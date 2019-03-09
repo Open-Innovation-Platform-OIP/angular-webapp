@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import PerfectScrollbar from 'perfect-scrollbar';
-
+import { Router } from '@angular/router';
+import { AuthService } from 'src/app/core/auth.service';
 declare const $: any;
 
 //Metadata
@@ -43,6 +44,12 @@ export const ROUTES: RouteInfo[] = [
 export class SidebarComponent implements OnInit {
     public menuItems: any[];
 
+    constructor(
+        private auth: AuthService,
+        private router: Router
+    ) {
+    }
+
     isMobileMenu() {
         if ($(window).width() > 991) {
             return false;
@@ -65,5 +72,9 @@ export class SidebarComponent implements OnInit {
             bool = true;
         }
         return bool;
+    }
+    logout() {
+        this.auth.logout();
+        this.router.navigate(['/auth/login']);
     }
 }

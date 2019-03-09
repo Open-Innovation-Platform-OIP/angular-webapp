@@ -36,6 +36,8 @@
     "angular2-jwt": "^0.2.3",
     "animate.css": "3.5.2",
     "apollo-angular": "^1.5.0",
+    "apollo-angular-link-http": "^1.5.0",
+    "apollo-cache-inmemory": "^1.5.1",
     "apollo-client": "^2.5.1",
     "apollo-link": "^1.2.9",
     "arrive": "2.3.1",
@@ -75,6 +77,7 @@
     "twitter-bootstrap-wizard": "1.2.0",
     "uglify-js": "3.3.28",
     "validate": "3.0.1",
+    "validator": "^10.11.0",
     "web-animations-js": "2.3.1",
     "zone.js": "0.8.26"
   },
