@@ -124,7 +124,7 @@ export class SentryErrorHandler implements ErrorHandler {
         AuthLayoutComponent
     ],
     providers: [
-      { provide: ErrorHandler, useClass: SentryErrorHandler }
+      // { provide: ErrorHandler, useClass: SentryErrorHandler }
     ],
     bootstrap:    [ AppComponent ]
 })

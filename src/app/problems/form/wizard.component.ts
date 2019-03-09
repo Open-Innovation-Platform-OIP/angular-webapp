@@ -11,11 +11,12 @@ import gql from 'graphql-tag';
 import { TagsService } from '../../core/tags.service';
 import { FilesService } from '../../core/files.service';
 import { OrgsService } from '../../core/orgs.service';
-import { GeocoderService } from '../../core/geocoder.service';
+import { AuthService } from '../../core/auth.service';
+// import { GeocoderService } from '../../core/geocoder.service';
 import { Observable } from 'rxjs';
 import { map, startWith } from 'rxjs/operators';
 import { first } from 'rxjs/operators';
-
+declare var H: any;
 declare const $: any;
 interface FileReaderEventTarget extends EventTarget {
     result: string;
@@ -70,7 +71,7 @@ export class WizardComponent implements OnInit, OnChanges, OnDestroy, AfterViewI
         featured_type: '',
         voted_by: [],
         watched_by: [],
-        created_by: Number(localStorage.getItem('userId')),
+        created_by: Number(this.auth.currentUserValue.id),
         is_draft: true
     };
     searchResults = {};
@@ -98,13 +99,15 @@ export class WizardComponent implements OnInit, OnChanges, OnDestroy, AfterViewI
         private apollo: Apollo,
         private tagService: TagsService,
         private orgsService: OrgsService,
-        private geocoder: GeocoderService
+        private auth: AuthService
+        // private geocoder: GeocoderService
     ) {
         canProceed = true;
         this.problem.organization = 'Social Alpha';
         this.filteredSectors = this.sectorCtrl.valueChanges.pipe(
             startWith(null),
             map((sector: string | null) => sector ? this._filter(sector) : Object.keys(this.tagService.allTags).slice()));
+        // console.log(this.auth.currentUserValue);
     }
 
     add(event: MatChipInputEvent): void {
@@ -735,7 +738,7 @@ export class WizardComponent implements OnInit, OnChanges, OnDestroy, AfterViewI
                 this.problem['id'] = result.data.insert_problems.returning[0].id;
                 const problem_tags = new Set();
                 this.sectors.map(sector => {
-                    if (this.tagService.allTags[sector].id) {
+                    if (this.tagService.allTags[sector] && this.tagService.allTags[sector].id) {
                         problem_tags.add({ tag_id: this.tagService.allTags[sector].id, problem_id: this.problem['id'] });
                     }
                 });

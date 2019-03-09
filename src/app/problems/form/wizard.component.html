@@ -232,7 +232,8 @@
                       <div class="col-sm-6">
                         <div class="picture-container">
                           <div class="picture">
-                            <img src="./assets/img/plus.png" class="picture-src" id="wizardPicturePreview" title="" />
+                            <img src="./assets/img/plus.png" class="picture-src" id="wizardPicturePreview"
+                              title="" />
                             <input type="file" (change)="onFileSelected($event)" name="..." multiple accept="image/*,video/*">
                           </div>
                           <h6 class="description">Choose Media</h6>
@@ -240,11 +241,6 @@
                       </div>
                       <div class="col-sm-6">
                         <div class="input-group">
-                          <!-- <div class="input-group-prepend">
-                            <span class="input-group-text">
-                              <i class="material-icons">public</i>
-                            </span>
-                          </div> -->
                           <mat-form-field class="example-full-width has-label">
                             <input type="text" name="media_url" matInput id="media_url" formControlName="media_url"
                               placeholder="Video URL" [(ngModel)]="media_url">
@@ -352,8 +348,8 @@
                 </div>
                 <div class="ml-auto">
                   <input type="button" class="btn btn-next btn-fill btn-warning btn-wd" name="next" value="Next">
-<input type="button" class="btn btn-fill btn-rose btn-wd" [disabled]="!problem.title" (click)="saveProblemDraft()" name="draft"
-                    value="Save Draft">
+                  <input type="button" class="btn btn-fill btn-rose btn-wd" [disabled]="!problem.title" (click)="saveProblemDraft()"
+                    name="draft" value="Save Draft">
                   <input type="button" class="btn btn-finish btn-fill btn-warning btn-wd" [disabled]="!isComplete()"
                     (click)="publishProblem()" name="finish" value="Publish" style="display: none;">
                 </div>
