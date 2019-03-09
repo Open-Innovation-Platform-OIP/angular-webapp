@@ -80,4 +80,14 @@ export class AuthService {
     };
     return this.http.post(this.authEndpoint + 'signup', JSON.stringify(user), httpOptions);
   }
+
+  resetPassword(resetDetails) {
+    console.log(resetDetails);
+    const httpOptions = {
+      headers: new HttpHeaders({
+        'Content-Type': 'application/json',
+      })
+    };
+    return this.http.post(this.authEndpoint + 'reset', JSON.stringify(resetDetails), httpOptions);
+  }
 }

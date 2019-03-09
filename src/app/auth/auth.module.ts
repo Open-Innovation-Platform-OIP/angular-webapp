@@ -10,6 +10,7 @@ import { AuthRoutes } from './auth.routing';
 import { RegisterComponent } from './register/register.component';
 import { LockComponent } from './lock/lock.component';
 import { LoginComponent } from './login/login.component';
+import { ForgotPasswordComponent } from './forgot-password/forgotpassword.component';
 
 @NgModule({
   imports: [
@@ -22,7 +23,8 @@ import { LoginComponent } from './login/login.component';
   declarations: [
     LoginComponent,
     RegisterComponent,
-    LockComponent
+    LockComponent,
+    ForgotPasswordComponent
   ]
 })
 

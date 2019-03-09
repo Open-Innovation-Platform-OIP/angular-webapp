@@ -6,14 +6,16 @@ import { first } from 'rxjs/operators';
 declare var $: any;
 
 @Component({
-    selector: 'app-login-cmp',
-    templateUrl: './login.component.html'
+    selector: 'app-forgotpassword-cmp',
+    templateUrl: './forgotpassword.component.html'
 })
 
-export class LoginComponent implements OnInit, OnDestroy {
-    loginDetails = {
+export class ForgotPasswordComponent implements OnInit, OnDestroy {
+    resetDetails = {
         email: '',
+        otp: '',
         password: '',
+        confirmPassword: '',
     };
     loading = false;
     submitted = false;
@@ -69,7 +71,7 @@ export class LoginComponent implements OnInit, OnDestroy {
         body.classList.remove('off-canvas-sidebar');
     }
     canSubmit() {
-        if (isEmail(this.loginDetails.email) && this.loginDetails.password.length >= 4) {
+        if (isEmail(this.resetDetails.email) && this.resetDetails.otp.length >= 4 && this.resetDetails.password.length >= 4 && this.resetDetails.password === this.resetDetails.confirmPassword) {
             return true;
         }
         return false;
@@ -78,11 +80,11 @@ export class LoginComponent implements OnInit, OnDestroy {
         if (err) console.error(err);
         if (res) console.log(res);
     }
-    login() {
+    submit() {
         this.submitted = true;
         this.loading = true;
-        // this.auth.login(this.loginDetails, this.done);
-        this.auth.login(this.loginDetails)
+        // this.auth.login(this.resetDetails, this.done);
+        this.auth.login(this.resetDetails)
             .pipe(first())
             .subscribe(
                 data => {
@@ -92,10 +94,5 @@ export class LoginComponent implements OnInit, OnDestroy {
                     this.error = error;
                     this.loading = false;
                 });
-    }
-    forgotPassword() {
-        // send reset request to server
-        console.log('sending reset email to your inbox');
-        this.router.navigate(["/auth/forgot"]);
     }
 }

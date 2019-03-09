@@ -16,7 +16,7 @@
     <div class="photo">
       <!-- <img src="./assets/img/faces/avatar.jpg" /> -->
     </div>
-    <div class="user-info">
+    <div class="user-info" *ngIf="auth.currentUserValue">
       <a data-toggle="collapse" href="#collapseExample" class="collapsed">
         <span>
           {{auth.currentUserValue.email}}
