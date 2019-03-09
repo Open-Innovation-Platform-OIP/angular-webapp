@@ -1,0 +1,174 @@
+<div class="main-content">
+  <div class="container-fluid">
+    <div class="card card-product">
+      <div class="card-header card-header-warning card-header-text">
+        <div class="card-text">
+          <h4 class="card-title">User Profile</h4>
+        </div>
+      </div>
+      <div class="card-body">
+        <div class="row">
+          <div class="col-4">
+            <div class="mycontent-left">
+              <label class="col-md-4 col-4 col-form-label" style="padding: 1px">Profile Picture</label>
+              <div class="col-md-5">
+                <div class="fileinput fileinput-new text-center" data-provides="fileinput">
+                  <div class="fileinput-new thumbnail img-circle">
+                    <img src="{{
+                        userData.photo_url && userData.photo_url.url
+                          ? userData.photo_url.url
+                          : './assets/img/default-avatar.png'
+                      }}"
+                      alt="..." />
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="col-8">
+            <div class="row">
+              <div class="col-md-2"><b>Name :</b></div>
+              <div class="col-md-10 col-9">
+                {{ userData.name }}
+              </div>
+            </div>
+            <!-- <div class="row">
+          <div class="col-md-2">Lastname :</div>
+          <div class="col-md-10 col-9">
+            {{userData.name}}
+          </div>
+        </div> -->
+            <div class="row">
+              <div class="col-md-2"><b>Organization :</b></div>
+              <div class="col-md-10 col-9">
+                {{ userData.organization }}
+              </div>
+            </div>
+            <!-- <div class="row">
+          <div class="col-md-2">Sectors & Interests :</div>
+          <div class="timeline-heading">
+            <span class="badge badge-warning">water</span>
+            <span class="badge badge-warning">sanitation</span>
+          </div>
+        </div> -->
+            <!-- <div class="row">
+              <div class="col-md-2"><b>Expertise :</b></div>
+              <div class="col-md-10 col-9">
+                {{userData.expertise}}
+              </div>
+            </div> -->
+            <div class="row">
+              <div class="col-md-2"><b>Qualification :</b></div>
+              <div class="col-md-10 col-9">
+                {{ userData.qualification }}
+              </div>
+            </div>
+            <!-- <div class="row">
+          <div class="col-md-2">Phone number :</div>
+          <div class="col-md-10 col-9">
+            {{userData.phone_number}}
+          </div>
+        </div> -->
+            <div class="row">
+              <div class="col-md-2"><b>E-mail :</b></div>
+              <div class="col-md-10 col-9">
+                {{ userData.email }}
+              </div>
+            </div>
+            <div class="row">
+              <div class="col-md-2"><b>Location :</b></div>
+              <div class="col-md-10 col-9">
+                {{ userData.location }}
+              </div>
+            </div>
+            <div class="row">
+              <div class="col-md-2"><b>Persona :</b></div>
+
+              <div *ngFor="let persona of userData.personas">
+                <span class="badge badge-warning">{{persona}}</span>
+                <span>&nbsp;</span>
+              </div>
+
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="card-footer">
+        <div *ngIf="loggedInUsersProfile">
+          <button [routerLink]="'/profile/' + userData.id + '/edit'" mat-raised-button class="btn btn-info">Edit</button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+
+<!--REWRITE-->
+
+<div class="main-content">
+  <div class="container-fluid">
+    <div class="row">
+      <div class="col-md-4">
+        <div class="card card-profile">
+          <div class="card-avatar">
+            <a href="#pablo">
+              <img class="img" src="{{(userData.photo_url && userData.photo_url.url) ? userData.photo_url.url : './assets/img/default-avatar.png'}}" />
+            </a>
+          </div>
+          <div class="card-body">
+            <!-- <h6 class="card-category text-gray">CEO / Co-Founder</h6> -->
+            <h4 class="card-title">{{userData.name}}</h4>
+            <!-- <p class="card-description">
+                Don't be scared of the truth because we need to restart the human foundation in truth And I love you like
+                Kanye loves Kanye I love Rick Owens’ bed design but the back is...
+              </p> -->
+          </div>
+        </div>
+      </div>
+      <div class="col-md-8">
+        <div class="card card-product">
+          <div class="card-header card-header-icon card-header-warning">
+            <div class="card-icon">
+              <i class="material-icons">perm_identity</i>
+            </div>
+            <h4 class="card-title" style="text-align:left;">My Profile
+              <!-- <small class="category">Complete your profile</small> -->
+            </h4>
+          </div>
+          <div class="card-body">
+            <strong *ngIf="userData.organization">Organization</strong>
+            <p class="description">{{userData.organization}}</p>
+            <strong *ngIf="userData.qualification">Qualification</strong>
+            <p class="description">{{userData.qualification}}</p>
+            <strong>Phone number</strong>
+            <p class="description">{{userData.organization}}</p>
+            <strong>E-mail</strong>
+            <p class="description">{{userData.email}}</p>
+            <strong>Interests</strong>
+            <p class="description">{{userData.location}}</p>
+            <strong>Location</strong>
+            <p class="description">{{userData.location}}</p>
+            <strong>Persona</strong>
+            <div *ngFor="let persona of userData.personas">
+              <span class="badge badge-warning">{{persona}}</span>
+              <span>&nbsp;</span>
+            </div>
+          </div>
+          <div class="card-footer">
+            <div *ngIf="loggedInUsersProfile">
+              <button [routerLink]="'/users/'+ userData.id+'/edit'" mat-raised-button class="btn btn-info pull-right">Edit</button>
+            </div>
+            <!-- <button mat-raised-button type="submit" class="btn btn-rose pull-right">Update Profile</button> -->
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+
+<!--REWRITE-->

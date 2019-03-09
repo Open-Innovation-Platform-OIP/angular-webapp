@@ -1,0 +1,109 @@
+<!-- <div class="card card-product">
+  <div class="card-header card-header-warning card-header-text">
+    <div class="card-text">
+      <h4 class="card-title">Validate</h4>
+    </div>
+  </div>
+
+  <div class="card-body"> -->
+<!-- <div class="row">
+      <label class="col-sm-2">Comment</label>
+      <div class="col-sm-10">
+        <input type="text" name="title" [(ngModel)]="problemHandleService.problemValidationData.comment">
+      </div>
+    </div> -->
+
+<!-- <div class="row">
+      <label class="col-sm-2 col-form-label">Comment</label>
+      <div class="col-sm-10">
+        <mat-form-field class="example-full-width">
+          <input matInput type="text" name="comment" [(ngModel)]="problemHandleService.problemValidationData.comment">
+        </mat-form-field>
+      </div>
+    </div>
+
+    <div class="row">
+      <label class="col-sm-2 col-form-label">Attachment</label>
+      <div class="col-md-10">
+        <div class="fileinput fileinput-new" data-provides="fileinput">
+          <span class="btn btn-default btn-file">
+            <span class="fileinput-new"><i class="fa fa-paperclip" aria-hidden="true"></i> Attach</span>
+            <span class="fileinput-exists"><i class="fa fa-paperclip" aria-hidden="true"></i> Attach</span>
+            <input type="file" name="..." (change)="onValidateFileSelected($event)" multiple />
+          </span>
+          <div *ngFor="let file of problemHandleService.problemValidationData.files; let i= index;">
+            <span>{{file.key}}</span>
+            <span class="closeBtn" (click)="removeAttachedFile(i)"><i class="fa fa-times"></i></span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="card-footer row justify-content-center">
+    <div class="col-md-3">
+      <button mat-raised-button class="btn btn-success" (click)="validateConsent(true)">
+        Agree
+      </button>
+    </div>
+    <div class="col-md-3">
+      <button mat-raised-button class="btn btn-danger" (click)="validateConsent(false)" data-dismiss="modal">
+        Disagree
+      </button>
+    </div>
+  </div>
+</div> -->
+
+
+
+
+<!--REWRITE-->
+
+<!-- <div class="row">
+      <label class="col-sm-2">Comment</label>
+      <div class="col-sm-10">
+        <input type="text" name="title" [(ngModel)]="problemHandleService.problemValidationData.comment">
+      </div>
+    </div> -->
+
+<div class="row">
+  <label class="col-sm-3 col-form-label">Comment</label>
+  <div class="col-sm-9">
+    <mat-form-field class="example-full-width">
+      <input matInput type="text" name="comment" [(ngModel)]="problemHandleService.problemValidationData.comment">
+    </mat-form-field>
+  </div>
+</div>
+
+<div class="row">
+  <label class="col-sm-3 col-form-label">Attachment</label>
+  <div class="col-md-9">
+    <div class="fileinput fileinput-new" data-provides="fileinput">
+      <span class="btn btn-default btn-file">
+        <span class="fileinput-new"><i class="fa fa-paperclip" aria-hidden="true"></i> Attach</span>
+        <span class="fileinput-exists"><i class="fa fa-paperclip" aria-hidden="true"></i> Attach</span>
+        <input type="file" name="..." (change)="onValidateFileSelected($event)" multiple />
+      </span>
+      <div *ngFor="let file of problemHandleService.problemValidationData.files; let i= index;">
+        <span>{{file.key}}</span>
+        <span class="closeBtn" (click)="removeAttachedFile(i)"><i class="fa fa-times"></i></span>
+      </div>
+    </div>
+  </div>
+</div>
+<hr>
+<div class="row justify-content-center">
+  <div class="col-md-3">
+    <button mat-raised-button class="btn btn-success btn-sm" (click)="validateConsent(true)" [disabled]="!problemHandleService.problemValidationData.comment">
+      Agree
+    </button>
+  </div>
+  <div class="col-md-3">
+    <button mat-raised-button class="btn btn-danger btn-sm" (click)="validateConsent(false)" data-dismiss="modal"
+      [disabled]="!problemHandleService.problemValidationData.comment">
+      Disagree
+    </button>
+  </div>
+</div>
+
+
+<!--REWRITE-->

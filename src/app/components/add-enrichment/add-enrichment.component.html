@@ -1,0 +1,325 @@
+<!-- <div class="main-panel"> -->
+<!-- <div class="container-fluid"> -->
+<!-- <div class="row"> -->
+<!-- <div class="col-md-7"> -->
+<!-- <div class="card card-product"> -->
+<!-- <div class="card-header card-header-warning card-header-text">
+      <div class="card-text">
+        <h4 class="card-title">Enrich</h4>
+      </div>
+    </div> -->
+<div class="card-body ">
+  <form method="get" action="/" class="form-horizontal" (ngSubmit)="onSubmit()" #enrichmentForm="ngForm">
+    <div class="form-group">
+      <div class="row">
+        <label class="col-sm-3 col-form-label" [ngStyle]="{ 'color' : (!problemEnrichmentData.description) ? 'red' : 'grey' }">Description
+        </label>
+        <div class="col-sm-9">
+          <mat-form-field class="example-full-width">
+            <textarea matInput placeholder="Leave a comment" name="description" required placeholder="Describe the problem in detail"
+              rows="5" [(ngModel)]="problemEnrichmentData.description" #description="ngModel"></textarea>
+          </mat-form-field>
+          <div [hidden]="description.valid || description.pristine" class="text-danger error-msg">
+            Description is required
+          </div>
+        </div>
+      </div>
+      <!-- <div class="row">
+                  <label class="col-sm-2 col-form-label">Description</label>
+                  <div class="col-sm-10">
+                    <mat-form-field class="example-full-width">
+                      <input matInput type="text" name="userid" [(ngModel)]="problem.description">
+                    </mat-form-field>
+                  </div>
+                </div> -->
+      <!-- <div class="row">
+                  <label class="col-sm-2 col-form-label">Owner</label>
+                  <div class="col-sm-10">
+                    <mat-form-field class="example-full-width">
+                      <input matInput type="text" name="userid" [(ngModel)]="problem.owner">
+                    </mat-form-field>
+                  </div>
+                </div> -->
+      <div class="row">
+        <label class="col-sm-3 col-form-label" [ngStyle]="{ 'color' : (!problemEnrichmentData.location) ? 'red' : 'grey' }">Location
+        </label>
+        <div class="col-sm-9">
+          <mat-form-field class="example-full-width">
+            <input matInput type="text" name="location" required [(ngModel)]="problemEnrichmentData.location" (keyup)="getAddress()"
+              #location="ngModel">
+            <table style="width: 100%" id="table">
+              <tbody>
+                <tr *ngFor="let location of locations">
+                  <td (click)="storeLocation($event)">
+                    <button style="width: 50%; background-color: #FFFF">
+                      {{ location.Location.Address.Label }}
+                    </button>
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </mat-form-field>
+          <div [hidden]="location.valid || location.pristine" class="text-danger error-msg">
+            Location is required
+          </div>
+        </div>
+      </div>
+
+      <div class="row">
+        <label class="col-sm-3 col-form-label">Resources needed</label>
+        <div class="col-sm-9">
+          <mat-form-field class="example-full-width">
+            <input matInput type="text" name="resources_needed" [(ngModel)]="problemEnrichmentData.resources_needed">
+          </mat-form-field>
+        </div>
+      </div>
+
+      <div class="row">
+        <label class="col-sm-3 col-form-label">Impact</label>
+        <div class="col-sm-9">
+          <mat-form-field class="example-full-width">
+            <input matInput type="text" name="impact" [(ngModel)]="problemEnrichmentData.impact">
+          </mat-form-field>
+        </div>
+      </div>
+
+      <div class="row">
+        <label class="col-sm-3 col-form-label">Extent</label>
+        <div class="col-sm-9">
+          <mat-form-field class="example-full-width">
+            <input matInput type="text" name="extent" [(ngModel)]="problemEnrichmentData.extent">
+          </mat-form-field>
+        </div>
+      </div>
+
+      <div class="row">
+        <label class="col-sm-3 col-form-label">Population Affected</label>
+
+        <div class="col-sm-9">
+          <mat-form-field class="example-full-width has-label">
+            <mat-select matInput [(ngModel)]="problemEnrichmentData.min_population" placeholder="Select size of affected population"
+              id="population" name="population">
+              <mat-option *ngFor="let size of sizes" [value]="size.value">
+                {{ size.viewValue }}
+              </mat-option>
+            </mat-select>
+          </mat-form-field>
+        </div>
+      </div>
+
+      <!-- <div class="row">
+            <div class="row">
+      
+                <label class="col-sm-3 col-form-label" [ngStyle]="{ 'color' : (!problemEnrichmentData.population_affected) ? 'red' : 'grey' }">Population
+                  Affected *</label>
+                <div class="col-sm-9">
+                  <mat-form-field class="example-full-width">
+                    <input matInput type="text" name="population_affected" required [(ngModel)]="problemEnrichmentData.population_affected"
+                      #population_affected="ngModel">
+                  </mat-form-field>
+                  <div [hidden]="population_affected.valid || population_affected.pristine" class="text-danger error-msg">
+                    Population Affected is required
+                  </div>
+                </div>
+              </div> -->
+
+      <div class="row">
+        <label class="col-sm-3 col-form-label">Beneficiary Attributes</label>
+        <div class="col-sm-9">
+          <mat-form-field class="example-full-width">
+            <input matInput type="text" name="beneficiary_attributes" [(ngModel)]="problemEnrichmentData.beneficiary_attributes">
+          </mat-form-field>
+        </div>
+      </div>
+
+      <div class="row">
+        <label class="col-sm-3 col-form-label">Organization</label>
+        <div class="col-sm-9">
+          <mat-form-field class="example-full-width">
+            <input matInput type="text" name="organization" [(ngModel)]="problemEnrichmentData.organization">
+          </mat-form-field>
+        </div>
+      </div>
+    </div>
+    <!-- <div class="row">
+              <label class="col-sm-2 col-form-label">sdsd</label>
+              <div class="col-sm-10">
+                <mat-form-field class="example-full-width">
+                  <input matInput type="text" name="title" [(ngModel)]="problem.title">
+                </mat-form-field>
+              </div>
+            </div>
+            <div class="row">
+              <label class="col-sm-2 col-form-label">Description</label>
+              <div class="col-sm-10">
+                <mat-form-field class="example-full-width">
+                  <input matInput type="text" name="description" [(ngModel)]="problem.description">
+                </mat-form-field>
+              </div>
+            </div>
+            <div class="row">
+              <label class="col-sm-2 col-form-label">Location</label>
+              <div class="col-sm-10">
+                <mat-form-field class="example-full-width">
+                  <input matInput type="text" name="location" [(ngModel)]="problem.location">
+                </mat-form-field>
+              </div>
+            </div> -->
+
+
+    <!-- <div class="row">
+            <label class="col-sm-2 col-form-label">Static control</label>
+            <div class="col-sm-10">
+              <div class="form-group">
+                <p class="form-control-static">hello@creative-tim.com</p>
+              </div>
+            </div>
+          </div> -->
+
+
+    <!-- <div class="row">
+            <label class="col-sm-2 col-form-label">Sectors</label>
+            <div class="col-sm-10 checkbox-radios">
+              <div class="form-check">
+                <label class="form-check-label">
+                  <input class="form-check-input" type="checkbox" value="Water" [(ngModel)]="problemEnrichmentData.sectors.water"
+                    [ngModelOptions]="{standalone: true}">
+                  Water
+                  <span class="form-check-sign">
+                    <span class="check"></span>
+                  </span>
+                </label>
+              </div>
+      
+      
+              <div class="form-check">
+                <label class="form-check-label">
+                  <input class="form-check-input" type="checkbox" value="Sanitation" [(ngModel)]="problemEnrichmentData.sectors.sanitation"
+                    [ngModelOptions]="{standalone: true}">
+                  Sanitation
+                  <span class="form-check-sign">
+                    <span class="check"></span>
+                  </span>
+                </label>
+              </div>
+      
+              <div class="form-check">
+                <label class="form-check-label">
+                  <input class="form-check-input" type="checkbox" value="Health" [(ngModel)]="problemEnrichmentData.sectors.health"
+                    [ngModelOptions]="{standalone: true}">
+                  Health
+                  <span class="form-check-sign">
+                    <span class="check"></span>
+                  </span>
+                </label>
+              </div>
+              <div class="form-check">
+                <label class="form-check-label">
+                  <input class="form-check-input" type="checkbox" value="Agriculture" [(ngModel)]="problemEnrichmentData.sectors.agriculture"
+                    [ngModelOptions]="{standalone: true}">
+                  Agriculture
+                  <span class="form-check-sign">
+                    <span class="check"></span>
+                  </span>
+                </label>
+              </div>
+              <div class="form-check">
+                <label class="form-check-label">
+                  <input class="form-check-input" type="checkbox" value="Energy" [(ngModel)]="problemEnrichmentData.sectors.energy"
+                    [ngModelOptions]="{standalone: true}">
+                  Energy
+                  <span class="form-check-sign">
+                    <span class="check"></span>
+                  </span>
+                </label>
+              </div>
+              <div class="form-check">
+                <label class="form-check-label">
+                  <input class="form-check-input" type="checkbox" value="Environment" [(ngModel)]="problemEnrichmentData.sectors.environment"
+                    [ngModelOptions]="{standalone: true}">
+                  Environment
+                  <span class="form-check-sign">
+                    <span class="check"></span>
+                  </span>
+                </label>
+              </div>
+              <div class="form-check">
+                <label class="form-check-label">
+                  <input class="form-check-input" type="checkbox" value="Disabilities" [(ngModel)]="problemEnrichmentData.sectors.disabilities"
+                    [ngModelOptions]="{standalone: true}">
+                  Disabilities
+                  <span class="form-check-sign">
+                    <span class="check"></span>
+                  </span>
+                </label>
+              </div>
+      
+            </div>
+          </div> -->
+    <!-- </div> -->
+  </form>
+  <div class="row">
+    <label class="col-sm-3 col-form-label">Problem Image</label>
+    <div class="col-md-4 col-sm-4">
+      <legend></legend>
+      <div class="fileinput fileinput-new text-center" data-provides="fileinput">
+        <div>
+          <span class="btn btn-file">
+            <span class="fileinput-new">Select image</span>
+            <span class="fileinput-exists">Add more</span>
+            <input type="file" name="..." (change)="onEnrichImgSelect($event)" multiple accept="image/*" />
+          </span>
+          <!-- <a href="#pablo" class="btn btn-danger fileinput-exists" data-dismiss="fileinput"><i class="fa fa-times"></i>
+                  Remove</a> -->
+        </div>
+        <div class="fileinput-new thumbnail">
+          <img src="./assets/img/image_placeholder.jpg" alt="...">
+        </div>
+        <div class="fileinput-new thumbnail" *ngFor="let imgSrc of  problemEnrichmentData.image_urls; let i=index">
+          <span class="btn-danger closeBtn" (click)="removeEnrichPhoto(i)"><i class="fa fa-times"></i></span>
+          <img src="{{imgSrc.url}}" alt="">
+        </div>
+        <div class="fileinput-preview fileinput-exists thumbnail" *ngFor="let imgSrc of  problemEnrichmentData.image_urls; let i=index">
+          <span class="btn-danger closeBtn" (click)="removeEnrichPhoto(i)"><i class="fa fa-times"></i></span>
+          <img src="{{imgSrc.url}}" alt="">
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- video upload -->
+  <div class="row">
+    <label class="col-sm-3 col-form-label">Problem Video</label>
+    <div class="col-md-4 col-sm-4">
+      <div class="fileinput fileinput-new" data-provides="fileinput">
+        <span class="btn btn-default btn-file">
+          <span class="fileinput-new">Select video </span>
+          <span class="fileinput-exists">Add More</span>
+          <input type="file" (change)="onEnrichVideoSelect($event)" name="..." multiple accept="video/*">
+        </span>
+        <div *ngFor="let video of  problemEnrichmentData.video_urls; let i=index">
+          <span>{{video.key}}</span>
+          <span class="closeBtn" (click)="removeEnrichVideo(i)"><i class="fa fa-times"></i></span>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+<!-- <hr> -->
+
+<div class="card-footer justify-content-center" *ngIf="mode==='Add'">
+  <div class="row justify-content-center">
+    <button mat-raised-button class="btn btn-warning" (click)="sendEnrichDataToDB()" [disabled]="!enrichmentForm.form.valid">
+      <i class="material-icons">add</i>Enrich</button>
+  </div>
+
+  <div class="card-footer justify-content-center" *ngIf="mode==='Edit'">
+    <button mat-raised-button class="btn btn-warning" (click)="updateEnrichmentDataInDB()" [disabled]="!enrichmentForm.form.valid">
+      <i class="material-icons">add</i>Update</button>
+  </div>
+</div>
+<!-- </div> -->
+<!-- </div> -->
+<!-- </div> -->
+<!-- </div> -->
+<!-- </div> -->

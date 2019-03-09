@@ -1,0 +1,46 @@
+<div *ngIf="validationData">
+  <!-- <div class="card-header card-header-warning card-header-text"> -->
+  <div class="card-body">
+    <div class="row">
+      <label class="col-sm-3">Comment</label>
+      <div>
+        {{validationData.comment}}
+      </div>
+    </div>
+    <div class="row">
+      <label class="col-sm-3">Approval Status</label>
+      <div>
+        {{validationData.agree?'Agreed':'Disagreed'}}
+      </div>
+    </div>
+    <div class="row" *ngIf="validationData.files.length>0">
+      <label class="col-sm-3">Download</label>
+      <!-- <div class="btn btn-primary"> -->
+      <a *ngIf="validationData.files&&validationData.files[0]" href="{{validationData.files[0].url}}">
+        <p>{{validationData.files[0].key}}</p>
+        <i class="material-icons" title="Download all the Attachments">cloud_download
+        </i>
+      </a>
+      <!-- </div> -->
+    </div>
+  </div>
+  <hr>
+  <div class="row justify-content-center" *ngIf="validationData.validated_by===auth.currentUserValue.id">
+
+    <button mat-button type="button" (click)="editValidation()" class="btn btn-warning" aria-hidden="true" data-dismiss="modal"
+      data-toggle="modal" data-target="#EditValidationModal">
+      <i class="material-icons actions">
+        create
+      </i>
+    </button>
+
+    <button mat-button type="button" class="btn btn-danger" (click)="deleteValidation()">
+      <i class="material-icons actions">
+        delete
+      </i>
+    </button>
+
+  </div>
+
+
+</div>

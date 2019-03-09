@@ -1,0 +1,10 @@
+.description {
+    max-lines: 2;
+    max-height: 5.5em;
+    overflow: hidden;
+    color: #333333;
+}
+
+.enrich-card {
+    height: 27em;
+}

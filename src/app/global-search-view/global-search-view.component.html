@@ -1,0 +1,37 @@
+<div class="main-content">
+  <div class="container-fluid">
+    <div class="row justify-content-center">
+      <div class="col-md-6">
+        <input type="text" value="" class="form-control" placeholder="Search..." name="searchInput" autofocus
+          data-toggle="dropdown" [(ngModel)]="searchInput" (input)="globalSearch($event.target.value)" autocomplete="off">
+      </div>
+    </div>
+    <hr>
+    <div class="row">
+      <div class="col-md-4">
+        <h4 class="card-title">Problems</h4>
+        <div class="card card-product" *ngFor="let problem of search.globalProblemSearchResults" [routerLink]="'/problems/'+problem.id">
+          <div class="card-header">
+            <h4 class="card-title">{{problem.title}}</h4>
+          </div>
+          <div class="card-body">
+            <p class="description">
+              {{problem.description}}
+            </p>
+          </div>
+        </div>
+      </div>
+      <div class="col-md-4">
+        <h4 class="card-title">Solutions</h4>
+      </div>
+      <div class="col-md-4">
+        <h4 class="card-title">Users</h4>
+        <div class="card card-product" *ngFor="let user of userSearchResults" [routerLink]="'/profile/'+user.id">
+          <div class="card-body">
+            {{user.email}}
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

@@ -79,7 +79,7 @@ export class WizardComponent implements OnInit, OnChanges, OnDestroy, AfterViewI
     filteredSectors: Observable<string[]>;
     sectors: string[] = [];
     matcher = new MyErrorStateMatcher();
-    autoCompleteTags: any[] = [];
+    // autoCompleteTags: any[] = [];
     tags = [];
     autosaveInterval: any;
     type: FormGroup;

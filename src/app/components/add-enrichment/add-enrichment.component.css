@@ -1,0 +1,37 @@
+.closeBtn {
+    width: 24px;
+    height: 24px;
+    border-radius: 50%;
+    position: absolute;
+    right: 0px;
+    cursor: pointer;
+}
+
+.previewImg {
+    /* display: inline block !important; */
+    margin-right: 10px;
+}
+
+.videoThumbnail {
+    display: inline-block;
+    margin-bottom: 10px;
+    overflow: hidden;
+    text-align: center;
+    vertical-align: middle;
+    max-width: 250px;
+    box-shadow: 0 10px 30px -12px rgba(0, 0, 0, 0.42), 0 4px 25px 0px rgba(0, 0, 0, 0.12), 0 8px 10px -5px rgba(0, 0, 0, 0.2);
+}
+
+.videoThumbnail>img {
+    max-height: 100%;
+    width: 100%;
+}
+
+.error-msg {
+    position: absolute;
+    top: 40px;
+    /* font-size: 10px; */
+    font-size: 90%;
+    margin-top: 0.5em;
+    top: calc(100% - 1.72916667em);
+}

@@ -1,0 +1,28 @@
+<div class="card card-product actions" [routerLink]="'/profile/'+userData.id">
+  <div class="card-header card-header-image">
+    <a>
+      <img style="object-fit: cover;" class="img" src="{{(userData.photo_url && userData.photo_url.url) ? userData.photo_url.url : './assets/img/image_placeholder.jpg'}}">
+    </a>
+  </div>
+  <div class="card-body">
+    <h4 class="card-title">
+      <a>{{userData.name}}</a>
+    </h4>
+    <div class="card-description">
+      <div>
+
+      </div>
+      <div>
+
+      </div>
+    </div>
+  </div>
+  <div class="card-footer">
+    <div class="price">
+      <!-- <h4>$459/night</h4> -->
+    </div>
+    <div class="stats">
+      <p class="card-category"><i class="material-icons">place</i> {{userData.location}}</p>
+    </div>
+  </div>
+</div>

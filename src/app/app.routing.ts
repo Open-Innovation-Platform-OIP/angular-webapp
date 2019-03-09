@@ -21,7 +21,10 @@ export const AppRoutes: Routes = [
     }, {
         path: 'problems',
         loadChildren: './problems/problems.module#ProblemsModule'
-    }
+        }, {
+          path: 'users',
+          loadChildren: './users/users.module#UsersModule'
+        }
   ]}, {
         path: 'auth',
       component: AuthLayoutComponent,

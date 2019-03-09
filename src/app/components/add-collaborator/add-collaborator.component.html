@@ -1,0 +1,104 @@
+<div class="row">
+  <label class="col-md-2 col-2 col-form-label">Intent</label>
+  <div class="col-md-10 col-9">
+    <mat-form-field class="example-full-width">
+      <textarea matInput placeholder="Please enter intent" name="intent" required [(ngModel)]="collaboratorData.intent"
+        #description="ngModel"></textarea>
+    </mat-form-field>
+    <!-- <mat-form-field class="example-full-width"> -->
+    <!-- <input type="text" ngDefaultControl [(ngmodel)]="collaboratorData.intent"></input> -->
+    <!-- </mat-form-field> -->
+  </div>
+</div>
+<div class="row">
+  <label class="col-sm-2 col-form-label">What role do you want to collaborate in</label>
+  <div class="col-sm-10">
+    <div class="form-check form-check-inline">
+      <label class="form-check-label">
+        <input class="form-check-input" type="checkbox" [(ngModel)]="collaborateAs.innovator">
+        Innovator
+        <span class="form-check-sign">
+          <span class="check"></span>
+        </span>
+      </label>
+    </div>
+    <div class="form-check form-check-inline">
+      <label class="form-check-label">
+        <input class="form-check-input" type="checkbox" [(ngModel)]="collaborateAs.entrepreneur">
+        Entrepreneur
+        <span class="form-check-sign">
+          <span class="check"></span>
+        </span>
+      </label>
+    </div>
+    <div class="form-check form-check-inline">
+      <label class="form-check-label">
+        <input class="form-check-input" type="checkbox" [(ngModel)]="collaborateAs.expert">
+        Expert
+        <span class="form-check-sign">
+          <span class="check"></span>
+        </span>
+      </label>
+    </div>
+    <div class="form-check form-check-inline">
+      <label class="form-check-label">
+        <input class="form-check-input" type="checkbox" [(ngModel)]="collaborateAs['user/beneficiary']">
+        User/Beneficiary
+        <span class="form-check-sign">
+          <span class="check"></span>
+        </span>
+      </label>
+    </div>
+    <div class="form-check form-check-inline">
+      <label class="form-check-label">
+        <input class="form-check-input" type="checkbox" [(ngModel)]="collaborateAs.government">
+        Government
+        <span class="form-check-sign">
+          <span class="check"></span>
+        </span>
+      </label>
+    </div>
+    <div class="form-check form-check-inline">
+      <label class="form-check-label">
+        <input class="form-check-input" type="checkbox" [(ngModel)]="collaborateAs.funder">
+        Funder
+        <span class="form-check-sign">
+          <span class="check"></span>
+        </span>
+      </label>
+    </div>
+    <div class="form-check form-check-inline">
+      <label class="form-check-label">
+        <input class="form-check-input" type="checkbox" [(ngModel)]="collaborateAs.ngo">
+        NGO
+        <span class="form-check-sign">
+          <span class="check"></span>
+        </span>
+      </label>
+    </div>
+
+    <div class="form-check form-check-inline">
+      <label class="form-check-label">
+        <input class="form-check-input" type="checkbox" [(ngModel)]="collaborateAs['incubator/enabler']">
+        Incubator/Enabler
+        <span class="form-check-sign">
+          <span class="check"></span>
+        </span>
+      </label>
+    </div>
+  </div>
+</div>
+<br>
+<div class="row">
+  <label class="col-md-5 col-5 col-form-label" *ngIf="mode==='Add'">Add Collaborator </label>
+  <label class="col-md-5 col-5 col-form-label" *ngIf="mode==='Edit'">Update </label>
+
+  <div class="col-md-6 col-6">
+    <div class="text-center">
+      <button class="btn btn-warning" *ngIf="mode==='Add'" (click)="collaborate()" [disabled]="!collaboratorData.intent&&!roleSelected">Yes</button>
+      <button class="btn btn-warning" *ngIf="mode==='Edit'" (click)="editCollaboration()">Yes</button>
+
+      <button class="btn btn-danger" data-dismiss="modal" *ngIf="mode==='Add'">No</button>
+    </div>
+  </div>
+</div>

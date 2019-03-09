@@ -33,7 +33,7 @@ export const ROUTES: RouteInfo[] = [
         path: '/problems',
         title: 'Problems',
         type: 'link',
-        icontype: 'question'
+        icontype: 'help'
     },
 ];
 @Component({
@@ -45,7 +45,7 @@ export class SidebarComponent implements OnInit {
     public menuItems: any[];
 
     constructor(
-        private auth: AuthService,
+        public auth: AuthService,
         private router: Router
     ) {
     }

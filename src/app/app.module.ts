@@ -53,6 +53,7 @@ import { AuthLayoutComponent } from './layouts/auth/auth-layout.component';
 
 import { AppRoutes } from './app.routing';
 import { GraphQLModule } from './services/graphql.module';
+
 @NgModule({
   exports: [
     MatAutocompleteModule,

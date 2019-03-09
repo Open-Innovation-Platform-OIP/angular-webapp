@@ -6,19 +6,19 @@ import { NouisliderModule } from 'ng2-nouislider';
 import { TagInputModule } from 'ngx-chips';
 import { SelectModule } from 'ng2-select';
 import { MaterialModule } from '../app.module';
-import { ProblemsRoutes } from './problems.routing';
-import { WizardComponent } from './form/wizard.component';
 import { MatChipsModule, MAT_CHIPS_DEFAULT_OPTIONS } from '@angular/material/chips';
 import { COMMA, ENTER } from '@angular/cdk/keycodes';
-import { ProblemDetailComponent } from './detail/problem-detail.component';
-import { ProblemsViewComponent } from './grid/problems-view.component';
+import { UsersRoutes } from './users.routing';
+import { AddUserProfileComponent } from './form/add-user-profile.component';
+import { ProfilesViewComponent } from './grid/profiles-view.component';
+import { ViewUserProfileComponent } from './detail/view-user-profile.component';
 import { NguCarouselModule } from "@ngu/carousel";
 import { ComponentsModule} from '../components/components.module';
 
 @NgModule({
   imports: [
     CommonModule,
-    RouterModule.forChild(ProblemsRoutes),
+    RouterModule.forChild(UsersRoutes),
     FormsModule,
     ReactiveFormsModule,
     NouisliderModule,
@@ -28,9 +28,9 @@ import { ComponentsModule} from '../components/components.module';
     ComponentsModule
   ],
   declarations: [
-    WizardComponent,
-    ProblemDetailComponent,
-    ProblemsViewComponent
+    AddUserProfileComponent,
+    ProfilesViewComponent,
+    ViewUserProfileComponent
   ],
   providers: [
     {
@@ -42,5 +42,5 @@ import { ComponentsModule} from '../components/components.module';
   ]
 })
 
-export class ProblemsModule { }
+export class UsersModule { }
 

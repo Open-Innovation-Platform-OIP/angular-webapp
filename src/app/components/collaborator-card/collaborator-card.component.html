@@ -1,0 +1,78 @@
+<!-- <div class="card card-product actions">
+  <div class="card-header card-header-image">
+    <a>
+      <img style="object-fit: cover;" class="img" src="{{(collaboratorProfileData.photo_url && collaboratorProfileData.photo_url.url) ? collaboratorProfileData.photo_url.url : './assets/img/image_placeholder.jpg'}}">
+    </a>
+  </div>
+  <div class="card-body">
+    <h4 class="card-title">
+      <a>{{collaboratorProfileData.name}}</a>
+    </h4>
+    <div class="card-description">
+      <div>
+
+      </div>
+      <div>
+
+      </div>
+    </div>
+  </div>
+  <div class="card-footer">
+    <div class="price">
+    </div>
+    <div class="stats">
+      <p class="card-category"><i class="material-icons">place</i> </p>
+    </div>
+
+  </div>
+  <button *ngIf="collaboratorData.user_id===auth.currentUserValue.id" mat-button type="button" class="btn btn-danger" (click)="deleteCollaboration()">Delete</button>
+</div> -->
+
+
+
+
+<!--REWRITE-->
+
+
+<div class="card card-profile" *ngIf="collaboratorData" [routerLink]="!(collaboratorData.user_id===auth.currentUserValue.id)&&'/profile/'+collaboratorData.user_id">
+
+  <div class="card-avatar">
+    <a *ngIf="collaboratorProfileData&&collaboratorProfileData.photo_url">
+
+      <img class="img" *ngIf="collaboratorProfileData && collaboratorProfileData.photo_url" src="{{(collaboratorProfileData.photo_url && collaboratorProfileData.photo_url.url) ? collaboratorProfileData.photo_url.url : './assets/img/default-avatar.png'}}" />
+    </a>
+  </div>
+  <div class="card-body">
+    <h6 class="card-category text-gray"></h6>
+    <h4 class="card-title" *ngIf="collaboratorProfileData&&collaboratorProfileData.name">{{collaboratorProfileData.name}}</h4>
+    <p class="card-description">
+      {{collaboratorData.intent}}
+    </p>
+    <!-- <p>{{collaboratorData.user_id}} ewerweewr</p> -->
+
+    <div *ngFor="let role of roles">
+      <span class="badge badge-warning">{{role}}</span>
+      <span>&nbsp;</span>
+    </div>
+    <!-- <a href="#pablo" class="btn btn-rose btn-round">Follow</a> -->
+  </div>
+</div>
+<button *ngIf="collaboratorData.user_id===auth.currentUserValue.id" mat-button type="button" class="btn btn-danger" (click)="deleteCollaboration()">
+  <i class="material-icons actions">
+    delete
+  </i>
+</button>
+<button *ngIf="collaboratorData.user_id===auth.currentUserValue.id" mat-button type="button" class="btn btn-warning" (click)="editCollaboration()"
+  data-toggle="modal" data-target="#EditCollaborateModal">
+  <i class="material-icons actions">
+    create
+  </i>
+</button>
+
+<!--REWRITE-->
+
+<!-- <div class="row justify-content-center" *ngIf="!collaboratorData">
+
+  <p>No collaborators yet. Be the first to collaborate.</p>
+
+</div> -->
