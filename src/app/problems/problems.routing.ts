@@ -4,9 +4,9 @@ import { WizardComponent } from './form/wizard.component';
 
 export const ProblemsRoutes: Routes = [
   {
-      path: '',
+      path: 'add',
       children: [ {
-        path: 'regular',
+        path: '',
         component: WizardComponent
       }]
   },
