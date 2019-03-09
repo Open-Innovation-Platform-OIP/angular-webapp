@@ -15,7 +15,7 @@ export class AuthLayoutComponent implements OnInit {
   constructor(private router: Router, private element: ElementRef) {
       this.sidebarVisible = false;
   }
-  ngOnInit(){
+  ngOnInit() {
     const navbar: HTMLElement = this.element.nativeElement;
 
     this.toggleButton = navbar.getElementsByClassName('navbar-toggler')[0];
@@ -26,28 +26,28 @@ export class AuthLayoutComponent implements OnInit {
   sidebarOpen() {
       const toggleButton = this.toggleButton;
       const body = document.getElementsByTagName('body')[0];
-      setTimeout(function(){
+      setTimeout(function() {
           toggleButton.classList.add('toggled');
       }, 500);
       body.classList.add('nav-open');
 
       this.sidebarVisible = true;
-  };
+  }
   sidebarClose() {
       const body = document.getElementsByTagName('body')[0];
       this.toggleButton.classList.remove('toggled');
       this.sidebarVisible = false;
       body.classList.remove('nav-open');
-  };
+  }
   sidebarToggle() {
     const body = document.getElementsByTagName('body')[0];
       if (this.sidebarVisible === false) {
           this.sidebarOpen();
-          var $layer = document.createElement('div');
+          let $layer = document.createElement('div');
           $layer.setAttribute('class', 'close-layer');
           if (body.querySelectorAll('.wrapper-full-page')) {
               document.getElementsByClassName('wrapper-full-page')[0].appendChild($layer);
-          }else if (body.classList.contains('off-canvas-sidebar')) {
+          } else if (body.classList.contains('off-canvas-sidebar')) {
               document.getElementsByClassName('wrapper-full-page')[0].appendChild($layer);
           }
           setTimeout(function() {
@@ -62,7 +62,7 @@ export class AuthLayoutComponent implements OnInit {
 
           body.classList.add('nav-open');
       } else {
-        document.getElementsByClassName("close-layer")[0].remove();
+        document.getElementsByClassName('close-layer')[0].remove();
           this.sidebarClose();
       }
   }
