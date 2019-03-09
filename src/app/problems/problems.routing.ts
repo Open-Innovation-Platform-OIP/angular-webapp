@@ -18,10 +18,6 @@ export const ProblemsRoutes: Routes = [
           path: ':id/edit',
           component: WizardComponent
         },
-        // {
-        //   path: 'add',
-        //   component: WizardComponent
-        // }
     ]
   },
 ];

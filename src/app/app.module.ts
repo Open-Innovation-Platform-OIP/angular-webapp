@@ -52,7 +52,7 @@ import { AdminLayoutComponent } from './layouts/admin/admin-layout.component';
 import { AuthLayoutComponent } from './layouts/auth/auth-layout.component';
 
 import { AppRoutes } from './app.routing';
-import { GraphQLModule } from './core/graphql.module';
+import { GraphQLModule } from './services/graphql.module';
 @NgModule({
   exports: [
     MatAutocompleteModule,
