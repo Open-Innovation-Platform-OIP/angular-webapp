@@ -29,5 +29,9 @@ export const AppRoutes: Routes = [
         path: '',
         loadChildren: './auth/auth.module#AuthModule'
       }]
+    },
+    {
+      path: '**',
+      redirectTo: 'dashboard',
     }
 ];
