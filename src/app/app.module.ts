@@ -1,8 +1,10 @@
-import { NgModule } from '@angular/core';
+import { BrowserModule } from "@angular/platform-browser";
+import { NgModule, ErrorHandler, Injectable } from "@angular/core";
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { RouterModule } from '@angular/router';
 import { HttpModule } from '@angular/http';
 import { HttpClientModule } from '@angular/common/http';
+import * as Sentry from "@sentry/browser";
 import { APP_BASE_HREF } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
@@ -89,6 +91,19 @@ import { GraphQLModule } from './core/graphql.module';
 })
 export class MaterialModule {}
 
+Sentry.init({
+  dsn: "https://aa3877830cee4ba6b6999be089316f57@sentry.io/1408858"
+});
+
+@Injectable()
+export class SentryErrorHandler implements ErrorHandler {
+  constructor() { }
+  handleError(error) {
+    Sentry.captureException(error.originalError || error);
+    throw error;
+  }
+}
+
 @NgModule({
     imports:      [
         CommonModule,
@@ -107,6 +122,9 @@ export class MaterialModule {}
         AppComponent,
         AdminLayoutComponent,
         AuthLayoutComponent
+    ],
+    providers: [
+      { provide: ErrorHandler, useClass: SentryErrorHandler }
     ],
     bootstrap:    [ AppComponent ]
 })
