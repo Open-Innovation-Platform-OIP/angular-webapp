@@ -24,6 +24,9 @@ export const AppRoutes: Routes = [
         }, {
           path: 'users',
           loadChildren: './users/users.module#UsersModule'
+        }, {
+          path: 'discussions',
+          loadChildren: './discussions/discussions.module#DiscussionsModule'
         }
   ]}, {
         path: 'auth',

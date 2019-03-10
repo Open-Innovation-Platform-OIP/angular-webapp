@@ -14,6 +14,7 @@ import { ProblemDetailComponent } from './detail/problem-detail.component';
 import { ProblemsViewComponent } from './grid/problems-view.component';
 import { NguCarouselModule } from "@ngu/carousel";
 import { ComponentsModule} from '../components/components.module';
+import {DiscussionsModule} from '../discussions/discussions.module';
 
 @NgModule({
   imports: [
@@ -25,7 +26,8 @@ import { ComponentsModule} from '../components/components.module';
     TagInputModule,
     MaterialModule,
     NguCarouselModule,
-    ComponentsModule
+    ComponentsModule,
+    DiscussionsModule
   ],
   declarations: [
     WizardComponent,

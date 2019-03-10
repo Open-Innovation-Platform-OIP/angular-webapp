@@ -1,0 +1,13 @@
+<div class="row">
+  <div class="col-md-12">
+    <quill-editor [style]="{height: '100px'}" [(ngModel)]="content" [sanitize]="true" [modules]="modules"
+      (onEditorCreated)="setFocus($event)">
+    </quill-editor>
+  </div>
+</div>
+<div class="row">
+  <div class="col-md-4">
+<button mat-raised-button class="btn btn-warning btn-round"
+  matTooltip="Click to add comment" [matTooltipPosition]="'below'" (click)="submit()">{{actionText}}</button>
+  </div>
+</div>

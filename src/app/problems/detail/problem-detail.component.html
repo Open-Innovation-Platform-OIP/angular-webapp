@@ -460,8 +460,7 @@
             <h4 class="card-title">Discussions</h4>
           </div>
           <div class="card-body">
-            The place is close to Barceloneta Beach and bus stop just 2 min by walk and near to "Naviglio" where
-            you can enjoy the main night life in Barcelona...
+            <app-discussions [users]="objectValues(usersService.allUsers)" [actionText]="'Comment'" (submitted)="onCommentSubmit($event)"></app-discussions>
           </div>
         </div>
       </div>

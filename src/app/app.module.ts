@@ -7,6 +7,7 @@ import { HttpClientModule } from '@angular/common/http';
 import * as Sentry from "@sentry/browser";
 import { APP_BASE_HREF } from '@angular/common';
 import { FormsModule } from '@angular/forms';
+import { QuillModule } from "ngx-quill";
 import { CommonModule } from '@angular/common';
 import {
   MatAutocompleteModule,
@@ -88,7 +89,8 @@ import { GraphQLModule } from './services/graphql.module';
     MatToolbarModule,
     MatTooltipModule
   ],
-  imports: [GraphQLModule, HttpClientModule]
+  imports: [GraphQLModule, HttpClientModule, QuillModule],
+  declarations: []
 })
 export class MaterialModule {}
 

@@ -10,6 +10,7 @@ import { Observable, Subscription, interval } from "rxjs";
 import { first, finalize, startWith, take, map } from "rxjs/operators";
 import { ProblemHandleService } from "../../services/problem-handle.service";
 import { AuthService } from "../../services/auth.service";
+import { UsersService } from '../../services/users.service';
 import * as Query from "../../services/queries";
 import { Apollo } from "apollo-angular";
 import gql from "graphql-tag";
@@ -17,6 +18,7 @@ import swal from "sweetalert2";
 import { NgForm } from "@angular/forms";
 import { NguCarouselConfig } from "@ngu/carousel";
 import { slider } from "./problem-detail.animation";
+import { DiscussionsService } from "src/app/services/discussions.service";
 
 const misc: any = {
   navbar_menu_visible: 0,
@@ -35,6 +37,17 @@ declare var $: any;
 })
 export class ProblemDetailComponent implements OnInit {
   userId: any;
+  objectValues = Object['values'];
+  allUsers = [
+    {
+      id: 1,
+      value: 'Tej'
+    },
+    {
+      id: 2,
+      value: 'Shaona'
+    }
+  ];
   problemData: any = {};
   enrichDataToEdit: any;
   tags: any = [];
@@ -112,7 +125,9 @@ export class ProblemDetailComponent implements OnInit {
     private problemHandleService: ProblemHandleService,
     private apollo: Apollo,
     private cdr: ChangeDetectorRef,
-    private auth: AuthService
+    private auth: AuthService,
+    public usersService: UsersService,
+    private discussionsService: DiscussionsService
   ) {}
 
   ngOnInit() {
@@ -801,5 +816,14 @@ export class ProblemDetailComponent implements OnInit {
 
   handleCollaborationEditMode(collaborationData) {
     this.collaborationDataToEdit = collaborationData;
+  }
+  onCommentSubmit(event) {
+    const [content, mentions] = event;
+    console.log(content, mentions);
+    this.discussionsService.submitCommentToDB({
+      problem_id: this.problemData['id'],
+      text: content,
+      mentions: JSON.stringify(mentions).replace('[', '{').replace(']', '}')
+    });
   }
 }

@@ -10,7 +10,7 @@ import { Apollo } from 'apollo-angular';
 import gql from 'graphql-tag';
 import { TagsService } from '../../services/tags.service';
 import { FilesService } from '../../services/files.service';
-import { OrgsService } from '../../services/orgs.service';
+import { UsersService } from '../../services/users.service';
 import { AuthService } from '../../services/auth.service';
 // import { GeocoderService } from '../../services/geocoder.service';
 import { Observable } from 'rxjs';
@@ -98,7 +98,7 @@ export class WizardComponent implements OnInit, OnChanges, OnDestroy, AfterViewI
         private filesService: FilesService,
         private apollo: Apollo,
         private tagService: TagsService,
-        private orgsService: OrgsService,
+        private usersService: UsersService,
         private auth: AuthService
         // private geocoder: GeocoderService
     ) {
@@ -224,7 +224,7 @@ export class WizardComponent implements OnInit, OnChanges, OnDestroy, AfterViewI
             }
         });
         this.tagService.getTagsFromDB();
-        this.orgsService.getOrgsFromDB();
+        this.usersService.getOrgsFromDB();
         this.type = this.formBuilder.group({
         // To add a validator, we must first convert the string value into an array.
         // The first tag in the array is the default value if any,

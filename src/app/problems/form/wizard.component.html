@@ -90,7 +90,7 @@
                             <mat-select name="organization" placeholder="Select Organization *" matInput id="organization"
                               formControlName="organization" [(ngModel)]="problem.organization">
                               <mat-option>None</mat-option>
-                              <mat-option *ngFor="let org of orgsService.allOrgs" value="{{org}}">{{org}}</mat-option>
+                              <mat-option *ngFor="let org of usersService.allOrgs" value="{{org}}">{{org}}</mat-option>
                             </mat-select>
                           </mat-form-field>
                         </div>
