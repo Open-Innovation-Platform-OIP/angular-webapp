@@ -53,8 +53,8 @@ export class ViewEnrichmentComponent implements OnInit, OnChanges {
           this.enrichmentVoted = true;
         }
       });
+      this.numberOfVotes = this.enrichData.voted_by.length;
     }
-    this.numberOfVotes = this.enrichData.voted_by.length;
 
     // this.numberOfVotes = Object.keys(this.enrichData.voted_by).length;
     // if (this.enrichData.voted_by.abc123) {
@@ -71,6 +71,9 @@ export class ViewEnrichmentComponent implements OnInit, OnChanges {
     if (this.enrichmentVoted) {
       this.numberOfVotes++;
       console.log(this.enrichData.voted_by, "voted by");
+      if (!this.enrichData.voted_by) {
+        this.enrichData.voted_by = [];
+      }
       this.enrichData.voted_by.push(Number(this.auth.currentUserValue.id));
       // console.log(this.enrichData, "enrich data", this.problemId);
       console.log(this.enrichData.voted_by, "voted by 2");

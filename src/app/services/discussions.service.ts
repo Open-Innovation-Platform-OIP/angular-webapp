@@ -53,4 +53,34 @@ export class DiscussionsService {
       console.error(JSON.stringify(err));
     });
   }
+
+  getComments(id, is_problem=true) {
+    let query = `{
+          discussions(where: { problem_id: { _eq: ${id} } }) {
+            id
+            title
+          }
+        }`;
+    if (!is_problem) {
+      query.replace('problem_id', 'solution_id');
+    }
+    return this.apollo.watchQuery<any>({
+      query: gql`
+        {
+          discussions(where: { problem_id: { _eq: ${id} } }) {
+            id
+            created_by
+            created_at
+            modified_at
+            text
+            linked_comment_id
+            mentions
+            usersBycreatedBy{
+              name
+            }
+          }
+        }
+      `
+    }).valueChanges;
+  }
 }

@@ -14,6 +14,7 @@ import { AuthService } from '../../services/auth.service';
 })
 export class ViewUserProfileComponent implements OnInit {
   userData: any = {};
+  interests: any[];
   loggedInUsersProfile: boolean = false;
   constructor(
     private userHandlerService: UserHandlerService,
@@ -53,7 +54,41 @@ export class ViewUserProfileComponent implements OnInit {
             }
             // console.log(this.problemHandleService.problem, "problem");
           });
+
+        this.getInterests(params.id);
       }
     });
+  }
+  getInterests(id) {
+    this.apollo
+      .watchQuery<any>({
+        query: gql`
+  {
+    users(where: { id: { _eq: ${id} } }) {
+      id
+      user_tags{
+        tag {
+          id
+          name
+        }
+      }
+    }
+  }
+`
+      })
+      .valueChanges.subscribe(
+        result => {
+          if (result.data.users[0].user_tags) {
+            this.interests = result.data.users[0].user_tags.map(tagArray => {
+              // console.log(tagArray, "work");
+              return tagArray.tag.name;
+            });
+            console.log(this.interests, "interests");
+          }
+        },
+        error => {
+          console.log("error", error);
+        }
+      );
   }
 }

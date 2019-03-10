@@ -40,7 +40,7 @@ export class UserHandlerService {
     expertise: "",
     qualification: "",
     photo_url: {},
-    phone_number: 91,
+    phone_number: '',
     location: "",
     personas: []
   };
@@ -80,6 +80,8 @@ export class UserHandlerService {
         // console.log("ID ID", this.userId);
         // console.log("USER", user);
         this.router.navigateByUrl("/profiles");
+      }, err => {
+        console.error(err);
       });
   }
 
@@ -102,8 +104,8 @@ export class UserHandlerService {
           set: {
             name: changedUserData.name,
             organization: changedUserData.organization,
-            expertise: changedUserData.expertise,
-            qualification: changedUserData.qualification,
+            // expertise: changedUserData.expertise,
+            // qualification: changedUserData.qualification,
             photo_url: changedUserData.photo_url,
             phone_number: changedUserData.phone_number,
             location: changedUserData.location,
@@ -117,50 +119,50 @@ export class UserHandlerService {
           // console.log(updatedTagsArray, "updated tags array");
           // console.log(tagsArray, "prev tags array");
 
-          if (!updatedTagsArray) {
-            this.tagHandlerService.addTagsInDb(
-              data.update_users.returning[0].id,
-              tagsArray,
-              "users"
-            );
-          } else if (updatedTagsArray) {
-            // console.log(updatedTagsArray, "updated tags");
-            const tagsToBeAddedInDB = updatedTagsArray.map(updatedTag => {
-              if (typeof updatedTag === "object") {
-                return updatedTag;
-              }
-            });
+          // if (!updatedTagsArray) {
+          //   this.tagHandlerService.addTagsInDb(
+          //     data.update_users.returning[0].id,
+          //     tagsArray,
+          //     "users"
+          //   );
+          // } else if (updatedTagsArray) {
+          //   // console.log(updatedTagsArray, "updated tags");
+          //   const tagsToBeAddedInDB = updatedTagsArray.map(updatedTag => {
+          //     if (typeof updatedTag === "object") {
+          //       return updatedTag;
+          //     }
+          //   });
 
-            const tagsToBeRemoved = tagsArray.filter(tag => {
-              let matched = false;
-              updatedTagsArray.map(updatedTag => {
-                if (typeof updatedTag !== "object") {
-                  if (tag.name === updatedTag) {
-                    console.log(tag, updatedTag, "updatedtag and tag");
-                    matched = true;
-                  }
-                }
-              });
-              if (!matched) {
-                return tag;
-              }
-            });
-            // console.log("===", tagsToBeAddedInDB, 'tags to be added');
+          //   const tagsToBeRemoved = tagsArray.filter(tag => {
+          //     let matched = false;
+          //     updatedTagsArray.map(updatedTag => {
+          //       if (typeof updatedTag !== "object") {
+          //         if (tag.name === updatedTag) {
+          //           console.log(tag, updatedTag, "updatedtag and tag");
+          //           matched = true;
+          //         }
+          //       }
+          //     });
+          //     if (!matched) {
+          //       return tag;
+          //     }
+          //   });
+          //   // console.log("===", tagsToBeAddedInDB, 'tags to be added');
 
-            console.log(tagsToBeAddedInDB, "test tag array");
-            this.tagHandlerService.addTagsInDb(
-              data.update_users.returning[0].id,
-              tagsToBeAddedInDB,
-              "users"
-            );
-            this.tagHandlerService.removeTagRelations(tagsToBeRemoved, "users");
-          }
+          //   console.log(tagsToBeAddedInDB, "test tag array");
+          //   this.tagHandlerService.addTagsInDb(
+          //     data.update_users.returning[0].id,
+          //     tagsToBeAddedInDB,
+          //     "users"
+          //   );
+          //   this.tagHandlerService.removeTagRelations(tagsToBeRemoved, "users");
+          // }
 
           location.reload();
           this.router.navigateByUrl("/profiles");
         },
         error => {
-          console.log("Could not update due to " + error);
+          console.error("Could not update due to " + error);
         }
       );
   }

@@ -11,7 +11,8 @@ export class GeocoderService implements OnInit {
   public constructor() {
     this.platform = new H.service.Platform({
       app_id: "sug0MiMpvxIW4BhoGjcf",
-      app_code: "GSl6bG5_ksXDw4sBTnhr_w"
+      app_code: "GSl6bG5_ksXDw4sBTnhr_w",
+      useHTTPS: true
     });
     this.geocoder = this.platform.getGeocodingService();
   }

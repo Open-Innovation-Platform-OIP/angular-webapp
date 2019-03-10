@@ -38,6 +38,9 @@ declare var $: any;
 export class ProblemDetailComponent implements OnInit {
   userId: any;
   objectValues = Object['values'];
+  discussions = [];
+  replyingTo = 0;
+  showReplyBox = false;
   allUsers = [
     {
       id: 1,
@@ -48,7 +51,23 @@ export class ProblemDetailComponent implements OnInit {
       value: 'Shaona'
     }
   ];
-  problemData: any = {};
+  problemData: any = {
+    id: 0,
+    title: '',
+    description: '',
+    organization: '',
+    location: '',
+    resources_needed: '',
+    created_by: 0,
+    image_urls: [],
+    voted_by: [],
+    watched_by: [],
+    video_urls: [],
+    impact: '',
+    extent: '',
+    min_population: 0,
+    beneficiary_attributes: '',
+  };
   enrichDataToEdit: any;
   tags: any = [];
   enrichDataArray: any[];
@@ -58,6 +77,16 @@ export class ProblemDetailComponent implements OnInit {
   isWatching: boolean = false;
   isVoted: boolean = false;
   watchedBy: number = 0;
+  userPersonas = {
+    innovator: false,
+    entrepreneur: false,
+    expert: false,
+    government: false,
+    "user/beneficiary": false,
+    "incubator/enabler": false,
+    ngo: false,
+    funder: false
+  };
   // enrich: number[] = [1, 2, 3, 4, 5];
   modalImgSrc: String;
   modalVideoSrc: String;
@@ -129,10 +158,34 @@ export class ProblemDetailComponent implements OnInit {
     public usersService: UsersService,
     private discussionsService: DiscussionsService
   ) {}
+  
+  getUserPersonas(id) {
+    this.apollo
+      .watchQuery<any>({
+        query: gql`
+          {
+            users(where: { id: { _eq: ${id} } }) {
+              
+              personas
+            }
+          }
+        `
+      })
+      .valueChanges.subscribe(result => {
+        if (result.data.users[0].personas) {
+          result.data.users[0].personas.map(persona => {
+            this.userPersonas[persona.toLowerCase()] = true;
+          });
+          console.log(this.userPersonas, "works");
+        }
 
+        // console.log(this.problemHandleService.problem, "problem");
+      });
+  }
   ngOnInit() {
     console.log(this.collaborators, "collaborators on load");
     this.userId = Number(this.auth.currentUserValue.id);
+    this.getUserPersonas(this.userId);
 
     this.carouselTileItems$ = interval(500).pipe(
       startWith(-1),
@@ -213,7 +266,12 @@ export class ProblemDetailComponent implements OnInit {
           .valueChanges.subscribe(
             result => {
               if (result.data.problems[0]) {
-                this.problemData = result.data.problems[0];
+                Object.keys(this.problemData).map(key => {
+                  if (result.data.problems[0][key]) {
+                    this.problemData[key] = result.data.problems[0][key];
+                  }
+                });
+                // this.problemData = result.data.problems[0];
                 console.log(this.problemData, "problem data");
                 if (result.data.problems[0].voted_by) {
                   this.number_of_votes =
@@ -287,6 +345,14 @@ export class ProblemDetailComponent implements OnInit {
                 this.getCollaborators(params.id);
                 this.getTags(params.id);
                 this.getValidations(params.id);
+                this.discussionsService.getComments(params.id)
+                  .subscribe(discussions => {
+                    if (discussions.data.discussions.length > 0) {
+                      console.log(discussions.data.discussions, "\n\n---->discussions<----\n\n\n");
+                      this.discussions = discussions.data.discussions;
+                    }
+                    
+                  });
               }
             },
             error => {
@@ -298,6 +364,12 @@ export class ProblemDetailComponent implements OnInit {
 
     // this.discuss();
     // this.replies();
+  }
+
+  replyTo(discussionId) {
+    this.showReplyBox = true;
+    this.replyingTo = discussionId;
+    console.log(discussionId);
   }
 
   // toggle image src in modal
@@ -818,12 +890,19 @@ export class ProblemDetailComponent implements OnInit {
     this.collaborationDataToEdit = collaborationData;
   }
   onCommentSubmit(event) {
+    
     const [content, mentions] = event;
-    console.log(content, mentions);
-    this.discussionsService.submitCommentToDB({
+    let comment = {
       problem_id: this.problemData['id'],
       text: content,
       mentions: JSON.stringify(mentions).replace('[', '{').replace(']', '}')
-    });
+    };
+    // console.log(content, mentions);
+    if (this.showReplyBox) {
+      comment['linked_comment_id'] = this.replyingTo;
+      this.replyingTo = 0;
+      this.showReplyBox = false;
+    }
+    this.discussionsService.submitCommentToDB(comment);
   }
 }

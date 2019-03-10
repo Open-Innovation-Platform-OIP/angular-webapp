@@ -8,6 +8,6 @@
 <div class="row">
   <div class="col-md-4">
 <button mat-raised-button class="btn btn-warning btn-round"
-  matTooltip="Click to add comment" [matTooltipPosition]="'below'" (click)="submit()">{{actionText}}</button>
+  matTooltip="Click to add comment" [matTooltipPosition]="'below'" [disabled]="!content" (click)="submit()">{{actionText}}</button>
   </div>
 </div>

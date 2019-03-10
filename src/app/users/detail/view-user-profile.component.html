@@ -1,111 +1,3 @@
-<div class="main-content">
-  <div class="container-fluid">
-    <div class="card card-product">
-      <div class="card-header card-header-warning card-header-text">
-        <div class="card-text">
-          <h4 class="card-title">User Profile</h4>
-        </div>
-      </div>
-      <div class="card-body">
-        <div class="row">
-          <div class="col-4">
-            <div class="mycontent-left">
-              <label class="col-md-4 col-4 col-form-label" style="padding: 1px">Profile Picture</label>
-              <div class="col-md-5">
-                <div class="fileinput fileinput-new text-center" data-provides="fileinput">
-                  <div class="fileinput-new thumbnail img-circle">
-                    <img src="{{
-                        userData.photo_url && userData.photo_url.url
-                          ? userData.photo_url.url
-                          : './assets/img/default-avatar.png'
-                      }}"
-                      alt="..." />
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-
-          <div class="col-8">
-            <div class="row">
-              <div class="col-md-2"><b>Name :</b></div>
-              <div class="col-md-10 col-9">
-                {{ userData.name }}
-              </div>
-            </div>
-            <!-- <div class="row">
-          <div class="col-md-2">Lastname :</div>
-          <div class="col-md-10 col-9">
-            {{userData.name}}
-          </div>
-        </div> -->
-            <div class="row">
-              <div class="col-md-2"><b>Organization :</b></div>
-              <div class="col-md-10 col-9">
-                {{ userData.organization }}
-              </div>
-            </div>
-            <!-- <div class="row">
-          <div class="col-md-2">Sectors & Interests :</div>
-          <div class="timeline-heading">
-            <span class="badge badge-warning">water</span>
-            <span class="badge badge-warning">sanitation</span>
-          </div>
-        </div> -->
-            <!-- <div class="row">
-              <div class="col-md-2"><b>Expertise :</b></div>
-              <div class="col-md-10 col-9">
-                {{userData.expertise}}
-              </div>
-            </div> -->
-            <div class="row">
-              <div class="col-md-2"><b>Qualification :</b></div>
-              <div class="col-md-10 col-9">
-                {{ userData.qualification }}
-              </div>
-            </div>
-            <!-- <div class="row">
-          <div class="col-md-2">Phone number :</div>
-          <div class="col-md-10 col-9">
-            {{userData.phone_number}}
-          </div>
-        </div> -->
-            <div class="row">
-              <div class="col-md-2"><b>E-mail :</b></div>
-              <div class="col-md-10 col-9">
-                {{ userData.email }}
-              </div>
-            </div>
-            <div class="row">
-              <div class="col-md-2"><b>Location :</b></div>
-              <div class="col-md-10 col-9">
-                {{ userData.location }}
-              </div>
-            </div>
-            <div class="row">
-              <div class="col-md-2"><b>Persona :</b></div>
-
-              <div *ngFor="let persona of userData.personas">
-                <span class="badge badge-warning">{{persona}}</span>
-                <span>&nbsp;</span>
-              </div>
-
-            </div>
-          </div>
-        </div>
-      </div>
-
-      <div class="card-footer">
-        <div *ngIf="loggedInUsersProfile">
-          <button [routerLink]="'/profile/' + userData.id + '/edit'" mat-raised-button class="btn btn-info">Edit</button>
-        </div>
-      </div>
-    </div>
-  </div>
-</div>
-
-
-
 <!--REWRITE-->
 
 <div class="main-content">
@@ -143,23 +35,27 @@
             <p class="description">{{userData.organization}}</p>
             <strong *ngIf="userData.qualification">Qualification</strong>
             <p class="description">{{userData.qualification}}</p>
-            <strong>Phone number</strong>
-            <p class="description">{{userData.organization}}</p>
+            <!-- <strong>Phone number</strong>
+            <p class="description">{{userData.organization}}</p> -->
             <strong>E-mail</strong>
             <p class="description">{{userData.email}}</p>
-            <strong>Interests</strong>
-            <p class="description">{{userData.location}}</p>
+            <strong *ngIf="interests">Interests</strong>
+            <div>
+              <span *ngFor="let interest of interests" class="badge badge-warning">{{interest }} </span>
+              <span>&nbsp;</span>
+            </div>
+
             <strong>Location</strong>
             <p class="description">{{userData.location}}</p>
             <strong>Persona</strong>
-            <div *ngFor="let persona of userData.personas">
-              <span class="badge badge-warning">{{persona}}</span>
+            <div>
+              <span *ngFor="let persona of userData.personas" class="badge badge-warning">{{persona}}</span>
               <span>&nbsp;</span>
             </div>
           </div>
           <div class="card-footer">
-            <div *ngIf="loggedInUsersProfile">
-              <button [routerLink]="'/users/'+ userData.id+'/edit'" mat-raised-button class="btn btn-info pull-right">Edit</button>
+            <div [routerLink]="'/profile/'+ userData.id+'/edit'" *ngIf="loggedInUsersProfile">
+              <button mat-raised-button class="btn btn-info pull-right">Edit</button>
             </div>
             <!-- <button mat-raised-button type="submit" class="btn btn-rose pull-right">Update Profile</button> -->
           </div>

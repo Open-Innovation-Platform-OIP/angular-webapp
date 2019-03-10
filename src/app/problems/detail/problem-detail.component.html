@@ -44,7 +44,7 @@
                 <strong *ngIf="problemData.impact">Impact</strong>
                 <p class="description">{{problemData.impact}}</p>
                 <strong>Population Affected</strong>
-                <p class="description">{{problemData.population_affected}}</p>
+                <p class="description">More than {{problemData.min_population}}</p>
                 <strong *ngIf="problemData.beneficiary_attributes">Beneficiary Attributes</strong>
                 <p class="description">{{problemData.beneficiary_attributes}}</p>
                 <strong *ngIf="problemData.beneficiary_attributes">Sectors</strong>
@@ -161,14 +161,14 @@
           <!-- <button NguCarouselNext class="btn btn-default rightRs" [style.opacity]="enrichCarousel.isLast ? 0.5:1">&gt;</button> -->
 
           <!-- <div class="row justify-content-center"> -->
-          <a mat-button NguCarouselPrev *ngIf="enrichment[0]">
+          <a mat-button NguCarouselPrev class="btn btn-white btn-just-icon btn-round leftRs" *ngIf="enrichment[0]">
             <i class="material-icons">
               keyboard_arrow_left
             </i>
           </a>
           <!-- <button mat-raised-button class="btn btn-warning btn-round" data-toggle="modal" data-target="#enrichmentModal" -->
           <!-- matTooltip="Click to add enrichment" [matTooltipPosition]="'below'">Enrich</button> -->
-          <a mat-button NguCarouselNext *ngIf="enrichment[0]">
+          <a mat-button NguCarouselNext class="btn btn-white btn-just-icon btn-round rightRs" *ngIf="enrichment[0]">
             <i class="material-icons">
               keyboard_arrow_right
             </i>
@@ -186,7 +186,7 @@
 
         <!--Add Enrichment Modal-->
 
-        <div class="modal fade" id="enrichmentModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel"
+        <div class="modal fade " id="enrichmentModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel"
           aria-hidden="true">
           <div class="modal-dialog modal-notice modal-lg">
             <div class="modal-content">
@@ -196,7 +196,7 @@
                   <i class="material-icons">close</i>
                 </button>
               </div>
-              <div class="modal-body">
+              <div class="modal-body ">
                 <app-add-enrichment [problemId]="problemData.id"></app-add-enrichment>
                 <!-- <app-wizard-cmp></app-wizard-cmp> -->
               </div>
@@ -236,7 +236,7 @@
 
         <div class="modal fade editModal" id="EditEnrichModal" tabindex="-1" role="dialog" aria-labelledby="EditEnrichModalLabel"
           aria-hidden="true">
-          <div class="modal-dialog modal-notice">
+          <div class="modal-dialog modal-notice modal-lg">
             <div class="modal-content">
               <div class="modal-header">
                 <h5 class="modal-title" id="myModalLabel">Edit Enrichment</h5>
@@ -265,7 +265,7 @@
             </i>
           </a> -->
           <button mat-raised-button class="btn btn-warning btn-round" data-toggle="modal" data-target="#validatorModal"
-            matTooltip="Click to validate problem" [matTooltipPosition]="'below'" [disabled]="disableValidateButton">Validate</button>
+            matTooltip="Click to validate problem" [matTooltipPosition]="'below'" [disabled]="disableValidateButton || !userPersonas.expert">Validate</button>
           <!-- <a mat-button>
             <i class="material-icons">
               keyboard_arrow_right
@@ -282,14 +282,14 @@
           <!-- <button NguCarouselPrev class="btn btn-default leftRs" [style.opacity]="ValidCarousel.isFirst ? 0.5:1">&lt;</button> -->
           <!-- <button NguCarouselNext class="btn btn-default rightRs" [style.opacity]="ValidCarousel.isLast ? 0.5:1">&gt;</button> -->
 
-          <a mat-button NguCarouselPrev *ngIf="validation[0]">
+          <a mat-button NguCarouselPrev class="btn btn-white btn-just-icon btn-round leftRs" *ngIf="validation[0]">
             <i class="material-icons">
               keyboard_arrow_left
             </i>
           </a>
           <!-- <button mat-raised-button class="btn btn-warning btn-round" data-toggle="modal" data-target="#validatorModal" -->
           <!-- matTooltip="Click to validate problem" [matTooltipPosition]="'below'">Validate</button> -->
-          <a mat-button NguCarouselNext *ngIf="validation[0]">
+          <a mat-button NguCarouselNext class="btn btn-white btn-just-icon btn-round rightRs" *ngIf="validation[0]">
             <i class="material-icons">
               keyboard_arrow_right
             </i>
@@ -297,7 +297,9 @@
 
         </ngu-carousel>
         <div class="row justify-content-center" *ngIf="!validation[0]">
-          <p>No validations yet. Be the first to validate.</p>
+          <p *ngIf="userPersonas.expert">No validations yet. Be the first to validate.</p>
+          <p *ngIf="!userPersonas.expert">No validations yet.</p>
+
         </div>
 
         <!--Validate Modal-->
@@ -368,7 +370,7 @@
 
         <div class="modal fade editModal" id="EditCollaborateModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel"
           aria-hidden="true">
-          <div class="modal-dialog modal-notice">
+          <div class="modal-dialog modal-notice modal-lg">
             <div class="modal-content">
               <div class="modal-header">
                 <h5 class="modal-title" id="myModalLabel">Edit collaboration</h5>
@@ -412,13 +414,13 @@
 
 
 
-          <a mat-button NguCarouselPrev *ngIf="collaborators[0]">
+          <a mat-button NguCarouselPrev class="btn btn-white btn-just-icon btn-round leftRs" *ngIf="collaborators[0]">
             <i class="material-icons">
               keyboard_arrow_left
             </i>
           </a>
 
-          <a mat-button NguCarouselNext *ngIf="collaborators[0]">
+          <a mat-button NguCarouselNext class="btn btn-white btn-just-icon btn-round rightRs" *ngIf="collaborators[0]">
             <i class="material-icons">
               keyboard_arrow_right
             </i>
@@ -431,7 +433,7 @@
         <!--Add Collaborator Modal-->
         <div class="modal fade" id="collaboratorModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel"
           aria-hidden="true">
-          <div class="modal-dialog modal-notice">
+          <div class="modal-dialog modal-notice modal-lg">
             <div class="modal-content">
               <div class="modal-header">
                 <h5 class="modal-title" id="myModalLabel">Add New Collaborator</h5>
@@ -462,6 +464,30 @@
           <div class="card-body">
             <app-discussions [users]="objectValues(usersService.allUsers)" [actionText]="'Comment'" (submitted)="onCommentSubmit($event)"></app-discussions>
           </div>
+        </div>
+        <div class="card" *ngFor="let discussion of discussions">
+          <div class="card-header card-header-icon card-header-warning">
+            <div class="card-icon">
+              <i class="material-icons">comment</i>
+            </div>
+            <h4 class="card-title">{{discussion.usersBycreatedBy.name || 'Anonymous'}}</h4>
+          </div>
+          <div class="card-body">
+            <div innerHTML="{{discussion.text}}"></div>
+            <app-discussions *ngIf="showReplyBox" [users]="objectValues(usersService.allUsers)" [actionText]="'Reply'"
+              (submitted)="onCommentSubmit($event)"></app-discussions>
+          </div>
+          <div class="card-footer" *ngIf="!showReplyBox">
+            <div class="stats">
+              <p class="card-category"><i class="material-icons">access_time</i> {{discussion.modified_at |
+                date:'medium'}}</p>
+            </div>
+            <div class="price">
+              <button mat-raised-button class="btn btn-warning btn-round" matTooltip="Click to reply"
+                [matTooltipPosition]="'below'" (click)="replyTo(discussion.id)">Reply</button>
+            </div>
+          </div>
+
         </div>
       </div>
     </div>

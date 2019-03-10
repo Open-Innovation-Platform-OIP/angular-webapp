@@ -17,7 +17,7 @@ import swal from "sweetalert2";
 import { EnrichmentHandlerService } from '../../services/enrichment-handler.service';
 import { FilesService } from '../../services/files.service';
 import { AuthService } from '../../services/auth.service';
-declare var H: any;
+// declare var H: any;
 // import { GeocoderService } from '../../services/geocoder.service';
 @Component({
   selector: "app-add-enrichment",
@@ -109,16 +109,10 @@ export class AddEnrichmentComponent implements OnChanges, OnInit {
     // this.problemEnrichmentData.problem_id = this.problemId;
     if (this.enrichmentData) {
       this.mode = "Edit";
+      console.log(this.mode, "mode on enrich edit");
       this.problemEnrichmentData = this.enrichmentData;
       console.log(this.problemEnrichmentData, "test");
     }
-    // this.platform = new H.service.Platform({
-    //   app_id: "sug0MiMpvxIW4BhoGjcf",
-    //   app_code: "GSl6bG5_ksXDw4sBTnhr_w"
-    // });
-    // this.geocoder = this.platform.getGeocodingService();
-    this.query = " ";
-    this.query2 = " ";
   }
   public getAddress() {
     if (this.problemEnrichmentData.location != "") {
@@ -134,6 +128,7 @@ export class AddEnrichmentComponent implements OnChanges, OnInit {
   }
   public storeLocation(loc) {
     this.problemEnrichmentData.location = loc.srcElement.innerText;
+    this.locations = [];
     console.log(this.problemEnrichmentData.location);
   }
   sendEnrichDataToDB() {
