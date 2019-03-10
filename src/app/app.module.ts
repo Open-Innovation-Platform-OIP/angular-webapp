@@ -54,7 +54,7 @@ import { AuthLayoutComponent } from './layouts/auth/auth-layout.component';
 
 import { AppRoutes } from './app.routing';
 import { GraphQLModule } from './services/graphql.module';
-
+import { GlobalSearchViewComponent } from "./global-search-view/global-search-view.component";
 @NgModule({
   exports: [
     MatAutocompleteModule,
@@ -124,7 +124,8 @@ export class SentryErrorHandler implements ErrorHandler {
     declarations: [
         AppComponent,
         AdminLayoutComponent,
-        AuthLayoutComponent
+        AuthLayoutComponent,
+      GlobalSearchViewComponent
     ],
     providers: [
       // { provide: ErrorHandler, useClass: SentryErrorHandler }

@@ -6,9 +6,9 @@
       <div class="col-md-4">
         <div class="card card-profile">
           <div class="card-avatar">
-            <a href="#pablo">
+            <!-- <a href=""> -->
               <img class="img" src="{{(userData.photo_url && userData.photo_url.url) ? userData.photo_url.url : './assets/img/default-avatar.png'}}" />
-            </a>
+            <!-- </a> -->
           </div>
           <div class="card-body">
             <!-- <h6 class="card-category text-gray">CEO / Co-Founder</h6> -->
@@ -54,7 +54,7 @@
             </div>
           </div>
           <div class="card-footer">
-            <div [routerLink]="'/profile/'+ userData.id+'/edit'" *ngIf="loggedInUsersProfile">
+            <div [routerLink]="'/users/'+ userData.id+'/edit'" *ngIf="loggedInUsersProfile">
               <button mat-raised-button class="btn btn-info pull-right">Edit</button>
             </div>
             <!-- <button mat-raised-button type="submit" class="btn btn-rose pull-right">Update Profile</button> -->
