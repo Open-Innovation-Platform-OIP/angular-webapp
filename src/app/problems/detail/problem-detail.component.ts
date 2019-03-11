@@ -893,6 +893,7 @@ export class ProblemDetailComponent implements OnInit {
     
     const [content, mentions] = event;
     let comment = {
+      created_by: this.auth.currentUserValue.id,
       problem_id: this.problemData['id'],
       text: content,
       mentions: JSON.stringify(mentions).replace('[', '{').replace(']', '}')

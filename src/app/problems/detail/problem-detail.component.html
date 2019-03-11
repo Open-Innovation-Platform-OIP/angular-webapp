@@ -467,7 +467,8 @@
         </div>
         <div class="card" *ngFor="let discussion of discussions">
           <div class="card-header card-header-icon card-header-warning">
-            <div class="card-icon">
+            <div class="user photo card-icon">
+<!-- <img class="img" src="{{(discussion.usersBycreatedBy.photo_url && discussion.usersBycreatedBy.photo_url.url) ? discussion.usersBycreatedBy.photo_url.url : './assets/img/default-avatar.png'}}" /> -->
               <i class="material-icons">comment</i>
             </div>
             <h4 class="card-title">{{discussion.usersBycreatedBy.name || 'Anonymous'}}</h4>

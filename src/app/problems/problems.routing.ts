@@ -13,12 +13,12 @@ export const ProblemsRoutes: Routes = [
           component: ProblemsViewComponent
         },
         {
-          path: ':id',
-          component: ProblemDetailComponent
-        },
-        {
           path: 'add',
           component: WizardComponent
+        },
+        {
+          path: ':id',
+          component: ProblemDetailComponent
         },
         {
           path: ':id/edit',

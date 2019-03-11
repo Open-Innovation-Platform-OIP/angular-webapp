@@ -23,7 +23,7 @@ export class DiscussionsService {
     private auth: AuthService
   ) { }
 
-  submitCommentToDB(comment) {
+  submitCommentToDB(comment: Comment) {
     if (!(comment.problem_id || comment.solution_id)) {
       console.log('cannot continue without problem or solution id');
       return false;
@@ -77,6 +77,7 @@ export class DiscussionsService {
             mentions
             usersBycreatedBy{
               name
+              photo_url
             }
           }
         }
