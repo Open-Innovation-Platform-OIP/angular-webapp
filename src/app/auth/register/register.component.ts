@@ -11,8 +11,7 @@ import { first } from 'rxjs/operators';
 export class RegisterComponent implements OnInit, OnDestroy {
   // test: Date = new Date();
   user = {
-    first: '',
-    last: '',
+    name: '',
     email: '',
     password: '',
     confirmPassword: ''
@@ -35,7 +34,7 @@ export class RegisterComponent implements OnInit, OnDestroy {
     body.classList.remove('off-canvas-sidebar');
   }
   canSubmit() {
-    if (this.user.first && this.user.last && isEmail(this.user.email) && this.user.password.length >= 4 && this.user.password === this.user.confirmPassword) {
+    if (this.user.name && isEmail(this.user.email) && this.user.password.length >= 4 && this.user.password === this.user.confirmPassword) {
       return true;
     }
     return false;

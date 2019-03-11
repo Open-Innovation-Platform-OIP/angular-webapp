@@ -54,6 +54,7 @@ export class WizardComponent implements OnInit, OnChanges, OnDestroy, AfterViewI
     readonly separatorKeysCodes: number[] = [ENTER, COMMA];
     is_edit = false;
     media_url = '';
+    owners = [];
     problem = {
         title: '',
         description: '',
@@ -72,7 +73,8 @@ export class WizardComponent implements OnInit, OnChanges, OnDestroy, AfterViewI
         voted_by: [],
         watched_by: [],
         created_by: Number(this.auth.currentUserValue.id),
-        is_draft: true
+        is_draft: true,
+        owners: ''
     };
     searchResults = {};
     sectorCtrl = new FormControl();
@@ -728,6 +730,7 @@ export class WizardComponent implements OnInit, OnChanges, OnDestroy, AfterViewI
                 }
             }
         `;
+        this.problem.owners = JSON.stringify(this.owners).replace('[', '{').replace(']', '}');
         this.apollo.mutate({
             mutation: upsert_problem,
             variables: {

@@ -58,14 +58,10 @@
             [routerLink]="['/problems/add']">
             <i class="material-icons">add</i>
         </button>
-        <div class="row" *ngIf="problems | async as problems">
-            <ng-container *ngFor="let problem of problems.data.problems">
-                <div class="col-md-4" *ngIf="!problem.is_deleted">
-
-                    <app-problem-card [problemData]="problem"></app-problem-card>
-
-                </div>
-            </ng-container>
+        <div class="row" *ngFor="let problem of problems">
+            <div class="col-md-4" *ngIf="!problem.is_deleted">
+                <app-problem-card [problemData]="problem"></app-problem-card>
+            </div>
         </div>
 
 

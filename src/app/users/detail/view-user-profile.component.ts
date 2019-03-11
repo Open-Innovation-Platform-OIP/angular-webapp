@@ -38,7 +38,6 @@ export class ViewUserProfileComponent implements OnInit {
               qualification
               photo_url
               location
-              expertise
               email
               personas
             }

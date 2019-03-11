@@ -41,9 +41,6 @@ export class AddEnrichmentComponent implements OnChanges, OnInit {
   problemEnrichmentData: any = {
     description: "",
     location: "",
-    type: "problem",
-    created_at: new Date(),
-    edited_at: null,
     solution_id: 0,
     organization: "",
     resources_needed: "",

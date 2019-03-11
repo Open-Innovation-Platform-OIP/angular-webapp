@@ -94,7 +94,6 @@ export class AddUserProfileComponent implements OnInit, OnChanges {
               qualification
               photo_url
               location
-              expertise
               phone_number
               personas
             }

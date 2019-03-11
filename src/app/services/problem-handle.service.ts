@@ -6,6 +6,7 @@ import swal from "sweetalert2";
 import { Router, ActivatedRoute } from "@angular/router";
 import { store } from "@angular/core/src/render3";
 import { TagsService } from "./tags.service";
+import { AuthService } from "./auth.service";
 
 @Injectable({
   providedIn: "root"
@@ -63,10 +64,7 @@ export class ProblemHandleService {
   problemValidationData: any = {
     comment: "",
     files: [],
-    edited_at: null,
-    is_deleted: false,
-
-    validated_by: Number(localStorage.getItem("userId"))
+    validated_by: this.auth.currentUserValue.id
   };
 
   collaborate: any = {
@@ -78,13 +76,14 @@ export class ProblemHandleService {
   constructor(
     private apollo: Apollo,
     private router: Router,
-    private tagHandlerService: TagsService
+    private tagHandlerService: TagsService,
+    private auth: AuthService
   ) {}
 
   async addProblemInDB(problemData: any, tagsArray) {
-    this.problem.created_by = Number(localStorage.getItem("userId"));
-    this.problem.created_at = new Date();
-    this.problem.modified_at = null;
+    this.problem.created_by = Number(this.auth.currentUserValue.id);
+    // this.problem.created_at = new Date();
+    // this.problem.modified_at = null;
 
     this.problem.notify_me = false;
     console.log(problemData, "problem data");

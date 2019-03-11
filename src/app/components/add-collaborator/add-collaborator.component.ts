@@ -16,7 +16,6 @@ export class AddCollaboratorComponent implements OnInit, OnChanges {
 
   collaboratorData: any = {
     intent: "",
-    edited_at: null
   };
 
   collaborateAs: any = {

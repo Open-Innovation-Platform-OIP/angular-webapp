@@ -589,7 +589,7 @@ export class ProblemDetailComponent implements OnInit {
               extent
               impact
               min_population
-              
+              organization
               beneficiary_attributes
 
               location
