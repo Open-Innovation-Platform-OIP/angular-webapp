@@ -58,8 +58,8 @@
             [routerLink]="['/problems/add']">
             <i class="material-icons">add</i>
         </button>
-        <div class="row" *ngFor="let problem of problems">
-            <div class="col-md-4" *ngIf="!problem.is_deleted">
+        <div class="row" >
+<div class="col-md-4" *ngFor="let problem of problems">
                 <app-problem-card [problemData]="problem"></app-problem-card>
             </div>
         </div>

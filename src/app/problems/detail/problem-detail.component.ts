@@ -729,6 +729,12 @@ export class ProblemDetailComponent implements OnInit {
     }
   }
 
+  onCollaborationSubmit(event) {
+    console.log(event, "from problem details");
+    // close modal
+    // send to db
+  }
+
   voteProblem() {
     this.isVoted = !this.isVoted;
     if (this.isVoted) {

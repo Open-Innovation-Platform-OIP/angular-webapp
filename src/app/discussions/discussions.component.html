@@ -1,6 +1,6 @@
 <div class="row">
   <div class="col-md-12">
-    <quill-editor [style]="{height: '100px'}" [(ngModel)]="content" [sanitize]="true" [modules]="modules"
+    <quill-editor [style]="{height: '100px'}" [(ngModel)]="content" [sanitize]="false" [modules]="modules"
       (onEditorCreated)="setFocus($event)">
     </quill-editor>
   </div>

@@ -442,7 +442,7 @@
                 </button>
               </div>
               <div class="modal-body">
-                <app-add-collaborator [problemId]="problemData.id"></app-add-collaborator>
+                <app-add-collaborator (submitted)="onCollaborationSubmit($event)" [problemId]="problemData.id"></app-add-collaborator>
               </div>
             </div>
           </div>
@@ -462,7 +462,7 @@
             <h4 class="card-title">Discussions</h4>
           </div>
           <div class="card-body">
-            <app-discussions [users]="objectValues(usersService.allUsers)" [actionText]="'Comment'" (submitted)="onCommentSubmit($event)"></app-discussions>
+<app-discussions [users]="objectValues(usersService.allUsers)" [actionText]="'Comment'" (submitted)="onCommentSubmit($event)"></app-discussions>
           </div>
         </div>
         <div class="card" *ngFor="let discussion of discussions">
@@ -475,7 +475,7 @@
           </div>
           <div class="card-body">
             <div innerHTML="{{discussion.text}}"></div>
-            <app-discussions *ngIf="showReplyBox" [users]="objectValues(usersService.allUsers)" [actionText]="'Reply'"
+            <app-discussions *ngIf="showReplyBox && replyingTo === discussion.id" [users]="objectValues(usersService.allUsers)" [actionText]="'Reply'"
               (submitted)="onCommentSubmit($event)"></app-discussions>
           </div>
           <div class="card-footer" *ngIf="!showReplyBox">
