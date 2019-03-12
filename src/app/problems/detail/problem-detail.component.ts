@@ -10,7 +10,7 @@ import { Observable, Subscription, interval } from "rxjs";
 import { first, finalize, startWith, take, map } from "rxjs/operators";
 import { ProblemHandleService } from "../../services/problem-handle.service";
 import { AuthService } from "../../services/auth.service";
-import { UsersService } from '../../services/users.service';
+import { UsersService } from "../../services/users.service";
 import * as Query from "../../services/queries";
 import { Apollo } from "apollo-angular";
 import gql from "graphql-tag";
@@ -19,6 +19,7 @@ import { NgForm } from "@angular/forms";
 import { NguCarouselConfig } from "@ngu/carousel";
 import { slider } from "./problem-detail.animation";
 import { DiscussionsService } from "src/app/services/discussions.service";
+import { CollaborationService } from "src/app/services/collaboration.service";
 
 const misc: any = {
   navbar_menu_visible: 0,
@@ -37,36 +38,36 @@ declare var $: any;
 })
 export class ProblemDetailComponent implements OnInit {
   userId: any;
-  objectValues = Object['values'];
+  objectValues = Object["values"];
   discussions = [];
   replyingTo = 0;
   showReplyBox = false;
   allUsers = [
     {
       id: 1,
-      value: 'Tej'
+      value: "Tej"
     },
     {
       id: 2,
-      value: 'Shaona'
+      value: "Shaona"
     }
   ];
   problemData: any = {
     id: 0,
-    title: '',
-    description: '',
-    organization: '',
-    location: '',
-    resources_needed: '',
+    title: "",
+    description: "",
+    organization: "",
+    location: "",
+    resources_needed: "",
     created_by: 0,
     image_urls: [],
     voted_by: [],
     watched_by: [],
     video_urls: [],
-    impact: '',
-    extent: '',
+    impact: "",
+    extent: "",
     min_population: 0,
-    beneficiary_attributes: '',
+    beneficiary_attributes: ""
   };
   enrichDataToEdit: any;
   tags: any = [];
@@ -133,7 +134,7 @@ export class ProblemDetailComponent implements OnInit {
   validationDataToEdit: any;
   validation: any = [1];
   collaborators: any = [1];
-  collaborationDataToEdit: any;
+  collaborationDataToEdit: any = {};
   public carouselTileItems$: Observable<any>;
   public carouselTileItemsValid$: Observable<number[]>;
   public carouselTileItemCollab$: Observable<number[]>;
@@ -156,9 +157,10 @@ export class ProblemDetailComponent implements OnInit {
     private cdr: ChangeDetectorRef,
     private auth: AuthService,
     public usersService: UsersService,
-    private discussionsService: DiscussionsService
+    private discussionsService: DiscussionsService,
+    private collaborationService: CollaborationService
   ) {}
-  
+
   getUserPersonas(id) {
     this.apollo
       .watchQuery<any>({
@@ -345,13 +347,16 @@ export class ProblemDetailComponent implements OnInit {
                 this.getCollaborators(params.id);
                 this.getTags(params.id);
                 this.getValidations(params.id);
-                this.discussionsService.getComments(params.id)
+                this.discussionsService
+                  .getComments(params.id)
                   .subscribe(discussions => {
                     if (discussions.data.discussions.length > 0) {
-                      console.log(discussions.data.discussions, "\n\n---->discussions<----\n\n\n");
+                      console.log(
+                        discussions.data.discussions,
+                        "\n\n---->discussions<----\n\n\n"
+                      );
                       this.discussions = discussions.data.discussions;
                     }
-                    
                   });
               }
             },
@@ -729,7 +734,23 @@ export class ProblemDetailComponent implements OnInit {
     }
   }
 
-  onCollaborationSubmit(event) {
+  onCollaborationSubmit(collaborationData) {
+    let collaborateAsArray = [];
+    collaborationData.user_id = Number(this.auth.currentUserValue.id);
+
+    collaborationData.problem_id = this.problemData.id;
+
+    Object.entries(collaborationData.collaborate_as).forEach(role => {
+      console.log(role);
+      if (role[1]) {
+        collaborateAsArray.push(role[0]);
+      }
+    });
+    collaborationData.collaborate_as = JSON.stringify(collaborateAsArray)
+      .replace("[", "{")
+      .replace("]", "}");
+
+    this.collaborationService.addCollaborator(collaborationData);
     console.log(event, "from problem details");
     // close modal
     // send to db
@@ -893,20 +914,41 @@ export class ProblemDetailComponent implements OnInit {
   }
 
   handleCollaborationEditMode(collaborationData) {
-    this.collaborationDataToEdit = collaborationData;
+    console.log("handle collaboration data to edit", collaborationData);
+    this.collaborationDataToEdit.intent = collaborationData.intent;
+    let roles = {
+      ngo: false,
+      innovator: false,
+      entrepreneur: false,
+      expert: false,
+      government: false,
+      beneficiary: false,
+      incubator: false,
+      funder: false
+    };
+    // this.collaborationDataToEdit.collaborate_as =
+    collaborationData.collaborate_as.map(role => {
+      for (let key in role) {
+        if (key === role) {
+          role[key] = true;
+        }
+      }
+    });
+    this.collaborationDataToEdit.collaborate_as = roles;
   }
   onCommentSubmit(event) {
-    
     const [content, mentions] = event;
     let comment = {
       created_by: this.auth.currentUserValue.id,
-      problem_id: this.problemData['id'],
+      problem_id: this.problemData["id"],
       text: content,
-      mentions: JSON.stringify(mentions).replace('[', '{').replace(']', '}')
+      mentions: JSON.stringify(mentions)
+        .replace("[", "{")
+        .replace("]", "}")
     };
     // console.log(content, mentions);
     if (this.showReplyBox) {
-      comment['linked_comment_id'] = this.replyingTo;
+      comment["linked_comment_id"] = this.replyingTo;
       this.replyingTo = 0;
       this.showReplyBox = false;
     }

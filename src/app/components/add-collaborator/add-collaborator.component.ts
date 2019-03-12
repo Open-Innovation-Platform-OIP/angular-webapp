@@ -1,6 +1,13 @@
-import { Component, OnInit, Input, Output, OnChanges, EventEmitter } from "@angular/core";
-import { AuthService } from '../../services/auth.service';
-import { ProblemHandleService } from '../../services/problem-handle.service';
+import {
+  Component,
+  OnInit,
+  Input,
+  Output,
+  OnChanges,
+  EventEmitter
+} from "@angular/core";
+import { AuthService } from "../../services/auth.service";
+import { ProblemHandleService } from "../../services/problem-handle.service";
 import { CollaborationService } from "src/app/services/collaboration.service";
 import { collaborator } from "src/app/services/collaboration.service";
 
@@ -19,8 +26,8 @@ export class AddCollaboratorComponent implements OnInit {
   // roleSelected: boolean = false;
   // collaborator = {} as collaborator;
   collaborator: collaborator = {
-    intent: '',
-    roles: {
+    intent: "",
+    collaborate_as: {
       ngo: false,
       innovator: false,
       entrepreneur: false,
@@ -28,9 +35,9 @@ export class AddCollaboratorComponent implements OnInit {
       government: false,
       beneficiary: false,
       incubator: false,
-      funder: false,
+      funder: false
     }
-  }
+  };
 
   // collaboratorData: any = {
   //   intent: "",
@@ -51,28 +58,29 @@ export class AddCollaboratorComponent implements OnInit {
     private auth: AuthService,
     private problemHandleService: ProblemHandleService,
     private collaborationService: CollaborationService
-  ) {
-  }
+  ) {}
 
   ngOnInit() {
-    console.log(Object.keys(this.collaborator.roles), 'collaborate this!');
-
+    // console.log(Object.keys(this.collaborator.roles), 'collaborate this!');
   }
 
-  // ngOnChanges() {
-  //   if (this.collaboratorDataToEdit) {
-  //     this.mode = "Edit";
-  //     // this.collaboratorData.intent = this.collaboratorDataToEdit.intent;
-  //     // this.collaboratorDataToEdit.collaborate_as.map(role => {
-  //     //   for (let key in this.collaborateAs) {
-  //     //     if (key === role) {
-  //     //       this.collaborateAs[key] = true;
-  //     //     }
-  //     //   }
-  //     // });
-  //     // console.log(this.collaborateAs, "collaborate as");
-  //   }
-  // }
+  ngOnChanges() {
+    if (this.collaboratorDataToEdit) {
+      this.mode = "Edit";
+      console.log(this.collaboratorDataToEdit, "collaborator data edit");
+      this.collaborator = this.collaboratorDataToEdit;
+
+      // this.collaboratorData.intent = this.collaboratorDataToEdit.intent;
+      // this.collaboratorDataToEdit.collaborate_as.map(role => {
+      //   for (let key in this.collaborateAs) {
+      //     if (key === role) {
+      //       this.collaborateAs[key] = true;
+      //     }
+      //   }
+      // });
+      // console.log(this.collaborateAs, "collaborate as");
+    }
+  }
 
   collaborate() {
     // console.log(this.collaborator);
