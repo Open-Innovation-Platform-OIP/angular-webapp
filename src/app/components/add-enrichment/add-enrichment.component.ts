@@ -9,26 +9,36 @@ import {
 import { Router, ActivatedRoute } from "@angular/router";
 import { Observable, Subscription } from "rxjs";
 import { first, finalize } from "rxjs/operators";
-import { ProblemHandleService } from '../../services/problem-handle.service';
-import * as Query from '../../services/queries';
+import { ProblemService } from "../../services/problem-handle.service";
+import * as Query from "../../services/queries";
 import { Apollo } from "apollo-angular";
 import gql from "graphql-tag";
 import swal from "sweetalert2";
-import { EnrichmentHandlerService } from '../../services/enrichment-handler.service';
-import { FilesService } from '../../services/files.service';
-import { AuthService } from '../../services/auth.service';
-// declare var H: any;
-// import { GeocoderService } from '../../services/geocoder.service';
+import { EnrichmentService } from "../../services/enrichment.service";
+import { FilesService } from "../../services/files.service";
+import { AuthService } from "../../services/auth.service";
+
 @Component({
   selector: "app-add-enrichment",
   templateUrl: "./add-enrichment.component.html",
   styleUrls: ["./add-enrichment.component.css"]
 })
 export class AddEnrichmentComponent implements OnChanges, OnInit {
-  @Input() problemId: any;
-  @Input() enrichmentData: any;
+  @Input() enrichmentData: any = {
+    description: "",
+    location: "",
+    organization: "",
+    resources_needed: "",
+    image_urls: [],
+    video_urls: [],
+    impact: "",
+    min_population: 0,
+    extent: "",
+    beneficiary_attributes: "",
+    voted_by: "{}"
+  };
 
-  @Output() enrichmentAdded = new EventEmitter();
+  @Output() submitted = new EventEmitter();
   mode = "Add";
   imgSrc: any = "./assets/img/image_placeholder.jpg";
 
@@ -38,136 +48,40 @@ export class AddEnrichmentComponent implements OnChanges, OnInit {
     { value: 10000, viewValue: ">10000" },
     { value: 100000, viewValue: ">100,000" }
   ];
-  problemEnrichmentData: any = {
-    description: "",
-    location: "",
-    solution_id: 0,
-    organization: "",
-    resources_needed: "",
-    image_urls: [],
-    video_urls: [],
-    voted_by: [],
-    impact: "",
-    min_population: 0,
-    extent: "",
-    beneficiary_attributes: "",
-    is_deleted: false
-  };
-  public query: string;
-  public query2: string;
-  public platform: any;
-  public geocoder: any;
+
   public locations: Array<any>;
   constructor(
     private router: Router,
     private route: ActivatedRoute,
     private imgUpload: FilesService,
-    private problemHandleService: ProblemHandleService,
+    private problemService: ProblemService,
     private apollo: Apollo,
-    private enrichmentHandlerService: EnrichmentHandlerService,
-    private auth: AuthService,
-    // private here: GeocoderService
-  ) {
-    console.log("Problem Id: ", this.problemId);
-  }
+    private enrichmentService: EnrichmentService,
+    private auth: AuthService // private here: GeocoderService
+  ) {}
 
-  showSwal(type, id) {
-    if (type === "warning-message-and-confirmation") {
-      swal({
-        title: "Are you sure?",
-        text: "You won't be able to revert this!",
-        type: "warning",
-        showCancelButton: true,
-        confirmButtonClass: "btn btn-success",
-        cancelButtonClass: "btn btn-danger",
-        confirmButtonText: "Yes, delete it!",
-        buttonsStyling: false
-      }).then(result => {
-        if (result.value) {
-          swal({
-            title: "Deleted!",
-            text: "Your problem has been deleted.",
-            type: "success",
-            confirmButtonClass: "btn btn-success",
-            buttonsStyling: false
-          }).then(res => {
-            this.problemHandleService.deleteProblem(id);
-          });
-        }
-      });
-    }
-  }
-
-  ngOnInit() {
-    this.problemEnrichmentData.problem_id = this.problemId;
-  }
+  ngOnInit() {}
 
   ngOnChanges() {
-    // this.problemEnrichmentData.problem_id = this.problemId;
+    // this.enrichmentData.problem_id = this.problemId;
     if (this.enrichmentData) {
       this.mode = "Edit";
       console.log(this.mode, "mode on enrich edit");
-      this.problemEnrichmentData = this.enrichmentData;
-      console.log(this.problemEnrichmentData, "test");
+      this.enrichmentData = this.enrichmentData;
+      console.log(this.enrichmentData, "test");
     }
   }
   public getAddress() {
-    if (this.problemEnrichmentData.location != "") {
-      // this.here.getAddress(this.problemEnrichmentData.location).then(
-      //   result => {
-      //     this.locations = <Array<any>>result;
-      //   },
-      //   error => {
-      //     console.error(error);
-      //   }
-      // );
+    if (this.enrichmentData.location != "") {
     }
   }
   public storeLocation(loc) {
-    this.problemEnrichmentData.location = loc.srcElement.innerText;
+    this.enrichmentData.location = loc.srcElement.innerText;
     this.locations = [];
-    console.log(this.problemEnrichmentData.location);
+    console.log(this.enrichmentData.location);
   }
   sendEnrichDataToDB() {
-    console.log(this.problemId, "id");
-
-    console.log(this.problemEnrichmentData, "enrichment data");
-
-    console.log(localStorage.getItem("userId"), "user ID");
-    this.problemEnrichmentData.created_by = Number(this.auth.currentUserValue.id);
-    this.problemEnrichmentData.problem_id = this.problemId;
-    this.enrichmentHandlerService
-      .addEnrichment(this.problemEnrichmentData)
-      .subscribe(
-        ({ data }) => {
-          console.log("After enrichment success: ", data);
-          this.enrichmentAdded.emit(true);
-          location.reload();
-        },
-        error => {
-          console.log("Could not add due to " + error);
-        }
-      );
-  }
-
-  updateEnrichmentDataInDB() {
-    this.problemEnrichmentData.edited_at = new Date();
-    console.log(this.problemEnrichmentData, "updated enrichment data");
-    this.enrichmentHandlerService
-      .updateEnrichment(
-        this.problemEnrichmentData.id,
-        this.problemEnrichmentData
-      )
-      .subscribe(
-        ({ data }) => {
-          location.reload();
-          this.enrichmentAdded.emit(true);
-          console.log(data, "enriched data");
-        },
-        error => {
-          console.log("Could not update due to " + error);
-        }
-      );
+    this.submitted.emit(this.enrichmentData);
   }
 
   onEnrichImgSelect(event) {
@@ -187,7 +101,7 @@ export class AddEnrichmentComponent implements OnChanges, OnInit {
             .promise()
             .then(values => {
               console.log("val: ", values);
-              this.problemEnrichmentData.image_urls.push({
+              this.enrichmentData.image_urls.push({
                 url: values["Location"],
                 key: values["Key"]
               });
@@ -209,7 +123,7 @@ export class AddEnrichmentComponent implements OnChanges, OnInit {
         .promise()
         .then(values => {
           console.log("val:: ", values);
-          this.problemEnrichmentData.video_urls.push({
+          this.enrichmentData.video_urls.push({
             key: values["Key"],
             url: values["Location"]
           });
@@ -220,12 +134,12 @@ export class AddEnrichmentComponent implements OnChanges, OnInit {
 
   removeEnrichPhoto(index) {
     this.imgUpload
-      .deleteFile(this.problemEnrichmentData.image_urls[index]["key"])
+      .deleteFile(this.enrichmentData.image_urls[index]["key"])
       .promise()
       .then(data => {
         console.log("Deleted file: ", data);
-        this.problemEnrichmentData.image_urls.splice(index, 1);
-        console.log("removed photo: ", this.problemEnrichmentData.image_urls);
+        this.enrichmentData.image_urls.splice(index, 1);
+        console.log("removed photo: ", this.enrichmentData.image_urls);
       })
       .catch(e => {
         console.log("Err: ", e);
@@ -234,11 +148,11 @@ export class AddEnrichmentComponent implements OnChanges, OnInit {
 
   removeEnrichVideo(index) {
     this.imgUpload
-      .deleteFile(this.problemEnrichmentData.video_urls[index]["key"])
+      .deleteFile(this.enrichmentData.video_urls[index]["key"])
       .promise()
       .then(data => {
         console.log("Deleted file: ", data);
-        this.problemEnrichmentData.video_urls.splice(index, 1);
+        this.enrichmentData.video_urls.splice(index, 1);
         console.log("removed video");
       })
       .catch(e => {

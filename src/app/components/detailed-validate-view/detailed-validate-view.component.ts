@@ -7,7 +7,7 @@ import {
   EventEmitter
 } from "@angular/core";
 import { AuthService } from "../../services/auth.service";
-import { ProblemHandleService } from "../../services/problem-handle.service";
+import { ProblemService } from "../../services/problem-handle.service";
 
 @Component({
   selector: "app-detailed-validate-view",
@@ -21,7 +21,7 @@ export class DetailedValidateViewComponent implements OnInit, OnChanges {
 
   constructor(
     private auth: AuthService,
-    private problemHandleService: ProblemHandleService
+    private problemService: ProblemService
   ) {}
 
   ngOnInit() {

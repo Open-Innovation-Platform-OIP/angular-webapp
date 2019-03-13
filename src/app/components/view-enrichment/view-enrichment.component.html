@@ -9,7 +9,7 @@
       <div class="tab-content">
         <div class="tab-pane active" id="link4">
           <div class="raised">
-            <img src="{{(enrichData.image_urls && enrichData.image_urls[0] && enrichData.image_urls[0].url) ? enrichData.image_urls[0].url :'./assets/img/image_placeholder.jpg'}}"
+            <img src="{{(enrichmentData.image_urls && enrichmentData.image_urls[0] && enrichmentData.image_urls[0].url) ? enrichmentData.image_urls[0].url :'./assets/img/image_placeholder.jpg'}}"
               width="250px" height="200px" style="object-fit: cover;" />
           </div>
           <div>
@@ -18,21 +18,21 @@
             </button>
           </div>
 
-          <b>Description : </b>{{enrichData.description}}
+          <b>Description : </b>{{enrichmentData.description}}
           <br>
-          <b>Organization : </b>{{enrichData.organization}}
+          <b>Organization : </b>{{enrichmentData.organization}}
           <br>
-          <b>Location : </b>{{enrichData.location}}
+          <b>Location : </b>{{enrichmentData.location}}
           <br>
-          <b>Impact : </b>{{enrichData.impact}}
+          <b>Impact : </b>{{enrichmentData.impact}}
           <br>
-          <b>Extent : </b>{{enrichData.extent}}
+          <b>Extent : </b>{{enrichmentData.extent}}
           <br>
-          <b>Population Affected : </b>{{enrichData.population_affected}}
+          <b>Population Affected : </b>{{enrichmentData.population_affected}}
           <br>
-          <b>Beneficiary Attributes : </b>{{enrichData.beneficiary_attributes}}
+          <b>Beneficiary Attributes : </b>{{enrichmentData.beneficiary_attributes}}
           <br>
-          <b>Resources needed : </b>{{enrichData.resources_needed}}
+          <b>Resources needed : </b>{{enrichmentData.resources_needed}}
           <br>
  
         </div>
@@ -69,7 +69,7 @@
 
 
 
-<div class="card-footer" *ngIf="enrichData.created_by===auth.currentUserValue.id">
+<div class="card-footer" *ngIf="enrichmentData.created_by===auth.currentUserValue.id">
   <div class="text-center">
     <button mat-button type="button" (click)="editEnrichment()" class="btn btn-warning" aria-hidden="true" data-dismiss="modal"
       data-toggle="modal" data-target="#EditEnrichModal">Edit</button>
@@ -92,10 +92,10 @@
   <div class="row">
     <div class="col-md-4">
       <!-- <div class="picture"> -->
-      <img src="{{(enrichData.image_urls && enrichData.image_urls[0] && enrichData.image_urls[0].url) ? enrichData.image_urls[0].url :'./assets/img/image_placeholder.jpg'}}"
+      <img src="{{(enrichmentData.image_urls && enrichmentData.image_urls[0] && enrichmentData.image_urls[0].url) ? enrichmentData.image_urls[0].url :'./assets/img/image_placeholder.jpg'}}"
         alt="Thumbnail Image" class="rounded img-fluid" width="250px" height="200px" style="object-fit: cover;">
       <!-- </div> -->
-<div class="row justify-content-center" *ngIf="enrichData.image_urls && enrichData.image_urls.length > 0">
+      <div class="row justify-content-center" *ngIf="enrichmentData.image_urls && enrichmentData.image_urls.length > 0">
         <button mat-raised-button class="btn btn-raised btn-info btn-sm" (click)="toggleViewForImgNView()">
           See More >>
         </button>
@@ -103,21 +103,21 @@
     </div>
     <div class="col-md-8">
       <strong>Description :</strong>
-      <p class="description">{{enrichData.description}}</p>
-      <strong *ngIf="enrichData.organization">Organization :</strong>
-      <p class="description">{{enrichData.organization}}</p>
+      <p class="description">{{enrichmentData.description}}</p>
+      <strong *ngIf="enrichmentData.organization">Organization :</strong>
+      <p class="description">{{enrichmentData.organization}}</p>
       <strong>Location :</strong>
-      <p class="description">{{enrichData.location}}</p>
-      <strong *ngIf="enrichData.impact">Impact :</strong>
-      <p class="description">{{enrichData.impact}}</p>
-      <strong *ngIf="enrichData.extent">Extent :</strong>
-      <p class="description">{{enrichData.extent}}</p>
+      <p class="description">{{enrichmentData.location}}</p>
+      <strong *ngIf="enrichmentData.impact">Impact :</strong>
+      <p class="description">{{enrichmentData.impact}}</p>
+      <strong *ngIf="enrichmentData.extent">Extent :</strong>
+      <p class="description">{{enrichmentData.extent}}</p>
       <!-- <strong>Population Affected :</strong> -->
-      <!-- <p class="description">{{enrichData.population_affected}}</p> -->
-      <strong *ngIf="enrichData.beneficiary_attributes">Beneficiary Attributes :</strong>
-      <p class="description">{{enrichData.beneficiary_attributes}}</p>
-      <strong *ngIf="enrichData.resources_needed">Resources needed :</strong>
-      <p class="description">{{enrichData.resources_needed}}</p>
+      <!-- <p class="description">{{enrichmentData.population_affected}}</p> -->
+      <strong *ngIf="enrichmentData.beneficiary_attributes">Beneficiary Attributes :</strong>
+      <p class="description">{{enrichmentData.beneficiary_attributes}}</p>
+      <strong *ngIf="enrichmentData.resources_needed">Resources needed :</strong>
+      <p class="description">{{enrichmentData.resources_needed}}</p>
     </div>
   </div>
 </div>
@@ -179,12 +179,12 @@
   <!-- </div> -->
   <!-- <div class="text-center"> -->
   <button mat-button type="button" (click)="editEnrichment()" class="btn btn-warning pull-right" aria-hidden="true"
-    data-dismiss="modal" data-toggle="modal" data-target="#EditEnrichModal" *ngIf="enrichData.created_by===auth.currentUserValue.id && !showModal">
+    data-dismiss="modal" data-toggle="modal" data-target="#EditEnrichModal" *ngIf="enrichmentData.created_by===auth.currentUserValue.id && !showModal">
     <i class="material-icons actions">
       create
     </i>
   </button>
-<button mat-button type="button" class="btn btn-danger pull-right" (click)="deleteEnrichment()" *ngIf="enrichData.created_by===auth.currentUserValue.id && !showModal">
+  <button mat-button type="button" class="btn btn-danger pull-right" (click)="deleteEnrichment()" *ngIf="enrichmentData.created_by===auth.currentUserValue.id && !showModal">
     <i class="material-icons actions">
       delete
     </i>

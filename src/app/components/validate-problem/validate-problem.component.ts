@@ -1,13 +1,6 @@
-import {
-  Component,
-  OnInit,
-  Input,
-  OnChanges,
-  Output,
-  EventEmitter
-} from "@angular/core";
+import { Component, Input, Output, EventEmitter } from "@angular/core";
 import { FilesService } from "../../services/files.service";
-import { ProblemHandleService } from "../../services/problem-handle.service";
+import { ProblemService } from "../../services/problem-handle.service";
 import swal from "sweetalert2";
 import { ValidationService } from "../../services/validation.service";
 
@@ -16,7 +9,7 @@ import { ValidationService } from "../../services/validation.service";
   templateUrl: "./validate-problem.component.html",
   styleUrls: ["./validate-problem.component.css"]
 })
-export class ValidateProblemComponent implements OnChanges {
+export class ValidateProblemComponent {
   // @Input() problemData: any;
   @Input() validationData: any = {
     comment: "",
@@ -34,21 +27,9 @@ export class ValidateProblemComponent implements OnChanges {
   // };
   constructor(
     private space: FilesService,
-    private problemHandleService: ProblemHandleService,
+    private problemService: ProblemService,
     private validationService: ValidationService
   ) {}
-
-  ngOnChanges() {
-    if (this.validationData) {
-      this.mode = "Edit";
-      this.problemHandleService.problemValidationData = this.validationData;
-      console.log(
-        this.problemHandleService.problemValidationData,
-        "problem service validation data"
-      );
-    }
-    // console.log(this.problemData, "problem data in validate ");
-  }
 
   onValidateFileSelected(event) {
     console.log("Event: ", event);
@@ -100,7 +81,7 @@ export class ValidateProblemComponent implements OnChanges {
       buttonsStyling: false
     }).then(res => {
       this.validationData.agree = userConsent;
-      // this.problemHandleService.displayValidateProblem = false;
+      // this.problemService.displayValidateProblem = false;
 
       // this.validationData.problem_id = this.problemData.id;
       // this.validationService.submitValidationToDB(this.validationData);
@@ -108,8 +89,8 @@ export class ValidateProblemComponent implements OnChanges {
       this.submitted.emit(this.validationData);
 
       // if (this.mode === "Edit") {
-      //   this.problemHandleService.submitValidation(
-      //     this.problemHandleService.problemValidationData
+      //   this.problemService.submitValidation(
+      //     this.problemService.problemValidationData
       //   );
       // }
     });

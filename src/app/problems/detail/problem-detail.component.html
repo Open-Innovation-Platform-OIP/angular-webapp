@@ -197,7 +197,7 @@
                 </button>
               </div>
               <div class="modal-body ">
-                <app-add-enrichment [problemId]="problemData.id"></app-add-enrichment>
+                <app-add-enrichment (submitted)="onEnrichmentSubmit($event)"></app-add-enrichment>
                 <!-- <app-wizard-cmp></app-wizard-cmp> -->
               </div>
             </div>
@@ -218,7 +218,8 @@
                 </button>
               </div>
               <div class="modal-body">
-                <app-view-enrichment *ngIf="enrichmentDataToView" [enrichData]="enrichmentDataToView" (editClicked)="handleEnrichEditMode($event)"></app-view-enrichment>
+                <app-view-enrichment *ngIf="enrichmentDataToView" [enrichmentData]="enrichmentDataToView" (editClicked)="handleEnrichEditMode($event)"
+                  (deleteClicked)="deleteEnrichment($event)" (voteClicked)="voteEnrichment($event)"></app-view-enrichment>
               </div>
               <!-- <div class="card-footer"> -->
               <!-- <div class="text-center"> -->
@@ -245,7 +246,7 @@
                 </button>
               </div>
               <div class="modal-body">
-                <app-add-enrichment [enrichmentData]="enrichDataToEdit"></app-add-enrichment>
+                <app-add-enrichment *ngIf="enrichDataToEdit" [enrichmentData]="enrichDataToEdit" (submitted)="onEnrichmentSubmit($event)"></app-add-enrichment>
               </div>
             </div>
           </div>

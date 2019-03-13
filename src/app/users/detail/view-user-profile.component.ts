@@ -1,12 +1,12 @@
 import { Component, OnInit } from "@angular/core";
-import { UserHandlerService } from '../../services/user-handler.service';
+import { UserHandlerService } from "../../services/user-handler.service";
 import { Router, ActivatedRoute } from "@angular/router";
 import { Observable, Subscription } from "rxjs";
 import { first, finalize } from "rxjs/operators";
-import * as Query from '../../services/queries';
+import * as Query from "../../services/queries";
 import { Apollo } from "apollo-angular";
 import gql from "graphql-tag";
-import { AuthService } from '../../services/auth.service';
+import { AuthService } from "../../services/auth.service";
 @Component({
   selector: "app-view-user-profile",
   templateUrl: "./view-user-profile.component.html",
@@ -21,7 +21,7 @@ export class ViewUserProfileComponent implements OnInit {
     private route: ActivatedRoute,
     private apollo: Apollo,
     private auth: AuthService
-  ) { }
+  ) {}
 
   ngOnInit() {
     this.route.params.pipe(first()).subscribe(params => {
@@ -51,7 +51,7 @@ export class ViewUserProfileComponent implements OnInit {
             if (this.userData.id === Number(this.auth.currentUserValue.id)) {
               this.loggedInUsersProfile = true;
             }
-            // console.log(this.problemHandleService.problem, "problem");
+            // console.log(this.problemService.problem, "problem");
           });
 
         this.getInterests(params.id);
@@ -79,7 +79,6 @@ export class ViewUserProfileComponent implements OnInit {
         result => {
           if (result.data.users[0].user_tags) {
             this.interests = result.data.users[0].user_tags.map(tagArray => {
-              // console.log(tagArray, "work");
               return tagArray.tag.name;
             });
             console.log(this.interests, "interests");

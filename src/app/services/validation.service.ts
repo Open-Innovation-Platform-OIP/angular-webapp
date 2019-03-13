@@ -1,11 +1,17 @@
 import { Injectable } from "@angular/core";
 import { Apollo } from "apollo-angular";
 import gql from "graphql-tag";
+import { Timestamp } from "aws-sdk/clients/workspaces";
 
 export interface validation {
   comment: String;
   agree: boolean;
   files: any[];
+  validated_by?: number;
+  problem_id?: number;
+  created_at?: Timestamp;
+  edited_at?: Timestamp;
+  is_deleted?: boolean;
 }
 
 @Injectable({
@@ -14,11 +20,8 @@ export interface validation {
 export class ValidationService {
   constructor(private apollo: Apollo) {}
 
-  submitValidationToDB(validationData) {
+  submitValidationToDB(validationData: validation) {
     console.log(validationData, "validation data");
-    if (validationData.__typename) {
-      delete validationData.__typename;
-    }
 
     this.apollo
       .mutate({
@@ -55,7 +58,7 @@ export class ValidationService {
       );
   }
 
-  deleteValidation(validationData) {
+  deleteValidation(validationData: validation) {
     console.log(validationData, "delete validation");
     // console.log(id, "ID");
     this.apollo

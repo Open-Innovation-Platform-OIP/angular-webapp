@@ -11,7 +11,7 @@ import { AuthService } from "./auth.service";
 @Injectable({
   providedIn: "root"
 })
-export class ProblemHandleService {
+export class ProblemService {
   displayValidateProblem: boolean = false;
   displayEnrichForm: boolean = false;
   displayValidateCard: boolean = true;

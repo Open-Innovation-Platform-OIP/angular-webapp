@@ -1,51 +1,26 @@
-<!-- <div class="main-panel"> -->
-<!-- <div class="container-fluid"> -->
-<!-- <div class="row"> -->
-<!-- <div class="col-md-7"> -->
-<!-- <div class="card card-product"> -->
-<!-- <div class="card-header card-header-warning card-header-text">
-      <div class="card-text">
-        <h4 class="card-title">Enrich</h4>
-      </div>
-    </div> -->
 <div class="card-body ">
   <form method="get" action="/" class="form-horizontal" (ngSubmit)="onSubmit()" #enrichmentForm="ngForm">
     <div class="form-group">
       <div class="row">
-        <label class="col-sm-3 col-form-label" [ngStyle]="{ 'color' : (!problemEnrichmentData.description) ? 'red' : 'grey' }">Description
+        <label class="col-sm-3 col-form-label" [ngStyle]="{ 'color' : (!enrichmentData.description) ? 'red' : 'grey' }">Description
         </label>
         <div class="col-sm-9">
           <mat-form-field class="example-full-width">
             <textarea matInput placeholder="Leave a comment" name="description" required placeholder="Describe the problem in detail"
-              rows="5" [(ngModel)]="problemEnrichmentData.description" #description="ngModel"></textarea>
+              rows="5" [(ngModel)]="enrichmentData.description" #description="ngModel"></textarea>
           </mat-form-field>
           <div [hidden]="description.valid || description.pristine" class="text-danger error-msg">
             Description is required
           </div>
         </div>
       </div>
-      <!-- <div class="row">
-                  <label class="col-sm-2 col-form-label">Description</label>
-                  <div class="col-sm-10">
-                    <mat-form-field class="example-full-width">
-                      <input matInput type="text" name="userid" [(ngModel)]="problem.description">
-                    </mat-form-field>
-                  </div>
-                </div> -->
-      <!-- <div class="row">
-                  <label class="col-sm-2 col-form-label">Owner</label>
-                  <div class="col-sm-10">
-                    <mat-form-field class="example-full-width">
-                      <input matInput type="text" name="userid" [(ngModel)]="problem.owner">
-                    </mat-form-field>
-                  </div>
-                </div> -->
+
       <div class="row">
-        <label class="col-sm-3 col-form-label" [ngStyle]="{ 'color' : (!problemEnrichmentData.location) ? 'red' : 'grey' }">Location
+        <label class="col-sm-3 col-form-label" [ngStyle]="{ 'color' : (!enrichmentData.location) ? 'red' : 'grey' }">Location
         </label>
         <div class="col-sm-9">
           <mat-form-field class="example-full-width">
-            <input matInput type="text" name="location" required [(ngModel)]="problemEnrichmentData.location" (keyup)="getAddress()"
+            <input matInput type="text" name="location" required [(ngModel)]="enrichmentData.location" (keyup)="getAddress()"
               #location="ngModel">
             <table style="width: 100%" id="table">
               <tbody>
@@ -65,11 +40,11 @@
         </div>
       </div>
       <div class="row">
-        <label class="col-sm-3 col-form-label" [ngStyle]="{ 'color' : (!problemEnrichmentData.organization) ? 'red' : 'grey' }">Organization
+        <label class="col-sm-3 col-form-label" [ngStyle]="{ 'color' : (!enrichmentData.organization) ? 'red' : 'grey' }">Organization
         </label>
         <div class="col-sm-9">
           <mat-form-field class="example-full-width">
-            <input matInput type="text" name="organization" required [(ngModel)]="problemEnrichmentData.organization">
+            <input matInput type="text" name="organization" required [(ngModel)]="enrichmentData.organization">
           </mat-form-field>
           <!-- <div [hidden]="organization.valid || organization.pristine" class="text-danger error-msg">
             Organization is required
@@ -80,7 +55,7 @@
         <label class="col-sm-3 col-form-label">Organization</label>
         <div class="col-sm-9">
           <mat-form-field class="example-full-width">
-            <input matInput type="text" name="organization" [(ngModel)]="problemEnrichmentData.organization">
+            <input matInput type="text" name="organization" [(ngModel)]="enrichmentData.organization">
           </mat-form-field>
         </div>
       </div> -->
@@ -89,7 +64,7 @@
         <label class="col-sm-3 col-form-label">Resources needed</label>
         <div class="col-sm-9">
           <mat-form-field class="example-full-width">
-            <input matInput type="text" name="resources_needed" [(ngModel)]="problemEnrichmentData.resources_needed">
+            <input matInput type="text" name="resources_needed" [(ngModel)]="enrichmentData.resources_needed">
           </mat-form-field>
         </div>
       </div>
@@ -98,7 +73,7 @@
         <label class="col-sm-3 col-form-label">Impact</label>
         <div class="col-sm-9">
           <mat-form-field class="example-full-width">
-            <input matInput type="text" name="impact" [(ngModel)]="problemEnrichmentData.impact">
+            <input matInput type="text" name="impact" [(ngModel)]="enrichmentData.impact">
           </mat-form-field>
         </div>
       </div>
@@ -107,7 +82,7 @@
         <label class="col-sm-3 col-form-label">Extent</label>
         <div class="col-sm-9">
           <mat-form-field class="example-full-width">
-            <input matInput type="text" name="extent" [(ngModel)]="problemEnrichmentData.extent">
+            <input matInput type="text" name="extent" [(ngModel)]="enrichmentData.extent">
           </mat-form-field>
         </div>
       </div>
@@ -117,7 +92,7 @@
 
         <div class="col-sm-9">
           <mat-form-field class="example-full-width has-label">
-            <mat-select matInput [(ngModel)]="problemEnrichmentData.min_population" placeholder="Select size of affected population"
+            <mat-select matInput [(ngModel)]="enrichmentData.min_population" placeholder="Select size of affected population"
               id="population" name="population">
               <mat-option *ngFor="let size of sizes" [value]="size.value">
                 {{ size.viewValue }}
@@ -130,11 +105,11 @@
       <!-- <div class="row">
             <div class="row">
       
-                <label class="col-sm-3 col-form-label" [ngStyle]="{ 'color' : (!problemEnrichmentData.population_affected) ? 'red' : 'grey' }">Population
+                <label class="col-sm-3 col-form-label" [ngStyle]="{ 'color' : (!enrichmentData.population_affected) ? 'red' : 'grey' }">Population
                   Affected *</label>
                 <div class="col-sm-9">
                   <mat-form-field class="example-full-width">
-                    <input matInput type="text" name="population_affected" required [(ngModel)]="problemEnrichmentData.population_affected"
+                    <input matInput type="text" name="population_affected" required [(ngModel)]="enrichmentData.population_affected"
                       #population_affected="ngModel">
                   </mat-form-field>
                   <div [hidden]="population_affected.valid || population_affected.pristine" class="text-danger error-msg">
@@ -147,7 +122,7 @@
         <label class="col-sm-3 col-form-label">Beneficiary Attributes</label>
         <div class="col-sm-9">
           <mat-form-field class="example-full-width">
-            <input matInput type="text" name="beneficiary_attributes" [(ngModel)]="problemEnrichmentData.beneficiary_attributes">
+            <input matInput type="text" name="beneficiary_attributes" [(ngModel)]="enrichmentData.beneficiary_attributes">
           </mat-form-field>
         </div>
       </div>
@@ -193,7 +168,7 @@
             <div class="col-sm-10 checkbox-radios">
               <div class="form-check">
                 <label class="form-check-label">
-                  <input class="form-check-input" type="checkbox" value="Water" [(ngModel)]="problemEnrichmentData.sectors.water"
+                  <input class="form-check-input" type="checkbox" value="Water" [(ngModel)]="enrichmentData.sectors.water"
                     [ngModelOptions]="{standalone: true}">
                   Water
                   <span class="form-check-sign">
@@ -205,7 +180,7 @@
       
               <div class="form-check">
                 <label class="form-check-label">
-                  <input class="form-check-input" type="checkbox" value="Sanitation" [(ngModel)]="problemEnrichmentData.sectors.sanitation"
+                  <input class="form-check-input" type="checkbox" value="Sanitation" [(ngModel)]="enrichmentData.sectors.sanitation"
                     [ngModelOptions]="{standalone: true}">
                   Sanitation
                   <span class="form-check-sign">
@@ -216,7 +191,7 @@
       
               <div class="form-check">
                 <label class="form-check-label">
-                  <input class="form-check-input" type="checkbox" value="Health" [(ngModel)]="problemEnrichmentData.sectors.health"
+                  <input class="form-check-input" type="checkbox" value="Health" [(ngModel)]="enrichmentData.sectors.health"
                     [ngModelOptions]="{standalone: true}">
                   Health
                   <span class="form-check-sign">
@@ -226,7 +201,7 @@
               </div>
               <div class="form-check">
                 <label class="form-check-label">
-                  <input class="form-check-input" type="checkbox" value="Agriculture" [(ngModel)]="problemEnrichmentData.sectors.agriculture"
+                  <input class="form-check-input" type="checkbox" value="Agriculture" [(ngModel)]="enrichmentData.sectors.agriculture"
                     [ngModelOptions]="{standalone: true}">
                   Agriculture
                   <span class="form-check-sign">
@@ -236,7 +211,7 @@
               </div>
               <div class="form-check">
                 <label class="form-check-label">
-                  <input class="form-check-input" type="checkbox" value="Energy" [(ngModel)]="problemEnrichmentData.sectors.energy"
+                  <input class="form-check-input" type="checkbox" value="Energy" [(ngModel)]="enrichmentData.sectors.energy"
                     [ngModelOptions]="{standalone: true}">
                   Energy
                   <span class="form-check-sign">
@@ -246,7 +221,7 @@
               </div>
               <div class="form-check">
                 <label class="form-check-label">
-                  <input class="form-check-input" type="checkbox" value="Environment" [(ngModel)]="problemEnrichmentData.sectors.environment"
+                  <input class="form-check-input" type="checkbox" value="Environment" [(ngModel)]="enrichmentData.sectors.environment"
                     [ngModelOptions]="{standalone: true}">
                   Environment
                   <span class="form-check-sign">
@@ -256,7 +231,7 @@
               </div>
               <div class="form-check">
                 <label class="form-check-label">
-                  <input class="form-check-input" type="checkbox" value="Disabilities" [(ngModel)]="problemEnrichmentData.sectors.disabilities"
+                  <input class="form-check-input" type="checkbox" value="Disabilities" [(ngModel)]="enrichmentData.sectors.disabilities"
                     [ngModelOptions]="{standalone: true}">
                   Disabilities
                   <span class="form-check-sign">
@@ -286,11 +261,11 @@
         <div class="fileinput-new thumbnail">
           <img src="./assets/img/image_placeholder.jpg" alt="...">
         </div>
-        <div class="fileinput-new thumbnail" *ngFor="let imgSrc of  problemEnrichmentData.image_urls; let i=index">
+        <div class="fileinput-new thumbnail" *ngFor="let imgSrc of  enrichmentData.image_urls; let i=index">
           <span class="btn-danger closeBtn" (click)="removeEnrichPhoto(i)"><i class="fa fa-times"></i></span>
           <img src="{{imgSrc.url}}" alt="">
         </div>
-        <div class="fileinput-preview fileinput-exists thumbnail" *ngFor="let imgSrc of  problemEnrichmentData.image_urls; let i=index">
+        <div class="fileinput-preview fileinput-exists thumbnail" *ngFor="let imgSrc of  enrichmentData.image_urls; let i=index">
           <span class="btn-danger closeBtn" (click)="removeEnrichPhoto(i)"><i class="fa fa-times"></i></span>
           <img src="{{imgSrc.url}}" alt="">
         </div>
@@ -308,7 +283,7 @@
           <span class="fileinput-exists">Add More</span>
           <input type="file" (change)="onEnrichVideoSelect($event)" name="..." multiple accept="video/*">
         </span>
-        <div *ngFor="let video of  problemEnrichmentData.video_urls; let i=index">
+        <div *ngFor="let video of  enrichmentData.video_urls; let i=index">
           <span>{{video.key}}</span>
           <span class="closeBtn" (click)="removeEnrichVideo(i)"><i class="fa fa-times"></i></span>
         </div>
@@ -325,7 +300,7 @@
   </div>
 
   <div class="row justify-content-center" *ngIf="mode==='Edit'">
-    <button mat-raised-button class="btn btn-warning" (click)="updateEnrichmentDataInDB()" [disabled]="!enrichmentForm.form.valid">
+    <button mat-raised-button class="btn btn-warning" (click)="sendEnrichDataToDB()" [disabled]="!enrichmentForm.form.valid">
       Update</button>
   </div>
 </div>
