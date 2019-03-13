@@ -20,6 +20,7 @@ import { NguCarouselConfig } from "@ngu/carousel";
 import { slider } from "./problem-detail.animation";
 import { DiscussionsService } from "src/app/services/discussions.service";
 import { CollaborationService } from "src/app/services/collaboration.service";
+import { ValidationService } from "src/app/services/validation.service";
 
 const misc: any = {
   navbar_menu_visible: 0,
@@ -134,7 +135,7 @@ export class ProblemDetailComponent implements OnInit {
   validationDataToEdit: any;
   validation: any = [1];
   collaborators: any = [1];
-  collaborationDataToEdit: any = {};
+  collaboratorDataToEdit: any;
   public carouselTileItems$: Observable<any>;
   public carouselTileItemsValid$: Observable<number[]>;
   public carouselTileItemCollab$: Observable<number[]>;
@@ -158,7 +159,8 @@ export class ProblemDetailComponent implements OnInit {
     private auth: AuthService,
     public usersService: UsersService,
     private discussionsService: DiscussionsService,
-    private collaborationService: CollaborationService
+    private collaborationService: CollaborationService,
+    private validationService: ValidationService
   ) {}
 
   getUserPersonas(id) {
@@ -548,9 +550,19 @@ export class ProblemDetailComponent implements OnInit {
     id
     problem_collaborators{
       intent
-      collaborate_as
-      problem_id
+      is_ngo
+      is_innovator
+      is_expert
+      is_government
+      is_funder
+      is_beneficiary
+      is_incubator
+      is_entrepreneur
+      
       user_id
+   
+      
+     
       
       
     }
@@ -735,25 +747,26 @@ export class ProblemDetailComponent implements OnInit {
   }
 
   onCollaborationSubmit(collaborationData) {
-    let collaborateAsArray = [];
+    if (collaborationData.__typename) {
+      delete collaborationData.__typename;
+    }
+    console.log(collaborationData, "collaboration data");
     collaborationData.user_id = Number(this.auth.currentUserValue.id);
 
     collaborationData.problem_id = this.problemData.id;
 
-    Object.entries(collaborationData.collaborate_as).forEach(role => {
-      console.log(role);
-      if (role[1]) {
-        collaborateAsArray.push(role[0]);
-      }
-    });
-    collaborationData.collaborate_as = JSON.stringify(collaborateAsArray)
-      .replace("[", "{")
-      .replace("]", "}");
-
-    this.collaborationService.addCollaborator(collaborationData);
-    console.log(event, "from problem details");
+    this.collaborationService.submitCollaboratorToDB(collaborationData);
+    console.log(event, "from problem details collab");
     // close modal
     // send to db
+  }
+
+  onValidationSubmit(validationData) {
+    validationData.validated_by = Number(this.auth.currentUserValue.id);
+
+    validationData.problem_id = this.problemData.id;
+
+    this.validationService.submitValidationToDB(validationData);
   }
 
   voteProblem() {
@@ -842,6 +855,14 @@ export class ProblemDetailComponent implements OnInit {
     return this.reply;
   }
 
+  deleteValidation(validationData) {
+    this.validationService.deleteValidation(validationData);
+  }
+
+  deleteCollaboration(collaborationData) {
+    this.collaborationService.deleteCollaboration(collaborationData);
+  }
+
   // Display Comments from Database
   discuss() {
     this.apollo
@@ -914,27 +935,8 @@ export class ProblemDetailComponent implements OnInit {
   }
 
   handleCollaborationEditMode(collaborationData) {
-    console.log("handle collaboration data to edit", collaborationData);
-    this.collaborationDataToEdit.intent = collaborationData.intent;
-    let roles = {
-      ngo: false,
-      innovator: false,
-      entrepreneur: false,
-      expert: false,
-      government: false,
-      beneficiary: false,
-      incubator: false,
-      funder: false
-    };
-    // this.collaborationDataToEdit.collaborate_as =
-    collaborationData.collaborate_as.map(role => {
-      for (let key in role) {
-        if (key === role) {
-          role[key] = true;
-        }
-      }
-    });
-    this.collaborationDataToEdit.collaborate_as = roles;
+    console.log("edit collab", collaborationData);
+    this.collaboratorDataToEdit = collaborationData;
   }
   onCommentSubmit(event) {
     const [content, mentions] = event;

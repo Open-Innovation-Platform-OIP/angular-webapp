@@ -4,16 +4,15 @@ import gql from "graphql-tag";
 
 export interface collaborator {
   intent: String;
-  collaborate_as: {
-    ngo: boolean;
-    innovator: boolean;
-    entrepreneur: boolean;
-    expert: boolean;
-    government: boolean;
-    beneficiary: boolean;
-    incubator: boolean;
-    funder: boolean;
-  };
+
+  is_ngo: boolean;
+  is_innovator: boolean;
+  is_entrepreneur: boolean;
+  is_expert: boolean;
+  is_government: boolean;
+  is_beneficiary: boolean;
+  is_incubator: boolean;
+  is_funder: boolean;
 }
 
 @Injectable({
@@ -22,32 +21,51 @@ export interface collaborator {
 export class CollaborationService {
   constructor(private apollo: Apollo) {}
 
-  addCollaborator(collaborationData) {
-    console.log(collaborationData, "in add collab");
-    this.apollo
-      .mutate<any>({
-        mutation: gql`
-          mutation insert_collaborators(
-            $objects: [collaborators_insert_input!]!
-          ) {
-            insert_collaborators(objects: $objects) {
-              returning {
-                user_id
-              }
-            }
+  submitCollaboratorToDB(collaborationData) {
+    console.log(collaborationData, "collab data 22");
+    const upsert_collaborators = gql`
+      mutation upsert_collaborators(
+        $collaborators: [collaborators_insert_input!]!
+      ) {
+        insert_collaborators(
+          objects: $collaborators
+          on_conflict: {
+            constraint: collaborators_pkey
+            update_columns: [
+              intent
+              is_ngo
+              is_entrepreneur
+              is_funder
+              is_incubator
+              is_government
+              is_expert
+              is_beneficiary
+              is_innovator
+            ]
           }
-        `,
+        ) {
+          affected_rows
+          returning {
+            user_id
+          }
+        }
+      }
+    `;
+
+    this.apollo
+      .mutate({
+        mutation: upsert_collaborators,
         variables: {
-          objects: [collaborationData]
+          collaborators: [collaborationData]
         }
       })
       .subscribe(
-        data => {
-          console.log(data);
+        result => {
+          console.log(result, "result");
           location.reload();
         },
-        err => {
-          console.log(err, "could not add collaborator due to");
+        error => {
+          console.log("error", error);
         }
       );
   }

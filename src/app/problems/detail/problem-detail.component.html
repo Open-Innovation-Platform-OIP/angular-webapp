@@ -314,7 +314,7 @@
                 </button>
               </div>
               <div class="modal-body">
-                <app-validate-problem [problemData]="problemData"></app-validate-problem>
+                <app-validate-problem (submitted)="onValidationSubmit($event)"></app-validate-problem>
               </div>
             </div>
           </div>
@@ -333,7 +333,8 @@
                 </button>
               </div>
               <div class="modal-body">
-                <app-detailed-validate-view [validationData]="validationDataToView" (editClicked)="handleValidationEditMode($event)"></app-detailed-validate-view>
+                <app-detailed-validate-view [validationData]="validationDataToView" (deleteClicked)="deleteValidation($event)"
+                  (editClicked)="handleValidationEditMode($event)"></app-detailed-validate-view>
               </div>
             </div>
           </div>
@@ -355,7 +356,7 @@
               <div class="modal-body">
 
 
-                <app-validate-problem [validationData]="validationDataToEdit"></app-validate-problem>
+                <app-validate-problem *ngIf="validationDataToEdit" [validationData]="validationDataToEdit" (submitted)="onValidationSubmit($event)"></app-validate-problem>
               </div>
             </div>
           </div>
@@ -381,7 +382,8 @@
               <div class="modal-body">
 
 
-                <app-add-collaborator [problemId]="problemData.id" [collaboratorDataToEdit]="collaborationDataToEdit">
+                <app-add-collaborator *ngIf="collaboratorDataToEdit" [collaborator]="collaboratorDataToEdit"
+                  (submitted)="onCollaborationSubmit($event)">
 
                 </app-add-collaborator>
               </div>
@@ -409,7 +411,8 @@
         <ngu-carousel #CollabCarousel [inputs]="carouselTileConfig" [dataSource]="carouselTileItemCollab$ | async"
           *ngIf="collaborators[0]">
           <ngu-tile *nguCarouselDef="let collaborator; let i = index; let ani = animate">
-            <app-collaborator-card *ngIf="collaborator" [collaboratorData]="collaborator" (editClicked)="handleCollaborationEditMode($event)"></app-collaborator-card>
+            <app-collaborator-card *ngIf="collaborator" [collaboratorData]="collaborator" (editClicked)="handleCollaborationEditMode($event)"
+              (deleteClicked)="deleteCollaboration($event)"></app-collaborator-card>
           </ngu-tile>
 
 
@@ -442,7 +445,7 @@
                 </button>
               </div>
               <div class="modal-body">
-                <app-add-collaborator (submitted)="onCollaborationSubmit($event)" [problemId]="problemData.id"></app-add-collaborator>
+                <app-add-collaborator (submitted)="onCollaborationSubmit($event)" (edit)=onCollaorationUpdate($event)></app-add-collaborator>
               </div>
             </div>
           </div>
@@ -462,21 +465,21 @@
             <h4 class="card-title">Discussions</h4>
           </div>
           <div class="card-body">
-<app-discussions [users]="objectValues(usersService.allUsers)" [actionText]="'Comment'" (submitted)="onCommentSubmit($event)"></app-discussions>
+            <app-discussions [users]="objectValues(usersService.allUsers)" [actionText]="'Comment'" (submitted)="onCommentSubmit($event)"></app-discussions>
           </div>
         </div>
         <div class="card" *ngFor="let discussion of discussions">
           <div class="card-header card-header-icon card-header-warning">
             <div class="user photo card-icon">
-<!-- <img class="img" src="{{(discussion.usersBycreatedBy.photo_url && discussion.usersBycreatedBy.photo_url.url) ? discussion.usersBycreatedBy.photo_url.url : './assets/img/default-avatar.png'}}" /> -->
+              <!-- <img class="img" src="{{(discussion.usersBycreatedBy.photo_url && discussion.usersBycreatedBy.photo_url.url) ? discussion.usersBycreatedBy.photo_url.url : './assets/img/default-avatar.png'}}" /> -->
               <i class="material-icons">comment</i>
             </div>
             <h4 class="card-title">{{discussion.usersBycreatedBy.name || 'Anonymous'}}</h4>
           </div>
           <div class="card-body">
             <div innerHTML="{{discussion.text}}"></div>
-            <app-discussions *ngIf="showReplyBox && replyingTo === discussion.id" [users]="objectValues(usersService.allUsers)" [actionText]="'Reply'"
-              (submitted)="onCommentSubmit($event)"></app-discussions>
+            <app-discussions *ngIf="showReplyBox && replyingTo === discussion.id" [users]="objectValues(usersService.allUsers)"
+              [actionText]="'Reply'" (submitted)="onCommentSubmit($event)"></app-discussions>
           </div>
           <div class="card-footer" *ngIf="!showReplyBox">
             <div class="stats">

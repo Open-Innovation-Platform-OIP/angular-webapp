@@ -6,8 +6,8 @@ import {
   Output,
   EventEmitter
 } from "@angular/core";
-import { AuthService } from '../../services/auth.service';
-import { ProblemHandleService } from '../../services/problem-handle.service';
+import { AuthService } from "../../services/auth.service";
+import { ProblemHandleService } from "../../services/problem-handle.service";
 
 @Component({
   selector: "app-detailed-validate-view",
@@ -17,6 +17,7 @@ import { ProblemHandleService } from '../../services/problem-handle.service';
 export class DetailedValidateViewComponent implements OnInit, OnChanges {
   @Input() validationData: any;
   @Output() editClicked = new EventEmitter();
+  @Output() deleteClicked = new EventEmitter();
 
   constructor(
     private auth: AuthService,
@@ -34,6 +35,7 @@ export class DetailedValidateViewComponent implements OnInit, OnChanges {
   }
 
   deleteValidation() {
-    this.problemHandleService.deleteValidation(this.validationData);
+    this.deleteClicked.emit(this.validationData);
+    // this.ValidaService.deleteValidation(this.validationData);
   }
 }
