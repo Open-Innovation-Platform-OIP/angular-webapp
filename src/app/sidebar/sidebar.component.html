@@ -1,7 +1,7 @@
 <div class="logo">
   <a class="simple-text logo-mini">
     <div class="logo-img">
-<img src="/assets/img/social-alpha-logo-250.png" />
+      <img src="/assets/img/social-alpha-logo-250.png" />
     </div>
   </a>
   <a href="" class="simple-text logo-normal">
@@ -14,7 +14,7 @@
 
   <div class="user">
     <div class="photo">
-<img class="img" src="{{(usersService.currentUser.photo_url && usersService.currentUser.photo_url.url) ? usersService.currentUser.photo_url.url : './assets/img/default-avatar.png'}}" />
+      <img class="img" src="{{(usersService.currentUser.photo_url && usersService.currentUser.photo_url.url) ? usersService.currentUser.photo_url.url : './assets/img/default-avatar.png'}}" />
     </div>
     <div class="user-info" *ngIf="auth.currentUserValue">
       <a data-toggle="collapse" href="#collapseExample" class="collapsed">
@@ -26,13 +26,13 @@
       <div class="collapse" id="collapseExample">
         <ul class="nav">
           <li class="nav-item">
-<a [routerLink]="'/users/'+auth.currentUserValue.id" class="nav-link">
+            <a [routerLink]="'/users/'+auth.currentUserValue.id" class="nav-link">
               <span class="sidebar-mini">MP</span>
               <span class="sidebar-normal">My Profile</span>
             </a>
           </li>
           <li class="nav-item">
-<a [routerLink]="'/users/'+auth.currentUserValue.id+'/edit'" class="nav-link">
+            <a [routerLink]="'/users/'+auth.currentUserValue.id+'/edit'" class="nav-link">
               <span class="sidebar-mini">EP</span>
               <span class="sidebar-normal">Edit Profile</span>
             </a>

@@ -1,4 +1,4 @@
-<div class="card card-product actions" [routerLink]="'/profile/'+userData.id">
+<!-- <div class="card card-product actions" [routerLink]="'/profile/'+userData.id">
   <div class="card-header card-header-image">
     <a>
       <img style="object-fit: cover;" class="img" src="{{(userData.photo_url && userData.photo_url.url) ? userData.photo_url.url : './assets/img/image_placeholder.jpg'}}">
@@ -16,6 +16,28 @@
 
       </div>
     </div>
+  </div>
+  <div class="card-footer">
+    <div class="stats">
+      <p class="card-category"><i class="material-icons">place</i> {{userData.location}}</p>
+    </div>
+  </div>
+</div> -->
+
+<!--FIX-->
+
+<div class="card card-profile" [routerLink]="'/profile/'+userData.id">
+  <div class="card-avatar">
+    <a href="">
+      <img class="img" src="{{(userData.photo_url && userData.photo_url.url) ? userData.photo_url.url : './assets/img/default-avatar.png'}}" />
+    </a>
+  </div>
+  <div class="card-body">
+    <h4 class="card-title">{{userData.name}}</h4>
+    <h6 class="card-category text-gray">{{userData.organization}}</h6>
+    <!-- <p class="card-description">
+      
+    </p> -->
   </div>
   <div class="card-footer">
     <div class="price">
