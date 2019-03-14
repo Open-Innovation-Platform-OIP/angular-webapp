@@ -186,8 +186,8 @@ export class ProblemDetailComponent implements OnInit {
   }
   ngOnInit() {
     console.log(this.collaborators, "collaborators on load");
-    this.userId = Number(this.auth.currentUserValue.id);
-    this.getUserPersonas(this.userId);
+
+    this.getUserPersonas(Number(this.auth.currentUserValue.id));
 
     this.carouselTileItems$ = interval(500).pipe(
       startWith(-1),
@@ -256,15 +256,31 @@ export class ProblemDetailComponent implements OnInit {
               extent
               min_population
               beneficiary_attributes
+              problem_tags{
+                tag {
+                    id
+                    name
+                }
             }
-          }
+            }
+        }
+            
         `
           })
           .valueChanges.subscribe(
             result => {
+              console.log(result, "prob detail data");
               if (result.data.problems[0]) {
+                if (result.data.problems[0].problem_tags) {
+                  this.tags = result.data.problems[0].problem_tags.map(
+                    tagArray => {
+                      // console.log(tagArray, "work");
+                      return tagArray.tag.name;
+                    }
+                  );
+                }
                 Object.keys(this.problemData).map(key => {
-                  if (result.data.problems[0][key]) {
+                  if (result.data.problems[0][key] && key !== "problem_tags") {
                     this.problemData[key] = result.data.problems[0][key];
                   }
                 });
@@ -284,7 +300,9 @@ export class ProblemDetailComponent implements OnInit {
 
                 if (result.data.problems[0].voted_by) {
                   result.data.problems[0].voted_by.forEach(userId => {
-                    if (userId === this.userId) {
+                    if (
+                      Number(userId) === Number(this.auth.currentUserValue.id)
+                    ) {
                       console.log(userId, "userId");
                       this.isVoted = true;
                     }
@@ -300,7 +318,9 @@ export class ProblemDetailComponent implements OnInit {
                     typeof result.data.problems[0].watched_by
                   );
                   result.data.problems[0].watched_by.forEach(userId => {
-                    if (userId === this.userId) {
+                    if (
+                      Number(userId) === Number(this.auth.currentUserValue.id)
+                    ) {
                       this.isWatching = true;
                     }
                   });
@@ -340,7 +360,7 @@ export class ProblemDetailComponent implements OnInit {
                 console.log(this.collaborators, "collaborators check");
                 this.getEnrichmentData(params.id);
                 this.getCollaborators(params.id);
-                this.getTags(params.id);
+                // this.getTags(params.id);
                 this.getValidations(params.id);
                 this.discussionsService
                   .getComments(params.id)
@@ -448,37 +468,37 @@ export class ProblemDetailComponent implements OnInit {
     }, 1000);
   }
 
-  getTags(id) {
-    this.apollo
-      .watchQuery<any>({
-        query: gql`
-  {
-    problems(where: { id: { _eq: ${id} } }) {
-      id
-      problem_tags{
-        tag {
-          id
-          name
-        }
-      }
-    }
-  }
-`
-      })
-      .valueChanges.subscribe(
-        result => {
-          if (result.data.problems[0].problem_tags) {
-            this.tags = result.data.problems[0].problem_tags.map(tagArray => {
-              // console.log(tagArray, "work");
-              return tagArray.tag.name;
-            });
-          }
-        },
-        error => {
-          console.log("error", error);
-        }
-      );
-  }
+  //   getTags(id) {
+  //     this.apollo
+  //       .watchQuery<any>({
+  //         query: gql`
+  //   {
+  //     problems(where: { id: { _eq: ${id} } }) {
+  //       id
+  //       problem_tags{
+  //         tag {
+  //           id
+  //           name
+  //         }
+  //       }
+  //     }
+  //   }
+  // `
+  //       })
+  //       .valueChanges.subscribe(
+  //         result => {
+  //           if (result.data.problems[0].problem_tags) {
+  //             this.tags = result.data.problems[0].problem_tags.map(tagArray => {
+  //               // console.log(tagArray, "work");
+  //               return tagArray.tag.name;
+  //             });
+  //           }
+  //         },
+  //         error => {
+  //           console.log("error", error);
+  //         }
+  //       );
+  //   }
 
   getValidations(id) {
     console.log("validation");
@@ -508,7 +528,10 @@ export class ProblemDetailComponent implements OnInit {
           if (result.data.problems[0].problem_validations) {
             result.data.problems[0].problem_validations.map(validation => {
               console.log(validation.validated_by, "test55");
-              if (validation.validated_by === this.userId) {
+              if (
+                validation.validated_by ===
+                Number(this.auth.currentUserValue.id)
+              ) {
                 this.disableValidateButton = true;
               }
             });
@@ -553,7 +576,9 @@ export class ProblemDetailComponent implements OnInit {
           console.log(result, "result from collaborators");
           if (result.data.problems[0].problem_collaborators) {
             result.data.problems[0].problem_collaborators.map(collaborator => {
-              if (collaborator.user_id === this.userId) {
+              if (
+                collaborator.user_id === Number(this.auth.currentUserValue.id)
+              ) {
                 this.disableCollaborateButton = true;
               }
             });
@@ -600,7 +625,9 @@ export class ProblemDetailComponent implements OnInit {
           if (data.data.enrichments) {
             console.log(data, "data");
             data.data.enrichments.map(enrichment => {
-              if (enrichment.created_by === this.userId) {
+              if (
+                enrichment.created_by === Number(this.auth.currentUserValue.id)
+              ) {
                 this.disableEnrichButton = true;
               }
             });
@@ -649,7 +676,11 @@ export class ProblemDetailComponent implements OnInit {
     this.isWatching = !this.isWatching;
     if (this.isWatching) {
       this.watchedBy++;
-      this.problemData.watched_by.push(this.userId);
+      this.problemData.watched_by.push(Number(this.auth.currentUserValue.id));
+
+      this.problemData.watched_by = JSON.stringify(this.problemData.watched_by)
+        .replace("[", "{")
+        .replace("]", "}");
 
       console.log(this.problemData.watched_by, "watched_by");
 
@@ -657,17 +688,31 @@ export class ProblemDetailComponent implements OnInit {
         this.problemData.id,
         this.problemData
       );
+
+      this.problemData.watched_by = JSON.parse(
+        this.problemData.watched_by.replace("{", "[").replace("}", "]")
+      );
     } else {
       this.watchedBy--;
 
-      let index = this.problemData.watched_by.indexOf(this.userId.toString());
+      let index = this.problemData.watched_by.indexOf(
+        Number(this.auth.currentUserValue.id).toString()
+      );
       console.log(this.problemData.watched_by, "watched_by");
 
       this.problemData.watched_by.splice(index, 1);
 
+      this.problemData.watched_by = JSON.stringify(this.problemData.watched_by)
+        .replace("[", "{")
+        .replace("]", "}");
+
       this.problemService.storeProblemWatchedBy(
         this.problemData.id,
         this.problemData
+      );
+
+      this.problemData.watched_by = JSON.parse(
+        this.problemData.watched_by.replace("{", "[").replace("}", "]")
       );
     }
   }
@@ -721,20 +766,34 @@ export class ProblemDetailComponent implements OnInit {
     this.isVoted = !this.isVoted;
     if (this.isVoted) {
       this.number_of_votes++;
-      this.problemData.voted_by.push(this.userId);
+      this.problemData.voted_by.push(Number(this.auth.currentUserValue.id));
+      this.problemData.voted_by = JSON.stringify(this.problemData.voted_by)
+        .replace("[", "{")
+        .replace("]", "}");
 
       this.problemService.storeProblemVotedBy(
         this.problemData.id,
         this.problemData
       );
+      this.problemData.voted_by = JSON.parse(
+        this.problemData.voted_by.replace("{", "[").replace("}", "]")
+      );
     } else {
       this.number_of_votes--;
-      let index = this.problemData.voted_by.indexOf(this.userId);
+      let index = this.problemData.voted_by.indexOf(
+        Number(this.auth.currentUserValue.id)
+      );
       this.problemData.voted_by.splice(index, 1);
+      this.problemData.voted_by = JSON.stringify(this.problemData.voted_by)
+        .replace("[", "{")
+        .replace("]", "}");
 
       this.problemService.storeProblemVotedBy(
         this.problemData.id,
         this.problemData
+      );
+      this.problemData.voted_by = JSON.parse(
+        this.problemData.voted_by.replace("{", "[").replace("}", "]")
       );
     }
   }

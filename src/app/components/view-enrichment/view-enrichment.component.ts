@@ -7,7 +7,7 @@ import {
   EventEmitter
 } from "@angular/core";
 import { ProblemService } from "../../services/problem-handle.service";
-import { EnrichmentHandlerService } from "../../services/enrichment-handler.service";
+
 import { AuthService } from "../../services/auth.service";
 
 @Component({
@@ -31,7 +31,6 @@ export class ViewEnrichmentComponent implements OnInit, OnChanges {
 
   constructor(
     private problemService: ProblemService,
-    private enrichmentHandlerService: EnrichmentHandlerService,
     private auth: AuthService
   ) {
     console.log("aswewrwe");

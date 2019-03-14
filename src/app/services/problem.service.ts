@@ -167,7 +167,20 @@ export class ProblemService {
   storeProblemWatchedBy(id: number, problemData: any) {
     this.apollo
       .mutate<any>({
-        mutation: Query.UpdateMutation,
+        mutation: gql`
+          mutation updateMutation(
+            $where: problems_bool_exp!
+            $set: problems_set_input!
+          ) {
+            update_problems(where: $where, _set: $set) {
+              affected_rows
+              returning {
+                id
+                title
+              }
+            }
+          }
+        `,
         variables: {
           where: {
             id: {
@@ -190,9 +203,23 @@ export class ProblemService {
       );
   }
   storeProblemVotedBy(id: number, problemData: any) {
+    console.log(problemData, "vote and watch test");
     this.apollo
       .mutate<any>({
-        mutation: Query.UpdateMutation,
+        mutation: gql`
+          mutation updateMutation(
+            $where: problems_bool_exp!
+            $set: problems_set_input!
+          ) {
+            update_problems(where: $where, _set: $set) {
+              affected_rows
+              returning {
+                id
+                title
+              }
+            }
+          }
+        `,
         variables: {
           where: {
             id: {
