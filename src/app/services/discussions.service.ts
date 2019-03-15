@@ -3,7 +3,7 @@ import { Apollo } from "apollo-angular";
 import gql from "graphql-tag";
 import { AuthService } from "./auth.service";
 
-interface Comment {
+export interface Comment {
   id?: number; // new comments will automatically get ids from PostgreSQL. Edits will have an id.
   created_by: number; // user_id
   problem_id?: number; // linked problem
@@ -74,7 +74,7 @@ export class DiscussionsService {
     return this.apollo.watchQuery<any>({
       query: gql`
         {
-          discussions(where: { problem_id: { _eq: ${id} } }) {
+          discussions(where: { problem_id: { _eq: ${id} } }, order_by:{created_at:desc}) {
             id
             created_by
             created_at

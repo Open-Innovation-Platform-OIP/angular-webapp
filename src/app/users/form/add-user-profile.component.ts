@@ -1,5 +1,5 @@
 import { Component, OnInit, OnChanges } from "@angular/core";
-import { UserHandlerService } from "../../services/user-handler.service";
+import { UsersService } from "../../services/users.service";
 import { Apollo } from "apollo-angular";
 import gql from "graphql-tag";
 import { Router, ActivatedRoute } from "@angular/router";
@@ -22,15 +22,41 @@ export class AddUserProfileComponent implements OnInit, OnChanges {
   tags = [];
   preTags: any = [];
   imageBlob: Blob;
-  personas = [];
+  personas = ["testing"];
   public query: string;
   public query2: string;
   public platform: any;
   public geocoder: any;
   public locations: Array<any>;
+  objectEntries = Object.entries;
+  objectKeys = Object.keys;
+  personaArray = [];
+
+  user: any = {
+    id: "",
+    email: "",
+    token: "",
+    password: "",
+
+    name: "",
+    organization: "",
+
+    qualification: "",
+    photo_url: {},
+    phone_number: "",
+    location: "",
+    is_ngo: false,
+    is_innovator: false,
+    is_expert: false,
+    is_government: false,
+    is_funder: false,
+    is_beneficiary: false,
+    is_incubator: false,
+    is_entrepreneur: false
+  };
 
   constructor(
-    private userHandlerService: UserHandlerService,
+    private userService: UsersService,
     private apollo: Apollo,
     private router: Router,
     private route: ActivatedRoute,
@@ -52,8 +78,8 @@ export class AddUserProfileComponent implements OnInit, OnChanges {
   }
 
   public getAddress() {
-    if (this.userHandlerService.user.location != "") {
-      // this.here.getAddress(this.userHandlerService.user.location).then(
+    if (this.user.location != "") {
+      // this.here.getAddress(this.user.location).then(
       //   result => {
       //     this.locations = <Array<any>>result;
       //   },
@@ -62,22 +88,27 @@ export class AddUserProfileComponent implements OnInit, OnChanges {
       //   }
       // );
     }
-    var obj = this.userHandlerService.personas;
-    console.log(this.userHandlerService.personas);
-    var keys = Object.keys(obj);
+    // var obj = personas;
+    // console.log(personas);
+    // var keys = Object.keys(obj);
 
-    var filtered = keys.filter(function(key) {
-      return obj[key];
-    });
-    console.log(JSON.parse("{" + filtered.toString() + "}"));
-    console.log(typeof JSON.parse("{" + filtered.toString() + "}"));
+    // var filtered = keys.filter(function(key) {
+    //   return obj[key];
+    // });
+    // console.log(JSON.parse("{" + filtered.toString() + "}"));
+    // console.log(typeof JSON.parse("{" + filtered.toString() + "}"));
   }
   public storeLocation(loc) {
-    this.userHandlerService.user.location = loc.srcElement.innerText;
-    console.log(this.userHandlerService.user.location);
+    this.user.location = loc.srcElement.innerText;
+    console.log(this.user.location);
   }
   ngOnInit() {
-    this.tagService.getTagsFromDB();
+    Object.entries(this.user).map(persona => {
+      if (typeof persona[1] === "boolean") {
+        this.personaArray.push(persona[0].slice(3));
+      }
+    });
+    // this.tagService.getTagsFromDB();
 
     this.route.params.pipe(first()).subscribe(params => {
       console.log(params.id, "params id");
@@ -95,20 +126,37 @@ export class AddUserProfileComponent implements OnInit, OnChanges {
               photo_url
               location
               phone_number
-              personas
+              is_ngo
+              is_innovator
+              is_entrepreneur
+              is_expert
+              is_government
+              is_beneficiary
+              is_incubator
+              is_funder
+
+              
             }
           }
         `,
             pollInterval: 500
           })
-          .valueChanges.subscribe(result => {
-            console.log("result", result);
-            this.userHandlerService.user = result.data.users[0];
-
-            if (this.userHandlerService.user.personas) {
-              // this.userHandlerService.personas = this.userHandlerService.user.personas;
+          .valueChanges.subscribe(
+            ({ data }) => {
+              // console.log(data, "user profile");
+              if (data.users.length > 0) {
+                Object.keys(this.user).map(key => {
+                  if (data.users[0][key]) {
+                    this.user[key] = data.users[0][key];
+                  }
+                });
+              }
+              // });
+            },
+            error => {
+              console.log("could not get user due to", error);
             }
-          });
+          );
       }
     });
 
@@ -154,27 +202,15 @@ export class AddUserProfileComponent implements OnInit, OnChanges {
   }
 
   updateProfileToDb() {
-    if (this.mode == "Add") {
-      this.userHandlerService.updateUserInDb(
-        Number(this.auth.currentUserValue.id),
-        this.userHandlerService.user,
-        this.tags
-      );
-
-      this.router.navigateByUrl("/profiles");
-    } else if (this.mode == "Edit") {
-      this.userHandlerService.updateUserInDb(
-        this.userHandlerService.user.id,
-        this.userHandlerService.user,
-        this.preTags,
-        this.tags
-      );
+    if (Number(this.auth.currentUserValue.id)) {
+      this.user.id = Number(this.auth.currentUserValue.id);
     }
+    this.userService.submitUserToDB(this.user);
   }
 
   onSubmit() {
     // adding persona before submitting
-    // this.userHandlerService.user.personas = this.userHandlerService.personas;
+    // this.user.personas = personas;
 
     if (this.imageBlob) {
       console.log("inside image blob");
@@ -185,9 +221,9 @@ export class AddUserProfileComponent implements OnInit, OnChanges {
         .promise()
         .then(values => {
           // console.log("val: ", values);
-          this.userHandlerService.user.photo_url = {};
-          this.userHandlerService.user.photo_url.url = values["Location"];
-          this.userHandlerService.user.photo_url.key = values["Key"];
+          this.user.photo_url = {};
+          this.user.photo_url.url = values["Location"];
+          this.user.photo_url.key = values["Key"];
 
           this.updateProfileToDb();
         })

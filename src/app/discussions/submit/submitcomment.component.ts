@@ -10,11 +10,11 @@ Quill.register('modules/imageDrop', ImageDrop);
 import 'quill-mention';
 import { QuillEditorComponent } from 'ngx-quill';
 @Component({
-  selector: 'app-discussions',
-  templateUrl: './discussions.component.html',
-  styleUrls: ['./discussions.component.css']
+  selector: 'app-submit-comment',
+  templateUrl: './submitcomment.component.html',
+  styleUrls: ['./submitcomment.component.css']
 })
-export class DiscussionsComponent implements OnInit {
+export class CommentSubmitComponent implements OnInit {
   @ViewChild(QuillEditorComponent) editor: QuillEditorComponent;
   @Input() actionText = "Comment";
   @Input() users = [
@@ -27,7 +27,8 @@ export class DiscussionsComponent implements OnInit {
       value: 'Jacob'
     }
   ];
-  @Output() submitted = new EventEmitter();
+  @Output() submit = new EventEmitter();
+  @Output() cancel = new EventEmitter();
   content = '';
   mentions = [];
   modules = {
@@ -76,9 +77,9 @@ export class DiscussionsComponent implements OnInit {
     event.focus();
   }
 
-  submit() {
+  submitComment() {
     // console.log(this.mentions, this.content);
-    this.submitted.emit([this.content, this.mentions]);
+    this.submit.emit([this.content, this.mentions]);
     this.content = '';
     this.mentions = [];
   }

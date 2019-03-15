@@ -68,7 +68,7 @@
               <span>&nbsp;</span>
               <span> {{watchedBy}}</span>
             </div>
-            <div *ngIf="this.userId===problemData.created_by" [routerLink]="
+            <div *ngIf="userId===problemData.created_by" [routerLink]="
             '/problems/'+ problemData.id+'/edit'">
               <i class="material-icons actions">
                 create
@@ -466,79 +466,67 @@
             <h4 class="card-title">Discussions</h4>
           </div>
           <div class="card-body">
-            <app-discussions [users]="objectValues(usersService.allUsers)" [actionText]="'Comment'" (submitted)="onCommentSubmit($event)"></app-discussions>
+            <button mat-raised-button class="btn btn-warning btn-sm btn-round" matTooltip="Click to add comment"
+              [matTooltipPosition]="'below'" (click)="showCommentBox=true">Join Discussion</button>
           </div>
         </div>
-        <div class="card" *ngFor="let discussion of discussions">
-          <div class="card-header card-header-icon card-header-warning">
-            <div class="user photo card-icon">
-              <!-- <img class="img" src="{{(discussion.usersBycreatedBy.photo_url && discussion.usersBycreatedBy.photo_url.url) ? discussion.usersBycreatedBy.photo_url.url : './assets/img/default-avatar.png'}}" /> -->
-              <i class="material-icons">comment</i>
-            </div>
-            <h4 class="card-title">{{discussion.usersBycreatedBy.name || 'Anonymous'}}</h4>
+        <app-submit-comment *ngIf="showCommentBox===true" [users]="objectValues(usersService.allUsers)" [actionText]="'Comment'" (cancel)="showCommentBox=false" (submit)="onCommentSubmit($event)"></app-submit-comment>
+        <div class="row" *ngFor="let comment of discussions">
+            <!-- <div class="row" *ngFor="let comment of objectValues(comments)"> -->
+          <div class="col-sm-1" *ngIf="comment.linked_comment_id"></div>
+          <div class="col">
+          <app-display-comment (replyClick)="replyTo(comment.id)" [comment]="comment"></app-display-comment>
+          <app-submit-comment *ngIf="showReplyBox && replyingTo === comment.id" [users]="objectValues(usersService.allUsers)"
+            [actionText]="'Reply'" (cancel)="showReplyBox=false" (submit)="onCommentSubmit($event)"></app-submit-comment>
           </div>
-          <div class="card-body">
-            <div innerHTML="{{discussion.text}}"></div>
-            <app-discussions *ngIf="showReplyBox && replyingTo === discussion.id" [users]="objectValues(usersService.allUsers)"
-              [actionText]="'Reply'" (submitted)="onCommentSubmit($event)"></app-discussions>
-          </div>
-          <div class="card-footer" *ngIf="!showReplyBox">
-            <div class="stats">
-              <p class="card-category"><i class="material-icons">access_time</i> {{discussion.modified_at |
-                date:'medium'}}</p>
-            </div>
-            <div class="price">
-              <button mat-raised-button class="btn btn-warning btn-round" matTooltip="Click to reply"
-                [matTooltipPosition]="'below'" (click)="replyTo(discussion.id)">Reply</button>
-            </div>
-          </div>
+        </div>
 
-        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ----------------------------- show more images modal start----------------------------- -->
+<div class="modal fade" id="viewMoreImgModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered modal-lg">
+    <div class="modal-content">
+      <img src="{{modalImgSrc}}" alt="" height="500px">
+      <div class="modal-footer justify-content-center" *ngIf="!singleImg">
+        <button mat-raised-button type="button" (click)="toggleImgSrc(false)" class="btn btn-info btn-round"><span
+            class="carousel-control-prev-icon" aria-hidden="true"></span></button>
+        <div class="col-3"></div>
+        <button mat-raised-button type="button" class="btn btn-info btn-round" (click)="toggleImgSrc(true)"><span class="carousel-control-next-icon"
+            aria-hidden="true"></span></button>
+      </div>
+    </div>
+  </div>
+</div>
+<!-- ----------------------------- show more images modal ends----------------------------- -->
+
+<!-- ----------------------------- show more videos modal start----------------------------- -->
+<div class="modal fade" id="viewMoreVideosModal" data-backdrop="static" data-keyboard="false">
+  <div class="modal-dialog modal-dialog-centered modal-lg">
+    <div class="modal-content">
+      <div>
+        <button mat-button type="button" class="close" data-dismiss="modal" (click)="dimissVideoModal($event)"
+          aria-hidden="true">
+          <i class="material-icons">clear</i>
+        </button>
+      </div>
+      <video height="450px" id="problemVideoID" controls src="{{modalVideoSrc}}">
+
+      </video>
+      <div class="modal-footer justify-content-center" *ngIf="problemData.video_urls && problemData.video_urls.length">
+        <button mat-raised-button type="button" class="btn btn-info btn-round" (click)="toggleVideoSrc('prev')"><span
+            class="carousel-control-prev-icon" aria-hidden="true"></span></button>
+        <div class="col-3"></div>
+        <button mat-raised-button type="button" class="btn btn-info btn-round" (click)="toggleVideoSrc('next')"><span
+            class="carousel-control-next-icon" aria-hidden="true"></span></button>
       </div>
     </div>
   </div>
 
-  <!-- ----------------------------- show more images modal start----------------------------- -->
-  <div class="modal fade" id="viewMoreImgModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
-    <div class="modal-dialog modal-dialog-centered modal-lg">
-      <div class="modal-content">
-        <img src="{{modalImgSrc}}" alt="" height="500px">
-        <div class="modal-footer justify-content-center" *ngIf="!singleImg">
-          <button mat-raised-button type="button" (click)="toggleImgSrc(false)" class="btn btn-info btn-round"><span
-              class="carousel-control-prev-icon" aria-hidden="true"></span></button>
-          <div class="col-3"></div>
-          <button mat-raised-button type="button" class="btn btn-info btn-round" (click)="toggleImgSrc(true)"><span
-              class="carousel-control-next-icon" aria-hidden="true"></span></button>
-        </div>
-      </div>
-    </div>
-  </div>
-  <!-- ----------------------------- show more images modal ends----------------------------- -->
+</div>
+<!-- ----------------------------- show more videos modal end ----------------------------- -->
 
-  <!-- ----------------------------- show more videos modal start----------------------------- -->
-  <div class="modal fade" id="viewMoreVideosModal" data-backdrop="static" data-keyboard="false">
-    <div class="modal-dialog modal-dialog-centered modal-lg">
-      <div class="modal-content">
-        <div>
-          <button mat-button type="button" class="close" data-dismiss="modal" (click)="dimissVideoModal($event)"
-            aria-hidden="true">
-            <i class="material-icons">clear</i>
-          </button>
-        </div>
-        <video height="450px" id="problemVideoID" controls src="{{modalVideoSrc}}">
-
-        </video>
-        <div class="modal-footer justify-content-center" *ngIf="problemData.video_urls && problemData.video_urls.length">
-          <button mat-raised-button type="button" class="btn btn-info btn-round" (click)="toggleVideoSrc('prev')"><span
-              class="carousel-control-prev-icon" aria-hidden="true"></span></button>
-          <div class="col-3"></div>
-          <button mat-raised-button type="button" class="btn btn-info btn-round" (click)="toggleVideoSrc('next')"><span
-              class="carousel-control-next-icon" aria-hidden="true"></span></button>
-        </div>
-      </div>
-    </div>
-
-  </div>
-  <!-- ----------------------------- show more videos modal end ----------------------------- -->
-
-  <!--REWRITE-->
+<!--REWRITE-->

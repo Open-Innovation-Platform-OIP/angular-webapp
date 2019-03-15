@@ -94,4 +94,54 @@ export class UsersService {
         }
       });
   }
+
+  submitUserToDB(userData) {
+    console.log(userData, "user Data on edit testing");
+    this.apollo
+      .mutate({
+        mutation: gql`
+          mutation upsert_users($users: [users_insert_input!]!) {
+            insert_users(
+              objects: $users
+              on_conflict: {
+                constraint: users_pkey
+                update_columns: [
+                  name
+                  organization
+                  qualification
+                  location
+                  photo_url
+                  phone_number
+                  is_ngo
+                  is_innovator
+                  is_entrepreneur
+                  is_expert
+                  is_incubator
+                  is_funder
+                  is_government
+                  is_beneficiary
+                ]
+              }
+            ) {
+              affected_rows
+              returning {
+                id
+              }
+            }
+          }
+        `,
+        variables: {
+          users: [userData]
+        }
+      })
+      .subscribe(
+        data => {
+          console.log(data);
+          // location.reload();
+        },
+        err => {
+          console.log(err, "error on user edit");
+        }
+      );
+  }
 }
