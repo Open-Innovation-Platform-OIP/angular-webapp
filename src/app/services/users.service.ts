@@ -34,7 +34,8 @@ export class UsersService {
             photo_url
           }
         }
-      `
+      `,
+        pollInterval: 500
       })
       .valueChanges.subscribe(({ data }) => {
         if (data.users.length > 0) {
@@ -55,7 +56,8 @@ export class UsersService {
               organization
             }
           }
-        `
+        `,
+        pollInterval: 500
       })
       .valueChanges.subscribe(({ data }) => {
         if (data.users.length > 0) {
@@ -78,7 +80,8 @@ export class UsersService {
               name
             }
           }
-        `
+        `,
+        pollInterval: 500
       })
       .valueChanges.subscribe(({ data }) => {
         if (data.users.length > 0) {

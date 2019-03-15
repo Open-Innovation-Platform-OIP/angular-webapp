@@ -137,7 +137,8 @@ export class AddUserProfileComponent implements OnInit, OnChanges {
               
             }
           }
-        `
+        `,
+            pollInterval: 500
           })
           .valueChanges.subscribe(
             ({ data }) => {
@@ -165,39 +166,40 @@ export class AddUserProfileComponent implements OnInit, OnChanges {
       }
     });
 
-    // this.apollo
-    //   .watchQuery<any>({
-    //     query: gql`
-    //       {
-    //         users(where: { id: { _eq: ${Number(
-    //           this.auth.currentUserValue.id
-    //         )} } }) {
-    //           id
-    //           user_tags{
-    //             tag {
-    //               id
-    //               name
-    //             }
-    //           }
-    //         }
-    //       }`
-    //   })
-    //   .valueChanges.subscribe(result => {
-    //     console.log(result, "result");
+    this.apollo
+      .watchQuery<any>({
+        query: gql`
+          {
+            users(where: { id: { _eq: ${Number(
+              this.auth.currentUserValue.id
+            )} } }) {
+              id
+              user_tags{
+                tag {
+                  id
+                  name
+                }
+              }
+            }
+          }`,
+        pollInterval: 500
+      })
+      .valueChanges.subscribe(result => {
+        console.log(result, "result");
 
-    //     // this.tags = result.data.this.users[0].this.user_tags.map(tagArray => {
-    //     //   console.log(tagArray, "work");
+        this.tags = result.data.users[0].user_tags.map(tagArray => {
+          console.log(tagArray, "work");
 
-    //     //   return tagArray.tag.name;
-    //     // });
-    //     // console.log(this.tags, "tag");
-    //     // this.preTags = result.data.this.users[0].this.user_tags.map(tagArray => {
-    //     //   console.log(tagArray, "work");
+          return tagArray.tag.name;
+        });
+        console.log(this.tags, "tag");
+        this.preTags = result.data.users[0].user_tags.map(tagArray => {
+          console.log(tagArray, "work");
 
-    //     //   return tagArray.tag;
-    //     // });
-    //     console.log("tags==", this.tags);
-    //   });
+          return tagArray.tag;
+        });
+        console.log("tags==", this.tags);
+      });
   }
 
   getBlob(event) {

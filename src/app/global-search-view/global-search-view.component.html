@@ -2,34 +2,41 @@
   <div class="container-fluid">
     <div class="row justify-content-center">
       <div class="col-md-6">
-        <input type="text" value="" class="form-control" placeholder="Search..." name="searchInput" autofocus
-          data-toggle="dropdown" [(ngModel)]="searchInput" (input)="globalSearch($event.target.value)" autocomplete="off">
+        <input
+          type="text"
+          value=""
+          class="form-control"
+          placeholder="Search..."
+          name="searchInput"
+          autofocus
+          data-toggle="dropdown"
+          [(ngModel)]="searchInput"
+          (input)="globalSearch($event.target.value)"
+          autocomplete="off"
+        />
       </div>
     </div>
-    <hr>
+    <hr />
     <div class="row">
       <div class="col-md-4">
-        <h4 class="card-title">Problems</h4>
-        <div class="card card-product" *ngFor="let problem of globalProblemSearchResults" [routerLink]="'/problems/'+problem.id">
-          <div class="card-header">
-            <h4 class="card-title">{{problem.title}}</h4>
-          </div>
-          <div class="card-body">
-            <p class="description">
-              {{problem.description}}
-            </p>
-          </div>
+        <h4 class="card-title text-center">Problems</h4>
+        <div>
+          <app-problem-card
+            *ngFor="let problem of globalProblemSearchResults"
+            [problemData]="problem"
+          ></app-problem-card>
         </div>
       </div>
       <div class="col-md-4">
-        <h4 class="card-title">Solutions</h4>
+        <h4 class="card-title text-center">Solutions</h4>
       </div>
       <div class="col-md-4">
-        <h4 class="card-title">Users</h4>
-        <div class="card card-product" *ngFor="let user of userSearchResults" [routerLink]="'/profile/'+user.id">
-          <div class="card-body">
-            {{user.email}}
-          </div>
+        <h4 class="card-title text-center">Users</h4>
+        <div>
+          <app-profile-card
+            *ngFor="let user of userSearchResults"
+            [userData]="user"
+          ></app-profile-card>
         </div>
       </div>
     </div>

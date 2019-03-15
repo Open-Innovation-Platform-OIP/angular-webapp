@@ -43,6 +43,7 @@ export class ProblemDetailComponent implements OnInit {
   discussions = [];
   replyingTo = 0;
   showReplyBox = false;
+  showCommentBox = false;
   allUsers = [
     {
       id: 1,
@@ -111,6 +112,7 @@ export class ProblemDetailComponent implements OnInit {
   showCollaborators: boolean;
   hideProblemDetail: boolean = true;
   collaboratorProfileInfo: any;
+  comments = {};
 
   fabTogglerState: boolean = false;
 
@@ -172,7 +174,8 @@ export class ProblemDetailComponent implements OnInit {
               personas
             }
           }
-        `
+        `,
+        pollInterval: 500
       })
       .valueChanges.subscribe(result => {
         if (result.data.users[0].personas) {
@@ -266,7 +269,8 @@ export class ProblemDetailComponent implements OnInit {
             }
         }
             
-        `
+        `,
+            pollInterval: 500
           })
           .valueChanges.subscribe(
             result => {
@@ -372,6 +376,46 @@ export class ProblemDetailComponent implements OnInit {
                         "\n\n---->discussions<----\n\n\n"
                       );
                       this.discussions = discussions.data.discussions;
+                      discussions.data.discussions.map(comment => {
+                        if (comment.linked_comment_id) {
+                          if (!this.comments[comment.linked_comment_id]) {
+                            // create comment object so we can add reply
+                            this.comments[comment.linked_comment_id] = {
+                              id: comment.linked_comment_id,
+                              created_by: 0,
+                              created_at: '',
+                              modified_at: '',
+                              text: '',
+                              mentions: [],
+                              replies: [comment]
+                            }
+                          } else {
+                            // comment object already exists so push reply
+                            this.comments[comment.linked_comment_id].replies.push(comment);
+                          }
+                        } else {
+                          // comment object does not exist
+                          if (!this.comments[comment.id]) {
+                            this.comments[comment.id] = {
+                              id: comment.id,
+                              created_by: comment.created_by,
+                              created_at: comment.created_at,
+                              modified_at: comment.modified_at,
+                              text: comment.text,
+                              replies: [],
+                              mentions: comment.mentions
+                            }
+                          } else {
+                            // comment object already created by a reply; assign properties so we don't overwrite the replies
+                            this.comments[comment.id].created_by = comment.created_by;
+                            this.comments[comment.id].created_at = comment.created_at;
+                            this.comments[comment.id].modified_at = comment.modified_at;
+                            this.comments[comment.id].text = comment.text;
+                            this.comments[comment.id].mentions = comment.mentions;
+                          }
+                        }
+                      });
+                      console.log(this.comments);
                     }
                   });
               }
@@ -522,7 +566,8 @@ export class ProblemDetailComponent implements OnInit {
       }
     }
   }
-`
+`,
+        pollInterval: 500
       })
       .valueChanges.subscribe(
         result => {
@@ -570,7 +615,8 @@ export class ProblemDetailComponent implements OnInit {
   }
 
 }
-`
+`,
+        pollInterval: 500
       })
       .valueChanges.subscribe(
         result => {
@@ -619,7 +665,8 @@ export class ProblemDetailComponent implements OnInit {
               is_deleted
             }
           }
-        `
+        `,
+        pollInterval: 500
       })
       .valueChanges.subscribe(
         data => {
@@ -760,7 +807,7 @@ export class ProblemDetailComponent implements OnInit {
 
     validationData.problem_id = this.problemData.id;
 
-    this.validationService.submitValidationToDB(validationData);
+    // this.validationService.submitValidationToDB(validationData);
   }
 
   voteProblem() {
@@ -826,7 +873,7 @@ export class ProblemDetailComponent implements OnInit {
   // }
 
   deleteValidation(validationData) {
-    this.validationService.deleteValidation(validationData);
+    // this.validationService.deleteValidation(validationData);
   }
 
   deleteCollaboration(collaborationData) {

@@ -235,7 +235,8 @@ export class WizardComponent
                             }
                             }
                         }
-                        `
+                        `,
+            pollInterval: 500
           })
           .valueChanges.subscribe(result => {
             if (
@@ -754,7 +755,8 @@ export class WizardComponent
                         }
                     }
                     }
-                    }`
+                    }`,
+          pollInterval: 500
         })
         .valueChanges.subscribe(
           result => {

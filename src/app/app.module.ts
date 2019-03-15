@@ -54,7 +54,7 @@ import { AuthLayoutComponent } from "./layouts/auth/auth-layout.component";
 
 import { AppRoutes } from "./app.routing";
 import { GraphQLModule } from "./services/graphql.module";
-import { GlobalSearchViewComponent } from "./global-search-view/global-search-view.component";
+// import { GlobalSearchViewModule } from "./global-search-view/global-search-view.module";
 @NgModule({
   exports: [
     MatAutocompleteModule,
@@ -94,9 +94,9 @@ import { GlobalSearchViewComponent } from "./global-search-view/global-search-vi
 })
 export class MaterialModule {}
 
-Sentry.init({
-  dsn: "https://aa3877830cee4ba6b6999be089316f57@sentry.io/1408858"
-});
+// Sentry.init({
+//   dsn: "https://aa3877830cee4ba6b6999be089316f57@sentry.io/1408858"
+// });
 
 @Injectable()
 export class SentryErrorHandler implements ErrorHandler {
@@ -120,13 +120,9 @@ export class SentryErrorHandler implements ErrorHandler {
     NavbarModule,
     FooterModule,
     FixedpluginModule
+    // GlobalSearchViewModule
   ],
-  declarations: [
-    AppComponent,
-    AdminLayoutComponent,
-    AuthLayoutComponent,
-    GlobalSearchViewComponent
-  ],
+  declarations: [AppComponent, AdminLayoutComponent, AuthLayoutComponent],
   providers: [
     // { provide: ErrorHandler, useClass: SentryErrorHandler }
   ],

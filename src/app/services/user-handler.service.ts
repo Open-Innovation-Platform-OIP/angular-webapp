@@ -70,7 +70,8 @@ export class UserHandlerService {
             name
           }
         }
-      `
+      `,
+      pollInterval: 500
     }).valueChanges;
   }
 
@@ -86,6 +87,10 @@ export class UserHandlerService {
       })
       .subscribe(
         data => {
+          // console.log("DATA", data);
+          // this.userId = data.data.insert_users.returning[0].id;
+          // console.log("ID ID", this.userId);
+          // console.log("USER", user);
           this.router.navigateByUrl("/profiles");
         },
         err => {
