@@ -33,14 +33,24 @@ export class UserHandlerService {
     government: false
   };
 
-  personaList: string[] = ['INNOVATOR', 'ENTREPRENEUR', 'EXPERT', 'USER', 'ADMIN', 'FUNDER', 'NGO', 'INCUBATOR', 'GOVERNMENT'];
+  personaList: string[] = [
+    "INNOVATOR",
+    "ENTREPRENEUR",
+    "EXPERT",
+    "USER",
+    "ADMIN",
+    "FUNDER",
+    "NGO",
+    "INCUBATOR",
+    "GOVERNMENT"
+  ];
   user: any = {
     name: "",
     organization: "",
     expertise: "",
     qualification: "",
     photo_url: {},
-    phone_number: '',
+    phone_number: "",
     location: "",
     personas: []
   };
@@ -49,7 +59,7 @@ export class UserHandlerService {
     private apollo: Apollo,
     private router: Router,
     private tagHandlerService: TagsService
-  ) { }
+  ) {}
 
   getUser(id: number) {
     return this.apollo.watchQuery<any>({
@@ -74,15 +84,14 @@ export class UserHandlerService {
           objects: [user]
         }
       })
-      .subscribe(data => {
-        // console.log("DATA", data);
-        // this.userId = data.data.insert_users.returning[0].id;
-        // console.log("ID ID", this.userId);
-        // console.log("USER", user);
-        this.router.navigateByUrl("/profiles");
-      }, err => {
-        console.error(err);
-      });
+      .subscribe(
+        data => {
+          this.router.navigateByUrl("/profiles");
+        },
+        err => {
+          console.error(err);
+        }
+      );
   }
 
   updateUserInDb(
