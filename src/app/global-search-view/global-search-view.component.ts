@@ -2,10 +2,10 @@ import { Component, OnInit, Input, OnChanges } from "@angular/core";
 import { Router, ActivatedRoute } from "@angular/router";
 import { first, finalize, startWith, take, map } from "rxjs/operators";
 
-import * as Query from '../services/queries';
+import * as Query from "../services/queries";
 import { Apollo } from "apollo-angular";
 import gql from "graphql-tag";
-import { AuthService } from '../services/auth.service';
+import { AuthService } from "../services/auth.service";
 
 declare var $: any;
 
@@ -55,15 +55,13 @@ export class GlobalSearchViewComponent implements OnInit, OnChanges {
               name
               email
               }
-              }`
+              }`,
+          pollInterval: 500
         })
         .valueChanges.subscribe(value => {
           this.globalProblemSearchResults = value.data.search_problems;
           this.userSearchResults = value.data.search_users;
-          console.log(
-            "Problem results = ",
-            this.globalProblemSearchResults
-          );
+          console.log("Problem results = ", this.globalProblemSearchResults);
           console.log("User results = ", this.userSearchResults);
           // console.log('searchValue : ', searchT);
           // console.log('SearchText : ', this.searchText);

@@ -53,7 +53,8 @@ export class CollaboratorCardComponent implements OnInit, OnChanges {
              } 
 
             }
-               `
+               `,
+          pollInterval: 500
         })
         .valueChanges.subscribe(
           result => {

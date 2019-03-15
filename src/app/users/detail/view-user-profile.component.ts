@@ -42,7 +42,8 @@ export class ViewUserProfileComponent implements OnInit {
               personas
             }
           }
-        `
+        `,
+            pollInterval: 500
           })
           .valueChanges.subscribe(result => {
             console.log(result, "result");
@@ -73,7 +74,8 @@ export class ViewUserProfileComponent implements OnInit {
       }
     }
   }
-`
+`,
+        pollInterval: 500
       })
       .valueChanges.subscribe(
         result => {

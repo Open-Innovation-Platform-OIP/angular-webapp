@@ -1,12 +1,12 @@
 import { Component, OnInit, OnChanges } from "@angular/core";
-import { UserHandlerService } from '../../services/user-handler.service';
+import { UserHandlerService } from "../../services/user-handler.service";
 import { Apollo } from "apollo-angular";
 import gql from "graphql-tag";
 import { Router, ActivatedRoute } from "@angular/router";
 import { first, finalize } from "rxjs/operators";
-import { AuthService } from '../../services/auth.service';
-import { FilesService } from '../../services/files.service';
-import { TagsService } from '../../services/tags.service';
+import { AuthService } from "../../services/auth.service";
+import { FilesService } from "../../services/files.service";
+import { TagsService } from "../../services/tags.service";
 declare var H: any;
 // import { GeocoderService } from '../../services/geocoder.service';
 import { filter } from "rxjs-compat/operator/filter";
@@ -37,7 +37,7 @@ export class AddUserProfileComponent implements OnInit, OnChanges {
     private imgUpload: FilesService,
     private auth: AuthService,
     // private here: GeocoderService,
-    private tagService: TagsService,
+    private tagService: TagsService
   ) {
     // console.log("TEst is: ", this.test);
   }
@@ -98,7 +98,8 @@ export class AddUserProfileComponent implements OnInit, OnChanges {
               personas
             }
           }
-        `
+        `,
+            pollInterval: 500
           })
           .valueChanges.subscribe(result => {
             console.log("result", result);
@@ -115,7 +116,9 @@ export class AddUserProfileComponent implements OnInit, OnChanges {
       .watchQuery<any>({
         query: gql`
           {
-            users(where: { id: { _eq: ${Number(this.auth.currentUserValue.id)} } }) {
+            users(where: { id: { _eq: ${Number(
+              this.auth.currentUserValue.id
+            )} } }) {
               id
               user_tags{
                 tag {
@@ -124,7 +127,8 @@ export class AddUserProfileComponent implements OnInit, OnChanges {
                 }
               }
             }
-          }`
+          }`,
+        pollInterval: 500
       })
       .valueChanges.subscribe(result => {
         console.log(result, "result");

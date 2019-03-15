@@ -1,7 +1,7 @@
-import { Injectable } from '@angular/core';
+import { Injectable } from "@angular/core";
 import { Apollo } from "apollo-angular";
 import gql from "graphql-tag";
-import { AuthService } from './auth.service';
+import { AuthService } from "./auth.service";
 
 interface Comment {
   id?: number; // new comments will automatically get ids from PostgreSQL. Edits will have an id.
@@ -14,47 +14,54 @@ interface Comment {
 }
 
 @Injectable({
-  providedIn: 'root'
+  providedIn: "root"
 })
 export class DiscussionsService {
-
-  constructor(
-    private apollo: Apollo,
-    private auth: AuthService
-  ) { }
+  constructor(private apollo: Apollo, private auth: AuthService) {}
 
   submitCommentToDB(comment: Comment) {
     if (!(comment.problem_id || comment.solution_id)) {
-      console.log('cannot continue without problem or solution id');
+      console.log("cannot continue without problem or solution id");
       return false;
     }
     comment.created_by = this.auth.currentUserValue.id;
     const upsert_comment = gql`
-            mutation upsert_comment($discussions:[discussions_insert_input!]!) {
-                insert_discussions(objects: $discussions, on_conflict: {constraint: discussions_pkey, update_columns: [text, mentions, modified_at]}) {
-                affected_rows
-                returning {
-                    id
-                    text
-                }
-                }
-            }
-        `;
-    this.apollo.mutate({
-      mutation: upsert_comment,
-      variables: {
-        discussions: [comment]
+      mutation upsert_comment($discussions: [discussions_insert_input!]!) {
+        insert_discussions(
+          objects: $discussions
+          on_conflict: {
+            constraint: discussions_pkey
+            update_columns: [text, mentions, modified_at]
+          }
+        ) {
+          affected_rows
+          returning {
+            id
+            text
+          }
+        }
       }
-    }).subscribe(result => {
-      if (result.data.insert_discussions.returning.length > 0) {
-        console.log(result.data.insert_discussions);
-      }
-    }, err => {
-      console.error(JSON.stringify(err));
-    });
+    `;
+    this.apollo
+      .mutate({
+        mutation: upsert_comment,
+        variables: {
+          discussions: [comment]
+        }
+      })
+      .subscribe(
+        result => {
+          if (result.data.insert_discussions.returning.length > 0) {
+            console.log(result.data.insert_discussions);
+          }
+        },
+        err => {
+          console.error(JSON.stringify(err));
+        }
+      );
   }
 
-  getComments(id, is_problem=true) {
+  getComments(id, is_problem = true) {
     let query = `{
           discussions(where: { problem_id: { _eq: ${id} } }) {
             id
@@ -62,7 +69,7 @@ export class DiscussionsService {
           }
         }`;
     if (!is_problem) {
-      query.replace('problem_id', 'solution_id');
+      query.replace("problem_id", "solution_id");
     }
     return this.apollo.watchQuery<any>({
       query: gql`
@@ -81,7 +88,8 @@ export class DiscussionsService {
             }
           }
         }
-      `
+      `,
+      pollInterval: 500
     }).valueChanges;
   }
 }

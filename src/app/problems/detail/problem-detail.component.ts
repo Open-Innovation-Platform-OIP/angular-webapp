@@ -173,7 +173,8 @@ export class ProblemDetailComponent implements OnInit {
               personas
             }
           }
-        `
+        `,
+        pollInterval: 500
       })
       .valueChanges.subscribe(result => {
         if (result.data.users[0].personas) {
@@ -265,7 +266,8 @@ export class ProblemDetailComponent implements OnInit {
             }
         }
             
-        `
+        `,
+            pollInterval: 500
           })
           .valueChanges.subscribe(
             result => {
@@ -521,7 +523,8 @@ export class ProblemDetailComponent implements OnInit {
       }
     }
   }
-`
+`,
+        pollInterval: 500
       })
       .valueChanges.subscribe(
         result => {
@@ -569,7 +572,8 @@ export class ProblemDetailComponent implements OnInit {
   }
 
 }
-`
+`,
+        pollInterval: 500
       })
       .valueChanges.subscribe(
         result => {
@@ -618,7 +622,8 @@ export class ProblemDetailComponent implements OnInit {
               is_deleted
             }
           }
-        `
+        `,
+        pollInterval: 500
       })
       .valueChanges.subscribe(
         data => {
