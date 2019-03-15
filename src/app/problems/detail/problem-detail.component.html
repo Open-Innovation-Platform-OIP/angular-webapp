@@ -68,7 +68,7 @@
               <span>&nbsp;</span>
               <span> {{watchedBy}}</span>
             </div>
-            <div *ngIf="this.userId===problemData.created_by" [routerLink]="
+            <div *ngIf="userId===problemData.created_by" [routerLink]="
             '/problems/'+ problemData.id+'/edit'">
               <i class="material-icons actions">
                 create

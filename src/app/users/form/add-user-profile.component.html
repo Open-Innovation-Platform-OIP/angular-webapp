@@ -17,9 +17,9 @@
                     <div class="fileinput fileinput-new text-center" data-provides="fileinput">
                       <div class="fileinput-new thumbnail img-circle">
                         <img src="{{
-                            userHandlerService.user.photo_url &&
-                            userHandlerService.user.photo_url.url
-                              ? userHandlerService.user.photo_url.url
+                            user.photo_url &&
+                            user.photo_url.url
+                              ? user.photo_url.url
                               : './assets/img/placeholder.jpg'
                           }}"
                           alt="..." />
@@ -40,11 +40,11 @@
                 </div>
                 <div class="row">
                   <label class="col-md-2 col-2 col-form-label" [ngStyle]="{
-                      color: !userHandlerService.user.name ? 'red' : 'grey'
+                      color: !user.name ? 'red' : 'grey'
                     }">Fullname</label>
                   <div class="col-md-10 col-9">
                     <mat-form-field class="example-full-width">
-                      <input matInput type="text" name="name" required [(ngModel)]="userHandlerService.user.name" #name="ngModel"
+                      <input matInput type="text" name="name" required [(ngModel)]="user.name" #name="ngModel"
                         ngDefaultControl />
                     </mat-form-field>
                     <div [hidden]="name.valid || name.pristine" class="text-danger error-msg">
@@ -56,7 +56,7 @@
                 <label class="col-md-2 col-2 col-form-label">Last Name</label>
                 <div class="col-md-10 col-9">
                   <mat-form-field class="example-full-width">
-                    <input matInput type="text" [ngModelOptions]="{standalone: true}" [(ngModel)]="userHandlerService.user.name">
+                    <input matInput type="text" [ngModelOptions]="{standalone: true}" [(ngModel)]="user.name">
                   </mat-form-field>
                 </div>
               </div> -->
@@ -64,16 +64,16 @@
                   <label class="col-md-2 col-2 col-form-label">Organization</label>
                   <div class="col-md-10 col-9">
                     <mat-form-field class="example-full-width">
-                      <input matInput type="text" name="organization" [(ngModel)]="userHandlerService.user.organization" />
+                      <input matInput type="text" name="organization" [(ngModel)]="user.organization" />
                     </mat-form-field>
                   </div>
                 </div>
                 <!-- <div class="row">
-                  <label class="col-md-2 col-2 col-form-label" [ngStyle]="{ 'color' : (!userHandlerService.user.interest) ? 'red' : 'grey' }">Interests
+                  <label class="col-md-2 col-2 col-form-label" [ngStyle]="{ 'color' : (!user.interest) ? 'red' : 'grey' }">Interests
                     </label>
                   <div class="col-md-10 col-9">
                     <mat-form-field class="example-full-width">
-                      <input matInput type="text" name="interests" required [(ngModel)]="userHandlerService.user.interest"
+                      <input matInput type="text" name="interests" required [(ngModel)]="user.interest"
                         #interests="ngModel">
                     </mat-form-field>
                     <div [hidden]="interests.valid || interests.pristine" class="text-danger error-msg">
@@ -93,23 +93,22 @@
                   <label class="col-md-2 col-2 col-form-label">Expertise</label>
                   <div class="col-md-10 col-9">
                     <mat-form-field class="example-full-width">
-                      <input matInput type="text" name="expertise" [(ngModel)]="userHandlerService.user.expertise">
+                      <input matInput type="text" name="expertise" [(ngModel)]="user.expertise">
                     </mat-form-field>
                   </div>
                 </div> -->
 
                 <div class="row">
                   <label class="col-md-2 col-2 col-form-label" [ngStyle]="{
-                    color: !userHandlerService.user.phone_number
+                    color: !user.phone_number
                       ? 'red'
                       : 'grey'
                   }">
                     Persona *</label>
                   <div class="col-md-10 col-9">
                     <mat-form-field>
-                      <mat-select [(ngModel)]="userHandlerService.user.personas" name="userHandlerService.user.personas"
-                        multiple>
-                        <mat-option *ngFor="let persona of userHandlerService.personaList" [value]="persona">{{persona}}</mat-option>
+                      <mat-select [(ngModel)]="user.is_ngo" name="user.is_ngo" multiple>
+                        <mat-option *ngFor="let persona of objectKeys(user)" [value]="persona">{{persona}}</mat-option>
                       </mat-select>
                     </mat-form-field>
                   </div>
@@ -117,7 +116,7 @@
 
                 <div class="row">
                   <label class="col-md-2 col-2 col-form-label" [ngStyle]="{
-                      color: !userHandlerService.user.phone_number
+                      color: !user.phone_number
                         ? 'red'
                         : 'grey'
                     }">Phone
@@ -125,7 +124,7 @@
                   </label>
                   <div class="col-md-10 col-9">
                     <mat-form-field class="example-full-width">
-                      <input matInput type="phone" name="phone_number" required [(ngModel)]="userHandlerService.user.phone_number"
+                      <input matInput type="phone" name="phone_number" required [(ngModel)]="user.phone_number"
                         #phone_number="ngModel" />
                     </mat-form-field>
                     <div [hidden]="phone_number.valid || phone_number.pristine" class="text-danger error-msg">
@@ -137,7 +136,7 @@
                   <label class="col-md-2 col-2 col-form-label">E-mail</label>
                   <div class="col-md-10 col-9">
                     <mat-form-field class="example-full-width">
-                      <input matInput type="text" name="email" [(ngModel)]="userHandlerService.user.email">
+                      <input matInput type="text" name="email" [(ngModel)]="user.email">
                     </mat-form-field>
                   </div>
                 </div> -->
@@ -159,13 +158,13 @@
 
                 <div class="row">
                   <label class="col-md-2 col-2 col-form-label" [ngStyle]="{
-                      color: !userHandlerService.user.location ? 'red' : 'grey'
+                      color: !user.location ? 'red' : 'grey'
                     }">Location
                     (Geo)
                   </label>
                   <div class="col-md-10 col-9">
                     <mat-form-field class="example-full-width">
-                      <input matInput type="text" name="location" required (keyup)="getAddress()" [(ngModel)]="userHandlerService.user.location"
+                      <input matInput type="text" name="location" required (keyup)="getAddress()" [(ngModel)]="user.location"
                         #location="ngModel" />
                       <table style="width: 100%" id="table">
                         <tbody>
@@ -188,7 +187,7 @@
                 <label class="col-md-2 col-2 col-form-label">Persona</label>
                 <div class="col-md-10 col-9">
                   <mat-form-field class="example-full-width">
-                    <input matInput type="text" name="personas" [(ngModel)]="userHandlerService.user.personas">
+                    <input matInput type="text" name="personas" [(ngModel)]="user.personas">
                   </mat-form-field>
                 </div>
               </div> -->
@@ -234,7 +233,7 @@
               Save Details
             </button>
 
-            <!-- <button mat-raised-button class="btn btn-warning" (click)="userHandlerService.updateUser(userHandleService.userId,userHandleService.user)"
+            <!-- <button mat-raised-button class="btn btn-warning" (click)="updateUser(userHandleService.userId,userHandleService.user)"
           *ngIf="mode==='Edit'">
           <i class="material-icons">create</i>Edit Details</button> -->
           </div>
@@ -244,7 +243,7 @@
               Update
             </button>
 
-            <!-- <button mat-raised-button class="btn btn-warning" (click)="userHandlerService.updateUser(userHandleService.userId,userHandleService.user)"
+            <!-- <button mat-raised-button class="btn btn-warning" (click)="updateUser(userHandleService.userId,userHandleService.user)"
           *ngIf="mode==='Edit'">
           <i class="material-icons">create</i>Edit Details</button> -->
           </div>

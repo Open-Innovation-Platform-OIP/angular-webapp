@@ -39,7 +39,6 @@ declare var $: any;
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class ProblemDetailComponent implements OnInit {
-  userId: any;
   objectValues = Object["values"];
   discussions = [];
   replyingTo = 0;
@@ -129,7 +128,7 @@ export class ProblemDetailComponent implements OnInit {
 
   // Carousel
   @Input() name: string;
-
+  userId: Number;
   enrichment: any = [1];
   enrichmentDataToView: any;
   validationDataToView: any;
@@ -186,6 +185,8 @@ export class ProblemDetailComponent implements OnInit {
   }
   ngOnInit() {
     console.log(this.collaborators, "collaborators on load");
+
+    this.userId = Number(this.auth.currentUserValue.id);
 
     this.getUserPersonas(Number(this.auth.currentUserValue.id));
 

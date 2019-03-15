@@ -39,7 +39,7 @@ export class ViewUserProfileComponent implements OnInit {
               photo_url
               location
               email
-              personas
+              
             }
           }
         `
