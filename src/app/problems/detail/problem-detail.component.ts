@@ -8,9 +8,9 @@ import {
 import { Router, ActivatedRoute } from "@angular/router";
 import { Observable, Subscription, interval } from "rxjs";
 import { first, finalize, startWith, take, map } from "rxjs/operators";
-import { ProblemHandleService } from "../../services/problem-handle.service";
+import { ProblemService } from "../../services/problem.service";
 import { AuthService } from "../../services/auth.service";
-import { UsersService } from '../../services/users.service';
+import { UsersService } from "../../services/users.service";
 import * as Query from "../../services/queries";
 import { Apollo } from "apollo-angular";
 import gql from "graphql-tag";
@@ -19,6 +19,9 @@ import { NgForm } from "@angular/forms";
 import { NguCarouselConfig } from "@ngu/carousel";
 import { slider } from "./problem-detail.animation";
 import { DiscussionsService } from "src/app/services/discussions.service";
+import { CollaborationService } from "src/app/services/collaboration.service";
+import { ValidationService } from "src/app/services/validation.service";
+import { EnrichmentService } from "src/app/services/enrichment.service";
 
 const misc: any = {
   navbar_menu_visible: 0,
@@ -36,37 +39,37 @@ declare var $: any;
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class ProblemDetailComponent implements OnInit {
-  userId: any;
-  objectValues = Object['values'];
+  objectValues = Object["values"];
   discussions = [];
   replyingTo = 0;
   showReplyBox = false;
+  showCommentBox = false;
   allUsers = [
     {
       id: 1,
-      value: 'Tej'
+      value: "Tej"
     },
     {
       id: 2,
-      value: 'Shaona'
+      value: "Shaona"
     }
   ];
   problemData: any = {
     id: 0,
-    title: '',
-    description: '',
-    organization: '',
-    location: '',
-    resources_needed: '',
+    title: "",
+    description: "",
+    organization: "",
+    location: "",
+    resources_needed: "",
     created_by: 0,
     image_urls: [],
     voted_by: [],
     watched_by: [],
     video_urls: [],
-    impact: '',
-    extent: '',
+    impact: "",
+    extent: "",
     min_population: 0,
-    beneficiary_attributes: '',
+    beneficiary_attributes: ""
   };
   enrichDataToEdit: any;
   tags: any = [];
@@ -109,6 +112,7 @@ export class ProblemDetailComponent implements OnInit {
   showCollaborators: boolean;
   hideProblemDetail: boolean = true;
   collaboratorProfileInfo: any;
+  comments = {};
 
   fabTogglerState: boolean = false;
 
@@ -126,14 +130,14 @@ export class ProblemDetailComponent implements OnInit {
 
   // Carousel
   @Input() name: string;
-
+  userId: Number;
   enrichment: any = [1];
   enrichmentDataToView: any;
   validationDataToView: any;
   validationDataToEdit: any;
   validation: any = [1];
   collaborators: any = [1];
-  collaborationDataToEdit: any;
+  collaboratorDataToEdit: any;
   public carouselTileItems$: Observable<any>;
   public carouselTileItemsValid$: Observable<number[]>;
   public carouselTileItemCollab$: Observable<number[]>;
@@ -145,20 +149,21 @@ export class ProblemDetailComponent implements OnInit {
     },
     touch: true,
     loop: true
-    // interval: { timing: 1500 },
-    // animation: "lazy"
   };
 
   constructor(
     private route: ActivatedRoute,
-    private problemHandleService: ProblemHandleService,
+    private problemService: ProblemService,
     private apollo: Apollo,
     private cdr: ChangeDetectorRef,
     private auth: AuthService,
     public usersService: UsersService,
-    private discussionsService: DiscussionsService
+    private discussionsService: DiscussionsService,
+    private collaborationService: CollaborationService,
+    private validationService: ValidationService,
+    private enrichmentService: EnrichmentService
   ) {}
-  
+
   getUserPersonas(id) {
     this.apollo
       .watchQuery<any>({
@@ -169,7 +174,8 @@ export class ProblemDetailComponent implements OnInit {
               personas
             }
           }
-        `
+        `,
+        pollInterval: 500
       })
       .valueChanges.subscribe(result => {
         if (result.data.users[0].personas) {
@@ -178,21 +184,21 @@ export class ProblemDetailComponent implements OnInit {
           });
           console.log(this.userPersonas, "works");
         }
-
-        // console.log(this.problemHandleService.problem, "problem");
       });
   }
   ngOnInit() {
     console.log(this.collaborators, "collaborators on load");
+
     this.userId = Number(this.auth.currentUserValue.id);
-    this.getUserPersonas(this.userId);
+
+    this.getUserPersonas(Number(this.auth.currentUserValue.id));
 
     this.carouselTileItems$ = interval(500).pipe(
       startWith(-1),
       take(32),
       map(val => {
         let data;
-        // console.log(this.enrich, "asd");
+
         if (this.enrichment.length < 1) {
           this.enrichment = [false];
         } else {
@@ -207,7 +213,7 @@ export class ProblemDetailComponent implements OnInit {
       take(32),
       map(val => {
         let data;
-        // console.log(this.enrich, "asd");
+
         if (this.validation.length < 1) {
           this.validation = [false];
         } else {
@@ -221,7 +227,7 @@ export class ProblemDetailComponent implements OnInit {
       take(32),
       map(val => {
         let data;
-        // console.log(this.enrich, "asd");
+
         if (this.collaborators && this.collaborators.length < 1) {
           this.collaborators = [false];
         } else {
@@ -233,11 +239,6 @@ export class ProblemDetailComponent implements OnInit {
 
     this.minimizeSidebar();
     this.route.params.pipe(first()).subscribe(params => {
-      // this.getEnrichmentData(params.id);
-      // this.getCollaborators(params.id);
-      // this.getTags(params.id);
-      // this.getValidations(params.id);
-
       if (params.id) {
         this.apollo
           .watchQuery<any>({
@@ -259,25 +260,42 @@ export class ProblemDetailComponent implements OnInit {
               extent
               min_population
               beneficiary_attributes
+              problem_tags{
+                tag {
+                    id
+                    name
+                }
             }
-          }
-        `
+            }
+        }
+            
+        `,
+            pollInterval: 500
           })
           .valueChanges.subscribe(
             result => {
+              console.log(result, "prob detail data");
               if (result.data.problems[0]) {
+                if (result.data.problems[0].problem_tags) {
+                  this.tags = result.data.problems[0].problem_tags.map(
+                    tagArray => {
+                      // console.log(tagArray, "work");
+                      return tagArray.tag.name;
+                    }
+                  );
+                }
                 Object.keys(this.problemData).map(key => {
-                  if (result.data.problems[0][key]) {
+                  if (result.data.problems[0][key] && key !== "problem_tags") {
                     this.problemData[key] = result.data.problems[0][key];
                   }
                 });
-                // this.problemData = result.data.problems[0];
+
                 console.log(this.problemData, "problem data");
                 if (result.data.problems[0].voted_by) {
                   this.number_of_votes =
                     result.data.problems[0].voted_by.length;
                 }
-                // console.log(this.number_of_votes, "number of votes");
+
                 if (
                   result.data.problems[0] &&
                   result.data.problems[0].watched_by
@@ -287,7 +305,9 @@ export class ProblemDetailComponent implements OnInit {
 
                 if (result.data.problems[0].voted_by) {
                   result.data.problems[0].voted_by.forEach(userId => {
-                    if (userId === this.userId) {
+                    if (
+                      Number(userId) === Number(this.auth.currentUserValue.id)
+                    ) {
                       console.log(userId, "userId");
                       this.isVoted = true;
                     }
@@ -303,7 +323,9 @@ export class ProblemDetailComponent implements OnInit {
                     typeof result.data.problems[0].watched_by
                   );
                   result.data.problems[0].watched_by.forEach(userId => {
-                    if (userId === this.userId) {
+                    if (
+                      Number(userId) === Number(this.auth.currentUserValue.id)
+                    ) {
                       this.isWatching = true;
                     }
                   });
@@ -343,15 +365,58 @@ export class ProblemDetailComponent implements OnInit {
                 console.log(this.collaborators, "collaborators check");
                 this.getEnrichmentData(params.id);
                 this.getCollaborators(params.id);
-                this.getTags(params.id);
+                // this.getTags(params.id);
                 this.getValidations(params.id);
-                this.discussionsService.getComments(params.id)
+                this.discussionsService
+                  .getComments(params.id)
                   .subscribe(discussions => {
                     if (discussions.data.discussions.length > 0) {
-                      console.log(discussions.data.discussions, "\n\n---->discussions<----\n\n\n");
+                      console.log(
+                        discussions.data.discussions,
+                        "\n\n---->discussions<----\n\n\n"
+                      );
                       this.discussions = discussions.data.discussions;
+                      discussions.data.discussions.map(comment => {
+                        if (comment.linked_comment_id) {
+                          if (!this.comments[comment.linked_comment_id]) {
+                            // create comment object so we can add reply
+                            this.comments[comment.linked_comment_id] = {
+                              id: comment.linked_comment_id,
+                              created_by: 0,
+                              created_at: '',
+                              modified_at: '',
+                              text: '',
+                              mentions: [],
+                              replies: [comment]
+                            }
+                          } else {
+                            // comment object already exists so push reply
+                            this.comments[comment.linked_comment_id].replies.push(comment);
+                          }
+                        } else {
+                          // comment object does not exist
+                          if (!this.comments[comment.id]) {
+                            this.comments[comment.id] = {
+                              id: comment.id,
+                              created_by: comment.created_by,
+                              created_at: comment.created_at,
+                              modified_at: comment.modified_at,
+                              text: comment.text,
+                              replies: [],
+                              mentions: comment.mentions
+                            }
+                          } else {
+                            // comment object already created by a reply; assign properties so we don't overwrite the replies
+                            this.comments[comment.id].created_by = comment.created_by;
+                            this.comments[comment.id].created_at = comment.created_at;
+                            this.comments[comment.id].modified_at = comment.modified_at;
+                            this.comments[comment.id].text = comment.text;
+                            this.comments[comment.id].mentions = comment.mentions;
+                          }
+                        }
+                      });
+                      console.log(this.comments);
                     }
-                    
                   });
               }
             },
@@ -361,9 +426,6 @@ export class ProblemDetailComponent implements OnInit {
           );
       }
     });
-
-    // this.discuss();
-    // this.replies();
   }
 
   replyTo(discussionId) {
@@ -372,7 +434,6 @@ export class ProblemDetailComponent implements OnInit {
     console.log(discussionId);
   }
 
-  // toggle image src in modal
   toggleImgSrc(flag: boolean) {
     if (flag && this.imgUrlIndex < this.problemData.image_urls.length - 1) {
       this.imgUrlIndex++;
@@ -409,14 +470,6 @@ export class ProblemDetailComponent implements OnInit {
         .catch(swal.noop);
     }
   }
-
-  // showItems() {
-  //   this.fabTogglerState = true;
-  // }
-
-  // hideItems() {
-  //   this.fabTogglerState = false;
-  // }
 
   onToggleFab() {
     this.fabTogglerState = !this.fabTogglerState;
@@ -460,37 +513,37 @@ export class ProblemDetailComponent implements OnInit {
     }, 1000);
   }
 
-  getTags(id) {
-    this.apollo
-      .watchQuery<any>({
-        query: gql`
-  {
-    problems(where: { id: { _eq: ${id} } }) {
-      id
-      problem_tags{
-        tag {
-          id
-          name
-        }
-      }
-    }
-  }
-`
-      })
-      .valueChanges.subscribe(
-        result => {
-          if (result.data.problems[0].problem_tags) {
-            this.tags = result.data.problems[0].problem_tags.map(tagArray => {
-              // console.log(tagArray, "work");
-              return tagArray.tag.name;
-            });
-          }
-        },
-        error => {
-          console.log("error", error);
-        }
-      );
-  }
+  //   getTags(id) {
+  //     this.apollo
+  //       .watchQuery<any>({
+  //         query: gql`
+  //   {
+  //     problems(where: { id: { _eq: ${id} } }) {
+  //       id
+  //       problem_tags{
+  //         tag {
+  //           id
+  //           name
+  //         }
+  //       }
+  //     }
+  //   }
+  // `
+  //       })
+  //       .valueChanges.subscribe(
+  //         result => {
+  //           if (result.data.problems[0].problem_tags) {
+  //             this.tags = result.data.problems[0].problem_tags.map(tagArray => {
+  //               // console.log(tagArray, "work");
+  //               return tagArray.tag.name;
+  //             });
+  //           }
+  //         },
+  //         error => {
+  //           console.log("error", error);
+  //         }
+  //       );
+  //   }
 
   getValidations(id) {
     console.log("validation");
@@ -513,17 +566,22 @@ export class ProblemDetailComponent implements OnInit {
       }
     }
   }
-`
+`,
+        pollInterval: 500
       })
       .valueChanges.subscribe(
         result => {
           if (result.data.problems[0].problem_validations) {
             result.data.problems[0].problem_validations.map(validation => {
               console.log(validation.validated_by, "test55");
-              if (validation.validated_by === this.userId) {
+              if (
+                validation.validated_by ===
+                Number(this.auth.currentUserValue.id)
+              ) {
                 this.disableValidateButton = true;
               }
             });
+
             this.validation = result.data.problems[0].problem_validations;
           }
           console.log(result, "result from validation");
@@ -543,29 +601,35 @@ export class ProblemDetailComponent implements OnInit {
     id
     problem_collaborators{
       intent
-      collaborate_as
-      problem_id
+      is_ngo
+      is_innovator
+      is_expert
+      is_government
+      is_funder
+      is_beneficiary
+      is_incubator
+      is_entrepreneur
       user_id
-      
       
     }
   }
 
 }
-`
+`,
+        pollInterval: 500
       })
       .valueChanges.subscribe(
         result => {
           console.log(result, "result from collaborators");
           if (result.data.problems[0].problem_collaborators) {
             result.data.problems[0].problem_collaborators.map(collaborator => {
-              if (collaborator.user_id === this.userId) {
+              if (
+                collaborator.user_id === Number(this.auth.currentUserValue.id)
+              ) {
                 this.disableCollaborateButton = true;
               }
             });
             this.collaborators = result.data.problems[0].problem_collaborators;
-            // this.collaboratorProfileInfo = result.data.users[0];
-            // console.log(this.collaboratorProfileInfo, "profile info");
 
             console.log(this.collaborators, "collaborators");
           }
@@ -591,7 +655,6 @@ export class ProblemDetailComponent implements OnInit {
               min_population
               organization
               beneficiary_attributes
-
               location
               resources_needed
               image_urls
@@ -602,14 +665,17 @@ export class ProblemDetailComponent implements OnInit {
               is_deleted
             }
           }
-        `
+        `,
+        pollInterval: 500
       })
       .valueChanges.subscribe(
         data => {
           if (data.data.enrichments) {
             console.log(data, "data");
             data.data.enrichments.map(enrichment => {
-              if (enrichment.created_by === this.userId) {
+              if (
+                enrichment.created_by === Number(this.auth.currentUserValue.id)
+              ) {
                 this.disableEnrichButton = true;
               }
             });
@@ -621,8 +687,6 @@ export class ProblemDetailComponent implements OnInit {
           console.log("error", err);
         }
       );
-    // console.log(data, "data from enrichment");
-    // });
   }
 
   dimissVideoModal(e) {
@@ -656,226 +720,166 @@ export class ProblemDetailComponent implements OnInit {
     this.mobile_menu_visible = 0;
   }
 
-  displayEnrich() {
-    if (!this.problemHandleService.displayEnrichForm) {
-      this.problemHandleService.displayEnrichForm = true;
-      this.problemHandleService.displayValidateProblem = false;
-    } else {
-      this.problemHandleService.displayEnrichForm = false;
-    }
-  }
-
-  showCollaboratorsView() {
-    if (!this.showCollaborators && this.hideProblemDetail) {
-      this.showCollaborators = true;
-      this.hideProblemDetail = false;
-      this.problemHandleService.displayValidateCard = false;
-      this.problemHandleService.displayEnrichCard = false;
-    } else {
-      this.showCollaborators = false;
-      this.problemHandleService.displayValidateCard = true;
-      this.problemHandleService.displayEnrichCard = true;
-      this.hideProblemDetail = true;
-    }
-  }
-
-  displayValidateComponent() {
-    if (!this.problemHandleService.displayValidateProblem) {
-      this.problemHandleService.displayValidateProblem = true;
-      this.problemHandleService.displayEnrichForm = false;
-    } else {
-      this.problemHandleService.displayValidateProblem = false;
-    }
-  }
-
-  enrichmentAdded(isAdded: any) {
-    if (isAdded) {
-      this.problemHandleService.displayEnrichForm = false;
-    }
-  }
-
   watchProblem() {
     this.isWatching = !this.isWatching;
     if (this.isWatching) {
       this.watchedBy++;
-      this.problemData.watched_by.push(this.userId);
-      // console.log(this.problemData.watched_by.length, "length");
-      // this.problemData.watched_by = JSON.stringify(this.problemData.watched_by)
-      //   .replace("[", "{")
-      //   .replace("]", "}");
+      this.problemData.watched_by.push(Number(this.auth.currentUserValue.id));
+
+      this.problemData.watched_by = JSON.stringify(this.problemData.watched_by)
+        .replace("[", "{")
+        .replace("]", "}");
+
       console.log(this.problemData.watched_by, "watched_by");
 
-      this.problemHandleService.storeProblemWatchedBy(
+      this.problemService.storeProblemWatchedBy(
         this.problemData.id,
         this.problemData
+      );
+
+      this.problemData.watched_by = JSON.parse(
+        this.problemData.watched_by.replace("{", "[").replace("}", "]")
       );
     } else {
       this.watchedBy--;
-      // delete this.problemData.watched_by[localStorage.getItem("userId")];
-      let index = this.problemData.watched_by.indexOf(this.userId.toString());
+
+      let index = this.problemData.watched_by.indexOf(
+        Number(this.auth.currentUserValue.id).toString()
+      );
       console.log(this.problemData.watched_by, "watched_by");
-      // this.problemData.watched_by = JSON.parse(
-      //   this.problemData.watched_by.replace("{", "[").replace("}", "]")
-      // );
+
       this.problemData.watched_by.splice(index, 1);
-      // this.problemData.watched_by = JSON.stringify(this.problemData.watched_by)
-      //   .replace("[", "{")
-      //   .replace("]", "}");
-      this.problemHandleService.storeProblemWatchedBy(
+
+      this.problemData.watched_by = JSON.stringify(this.problemData.watched_by)
+        .replace("[", "{")
+        .replace("]", "}");
+
+      this.problemService.storeProblemWatchedBy(
         this.problemData.id,
         this.problemData
       );
-      //change the hard coded user id to dynamic one
+
+      this.problemData.watched_by = JSON.parse(
+        this.problemData.watched_by.replace("{", "[").replace("}", "]")
+      );
     }
   }
 
-  onCollaborationSubmit(event) {
-    console.log(event, "from problem details");
+  onEnrichmentSubmit(enrichmentData) {
+    if (enrichmentData.__typename) {
+      delete enrichmentData.__typename;
+    }
+    enrichmentData.created_by = Number(this.auth.currentUserValue.id);
+
+    enrichmentData.problem_id = this.problemData.id;
+
+    this.enrichmentService.submitEnrichmentToDB(enrichmentData);
+  }
+
+  deleteEnrichment(id) {
+    this.enrichmentService.deleteEnrichment(id);
+  }
+
+  voteEnrichment(enrichmentData) {
+    this.enrichmentService.voteEnrichment(enrichmentData);
+  }
+
+  onCollaborationSubmit(collaborationData) {
+    if (collaborationData.__typename) {
+      delete collaborationData.__typename;
+    }
+    console.log(collaborationData, "collaboration data");
+    collaborationData.user_id = Number(this.auth.currentUserValue.id);
+
+    collaborationData.problem_id = this.problemData.id;
+
+    this.collaborationService.submitCollaboratorToDB(collaborationData);
+    console.log(event, "from problem details collab");
     // close modal
     // send to db
+  }
+
+  onValidationSubmit(validationData) {
+    if (validationData.__typename) {
+      delete validationData.__typename;
+    }
+    validationData.validated_by = Number(this.auth.currentUserValue.id);
+
+    validationData.problem_id = this.problemData.id;
+
+    // this.validationService.submitValidationToDB(validationData);
   }
 
   voteProblem() {
     this.isVoted = !this.isVoted;
     if (this.isVoted) {
       this.number_of_votes++;
-      this.problemData.voted_by.push(this.userId);
+      this.problemData.voted_by.push(Number(this.auth.currentUserValue.id));
+      this.problemData.voted_by = JSON.stringify(this.problemData.voted_by)
+        .replace("[", "{")
+        .replace("]", "}");
 
-      this.problemHandleService.storeProblemVotedBy(
+      this.problemService.storeProblemVotedBy(
         this.problemData.id,
         this.problemData
       );
+      this.problemData.voted_by = JSON.parse(
+        this.problemData.voted_by.replace("{", "[").replace("}", "]")
+      );
     } else {
       this.number_of_votes--;
-      let index = this.problemData.voted_by.indexOf(this.userId);
+      let index = this.problemData.voted_by.indexOf(
+        Number(this.auth.currentUserValue.id)
+      );
       this.problemData.voted_by.splice(index, 1);
+      this.problemData.voted_by = JSON.stringify(this.problemData.voted_by)
+        .replace("[", "{")
+        .replace("]", "}");
 
-      this.problemHandleService.storeProblemVotedBy(
+      this.problemService.storeProblemVotedBy(
         this.problemData.id,
         this.problemData
+      );
+      this.problemData.voted_by = JSON.parse(
+        this.problemData.voted_by.replace("{", "[").replace("}", "]")
       );
     }
   }
 
-  clickCollab() {
-    // console.log(document.getElementById("collabBtn").getAttribute("color"));
-    swal({
-      title: "Do you want to collaborate",
-      showCancelButton: true,
-      confirmButtonClass: "btn btn-success",
-      cancelButtonClass: "btn btn-danger",
-      buttonsStyling: false
-    })
-      .then(result => {
-        // console.log(result);
-
-        let title;
-        if (result.value) {
-          this.problemHandleService.collaborate["value"] = result.value;
-          this.problemHandleService.collaborate["key"] = "Uncollaborate";
-          document.getElementById("collabBtn").style.color = "green";
-          // console.log(
-          //   document.getElementById("collabBtn").getAttribute("color")
-          // );
-          title = "Thank you for collaboration";
-        } else {
-          this.problemHandleService.collaborate["value"] = result.value;
-          this.problemHandleService.collaborate["key"] = "Collaborate";
-          title = "Thank you";
-        }
-        // console.log(this.problemHandleService.collaborate);
-
-        swal({
-          type: "success",
-          title: title,
-          confirmButtonClass: "btn btn-success",
-          buttonsStyling: false
-        });
-      })
-      .catch(swal.noop);
-  }
-
   // Open Comment Input Field
-  OpenComment() {
-    this.openform = true;
-    return this.openform;
-  }
+  // OpenComment() {
+  //   this.openform = true;
+  //   return this.openform;
+  // }
 
   // Close Comment Input Field
-  closeComment() {
-    this.openform = false;
-    return this.openform;
+  // closeComment() {
+  //   this.openform = false;
+  //   return this.openform;
+  // }
+
+  // // Open Reply Input Field
+  // OpenReply(user_id) {
+  //   this.index = user_id;
+  //   this.reply = true;
+  //   return this.reply;
+  // }
+
+  // // Close Reply Input Field
+  // CloseReply(user_id) {
+  //   this.index = user_id;
+  //   this.reply = false;
+  //   return this.reply;
+  // }
+
+  deleteValidation(validationData) {
+    // this.validationService.deleteValidation(validationData);
   }
 
-  // Open Reply Input Field
-  OpenReply(user_id) {
-    this.index = user_id;
-    this.reply = true;
-    return this.reply;
+  deleteCollaboration(collaborationData) {
+    this.collaborationService.deleteCollaboration(collaborationData);
   }
 
-  // Close Reply Input Field
-  CloseReply(user_id) {
-    this.index = user_id;
-    this.reply = false;
-    return this.reply;
-  }
-
-  // Display Comments from Database
-  discuss() {
-    this.apollo
-      .watchQuery<any>({
-        query: gql`
-          {
-            discussions {
-              id
-              user_id
-              comment
-              replies
-              problem_id
-            }
-          }
-        `
-      })
-      .valueChanges.subscribe((log: any) => {
-        this.data = log.data.discussions;
-        // console.log(log);
-      });
-  }
-
-  // Display Replies to Comments from Database
-  replies() {
-    this.apollo
-      .watchQuery<any>({
-        query: gql`
-          {
-            discussions {
-              id
-              user_id
-              comment
-              replies
-              problem_id
-            }
-          }
-        `
-      })
-      .valueChanges.subscribe((rep: any) => {
-        this.putReply = rep.data.discussions;
-        this.netReply = rep.data.discussions["2"].replies.user_id["0"];
-        // console.log(this.netReply);
-      });
-  }
-
-  // Post the Comment from the User
-  saveForm(comment: NgForm): void {
-    this.problemHandleService.addDiscussions(this.form);
-    this.discuss();
-    comment.reset();
-  }
-
-  post() {
-    // console.log("Your reply to the Comment is posted !!!");
-  }
   handleEnrichCardClicked(enrichmentData) {
     this.enrichmentDataToView = enrichmentData;
   }
@@ -893,20 +897,22 @@ export class ProblemDetailComponent implements OnInit {
   }
 
   handleCollaborationEditMode(collaborationData) {
-    this.collaborationDataToEdit = collaborationData;
+    console.log("edit collab", collaborationData);
+    this.collaboratorDataToEdit = collaborationData;
   }
   onCommentSubmit(event) {
-    
     const [content, mentions] = event;
     let comment = {
       created_by: this.auth.currentUserValue.id,
-      problem_id: this.problemData['id'],
+      problem_id: this.problemData["id"],
       text: content,
-      mentions: JSON.stringify(mentions).replace('[', '{').replace(']', '}')
+      mentions: JSON.stringify(mentions)
+        .replace("[", "{")
+        .replace("]", "}")
     };
     // console.log(content, mentions);
     if (this.showReplyBox) {
-      comment['linked_comment_id'] = this.replyingTo;
+      comment["linked_comment_id"] = this.replyingTo;
       this.replyingTo = 0;
       this.showReplyBox = false;
     }

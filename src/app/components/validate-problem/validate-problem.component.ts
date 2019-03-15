@@ -1,16 +1,23 @@
-import { Component, OnInit, Input, OnChanges } from "@angular/core";
-import { FilesService } from '../../services/files.service';
-import { ProblemHandleService } from '../../services/problem-handle.service';
+import { Component, Input, Output, EventEmitter } from "@angular/core";
+import { FilesService } from "../../services/files.service";
+import { ProblemService } from "../../services/problem-handle.service";
 import swal from "sweetalert2";
+import { ValidationService } from "../../services/validation.service";
 
 @Component({
   selector: "app-validate-problem",
   templateUrl: "./validate-problem.component.html",
   styleUrls: ["./validate-problem.component.css"]
 })
-export class ValidateProblemComponent implements OnChanges {
-  @Input() problemData: any;
-  @Input() validationData: any;
+export class ValidateProblemComponent {
+  // @Input() problemData: any;
+  @Input() validationData: any = {
+    comment: "",
+    agree: false,
+    files: []
+  };
+  @Output() submitted = new EventEmitter();
+
   mode = "Add";
   Arr = [1, 2, 3, 4];
   // validationData: any = {
@@ -20,20 +27,9 @@ export class ValidateProblemComponent implements OnChanges {
   // };
   constructor(
     private space: FilesService,
-    private problemHandleService: ProblemHandleService
+    private problemService: ProblemService,
+    private validationService: ValidationService
   ) {}
-
-  ngOnChanges() {
-    if (this.validationData) {
-      this.mode = "Edit";
-      this.problemHandleService.problemValidationData = this.validationData;
-      console.log(
-        this.problemHandleService.problemValidationData,
-        "problem service validation data"
-      );
-    }
-    console.log(this.problemData, "problem data in validate ");
-  }
 
   onValidateFileSelected(event) {
     console.log("Event: ", event);
@@ -51,7 +47,7 @@ export class ValidateProblemComponent implements OnChanges {
             .promise()
             .then(values => {
               console.log("val: ", values);
-              this.problemHandleService.problemValidationData.files.push({
+              this.validationData.files.push({
                 url: values["Location"],
                 key: values["Key"]
               });
@@ -65,13 +61,11 @@ export class ValidateProblemComponent implements OnChanges {
 
   removeAttachedFile(index) {
     this.space
-      .deleteFile(
-        this.problemHandleService.problemValidationData.files[index]["key"]
-      )
+      .deleteFile(this.validationData.files[index]["key"])
       .promise()
       .then(data => {
         console.log("Deleted file: ", data);
-        this.problemHandleService.problemValidationData.files.splice(index, 1);
+        this.validationData.files.splice(index, 1);
         console.log("file removed");
       })
       .catch(e => {
@@ -86,17 +80,19 @@ export class ValidateProblemComponent implements OnChanges {
       confirmButtonClass: "btn btn-success",
       buttonsStyling: false
     }).then(res => {
-      this.problemHandleService.problemValidationData.agree = userConsent;
-      this.problemHandleService.displayValidateProblem = false;
-      if (this.mode === "Add") {
-        this.problemHandleService.problemValidationData.problem_id = this.problemData.id;
-        this.problemHandleService.addValidation();
-      }
-      if (this.mode === "Edit") {
-        this.problemHandleService.updateValidation(
-          this.problemHandleService.problemValidationData
-        );
-      }
+      this.validationData.agree = userConsent;
+      // this.problemService.displayValidateProblem = false;
+
+      // this.validationData.problem_id = this.problemData.id;
+      // this.validationService.submitValidationToDB(this.validationData);
+
+      this.submitted.emit(this.validationData);
+
+      // if (this.mode === "Edit") {
+      //   this.problemService.submitValidation(
+      //     this.problemService.problemValidationData
+      //   );
+      // }
     });
   }
 }

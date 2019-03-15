@@ -6,10 +6,10 @@ import {
   Output,
   EventEmitter
 } from "@angular/core";
-import { ProblemHandleService } from '../../services/problem-handle.service';
-import { AuthService } from '../../services/auth.service';
+import { CollaborationService } from "../../services/collaboration.service";
+import { AuthService } from "../../services/auth.service";
 import { Router, ActivatedRoute } from "@angular/router";
-import * as Query from '../../services/queries';
+
 import { Apollo } from "apollo-angular";
 import gql from "graphql-tag";
 
@@ -20,48 +20,41 @@ import gql from "graphql-tag";
 })
 export class CollaboratorCardComponent implements OnInit, OnChanges {
   @Input() collaboratorData: any;
-  @Input() collaboratorProfileData: any;
   @Output() editClicked = new EventEmitter();
-  roles: any;
-  // isMyCollaboration: boolean = true;
+  @Output() deleteClicked = new EventEmitter();
+  collaboratorProfileData: any;
+  roles: any = [];
 
   constructor(
-    private problemHandleService: ProblemHandleService,
+    private collaborationService: CollaborationService,
     private auth: AuthService,
     private apollo: Apollo
   ) {}
 
-  ngOnInit() {
-    // this.personas = this.collaboratorData.personas;
-  }
+  ngOnInit() {}
 
   ngOnChanges() {
-    console.log(
-      this.collaboratorData.user_id,
-      "collaborator data in collaborator card"
-    );
-    console.log(this.collaboratorProfileData, "collaborator prof data");
     if (typeof this.collaboratorData === "object") {
-      // if (this.collaboratorData.user_id === Number(this.auth.currentUserValue.id)) {
-      //   this.isMyCollaboration = true;
-      // }
-      this.roles = this.collaboratorData.collaborate_as;
+      Object.entries(this.collaboratorData).map(collabData => {
+        if (typeof collabData[1] === "boolean" && collabData[1]) {
+          this.roles.push(collabData[0]);
+        }
+      });
 
       this.apollo
         .watchQuery<any>({
           query: gql`
-{
-users(where: { id: { _eq: ${this.collaboratorData.user_id} } }) {
-  id
-  name
-  photo_url
-  
+            {
+             users(where: { id: { _eq: ${this.collaboratorData.user_id} } }) {
+               id
+               name
+               photo_url
+   
+             } 
 
- 
-}
-
-}
-`
+            }
+               `,
+          pollInterval: 500
         })
         .valueChanges.subscribe(
           result => {
@@ -73,8 +66,6 @@ users(where: { id: { _eq: ${this.collaboratorData.user_id} } }) {
           }
         );
     }
-
-    // console.log(this.collaboratorProfileData, "collaborator profile");
   }
 
   editCollaboration() {
@@ -82,6 +73,6 @@ users(where: { id: { _eq: ${this.collaboratorData.user_id} } }) {
   }
 
   deleteCollaboration() {
-    this.problemHandleService.deleteCollaboration(this.collaboratorData);
+    this.deleteClicked.emit(this.collaboratorData);
   }
 }

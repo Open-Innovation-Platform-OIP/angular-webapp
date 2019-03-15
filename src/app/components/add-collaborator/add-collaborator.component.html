@@ -5,18 +5,16 @@
       <textarea matInput placeholder="Please enter intent" name="intent" required [(ngModel)]="collaborator.intent"
         #description="ngModel"></textarea>
     </mat-form-field>
-    <!-- <mat-form-field class="example-full-width"> -->
-    <!-- <input type="text" ngDefaultControl [(ngmodel)]="collaboratorData.intent"></input> -->
-    <!-- </mat-form-field> -->
+
   </div>
 </div>
 <div class="row">
   <label class="col-sm-2 col-form-label">What role do you want to collaborate in</label>
   <div class="col-sm-10">
-    <div class="form-check form-check-inline" *ngFor="let role of objectKeys(collaborator.roles)">
-      <label class="form-check-label">
-<input class="form-check-input" type="checkbox" [(ngModel)]="collaborator.roles[role]">
-        {{role}}
+    <div class="form-check form-check-inline" *ngFor="let role of objectKeys(collaborator)">
+      <label class="form-check-label" *ngIf="role!=='intent' && role!=='user_id' && role!=='__typename'">
+        <input class="form-check-input" type="checkbox" [(ngModel)]="collaborator[role]">
+        {{role.slice(3)}}
         <span class="form-check-sign">
           <span class="check"></span>
         </span>
@@ -32,7 +30,7 @@
   <div class="col-md-6 col-6">
     <div class="text-center">
       <button class="btn btn-warning" *ngIf="mode==='Add'" (click)="collaborate()">Yes</button>
-      <button class="btn btn-warning" *ngIf="mode==='Edit'" (click)="editCollaboration()">Yes</button>
+      <button class="btn btn-warning" *ngIf="mode==='Edit'" (click)="collaborate()">Yes</button>
 
       <button class="btn btn-danger" data-dismiss="modal" *ngIf="mode==='Add'">No</button>
     </div>

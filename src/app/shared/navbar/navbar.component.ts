@@ -73,9 +73,8 @@ export class NavbarComponent implements OnInit {
     private router: Router,
     private apollo: Apollo,
     private auth: AuthService,
-    private route: ActivatedRoute
-  ) // private search: SearchService
-  {
+    private route: ActivatedRoute // private search: SearchService
+  ) {
     this.location = location;
     this.nativeElement = element.nativeElement;
     this.sidebarVisible = false;
@@ -184,7 +183,8 @@ export class NavbarComponent implements OnInit {
               }
             }
           }
-        `
+        `,
+        pollInterval: 500
       })
       .valueChanges.subscribe(({ data }) => {
         // console.log(data);

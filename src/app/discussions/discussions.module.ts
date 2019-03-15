@@ -5,8 +5,9 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { MdModule } from '../md/md.module';
 import { MaterialModule } from '../app.module';
 import { QuillModule } from "ngx-quill";
-import { DiscussionsComponent } from './discussions.component';
-import { DiscussionsRoutes } from './discussions.routing';
+import { CommentSubmitComponent } from './submit/submitcomment.component';
+import {CommentDisplayComponent} from './display/displaycomment.component';
+import {TimeAgoPipe} from 'time-ago-pipe';
 
 @NgModule({
     imports: [
@@ -15,10 +16,10 @@ import { DiscussionsRoutes } from './discussions.routing';
         FormsModule,
         MdModule,
         MaterialModule,
-        QuillModule
+        QuillModule,
     ],
-    declarations: [DiscussionsComponent],
-    exports: [DiscussionsComponent]
+    declarations: [CommentSubmitComponent, CommentDisplayComponent, TimeAgoPipe],
+    exports: [CommentSubmitComponent, CommentDisplayComponent]
 })
 
 export class DiscussionsModule {}

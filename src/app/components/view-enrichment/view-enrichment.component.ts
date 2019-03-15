@@ -6,9 +6,9 @@ import {
   Output,
   EventEmitter
 } from "@angular/core";
-import { ProblemHandleService } from '../../services/problem-handle.service';
-import { EnrichmentHandlerService } from '../../services/enrichment-handler.service';
-import { AuthService } from '../../services/auth.service';
+import { ProblemService } from "../../services/problem-handle.service";
+
+import { AuthService } from "../../services/auth.service";
 
 @Component({
   selector: "app-view-enrichment",
@@ -17,9 +17,10 @@ import { AuthService } from '../../services/auth.service';
 })
 export class ViewEnrichmentComponent implements OnInit, OnChanges {
   @Output() editClicked = new EventEmitter();
+  @Output() voteClicked = new EventEmitter();
+  @Output() deleteClicked = new EventEmitter();
 
-  @Input() enrichData: any;
-  @Input() problemId: number;
+  @Input() enrichmentData: any;
   enrichmentVoted = false;
   numberOfVotes: number;
   showModal = false;
@@ -28,14 +29,8 @@ export class ViewEnrichmentComponent implements OnInit, OnChanges {
   videoStatus = false;
   modalSrc: String;
 
-  /* this.enrichData.video_urls.push({
-      key: 'sample.mp4',
-      url: 'https://sample-videos.com/video123/mp4/720/big_buck_bunny_720p_2mb.mp4'
-    }); */
-
   constructor(
-    private problemHandleService: ProblemHandleService,
-    private enrichmentHandlerService: EnrichmentHandlerService,
+    private problemService: ProblemService,
     private auth: AuthService
   ) {
     console.log("aswewrwe");
@@ -43,26 +38,27 @@ export class ViewEnrichmentComponent implements OnInit, OnChanges {
 
   ngOnInit() {
     this.combinedImgAndVideo = [
-      ...this.enrichData.image_urls,
-      ...this.enrichData.video_urls
+      ...this.enrichmentData.image_urls,
+      ...this.enrichmentData.video_urls
     ];
-    if (this.enrichData.voted_by) {
-      this.enrichData.voted_by.forEach(userId => {
-        if (userId === Number(this.auth.currentUserValue.id)) {
+    console.log(this.enrichmentData, "test enrich view");
+    if (this.enrichmentData.voted_by) {
+      this.enrichmentData.voted_by.forEach(userId => {
+        if (Number(userId) === Number(this.auth.currentUserValue.id)) {
           // console.log(userId, "userId");
           this.enrichmentVoted = true;
         }
       });
-      this.numberOfVotes = this.enrichData.voted_by.length;
+      this.numberOfVotes = this.enrichmentData.voted_by.length;
     }
 
-    // this.numberOfVotes = Object.keys(this.enrichData.voted_by).length;
-    // if (this.enrichData.voted_by.abc123) {
+    // this.numberOfVotes = Object.keys(this.enrichmentData.voted_by).length;
+    // if (this.enrichmentData.voted_by.abc123) {
     //   this.enrichmentVoted = true;
     // }
   }
   ngOnChanges() {
-    // console.log(this.enrichData, 'works');
+    // console.log(this.enrichmentData, 'works');
   }
 
   voteEnrichment() {
@@ -70,19 +66,34 @@ export class ViewEnrichmentComponent implements OnInit, OnChanges {
     console.log("clicked");
     if (this.enrichmentVoted) {
       this.numberOfVotes++;
-      console.log(this.enrichData.voted_by, "voted by");
-      if (!this.enrichData.voted_by) {
-        this.enrichData.voted_by = [];
-      }
-      this.enrichData.voted_by.push(Number(this.auth.currentUserValue.id));
-      // console.log(this.enrichData, "enrich data", this.problemId);
-      console.log(this.enrichData.voted_by, "voted by 2");
-      this.enrichmentHandlerService.storeEnrichmentVotedBy(this.enrichData);
+
+      this.enrichmentData.voted_by.push(Number(this.auth.currentUserValue.id));
+      this.enrichmentData.voted_by = JSON.stringify(
+        this.enrichmentData.voted_by
+      )
+        .replace("[", "{")
+        .replace("]", "}");
+
+      this.voteClicked.emit(this.enrichmentData);
+      this.enrichmentData.voted_by = JSON.parse(
+        this.enrichmentData.voted_by.replace("{", "[").replace("}", "]")
+      );
     } else {
       this.numberOfVotes--;
-      let index = this.enrichData.voted_by.indexOf(Number(this.auth.currentUserValue.id));
-      this.enrichData.voted_by.splice(index, 1);
-      this.enrichmentHandlerService.storeEnrichmentVotedBy(this.enrichData);
+      let index = this.enrichmentData.voted_by.indexOf(
+        Number(this.auth.currentUserValue.id)
+      );
+      this.enrichmentData.voted_by.splice(index, 1);
+      this.enrichmentData.voted_by = JSON.stringify(
+        this.enrichmentData.voted_by
+      )
+        .replace("[", "{")
+        .replace("]", "}");
+
+      this.voteClicked.emit(this.enrichmentData);
+      this.enrichmentData.voted_by = JSON.parse(
+        this.enrichmentData.voted_by.replace("{", "[").replace("}", "]")
+      );
     }
   }
 
@@ -121,10 +132,11 @@ export class ViewEnrichmentComponent implements OnInit, OnChanges {
 
   editEnrichment() {
     console.log("edit clicked");
-    this.editClicked.emit(this.enrichData);
+    this.editClicked.emit(this.enrichmentData);
   }
 
   deleteEnrichment() {
-    this.enrichmentHandlerService.deleteEnrichment(this.enrichData.id);
+    this.deleteClicked.emit(this.enrichmentData.id);
+    // this.enrichmentHandlerService.deleteEnrichment(this.enrichmentData.id);
   }
 }

@@ -11,7 +11,7 @@ import { AuthService } from "./auth.service";
 @Injectable({
   providedIn: "root"
 })
-export class ProblemHandleService {
+export class ProblemService {
   displayValidateProblem: boolean = false;
   displayEnrichForm: boolean = false;
   displayValidateCard: boolean = true;
@@ -143,7 +143,8 @@ export class ProblemHandleService {
             title
           }
         }
-      `
+      `,
+      pollInterval: 500
     }).valueChanges;
   }
 
@@ -378,7 +379,8 @@ export class ProblemHandleService {
               }
             }
           }
-        `
+        `,
+        pollInterval: 500
       })
       .valueChanges.subscribe(result => {
         tags = result.data.problems[0].problem_tags.map(tagArray => {
