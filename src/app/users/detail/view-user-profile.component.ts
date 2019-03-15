@@ -16,6 +16,9 @@ export class ViewUserProfileComponent implements OnInit {
   userData: any = {};
   interests: any[];
   loggedInUsersProfile: boolean = false;
+  objectEntries = Object.entries;
+  personas: any = [];
+
   constructor(
     private userHandlerService: UserHandlerService,
     private route: ActivatedRoute,
@@ -39,6 +42,14 @@ export class ViewUserProfileComponent implements OnInit {
               photo_url
               location
               email
+              is_ngo
+              is_innovator
+              is_entrepreneur
+              is_expert
+              is_incubator
+              is_funder
+              is_government
+              is_beneficiary
               
             }
           }
@@ -47,6 +58,11 @@ export class ViewUserProfileComponent implements OnInit {
           .valueChanges.subscribe(result => {
             console.log(result, "result");
             this.userData = result.data.users[0];
+            Object.entries(this.userData).map(data => {
+              if (typeof data[1] === "boolean" && data[1]) {
+                this.personas.push(data[0]);
+              }
+            });
             console.log(this.userData, "userData");
             if (this.userData.id === Number(this.auth.currentUserValue.id)) {
               this.loggedInUsersProfile = true;
@@ -54,39 +70,39 @@ export class ViewUserProfileComponent implements OnInit {
             // console.log(this.problemService.problem, "problem");
           });
 
-        this.getInterests(params.id);
+        // this.getInterests(params.id);
       }
     });
   }
-  getInterests(id) {
-    this.apollo
-      .watchQuery<any>({
-        query: gql`
-  {
-    users(where: { id: { _eq: ${id} } }) {
-      id
-      user_tags{
-        tag {
-          id
-          name
-        }
-      }
-    }
-  }
-`
-      })
-      .valueChanges.subscribe(
-        result => {
-          if (result.data.users[0].user_tags) {
-            this.interests = result.data.users[0].user_tags.map(tagArray => {
-              return tagArray.tag.name;
-            });
-            console.log(this.interests, "interests");
-          }
-        },
-        error => {
-          console.log("error", error);
-        }
-      );
-  }
+  //   getInterests(id) {
+  //     this.apollo
+  //       .watchQuery<any>({
+  //         query: gql`
+  //   {
+  //     users(where: { id: { _eq: ${id} } }) {
+  //       id
+  //       user_tags{
+  //         tag {
+  //           id
+  //           name
+  //         }
+  //       }
+  //     }
+  //   }
+  // `
+  //       })
+  //       .valueChanges.subscribe(
+  //         result => {
+  //           if (result.data.users[0].user_tags) {
+  //             this.interests = result.data.users[0].user_tags.map(tagArray => {
+  //               return tagArray.tag.name;
+  //             });
+  //             console.log(this.interests, "interests");
+  //           }
+  //         },
+  //         error => {
+  //           console.log("error", error);
+  //         }
+  //       );
+  //   }
 }

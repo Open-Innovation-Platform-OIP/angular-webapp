@@ -22,7 +22,7 @@ export class AddUserProfileComponent implements OnInit, OnChanges {
   tags = [];
   preTags: any = [];
   imageBlob: Blob;
-  personas = ["testing"];
+  personas: any = [];
   public query: string;
   public query2: string;
   public platform: any;
@@ -37,10 +37,8 @@ export class AddUserProfileComponent implements OnInit, OnChanges {
     email: "",
     token: "",
     password: "",
-
     name: "",
     organization: "",
-
     qualification: "",
     photo_url: {},
     phone_number: "",
@@ -105,9 +103,10 @@ export class AddUserProfileComponent implements OnInit, OnChanges {
   ngOnInit() {
     Object.entries(this.user).map(persona => {
       if (typeof persona[1] === "boolean") {
-        this.personaArray.push(persona[0].slice(3));
+        this.personaArray.push(persona[0]);
       }
     });
+
     // this.tagService.getTagsFromDB();
 
     this.route.params.pipe(first()).subscribe(params => {
@@ -147,9 +146,16 @@ export class AddUserProfileComponent implements OnInit, OnChanges {
                 Object.keys(this.user).map(key => {
                   if (data.users[0][key]) {
                     this.user[key] = data.users[0][key];
+                    if (typeof data.users[0][key] === "boolean") {
+                      this.personaArray.push(data.users[0][key]);
+                      if (data.users[0][key]) {
+                        this.personas.push(data.users[0][key].slice(3));
+                      }
+                    }
                   }
                 });
               }
+              console.log(this.personas, "personas");
               // });
             },
             error => {
@@ -203,6 +209,14 @@ export class AddUserProfileComponent implements OnInit, OnChanges {
     if (Number(this.auth.currentUserValue.id)) {
       this.user.id = Number(this.auth.currentUserValue.id);
     }
+
+    // console.log(this.personas, "personas");
+    if (this.personas) {
+      this.personas.map(persona => {
+        this.user[persona] = true;
+      });
+    }
+
     this.userService.submitUserToDB(this.user);
   }
 
