@@ -10,11 +10,11 @@ Quill.register('modules/imageDrop', ImageDrop);
 import 'quill-mention';
 import { QuillEditorComponent } from 'ngx-quill';
 @Component({
-  selector: 'app-discussions',
-  templateUrl: './discussions.component.html',
-  styleUrls: ['./discussions.component.css']
+  selector: 'app-submit-comment',
+  templateUrl: './submitcomment.component.html',
+  styleUrls: ['./submitcomment.component.css']
 })
-export class DiscussionsComponent implements OnInit {
+export class CommentSubmitComponent implements OnInit {
   @ViewChild(QuillEditorComponent) editor: QuillEditorComponent;
   @Input() actionText = "Comment";
   @Input() users = [

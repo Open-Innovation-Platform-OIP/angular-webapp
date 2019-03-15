@@ -3,7 +3,7 @@ import { Apollo } from "apollo-angular";
 import gql from "graphql-tag";
 import { AuthService } from './auth.service';
 
-interface Comment {
+export interface Comment {
   id?: number; // new comments will automatically get ids from PostgreSQL. Edits will have an id.
   created_by: number; // user_id
   problem_id?: number; // linked problem

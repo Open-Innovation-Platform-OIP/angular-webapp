@@ -1,0 +1,24 @@
+<div class="card">
+          <div class="card-header card-header-icon card-header-warning">
+            <div class="user photo card-icon">
+              <i class="material-icons">comment</i>
+            </div>
+            <h4 class="card-title">{{comment.usersBycreatedBy.name || 'Anonymous'}}</h4>
+          </div>
+          <div class="card-body">
+            <div innerHTML="{{comment.text}}"></div>
+            <app-submit-comment *ngIf="showReplyBox && replyingTo === comment.id" [users]="objectValues(usersService.allUsers)" [actionText]="'Reply'"
+              (submitted)="onCommentSubmit($event)"></app-submit-comment>
+          </div>
+          <div class="card-footer" *ngIf="!showReplyBox">
+            <div class="stats">
+              <p class="card-category"><i class="material-icons">access_time</i> {{comment.modified_at |
+                date:'medium'}}</p>
+            </div>
+            <div class="price">
+              <button mat-raised-button class="btn btn-warning btn-round" matTooltip="Click to reply"
+                [matTooltipPosition]="'below'" (click)="replyTo(comment.id)">Reply</button>
+            </div>
+          </div>
+
+        </div>

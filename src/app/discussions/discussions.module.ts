@@ -5,7 +5,8 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { MdModule } from '../md/md.module';
 import { MaterialModule } from '../app.module';
 import { QuillModule } from "ngx-quill";
-import { DiscussionsComponent } from './discussions.component';
+import { CommentSubmitComponent } from './submit/submitcomment.component';
+import {CommentDisplayComponent} from './display/displaycomment.component';
 import { DiscussionsRoutes } from './discussions.routing';
 
 @NgModule({
@@ -17,8 +18,8 @@ import { DiscussionsRoutes } from './discussions.routing';
         MaterialModule,
         QuillModule
     ],
-    declarations: [DiscussionsComponent],
-    exports: [DiscussionsComponent]
+    declarations: [CommentSubmitComponent, CommentDisplayComponent],
+    exports: [CommentSubmitComponent, CommentDisplayComponent]
 })
 
 export class DiscussionsModule {}
