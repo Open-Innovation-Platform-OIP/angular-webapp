@@ -266,7 +266,7 @@
             </i>
           </a> -->
           <button mat-raised-button class="btn btn-warning btn-round" data-toggle="modal" data-target="#validatorModal"
-            matTooltip="Click to validate problem" [matTooltipPosition]="'below'" [disabled]="disableValidateButton || !userPersonas.expert">Validate</button>
+            matTooltip="Click to validate problem" [matTooltipPosition]="'below'" [disabled]="disableValidateButton || !userPersonas.is_expert || userId == problemData.created_by">Validate</button>
           <!-- <a mat-button>
             <i class="material-icons">
               keyboard_arrow_right
@@ -470,14 +470,15 @@
               [matTooltipPosition]="'below'" (click)="showCommentBox=true">Join Discussion</button>
           </div>
         </div>
-        <app-submit-comment *ngIf="showCommentBox===true" [users]="objectValues(usersService.allUsers)" [actionText]="'Comment'" (cancel)="showCommentBox=false" (submit)="onCommentSubmit($event)"></app-submit-comment>
+        <app-submit-comment *ngIf="showCommentBox===true" [users]="objectValues(usersService.allUsers)" [actionText]="'Comment'"
+          (cancel)="showCommentBox=false" (submit)="onCommentSubmit($event)"></app-submit-comment>
         <div class="row" *ngFor="let comment of discussions">
-            <!-- <div class="row" *ngFor="let comment of objectValues(comments)"> -->
+          <!-- <div class="row" *ngFor="let comment of objectValues(comments)"> -->
           <div class="col-sm-1" *ngIf="comment.linked_comment_id"></div>
           <div class="col">
-          <app-display-comment (replyClick)="replyTo(comment.id)" [comment]="comment"></app-display-comment>
-          <app-submit-comment *ngIf="showReplyBox && replyingTo === comment.id" [users]="objectValues(usersService.allUsers)"
-            [actionText]="'Reply'" (cancel)="showReplyBox=false" (submit)="onCommentSubmit($event)"></app-submit-comment>
+            <app-display-comment (replyClick)="replyTo(comment.id)" [comment]="comment"></app-display-comment>
+            <app-submit-comment *ngIf="showReplyBox && replyingTo === comment.id" [users]="objectValues(usersService.allUsers)"
+              [actionText]="'Reply'" (cancel)="showReplyBox=false" (submit)="onCommentSubmit($event)"></app-submit-comment>
           </div>
         </div>
 

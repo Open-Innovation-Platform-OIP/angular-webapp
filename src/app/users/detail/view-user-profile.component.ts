@@ -75,39 +75,6 @@ export class ViewUserProfileComponent implements OnInit {
       }
     });
   }
-<<<<<<< HEAD
-  //   getInterests(id) {
-  //     this.apollo
-  //       .watchQuery<any>({
-  //         query: gql`
-  //   {
-  //     users(where: { id: { _eq: ${id} } }) {
-  //       id
-  //       user_tags{
-  //         tag {
-  //           id
-  //           name
-  //         }
-  //       }
-  //     }
-  //   }
-  // `
-  //       })
-  //       .valueChanges.subscribe(
-  //         result => {
-  //           if (result.data.users[0].user_tags) {
-  //             this.interests = result.data.users[0].user_tags.map(tagArray => {
-  //               return tagArray.tag.name;
-  //             });
-  //             console.log(this.interests, "interests");
-  //           }
-  //         },
-  //         error => {
-  //           console.log("error", error);
-  //         }
-  //       );
-  //   }
-=======
   getInterests(id) {
     this.apollo
       .watchQuery<any>({
@@ -140,5 +107,4 @@ export class ViewUserProfileComponent implements OnInit {
         }
       );
   }
->>>>>>> 5fc830a95b321bcf62f41aae7faef3df72ceab27
 }

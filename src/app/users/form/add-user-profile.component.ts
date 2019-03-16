@@ -147,12 +147,12 @@ export class AddUserProfileComponent implements OnInit, OnChanges {
                 Object.keys(this.user).map(key => {
                   if (data.users[0][key]) {
                     this.user[key] = data.users[0][key];
-                    if (typeof data.users[0][key] === "boolean") {
-                      this.personaArray.push(data.users[0][key]);
-                      if (data.users[0][key]) {
-                        this.personas.push(data.users[0][key].slice(3));
-                      }
-                    }
+                    // if (typeof data.users[0][key] === "boolean") {
+                    // this.personaArray.push(data.users[0][key]);
+                    // if (data.users[0][key]) {
+                    //   this.personas.push(data.users[0][key].slice(3));
+                    // }
+                    // }
                   }
                 });
               }
@@ -218,7 +218,7 @@ export class AddUserProfileComponent implements OnInit, OnChanges {
         this.user[persona] = true;
       });
     }
-
+    console.log("Persona check", this.user);
     this.userService.submitUserToDB(this.user);
   }
 
