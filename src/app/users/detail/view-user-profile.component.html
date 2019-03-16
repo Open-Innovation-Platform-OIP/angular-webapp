@@ -49,7 +49,7 @@
             <p class="description">{{userData.location}}</p>
             <strong>Persona</strong>
             <div>
-              <span *ngFor="let persona of personas " class="badge badge-warning">{{persona}}</span>
+              <span *ngFor="let persona of personas " class="badge badge-warning">{{persona.slice(3)}}</span>
               <span>&nbsp;</span>
             </div>
           </div>
