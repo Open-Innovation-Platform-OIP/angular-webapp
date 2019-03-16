@@ -26,6 +26,7 @@ export class CollaborationService {
   constructor(private apollo: Apollo) {}
 
   submitCollaboratorToDB(collaborationData: collaborator) {
+    console.log(collaborationData, "collab data");
     console.log(collaborationData, "collab data 22");
     const upsert_collaborators = gql`
       mutation upsert_collaborators(

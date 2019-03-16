@@ -29,6 +29,7 @@ export class TagsService {
         }
       });
   }
+
   addTagsInDb(tableId, tags, tableName) {
     tags.map(tag => {
       if (tag) {

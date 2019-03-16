@@ -7,7 +7,7 @@ import { first, finalize } from "rxjs/operators";
 import { AuthService } from "../../services/auth.service";
 import { FilesService } from "../../services/files.service";
 import { TagsService } from "../../services/tags.service";
-declare var H: any;
+// declare var H: any;
 // import { GeocoderService } from '../../services/geocoder.service';
 import { filter } from "rxjs-compat/operator/filter";
 @Component({
@@ -66,13 +66,13 @@ export class AddUserProfileComponent implements OnInit, OnChanges {
     // console.log("TEst is: ", this.test);
   }
   ngOnChanges() {
-    this.platform = new H.service.Platform({
-      app_id: "sug0MiMpvxIW4BhoGjcf",
-      app_code: "GSl6bG5_ksXDw4sBTnhr_w"
-    });
-    this.geocoder = this.platform.getGeocodingService();
-    this.query = " ";
-    this.query2 = " ";
+    // this.platform = new H.service.Platform({
+    //   app_id: "sug0MiMpvxIW4BhoGjcf",
+    //   app_code: "GSl6bG5_ksXDw4sBTnhr_w"
+    // });
+    // this.geocoder = this.platform.getGeocodingService();
+    // this.query = " ";
+    // this.query2 = " ";
   }
 
   public getAddress() {
@@ -148,15 +148,17 @@ export class AddUserProfileComponent implements OnInit, OnChanges {
                   if (data.users[0][key]) {
                     this.user[key] = data.users[0][key];
                     if (typeof data.users[0][key] === "boolean") {
-                      this.personaArray.push(data.users[0][key]);
+                      this.personaArray.push(key.slice(3));
                       if (data.users[0][key]) {
-                        this.personas.push(data.users[0][key].slice(3));
+                        this.personas.push(key);
                       }
                     }
                   }
                 });
               }
               console.log(this.personas, "personas");
+              console.log(this.personaArray, "persona array");
+
               // });
             },
             error => {
@@ -185,7 +187,7 @@ export class AddUserProfileComponent implements OnInit, OnChanges {
         pollInterval: 500
       })
       .valueChanges.subscribe(result => {
-        console.log(result, "result");
+        // console.log(result, "result");
 
         this.tags = result.data.users[0].user_tags.map(tagArray => {
           console.log(tagArray, "work");
@@ -218,8 +220,8 @@ export class AddUserProfileComponent implements OnInit, OnChanges {
         this.user[persona] = true;
       });
     }
-
     this.userService.submitUserToDB(this.user);
+    this.personas = [];
   }
 
   onSubmit() {

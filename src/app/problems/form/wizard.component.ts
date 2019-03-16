@@ -862,6 +862,7 @@ export class WizardComponent
           if (result.data.insert_problems.returning.length > 0) {
             this.problem["id"] = result.data.insert_problems.returning[0].id;
             const problem_tags = new Set();
+
             this.sectors.map(sector => {
               if (
                 this.tagService.allTags[sector] &&
