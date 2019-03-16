@@ -113,20 +113,21 @@ export class ProblemDetailComponent implements OnInit {
   hideProblemDetail: boolean = true;
   collaboratorProfileInfo: any;
   comments = {};
+  replies = {};
 
   fabTogglerState: boolean = false;
 
-  openform: any;
-  reply: any;
-  index: any;
-  form = {
-    comment: null,
-    user_id: 1,
-    problem_id: 3
-  };
-  data: any;
-  putReply: any;
-  netReply: any;
+  // openform: any;
+  // reply: any;
+  // index: any;
+  // form = {
+  //   comment: null,
+  //   user_id: 1,
+  //   problem_id: 3
+  // };
+  // data: any;
+  // putReply: any;
+  // netReply: any;
 
   // Carousel
   @Input() name: string;
@@ -376,41 +377,18 @@ export class ProblemDetailComponent implements OnInit {
                       this.discussions = discussions.data.discussions;
                       discussions.data.discussions.map(comment => {
                         if (comment.linked_comment_id) {
-                          if (!this.comments[comment.linked_comment_id]) {
-                            // create comment object so we can add reply
-                            this.comments[comment.linked_comment_id] = {
-                              id: comment.linked_comment_id,
-                              created_by: 0,
-                              created_at: '',
-                              modified_at: '',
-                              text: '',
-                              mentions: [],
-                              replies: [comment]
-                            }
+                          // this comment is a reply - add it to the replies object
+                          if (!this.replies[comment.linked_comment_id]) {
+                            // create reply object so we can add reply
+                            this.replies[comment.linked_comment_id] = [comment];
                           } else {
-                            // comment object already exists so push reply
-                            this.comments[comment.linked_comment_id].replies.push(comment);
+                            // comment reply already exists so push reply into the array
+                            this.replies[comment.linked_comment_id].push(comment);
                           }
                         } else {
+                          // this comment is a parent comment - add it to the comments object
                           // comment object does not exist
-                          if (!this.comments[comment.id]) {
-                            this.comments[comment.id] = {
-                              id: comment.id,
-                              created_by: comment.created_by,
-                              created_at: comment.created_at,
-                              modified_at: comment.modified_at,
-                              text: comment.text,
-                              replies: [],
-                              mentions: comment.mentions
-                            }
-                          } else {
-                            // comment object already created by a reply; assign properties so we don't overwrite the replies
-                            this.comments[comment.id].created_by = comment.created_by;
-                            this.comments[comment.id].created_at = comment.created_at;
-                            this.comments[comment.id].modified_at = comment.modified_at;
-                            this.comments[comment.id].text = comment.text;
-                            this.comments[comment.id].mentions = comment.mentions;
-                          }
+                          this.comments[comment.id] = comment;
                         }
                       });
                       console.log(this.comments);

@@ -470,16 +470,24 @@
               [matTooltipPosition]="'below'" (click)="showCommentBox=true">Join Discussion</button>
           </div>
         </div>
-        <app-submit-comment *ngIf="showCommentBox===true" [users]="objectValues(usersService.allUsers)" [actionText]="'Comment'" (cancel)="showCommentBox=false" (submit)="onCommentSubmit($event)"></app-submit-comment>
-        <div class="row" *ngFor="let comment of discussions">
-            <!-- <div class="row" *ngFor="let comment of objectValues(comments)"> -->
-          <div class="col-sm-1" *ngIf="comment.linked_comment_id"></div>
-          <div class="col">
-          <app-display-comment (replyClick)="replyTo(comment.id)" [comment]="comment"></app-display-comment>
-          <app-submit-comment *ngIf="showReplyBox && replyingTo === comment.id" [users]="objectValues(usersService.allUsers)"
-            [actionText]="'Reply'" (cancel)="showReplyBox=false" (submit)="onCommentSubmit($event)"></app-submit-comment>
-          </div>
-        </div>
+        <app-submit-comment *ngIf="showCommentBox===true" [users]="objectValues(usersService.allUsers)" [actionText]="'Comment'"
+          (cancel)="showCommentBox=false" (submit)="onCommentSubmit($event)"></app-submit-comment>
+        <!-- <div class="row" *ngFor="let comment of discussions"> -->
+        <ng-container *ngFor="let comment of objectValues(comments)">
+            <div class="row">
+                <div class="col">
+                  <app-display-comment (replyClick)="replyTo(comment.id)" [comment]="comment"></app-display-comment>
+                  <app-submit-comment *ngIf="showReplyBox && replyingTo === comment.id" [users]="objectValues(usersService.allUsers)"
+                    [actionText]="'Reply'" (cancel)="showReplyBox=false" (submit)="onCommentSubmit($event)"></app-submit-comment>
+                </div>
+              </div>
+              <div class="row" *ngFor="let reply of replies[comment.id]">
+                <div class="col-sm-1"></div>
+                  <div class="col">
+                      <app-display-comment (replyClick)="replyTo(reply.id)" [comment]="reply"></app-display-comment>
+                  </div>
+              </div>
+        </ng-container>
 
       </div>
     </div>
