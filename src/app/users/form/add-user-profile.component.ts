@@ -1,4 +1,10 @@
-import { Component, OnInit, OnChanges } from "@angular/core";
+import {
+  Component,
+  OnInit,
+  OnChanges,
+  ElementRef,
+  ViewChild
+} from "@angular/core";
 import { UsersService } from "../../services/users.service";
 import { Apollo } from "apollo-angular";
 import gql from "graphql-tag";
@@ -7,6 +13,22 @@ import { first, finalize } from "rxjs/operators";
 import { AuthService } from "../../services/auth.service";
 import { FilesService } from "../../services/files.service";
 import { TagsService } from "../../services/tags.service";
+import { Observable } from "rxjs";
+import { map, startWith } from "rxjs/operators";
+
+import {
+  FormControl,
+  FormBuilder,
+  FormGroupDirective,
+  NgForm,
+  Validators,
+  FormGroup
+} from "@angular/forms";
+import {
+  MatAutocompleteSelectedEvent,
+  MatChipInputEvent,
+  MatAutocomplete
+} from "@angular/material";
 // declare var H: any;
 // import { GeocoderService } from '../../services/geocoder.service';
 import { filter } from "rxjs-compat/operator/filter";
@@ -19,6 +41,10 @@ export class AddUserProfileComponent implements OnInit, OnChanges {
   mode = "Add";
   userId: any;
   autoCompleteTags: any[] = [];
+  searchResults = {};
+  sectorCtrl = new FormControl();
+  filteredSectors: Observable<string[]>;
+  sectors: string[] = [];
   tags = [];
   preTags: any = [];
   imageBlob: Blob;
@@ -53,6 +79,9 @@ export class AddUserProfileComponent implements OnInit, OnChanges {
     is_entrepreneur: false
   };
 
+  @ViewChild("sectorInput") sectorInput: ElementRef<HTMLInputElement>;
+  @ViewChild("auto") matAutocomplete: MatAutocomplete;
+
   constructor(
     private userService: UsersService,
     private apollo: Apollo,
@@ -63,7 +92,54 @@ export class AddUserProfileComponent implements OnInit, OnChanges {
     // private here: GeocoderService,
     private tagService: TagsService
   ) {
+    this.filteredSectors = this.sectorCtrl.valueChanges.pipe(
+      startWith(null),
+      map((sector: string | null) =>
+        sector
+          ? this._filter(sector)
+          : Object.keys(this.tagService.allTags).slice()
+      )
+    );
     // console.log("TEst is: ", this.test);
+  }
+
+  add(event: MatChipInputEvent): void {
+    // Add sector only when MatAutocomplete is not open
+    // To make sure this does not conflict with OptionSelected Event
+    if (!this.matAutocomplete.isOpen) {
+      const input = event.input;
+      const value = event.value;
+      // Add our sector
+      if ((value || "").trim()) {
+        this.sectors.push(value.trim());
+      }
+      // Reset the input value
+      if (input) {
+        input.value = "";
+      }
+      this.sectorCtrl.setValue(null);
+    }
+  }
+
+  remove(sector: string): void {
+    const index = this.sectors.indexOf(sector);
+    if (index >= 0) {
+      this.sectors.splice(index, 1);
+    }
+  }
+
+  selected(event: MatAutocompleteSelectedEvent): void {
+    this.sectors.push(event.option.viewValue);
+    this.sectorInput.nativeElement.value = "";
+    this.sectorCtrl.setValue(null);
+  }
+
+  private _filter(value: string): string[] {
+    const filterValue = value.toLowerCase();
+
+    return Object.keys(this.tagService.allTags).filter(
+      sector => sector.toLowerCase().indexOf(filterValue) === 0
+    );
   }
   ngOnChanges() {
     // this.platform = new H.service.Platform({

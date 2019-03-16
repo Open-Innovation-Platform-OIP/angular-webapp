@@ -137,6 +137,7 @@ export class UsersService {
       .subscribe(
         data => {
           console.log(data);
+
           // location.reload();
         },
         err => {

@@ -7,6 +7,21 @@ import gql from "graphql-tag";
 export class TagsService {
   public allTags = {};
 
+  public upsert_tags = gql`
+    mutation upsert_tags($tags: [tags_insert_input!]!) {
+      insert_tags(
+        objects: $tags
+        on_conflict: { constraint: tags_pkey, update_columns: [] }
+      ) {
+        affected_rows
+        returning {
+          id
+          name
+        }
+      }
+    }
+  `;
+
   constructor(private apollo: Apollo) {}
   getTagsFromDB() {
     this.apollo
@@ -29,50 +44,66 @@ export class TagsService {
         }
       });
   }
+  addTagsInDb(tags, tableName, tableId?) {
+    console.log(tags, "check for tag");
+    this.apollo
+      .mutate({
+        mutation: this.upsert_tags,
+        variables: {
+          tags: tags
+        }
+      })
+      .subscribe(
+        data => {
+          console.log("worked", data);
+        },
+        err => {
+          console.log(err, "couldn't add tags");
+        }
+      );
 
-  addTagsInDb(tableId, tags, tableName) {
-    tags.map(tag => {
-      if (tag) {
-        this.apollo
-          .watchQuery<any>({
-            query: gql`query { tags( where: {name: {_eq:"${
-              tag.value
-            }"} }){id name}}`,
-            pollInterval: 500
-          })
-          .valueChanges.subscribe(({ data }) => {
-            console.log(data.tags, "tags presnt in db");
-            if (data.tags.length > 0) {
-              this.addRelationToTags(tableId, data.tags[0].id, tableName);
-            } else if (data.tags.length === 0) {
-              console.log(tag.value, "tag value");
+    // tags.map(tag => {
+    //   if (tag) {
+    //     this.apollo
+    //       .watchQuery<any>({
+    //         query: gql`query { tags( where: {name: {_eq:"${
+    //           tag.value
+    //         }"} }){id name}}`,
+    //         pollInterval: 500
+    //       })
+    //       .valueChanges.subscribe(({ data }) => {
+    //         console.log(data.tags, "tags presnt in db");
+    //         if (data.tags.length > 0) {
+    //           this.addRelationToTags(tableId, data.tags[0].id, tableName);
+    //         } else if (data.tags.length === 0) {
+    //           console.log(tag.value, "tag value");
 
-              this.apollo
-                .mutate<any>({
-                  mutation: gql`mutation insert_tags {
-              insert_tags(
-                objects: [
-                  {name:"${tag.value}"}
-                ]
-              ) {
-                returning {
-                  id
-                  name
-                }
-              }
-            }`
-                })
-                .subscribe(data => {
-                  this.addRelationToTags(
-                    tableId,
-                    data.data.insert_tags.returning[0].id,
-                    tableName
-                  );
-                });
-            }
-          });
-      }
-    });
+    //           this.apollo
+    //             .mutate<any>({
+    //               mutation: gql`mutation insert_tags {
+    //           insert_tags(
+    //             objects: [
+    //               {name:"${tag.value}"}
+    //             ]
+    //           ) {
+    //             returning {
+    //               id
+    //               name
+    //             }
+    //           }
+    //         }`
+    //             })
+    //             .subscribe(data => {
+    //               this.addRelationToTags(
+    //                 tableId,
+    //                 data.data.insert_tags.returning[0].id,
+    //                 tableName
+    //               );
+    //             });
+    //         }
+    //       });
+    //   }
+    // });
   }
   addRelationToTags(tableId, tagId, tableName) {
     console.log(tableId, tagId, tableName, "tableId", "tagId", "tableName");
