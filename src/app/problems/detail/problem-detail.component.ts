@@ -19,6 +19,7 @@ import { NgForm } from "@angular/forms";
 import { NguCarouselConfig } from "@ngu/carousel";
 import { slider } from "./problem-detail.animation";
 import { DiscussionsService } from "src/app/services/discussions.service";
+import { FilesService } from "src/app/services/files.service";
 import { CollaborationService } from "src/app/services/collaboration.service";
 import { ValidationService } from "src/app/services/validation.service";
 import { EnrichmentService } from "src/app/services/enrichment.service";
@@ -149,11 +150,12 @@ export class ProblemDetailComponent implements OnInit {
     private cdr: ChangeDetectorRef,
     private auth: AuthService,
     public usersService: UsersService,
+    public fileService: FilesService,
     private discussionsService: DiscussionsService,
     private collaborationService: CollaborationService,
     private validationService: ValidationService,
     private enrichmentService: EnrichmentService
-  ) {}
+  ) { }
 
   getUserPersonas(id) {
     this.apollo
@@ -434,7 +436,7 @@ export class ProblemDetailComponent implements OnInit {
         cancelButtonClass: "btn btn-danger",
         buttonsStyling: false
       })
-        .then(function(result) {
+        .then(function (result) {
           swal({
             type: "success",
             html:
@@ -471,7 +473,7 @@ export class ProblemDetailComponent implements OnInit {
       body.classList.remove("sidebar-mini");
       misc.sidebar_mini_active = false;
     } else {
-      setTimeout(function() {
+      setTimeout(function () {
         body.classList.add("sidebar-mini");
 
         misc.sidebar_mini_active = true;
@@ -479,12 +481,12 @@ export class ProblemDetailComponent implements OnInit {
     }
 
     // we simulate the window Resize so the charts will get updated in realtime.
-    const simulateWindowResize = setInterval(function() {
+    const simulateWindowResize = setInterval(function () {
       window.dispatchEvent(new Event("resize"));
     }, 180);
 
     // we stop the simulation of Window Resize after the animations are completed
-    setTimeout(function() {
+    setTimeout(function () {
       clearInterval(simulateWindowResize);
     }, 1000);
   }
@@ -689,7 +691,7 @@ export class ProblemDetailComponent implements OnInit {
       $layer.remove();
     }
 
-    setTimeout(function() {
+    setTimeout(function () {
       $toggle.classList.remove("toggled");
     }, 400);
 
@@ -876,28 +878,63 @@ export class ProblemDetailComponent implements OnInit {
     console.log("edit collab", collaborationData);
     this.collaboratorDataToEdit = collaborationData;
   }
-  onCommentSubmit(event) {
-    const [content, mentions] = event;
-    let comment = {
-      created_by: this.auth.currentUserValue.id,
-      problem_id: this.problemData["id"],
-      text: content,
-      mentions: JSON.stringify(mentions)
-        .replace("[", "{")
-        .replace("]", "}")
-    };
-    // console.log(content, mentions);
-    if (this.showReplyBox) {
-      comment["linked_comment_id"] = this.replyingTo;
-      this.replyingTo = 0;
-      this.showReplyBox = false;
-    }
-    this.discussionsService.submitCommentToDB(comment);
+
+  async onCommentSubmit(event) {
+
+    const [content, mentions, attachments] = event;
+    let file_links = [];
+
+    await attachments.forEach((file, index) => {
+      this.fileService
+        .uploadFile(file, file.name)
+        .promise()
+        .then(values => {
+          // console.log("val: ", values);
+          file_links.push(values.Location);
+        })
+        .catch(e => console.log("Err:: ", e))
+        .then(() => {
+          if (index === attachments.length - 1) {
+            let comment = {
+              created_by: this.auth.currentUserValue.id,
+              problem_id: this.problemData["id"],
+              text: content,
+              attachments: file_links,  // overwriting the incoming blobs
+              mentions: JSON.stringify(mentions)
+                .replace("[", "{")
+                .replace("]", "}")
+            };
+            // console.log(content, mentions);
+            if (this.showReplyBox) {
+              comment["linked_comment_id"] = this.replyingTo;
+              this.replyingTo = 0;
+              this.showReplyBox = false;
+            }
+            this.discussionsService.submitCommentToDB(comment);
+          }
+        });
+    })
   }
-  onReplySubmit(comment) {
-    console.log(comment);
-    comment['created_by'] = this.auth.currentUserValue.id;
-    comment['problem_id'] = this.problemData["id"];
-    this.discussionsService.submitCommentToDB(comment);
+
+  async onReplySubmit(comment) {
+    let file_links = [];
+
+    await comment.attachments.forEach((file, index) => {
+      this.fileService
+        .uploadFile(file, file.name)
+        .promise()
+        .then(values => {
+          file_links.push(values.Location);
+        })
+        .catch(e => console.log("Err:: ", e))
+        .then(() => {
+          if (index === comment.attachments.length - 1) {
+            comment['attachments'] = file_links; // overwriting the incoming blobs
+            comment['created_by'] = this.auth.currentUserValue.id;
+            comment['problem_id'] = this.problemData["id"];
+            this.discussionsService.submitCommentToDB(comment);
+          }
+        });
+    })
   }
 }

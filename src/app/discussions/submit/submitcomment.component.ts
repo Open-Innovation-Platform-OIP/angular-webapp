@@ -1,7 +1,8 @@
 import {
   Component, ViewChild, OnInit, Input,
   Output,
-  EventEmitter } from '@angular/core';
+  EventEmitter
+} from '@angular/core';
 import * as Quill from 'quill/dist/quill.js';
 import ImageResize from 'quill-image-resize-module';
 // import {ImageDrop} from 'quill-image-drop-module';
@@ -18,6 +19,7 @@ export class CommentSubmitComponent implements OnInit {
   @ViewChild(QuillEditorComponent) editor: QuillEditorComponent;
   @Input() actionText = "Comment";
   @Input() cancelShown = false;
+  @Input() id;
   @Input() users = [
     {
       id: 1,
@@ -32,6 +34,7 @@ export class CommentSubmitComponent implements OnInit {
   @Output() cancel = new EventEmitter();
   content = '';
   mentions = [];
+  attachments: Blob[] = [];
   modules = {
     mention: {
       allowedChars: /^[A-Za-z\sÅÄÖåäö]*$/,
@@ -69,7 +72,7 @@ export class CommentSubmitComponent implements OnInit {
         // other camelCase styles for size display
       }
     },
-    toolbar: [['bold', 'italic', 'blockquote'], ['link', 'image', 'video']]
+    toolbar: [['bold', 'italic', 'blockquote'], ['link']]
   }
 
   setFocus(event) {
@@ -80,12 +83,31 @@ export class CommentSubmitComponent implements OnInit {
 
   submitComment() {
     // console.log(this.mentions, this.content);
-    this.submit.emit([this.content, this.mentions]);
+    this.submit.emit([this.content, this.mentions, this.attachments]);
     this.content = '';
     this.mentions = [];
+    this.attachments = [];
   }
 
   ngOnInit() {
+  }
+
+  onFileSelected(attach_files) {
+    if (attach_files && attach_files.target.files) {
+      for (let i = 0; i < attach_files.target.files.length; i++) {
+        const file = attach_files.target.files[i];
+        this.attachments.push(file);
+      }
+    }
+
+  }
+
+  removeFile(i) {
+    if (this.attachments.length === 1) {
+      this.attachments = [];
+    } else {
+      this.attachments.splice(i, 1);
+    }
   }
 
 }

@@ -11,15 +11,18 @@ export interface Comment {
   text: String; // text/html for comment
   linked_comment_id?: number; // include parent comment id if this is a reply
   mentions?: String;
+  attachments?: String[];
 }
 
 @Injectable({
   providedIn: "root"
 })
 export class DiscussionsService {
-  constructor(private apollo: Apollo, private auth: AuthService) {}
+  constructor(private apollo: Apollo, private auth: AuthService) { }
 
   submitCommentToDB(comment: Comment) {
+    console.log("comment>>>> ", comment);
+
     if (!(comment.problem_id || comment.solution_id)) {
       console.log("cannot continue without problem or solution id");
       return false;
