@@ -44,16 +44,6 @@ export class ProblemDetailComponent implements OnInit {
   replyingTo = 0;
   showReplyBox = false;
   showCommentBox = false;
-  allUsers = [
-    {
-      id: 1,
-      value: "Tej"
-    },
-    {
-      id: 2,
-      value: "Shaona"
-    }
-  ];
   problemData: any = {
     id: 0,
     title: "",
@@ -889,6 +879,12 @@ export class ProblemDetailComponent implements OnInit {
       this.replyingTo = 0;
       this.showReplyBox = false;
     }
+    this.discussionsService.submitCommentToDB(comment);
+  }
+  onReplySubmit(comment) {
+    console.log(comment);
+    comment['created_by'] = this.auth.currentUserValue.id;
+    comment['problem_id'] = this.problemData["id"];
     this.discussionsService.submitCommentToDB(comment);
   }
 }

@@ -4,9 +4,9 @@ import {
   EventEmitter } from '@angular/core';
 import * as Quill from 'quill/dist/quill.js';
 import ImageResize from 'quill-image-resize-module';
-import {ImageDrop} from 'quill-image-drop-module';
+// import {ImageDrop} from 'quill-image-drop-module';
 Quill.register('modules/imageResize', ImageResize);
-Quill.register('modules/imageDrop', ImageDrop);
+// Quill.register('modules/imageDrop', ImageDrop);
 import 'quill-mention';
 import { QuillEditorComponent } from 'ngx-quill';
 @Component({
@@ -17,6 +17,7 @@ import { QuillEditorComponent } from 'ngx-quill';
 export class CommentSubmitComponent implements OnInit {
   @ViewChild(QuillEditorComponent) editor: QuillEditorComponent;
   @Input() actionText = "Comment";
+  @Input() cancelShown = false;
   @Input() users = [
     {
       id: 1,
@@ -58,7 +59,7 @@ export class CommentSubmitComponent implements OnInit {
         }
       }
     },
-    imageDrop: true,
+    // imageDrop: true,
     imageResize: {
       modules: ['Resize', 'DisplaySize', 'Toolbar'],
       handleStyles: {
