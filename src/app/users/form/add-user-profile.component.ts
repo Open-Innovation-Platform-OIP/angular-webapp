@@ -5,6 +5,8 @@ import {
   ElementRef,
   ViewChild
 } from "@angular/core";
+import { ErrorStateMatcher } from "@angular/material/core";
+
 import { UsersService } from "../../services/users.service";
 import { Apollo } from "apollo-angular";
 import gql from "graphql-tag";
@@ -15,6 +17,7 @@ import { FilesService } from "../../services/files.service";
 import { TagsService } from "../../services/tags.service";
 import { Observable } from "rxjs";
 import { map, startWith } from "rxjs/operators";
+import { COMMA, ENTER } from "@angular/cdk/keycodes";
 
 import {
   FormControl,
@@ -32,6 +35,20 @@ import {
 // declare var H: any;
 // import { GeocoderService } from '../../services/geocoder.service';
 import { filter } from "rxjs-compat/operator/filter";
+
+export class MyErrorStateMatcher implements ErrorStateMatcher {
+  isErrorState(
+    control: FormControl | null,
+    form: FormGroupDirective | NgForm | null
+  ): boolean {
+    const isSubmitted = form && form.submitted;
+    return !!(
+      control &&
+      control.invalid &&
+      (control.dirty || control.touched || isSubmitted)
+    );
+  }
+}
 @Component({
   selector: "app-add-user-profile",
   templateUrl: "./add-user-profile.component.html",
@@ -40,6 +57,12 @@ import { filter } from "rxjs-compat/operator/filter";
 export class AddUserProfileComponent implements OnInit, OnChanges {
   mode = "Add";
   userId: any;
+  visible = true;
+
+  selectable = true;
+  removable = true;
+  addOnBlur = true;
+  readonly separatorKeysCodes: number[] = [ENTER, COMMA];
   autoCompleteTags: any[] = [];
   searchResults = {};
   sectorCtrl = new FormControl();
@@ -61,8 +84,9 @@ export class AddUserProfileComponent implements OnInit, OnChanges {
   user: any = {
     id: "",
     email: "",
-    token: "",
     password: "",
+    token: "",
+
     name: "",
     organization: "",
     qualification: "",
@@ -104,6 +128,7 @@ export class AddUserProfileComponent implements OnInit, OnChanges {
   }
 
   add(event: MatChipInputEvent): void {
+    console.log("test", event);
     // Add sector only when MatAutocomplete is not open
     // To make sure this does not conflict with OptionSelected Event
     if (!this.matAutocomplete.isOpen) {
@@ -141,6 +166,9 @@ export class AddUserProfileComponent implements OnInit, OnChanges {
       sector => sector.toLowerCase().indexOf(filterValue) === 0
     );
   }
+  // isFieldValid(form: FormGroup, field: string) {
+  //   return !form.get(field).valid && form.get(field).touched;
+  // }
   ngOnChanges() {
     // this.platform = new H.service.Platform({
     //   app_id: "sug0MiMpvxIW4BhoGjcf",
@@ -177,6 +205,8 @@ export class AddUserProfileComponent implements OnInit, OnChanges {
     console.log(this.user.location);
   }
   ngOnInit() {
+    this.tagService.getTagsFromDB();
+
     Object.entries(this.user).map(persona => {
       if (typeof persona[1] === "boolean") {
         this.personaArray.push(persona[0]);
@@ -209,10 +239,17 @@ export class AddUserProfileComponent implements OnInit, OnChanges {
               is_beneficiary
               is_incubator
               is_funder
+              user_tags{
+                tag {
+                    id
+                    name
+                }
+            }
+            }
+        }
 
               
-            }
-          }
+           
         `,
             pollInterval: 500
           })
@@ -232,6 +269,9 @@ export class AddUserProfileComponent implements OnInit, OnChanges {
                   }
                 });
               }
+              this.sectors = data.users[0].user_tags.map(tagArray => {
+                return tagArray.tag.name;
+              });
               console.log(this.personas, "personas");
               console.log(this.personaArray, "persona array");
 
@@ -243,41 +283,6 @@ export class AddUserProfileComponent implements OnInit, OnChanges {
           );
       }
     });
-
-    this.apollo
-      .watchQuery<any>({
-        query: gql`
-          {
-            users(where: { id: { _eq: ${Number(
-              this.auth.currentUserValue.id
-            )} } }) {
-              id
-              user_tags{
-                tag {
-                  id
-                  name
-                }
-              }
-            }
-          }`,
-        pollInterval: 500
-      })
-      .valueChanges.subscribe(result => {
-        // console.log(result, "result");
-
-        this.tags = result.data.users[0].user_tags.map(tagArray => {
-          console.log(tagArray, "work");
-
-          return tagArray.tag.name;
-        });
-        console.log(this.tags, "tag");
-        this.preTags = result.data.users[0].user_tags.map(tagArray => {
-          console.log(tagArray, "work");
-
-          return tagArray.tag;
-        });
-        console.log("tags==", this.tags);
-      });
   }
 
   getBlob(event) {
@@ -296,7 +301,67 @@ export class AddUserProfileComponent implements OnInit, OnChanges {
         this.user[persona] = true;
       });
     }
-    this.userService.submitUserToDB(this.user);
+    this.userService.submitUserToDB(this.user).subscribe(
+      result => {
+        this.user["id"] = result.data.insert_users.returning[0].id;
+
+        const tags = [];
+
+        const user_tags = new Set();
+        console.log(this.sectors, "sectors");
+
+        this.sectors.map(sector => {
+          tags.push({ name: sector });
+          console.log(tags, "tags in array");
+
+          if (
+            this.tagService.allTags[sector] &&
+            this.tagService.allTags[sector].id
+          ) {
+            user_tags.add({
+              tag_id: this.tagService.allTags[sector].id,
+              user_id: this.user["id"]
+            });
+          }
+        });
+
+        this.tagService.addTagsInDb(tags, "users", this.user["id"]);
+
+        if (user_tags.size > 0) {
+          const upsert_user_tags = gql`
+            mutation upsert_user_tags(
+              $users_tags: [users_tags_insert_input!]!
+            ) {
+              insert_users_tags(
+                objects: $users_tags
+                on_conflict: {
+                  constraint: users_tags_pkey
+                  update_columns: [tag_id, user_id]
+                }
+              ) {
+                affected_rows
+                returning {
+                  tag_id
+                  user_id
+                }
+              }
+            }
+          `;
+          this.apollo
+            .mutate({
+              mutation: upsert_user_tags,
+              variables: {
+                users_tags: Array.from(user_tags)
+              }
+            })
+            .subscribe(data => {}, err => {});
+        }
+      },
+      err => {
+        console.error(JSON.stringify(err));
+      }
+    );
+
     this.personas = [];
   }
 

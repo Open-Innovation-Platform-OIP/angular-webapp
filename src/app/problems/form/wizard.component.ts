@@ -883,7 +883,6 @@ export class WizardComponent
 
             this.sectors.map(sector => {
               tags.push({ name: sector });
-              this.tagService.addTagsInDb(tags, "problems");
               console.log(tags, "tags in array");
 
               if (
@@ -896,6 +895,9 @@ export class WizardComponent
                 });
               }
             });
+
+            this.tagService.addTagsInDb(tags, "problems", this.problem["id"]);
+
             if (problem_tags.size > 0) {
               const upsert_problem_tags = gql`
                 mutation upsert_problem_tags(

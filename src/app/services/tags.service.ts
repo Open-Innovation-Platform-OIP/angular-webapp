@@ -7,20 +7,7 @@ import gql from "graphql-tag";
 export class TagsService {
   public allTags = {};
 
-  public upsert_tags = gql`
-    mutation upsert_tags($tags: [tags_insert_input!]!) {
-      insert_tags(
-        objects: $tags
-        on_conflict: { constraint: tags_pkey, update_columns: [] }
-      ) {
-        affected_rows
-        returning {
-          id
-          name
-        }
-      }
-    }
-  `;
+  // public upsert_tags = ;
 
   constructor(private apollo: Apollo) {}
   getTagsFromDB() {
@@ -45,17 +32,75 @@ export class TagsService {
       });
   }
   addTagsInDb(tags, tableName, tableId?) {
+    let concatTableName = tableName.slice(0, tableName.length - 1);
     console.log(tags, "check for tag");
     this.apollo
       .mutate({
-        mutation: this.upsert_tags,
+        mutation: gql`
+          mutation upsert_tags($tags: [tags_insert_input!]!) {
+            insert_tags(
+              objects: $tags
+              on_conflict: { constraint: tags_name_key, update_columns: [] }
+            ) {
+              affected_rows
+              returning {
+                id
+                name
+              }
+            }
+          }
+        `,
         variables: {
           tags: tags
         }
       })
       .subscribe(
         data => {
-          console.log("worked", data);
+          let tagsToBeLinked = [];
+          if (data.data.insert_tags.returning) {
+            data.data.insert_tags.returning.map(tag => {
+              tagsToBeLinked.push({
+                tag_id: tag.id,
+                [`${concatTableName}_id`]: tableId
+              });
+            });
+
+            this.apollo
+              .mutate({
+                mutation: gql`
+            mutation upsert_${concatTableName}_tags(
+              $${tableName}_tags: [${tableName}_tags_insert_input!]!
+            ) {
+              insert_${tableName}_tags(
+                objects: $${tableName}_tags
+                on_conflict: {
+                  constraint: ${tableName}_tags_pkey
+                  update_columns: [tag_id, ${concatTableName}_id]
+                }
+              ) {
+                affected_rows
+                returning {
+                  tag_id
+                  ${concatTableName}_id
+                }
+              }
+            }
+          `,
+                variables: {
+                  [`${tableName}_tags`]: tagsToBeLinked
+                }
+              })
+              .subscribe(
+                data => {
+                  console.log("worked", data);
+                },
+                err => {
+                  console.log(err, "couldn't add tags");
+                }
+              );
+
+            console.log("worked", data);
+          }
         },
         err => {
           console.log(err, "couldn't add tags");

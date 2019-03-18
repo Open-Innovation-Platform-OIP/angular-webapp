@@ -46,6 +46,7 @@ export class CollaborationService {
               is_expert
               is_beneficiary
               is_innovator
+              edited_at
             ]
           }
         ) {

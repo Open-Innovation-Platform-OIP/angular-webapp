@@ -57,6 +57,7 @@ export class EnrichmentService {
                   min_population
                   extent
                   beneficiary_attributes
+                  edited_at
                 ]
               }
             ) {
