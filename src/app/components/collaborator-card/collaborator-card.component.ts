@@ -23,6 +23,7 @@ export class CollaboratorCardComponent implements OnInit, OnChanges {
   @Output() editClicked = new EventEmitter();
   @Output() deleteClicked = new EventEmitter();
   collaboratorProfileData: any;
+  currentUser: Number;
   roles: any = [];
 
   constructor(
@@ -31,9 +32,15 @@ export class CollaboratorCardComponent implements OnInit, OnChanges {
     private apollo: Apollo
   ) {}
 
-  ngOnInit() {}
+  ngOnInit() {
+    console.log("works ngoninit");
+    this.currentUser = Number(this.auth.currentUserValue.id);
+    console.log(this.currentUser, "curr", this.collaboratorData.user_id);
+  }
 
   ngOnChanges() {
+    this.roles = [];
+    console.log("works");
     if (typeof this.collaboratorData === "object") {
       Object.entries(this.collaboratorData).map(collabData => {
         if (typeof collabData[1] === "boolean" && collabData[1]) {

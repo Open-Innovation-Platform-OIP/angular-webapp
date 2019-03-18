@@ -18,6 +18,7 @@ import { TagsService } from "../../services/tags.service";
 import { Observable } from "rxjs";
 import { map, startWith } from "rxjs/operators";
 import { COMMA, ENTER } from "@angular/cdk/keycodes";
+import { GeocoderService } from "../../services/geocoder.service";
 
 import {
   FormControl,
@@ -36,19 +37,19 @@ import {
 // import { GeocoderService } from '../../services/geocoder.service';
 import { filter } from "rxjs-compat/operator/filter";
 
-export class MyErrorStateMatcher implements ErrorStateMatcher {
-  isErrorState(
-    control: FormControl | null,
-    form: FormGroupDirective | NgForm | null
-  ): boolean {
-    const isSubmitted = form && form.submitted;
-    return !!(
-      control &&
-      control.invalid &&
-      (control.dirty || control.touched || isSubmitted)
-    );
-  }
-}
+// export class MyErrorStateMatcher implements ErrorStateMatcher {
+//   isErrorState(
+//     control: FormControl | null,
+//     form: FormGroupDirective | NgForm | null
+//   ): boolean {
+//     const isSubmitted = form && form.submitted;
+//     return !!(
+//       control &&
+//       control.invalid &&
+//       (control.dirty || control.touched || isSubmitted)
+//     );
+//   }
+// }
 @Component({
   selector: "app-add-user-profile",
   templateUrl: "./add-user-profile.component.html",
@@ -113,7 +114,7 @@ export class AddUserProfileComponent implements OnInit, OnChanges {
     private route: ActivatedRoute,
     private imgUpload: FilesService,
     private auth: AuthService,
-    // private here: GeocoderService,
+    private here: GeocoderService,
     private tagService: TagsService
   ) {
     this.filteredSectors = this.sectorCtrl.valueChanges.pipe(
@@ -179,16 +180,17 @@ export class AddUserProfileComponent implements OnInit, OnChanges {
     // this.query2 = " ";
   }
 
-  public getAddress() {
-    if (this.user.location != "") {
-      // this.here.getAddress(this.user.location).then(
-      //   result => {
-      //     this.locations = <Array<any>>result;
-      //   },
-      //   error => {
-      //     console.error(error);
-      //   }
-      // );
+  getLocation() {
+    console.log("get address");
+    if (this.user.location != "Unknown") {
+      this.here.getAddress(this.user.location).then(
+        result => {
+          this.locations = <Array<any>>result;
+        },
+        error => {
+          console.error(error);
+        }
+      );
     }
     // var obj = personas;
     // console.log(personas);
@@ -304,6 +306,9 @@ export class AddUserProfileComponent implements OnInit, OnChanges {
     this.userService.submitUserToDB(this.user).subscribe(
       result => {
         this.user["id"] = result.data.insert_users.returning[0].id;
+        this.router.navigateByUrl(
+          `/profiles/${result.data.insert_users.returning[0].id}`
+        );
 
         const tags = [];
 

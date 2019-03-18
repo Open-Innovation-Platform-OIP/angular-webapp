@@ -57,7 +57,6 @@ export class EnrichmentService {
                   min_population
                   extent
                   beneficiary_attributes
-                  edited_at
                 ]
               }
             ) {
@@ -151,7 +150,7 @@ export class EnrichmentService {
       .subscribe(
         ({ data }) => {
           console.log(data, "return form db");
-          location.reload();
+          // location.reload();
 
           return;
         },

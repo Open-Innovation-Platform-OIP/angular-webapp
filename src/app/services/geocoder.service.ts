@@ -1,24 +1,25 @@
-import { Injectable, OnInit } from "@angular/core";
+import { Injectable } from "@angular/core";
 declare var H: any;
 
 @Injectable({
   providedIn: "root"
 })
-export class GeocoderService implements OnInit {
+export class GeocoderService {
   public platform: any;
   public geocoder: any;
 
-  public constructor() {
+  constructor() {
     this.platform = new H.service.Platform({
       app_id: "sug0MiMpvxIW4BhoGjcf",
       app_code: "GSl6bG5_ksXDw4sBTnhr_w",
       useHTTPS: true
     });
     this.geocoder = this.platform.getGeocodingService();
+    console.log(this.geocoder, "coder");
   }
-  ngOnInit() {}
+
   public getAddress(query2: string) {
-    console.log(this.geocoder);
+    console.log(this.geocoder, "geo");
 
     return new Promise((resolve, reject) => {
       this.geocoder.geocode(

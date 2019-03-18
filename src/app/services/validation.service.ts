@@ -18,7 +18,9 @@ export interface validation {
   providedIn: "root"
 })
 export class ValidationService {
-  constructor(private apollo: Apollo) {}
+  constructor(private apollo: Apollo) {
+    console.log("test2");
+  }
 
   submitValidationToDB(validationData: validation) {
     console.log(validationData, "validation data");
