@@ -1,20 +1,41 @@
-<div class="card">
-  <div class="card-header card-header-icon card-header-warning">
-    <!-- <div class="user photo card-icon">
-      <i class="material-icons">comment</i>
-    </div> -->
-    <p class="card-title">{{comment.usersBycreatedBy.name || 'Anonymous'}}, {{comment.modified_at |
-      timeAgo}}</p>
+<div class="card-collapse">
+  <div class="card-header" role="tab" id="headingTwo">
+    <h5 class="mb-0">
+      <a class="collapsed" data-toggle="collapse" href="#comment-{{comment.id}}" aria-expanded="true"
+        attr.aria-controls="comment-{{comment.id}}">
+        {{comment.usersBycreatedBy.name || 'Anonymous'}}, {{comment.modified_at | date:short}}
+        <i class="material-icons">keyboard_arrow_down</i>
+      </a>
+    </h5>
   </div>
-  <div class="card-body">
-    <div innerHTML="{{comment.text}}"></div>
-    <app-submit-comment *ngIf="showReplyBox && replyingTo === comment.id" [users]="objectValues(usersService.allUsers)"
-      [actionText]="'Reply'" (submitted)="onCommentSubmit($event)"></app-submit-comment>
-  </div>
-  <div class="card-footer" *ngIf="!showReplyBox">
-    <div class="stats">
-      <button mat-raised-button class="btn btn-warning btn-sm" matTooltip="Click to reply" [matTooltipPosition]="'below'"
-        (click)="replyClick.emit()">Reply</button>
+  <div id="comment-{{comment.id}}" class="collapse show" role="tabpanel" aria-labelledby="headingTwo" attr.data-target="#comment-{{comment.id}}">
+    <div class="card-body">
+      <div innerHTML="{{comment.text}}"></div>
+      <button mat-raised-button class="btn btn-warning btn-round btn-sm" matTooltip="Click to reply"
+        [matTooltipPosition]="'below'" *ngIf="!(showReplyBox && replyingTo === comment.id)" (click)="replyTo(comment.id)">Reply</button>
+      <app-submit-comment *ngIf="showReplyBox && replyingTo === comment.id" [users]="users" [actionText]="'Reply'"
+        [cancelShown]="true" [id]="comment.id" (cancel)="showReplyBox=false" (submit)="onCommentSubmit($event)"></app-submit-comment>
+      <div class="card-collapse" *ngFor="let reply of replies">
+        <div class="card-header" role="tab" id="headingTwo">
+          <h5 class="mb-0">
+            <a class="collapsed" data-toggle="collapse" href="#reply-{{reply.id}}" aria-expanded="true"
+              attr.aria-controls="reply-{{reply.id}}">
+              {{reply.usersBycreatedBy.name || 'Anonymous'}}, {{reply.modified_at | date:short}}
+              <i class="material-icons">keyboard_arrow_down</i>
+            </a>
+          </h5>
+        </div>
+        <div id="reply-{{reply.id}}" class="collapse show" role="tabpanel" aria-labelledby="headingTwo"
+          attr.data-target="#reply-{{reply.id}}">
+          <div class="card-body">
+            <div innerHTML="{{reply.text}}"></div>
+            <!-- <button mat-raised-button class="btn btn-warning btn-round btn-sm" matTooltip="Click to reply" [matTooltipPosition]="'below'" *ngIf="!(showReplyBox && replyingTo === reply.id)"
+        (click)="replyTo(reply.id)">Reply</button>
+        <app-submit-comment *ngIf="showReplyBox && replyingTo === reply.id" [users]="objectValues(usersService.allUsers)"
+        [actionText]="'Reply'" [cancelShown]="true" (cancel)="showReplyBox=false" (submit)="onCommentSubmit($event)"></app-submit-comment> -->
+          </div>
+        </div>
+      </div>
     </div>
   </div>
 </div>

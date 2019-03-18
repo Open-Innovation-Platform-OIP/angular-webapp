@@ -75,7 +75,7 @@ export class EnrichmentService {
       .subscribe(
         data => {
           console.log(data);
-          location.reload();
+          // location.reload();
         },
         err => {
           console.log(err, "error");

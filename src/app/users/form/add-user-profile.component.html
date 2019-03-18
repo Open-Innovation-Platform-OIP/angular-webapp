@@ -98,7 +98,7 @@
                   </div>
                 </div> -->
 
-                <div class="row">
+                <!-- <div class="row">
                   <label class="col-md-2 col-2 col-form-label" [ngStyle]="{
                     color: !user.phone_number
                       ? 'red'
@@ -111,6 +111,21 @@
                         <mat-option *ngFor="let persona of personaArray" [value]="persona">{{persona.slice(3)}}</mat-option>
                       </mat-select>
                     </mat-form-field>
+                  </div>
+                </div> -->
+
+                <div class="row">
+                  <label class="col-sm-2 col-form-label">Persona</label>
+                  <div class="col-md-10 col-9">
+                    <div class="form-check" *ngFor="let persona of objectKeys(user)">
+                      <label class="form-check-label" *ngIf="persona!=='id' && persona!=='email' && persona!=='token' && persona!=='password' && persona!=='name' && persona!=='organization' && persona!=='qualification' && persona!=='photo_url' && persona!=='phone_number' && persona!=='location'">
+                        <input class="form-check-input" type="checkbox" [(ngModel)]="user[persona]" [ngModelOptions]="{standalone: true}">
+                        {{persona.slice(3)}}
+                        <span class="form-check-sign">
+                          <span class="check"></span>
+                        </span>
+                      </label>
+                    </div>
                   </div>
                 </div>
 

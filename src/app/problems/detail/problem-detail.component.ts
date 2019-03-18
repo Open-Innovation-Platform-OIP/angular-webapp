@@ -19,6 +19,7 @@ import { NgForm } from "@angular/forms";
 import { NguCarouselConfig } from "@ngu/carousel";
 import { slider } from "./problem-detail.animation";
 import { DiscussionsService } from "src/app/services/discussions.service";
+import { FilesService } from "src/app/services/files.service";
 import { CollaborationService } from "src/app/services/collaboration.service";
 import { ValidationService } from "src/app/services/validation.service";
 import { EnrichmentService } from "src/app/services/enrichment.service";
@@ -44,16 +45,6 @@ export class ProblemDetailComponent implements OnInit {
   replyingTo = 0;
   showReplyBox = false;
   showCommentBox = false;
-  allUsers = [
-    {
-      id: 1,
-      value: "Tej"
-    },
-    {
-      id: 2,
-      value: "Shaona"
-    }
-  ];
   problemData: any = {
     id: 0,
     title: "",
@@ -81,14 +72,14 @@ export class ProblemDetailComponent implements OnInit {
   isVoted: boolean = false;
   watchedBy: number = 0;
   userPersonas = {
-    innovator: false,
-    entrepreneur: false,
-    expert: false,
-    government: false,
-    "user/beneficiary": false,
-    "incubator/enabler": false,
-    ngo: false,
-    funder: false
+    is_ngo: false,
+    is_innovator: false,
+    is_expert: false,
+    is_government: false,
+    is_funder: false,
+    is_beneficiary: false,
+    is_incubator: false,
+    is_entrepreneur: false
   };
   // enrich: number[] = [1, 2, 3, 4, 5];
   modalImgSrc: String;
@@ -113,20 +104,21 @@ export class ProblemDetailComponent implements OnInit {
   hideProblemDetail: boolean = true;
   collaboratorProfileInfo: any;
   comments = {};
+  replies = {};
 
   fabTogglerState: boolean = false;
 
-  openform: any;
-  reply: any;
-  index: any;
-  form = {
-    comment: null,
-    user_id: 1,
-    problem_id: 3
-  };
-  data: any;
-  putReply: any;
-  netReply: any;
+  // openform: any;
+  // reply: any;
+  // index: any;
+  // form = {
+  //   comment: null,
+  //   user_id: 1,
+  //   problem_id: 3
+  // };
+  // data: any;
+  // putReply: any;
+  // netReply: any;
 
   // Carousel
   @Input() name: string;
@@ -158,6 +150,7 @@ export class ProblemDetailComponent implements OnInit {
     private cdr: ChangeDetectorRef,
     private auth: AuthService,
     public usersService: UsersService,
+    public fileService: FilesService,
     private discussionsService: DiscussionsService,
     private collaborationService: CollaborationService,
     private validationService: ValidationService,
@@ -171,18 +164,26 @@ export class ProblemDetailComponent implements OnInit {
           {
             users(where: { id: { _eq: ${id} } }) {
               
-              personas
+              is_ngo
+              is_innovator
+              is_expert
+              is_government
+              is_funder
+              is_beneficiary
+              is_incubator
+              is_entrepreneur
             }
           }
-        `,
-        pollInterval: 500
+        `
+        // pollInterval: 500
       })
       .valueChanges.subscribe(result => {
-        if (result.data.users[0].personas) {
-          result.data.users[0].personas.map(persona => {
-            this.userPersonas[persona.toLowerCase()] = true;
+        console.log("PERSONAS", result);
+        if (result.data.users[0]) {
+          Object.keys(result.data.users[0]).map(persona => {
+            this.userPersonas[persona] = result.data.users[0][persona];
           });
-          console.log(this.userPersonas, "works");
+          console.log("persona assignment", this.userPersonas);
         }
       });
   }
@@ -378,41 +379,20 @@ export class ProblemDetailComponent implements OnInit {
                       this.discussions = discussions.data.discussions;
                       discussions.data.discussions.map(comment => {
                         if (comment.linked_comment_id) {
-                          if (!this.comments[comment.linked_comment_id]) {
-                            // create comment object so we can add reply
-                            this.comments[comment.linked_comment_id] = {
-                              id: comment.linked_comment_id,
-                              created_by: 0,
-                              created_at: '',
-                              modified_at: '',
-                              text: '',
-                              mentions: [],
-                              replies: [comment]
-                            }
+                          // this comment is a reply - add it to the replies object
+                          if (!this.replies[comment.linked_comment_id]) {
+                            // create reply object so we can add reply
+                            this.replies[comment.linked_comment_id] = [comment];
                           } else {
-                            // comment object already exists so push reply
-                            this.comments[comment.linked_comment_id].replies.push(comment);
+                            // comment reply already exists so push reply into the array
+                            this.replies[comment.linked_comment_id].push(
+                              comment
+                            );
                           }
                         } else {
+                          // this comment is a parent comment - add it to the comments object
                           // comment object does not exist
-                          if (!this.comments[comment.id]) {
-                            this.comments[comment.id] = {
-                              id: comment.id,
-                              created_by: comment.created_by,
-                              created_at: comment.created_at,
-                              modified_at: comment.modified_at,
-                              text: comment.text,
-                              replies: [],
-                              mentions: comment.mentions
-                            }
-                          } else {
-                            // comment object already created by a reply; assign properties so we don't overwrite the replies
-                            this.comments[comment.id].created_by = comment.created_by;
-                            this.comments[comment.id].created_at = comment.created_at;
-                            this.comments[comment.id].modified_at = comment.modified_at;
-                            this.comments[comment.id].text = comment.text;
-                            this.comments[comment.id].mentions = comment.mentions;
-                          }
+                          this.comments[comment.id] = comment;
                         }
                       });
                       console.log(this.comments);
@@ -571,6 +551,7 @@ export class ProblemDetailComponent implements OnInit {
       })
       .valueChanges.subscribe(
         result => {
+          console.log(result, "poll interval working");
           if (result.data.problems[0].problem_validations) {
             result.data.problems[0].problem_validations.map(validation => {
               console.log(validation.validated_by, "test55");
@@ -807,7 +788,7 @@ export class ProblemDetailComponent implements OnInit {
 
     validationData.problem_id = this.problemData.id;
 
-    // this.validationService.submitValidationToDB(validationData);
+    this.validationService.submitValidationToDB(validationData);
   }
 
   voteProblem() {
@@ -873,7 +854,7 @@ export class ProblemDetailComponent implements OnInit {
   // }
 
   deleteValidation(validationData) {
-    // this.validationService.deleteValidation(validationData);
+    this.validationService.deleteValidation(validationData);
   }
 
   deleteCollaboration(collaborationData) {
@@ -900,22 +881,80 @@ export class ProblemDetailComponent implements OnInit {
     console.log("edit collab", collaborationData);
     this.collaboratorDataToEdit = collaborationData;
   }
-  onCommentSubmit(event) {
-    const [content, mentions] = event;
-    let comment = {
-      created_by: this.auth.currentUserValue.id,
-      problem_id: this.problemData["id"],
-      text: content,
-      mentions: JSON.stringify(mentions)
-        .replace("[", "{")
-        .replace("]", "}")
-    };
-    // console.log(content, mentions);
-    if (this.showReplyBox) {
-      comment["linked_comment_id"] = this.replyingTo;
-      this.replyingTo = 0;
-      this.showReplyBox = false;
-    }
-    this.discussionsService.submitCommentToDB(comment);
+
+  async onCommentSubmit(event) {
+    const [content, mentions, attachments] = event;
+    let file_links = [];
+
+    await attachments.forEach((file, index) => {
+      this.fileService
+        .uploadFile(file, file.name)
+        .promise()
+        .then(values => {
+          // console.log("val: ", values);
+          file_links.push(values.Location);
+        })
+        .catch(e => console.log("Err:: ", e))
+        .then(() => {
+          if (index === attachments.length - 1) {
+            let comment = {
+              created_by: this.auth.currentUserValue.id,
+              problem_id: this.problemData["id"],
+              text: content,
+              attachments: file_links, // overwriting the incoming blobs
+              mentions: JSON.stringify(mentions)
+                .replace("[", "{")
+                .replace("]", "}")
+            };
+            // console.log(content, mentions);
+            if (this.showReplyBox) {
+              comment["linked_comment_id"] = this.replyingTo;
+              this.replyingTo = 0;
+              this.showReplyBox = false;
+            }
+            this.discussionsService.submitCommentToDB(comment);
+          }
+        });
+    });
+  }
+
+  async onReplySubmit(comment) {
+    let file_links = [];
+
+    await comment.attachments.forEach((file, index) => {
+      this.fileService
+        .uploadFile(file, file.name)
+        .promise()
+        .then(values => {
+          file_links.push(values.Location);
+        })
+        .catch(e => console.log("Err:: ", e))
+        .then(() => {
+          if (index === comment.attachments.length - 1) {
+            comment["attachments"] = file_links; // overwriting the incoming blobs
+            comment["created_by"] = this.auth.currentUserValue.id;
+            comment["problem_id"] = this.problemData["id"];
+            this.discussionsService.submitCommentToDB(comment);
+          }
+        });
+    });
+  }
+
+  dismiss() {
+    swal({
+      title: "Are you sure you want to leave?",
+      // text: "You won't be able to revert this!",
+      type: "warning",
+      showCancelButton: true,
+      confirmButtonClass: "btn btn-success",
+      cancelButtonClass: "btn btn-danger",
+      confirmButtonText: "Yes",
+      buttonsStyling: false
+    }).then(result => {
+      if (result.value) {
+        console.log("Received result", result);
+        $("#collaboratorModal").modal("hide");
+      }
+    });
   }
 }

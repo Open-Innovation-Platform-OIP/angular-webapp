@@ -266,7 +266,7 @@
             </i>
           </a> -->
           <button mat-raised-button class="btn btn-warning btn-round" data-toggle="modal" data-target="#validatorModal"
-            matTooltip="Click to validate problem" [matTooltipPosition]="'below'" [disabled]="disableValidateButton || !userPersonas.expert">Validate</button>
+            matTooltip="Click to validate problem" [matTooltipPosition]="'below'" [disabled]="disableValidateButton || !userPersonas.is_expert || userId == problemData.created_by">Validate</button>
           <!-- <a mat-button>
             <i class="material-icons">
               keyboard_arrow_right
@@ -441,7 +441,7 @@
             <div class="modal-content">
               <div class="modal-header">
                 <h5 class="modal-title" id="myModalLabel">Add New Collaborator</h5>
-                <button mat-button type="button" class="close" data-dismiss="modal" aria-hidden="true">
+                <button mat-button type="button" class="close" aria-hidden="true" (click)="dismiss()">
                   <i class="material-icons">close</i>
                 </button>
               </div>
@@ -456,7 +456,6 @@
         <!--Collaborate-->
 
       </div> <!-- COL - 8-->
-
       <div class="col-md-4">
         <div class="card">
           <div class="card-header card-header-icon card-header-warning">
@@ -466,21 +465,26 @@
             <h4 class="card-title">Discussions</h4>
           </div>
           <div class="card-body">
-            <button mat-raised-button class="btn btn-warning btn-sm btn-round" matTooltip="Click to add comment"
-              [matTooltipPosition]="'below'" (click)="showCommentBox=true">Join Discussion</button>
+            <div id="accordion" role="tablist">
+              <div class="card-collapse">
+                <div class="card-header" role="tab" id="headingOne">
+                  <h5 class="mb-0">
+                    <a data-toggle="collapse" href="#newComment" aria-expanded="true" aria-controls="newComment" class="collapsed">
+                      Join Discussion
+                      <i class="material-icons">keyboard_arrow_down</i>
+                    </a>
+                  </h5>
+                </div>
+                <div id="newComment" class="collapse show" role="tabpanel" aria-labelledby="headingOne" data-target="#newComment"
+                  style="">
+                  <app-submit-comment [users]="objectValues(usersService.allUsers)" [actionText]="'Comment'" (submit)="onCommentSubmit($event)"></app-submit-comment>
+                </div>
+              </div>
+              <app-display-comment [users]="objectValues(usersService.allUsers)" [comment]="comment" [replies]="replies[comment.id]"
+                (reply)="onReplySubmit($event)" *ngFor="let comment of objectValues(comments)"></app-display-comment>
+            </div>
           </div>
         </div>
-        <app-submit-comment *ngIf="showCommentBox===true" [users]="objectValues(usersService.allUsers)" [actionText]="'Comment'" (cancel)="showCommentBox=false" (submit)="onCommentSubmit($event)"></app-submit-comment>
-        <div class="row" *ngFor="let comment of discussions">
-            <!-- <div class="row" *ngFor="let comment of objectValues(comments)"> -->
-          <div class="col-sm-1" *ngIf="comment.linked_comment_id"></div>
-          <div class="col">
-          <app-display-comment (replyClick)="replyTo(comment.id)" [comment]="comment"></app-display-comment>
-          <app-submit-comment *ngIf="showReplyBox && replyingTo === comment.id" [users]="objectValues(usersService.allUsers)"
-            [actionText]="'Reply'" (cancel)="showReplyBox=false" (submit)="onCommentSubmit($event)"></app-submit-comment>
-          </div>
-        </div>
-
       </div>
     </div>
   </div>
