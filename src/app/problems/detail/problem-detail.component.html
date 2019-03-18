@@ -441,7 +441,7 @@
             <div class="modal-content">
               <div class="modal-header">
                 <h5 class="modal-title" id="myModalLabel">Add New Collaborator</h5>
-                <button mat-button type="button" class="close" data-dismiss="modal" aria-hidden="true">
+                <button mat-button type="button" class="close" aria-hidden="true" (click)="dismiss()">
                   <i class="material-icons">close</i>
                 </button>
               </div>
@@ -480,8 +480,8 @@
                   <app-submit-comment [users]="objectValues(usersService.allUsers)" [actionText]="'Comment'" (submit)="onCommentSubmit($event)"></app-submit-comment>
                 </div>
               </div>
-              <app-display-comment [users]="objectValues(usersService.allUsers)" [comment]="comment" [replies]="replies[comment.id]" (reply)="onReplySubmit($event)"
-                *ngFor="let comment of objectValues(comments)"></app-display-comment>
+              <app-display-comment [users]="objectValues(usersService.allUsers)" [comment]="comment" [replies]="replies[comment.id]"
+                (reply)="onReplySubmit($event)" *ngFor="let comment of objectValues(comments)"></app-display-comment>
             </div>
           </div>
         </div>

@@ -903,4 +903,22 @@ export class ProblemDetailComponent implements OnInit {
     comment["problem_id"] = this.problemData["id"];
     this.discussionsService.submitCommentToDB(comment);
   }
+
+  dismiss() {
+    swal({
+      title: "Are you sure you want to leave?",
+      // text: "You won't be able to revert this!",
+      type: "warning",
+      showCancelButton: true,
+      confirmButtonClass: "btn btn-success",
+      cancelButtonClass: "btn btn-danger",
+      confirmButtonText: "Yes",
+      buttonsStyling: false
+    }).then(result => {
+      if (result.value) {
+        console.log("Received result", result);
+        $("#collaboratorModal").modal("hide");
+      }
+    });
+  }
 }
