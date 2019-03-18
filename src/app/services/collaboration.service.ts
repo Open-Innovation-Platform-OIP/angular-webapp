@@ -67,7 +67,7 @@ export class CollaborationService {
       .subscribe(
         result => {
           console.log(result, "result");
-          location.reload();
+          // location.reload();
         },
         error => {
           console.log("error", error);

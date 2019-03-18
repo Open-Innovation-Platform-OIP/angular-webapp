@@ -172,8 +172,8 @@ export class ProblemDetailComponent implements OnInit {
               is_entrepreneur
             }
           }
-        `,
-        pollInterval: 500
+        `
+        // pollInterval: 500
       })
       .valueChanges.subscribe(result => {
         console.log("PERSONAS", result);
@@ -383,7 +383,9 @@ export class ProblemDetailComponent implements OnInit {
                             this.replies[comment.linked_comment_id] = [comment];
                           } else {
                             // comment reply already exists so push reply into the array
-                            this.replies[comment.linked_comment_id].push(comment);
+                            this.replies[comment.linked_comment_id].push(
+                              comment
+                            );
                           }
                         } else {
                           // this comment is a parent comment - add it to the comments object
@@ -547,6 +549,7 @@ export class ProblemDetailComponent implements OnInit {
       })
       .valueChanges.subscribe(
         result => {
+          console.log(result, "poll interval working");
           if (result.data.problems[0].problem_validations) {
             result.data.problems[0].problem_validations.map(validation => {
               console.log(validation.validated_by, "test55");
@@ -783,7 +786,7 @@ export class ProblemDetailComponent implements OnInit {
 
     validationData.problem_id = this.problemData.id;
 
-    // this.validationService.submitValidationToDB(validationData);
+    this.validationService.submitValidationToDB(validationData);
   }
 
   voteProblem() {
@@ -849,7 +852,7 @@ export class ProblemDetailComponent implements OnInit {
   // }
 
   deleteValidation(validationData) {
-    // this.validationService.deleteValidation(validationData);
+    this.validationService.deleteValidation(validationData);
   }
 
   deleteCollaboration(collaborationData) {
@@ -896,8 +899,8 @@ export class ProblemDetailComponent implements OnInit {
   }
   onReplySubmit(comment) {
     console.log(comment);
-    comment['created_by'] = this.auth.currentUserValue.id;
-    comment['problem_id'] = this.problemData["id"];
+    comment["created_by"] = this.auth.currentUserValue.id;
+    comment["problem_id"] = this.problemData["id"];
     this.discussionsService.submitCommentToDB(comment);
   }
 }

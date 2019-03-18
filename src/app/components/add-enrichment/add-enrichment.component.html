@@ -295,12 +295,14 @@
 
 <div class="card-footer justify-content-center">
   <div class="row justify-content-center" *ngIf="mode==='Add'">
-    <button mat-raised-button class="btn btn-warning" (click)="sendEnrichDataToDB()" [disabled]="!enrichmentForm.form.valid">
+    <button mat-raised-button class="btn btn-warning" (click)="sendEnrichDataToDB()" [disabled]="!enrichmentForm.form.valid"
+      data-dismiss="modal">
       Enrich</button>
   </div>
 
   <div class="row justify-content-center" *ngIf="mode==='Edit'">
-    <button mat-raised-button class="btn btn-warning" (click)="sendEnrichDataToDB()" [disabled]="!enrichmentForm.form.valid">
+    <button mat-raised-button class="btn btn-warning" (click)="sendEnrichDataToDB()" [disabled]="!enrichmentForm.form.valid"
+      data-dismiss="modal">
       Update</button>
   </div>
 </div>
