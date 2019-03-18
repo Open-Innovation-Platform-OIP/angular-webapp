@@ -71,14 +71,14 @@ export class ProblemDetailComponent implements OnInit {
   isVoted: boolean = false;
   watchedBy: number = 0;
   userPersonas = {
-    innovator: false,
-    entrepreneur: false,
-    expert: false,
-    government: false,
-    "user/beneficiary": false,
-    "incubator/enabler": false,
-    ngo: false,
-    funder: false
+    is_ngo: false,
+    is_innovator: false,
+    is_expert: false,
+    is_government: false,
+    is_funder: false,
+    is_beneficiary: false,
+    is_incubator: false,
+    is_entrepreneur: false
   };
   // enrich: number[] = [1, 2, 3, 4, 5];
   modalImgSrc: String;
@@ -162,17 +162,26 @@ export class ProblemDetailComponent implements OnInit {
           {
             users(where: { id: { _eq: ${id} } }) {
               
-              personas
+              is_ngo
+              is_innovator
+              is_expert
+              is_government
+              is_funder
+              is_beneficiary
+              is_incubator
+              is_entrepreneur
             }
           }
-        `
+        `,
+        pollInterval: 500
       })
       .valueChanges.subscribe(result => {
-        if (result.data.users[0].personas) {
-          result.data.users[0].personas.map(persona => {
-            this.userPersonas[persona.toLowerCase()] = true;
+        console.log("PERSONAS", result);
+        if (result.data.users[0]) {
+          Object.keys(result.data.users[0]).map(persona => {
+            this.userPersonas[persona] = result.data.users[0][persona];
           });
-          console.log(this.userPersonas, "works");
+          console.log("persona assignment", this.userPersonas);
         }
       });
   }
@@ -259,7 +268,8 @@ export class ProblemDetailComponent implements OnInit {
             }
         }
             
-        `
+        `,
+            pollInterval: 500
           })
           .valueChanges.subscribe(
             result => {
@@ -532,7 +542,8 @@ export class ProblemDetailComponent implements OnInit {
       }
     }
   }
-`
+`,
+        pollInterval: 500
       })
       .valueChanges.subscribe(
         result => {
@@ -580,7 +591,8 @@ export class ProblemDetailComponent implements OnInit {
   }
 
 }
-`
+`,
+        pollInterval: 500
       })
       .valueChanges.subscribe(
         result => {
@@ -629,7 +641,8 @@ export class ProblemDetailComponent implements OnInit {
               is_deleted
             }
           }
-        `
+        `,
+        pollInterval: 500
       })
       .valueChanges.subscribe(
         data => {

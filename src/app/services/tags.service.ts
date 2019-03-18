@@ -1,13 +1,13 @@
-import { Injectable } from '@angular/core';
+import { Injectable } from "@angular/core";
 import { Apollo } from "apollo-angular";
 import gql from "graphql-tag";
 @Injectable({
-  providedIn: 'root'
+  providedIn: "root"
 })
 export class TagsService {
   public allTags = {};
 
-  constructor(private apollo: Apollo) { }
+  constructor(private apollo: Apollo) {}
   getTagsFromDB() {
     this.apollo
       .watchQuery<any>({
@@ -18,16 +18,18 @@ export class TagsService {
               name
             }
           }
-        `
+        `,
+        pollInterval: 500
       })
       .valueChanges.subscribe(({ data }) => {
-        if (data.tags.length> 0) {
+        if (data.tags.length > 0) {
           data.tags.map(tag => {
             this.allTags[tag.name] = tag;
-          })
+          });
         }
       });
   }
+
   addTagsInDb(tableId, tags, tableName) {
     tags.map(tag => {
       if (tag) {
@@ -35,7 +37,8 @@ export class TagsService {
           .watchQuery<any>({
             query: gql`query { tags( where: {name: {_eq:"${
               tag.value
-              }"} }){id name}}`
+            }"} }){id name}}`,
+            pollInterval: 500
           })
           .valueChanges.subscribe(({ data }) => {
             console.log(data.tags, "tags presnt in db");

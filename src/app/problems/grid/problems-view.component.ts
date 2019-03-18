@@ -1,5 +1,5 @@
 import { Component, OnInit } from "@angular/core";
-import * as Query from '../../services/queries';
+import * as Query from "../../services/queries";
 import { Apollo } from "apollo-angular";
 import gql from "graphql-tag";
 import { Observable } from "rxjs";
@@ -14,13 +14,15 @@ export class ProblemsViewComponent implements OnInit {
   constructor(private apollo: Apollo) {}
 
   ngOnInit() {
-    this.apollo.watchQuery<any>({
-      query: Query.GetQuery
-    }).valueChanges.subscribe(result => {
-      if (result.data.problems.length > 0) {
-        this.problems = result.data.problems;
-      }
-    });
-
+    this.apollo
+      .watchQuery<any>({
+        query: Query.GetQuery,
+        pollInterval: 500
+      })
+      .valueChanges.subscribe(result => {
+        if (result.data.problems.length > 0) {
+          this.problems = result.data.problems;
+        }
+      });
   }
 }

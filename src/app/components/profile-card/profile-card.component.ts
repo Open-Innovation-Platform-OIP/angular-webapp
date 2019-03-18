@@ -7,7 +7,8 @@ import { Component, OnInit, Input } from "@angular/core";
 })
 export class ProfileCardComponent implements OnInit {
   @Input() userData: any;
-  constructor() { }
+
+  constructor() {}
 
   ngOnInit() {
     // console.log(this.userData, "in card");

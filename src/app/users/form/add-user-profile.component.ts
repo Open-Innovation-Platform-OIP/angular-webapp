@@ -7,7 +7,7 @@ import { first, finalize } from "rxjs/operators";
 import { AuthService } from "../../services/auth.service";
 import { FilesService } from "../../services/files.service";
 import { TagsService } from "../../services/tags.service";
-declare var H: any;
+// declare var H: any;
 // import { GeocoderService } from '../../services/geocoder.service';
 import { filter } from "rxjs-compat/operator/filter";
 @Component({
@@ -22,7 +22,7 @@ export class AddUserProfileComponent implements OnInit, OnChanges {
   tags = [];
   preTags: any = [];
   imageBlob: Blob;
-  personas = ["testing"];
+  personas: any = [];
   public query: string;
   public query2: string;
   public platform: any;
@@ -37,10 +37,8 @@ export class AddUserProfileComponent implements OnInit, OnChanges {
     email: "",
     token: "",
     password: "",
-
     name: "",
     organization: "",
-
     qualification: "",
     photo_url: {},
     phone_number: "",
@@ -68,13 +66,13 @@ export class AddUserProfileComponent implements OnInit, OnChanges {
     // console.log("TEst is: ", this.test);
   }
   ngOnChanges() {
-    this.platform = new H.service.Platform({
-      app_id: "sug0MiMpvxIW4BhoGjcf",
-      app_code: "GSl6bG5_ksXDw4sBTnhr_w"
-    });
-    this.geocoder = this.platform.getGeocodingService();
-    this.query = " ";
-    this.query2 = " ";
+    // this.platform = new H.service.Platform({
+    //   app_id: "sug0MiMpvxIW4BhoGjcf",
+    //   app_code: "GSl6bG5_ksXDw4sBTnhr_w"
+    // });
+    // this.geocoder = this.platform.getGeocodingService();
+    // this.query = " ";
+    // this.query2 = " ";
   }
 
   public getAddress() {
@@ -105,9 +103,10 @@ export class AddUserProfileComponent implements OnInit, OnChanges {
   ngOnInit() {
     Object.entries(this.user).map(persona => {
       if (typeof persona[1] === "boolean") {
-        this.personaArray.push(persona[0].slice(3));
+        this.personaArray.push(persona[0]);
       }
     });
+
     // this.tagService.getTagsFromDB();
 
     this.route.params.pipe(first()).subscribe(params => {
@@ -138,7 +137,8 @@ export class AddUserProfileComponent implements OnInit, OnChanges {
               
             }
           }
-        `
+        `,
+            pollInterval: 500
           })
           .valueChanges.subscribe(
             ({ data }) => {
@@ -147,9 +147,18 @@ export class AddUserProfileComponent implements OnInit, OnChanges {
                 Object.keys(this.user).map(key => {
                   if (data.users[0][key]) {
                     this.user[key] = data.users[0][key];
+                    // if (typeof data.users[0][key] === "boolean") {
+                    // this.personaArray.push(data.users[0][key]);
+                    // if (data.users[0][key]) {
+                    //   this.personas.push(data.users[0][key].slice(3));
+                    // }
+                    // }
                   }
                 });
               }
+              console.log(this.personas, "personas");
+              console.log(this.personaArray, "persona array");
+
               // });
             },
             error => {
@@ -159,39 +168,40 @@ export class AddUserProfileComponent implements OnInit, OnChanges {
       }
     });
 
-    // this.apollo
-    //   .watchQuery<any>({
-    //     query: gql`
-    //       {
-    //         users(where: { id: { _eq: ${Number(
-    //           this.auth.currentUserValue.id
-    //         )} } }) {
-    //           id
-    //           user_tags{
-    //             tag {
-    //               id
-    //               name
-    //             }
-    //           }
-    //         }
-    //       }`
-    //   })
-    //   .valueChanges.subscribe(result => {
-    //     console.log(result, "result");
+    this.apollo
+      .watchQuery<any>({
+        query: gql`
+          {
+            users(where: { id: { _eq: ${Number(
+              this.auth.currentUserValue.id
+            )} } }) {
+              id
+              user_tags{
+                tag {
+                  id
+                  name
+                }
+              }
+            }
+          }`,
+        pollInterval: 500
+      })
+      .valueChanges.subscribe(result => {
+        // console.log(result, "result");
 
-    //     // this.tags = result.data.this.users[0].this.user_tags.map(tagArray => {
-    //     //   console.log(tagArray, "work");
+        this.tags = result.data.users[0].user_tags.map(tagArray => {
+          console.log(tagArray, "work");
 
-    //     //   return tagArray.tag.name;
-    //     // });
-    //     // console.log(this.tags, "tag");
-    //     // this.preTags = result.data.this.users[0].this.user_tags.map(tagArray => {
-    //     //   console.log(tagArray, "work");
+          return tagArray.tag.name;
+        });
+        console.log(this.tags, "tag");
+        this.preTags = result.data.users[0].user_tags.map(tagArray => {
+          console.log(tagArray, "work");
 
-    //     //   return tagArray.tag;
-    //     // });
-    //     console.log("tags==", this.tags);
-    //   });
+          return tagArray.tag;
+        });
+        console.log("tags==", this.tags);
+      });
   }
 
   getBlob(event) {
@@ -203,7 +213,16 @@ export class AddUserProfileComponent implements OnInit, OnChanges {
     if (Number(this.auth.currentUserValue.id)) {
       this.user.id = Number(this.auth.currentUserValue.id);
     }
+
+    // console.log(this.personas, "personas");
+    if (this.personas) {
+      this.personas.map(persona => {
+        this.user[persona] = true;
+      });
+    }
+    console.log("Persona check", this.user);
     this.userService.submitUserToDB(this.user);
+    this.personas = [];
   }
 
   onSubmit() {

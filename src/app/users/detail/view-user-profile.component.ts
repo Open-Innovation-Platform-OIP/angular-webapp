@@ -16,6 +16,9 @@ export class ViewUserProfileComponent implements OnInit {
   userData: any = {};
   interests: any[];
   loggedInUsersProfile: boolean = false;
+  objectEntries = Object.entries;
+  personas: any = [];
+
   constructor(
     private userHandlerService: UserHandlerService,
     private route: ActivatedRoute,
@@ -39,14 +42,28 @@ export class ViewUserProfileComponent implements OnInit {
               photo_url
               location
               email
+              is_ngo
+              is_innovator
+              is_entrepreneur
+              is_expert
+              is_incubator
+              is_funder
+              is_government
+              is_beneficiary
               
             }
           }
-        `
+        `,
+            pollInterval: 500
           })
           .valueChanges.subscribe(result => {
             console.log(result, "result");
             this.userData = result.data.users[0];
+            Object.entries(this.userData).map(data => {
+              if (typeof data[1] === "boolean" && data[1]) {
+                this.personas.push(data[0]);
+              }
+            });
             console.log(this.userData, "userData");
             if (this.userData.id === Number(this.auth.currentUserValue.id)) {
               this.loggedInUsersProfile = true;
@@ -54,7 +71,7 @@ export class ViewUserProfileComponent implements OnInit {
             // console.log(this.problemService.problem, "problem");
           });
 
-        this.getInterests(params.id);
+        // this.getInterests(params.id);
       }
     });
   }
@@ -73,7 +90,8 @@ export class ViewUserProfileComponent implements OnInit {
       }
     }
   }
-`
+`,
+        pollInterval: 500
       })
       .valueChanges.subscribe(
         result => {
