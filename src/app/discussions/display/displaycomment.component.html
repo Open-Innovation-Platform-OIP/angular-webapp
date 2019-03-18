@@ -13,8 +13,8 @@
       <div innerHTML="{{comment.text}}"></div>
       <button mat-raised-button class="btn btn-warning btn-round btn-sm" matTooltip="Click to reply"
         [matTooltipPosition]="'below'" *ngIf="!(showReplyBox && replyingTo === comment.id)" (click)="replyTo(comment.id)">Reply</button>
-      <app-submit-comment *ngIf="showReplyBox && replyingTo === comment.id" [users]="users"
-        [actionText]="'Reply'" [cancelShown]="true" (cancel)="showReplyBox=false" (submit)="onCommentSubmit($event)"></app-submit-comment>
+      <app-submit-comment *ngIf="showReplyBox && replyingTo === comment.id" [users]="users" [actionText]="'Reply'"
+        [cancelShown]="true" [id]="comment.id" (cancel)="showReplyBox=false" (submit)="onCommentSubmit($event)"></app-submit-comment>
       <div class="card-collapse" *ngFor="let reply of replies">
         <div class="card-header" role="tab" id="headingTwo">
           <h5 class="mb-0">

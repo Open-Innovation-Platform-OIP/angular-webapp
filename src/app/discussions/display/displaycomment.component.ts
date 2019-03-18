@@ -1,8 +1,9 @@
 import {
   Component, ViewChild, OnInit, Input,
   Output,
-  EventEmitter } from '@angular/core';
-import {Comment} from '../../services/discussions.service';
+  EventEmitter
+} from '@angular/core';
+import { Comment } from '../../services/discussions.service';
 @Component({
   selector: 'app-display-comment',
   templateUrl: './displaycomment.component.html',
@@ -24,12 +25,14 @@ export class CommentDisplayComponent implements OnInit {
     this.replyingTo = commentId;
     console.log(commentId);
   }
-  onCommentSubmit(event) {
-    const [content, mentions] = event;
+  async onCommentSubmit(event) {
+    const [content, mentions, attachments] = event;
+
     let comment = {
       created_by: 0,
       problem_id: 0,
       text: content,
+      attachments: attachments,
       mentions: JSON.stringify(mentions)
         .replace("[", "{")
         .replace("]", "}"),
