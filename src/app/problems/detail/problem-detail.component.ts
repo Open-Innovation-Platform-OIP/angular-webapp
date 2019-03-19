@@ -155,7 +155,7 @@ export class ProblemDetailComponent implements OnInit {
     private collaborationService: CollaborationService,
     private validationService: ValidationService,
     private enrichmentService: EnrichmentService
-  ) {}
+  ) { }
 
   getUserPersonas(id) {
     this.apollo
@@ -440,7 +440,7 @@ export class ProblemDetailComponent implements OnInit {
         cancelButtonClass: "btn btn-danger",
         buttonsStyling: false
       })
-        .then(function(result) {
+        .then(function (result) {
           swal({
             type: "success",
             html:
@@ -477,7 +477,7 @@ export class ProblemDetailComponent implements OnInit {
       body.classList.remove("sidebar-mini");
       misc.sidebar_mini_active = false;
     } else {
-      setTimeout(function() {
+      setTimeout(function () {
         body.classList.add("sidebar-mini");
 
         misc.sidebar_mini_active = true;
@@ -485,12 +485,12 @@ export class ProblemDetailComponent implements OnInit {
     }
 
     // we simulate the window Resize so the charts will get updated in realtime.
-    const simulateWindowResize = setInterval(function() {
+    const simulateWindowResize = setInterval(function () {
       window.dispatchEvent(new Event("resize"));
     }, 180);
 
     // we stop the simulation of Window Resize after the animations are completed
-    setTimeout(function() {
+    setTimeout(function () {
       clearInterval(simulateWindowResize);
     }, 1000);
   }
@@ -698,7 +698,7 @@ export class ProblemDetailComponent implements OnInit {
       $layer.remove();
     }
 
-    setTimeout(function() {
+    setTimeout(function () {
       $toggle.classList.remove("toggled");
     }, 400);
 
@@ -888,10 +888,36 @@ export class ProblemDetailComponent implements OnInit {
 
   async onCommentSubmit(event) {
     const [content, mentions, attachments] = event;
+
+    if (attachments.length) {
+      let file_links = [];
+
+      await attachments.forEach((file, index) => {
+        this.fileService
+          .uploadFile(file, file.name)
+          .promise()
+          .then(values => {
+            // console.log("val: ", values);
+            file_links.push(values.Location);
+          })
+          .catch(e => console.log("Err:: ", e))
+          .then(() => {
+            if (index === attachments.length - 1) {
+              this.submitComment(content, mentions, file_links);
+            }
+          });
+      });
+    } else {
+      this.submitComment(content, mentions);
+    }
+  }
+
+  submitComment(content, mentions, attachments?) {
     let comment = {
       created_by: this.auth.currentUserValue.id,
       problem_id: this.problemData["id"],
       text: content,
+      attachments: attachments, // overwriting the incoming blobs
       mentions: JSON.stringify(mentions)
         .replace("[", "{")
         .replace("]", "}")
@@ -903,64 +929,34 @@ export class ProblemDetailComponent implements OnInit {
       this.showReplyBox = false;
     }
     this.discussionsService.submitCommentToDB(comment);
-
-    /* let file_links = [];
-
-    await attachments.forEach((file, index) => {
-      this.fileService
-        .uploadFile(file, file.name)
-        .promise()
-        .then(values => {
-          // console.log("val: ", values);
-          file_links.push(values.Location);
-        })
-        .catch(e => console.log("Err:: ", e))
-        .then(() => {
-          if (index === attachments.length - 1) {
-            let comment = {
-              created_by: this.auth.currentUserValue.id,
-              problem_id: this.problemData["id"],
-              text: content,
-              attachments: file_links, // overwriting the incoming blobs
-              mentions: JSON.stringify(mentions)
-                .replace("[", "{")
-                .replace("]", "}")
-            };
-            // console.log(content, mentions);
-            if (this.showReplyBox) {
-              comment["linked_comment_id"] = this.replyingTo;
-              this.replyingTo = 0;
-              this.showReplyBox = false;
-            }
-            this.discussionsService.submitCommentToDB(comment);
-          }
-        });
-    }); */
   }
 
   async onReplySubmit(comment) {
-    comment["created_by"] = this.auth.currentUserValue.id;
-    comment["problem_id"] = this.problemData["id"];
-    this.discussionsService.submitCommentToDB(comment);
-    /* let file_links = [];
+    if (comment.attachments.length) {
+      let file_links = [];
 
-    await comment.attachments.forEach((file, index) => {
-      this.fileService
-        .uploadFile(file, file.name)
-        .promise()
-        .then(values => {
-          file_links.push(values.Location);
-        })
-        .catch(e => console.log("Err:: ", e))
-        .then(() => {
-          if (index === comment.attachments.length - 1) {
-            comment["attachments"] = file_links; // overwriting the incoming blobs
-            comment["created_by"] = this.auth.currentUserValue.id;
-            comment["problem_id"] = this.problemData["id"];
-            this.discussionsService.submitCommentToDB(comment);
-          }
-        });
-    }); */
+      await comment.attachments.forEach((file, index) => {
+        this.fileService
+          .uploadFile(file, file.name)
+          .promise()
+          .then(values => {
+            file_links.push(values.Location);
+          })
+          .catch(e => console.log("Err:: ", e))
+          .then(() => {
+            if (index === comment.attachments.length - 1) {
+              comment["attachments"] = file_links; // overwriting the incoming blobs
+              comment["created_by"] = this.auth.currentUserValue.id;
+              comment["problem_id"] = this.problemData["id"];
+              this.discussionsService.submitCommentToDB(comment);
+            }
+          });
+      });
+    } else {
+      comment["created_by"] = this.auth.currentUserValue.id;
+      comment["problem_id"] = this.problemData["id"];
+      this.discussionsService.submitCommentToDB(comment);
+    }
   }
 
   dismiss() {
