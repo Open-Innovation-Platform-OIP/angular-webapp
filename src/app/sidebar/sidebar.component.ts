@@ -3,10 +3,7 @@ import PerfectScrollbar from "perfect-scrollbar";
 import { Router } from "@angular/router";
 import { AuthService } from "src/app/services/auth.service";
 import { UsersService } from "../services/users.service";
-<<<<<<< HEAD
-=======
 import { GeocoderService } from "../services/geocoder.service";
->>>>>>> 73d17cf9e2e90cf6abdbf9d97d5024a0973bb3b4
 
 declare const $: any;
 
