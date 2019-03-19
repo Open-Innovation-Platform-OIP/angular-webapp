@@ -566,20 +566,6 @@ export class ProblemDetailComponent implements OnInit {
             });
 
             this.validation = result.data.problems[0].problem_validations;
-            this.carouselTileItemsValid$ = interval(500).pipe(
-              startWith(-1),
-              take(32),
-              map(val => {
-                let data;
-        
-                if (this.validation.length < 1) {
-                  this.validation = [false];
-                } else {
-                  data = this.validation;
-                }
-                return data;
-              })
-            );
           }
           console.log(result, "result from validation");
         },
@@ -628,21 +614,6 @@ export class ProblemDetailComponent implements OnInit {
               }
             });
             this.collaborators = result.data.problems[0].problem_collaborators;
-            this.carouselTileItemCollab$ = interval(500).pipe(
-              startWith(-1),
-              take(32),
-              map(val => {
-                let data;
-        
-                if (this.collaborators && this.collaborators.length < 1) {
-                  this.collaborators = [false];
-                } else {
-                  data = this.collaborators;
-                }
-                return data;
-              })
-            );
-        
 
             console.log(this.collaborators, "collaborators");
           }
@@ -693,21 +664,7 @@ export class ProblemDetailComponent implements OnInit {
               }
             });
             this.enrichment = data.data.enrichments;
-            this.carouselTileItems$ = interval(500).pipe(
-              startWith(-1),
-              take(32),
-              map(val => {
-                let data;
-        
-                if (this.enrichment.length < 1) {
-                  this.enrichment = [false];
-                } else {
-                  data = this.enrichment;
-                }
-                return data;
-              })
-            );
-        
+
             console.log(this.enrichment, "id specifi enrichment");
           }
         },
