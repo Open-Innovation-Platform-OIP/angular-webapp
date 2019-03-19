@@ -888,7 +888,23 @@ export class ProblemDetailComponent implements OnInit {
 
   async onCommentSubmit(event) {
     const [content, mentions, attachments] = event;
-    let file_links = [];
+    let comment = {
+      created_by: this.auth.currentUserValue.id,
+      problem_id: this.problemData["id"],
+      text: content,
+      mentions: JSON.stringify(mentions)
+        .replace("[", "{")
+        .replace("]", "}")
+    };
+    // console.log(content, mentions);
+    if (this.showReplyBox) {
+      comment["linked_comment_id"] = this.replyingTo;
+      this.replyingTo = 0;
+      this.showReplyBox = false;
+    }
+    this.discussionsService.submitCommentToDB(comment);
+
+    /* let file_links = [];
 
     await attachments.forEach((file, index) => {
       this.fileService
@@ -919,11 +935,14 @@ export class ProblemDetailComponent implements OnInit {
             this.discussionsService.submitCommentToDB(comment);
           }
         });
-    });
+    }); */
   }
 
   async onReplySubmit(comment) {
-    let file_links = [];
+    comment["created_by"] = this.auth.currentUserValue.id;
+    comment["problem_id"] = this.problemData["id"];
+    this.discussionsService.submitCommentToDB(comment);
+    /* let file_links = [];
 
     await comment.attachments.forEach((file, index) => {
       this.fileService
@@ -941,7 +960,7 @@ export class ProblemDetailComponent implements OnInit {
             this.discussionsService.submitCommentToDB(comment);
           }
         });
-    });
+    }); */
   }
 
   dismiss() {
