@@ -40,6 +40,10 @@ export const AppRoutes: Routes = [
         path: "search",
         loadChildren:
           "./global-search-view/global-search-view.module#GlobalSearchViewModule"
+      },
+      {
+        path: "solutions",
+        loadChildren: "./solutions/solutions.module#SolutionsModule"
       }
     ]
   },
