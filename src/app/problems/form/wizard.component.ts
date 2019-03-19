@@ -861,9 +861,30 @@ export class WizardComponent
         result => {
           if (result.data.insert_problems.returning.length > 0) {
             this.problem["id"] = result.data.insert_problems.returning[0].id;
+            const upsert_tags = gql`
+              mutation upsert_tags($tags: [tags_insert_input!]!) {
+                insert_tags(
+                  objects: $tags
+                  on_conflict: { constraint: tags_pkey, update_columns: [name] }
+                ) {
+                  affected_rows
+                  returning {
+                    id
+                    name
+                  }
+                }
+              }
+            `;
+
+            const tags = [];
+
             const problem_tags = new Set();
+            console.log(this.sectors, "sectors");
 
             this.sectors.map(sector => {
+              tags.push({ name: sector });
+              console.log(tags, "tags in array");
+
               if (
                 this.tagService.allTags[sector] &&
                 this.tagService.allTags[sector].id
@@ -874,6 +895,9 @@ export class WizardComponent
                 });
               }
             });
+
+            this.tagService.addTagsInDb(tags, "problems", this.problem["id"]);
+
             if (problem_tags.size > 0) {
               const upsert_problem_tags = gql`
                 mutation upsert_problem_tags(

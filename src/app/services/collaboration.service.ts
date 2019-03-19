@@ -46,6 +46,7 @@ export class CollaborationService {
               is_expert
               is_beneficiary
               is_innovator
+              edited_at
             ]
           }
         ) {
@@ -67,7 +68,7 @@ export class CollaborationService {
       .subscribe(
         result => {
           console.log(result, "result");
-          location.reload();
+          // location.reload();
         },
         error => {
           console.log("error", error);

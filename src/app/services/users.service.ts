@@ -2,6 +2,48 @@ import { Injectable } from "@angular/core";
 import { Apollo } from "apollo-angular";
 import gql from "graphql-tag";
 import { AuthService } from "./auth.service";
+import { AnalysisScheme } from "aws-sdk/clients/cloudsearch";
+
+export interface User {
+  id?: Number;
+  email?: String;
+  password?: String;
+  token?: String;
+
+  name: String;
+  organization: String;
+  qualification: String;
+  photo_url: any;
+  phone_number: String;
+  location: String;
+  is_ngo: Boolean;
+  is_innovator: Boolean;
+  is_expert: Boolean;
+  is_government: Boolean;
+  is_funder: Boolean;
+  is_beneficiary: Boolean;
+  is_incubator: Boolean;
+  is_entrepreneur: Boolean;
+}
+
+// id: "",
+//     email: "",
+//     token: "",
+//     password: "",
+//     name: "",
+//     organization: "",
+//     qualification: "",
+//     photo_url: {},
+//     phone_number: "",
+//     location: "",
+//     is_ngo: false,
+//     is_innovator: false,
+//     is_expert: false,
+//     is_government: false,
+//     is_funder: false,
+//     is_beneficiary: false,
+//     is_incubator: false,
+//     is_entrepreneur: false
 
 @Injectable({
   providedIn: "root"
@@ -20,6 +62,7 @@ export class UsersService {
     this.getOrgsFromDB();
     this.getUsersFromDB();
     this.getCurrentUser();
+    console.log("test");
   }
 
   public getCurrentUser() {
@@ -95,53 +138,44 @@ export class UsersService {
       });
   }
 
-  submitUserToDB(userData) {
+  submitUserToDB(userData: User) {
     console.log(userData, "user Data on edit testing");
-    this.apollo
-      .mutate({
-        mutation: gql`
-          mutation upsert_users($users: [users_insert_input!]!) {
-            insert_users(
-              objects: $users
-              on_conflict: {
-                constraint: users_pkey
-                update_columns: [
-                  name
-                  organization
-                  qualification
-                  location
-                  photo_url
-                  phone_number
-                  is_ngo
-                  is_innovator
-                  is_entrepreneur
-                  is_expert
-                  is_incubator
-                  is_funder
-                  is_government
-                  is_beneficiary
-                ]
-              }
-            ) {
-              affected_rows
-              returning {
-                id
-              }
+    return this.apollo.mutate({
+      mutation: gql`
+        mutation upsert_users($users: [users_insert_input!]!) {
+          insert_users(
+            objects: $users
+            on_conflict: {
+              constraint: users_pkey
+              update_columns: [
+                name
+                organization
+                qualification
+                location
+                photo_url
+                phone_number
+                is_ngo
+                is_innovator
+                is_entrepreneur
+                is_expert
+                is_incubator
+                is_funder
+                is_government
+                is_beneficiary
+                edited_at
+              ]
+            }
+          ) {
+            affected_rows
+            returning {
+              id
             }
           }
-        `,
-        variables: {
-          users: [userData]
         }
-      })
-      .subscribe(
-        data => {
-          console.log(data);
-          // location.reload();
-        },
-        err => {
-          console.log(err, "error on user edit");
-        }
-      );
+      `,
+      variables: {
+        users: [userData]
+      }
+    });
   }
 }

@@ -17,6 +17,7 @@ import swal from "sweetalert2";
 import { EnrichmentService } from "../../services/enrichment.service";
 import { FilesService } from "../../services/files.service";
 import { AuthService } from "../../services/auth.service";
+import { GeocoderService } from "../../services/geocoder.service";
 
 @Component({
   selector: "app-add-enrichment",
@@ -57,7 +58,8 @@ export class AddEnrichmentComponent implements OnChanges, OnInit {
     private problemService: ProblemService,
     private apollo: Apollo,
     private enrichmentService: EnrichmentService,
-    private auth: AuthService // private here: GeocoderService
+    private auth: AuthService,
+    private here: GeocoderService
   ) {}
 
   ngOnInit() {}
@@ -73,6 +75,14 @@ export class AddEnrichmentComponent implements OnChanges, OnInit {
   }
   public getAddress() {
     if (this.enrichmentData.location != "") {
+      this.here.getAddress(this.enrichmentData.location).then(
+        result => {
+          this.locations = <Array<any>>result;
+        },
+        error => {
+          console.error(error);
+        }
+      );
     }
   }
   public storeLocation(loc) {

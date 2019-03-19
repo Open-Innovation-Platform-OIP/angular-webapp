@@ -1,7 +1,7 @@
 <!--REWRITE-->
 
 
-<div class="card card-profile collaborate-card" *ngIf="collaboratorData" [routerLink]="!(collaboratorData.user_id===auth.currentUserValue.id)&&'/profile/'+collaboratorData.user_id">
+<div class="card card-profile collaborate-card" *ngIf="collaboratorData" [routerLink]="currentUser&&!(collaboratorData.user_id===currentUser)&&'/profiles/'+collaboratorData.user_id">
 
   <div class="card-avatar">
     <a *ngIf="collaboratorProfileData&&collaboratorProfileData.photo_url">

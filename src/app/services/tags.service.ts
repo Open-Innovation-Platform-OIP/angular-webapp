@@ -7,6 +7,8 @@ import gql from "graphql-tag";
 export class TagsService {
   public allTags = {};
 
+  // public upsert_tags = ;
+
   constructor(private apollo: Apollo) {}
   getTagsFromDB() {
     this.apollo
@@ -29,50 +31,124 @@ export class TagsService {
         }
       });
   }
+  addTagsInDb(tags, tableName, tableId?) {
+    let concatTableName = tableName.slice(0, tableName.length - 1);
+    console.log(tags, "check for tag");
+    this.apollo
+      .mutate({
+        mutation: gql`
+          mutation upsert_tags($tags: [tags_insert_input!]!) {
+            insert_tags(
+              objects: $tags
+              on_conflict: { constraint: tags_name_key, update_columns: [] }
+            ) {
+              affected_rows
+              returning {
+                id
+                name
+              }
+            }
+          }
+        `,
+        variables: {
+          tags: tags
+        }
+      })
+      .subscribe(
+        data => {
+          let tagsToBeLinked = [];
+          if (data.data.insert_tags.returning) {
+            data.data.insert_tags.returning.map(tag => {
+              tagsToBeLinked.push({
+                tag_id: tag.id,
+                [`${concatTableName}_id`]: tableId
+              });
+            });
 
-  addTagsInDb(tableId, tags, tableName) {
-    tags.map(tag => {
-      if (tag) {
-        this.apollo
-          .watchQuery<any>({
-            query: gql`query { tags( where: {name: {_eq:"${
-              tag.value
-            }"} }){id name}}`,
-            pollInterval: 500
-          })
-          .valueChanges.subscribe(({ data }) => {
-            console.log(data.tags, "tags presnt in db");
-            if (data.tags.length > 0) {
-              this.addRelationToTags(tableId, data.tags[0].id, tableName);
-            } else if (data.tags.length === 0) {
-              console.log(tag.value, "tag value");
-
-              this.apollo
-                .mutate<any>({
-                  mutation: gql`mutation insert_tags {
-              insert_tags(
-                objects: [
-                  {name:"${tag.value}"}
-                ]
+            this.apollo
+              .mutate({
+                mutation: gql`
+            mutation upsert_${concatTableName}_tags(
+              $${tableName}_tags: [${tableName}_tags_insert_input!]!
+            ) {
+              insert_${tableName}_tags(
+                objects: $${tableName}_tags
+                on_conflict: {
+                  constraint: ${tableName}_tags_pkey
+                  update_columns: [tag_id, ${concatTableName}_id]
+                }
               ) {
+                affected_rows
                 returning {
-                  id
-                  name
+                  tag_id
+                  ${concatTableName}_id
                 }
               }
-            }`
-                })
-                .subscribe(data => {
-                  this.addRelationToTags(
-                    tableId,
-                    data.data.insert_tags.returning[0].id,
-                    tableName
-                  );
-                });
             }
-          });
-      }
-    });
+          `,
+                variables: {
+                  [`${tableName}_tags`]: tagsToBeLinked
+                }
+              })
+              .subscribe(
+                data => {
+                  console.log("worked", data);
+                },
+                err => {
+                  console.log(err, "couldn't add tags");
+                }
+              );
+
+            console.log("worked", data);
+          }
+        },
+        err => {
+          console.log(err, "couldn't add tags");
+        }
+      );
+
+    // tags.map(tag => {
+    //   if (tag) {
+    //     this.apollo
+    //       .watchQuery<any>({
+    //         query: gql`query { tags( where: {name: {_eq:"${
+    //           tag.value
+    //         }"} }){id name}}`,
+    //         pollInterval: 500
+    //       })
+    //       .valueChanges.subscribe(({ data }) => {
+    //         console.log(data.tags, "tags presnt in db");
+    //         if (data.tags.length > 0) {
+    //           this.addRelationToTags(tableId, data.tags[0].id, tableName);
+    //         } else if (data.tags.length === 0) {
+    //           console.log(tag.value, "tag value");
+
+    //           this.apollo
+    //             .mutate<any>({
+    //               mutation: gql`mutation insert_tags {
+    //           insert_tags(
+    //             objects: [
+    //               {name:"${tag.value}"}
+    //             ]
+    //           ) {
+    //             returning {
+    //               id
+    //               name
+    //             }
+    //           }
+    //         }`
+    //             })
+    //             .subscribe(data => {
+    //               this.addRelationToTags(
+    //                 tableId,
+    //                 data.data.insert_tags.returning[0].id,
+    //                 tableName
+    //               );
+    //             });
+    //         }
+    //       });
+    //   }
+    // });
   }
   addRelationToTags(tableId, tagId, tableName) {
     console.log(tableId, tagId, tableName, "tableId", "tagId", "tableName");

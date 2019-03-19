@@ -18,7 +18,9 @@ export interface validation {
   providedIn: "root"
 })
 export class ValidationService {
-  constructor(private apollo: Apollo) {}
+  constructor(private apollo: Apollo) {
+    console.log("test2");
+  }
 
   submitValidationToDB(validationData: validation) {
     console.log(validationData, "validation data");
@@ -33,7 +35,7 @@ export class ValidationService {
               objects: $validations
               on_conflict: {
                 constraint: validations_pkey
-                update_columns: [comment, files, agree]
+                update_columns: [comment, files, agree, edited_at]
               }
             ) {
               affected_rows
@@ -50,7 +52,7 @@ export class ValidationService {
       .subscribe(
         data => {
           console.log(data);
-          location.reload();
+          // location.reload();
         },
         err => {
           console.log(err, "error");

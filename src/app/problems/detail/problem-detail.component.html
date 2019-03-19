@@ -47,7 +47,7 @@
                 <p class="description">More than {{problemData.min_population}}</p>
                 <strong *ngIf="problemData.beneficiary_attributes">Beneficiary Attributes</strong>
                 <p class="description">{{problemData.beneficiary_attributes}}</p>
-                <strong *ngIf="problemData.beneficiary_attributes">Sectors</strong>
+                <strong *ngIf="tags">Sectors</strong>
                 <div *ngFor="let tag of tags">
                   <span class="badge badge-warning">{{tag}}</span>
                   <span>&nbsp;</span>
@@ -441,7 +441,7 @@
             <div class="modal-content">
               <div class="modal-header">
                 <h5 class="modal-title" id="myModalLabel">Add New Collaborator</h5>
-                <button mat-button type="button" class="close" data-dismiss="modal" aria-hidden="true">
+                <button mat-button type="button" class="close" aria-hidden="true" (click)="dismiss()">
                   <i class="material-icons">close</i>
                 </button>
               </div>

@@ -155,7 +155,7 @@ export class ProblemDetailComponent implements OnInit {
     private collaborationService: CollaborationService,
     private validationService: ValidationService,
     private enrichmentService: EnrichmentService
-  ) { }
+  ) {}
 
   getUserPersonas(id) {
     this.apollo
@@ -174,8 +174,8 @@ export class ProblemDetailComponent implements OnInit {
               is_entrepreneur
             }
           }
-        `,
-        pollInterval: 500
+        `
+        // pollInterval: 500
       })
       .valueChanges.subscribe(result => {
         console.log("PERSONAS", result);
@@ -223,6 +223,7 @@ export class ProblemDetailComponent implements OnInit {
         return data;
       })
     );
+
     this.carouselTileItemCollab$ = interval(500).pipe(
       startWith(-1),
       take(32),
@@ -241,6 +242,10 @@ export class ProblemDetailComponent implements OnInit {
     this.minimizeSidebar();
     this.route.params.pipe(first()).subscribe(params => {
       if (params.id) {
+        this.getEnrichmentData(params.id);
+        this.getCollaborators(params.id);
+        // this.getTags(params.id);
+        this.getValidations(params.id);
         this.apollo
           .watchQuery<any>({
             query: gql`
@@ -364,10 +369,7 @@ export class ProblemDetailComponent implements OnInit {
 
                 // this.getCollaborators(params.id);
                 console.log(this.collaborators, "collaborators check");
-                this.getEnrichmentData(params.id);
-                this.getCollaborators(params.id);
-                // this.getTags(params.id);
-                this.getValidations(params.id);
+
                 this.discussionsService
                   .getComments(params.id)
                   .subscribe(discussions => {
@@ -385,7 +387,9 @@ export class ProblemDetailComponent implements OnInit {
                             this.replies[comment.linked_comment_id] = [comment];
                           } else {
                             // comment reply already exists so push reply into the array
-                            this.replies[comment.linked_comment_id].push(comment);
+                            this.replies[comment.linked_comment_id].push(
+                              comment
+                            );
                           }
                         } else {
                           // this comment is a parent comment - add it to the comments object
@@ -436,7 +440,7 @@ export class ProblemDetailComponent implements OnInit {
         cancelButtonClass: "btn btn-danger",
         buttonsStyling: false
       })
-        .then(function (result) {
+        .then(function(result) {
           swal({
             type: "success",
             html:
@@ -473,7 +477,7 @@ export class ProblemDetailComponent implements OnInit {
       body.classList.remove("sidebar-mini");
       misc.sidebar_mini_active = false;
     } else {
-      setTimeout(function () {
+      setTimeout(function() {
         body.classList.add("sidebar-mini");
 
         misc.sidebar_mini_active = true;
@@ -481,12 +485,12 @@ export class ProblemDetailComponent implements OnInit {
     }
 
     // we simulate the window Resize so the charts will get updated in realtime.
-    const simulateWindowResize = setInterval(function () {
+    const simulateWindowResize = setInterval(function() {
       window.dispatchEvent(new Event("resize"));
     }, 180);
 
     // we stop the simulation of Window Resize after the animations are completed
-    setTimeout(function () {
+    setTimeout(function() {
       clearInterval(simulateWindowResize);
     }, 1000);
   }
@@ -549,6 +553,7 @@ export class ProblemDetailComponent implements OnInit {
       })
       .valueChanges.subscribe(
         result => {
+          console.log(result, "poll interval working");
           if (result.data.problems[0].problem_validations) {
             result.data.problems[0].problem_validations.map(validation => {
               console.log(validation.validated_by, "test55");
@@ -598,6 +603,7 @@ export class ProblemDetailComponent implements OnInit {
       })
       .valueChanges.subscribe(
         result => {
+          console.log("pool on collab");
           console.log(result, "result from collaborators");
           if (result.data.problems[0].problem_collaborators) {
             result.data.problems[0].problem_collaborators.map(collaborator => {
@@ -658,6 +664,7 @@ export class ProblemDetailComponent implements OnInit {
               }
             });
             this.enrichment = data.data.enrichments;
+
             console.log(this.enrichment, "id specifi enrichment");
           }
         },
@@ -691,7 +698,7 @@ export class ProblemDetailComponent implements OnInit {
       $layer.remove();
     }
 
-    setTimeout(function () {
+    setTimeout(function() {
       $toggle.classList.remove("toggled");
     }, 400);
 
@@ -785,7 +792,7 @@ export class ProblemDetailComponent implements OnInit {
 
     validationData.problem_id = this.problemData.id;
 
-    // this.validationService.submitValidationToDB(validationData);
+    this.validationService.submitValidationToDB(validationData);
   }
 
   voteProblem() {
@@ -851,7 +858,7 @@ export class ProblemDetailComponent implements OnInit {
   // }
 
   deleteValidation(validationData) {
-    // this.validationService.deleteValidation(validationData);
+    this.validationService.deleteValidation(validationData);
   }
 
   deleteCollaboration(collaborationData) {
@@ -880,9 +887,24 @@ export class ProblemDetailComponent implements OnInit {
   }
 
   async onCommentSubmit(event) {
-
     const [content, mentions, attachments] = event;
-    let file_links = [];
+    let comment = {
+      created_by: this.auth.currentUserValue.id,
+      problem_id: this.problemData["id"],
+      text: content,
+      mentions: JSON.stringify(mentions)
+        .replace("[", "{")
+        .replace("]", "}")
+    };
+    // console.log(content, mentions);
+    if (this.showReplyBox) {
+      comment["linked_comment_id"] = this.replyingTo;
+      this.replyingTo = 0;
+      this.showReplyBox = false;
+    }
+    this.discussionsService.submitCommentToDB(comment);
+
+    /* let file_links = [];
 
     await attachments.forEach((file, index) => {
       this.fileService
@@ -899,7 +921,7 @@ export class ProblemDetailComponent implements OnInit {
               created_by: this.auth.currentUserValue.id,
               problem_id: this.problemData["id"],
               text: content,
-              attachments: file_links,  // overwriting the incoming blobs
+              attachments: file_links, // overwriting the incoming blobs
               mentions: JSON.stringify(mentions)
                 .replace("[", "{")
                 .replace("]", "}")
@@ -913,11 +935,14 @@ export class ProblemDetailComponent implements OnInit {
             this.discussionsService.submitCommentToDB(comment);
           }
         });
-    })
+    }); */
   }
 
   async onReplySubmit(comment) {
-    let file_links = [];
+    comment["created_by"] = this.auth.currentUserValue.id;
+    comment["problem_id"] = this.problemData["id"];
+    this.discussionsService.submitCommentToDB(comment);
+    /* let file_links = [];
 
     await comment.attachments.forEach((file, index) => {
       this.fileService
@@ -929,12 +954,30 @@ export class ProblemDetailComponent implements OnInit {
         .catch(e => console.log("Err:: ", e))
         .then(() => {
           if (index === comment.attachments.length - 1) {
-            comment['attachments'] = file_links; // overwriting the incoming blobs
-            comment['created_by'] = this.auth.currentUserValue.id;
-            comment['problem_id'] = this.problemData["id"];
+            comment["attachments"] = file_links; // overwriting the incoming blobs
+            comment["created_by"] = this.auth.currentUserValue.id;
+            comment["problem_id"] = this.problemData["id"];
             this.discussionsService.submitCommentToDB(comment);
           }
         });
-    })
+    }); */
+  }
+
+  dismiss() {
+    swal({
+      title: "Are you sure you want to leave?",
+      // text: "You won't be able to revert this!",
+      type: "warning",
+      showCancelButton: true,
+      confirmButtonClass: "btn btn-success",
+      cancelButtonClass: "btn btn-danger",
+      confirmButtonText: "Yes",
+      buttonsStyling: false
+    }).then(result => {
+      if (result.value) {
+        console.log("Received result", result);
+        $("#collaboratorModal").modal("hide");
+      }
+    });
   }
 }
