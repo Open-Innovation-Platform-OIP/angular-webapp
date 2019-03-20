@@ -155,7 +155,7 @@ export class ProblemDetailComponent implements OnInit {
     private collaborationService: CollaborationService,
     private validationService: ValidationService,
     private enrichmentService: EnrichmentService
-  ) { }
+  ) {}
 
   getUserPersonas(id) {
     this.apollo
@@ -440,7 +440,7 @@ export class ProblemDetailComponent implements OnInit {
         cancelButtonClass: "btn btn-danger",
         buttonsStyling: false
       })
-        .then(function (result) {
+        .then(function(result) {
           swal({
             type: "success",
             html:
@@ -477,7 +477,7 @@ export class ProblemDetailComponent implements OnInit {
       body.classList.remove("sidebar-mini");
       misc.sidebar_mini_active = false;
     } else {
-      setTimeout(function () {
+      setTimeout(function() {
         body.classList.add("sidebar-mini");
 
         misc.sidebar_mini_active = true;
@@ -485,12 +485,12 @@ export class ProblemDetailComponent implements OnInit {
     }
 
     // we simulate the window Resize so the charts will get updated in realtime.
-    const simulateWindowResize = setInterval(function () {
+    const simulateWindowResize = setInterval(function() {
       window.dispatchEvent(new Event("resize"));
     }, 180);
 
     // we stop the simulation of Window Resize after the animations are completed
-    setTimeout(function () {
+    setTimeout(function() {
       clearInterval(simulateWindowResize);
     }, 1000);
   }
@@ -698,7 +698,7 @@ export class ProblemDetailComponent implements OnInit {
       $layer.remove();
     }
 
-    setTimeout(function () {
+    setTimeout(function() {
       $toggle.classList.remove("toggled");
     }, 400);
 
@@ -830,32 +830,6 @@ export class ProblemDetailComponent implements OnInit {
       );
     }
   }
-
-  // Open Comment Input Field
-  // OpenComment() {
-  //   this.openform = true;
-  //   return this.openform;
-  // }
-
-  // Close Comment Input Field
-  // closeComment() {
-  //   this.openform = false;
-  //   return this.openform;
-  // }
-
-  // // Open Reply Input Field
-  // OpenReply(user_id) {
-  //   this.index = user_id;
-  //   this.reply = true;
-  //   return this.reply;
-  // }
-
-  // // Close Reply Input Field
-  // CloseReply(user_id) {
-  //   this.index = user_id;
-  //   this.reply = false;
-  //   return this.reply;
-  // }
 
   deleteValidation(validationData) {
     this.validationService.deleteValidation(validationData);

@@ -32,7 +32,7 @@ export class TagsService {
       });
   }
   addTagsInDb(tags, tableName, tableId?) {
-    let concatTableName = tableName.slice(0, tableName.length - 1);
+    let trimmedTableName = tableName.slice(0, tableName.length - 1);
     console.log(tags, "check for tag");
     this.apollo
       .mutate({
@@ -61,27 +61,27 @@ export class TagsService {
             data.data.insert_tags.returning.map(tag => {
               tagsToBeLinked.push({
                 tag_id: tag.id,
-                [`${concatTableName}_id`]: tableId
+                [`${trimmedTableName}_id`]: tableId
               });
             });
 
             this.apollo
               .mutate({
                 mutation: gql`
-            mutation upsert_${concatTableName}_tags(
+            mutation upsert_${trimmedTableName}_tags(
               $${tableName}_tags: [${tableName}_tags_insert_input!]!
             ) {
               insert_${tableName}_tags(
                 objects: $${tableName}_tags
                 on_conflict: {
                   constraint: ${tableName}_tags_pkey
-                  update_columns: [tag_id, ${concatTableName}_id]
+                  update_columns: [tag_id, ${trimmedTableName}_id]
                 }
               ) {
                 affected_rows
                 returning {
                   tag_id
-                  ${concatTableName}_id
+                  ${trimmedTableName}_id
                 }
               }
             }
