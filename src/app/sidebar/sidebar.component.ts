@@ -56,7 +56,7 @@ export class SidebarComponent implements OnInit {
     public auth: AuthService,
     private router: Router,
     private usersService: UsersService
-  ) {}
+  ) { }
 
   isMobileMenu() {
     if ($(window).width() > 991) {

@@ -11,6 +11,16 @@
   <div id="comment-{{comment.id}}" class="collapse show" role="tabpanel" aria-labelledby="headingTwo" attr.data-target="#comment-{{comment.id}}">
     <div class="card-body">
       <div innerHTML="{{comment.text}}"></div>
+      <p>
+        <span *ngFor="let attachment of comment.attachments;">
+          <img *ngIf="attachment.slice(-4) === '.png' || attachment.slice(-4) === '.jpg'" style="cursor: pointer;" src="{{attachment}}"
+            width="50" />
+          <img *ngIf="attachment.slice(-4) == '.mp4'" style="cursor: pointer;" src="http://www.pngmart.com/files/1/Video-Icon-PNG-Image.png"
+            width="50" />
+        </span>
+      </p>
+
+
       <button mat-raised-button class="btn btn-warning btn-round btn-sm" matTooltip="Click to reply"
         [matTooltipPosition]="'below'" *ngIf="!(showReplyBox && replyingTo === comment.id)" (click)="replyTo(comment.id)">Reply</button>
       <app-submit-comment *ngIf="showReplyBox && replyingTo === comment.id" [users]="users" [actionText]="'Reply'"
@@ -29,6 +39,15 @@
           attr.data-target="#reply-{{reply.id}}">
           <div class="card-body">
             <div innerHTML="{{reply.text}}"></div>
+            <p>
+              <span *ngFor="let attachment of reply.attachments;">
+                <img *ngIf="attachment.slice(-4) == '.png' || attachment.slice(-4) == '.jpg'" style="cursor: pointer;"
+                  src="{{attachment}}" width="50" />
+                <img *ngIf="attachment.slice(-4) == '.mp4'" style="cursor: pointer;" src="http://www.pngmart.com/files/1/Video-Icon-PNG-Image.png"
+                  width="50" />
+              </span>
+            </p>
+
             <!-- <button mat-raised-button class="btn btn-warning btn-round btn-sm" matTooltip="Click to reply" [matTooltipPosition]="'below'" *ngIf="!(showReplyBox && replyingTo === reply.id)"
         (click)="replyTo(reply.id)">Reply</button>
         <app-submit-comment *ngIf="showReplyBox && replyingTo === reply.id" [users]="objectValues(usersService.allUsers)"

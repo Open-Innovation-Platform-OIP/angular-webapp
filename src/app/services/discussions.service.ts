@@ -85,6 +85,7 @@ export class DiscussionsService {
             text
             linked_comment_id
             mentions
+            attachments
             usersBycreatedBy{
               name
               photo_url
