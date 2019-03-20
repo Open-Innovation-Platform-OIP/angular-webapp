@@ -831,32 +831,6 @@ export class ProblemDetailComponent implements OnInit {
     }
   }
 
-  // Open Comment Input Field
-  // OpenComment() {
-  //   this.openform = true;
-  //   return this.openform;
-  // }
-
-  // Close Comment Input Field
-  // closeComment() {
-  //   this.openform = false;
-  //   return this.openform;
-  // }
-
-  // // Open Reply Input Field
-  // OpenReply(user_id) {
-  //   this.index = user_id;
-  //   this.reply = true;
-  //   return this.reply;
-  // }
-
-  // // Close Reply Input Field
-  // CloseReply(user_id) {
-  //   this.index = user_id;
-  //   this.reply = false;
-  //   return this.reply;
-  // }
-
   deleteValidation(validationData) {
     this.validationService.deleteValidation(validationData);
   }
@@ -888,10 +862,36 @@ export class ProblemDetailComponent implements OnInit {
 
   async onCommentSubmit(event) {
     const [content, mentions, attachments] = event;
+
+    if (attachments.length) {
+      let file_links = [];
+
+      await attachments.forEach((file, index) => {
+        this.fileService
+          .uploadFile(file, file.name)
+          .promise()
+          .then(values => {
+            // console.log("val: ", values);
+            file_links.push(values.Location);
+          })
+          .catch(e => console.log("Err:: ", e))
+          .then(() => {
+            if (index === attachments.length - 1) {
+              this.submitComment(content, mentions, file_links);
+            }
+          });
+      });
+    } else {
+      this.submitComment(content, mentions);
+    }
+  }
+
+  submitComment(content, mentions, attachments?) {
     let comment = {
       created_by: this.auth.currentUserValue.id,
       problem_id: this.problemData["id"],
       text: content,
+      attachments: attachments, // overwriting the incoming blobs
       mentions: JSON.stringify(mentions)
         .replace("[", "{")
         .replace("]", "}")
@@ -903,64 +903,34 @@ export class ProblemDetailComponent implements OnInit {
       this.showReplyBox = false;
     }
     this.discussionsService.submitCommentToDB(comment);
-
-    /* let file_links = [];
-
-    await attachments.forEach((file, index) => {
-      this.fileService
-        .uploadFile(file, file.name)
-        .promise()
-        .then(values => {
-          // console.log("val: ", values);
-          file_links.push(values.Location);
-        })
-        .catch(e => console.log("Err:: ", e))
-        .then(() => {
-          if (index === attachments.length - 1) {
-            let comment = {
-              created_by: this.auth.currentUserValue.id,
-              problem_id: this.problemData["id"],
-              text: content,
-              attachments: file_links, // overwriting the incoming blobs
-              mentions: JSON.stringify(mentions)
-                .replace("[", "{")
-                .replace("]", "}")
-            };
-            // console.log(content, mentions);
-            if (this.showReplyBox) {
-              comment["linked_comment_id"] = this.replyingTo;
-              this.replyingTo = 0;
-              this.showReplyBox = false;
-            }
-            this.discussionsService.submitCommentToDB(comment);
-          }
-        });
-    }); */
   }
 
   async onReplySubmit(comment) {
-    comment["created_by"] = this.auth.currentUserValue.id;
-    comment["problem_id"] = this.problemData["id"];
-    this.discussionsService.submitCommentToDB(comment);
-    /* let file_links = [];
+    if (comment.attachments.length) {
+      let file_links = [];
 
-    await comment.attachments.forEach((file, index) => {
-      this.fileService
-        .uploadFile(file, file.name)
-        .promise()
-        .then(values => {
-          file_links.push(values.Location);
-        })
-        .catch(e => console.log("Err:: ", e))
-        .then(() => {
-          if (index === comment.attachments.length - 1) {
-            comment["attachments"] = file_links; // overwriting the incoming blobs
-            comment["created_by"] = this.auth.currentUserValue.id;
-            comment["problem_id"] = this.problemData["id"];
-            this.discussionsService.submitCommentToDB(comment);
-          }
-        });
-    }); */
+      await comment.attachments.forEach((file, index) => {
+        this.fileService
+          .uploadFile(file, file.name)
+          .promise()
+          .then(values => {
+            file_links.push(values.Location);
+          })
+          .catch(e => console.log("Err:: ", e))
+          .then(() => {
+            if (index === comment.attachments.length - 1) {
+              comment["attachments"] = file_links; // overwriting the incoming blobs
+              comment["created_by"] = this.auth.currentUserValue.id;
+              comment["problem_id"] = this.problemData["id"];
+              this.discussionsService.submitCommentToDB(comment);
+            }
+          });
+      });
+    } else {
+      comment["created_by"] = this.auth.currentUserValue.id;
+      comment["problem_id"] = this.problemData["id"];
+      this.discussionsService.submitCommentToDB(comment);
+    }
   }
 
   dismiss() {
