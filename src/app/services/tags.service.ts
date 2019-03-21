@@ -181,40 +181,43 @@ export class TagsService {
       );
   }
 
-  removeTagRelations(tagsToBeRemoved, tableName) {
-    tagsToBeRemoved.map(tag => {
-      this.apollo
-        .mutate<any>({
-          mutation: gql`
-            mutation DeleteMutation($where: ${tableName}_tags_bool_exp!) {
-              delete_${tableName}_tags(where: $where) {
-                affected_rows
-                returning {
-                  tag_id
-                }
-              }
-            }
-          `,
-          variables: {
-            where: {
-              tag_id: {
-                _eq: tag.id
-              }
+  removeTagRelation(tagId, tableId, tableName) {
+    let trimmedTableName = tableName.slice(0, tableName.length - 1);
+    this.apollo
+      .mutate<any>({
+        mutation: gql`
+        mutation DeleteMutation($where: ${tableName}_tags_bool_exp!) {
+          delete_${tableName}_tags(where: $where) {
+            affected_rows
+            returning {
+              tag_id
             }
           }
-        })
-        .subscribe(
-          ({ data }) => {
-            console.log(data, "remove tags");
-            // location.reload();
-            // this.router.navigateByUrl("/problems");
+        }
+      `,
+        variables: {
+          where: {
+            tag_id: {
+              _eq: tagId
+            },
+            [`${trimmedTableName}_id`]: {
+              _eq: tableId
+            }
+          }
+        }
+      })
+      .subscribe(
+        ({ data }) => {
+          console.log("worked", data);
+          // location.reload();
+          // location.reload();
+          // this.router.navigateByUrl("/problems");
 
-            return;
-          },
-          error => {
-            console.log("Could delete due to " + error);
-          }
-        );
-    });
+          return;
+        },
+        error => {
+          console.log("Could delete due to " + error);
+        }
+      );
   }
 }

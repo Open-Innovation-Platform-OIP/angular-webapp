@@ -151,6 +151,52 @@ export class AddUserProfileComponent implements OnInit, OnChanges {
     const index = this.sectors.indexOf(sector);
     if (index >= 0) {
       this.sectors.splice(index, 1);
+      console.log(this.tagService.allTags[sector], "sector delete check");
+
+      if (this.tagService.allTags[sector] && this.user.id) {
+        this.tagService.removeTagRelation(
+          this.tagService.allTags[sector].id,
+          this.user.id,
+          "users"
+        );
+      }
+
+      // this.apollo
+      //   .mutate<any>({
+      //     mutation: gql`
+      //       mutation DeleteMutation($where: users_tags_bool_exp!) {
+      //         delete_users_tags(where: $where) {
+      //           affected_rows
+      //           returning {
+      //             tag_id
+      //           }
+      //         }
+      //       }
+      //     `,
+      //     variables: {
+      //       where: {
+      //         tag_id: {
+      //           _eq: this.tagService.allTags[sector].id
+      //         },
+      //         user_id: {
+      //           _eq: this.user.id
+      //         }
+      //       }
+      //     }
+      //   })
+      //   .subscribe(
+      //     ({ data }) => {
+      //       console.log("worked", data);
+      //       // location.reload();
+      //       // location.reload();
+      //       // this.router.navigateByUrl("/problems");
+
+      //       return;
+      //     },
+      //     error => {
+      //       console.log("Could delete due to " + error);
+      //     }
+      //   );
     }
   }
 
@@ -276,6 +322,7 @@ export class AddUserProfileComponent implements OnInit, OnChanges {
               });
               console.log(this.personas, "personas");
               console.log(this.personaArray, "persona array");
+              
 
               // });
             },

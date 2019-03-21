@@ -62,8 +62,12 @@ export class ProblemDetailComponent implements OnInit {
     min_population: 0,
     beneficiary_attributes: ""
   };
+
+  public problemOwner: string;
+
   enrichDataToEdit: any;
   tags: any = [];
+  sectorMatched: boolean = false;
   enrichDataArray: any[];
   validationArray: any[];
   sectors: any[] = [];
@@ -71,6 +75,8 @@ export class ProblemDetailComponent implements OnInit {
   isWatching: boolean = false;
   isVoted: boolean = false;
   watchedBy: number = 0;
+  userInterests: any = {};
+  sectorsOfProblem: any[] = [];
   userPersonas = {
     is_ngo: false,
     is_innovator: false,
@@ -172,8 +178,15 @@ export class ProblemDetailComponent implements OnInit {
               is_beneficiary
               is_incubator
               is_entrepreneur
+              user_tags{
+                tag {
+                    id
+                    name
+                }
             }
-          }
+            }
+        }
+            
         `
         // pollInterval: 500
       })
@@ -183,7 +196,11 @@ export class ProblemDetailComponent implements OnInit {
           Object.keys(result.data.users[0]).map(persona => {
             this.userPersonas[persona] = result.data.users[0][persona];
           });
-          console.log("persona assignment", this.userPersonas);
+          console.log("persona assignment", result.data.users[0]);
+          result.data.users[0].user_tags.map(tag => {
+            this.userInterests[tag.tag.name] = tag.tag;
+          });
+          console.log(this.userInterests, "user interests");
         }
       });
   }
@@ -196,7 +213,7 @@ export class ProblemDetailComponent implements OnInit {
 
     this.carouselTileItems$ = interval(500).pipe(
       startWith(-1),
-      take(32),
+      take(2),
       map(val => {
         let data;
 
@@ -205,13 +222,14 @@ export class ProblemDetailComponent implements OnInit {
         } else {
           data = this.enrichment;
         }
+        console.log(data, "carousel data");
         return data;
       })
     );
 
     this.carouselTileItemsValid$ = interval(500).pipe(
       startWith(-1),
-      take(32),
+      take(2),
       map(val => {
         let data;
 
@@ -226,7 +244,7 @@ export class ProblemDetailComponent implements OnInit {
 
     this.carouselTileItemCollab$ = interval(500).pipe(
       startWith(-1),
-      take(32),
+      take(2),
       map(val => {
         let data;
 
@@ -266,6 +284,10 @@ export class ProblemDetailComponent implements OnInit {
               extent
               min_population
               beneficiary_attributes
+              usersBycreatedBy {
+                id
+                name
+              } 
               problem_tags{
                 tag {
                     id
@@ -276,12 +298,20 @@ export class ProblemDetailComponent implements OnInit {
         }
             
         `,
-            pollInterval: 500
+            pollInterval: 200
           })
           .valueChanges.subscribe(
             result => {
               console.log(result, "prob detail data");
               if (result.data.problems[0]) {
+                this.problemOwner =
+                  result.data.problems[0].usersBycreatedBy.name;
+                result.data.problems[0].problem_tags.map(tags => {
+                  if (this.userInterests[tags.tag.name]) {
+                    this.sectorMatched = true;
+                    console.log(this.sectorMatched, "sector matched");
+                  }
+                });
                 if (result.data.problems[0].problem_tags) {
                   this.tags = result.data.problems[0].problem_tags.map(
                     tagArray => {
@@ -543,13 +573,18 @@ export class ProblemDetailComponent implements OnInit {
         validated_by
         edited_at
         is_deleted
+
         problem_id
+        user {
+          id
+          name
+        } 
         
       }
     }
   }
 `,
-        pollInterval: 500
+        pollInterval: 200
       })
       .valueChanges.subscribe(
         result => {
@@ -593,13 +628,18 @@ export class ProblemDetailComponent implements OnInit {
       is_incubator
       is_entrepreneur
       user_id
+      user {
+        id
+        name
+        photo_url
+      } 
       
     }
   }
 
 }
 `,
-        pollInterval: 500
+        pollInterval: 200
       })
       .valueChanges.subscribe(
         result => {
@@ -647,10 +687,14 @@ export class ProblemDetailComponent implements OnInit {
               edited_at
               voted_by
               is_deleted
+              usersBycreatedBy{
+                id 
+                name
+              }
             }
           }
         `,
-        pollInterval: 500
+        pollInterval: 200
       })
       .valueChanges.subscribe(
         data => {

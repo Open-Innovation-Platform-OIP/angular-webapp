@@ -74,6 +74,7 @@
                 create
               </i>
             </div>
+            <p>Created By:{{problemOwner}}</p>
           </div>
         </div>
         <!--Problem Details-->
@@ -266,7 +267,7 @@
             </i>
           </a> -->
           <button mat-raised-button class="btn btn-warning btn-round" data-toggle="modal" data-target="#validatorModal"
-            matTooltip="Click to validate problem" [matTooltipPosition]="'below'" [disabled]="disableValidateButton || !userPersonas.is_expert || userId == problemData.created_by">Validate</button>
+            matTooltip="Click to validate problem" [matTooltipPosition]="'below'" [disabled]="disableValidateButton || !userPersonas.is_expert || userId == problemData.created_by ||!sectorMatched">Validate</button>
           <!-- <a mat-button>
             <i class="material-icons">
               keyboard_arrow_right
