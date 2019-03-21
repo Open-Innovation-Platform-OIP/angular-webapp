@@ -123,10 +123,10 @@ export class ProblemService {
             tagsToBeAddedInDB,
             "problems"
           );
-          this.tagHandlerService.removeTagRelations(
-            tagsToBeRemoved,
-            "problems"
-          );
+          // this.tagHandlerService.removeTagRelations(
+          //   tagsToBeRemoved,
+          //   "problems"
+          // );
           location.reload();
           this.router.navigateByUrl("/problems");
         },

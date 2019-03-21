@@ -18,7 +18,7 @@ export interface Comment {
   providedIn: "root"
 })
 export class DiscussionsService {
-  constructor(private apollo: Apollo, private auth: AuthService) { }
+  constructor(private apollo: Apollo, private auth: AuthService) {}
 
   submitCommentToDB(comment: Comment) {
     console.log("comment>>>> ", comment);
@@ -93,7 +93,7 @@ export class DiscussionsService {
           }
         }
       `,
-      pollInterval: 500
+      pollInterval: 200
     }).valueChanges;
   }
 }

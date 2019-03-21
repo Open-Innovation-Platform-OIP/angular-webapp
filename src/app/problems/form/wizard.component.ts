@@ -168,6 +168,13 @@ export class WizardComponent
     if (index >= 0) {
       this.sectors.splice(index, 1);
     }
+    if (this.tagService.allTags[sector] && this.problem["id"]) {
+      this.tagService.removeTagRelation(
+        this.tagService.allTags[sector].id,
+        this.problem["id"],
+        "problems"
+      );
+    }
   }
 
   selected(event: MatAutocompleteSelectedEvent): void {
