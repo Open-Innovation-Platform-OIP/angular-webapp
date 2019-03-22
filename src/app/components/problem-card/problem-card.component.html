@@ -38,32 +38,38 @@
 <!-- </div> -->
 <!-- </div> -->
 
-
-
 <!--REWRITE-->
 
 <!-- <div class="row"> -->
 
 <!-- <div class="col-4"> -->
 
-<div class="card card-product actions problem-card" [routerLink]="'/problems/'+problemData.id">
+<div
+  class="card card-product actions problem-card"
+  [routerLink]="'/problems/' + problemData.id"
+>
   <div class="card-header card-header-image">
-    <img src="{{(problemData.image_urls && problemData.image_urls[0]) ? problemData.image_urls[0].url : './assets/img/image_placeholder.jpg'}}"
-      width="200px" height="180px" style="object-fit: cover;" />
+    <img
+      src="{{
+        problemData.image_urls && problemData.image_urls[0]
+          ? problemData.image_urls[0].url
+          : './assets/img/image_placeholder.jpg'
+      }}"
+      width="200px"
+      height="180px"
+      style="object-fit: cover;"
+    />
   </div>
   <div class="card-body">
     <p class="card-title title">
-      {{problemData.title}}
+      {{ problemData.title }}
     </p>
     <div class="description">
-      <span>
-        <b> Description : </b>{{problemData.description}}</span>
+      <span> <b> Description : </b>{{ problemData.description }}</span>
     </div>
 
-
     <div>
-      <span>
-        <b> Location : </b>{{problemData.location}}</span>
+      <span> <b> Location : </b>{{ problemData.location }}</span>
     </div>
   </div>
   <div class="card-footer">
@@ -82,14 +88,21 @@
       <i class="material-icons">
         thumb_up
       </i>
-      {{votedBy}}
+      {{ votedBy }}
       <span>&nbsp;</span>
       <span>&nbsp;</span>
       <span>&nbsp;</span>
       <i class="material-icons">
         visibility
       </i>
-      {{watchedBy}}
+      {{ watchedBy }}
+      <span>&nbsp;</span>
+      <span>&nbsp;</span>
+      <span>&nbsp;</span>
+      <i class="material-icons">
+        how_to_reg
+      </i>
+      {{ problemData.problem_validations.length }}
     </div>
     <!-- <div class="stats">
       <i class="material-icons">access_time</i> 4 minutes ago

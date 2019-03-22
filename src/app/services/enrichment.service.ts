@@ -5,6 +5,8 @@ import * as Query from "./queries";
 import { Timestamp } from "aws-sdk/clients/workspaces";
 import { stringType } from "aws-sdk/clients/iam";
 import { String } from "aws-sdk/clients/sns";
+import swal from "sweetalert2";
+declare var $: any;
 
 export interface enrichment {
   description: String;
@@ -74,6 +76,12 @@ export class EnrichmentService {
       .subscribe(
         data => {
           console.log(data);
+          swal({
+            type: "success",
+            title: "Thank you for enriching!",
+            timer: 4000,
+            showConfirmButton: false
+          }).catch(swal.noop);
           // location.reload();
         },
         err => {

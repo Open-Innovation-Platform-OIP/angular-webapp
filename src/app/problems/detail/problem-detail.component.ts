@@ -204,6 +204,7 @@ export class ProblemDetailComponent implements OnInit {
         }
       });
   }
+
   ngOnInit() {
     console.log(this.collaborators, "collaborators on load");
 
