@@ -4,13 +4,13 @@
 <div class="card card-profile collaborate-card" *ngIf="collaboratorData" [routerLink]="currentUser&&!(collaboratorData.user_id===currentUser)&&'/profiles/'+collaboratorData.user_id">
 
   <div class="card-avatar">
-    <a *ngIf="collaboratorProfileData&&collaboratorProfileData.photo_url">
-      <img class="img" *ngIf="collaboratorProfileData && collaboratorProfileData.photo_url" src="{{(collaboratorProfileData.photo_url && collaboratorProfileData.photo_url.url) ? collaboratorProfileData.photo_url.url : './assets/img/default-avatar.png'}}" />
+    <a *ngIf="collaboratorData.user&&collaboratorData.user.photo_url">
+      <img class="img" *ngIf="collaboratorData.user && collaboratorData.user.photo_url" src="{{(collaboratorData.user.photo_url && collaboratorData.user.photo_url.url) ? collaboratorData.user.photo_url.url : './assets/img/default-avatar.png'}}" />
     </a>
   </div>
   <div class="card-body">
     <h6 class="card-category text-gray"></h6>
-    <h4 class="card-title" *ngIf="collaboratorProfileData&&collaboratorProfileData.name">{{collaboratorProfileData.name}}</h4>
+    <h4 class="card-title" *ngIf="collaboratorData.user&&collaboratorData.user.name">{{collaboratorData.user.name}}</h4>
     <p class="card-description">
       {{collaboratorData.intent}}
     </p>
@@ -23,6 +23,7 @@
 
   </div>
 </div>
+
 <button *ngIf="collaboratorData.user_id===auth.currentUserValue.id" mat-button type="button" class="btn btn-danger"
   (click)="deleteCollaboration()">
   <i class="material-icons actions">

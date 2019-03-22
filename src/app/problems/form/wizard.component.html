@@ -3,15 +3,15 @@
     <div class="row">
       <div class="col-md-8">
         <!--      Wizard container        -->
-        <div class="wizard-container">
+
+        <app-wizard-container [content]="problem"></app-wizard-container>
+        <!-- <div class="wizard-container">
           <div class="card card-wizard" data-color="orange" id="wizardProfile">
             <form [formGroup]="type" action="" method="">
-              <!--        You can switch " data-color="primary" "  with one of the next bright colors: "green", "orange", "red", "blue"       -->
               <div class="card-header text-center">
                 <h3 class="card-title">
                   {{problem.title || "Let's add a problem"}}
                 </h3>
-                <!-- <h5 class="card-description">These details are mandatory.</h5> -->
               </div>
               <div class="wizard-navigation">
                 <ul class="nav nav-pills">
@@ -327,17 +327,6 @@
                         </div>
                       </div>
                     </div>
-                    <!-- <div class="row">
-                      <div class="col-sm-12">
-                        <mat-chip-list #chipList>
-                          <mat-chip *ngFor="let video of problem.video_urls; let i = index" [selectable]="true"
-                            [removable]="true" (removed)="removeVideo(i)">
-                            {{video.key}}
-                            <mat-icon matChipRemove *ngIf="removable">cancel</mat-icon>
-                          </mat-chip>
-                        </mat-chip-list>
-                      </div>
-                    </div> -->
                   </div>
                 </div>
               </div>
@@ -357,7 +346,7 @@
               </div>
             </form>
           </div>
-        </div>
+        </div> -->
         <!-- wizard container -->
       </div>
       <div class="col-md-4">
