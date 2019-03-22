@@ -16,6 +16,7 @@ import { DetailedValidateViewComponent } from "./detailed-validate-view/detailed
 import { AddCollaboratorComponent } from "./add-collaborator/add-collaborator.component";
 import { CollaboratorCardComponent } from "./collaborator-card/collaborator-card.component";
 import { ProblemCardComponent } from "./problem-card/problem-card.component";
+import { DisplayModalComponent } from './display-modal/display-modal.component';
 // import { GlobalSearchCardsComponent } from "./global-search-cards/global-search-cards.component";
 
 @NgModule({
@@ -41,7 +42,8 @@ import { ProblemCardComponent } from "./problem-card/problem-card.component";
         DetailedValidateViewComponent,
         AddCollaboratorComponent,
         CollaboratorCardComponent,
-        ProblemCardComponent
+        ProblemCardComponent,
+        DisplayModalComponent
     ],
     exports: [
         AddEnrichmentComponent,
@@ -58,7 +60,8 @@ import { ProblemCardComponent } from "./problem-card/problem-card.component";
         DetailedValidateViewComponent,
         AddCollaboratorComponent,
         CollaboratorCardComponent,
-        ProblemCardComponent
+        ProblemCardComponent,
+        DisplayModalComponent,
     ]
 })
 

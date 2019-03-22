@@ -526,7 +526,7 @@
                 </div>
               </div>
               <app-display-comment [users]="objectValues(usersService.allUsers)" [comment]="comment"
-                [replies]="replies[comment.id]" (reply)="onReplySubmit($event)"
+                [replies]="replies[comment.id]" (reply)="onReplySubmit($event)" (fileClicked)="displayModal($event)"
                 *ngFor="let comment of objectValues(comments)"></app-display-comment>
             </div>
           </div>
@@ -535,6 +535,30 @@
     </div>
   </div>
 </div>
+
+<!-- discuss image and video modal starts -->
+<div class="modal fade" id="enlargeView" style="display: none;">
+  <div class="modal-dialog modal-lg">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-hidden="true"
+          (click)="pauseVideo($event)">close</button>
+      </div>
+      <div class="modal-body">
+        <app-display-modal *ngIf="modalSrc" [source]="modalSrc">
+        </app-display-modal>
+      </div>
+      <div class="modal-footer justify-content-center" *ngIf="sources && sources['urls'].length > 1">
+        <button mat-raised-button type="button" (click)="toggleFileSrc(false)" class="btn btn-info btn-round"><span
+            class="carousel-control-prev-icon" aria-hidden="true"></span></button>
+        <div class="col-3"></div>
+        <button mat-raised-button type="button" class="btn btn-info btn-round" (click)="toggleFileSrc(true)"><span
+            class="carousel-control-next-icon" aria-hidden="true"></span></button>
+      </div>
+    </div>
+  </div>
+</div>
+<!-- discuss image and video modal ends -->
 
 <!-- ----------------------------- show more images modal start----------------------------- -->
 <div class="modal fade" id="viewMoreImgModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel"

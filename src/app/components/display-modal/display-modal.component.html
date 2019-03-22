@@ -1,0 +1,7 @@
+<video *ngIf="checkUrl(source) == false" id="modalVideo" controls width="100%">
+  <source src="{{source}}" type="video/webm">
+  <source src="{{source}}" type="video/mp4">
+
+  Sorry, your browser doesn't support this video.
+</video>
+<img *ngIf="checkUrl(source)" src="{{source}}" alt="" width="100%">

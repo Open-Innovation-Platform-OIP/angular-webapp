@@ -6,8 +6,10 @@ import { MdModule } from '../md/md.module';
 import { MaterialModule } from '../app.module';
 import { QuillModule } from "ngx-quill";
 import { CommentSubmitComponent } from './submit/submitcomment.component';
-import {CommentDisplayComponent} from './display/displaycomment.component';
-import {TimeAgoPipe} from 'time-ago-pipe';
+import { CommentDisplayComponent } from './display/displaycomment.component';
+import { TimeAgoPipe } from 'time-ago-pipe';
+import { ComponentsModule } from "../components/components.module";
+
 
 @NgModule({
     imports: [
@@ -17,9 +19,10 @@ import {TimeAgoPipe} from 'time-ago-pipe';
         MdModule,
         MaterialModule,
         QuillModule,
+        ComponentsModule,
     ],
-    declarations: [CommentSubmitComponent, CommentDisplayComponent, TimeAgoPipe],
+    declarations: [CommentSubmitComponent, CommentDisplayComponent, TimeAgoPipe,],
     exports: [CommentSubmitComponent, CommentDisplayComponent]
 })
 
-export class DiscussionsModule {}
+export class DiscussionsModule { }
