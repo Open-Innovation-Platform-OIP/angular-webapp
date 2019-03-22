@@ -15,6 +15,7 @@ export class ProblemCardComponent implements OnInit {
   votedBy: any;
   watchedBy: any;
   // sectors: any[] = [];
+
   constructor() {}
 
   ngOnInit() {

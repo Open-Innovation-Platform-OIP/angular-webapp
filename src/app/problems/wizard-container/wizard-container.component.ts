@@ -5,7 +5,11 @@ import {
   OnChanges,
   OnDestroy,
   AfterViewInit,
-  SimpleChanges
+  SimpleChanges,
+  Output,
+  EventEmitter,
+  ElementRef,
+  ViewChild
 } from "@angular/core";
 import { ErrorStateMatcher } from "@angular/material/core";
 import { TagsService } from "../../services/tags.service";
@@ -13,6 +17,8 @@ import { FilesService } from "../../services/files.service";
 import { UsersService } from "../../services/users.service";
 import { AuthService } from "../../services/auth.service";
 import { Router, ActivatedRoute } from "@angular/router";
+import { map, startWith } from "rxjs/operators";
+import { Observable } from "rxjs";
 
 import {
   FormControl,
@@ -23,6 +29,13 @@ import {
   FormGroup
 } from "@angular/forms";
 import { Content } from "@angular/compiler/src/render3/r3_ast";
+
+import { COMMA, ENTER } from "@angular/cdk/keycodes";
+import {
+  MatAutocompleteSelectedEvent,
+  MatChipInputEvent,
+  MatAutocomplete
+} from "@angular/material";
 declare const $: any;
 
 let canProceed: boolean;
@@ -60,9 +73,30 @@ export class MyErrorStateMatcher implements ErrorStateMatcher {
 export class WizardContainerComponent
   implements OnInit, OnChanges, AfterViewInit {
   @Input() content;
+  @Output() smartSearchInput = new EventEmitter();
+  @Output() tagAdded = new EventEmitter();
+  @Output() tagRemoved = new EventEmitter();
+  @Output() contentSubmitted = new EventEmitter();
+
   matcher = new MyErrorStateMatcher();
   type: FormGroup;
+  is_edit = false;
+  media_url = "";
+  readonly separatorKeysCodes: number[] = [ENTER, COMMA];
+  searchResults = {};
+  sectorCtrl = new FormControl();
+  filteredSectors: Observable<string[]>;
+  sectors: string[] = [];
+  removable = true;
+  sizes = [
+    { value: 100, viewValue: ">100" },
+    { value: 1000, viewValue: ">1000" },
+    { value: 10000, viewValue: ">10000" },
+    { value: 100000, viewValue: ">100,000" }
+  ];
 
+  @ViewChild("sectorInput") sectorInput: ElementRef<HTMLInputElement>;
+  @ViewChild("auto") matAutocomplete: MatAutocomplete;
   constructor(
     private router: Router,
     private route: ActivatedRoute,
@@ -71,7 +105,59 @@ export class WizardContainerComponent
     private tagService: TagsService,
     private usersService: UsersService,
     private auth: AuthService
-  ) {}
+  ) {
+    this.filteredSectors = this.sectorCtrl.valueChanges.pipe(
+      startWith(null),
+      map((sector: string | null) =>
+        sector
+          ? this._filter(sector)
+          : Object.keys(this.tagService.allTags).slice()
+      )
+    );
+  }
+
+  add(event: MatChipInputEvent): void {
+    // Add sector only when MatAutocomplete is not open
+    // To make sure this does not conflict with OptionSelected Event
+    if (!this.matAutocomplete.isOpen) {
+      const input = event.input;
+      const value = event.value;
+      // Add our sector
+      if ((value || "").trim()) {
+        this.sectors.push(value.trim());
+      }
+      // Reset the input value
+      if (input) {
+        input.value = "";
+      }
+      this.sectorCtrl.setValue(null);
+      this.tagAdded.emit(this.sectors);
+    }
+  }
+
+  // sendTagsToParent(tags) {
+  //   this.tagsChanged.emit(this.sectors);
+  // }
+
+  remove(sector: string): void {
+    this.tagRemoved.emit(sector);
+    // this.tagsChanged.emit(this.sectors);
+  }
+
+  selected(event: MatAutocompleteSelectedEvent): void {
+    this.sectors.push(event.option.viewValue);
+    this.sectorInput.nativeElement.value = "";
+    this.sectorCtrl.setValue(null);
+    this.tagAdded.emit(this.sectors);
+  }
+
+  private _filter(value: string): string[] {
+    const filterValue = value.toLowerCase();
+
+    return Object.keys(this.tagService.allTags).filter(
+      sector => sector.toLowerCase().indexOf(filterValue) === 0
+    );
+  }
 
   displayFieldCss(form: FormGroup, field: string) {
     return {
@@ -86,6 +172,14 @@ export class WizardContainerComponent
 
   ngOnInit() {
     canProceed = true;
+    console.log(this.content, "content");
+    if (this.content.problem_tags) {
+      this.sectors = this.content.problem_tags.map(tagArray => {
+        return tagArray.tag.name;
+      });
+    }
+
+    this.is_edit = true;
     // clearInterval(this.autosaveInterval);
     // this.autosaveInterval = setInterval(() => {
     //   this.autoSave();
@@ -96,7 +190,7 @@ export class WizardContainerComponent
     //       .watchQuery<any>({
     //         query: gql`
     //                     {
-    //                         problems(where: { id: { _eq: ${params.id} } }) {
+    //                         contents(where: { id: { _eq: ${params.id} } }) {
     //                         id
     //                         title
     //                         created_by
@@ -114,7 +208,7 @@ export class WizardContainerComponent
     //                         featured_type
     //                         voted_by
     //                         watched_by
-    //                         problem_tags{
+    //                         content_tags{
     //                             tag {
     //                                 id
     //                                 name
@@ -127,28 +221,28 @@ export class WizardContainerComponent
     //       })
     //       .valueChanges.subscribe(result => {
     //         if (
-    //           result.data.problems.length >= 1 &&
-    //           result.data.problems[0].id
+    //           result.data.contents.length >= 1 &&
+    //           result.data.contents[0].id
     //         ) {
     //           canProceed = true;
-    //           this.problem["id"] = result.data.problems[0].id;
-    //           Object.keys(this.problem).map(key => {
-    //             // console.log(key, result.data.problems[0][key]);
-    //             if (result.data.problems[0][key]) {
-    //               this.problem[key] = result.data.problems[0][key];
+    //           this.content["id"] = result.data.contents[0].id;
+    //           Object.keys(this.content).map(key => {
+    //             // console.log(key, result.data.contents[0][key]);
+    //             if (result.data.contents[0][key]) {
+    //               this.content[key] = result.data.contents[0][key];
     //             }
     //           });
-    //           if (this.problem.title) {
-    //             this.smartSearch(this.problem.title);
+    //           if (this.content.title) {
+    //             this.smartSearch(this.content.title);
     //           }
-    //           this.sectors = result.data.problems[0].problem_tags.map(
+    //           this.sectors = result.data.contents[0].content_tags.map(
     //             tagArray => {
     //               return tagArray.tag.name;
     //             }
     //           );
     //           this.is_edit = true;
     //         } else {
-    //           this.router.navigate(["problems/add"]);
+    //           this.router.navigate(["contents/add"]);
     //         }
     //       });
     //   }
@@ -224,7 +318,7 @@ export class WizardContainerComponent
         } else if (!canProceed) {
           if (
             confirm(
-              "Are you sure you want to add a new problem and not enrich an existing one?"
+              "Are you sure you want to add a new content and not enrich an existing one?"
             )
           ) {
             canProceed = true;
@@ -452,6 +546,16 @@ export class WizardContainerComponent
       reader.readAsDataURL(input[0].files[0]);
     }
   }
+
+  sendInputToParent(input) {
+    console.log(event, "test for event");
+    this.smartSearchInput.emit(input);
+  }
+
+  publishContent() {
+    this.contentSubmitted.emit(this.content);
+  }
+
   ngAfterViewInit() {
     $(window).resize(() => {
       $(".card-wizard").each(function() {
@@ -507,5 +611,195 @@ export class WizardContainerComponent
         });
       });
     });
+  }
+
+  removePhoto(index) {
+    this.filesService
+      .deleteFile(this.content["image_urls"][index]["key"])
+      .promise()
+      .then(data => {
+        if (this.content.image_urls[index].url === this.content.featured_url) {
+          this.content.featured_url = "";
+          this.content.featured_type = "";
+        }
+        this.content.image_urls.splice(index, 1);
+      })
+      .catch(e => {
+        console.log("Err: ", e);
+      });
+  }
+
+  removeAll() {
+    this.content.image_urls.forEach((imageObj, i) => {
+      this.filesService
+        .deleteFile(imageObj["key"])
+        .promise()
+        .then(data => {
+          console.log("Deleted file: ", data);
+          if (this.content.image_urls.length === i + 1) {
+            this.content.image_urls = [];
+          }
+        })
+        .catch(e => {
+          console.log("Err: ", e);
+        });
+    });
+  }
+
+  onFileSelected(event) {
+    for (let i = 0; i < event.target.files.length; i++) {
+      const file = event.target.files[i];
+      const type = event.target.files[i].type.split("/")[0];
+      switch (type) {
+        case "image": {
+          if (typeof FileReader !== "undefined") {
+            const reader = new FileReader();
+
+            reader.onload = (e: any) => {
+              const img_id = file.name;
+              this.filesService
+                .uploadFile(e.target.result, img_id)
+                .promise()
+                .then(values => {
+                  this.content.image_urls.push({
+                    url: values["Location"],
+                    key: values["Key"]
+                  });
+                  if (!this.content.featured_url) {
+                    this.content.featured_url = this.content.image_urls[0].url;
+                    this.content.featured_type = "image";
+                  }
+                })
+                .catch(e => console.log("Err:: ", e));
+            };
+            reader.readAsArrayBuffer(file);
+          }
+          break;
+        }
+        case "video": {
+          const video = event.target.files[i];
+          this.filesService
+            .uploadFile(video, video.name)
+            .promise()
+            .then(data => {
+              this.content.video_urls.push({
+                key: data["Key"],
+                url: data["Location"]
+              });
+              if (!this.content.featured_url) {
+                this.content.featured_url = this.content.video_urls[0].url;
+                this.content.featured_type = "video";
+              }
+            })
+            .catch(e => console.log("Err:: ", e));
+          break;
+        }
+        default: {
+          console.log("unknown file type");
+          alert("Unknown file type. Please upload images or videos");
+          break;
+        }
+      }
+    }
+  }
+
+  removeVideo(index: number) {
+    this.filesService
+      .deleteFile(this.content["video_urls"][index]["key"])
+      .promise()
+      .then(data => {
+        if (this.content.video_urls[index].url === this.content.featured_url) {
+          this.content.featured_url = "";
+          this.content.featured_type = "";
+        }
+        this.content.video_urls.splice(index, 1);
+      })
+      .catch(e => {
+        console.log("Err: ", e);
+      });
+  }
+
+  removeEmbed(index: number) {
+    this.content.embed_urls.splice(index, 1);
+    if (this.content.embed_urls[index] === this.content.featured_url) {
+      this.content.featured_url = "";
+      this.content.featured_type = "";
+    }
+  }
+
+  // smartSearch(key: string) {
+  //   const searchKey = this.content.title + " " + this.content.description;
+  //   if (searchKey.length > 3) {
+  //     this.searchResults = {};
+  //     this.apollo
+  //       .watchQuery<any>({
+  //         query: gql`query {
+  //                   search_contents_v2(
+  //                   args: {search: "${searchKey.toLowerCase()}"}
+  //                   ){
+  //                   id
+  //                   title
+  //                   description
+  //                   content_tags {
+  //                       tag {
+  //                           name
+  //                       }
+  //                   }
+  //                   }
+  //                   }`,
+  //         pollInterval: 500
+  //       })
+  //       .valueChanges.subscribe(
+  //         result => {
+  //           if (result.data.search_contents_v2.length > 0) {
+  //             result.data.search_contents_v2.map(result => {
+  //               if (result.id != this.content["id"]) {
+  //                 this.searchResults[result.id] = result;
+  //               }
+  //             });
+  //             if (!this.is_edit) {
+  //               canProceed = false;
+  //             }
+  //           }
+  //         },
+  //         err => {}
+  //       );
+  //   } else {
+  //     this.searchResults = {};
+  //   }
+  // }
+
+  isComplete() {
+    return (
+      this.content.title &&
+      this.content.description &&
+      this.content.organization &&
+      this.content.min_population &&
+      this.content.location
+    );
+  }
+
+  setFeatured(type, index) {
+    console.log(type, index);
+    if (type === "image") {
+      this.content.featured_type = "image";
+      this.content.featured_url = this.content.image_urls[index].url;
+    } else if (type === "video") {
+      this.content.featured_type = "video";
+      this.content.featured_url = this.content.video_urls[index].url;
+    } else if (type === "embed") {
+      this.content.featured_type = "embed";
+      this.content.featured_url = this.content.embed_urls[index];
+    }
+  }
+
+  addMediaUrl() {
+    if (this.media_url) {
+      this.content.embed_urls.push(this.media_url);
+      if (!this.content.featured_url) {
+        this.content.featured_url = this.media_url;
+        this.content.featured_type = "embed";
+      }
+    }
   }
 }

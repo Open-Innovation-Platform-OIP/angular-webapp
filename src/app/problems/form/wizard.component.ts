@@ -163,6 +163,11 @@ export class WizardComponent
     }
   }
 
+  addTags(tags) {
+    console.log(tags, "tag working");
+    this.sectors = tags;
+  }
+
   remove(sector: string): void {
     const index = this.sectors.indexOf(sector);
     if (index >= 0) {
@@ -208,7 +213,7 @@ export class WizardComponent
   ngOnInit() {
     clearInterval(this.autosaveInterval);
     this.autosaveInterval = setInterval(() => {
-      this.autoSave();
+      // this.autoSave();
     }, 10000);
     this.route.params.pipe(first()).subscribe(params => {
       if (params.id) {
@@ -629,6 +634,10 @@ export class WizardComponent
     });
   }
 
+  test(event){
+    console.log(event,"event");
+  }
+
   removePhoto(index) {
     this.filesService
       .deleteFile(this.problem["image_urls"][index]["key"])
@@ -763,7 +772,7 @@ export class WizardComponent
                     }
                     }
                     }`,
-          pollInterval: 500
+          pollInterval: 200
         })
         .valueChanges.subscribe(
           result => {
@@ -795,25 +804,25 @@ export class WizardComponent
     );
   }
 
-  autoSave() {
-    console.log("trying to auto save");
-    if (this.problem.title) {
-      this.submitProblemToDB();
-    }
-  }
+  // autoSave() {
+  //   console.log("trying to auto save");
+  //   if (this.problem.title) {
+  //     this.submitProblemToDB();
+  //   }
+  // }
 
-  saveProblemDraft() {
-    this.autoSave();
-    alert("Problem draft has been saved. You can continue editing anytime");
-  }
+  // saveProblemDraft() {
+  //   this.autoSave();
+  //   alert("Problem draft has been saved. You can continue editing anytime");
+  // }
 
-  publishProblem() {
-    this.problem.is_draft = false;
-    clearInterval(this.autosaveInterval);
-    this.submitProblemToDB();
-  }
+  // publishProblem() {
+  //   this.problem.is_draft = false;
+  //   clearInterval(this.autosaveInterval);
+  //   this.submitProblemToDB();
+  // }
 
-  submitProblemToDB() {
+  submitProblemToDB(problem) {
     const upsert_problem = gql`
       mutation upsert_problem($problems: [problems_insert_input!]!) {
         insert_problems(
@@ -861,7 +870,7 @@ export class WizardComponent
       .mutate({
         mutation: upsert_problem,
         variables: {
-          problems: [this.problem]
+          problems: [problem]
         }
       })
       .subscribe(

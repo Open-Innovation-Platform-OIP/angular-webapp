@@ -41,7 +41,7 @@
                   </div>
                   <mat-form-field class="example-full-width has-label" [ngClass]="displayFieldCss(type, 'title')">
                     <input type="text" name="title" matInput id="title" placeholder="Title *" formControlName="title"
-                      [(ngModel)]="content.title" (input)="smartSearch($event.target.value)">
+                      [(ngModel)]="content.title" (input)="sendInputToParent($event.target.value)">
                   </mat-form-field>
                 </div>
               </div>
@@ -60,7 +60,8 @@
                   </div>
                   <mat-form-field class="example-full-width has-label" [ngClass]="displayFieldCss(type, 'description')">
                     <textarea type="text" name="description" matInput id="description" placeholder="Description *"
-                      formControlName="description" rows="3" (input)="smartSearch($event.target.value)" [(ngModel)]="content.description"></textarea>
+                      formControlName="description" rows="3" (input)="sendInputToParent($event.target.value)"
+                      [(ngModel)]="content.description"></textarea>
                   </mat-form-field>
                 </div>
               </div>
@@ -329,7 +330,7 @@
           <input type="button" class="btn btn-next btn-fill btn-warning btn-wd" name="next" value="Next">
           <input type="button" class="btn btn-fill btn-rose btn-wd" [disabled]="!content.title" (click)="saveProblemDraft()"
             name="draft" value="Save Draft">
-          <input type="button" class="btn btn-finish btn-fill btn-warning btn-wd" [disabled]="!isComplete()" (click)="publishProblem()"
+          <input type="button" class="btn btn-finish btn-fill btn-warning btn-wd" [disabled]="!isComplete()" (click)="publishContent()"
             name="finish" value="Publish" style="display: none;">
         </div>
         <div class="clearfix"></div>
