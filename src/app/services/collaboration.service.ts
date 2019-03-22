@@ -2,6 +2,8 @@ import { Injectable } from "@angular/core";
 import { Apollo } from "apollo-angular";
 import gql from "graphql-tag";
 import { Timestamp } from "aws-sdk/clients/kinesisanalytics";
+import swal from "sweetalert2";
+declare var $: any;
 
 export interface collaborator {
   intent: String;
@@ -69,6 +71,12 @@ export class CollaborationService {
         result => {
           console.log(result, "result");
           // location.reload();
+          swal({
+            type: "success",
+            title: "Thank you for collaborating!",
+            timer: 4000,
+            showConfirmButton: false
+          }).catch(swal.noop);
         },
         error => {
           console.log("error", error);

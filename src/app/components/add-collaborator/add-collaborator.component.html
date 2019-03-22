@@ -9,10 +9,11 @@
   </div>
 </div>
 <div class="row">
-  <label class="col-sm-2 col-form-label">What role do you want to collaborate in</label>
+  <label class="col-sm-2 col-form-label">Role</label>
   <div class="col-sm-10">
-    <div class="form-check form-check-inline" *ngFor="let role of objectKeys(collaborator)">
-      <label class="form-check-label" *ngIf="role!=='intent' && role!=='user_id' && role!=='__typename'&& role!=='problem_id'">
+    <div class="form-check" *ngFor="let role of objectKeys(collaborator)">
+      <label class="form-check-label"
+        *ngIf="role!=='intent' && role!=='user_id' && role!=='__typename'&& role!=='problem_id'">
         <input class="form-check-input" type="checkbox" [(ngModel)]="collaborator[role]">
         {{role.slice(3)}}
         <span class="form-check-sign">
@@ -29,10 +30,10 @@
 
   <div class="col-md-6 col-6">
     <div class="text-center">
-      <button class="btn btn-warning" *ngIf="mode==='Add'" (click)="collaborate()" data-dismiss="modal">Yes</button>
-      <button class="btn btn-warning" *ngIf="mode==='Edit'" (click)="collaborate()" data-dismiss="modal">Yes</button>
+      <button class="btn btn-warning" *ngIf="mode==='Add'" (click)="collaborate()" data-dismiss="modal">Add</button>
+      <button class="btn btn-warning" *ngIf="mode==='Edit'" (click)="collaborate()" data-dismiss="modal">Update</button>
 
-      <button class="btn btn-danger" data-dismiss="modal" *ngIf="mode==='Add'">No</button>
+      <button class="btn btn-danger" data-dismiss="modal" *ngIf="mode==='Add'">Cancel</button>
     </div>
   </div>
 </div>
