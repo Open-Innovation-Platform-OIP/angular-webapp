@@ -15,6 +15,7 @@ export class CommentDisplayComponent implements OnInit {
   @Input() replies;
   @Input() users;
   @Output() reply = new EventEmitter();
+  @Output() fileClicked = new EventEmitter();
   showReplyBox = false;
   replyingTo = 0;
   ngOnInit() {
@@ -41,5 +42,20 @@ export class CommentDisplayComponent implements OnInit {
     this.reply.emit(comment);
     this.replyingTo = 0;
     this.showReplyBox = false;
+  }
+
+  checkUrl(url) {
+    var arr = ["jpeg", "jpg", "gif", "png"];
+    var ext = url.substring(url.lastIndexOf(".") + 1);
+    if (arr.indexOf(ext) > 0) {
+      return true;
+    } else {
+      return false;
+    }
+  }
+
+  assignUrl(urls, index) {
+    // console.log("modal src: ", urls, index);
+    this.fileClicked.emit({ urls: urls, index: index });
   }
 }
