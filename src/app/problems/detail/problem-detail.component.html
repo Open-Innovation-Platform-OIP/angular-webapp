@@ -9,24 +9,20 @@
         <div class="card card-product">
           <div class="card-header card-header-warning">
             <h4 class="card-title">{{problemData.title}}</h4>
-
-            <!-- <p class="card-category">Category subtitle</p> -->
+            <p class="card-category"><b>Created By : {{problemOwner}}</b></p>
           </div>
           <div class="card-body">
             <div class="row">
               <div class="col-md-4">
                 <div class="picture">
-                  <img style="object-fit: cover;"
-                    src="{{ problemData.image_urls && problemData.image_urls[0] && problemData.image_urls[0].url ? problemData.image_urls[0].url : './assets/img/image_placeholder.jpg'}}"
+                  <img style="object-fit: cover;" src="{{ problemData.image_urls && problemData.image_urls[0] && problemData.image_urls[0].url ? problemData.image_urls[0].url : './assets/img/image_placeholder.jpg'}}"
                     alt="Thumbnail Image" class="rounded img-fluid">
                   <div class="row justify-content-center">
-                    <button mat-raised-button class="btn btn-raised btn-info btn-sm" data-toggle="modal"
-                      data-target="#viewMoreImgModal"
+                    <button mat-raised-button class="btn btn-raised btn-info btn-sm" data-toggle="modal" data-target="#viewMoreImgModal"
                       *ngIf="this.problemData.image_urls && this.problemData.image_urls.length >0">
                       {{modalBtnTxt}}
                     </button>
-                    <button mat-raised-button class="btn btn-raised btn-info btn-sm" data-toggle="modal"
-                      data-target="#viewMoreVideosModal"
+                    <button mat-raised-button class="btn btn-raised btn-info btn-sm" data-toggle="modal" data-target="#viewMoreVideosModal"
                       *ngIf="this.problemData.video_urls && this.problemData.video_urls.length > 0">
                       Show videos
                     </button>
@@ -60,13 +56,11 @@
           </div>
           <div class="card-footer">
             <div>
-              <i class="material-icons actions" (click)="voteProblem()"
-                [ngStyle]="{'color':isVoted ? '#1E90FF' : 'black' }">
+              <i class="material-icons actions" (click)="voteProblem()" [ngStyle]="{'color':isVoted ? '#1E90FF' : 'black' }">
                 thumb_up
               </i>
               <span>{{number_of_votes}}</span>
-              <i class="material-icons actions col-md-3" (click)="watchProblem()"
-                [ngStyle]="{'color':isWatching ? '#1E90FF' : 'black' }">
+              <i class="material-icons actions col-md-3" (click)="watchProblem()" [ngStyle]="{'color':isWatching ? '#1E90FF' : 'black' }">
                 visibility
               </i>
               <span>&nbsp;</span>
@@ -79,7 +73,7 @@
                 create
               </i>
             </div>
-            <p>Created By:{{problemOwner}}</p>
+
           </div>
         </div>
         <!--Problem Details-->
@@ -94,13 +88,11 @@
             <div class="modal-content">
               <img src="{{modalImgSrc}}" alt="" height="500px">
               <div class="modal-footer justify-content-center" *ngIf="!singleImg">
-                <button mat-raised-button type="button" (click)="toggleImgSrc(false)"
-                  class="btn btn-info btn-round"><span class="carousel-control-prev-icon"
-                    aria-hidden="true"></span></button>
+                <button mat-raised-button type="button" (click)="toggleImgSrc(false)" class="btn btn-info btn-round"><span
+                    class="carousel-control-prev-icon" aria-hidden="true"></span></button>
                 <div class="col-3"></div>
-                <button mat-raised-button type="button" class="btn btn-info btn-round"
-                  (click)="toggleImgSrc(true)"><span class="carousel-control-next-icon"
-                    aria-hidden="true"></span></button>
+                <button mat-raised-button type="button" class="btn btn-info btn-round" (click)="toggleImgSrc(true)"><span
+                    class="carousel-control-next-icon" aria-hidden="true"></span></button>
               </div>
             </div>
           </div>
@@ -120,15 +112,12 @@
               <video height="450px" id="problemVideoID" controls src="{{modalVideoSrc}}">
 
               </video>
-              <div class="modal-footer justify-content-center"
-                *ngIf="problemData.video_urls && problemData.video_urls.length">
-                <button mat-raised-button type="button" class="btn btn-info btn-round"
-                  (click)="toggleVideoSrc('prev')"><span class="carousel-control-prev-icon"
-                    aria-hidden="true"></span></button>
+              <div class="modal-footer justify-content-center" *ngIf="problemData.video_urls && problemData.video_urls.length">
+                <button mat-raised-button type="button" class="btn btn-info btn-round" (click)="toggleVideoSrc('prev')"><span
+                    class="carousel-control-prev-icon" aria-hidden="true"></span></button>
                 <div class="col-3"></div>
-                <button mat-raised-button type="button" class="btn btn-info btn-round"
-                  (click)="toggleVideoSrc('next')"><span class="carousel-control-next-icon"
-                    aria-hidden="true"></span></button>
+                <button mat-raised-button type="button" class="btn btn-info btn-round" (click)="toggleVideoSrc('next')"><span
+                    class="carousel-control-next-icon" aria-hidden="true"></span></button>
               </div>
             </div>
           </div>
@@ -153,8 +142,7 @@
             </i>
           </a> -->
           <button mat-raised-button class="btn btn-warning btn-round" data-toggle="modal" data-target="#enrichmentModal"
-            matTooltip="Click to add enrichment" [matTooltipPosition]="'below'"
-            [disabled]="disableEnrichButton">Enrich</button>
+            matTooltip="Click to add enrichment" [matTooltipPosition]="'below'" [disabled]="disableEnrichButton">Enrich</button>
           <!-- <a mat-button NguCarouselNext class="rightRs">
             <i class="material-icons">
               keyboard_arrow_right
@@ -163,10 +151,8 @@
         </div>
         <!--Enrichment divider-->
 
-        <ngu-carousel #enrichCarousel [inputs]="carouselTileConfig" [dataSource]="carouselTileItems$ | async"
-          *ngIf="enrichment[0]">
-          <ngu-tile *nguCarouselDef="let enrichment; let i = index; let ani = animate" data-toggle="modal"
-            data-target="#enrichModal">
+        <ngu-carousel #enrichCarousel [inputs]="carouselTileConfig" [dataSource]="carouselTileItems$ | async" *ngIf="enrichment[0]">
+          <ngu-tile *nguCarouselDef="let enrichment; let i = index; let ani = animate" data-toggle="modal" data-target="#enrichModal">
 
             <app-enrichment-card [enrichmentData]="enrichment" (clicked)=handleEnrichCardClicked($event)>
             </app-enrichment-card>
@@ -224,8 +210,7 @@
 
         <!--View Enrichment Modal-->
 
-        <div class="modal fade" id="enrichModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel"
-          aria-hidden="true">
+        <div class="modal fade" id="enrichModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
           <div class="modal-dialog modal-notice modal-lg">
             <div class="modal-content">
               <div class="modal-header">
@@ -235,9 +220,8 @@
                 </button>
               </div>
               <div class="modal-body">
-                <app-view-enrichment *ngIf="enrichmentDataToView" [enrichmentData]="enrichmentDataToView"
-                  (editClicked)="handleEnrichEditMode($event)" (deleteClicked)="deleteEnrichment($event)"
-                  (voteClicked)="voteEnrichment($event)"></app-view-enrichment>
+                <app-view-enrichment *ngIf="enrichmentDataToView" [enrichmentData]="enrichmentDataToView" (editClicked)="handleEnrichEditMode($event)"
+                  (deleteClicked)="deleteEnrichment($event)" (voteClicked)="voteEnrichment($event)"></app-view-enrichment>
               </div>
               <!-- <div class="card-footer"> -->
               <!-- <div class="text-center"> -->
@@ -253,8 +237,8 @@
 
         <!--Edit Enrichment Modal-->
 
-        <div class="modal fade editModal" id="EditEnrichModal" tabindex="-1" role="dialog"
-          aria-labelledby="EditEnrichModalLabel" aria-hidden="true">
+        <div class="modal fade editModal" id="EditEnrichModal" tabindex="-1" role="dialog" aria-labelledby="EditEnrichModalLabel"
+          aria-hidden="true">
           <div class="modal-dialog modal-notice modal-lg">
             <div class="modal-content">
               <div class="modal-header">
@@ -264,8 +248,7 @@
                 </button>
               </div>
               <div class="modal-body">
-                <app-add-enrichment *ngIf="enrichDataToEdit" [enrichmentData]="enrichDataToEdit"
-                  (submitted)="onEnrichmentSubmit($event)"></app-add-enrichment>
+                <app-add-enrichment *ngIf="enrichDataToEdit" [enrichmentData]="enrichDataToEdit" (submitted)="onEnrichmentSubmit($event)"></app-add-enrichment>
               </div>
             </div>
           </div>
@@ -285,8 +268,7 @@
             </i>
           </a> -->
           <button mat-raised-button class="btn btn-warning btn-round" data-toggle="modal" data-target="#validatorModal"
-            matTooltip="Click to validate problem" [matTooltipPosition]="'below'"
-            [disabled]="disableValidateButton || !userPersonas.is_expert || userId == problemData.created_by ||!sectorMatched">Validate</button>
+            matTooltip="Click to validate problem" [matTooltipPosition]="'below'" [disabled]="disableValidateButton || !userPersonas.is_expert || userId == problemData.created_by ||!sectorMatched">Validate</button>
           <!-- <a mat-button>
             <i class="material-icons">
               keyboard_arrow_right
@@ -295,12 +277,9 @@
         </div>
         <!--Validate divider-->
 
-        <ngu-carousel #ValidCarousel [inputs]="carouselTileConfig" [dataSource]="carouselTileItemsValid$ | async"
-          *ngIf="validation[0] ">
-          <ngu-tile *nguCarouselDef="let validation; let i = index; let ani = animate" data-toggle="modal"
-            data-target="#validModal">
-            <app-validate-card *ngIf="!validation.is_deleted" [validationData]="validation"
-              (clicked)="handleValidationCardClicked($event)"></app-validate-card>
+        <ngu-carousel #ValidCarousel [inputs]="carouselTileConfig" [dataSource]="carouselTileItemsValid$ | async" *ngIf="validation[0] ">
+          <ngu-tile *nguCarouselDef="let validation; let i = index; let ani = animate" data-toggle="modal" data-target="#validModal">
+            <app-validate-card *ngIf="!validation.is_deleted" [validationData]="validation" (clicked)="handleValidationCardClicked($event)"></app-validate-card>
           </ngu-tile>
 
           <!-- <button NguCarouselPrev class="btn btn-default leftRs" [style.opacity]="ValidCarousel.isFirst ? 0.5:1">&lt;</button> -->
@@ -347,8 +326,7 @@
 
         <!--View Validation Modal-->
 
-        <div class="modal fade" id="validModal" tabindex="-1" role="dialog" aria-labelledby="ModalLabel"
-          aria-hidden="true">
+        <div class="modal fade" id="validModal" tabindex="-1" role="dialog" aria-labelledby="ModalLabel" aria-hidden="true">
           <div class="modal-dialog modal-notice">
             <div class="modal-content">
               <div class="modal-header">
@@ -358,8 +336,8 @@
                 </button>
               </div>
               <div class="modal-body">
-                <app-detailed-validate-view [validationData]="validationDataToView"
-                  (deleteClicked)="deleteValidation($event)" (editClicked)="handleValidationEditMode($event)">
+                <app-detailed-validate-view [validationData]="validationDataToView" (deleteClicked)="deleteValidation($event)"
+                  (editClicked)="handleValidationEditMode($event)">
                 </app-detailed-validate-view>
               </div>
             </div>
@@ -369,8 +347,8 @@
         <!--View Validation Modal-->
 
         <!--Edit Validation Modal-->
-        <div class="modal fade editModal" id="EditValidationModal" tabindex="-1" role="dialog"
-          aria-labelledby="myModalLabel" aria-hidden="true">
+        <div class="modal fade editModal" id="EditValidationModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel"
+          aria-hidden="true">
           <div class="modal-dialog modal-notice">
             <div class="modal-content">
               <div class="modal-header">
@@ -382,8 +360,7 @@
               <div class="modal-body">
 
 
-                <app-validate-problem *ngIf="validationDataToEdit" [validationData]="validationDataToEdit"
-                  (submitted)="onValidationSubmit($event)"></app-validate-problem>
+                <app-validate-problem *ngIf="validationDataToEdit" [validationData]="validationDataToEdit" (submitted)="onValidationSubmit($event)"></app-validate-problem>
               </div>
             </div>
           </div>
@@ -396,8 +373,8 @@
 
         <!--Collaborate-->
 
-        <div class="modal fade editModal" id="EditCollaborateModal" tabindex="-1" role="dialog"
-          aria-labelledby="myModalLabel" aria-hidden="true">
+        <div class="modal fade editModal" id="EditCollaborateModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel"
+          aria-hidden="true">
           <div class="modal-dialog modal-notice modal-lg">
             <div class="modal-content">
               <div class="modal-header">
@@ -425,9 +402,8 @@
               keyboard_arrow_left
             </i>
           </a> -->
-          <button mat-raised-button class="btn btn-warning btn-round" data-toggle="modal"
-            data-target="#collaboratorModal" matTooltip="Click to collaborate" [matTooltipPosition]="'below'"
-            [disabled]="disableCollaborateButton">Collaborate</button>
+          <button mat-raised-button class="btn btn-warning btn-round" data-toggle="modal" data-target="#collaboratorModal"
+            matTooltip="Click to collaborate" [matTooltipPosition]="'below'" [disabled]="disableCollaborateButton">Collaborate</button>
           <!-- <a mat-button>
             <i class="material-icons">
               keyboard_arrow_right
@@ -439,8 +415,8 @@
         <ngu-carousel #CollabCarousel [inputs]="carouselTileConfig" [dataSource]="carouselTileItemCollab$ | async"
           *ngIf="collaborators[0]">
           <ngu-tile *nguCarouselDef="let collaborator; let i = index; let ani = animate">
-            <app-collaborator-card *ngIf="collaborator" [collaboratorData]="collaborator"
-              (editClicked)="handleCollaborationEditMode($event)" (deleteClicked)="deleteCollaboration($event)">
+            <app-collaborator-card *ngIf="collaborator" [collaboratorData]="collaborator" (editClicked)="handleCollaborationEditMode($event)"
+              (deleteClicked)="deleteCollaboration($event)">
             </app-collaborator-card>
           </ngu-tile>
 
@@ -496,7 +472,7 @@
               <span>&nbsp;</span>
               <span>&nbsp;</span>
               <span>&nbsp;</span>
-              <h5>Do you have a solution? <a target="_blank" href="/solutions">click here</a></h5>
+              <h5>Do you have a solution? <a href="/solutions">click here</a></h5>
             </div>
           </div>
         </div>
@@ -512,22 +488,19 @@
               <div class="card-collapse">
                 <div class="card-header" role="tab" id="headingOne">
                   <h5 class="mb-0">
-                    <a data-toggle="collapse" href="#newComment" aria-expanded="true" aria-controls="newComment"
-                      class="collapsed">
+                    <a data-toggle="collapse" href="#newComment" aria-expanded="true" aria-controls="newComment" class="collapsed">
                       Join Discussion
                       <i class="material-icons">keyboard_arrow_down</i>
                     </a>
                   </h5>
                 </div>
-                <div id="newComment" class="collapse show" role="tabpanel" aria-labelledby="headingOne"
-                  data-target="#newComment" style="">
-                  <app-submit-comment [users]="objectValues(usersService.allUsers)" [actionText]="'Comment'"
-                    (submit)="onCommentSubmit($event)"></app-submit-comment>
+                <div id="newComment" class="collapse show" role="tabpanel" aria-labelledby="headingOne" data-target="#newComment"
+                  style="">
+                  <app-submit-comment [users]="objectValues(usersService.allUsers)" [actionText]="'Comment'" (submit)="onCommentSubmit($event)"></app-submit-comment>
                 </div>
               </div>
-              <app-display-comment [users]="objectValues(usersService.allUsers)" [comment]="comment"
-                [replies]="replies[comment.id]" (reply)="onReplySubmit($event)" (fileClicked)="displayModal($event)"
-                *ngFor="let comment of objectValues(comments)"></app-display-comment>
+              <app-display-comment [users]="objectValues(usersService.allUsers)" [comment]="comment" [replies]="replies[comment.id]"
+                (reply)="onReplySubmit($event)" (fileClicked)="displayModal($event)" *ngFor="let comment of objectValues(comments)"></app-display-comment>
             </div>
           </div>
         </div>
@@ -541,8 +514,7 @@
   <div class="modal-dialog modal-lg">
     <div class="modal-content">
       <div class="modal-header">
-        <button type="button" class="close" data-dismiss="modal" aria-hidden="true"
-          (click)="pauseVideo($event)">close</button>
+        <button type="button" class="close" data-dismiss="modal" aria-hidden="true" (click)="pauseVideo($event)">close</button>
       </div>
       <div class="modal-body">
         <app-display-modal *ngIf="modalSrc" [source]="modalSrc">
@@ -561,8 +533,7 @@
 <!-- discuss image and video modal ends -->
 
 <!-- ----------------------------- show more images modal start----------------------------- -->
-<div class="modal fade" id="viewMoreImgModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel"
-  aria-hidden="true">
+<div class="modal fade" id="viewMoreImgModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
   <div class="modal-dialog modal-dialog-centered modal-lg">
     <div class="modal-content">
       <img src="{{modalImgSrc}}" alt="" height="500px">
@@ -570,8 +541,8 @@
         <button mat-raised-button type="button" (click)="toggleImgSrc(false)" class="btn btn-info btn-round"><span
             class="carousel-control-prev-icon" aria-hidden="true"></span></button>
         <div class="col-3"></div>
-        <button mat-raised-button type="button" class="btn btn-info btn-round" (click)="toggleImgSrc(true)"><span
-            class="carousel-control-next-icon" aria-hidden="true"></span></button>
+        <button mat-raised-button type="button" class="btn btn-info btn-round" (click)="toggleImgSrc(true)"><span class="carousel-control-next-icon"
+            aria-hidden="true"></span></button>
       </div>
     </div>
   </div>
