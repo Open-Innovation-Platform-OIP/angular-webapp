@@ -45,6 +45,22 @@ export class ProblemDetailComponent implements OnInit {
   replyingTo = 0;
   showReplyBox = false;
   showCommentBox = false;
+  enrichmentData: any = {
+    description: "",
+    location: "",
+    organization: "",
+    resources_needed: "",
+    image_urls: [],
+    video_urls: [],
+    impact: "",
+    min_population: 0,
+    extent: "",
+    beneficiary_attributes: "",
+    voted_by: "{}",
+    featured_url: "",
+    embed_urls: [],
+    featured_type: ""
+  };
   problemData: any = {
     id: 0,
     title: "",
@@ -284,6 +300,9 @@ export class ProblemDetailComponent implements OnInit {
               extent
               min_population
               beneficiary_attributes
+              featured_url
+              embed_urls
+              featured_type
               usersBycreatedBy {
                 id
                 name
@@ -609,7 +628,9 @@ export class ProblemDetailComponent implements OnInit {
         }
       );
   }
-
+  test(event) {
+    console.log(event, "enriched data");
+  }
   getCollaborators(id) {
     this.apollo
       .watchQuery<any>({
@@ -687,6 +708,9 @@ export class ProblemDetailComponent implements OnInit {
               edited_at
               voted_by
               is_deleted
+              featured_url
+              embed_urls
+              featured_type
               usersBycreatedBy{
                 id 
                 name
@@ -797,6 +821,7 @@ export class ProblemDetailComponent implements OnInit {
   onEnrichmentSubmit(enrichmentData) {
     if (enrichmentData.__typename) {
       delete enrichmentData.__typename;
+      // delete enrichmentData.usersBycreatedBy;
     }
     enrichmentData.created_by = Number(this.auth.currentUserValue.id);
 

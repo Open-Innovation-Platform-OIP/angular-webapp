@@ -1,9 +1,9 @@
 <!--      Wizard container        -->
 <div class="wizard-container">
   <div class="card card-wizard" data-color="orange" id="wizardProfile">
-    <form [formGroup]="type" action="" method="">
+    <form [formGroup]="type" action="" method="" (keyup)="sendDataBack($event)">
       <div class="card-header text-center">
-        <h3 class="card-title">
+        <h3 class="card-title" *ngIf="contentType==='problem'">
           {{content.title || "Let's add a content"}}
         </h3>
       </div>
@@ -29,7 +29,7 @@
               image(s) and {{content.video_urls.length}} video(s) attached</a>
             <div class="row justify-content-center">
               <div class="col-sm-12">
-                <div class="input-group form-control-lg">
+                <div class="input-group form-control-lg" *ngIf="contentType==='problem'">
                   <div class="input-group-prepend">
                     <span class="input-group-text">
                       <i class="material-icons" [ngStyle]="{
@@ -192,7 +192,7 @@
                 </div>
               </div>
             </div>
-            <div class="row justify-content-center">
+            <div class="row justify-content-center" *ngIf="contentType==='problem'">
               <div class="col-sm-12">
                 <div class="input-group form-control-lg">
                   <div class="input-group-prepend">
@@ -328,8 +328,7 @@
         </div>
         <div class="ml-auto">
           <input type="button" class="btn btn-next btn-fill btn-warning btn-wd" name="next" value="Next">
-          <input type="button" class="btn btn-fill btn-rose btn-wd" [disabled]="!content.title" (click)="saveProblemDraft()"
-            name="draft" value="Save Draft">
+
           <input type="button" class="btn btn-finish btn-fill btn-warning btn-wd" [disabled]="!isComplete()" (click)="publishContent()"
             name="finish" value="Publish" style="display: none;">
         </div>

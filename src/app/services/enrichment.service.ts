@@ -57,6 +57,9 @@ export class EnrichmentService {
                   min_population
                   extent
                   beneficiary_attributes
+                  featured_url
+                  featured_type
+                  embed_urls
                 ]
               }
             ) {

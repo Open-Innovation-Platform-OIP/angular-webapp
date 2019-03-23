@@ -73,6 +73,9 @@ export class MyErrorStateMatcher implements ErrorStateMatcher {
 export class WizardContainerComponent
   implements OnInit, OnChanges, AfterViewInit {
   @Input() content;
+  @Input() sectors: string[] = [];
+  @Input() contentType: any;
+  @Output() fieldsPopulated = new EventEmitter();
   @Output() smartSearchInput = new EventEmitter();
   @Output() tagAdded = new EventEmitter();
   @Output() tagRemoved = new EventEmitter();
@@ -82,11 +85,14 @@ export class WizardContainerComponent
   type: FormGroup;
   is_edit = false;
   media_url = "";
+  autosaveInterval: any;
+
   readonly separatorKeysCodes: number[] = [ENTER, COMMA];
   searchResults = {};
   sectorCtrl = new FormControl();
   filteredSectors: Observable<string[]>;
-  sectors: string[] = [];
+  // sectors: string[] = [];
+  tags = [];
   removable = true;
   sizes = [
     { value: 100, viewValue: ">100" },
@@ -106,6 +112,7 @@ export class WizardContainerComponent
     private usersService: UsersService,
     private auth: AuthService
   ) {
+    console.log(this.sectors, "sec");
     this.filteredSectors = this.sectorCtrl.valueChanges.pipe(
       startWith(null),
       map((sector: string | null) =>
@@ -145,6 +152,7 @@ export class WizardContainerComponent
   }
 
   selected(event: MatAutocompleteSelectedEvent): void {
+    console.log(this.sectors, "test for sector");
     this.sectors.push(event.option.viewValue);
     this.sectorInput.nativeElement.value = "";
     this.sectorCtrl.setValue(null);
@@ -172,18 +180,12 @@ export class WizardContainerComponent
 
   ngOnInit() {
     canProceed = true;
-    console.log(this.content, "content");
-    if (this.content.problem_tags) {
-      this.sectors = this.content.problem_tags.map(tagArray => {
-        return tagArray.tag.name;
-      });
-    }
 
-    this.is_edit = true;
-    // clearInterval(this.autosaveInterval);
-    // this.autosaveInterval = setInterval(() => {
-    //   this.autoSave();
-    // }, 10000);
+    console.log(this.content, "content");
+    clearInterval(this.autosaveInterval);
+    this.autosaveInterval = setInterval(() => {
+      // this.autoSave();
+    }, 10000);
     // this.route.params.pipe(first()).subscribe(params => {
     //   if (params.id) {
     //     this.apollo
@@ -248,6 +250,7 @@ export class WizardContainerComponent
     //   }
     // });
     // this.tagService.getTagsFromDB();
+    console.log(this.content, "test for cont");
     // this.usersService.getOrgsFromDB();
     this.type = this.formBuilder.group({
       // To add a validator, we must first convert the string value into an array.
@@ -556,6 +559,10 @@ export class WizardContainerComponent
     this.contentSubmitted.emit(this.content);
   }
 
+  sendDataBack() {
+    this.fieldsPopulated.emit(this.content);
+  }
+
   ngAfterViewInit() {
     $(window).resize(() => {
       $(".card-wizard").each(function() {
@@ -770,13 +777,22 @@ export class WizardContainerComponent
   // }
 
   isComplete() {
-    return (
-      this.content.title &&
-      this.content.description &&
-      this.content.organization &&
-      this.content.min_population &&
-      this.content.location
-    );
+    if (this.contentType === "problem") {
+      return (
+        this.content.title &&
+        this.content.description &&
+        this.content.organization &&
+        this.content.min_population &&
+        this.content.location
+      );
+    } else {
+      return (
+        this.content.description &&
+        this.content.organization &&
+        this.content.min_population &&
+        this.content.location
+      );
+    }
   }
 
   setFeatured(type, index) {

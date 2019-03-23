@@ -213,7 +213,7 @@ export class WizardComponent
   ngOnInit() {
     clearInterval(this.autosaveInterval);
     this.autosaveInterval = setInterval(() => {
-      // this.autoSave();
+      this.autoSave();
     }, 10000);
     this.route.params.pipe(first()).subscribe(params => {
       if (params.id) {
@@ -266,11 +266,14 @@ export class WizardComponent
               if (this.problem.title) {
                 this.smartSearch(this.problem.title);
               }
-              this.sectors = result.data.problems[0].problem_tags.map(
-                tagArray => {
-                  return tagArray.tag.name;
-                }
-              );
+              if (result.data.problems[0].problem_tags) {
+                this.sectors = result.data.problems[0].problem_tags.map(
+                  tagArray => {
+                    return tagArray.tag.name;
+                  }
+                );
+              }
+
               this.is_edit = true;
             } else {
               this.router.navigate(["problems/add"]);
@@ -634,8 +637,8 @@ export class WizardComponent
     });
   }
 
-  test(event){
-    console.log(event,"event");
+  test(event) {
+    console.log(event, "event");
   }
 
   removePhoto(index) {
@@ -803,26 +806,33 @@ export class WizardComponent
       this.problem.location
     );
   }
+  updateProblem(updatedProblem) {
+    this.problem = updatedProblem;
+  }
 
-  // autoSave() {
-  //   console.log("trying to auto save");
-  //   if (this.problem.title) {
-  //     this.submitProblemToDB();
-  //   }
-  // }
+  autoSave() {
+    console.log("trying to auto save");
+    if (this.problem.is_draft) {
+      if (this.problem.title) {
+        this.submitProblemToDB(this.problem);
+      }
+    }
+  }
 
   // saveProblemDraft() {
   //   this.autoSave();
   //   alert("Problem draft has been saved. You can continue editing anytime");
   // }
 
-  // publishProblem() {
-  //   this.problem.is_draft = false;
-  //   clearInterval(this.autosaveInterval);
-  //   this.submitProblemToDB();
-  // }
+  publishProblem(problem) {
+    problem.is_draft = false;
+    console.log(problem, "problem before publishing");
+    clearInterval(this.autosaveInterval);
+    this.submitProblemToDB(problem);
+  }
 
   submitProblemToDB(problem) {
+    console.log(problem, "submitted");
     const upsert_problem = gql`
       mutation upsert_problem($problems: [problems_insert_input!]!) {
         insert_problems(
@@ -846,6 +856,7 @@ export class WizardComponent
               featured_url
               featured_type
               embed_urls
+              is_draft
             ]
           }
         ) {
