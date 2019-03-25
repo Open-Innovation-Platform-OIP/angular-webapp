@@ -249,9 +249,9 @@
                 </button>
               </div>
               <div class="modal-body">
-                <app-add-enrichment *ngIf="enrichDataToEdit" [enrichmentData]="enrichDataToEdit" (submitted)="onEnrichmentSubmit($event)"></app-add-enrichment>
-                <!-- <app-wizard-container *ngIf="enrichDataToEdit" [content]="enrichDataToEdit" [contentType]="'enrichment'"
-                  (contentSubmitted)="onEnrichmentSubmit($event)"></app-wizard-container> -->
+                <!-- <app-add-enrichment *ngIf="enrichDataToEdit" [enrichmentData]="enrichDataToEdit" (submitted)="onEnrichmentSubmit($event)"></app-add-enrichment> -->
+                <app-wizard-container *ngIf="enrichDataToEdit" [content]="enrichDataToEdit" [contentType]="'enrichment'"
+                  (contentSubmitted)="onEnrichmentSubmit($event)"></app-wizard-container>
 
               </div>
             </div>
