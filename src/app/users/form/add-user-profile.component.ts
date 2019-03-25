@@ -250,6 +250,7 @@ export class AddUserProfileComponent implements OnInit, OnChanges {
   }
   public storeLocation(loc) {
     this.user.location = loc.srcElement.innerText;
+    this.locations = [];
     console.log(this.user.location);
   }
   ngOnInit() {
@@ -322,7 +323,6 @@ export class AddUserProfileComponent implements OnInit, OnChanges {
               });
               console.log(this.personas, "personas");
               console.log(this.personaArray, "persona array");
-              
 
               // });
             },

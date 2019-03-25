@@ -91,7 +91,7 @@ export class ProblemDetailComponent implements OnInit {
   modalImgSrc: String;
   modalVideoSrc: String;
   modalSrc: String;
-  sources: { index: number, urls: string[] }
+  sources: { index: number; urls: string[] };
   singleImg: boolean = false;
   modalBtnTxt: string;
   imgUrlIndex: number = 0;
@@ -163,7 +163,7 @@ export class ProblemDetailComponent implements OnInit {
     private collaborationService: CollaborationService,
     private validationService: ValidationService,
     private enrichmentService: EnrichmentService
-  ) { }
+  ) {}
 
   getUserPersonas(id) {
     this.apollo
@@ -473,7 +473,7 @@ export class ProblemDetailComponent implements OnInit {
         cancelButtonClass: "btn btn-danger",
         buttonsStyling: false
       })
-        .then(function (result) {
+        .then(function(result) {
           swal({
             type: "success",
             html:
@@ -510,7 +510,7 @@ export class ProblemDetailComponent implements OnInit {
       body.classList.remove("sidebar-mini");
       misc.sidebar_mini_active = false;
     } else {
-      setTimeout(function () {
+      setTimeout(function() {
         body.classList.add("sidebar-mini");
 
         misc.sidebar_mini_active = true;
@@ -518,12 +518,12 @@ export class ProblemDetailComponent implements OnInit {
     }
 
     // we simulate the window Resize so the charts will get updated in realtime.
-    const simulateWindowResize = setInterval(function () {
+    const simulateWindowResize = setInterval(function() {
       window.dispatchEvent(new Event("resize"));
     }, 180);
 
     // we stop the simulation of Window Resize after the animations are completed
-    setTimeout(function () {
+    setTimeout(function() {
       clearInterval(simulateWindowResize);
     }, 1000);
   }
@@ -690,10 +690,9 @@ export class ProblemDetailComponent implements OnInit {
               edited_at
               voted_by
               is_deleted
-              usersBycreatedBy{
-                id 
-                name
-              }
+             
+
+             
             }
           }
         `,
@@ -745,7 +744,7 @@ export class ProblemDetailComponent implements OnInit {
       $layer.remove();
     }
 
-    setTimeout(function () {
+    setTimeout(function() {
       $toggle.classList.remove("toggled");
     }, 400);
 
@@ -998,16 +997,18 @@ export class ProblemDetailComponent implements OnInit {
     });
   }
 
-  displayModal(files: { index: number, urls: string[] }) {
+  displayModal(files: { index: number; urls: string[] }) {
     this.sources = files;
     this.modalSrc = files.urls[files.index];
     /* opening modal */
-    $('#enlargeView').modal('show');
+    $("#enlargeView").modal("show");
   }
 
   pauseVideo(e) {
     if (e.type === "click") {
-      let problemVideoTag: HTMLMediaElement = document.querySelector("#modalVideo");
+      let problemVideoTag: HTMLMediaElement = document.querySelector(
+        "#modalVideo"
+      );
       if (problemVideoTag) {
         problemVideoTag.pause();
       }
@@ -1015,12 +1016,12 @@ export class ProblemDetailComponent implements OnInit {
   }
 
   toggleFileSrc(dir: boolean) {
-    if (dir && this.sources['index'] < this.sources['urls'].length - 1) {
-      this.sources['index']++;
-      this.modalSrc = this.sources['urls'][this.sources['index']];
-    } else if (!dir && this.sources['index'] > 0) {
-      this.sources['index']--;
-      this.modalSrc = this.sources['urls'][this.sources['index']];
+    if (dir && this.sources["index"] < this.sources["urls"].length - 1) {
+      this.sources["index"]++;
+      this.modalSrc = this.sources["urls"][this.sources["index"]];
+    } else if (!dir && this.sources["index"] > 0) {
+      this.sources["index"]--;
+      this.modalSrc = this.sources["urls"][this.sources["index"]];
     }
   }
 }
