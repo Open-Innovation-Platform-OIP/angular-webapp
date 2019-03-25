@@ -29,8 +29,11 @@
 
   <div class="col-md-6 col-6">
     <div class="text-center">
-      <button class="btn btn-warning" *ngIf="mode==='Add'" (click)="collaborate()" data-dismiss="modal">Add</button>
-      <button class="btn btn-warning" *ngIf="mode==='Edit'" (click)="collaborate()" data-dismiss="modal">Update</button>
+      <button class="btn btn-warning" *ngIf="mode==='Add'" [disabled]='!collaborator.intent || collaborator.intent==" "'
+        (click)="collaborate()" data-dismiss="modal">Add</button>
+      <button class="btn btn-warning" *ngIf="mode==='Edit'"
+        [disabled]='!collaborator.intent || collaborator.intent==" "' (click)="collaborate()"
+        data-dismiss="modal">Update</button>
 
       <button class="btn btn-danger" data-dismiss="modal" *ngIf="mode==='Add'">Cancel</button>
     </div>
