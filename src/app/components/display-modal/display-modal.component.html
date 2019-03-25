@@ -1,7 +1,21 @@
-<video *ngIf="checkUrl(source) == false" id="modalVideo" controls width="100%">
-  <source src="{{source}}" type="video/webm">
-  <source src="{{source}}" type="video/mp4">
+<video *ngIf="source.mimeType.startsWith('video')" id="modalVideo" controls width="100%">
+  <source src="{{source.url}}" type="video/webm">
+  <source src="{{source.url}}" type="video/mp4">
 
   Sorry, your browser doesn't support this video.
 </video>
-<img *ngIf="checkUrl(source)" src="{{source}}" alt="" width="100%">
+
+<img *ngIf="source.mimeType.startsWith('image')" src="{{source.url}}" alt="" width="100%">
+
+<!-- for other than image and video -->
+<div *ngIf="!source.mimeType.startsWith('image') && !source.mimeType.startsWith('video')" class="doc_div">
+  <a href="{{source.url}}">
+    <button mat-raised-button class="btn btn-secondary btn-round btn-lg">
+      <i class="material-icons">
+        arrow_downward
+      </i>
+      Download
+    </button>
+  </a>
+
+</div>

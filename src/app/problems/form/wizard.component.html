@@ -31,7 +31,8 @@
               <div class="card-body">
                 <div class="tab-content">
                   <div class="tab-pane active" id="text">
-                    <a href="#media" data-toggle="tab" role="tab" class="nav-link" *ngIf="problem.image_urls.length+problem.video_urls.length>0">{{problem.image_urls.length}}
+                    <a href="#media" data-toggle="tab" role="tab" class="nav-link"
+                      *ngIf="problem.image_urls.length+problem.video_urls.length>0">{{problem.image_urls.length}}
                       image(s) and {{problem.video_urls.length}} video(s) attached</a>
                     <div class="row justify-content-center">
                       <div class="col-sm-12">
@@ -45,9 +46,11 @@
                     }">title</i>
                             </span>
                           </div>
-                          <mat-form-field class="example-full-width has-label" [ngClass]="displayFieldCss(type, 'title')">
-                            <input type="text" name="title" matInput id="title" placeholder="Title *" formControlName="title"
-                              [(ngModel)]="problem.title" (input)="smartSearch($event.target.value)">
+                          <mat-form-field class="example-full-width has-label"
+                            [ngClass]="displayFieldCss(type, 'title')">
+                            <input type="text" name="title" matInput id="title" placeholder="Title *"
+                              formControlName="title" [(ngModel)]="problem.title"
+                              (input)="smartSearch($event.target.value)">
                           </mat-form-field>
                         </div>
                       </div>
@@ -64,10 +67,11 @@
                     }">description</i>
                             </span>
                           </div>
-                          <mat-form-field class="example-full-width has-label" [ngClass]="displayFieldCss(type, 'description')">
-                            <textarea type="text" name="description" matInput id="description" placeholder="Description *"
-                              formControlName="description" rows="3" (input)="smartSearch($event.target.value)"
-                              [(ngModel)]="problem.description"></textarea>
+                          <mat-form-field class="example-full-width has-label"
+                            [ngClass]="displayFieldCss(type, 'description')">
+                            <textarea type="text" name="description" matInput id="description"
+                              placeholder="Description *" formControlName="description" rows="3"
+                              (input)="smartSearch($event.target.value)" [(ngModel)]="problem.description"></textarea>
                           </mat-form-field>
                         </div>
                       </div>
@@ -86,9 +90,10 @@
                     }">business_center</i>
                             </span>
                           </div>
-                          <mat-form-field class="example-full-width has-label" [ngClass]="displayFieldCss(type, 'organization')">
-                            <mat-select name="organization" placeholder="Select Organization *" matInput id="organization"
-                              formControlName="organization" [(ngModel)]="problem.organization">
+                          <mat-form-field class="example-full-width has-label"
+                            [ngClass]="displayFieldCss(type, 'organization')">
+                            <mat-select name="organization" placeholder="Select Organization *" matInput
+                              id="organization" formControlName="organization" [(ngModel)]="problem.organization">
                               <mat-option>None</mat-option>
                               <mat-option *ngFor="let org of usersService.allOrgs" value="{{org}}">{{org}}</mat-option>
                             </mat-select>
@@ -108,7 +113,8 @@
                     }">group_add</i>
                             </span>
                           </div>
-                          <mat-form-field class="example-full-width has-label" [ngClass]="displayFieldCss(type, 'population')">
+                          <mat-form-field class="example-full-width has-label"
+                            [ngClass]="displayFieldCss(type, 'population')">
                             <mat-select matInput formControlName="population" [(ngModel)]="problem.min_population"
                               placeholder="Select size of affected population *" id="population" name="population">
                               <mat-option *ngFor="let size of sizes" [value]="size.value">
@@ -131,7 +137,8 @@
                     }">place</i>
                             </span>
                           </div>
-                          <mat-form-field class="example-full-width has-label" [ngClass]="displayFieldCss(type, 'location')">
+                          <mat-form-field class="example-full-width has-label"
+                            [ngClass]="displayFieldCss(type, 'location')">
                             <input type="text" name="location" matInput id="location" placeholder="Location *"
                               formControlName="location" [(ngModel)]="problem.location">
                           </mat-form-field>
@@ -146,9 +153,11 @@
                               <i class="material-icons">nature_people</i>
                             </span>
                           </div>
-                          <mat-form-field class="example-full-width has-label" [ngClass]="displayFieldCss(type, 'location')">
-                            <input type="text" name="beneficiary" matInput id="beneficiary" placeholder="Who is affected by this problem?"
-                              formControlName="beneficiary" [(ngModel)]="problem.beneficiary_attributes">
+                          <mat-form-field class="example-full-width has-label"
+                            [ngClass]="displayFieldCss(type, 'location')">
+                            <input type="text" name="beneficiary" matInput id="beneficiary"
+                              placeholder="Who is affected by this problem?" formControlName="beneficiary"
+                              [(ngModel)]="problem.beneficiary_attributes">
                           </mat-form-field>
                         </div>
                       </div>
@@ -161,9 +170,10 @@
                               <i class="material-icons">trending_up</i>
                             </span>
                           </div>
-                          <mat-form-field class="example-full-width has-label" [ngClass]="displayFieldCss(type, 'impact')">
-                            <input type="text" name="impact" matInput id="impact" placeholder="Impact" formControlName="impact"
-                              [(ngModel)]="problem.impact">
+                          <mat-form-field class="example-full-width has-label"
+                            [ngClass]="displayFieldCss(type, 'impact')">
+                            <input type="text" name="impact" matInput id="impact" placeholder="Impact"
+                              formControlName="impact" [(ngModel)]="problem.impact">
                           </mat-form-field>
                         </div>
                       </div>
@@ -176,9 +186,10 @@
                               <i class="material-icons">public</i>
                             </span>
                           </div>
-                          <mat-form-field class="example-full-width has-label" [ngClass]="displayFieldCss(type, 'extent')">
-                            <input type="text" name="extent" matInput id="extent" placeholder="Extent" formControlName="extent"
-                              [(ngModel)]="problem.extent">
+                          <mat-form-field class="example-full-width has-label"
+                            [ngClass]="displayFieldCss(type, 'extent')">
+                            <input type="text" name="extent" matInput id="extent" placeholder="Extent"
+                              formControlName="extent" [(ngModel)]="problem.extent">
                           </mat-form-field>
                         </div>
                       </div>
@@ -191,7 +202,8 @@
                               <i class="material-icons">trending_up</i>
                             </span>
                           </div>
-                          <mat-form-field class="example-full-width has-label" [ngClass]="displayFieldCss(type, 'resources')">
+                          <mat-form-field class="example-full-width has-label"
+                            [ngClass]="displayFieldCss(type, 'resources')">
                             <input type="text" name="resources" matInput id="resources" placeholder="Resources Needed"
                               formControlName="resources" [(ngModel)]="problem.resources_needed">
                           </mat-form-field>
@@ -213,9 +225,10 @@
                                 {{sector}}
                                 <mat-icon matChipRemove *ngIf="removable">cancel</mat-icon>
                               </mat-chip>
-                              <input placeholder="Sectors" #sectorInput [formControl]="sectorCtrl" [matAutocomplete]="auto"
-                                [matChipInputFor]="chipList" [matChipInputSeparatorKeyCodes]="separatorKeysCodes"
-                                [matChipInputAddOnBlur]="addOnBlur" (matChipInputTokenEnd)="add($event)">
+                              <input placeholder="Sectors" #sectorInput [formControl]="sectorCtrl"
+                                [matAutocomplete]="auto" [matChipInputFor]="chipList"
+                                [matChipInputSeparatorKeyCodes]="separatorKeysCodes" [matChipInputAddOnBlur]="addOnBlur"
+                                (matChipInputTokenEnd)="add($event)">
                             </mat-chip-list>
                             <mat-autocomplete #auto="matAutocomplete" (optionSelected)="selected($event)">
                               <mat-option *ngFor="let sector of filteredSectors | async" [value]="sector">
@@ -233,7 +246,8 @@
                         <div class="picture-container">
                           <div class="picture">
                             <img src="./assets/img/plus.png" class="picture-src" id="wizardPicturePreview" title="" />
-                            <input type="file" (change)="onFileSelected($event)" name="..." multiple accept="image/*,video/*">
+                            <input type="file" (change)="onFileSelected($event)" name="..." multiple
+                              accept="{{file_types.join(',')}}">
                           </div>
                           <h6 class="description">Choose Media</h6>
                         </div>
@@ -244,9 +258,9 @@
                             <input type="text" name="media_url" matInput id="media_url" formControlName="media_url"
                               placeholder="Video URL" [(ngModel)]="media_url">
                           </mat-form-field>
-                          <input type="button" class="btn btn-finish btn-fill btn-success btn-wd" (click)="addMediaUrl()"
-                            name="add_media_url" [disabled]="!media_url.startsWith('http')" value="Add Video By URL"
-                            style="display: none;">
+                          <input type="button" class="btn btn-finish btn-fill btn-success btn-wd"
+                            (click)="addMediaUrl()" name="add_media_url" [disabled]="!media_url.startsWith('http')"
+                            value="Add Video By URL" style="display: none;">
                         </div>
                       </div>
                     </div>
@@ -259,15 +273,15 @@
                           <div class="card-body"></div>
                           <div class="card-footer">
                             <div class="price">
-                              <button mat-raised-button type="button" class="btn btn-default btn-link" matTooltip="Feature"
-                                [matTooltipPosition]="'below'" (click)="setFeatured('image',i)">
+                              <button mat-raised-button type="button" class="btn btn-default btn-link"
+                                matTooltip="Feature" [matTooltipPosition]="'below'" (click)="setFeatured('image',i)">
                                 <i *ngIf="imgSrc.url !== problem.featured_url" class="material-icons">turned_in_not</i>
                                 <i *ngIf="imgSrc.url === problem.featured_url" class="material-icons">turned_in</i>
                               </button>
                             </div>
                             <div class="stats">
-                              <button mat-raised-button type="button" class="btn btn-danger btn-link" matTooltip="Remove"
-                                [matTooltipPosition]="'below'" (click)="removePhoto(i)">
+                              <button mat-raised-button type="button" class="btn btn-danger btn-link"
+                                matTooltip="Remove" [matTooltipPosition]="'below'" (click)="removePhoto(i)">
                                 <i class="material-icons">close</i>
                               </button>
                             </div>
@@ -288,15 +302,15 @@
                           <div class="card-body">{{video.key}}</div>
                           <div class="card-footer">
                             <div class="price">
-                              <button mat-raised-button type="button" class="btn btn-default btn-link" matTooltip="Feature"
-                                [matTooltipPosition]="'below'" (click)="setFeatured('video',i)">
+                              <button mat-raised-button type="button" class="btn btn-default btn-link"
+                                matTooltip="Feature" [matTooltipPosition]="'below'" (click)="setFeatured('video',i)">
                                 <i *ngIf="video.url !== problem.featured_url" class="material-icons">turned_in_not</i>
                                 <i *ngIf="video.url === problem.featured_url" class="material-icons">turned_in</i>
                               </button>
                             </div>
                             <div class="stats">
-                              <button mat-raised-button type="button" class="btn btn-danger btn-link" matTooltip="Remove"
-                                [matTooltipPosition]="'below'" (click)="removeVideo(i)">
+                              <button mat-raised-button type="button" class="btn btn-danger btn-link"
+                                matTooltip="Remove" [matTooltipPosition]="'below'" (click)="removeVideo(i)">
                                 <i class="material-icons">close</i>
                               </button>
                             </div>
@@ -310,15 +324,15 @@
                           <div class="card-body">{{embed_url}}</div>
                           <div class="card-footer">
                             <div class="price">
-                              <button mat-raised-button type="button" class="btn btn-default btn-link" matTooltip="Feature"
-                                [matTooltipPosition]="'below'" (click)="setFeatured('embed',i)">
+                              <button mat-raised-button type="button" class="btn btn-default btn-link"
+                                matTooltip="Feature" [matTooltipPosition]="'below'" (click)="setFeatured('embed',i)">
                                 <i *ngIf="embed_url !== problem.featured_url" class="material-icons">turned_in_not</i>
                                 <i *ngIf="embed_url === problem.featured_url" class="material-icons">turned_in</i>
                               </button>
                             </div>
                             <div class="stats">
-                              <button mat-raised-button type="button" class="btn btn-danger btn-link" matTooltip="Remove"
-                                [matTooltipPosition]="'below'" (click)="removeEmbed(i)">
+                              <button mat-raised-button type="button" class="btn btn-danger btn-link"
+                                matTooltip="Remove" [matTooltipPosition]="'below'" (click)="removeEmbed(i)">
                                 <i class="material-icons">close</i>
                               </button>
                             </div>
@@ -336,8 +350,8 @@
                 </div>
                 <div class="ml-auto">
                   <input type="button" class="btn btn-next btn-fill btn-warning btn-wd" name="next" value="Next">
-                  <input type="button" class="btn btn-fill btn-rose btn-wd" [disabled]="!problem.title" (click)="saveProblemDraft()"
-                    name="draft" value="Save Draft">
+                  <input type="button" class="btn btn-fill btn-rose btn-wd" [disabled]="!problem.title"
+                    (click)="saveProblemDraft()" name="draft" value="Save Draft">
                   <input type="button" class="btn btn-finish btn-fill btn-warning btn-wd" [disabled]="!isComplete()"
                     (click)="publishProblem()" name="finish" value="Publish" style="display: none;">
                 </div>

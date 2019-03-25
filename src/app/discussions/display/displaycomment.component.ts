@@ -44,18 +44,8 @@ export class CommentDisplayComponent implements OnInit {
     this.showReplyBox = false;
   }
 
-  checkUrl(url) {
-    var arr = ["jpeg", "jpg", "gif", "png"];
-    var ext = url.substring(url.lastIndexOf(".") + 1);
-    if (arr.indexOf(ext) > 0) {
-      return true;
-    } else {
-      return false;
-    }
-  }
-
-  assignUrl(urls, index) {
-    // console.log("modal src: ", urls, index);
-    this.fileClicked.emit({ urls: urls, index: index });
+  assignUrl(files: any[], index: number) {
+    // console.log("modal src: ", attachmentObj.length, index);
+    this.fileClicked.emit({ attachmentObj: files, index: index });
   }
 }
