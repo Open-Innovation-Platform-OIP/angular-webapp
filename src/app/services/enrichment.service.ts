@@ -59,12 +59,13 @@ export class EnrichmentService {
                   min_population
                   extent
                   beneficiary_attributes
+                  voted_by
                 ]
               }
             ) {
               affected_rows
               returning {
-                id
+                description
               }
             }
           }
@@ -86,6 +87,7 @@ export class EnrichmentService {
         },
         err => {
           console.log(err, "error");
+          console.error(JSON.stringify(err));
         }
       );
   }

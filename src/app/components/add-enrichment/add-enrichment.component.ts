@@ -91,6 +91,15 @@ export class AddEnrichmentComponent implements OnChanges, OnInit {
     console.log(this.enrichmentData.location);
   }
   sendEnrichDataToDB() {
+    if (typeof this.enrichmentData.voted_by === "string") {
+      this.submitted.emit(this.enrichmentData);
+    } else {
+      this.enrichmentData.voted_by = this.enrichmentData.voted_by = JSON.stringify(
+        this.enrichmentData.voted_by
+      )
+        .replace("[", "{")
+        .replace("]", "}");
+    }
     this.submitted.emit(this.enrichmentData);
   }
 
