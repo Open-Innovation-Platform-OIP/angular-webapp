@@ -30,7 +30,7 @@ export class ProblemCardComponent implements OnInit {
       this.problemData.validatedBy &&
       this.problemData.validatedBy.length
     ) {
-      this.validatedBy = this.problemData.validatedBy.length;
+      this.validatedBy = this.problemData.problem_validations.length;
     }
 
     // this.sectors = Object.keys(this.problemData.sectors).filter((sector) => {
