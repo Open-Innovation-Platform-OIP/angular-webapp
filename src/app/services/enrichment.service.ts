@@ -59,6 +59,7 @@ export class EnrichmentService {
                   min_population
                   extent
                   beneficiary_attributes
+                  voted_by
                 ]
               }
             ) {
