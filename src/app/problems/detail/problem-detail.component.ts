@@ -691,6 +691,8 @@ export class ProblemDetailComponent implements OnInit {
               voted_by
               is_deleted
              
+
+             
             }
           }
         `,
