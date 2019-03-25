@@ -44,21 +44,13 @@
 
 <!-- <div class="col-4"> -->
 
-<div
-  class="card card-product actions problem-card"
-  [routerLink]="'/problems/' + problemData.id"
->
+<div class="card card-product actions problem-card" [routerLink]="'/problems/' + problemData.id">
   <div class="card-header card-header-image">
-    <img
-      src="{{
+    <img src="{{
         problemData.image_urls && problemData.image_urls[0]
           ? problemData.image_urls[0].url
           : './assets/img/image_placeholder.jpg'
-      }}"
-      width="200px"
-      height="180px"
-      style="object-fit: cover;"
-    />
+      }}" width="200px" height="180px" style="object-fit: cover;" />
   </div>
   <div class="card-body">
     <p class="card-title title">
@@ -102,7 +94,7 @@
       <i class="material-icons">
         how_to_reg
       </i>
-      {{ problemData.problem_validations.length }}
+      {{ validatedBy }}
     </div>
     <!-- <div class="stats">
       <i class="material-icons">access_time</i> 4 minutes ago

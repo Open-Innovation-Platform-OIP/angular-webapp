@@ -14,6 +14,7 @@ export class ProblemCardComponent implements OnInit {
   @Input() problemData: any;
   votedBy: any;
   watchedBy: any;
+  validatedBy: any;
   // sectors: any[] = [];
   constructor() {}
 
@@ -24,6 +25,12 @@ export class ProblemCardComponent implements OnInit {
     }
     if (this.problemData.watched_by && this.problemData.watched_by.length) {
       this.watchedBy = this.problemData.watched_by.length;
+    }
+    if (
+      this.problemData.problem_validations &&
+      this.problemData.problem_validations.length
+    ) {
+      this.validatedBy = this.problemData.validatedBy.length;
     }
 
     // this.sectors = Object.keys(this.problemData.sectors).filter((sector) => {
