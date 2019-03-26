@@ -1015,17 +1015,17 @@ export class WizardComponent
     }
   }
   setFeatured(type, index) {
-    console.log(type, index);
     if (type === "image") {
       this.problem.featured_type = "image";
       this.problem.featured_url = this.problem.image_urls[index].url;
-    } else if (type === "video") {
+    }
+    /* else if (type === "video") {
       this.problem.featured_type = "video";
       this.problem.featured_url = this.problem.video_urls[index].url;
     } else if (type === "embed") {
       this.problem.featured_type = "embed";
       this.problem.featured_url = this.problem.embed_urls[index];
-    }
+    } */
   }
 
   addMediaUrl() {

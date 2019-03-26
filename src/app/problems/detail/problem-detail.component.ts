@@ -64,6 +64,7 @@ export class ProblemDetailComponent implements OnInit {
     video_urls: [],
     impact: "",
     extent: "",
+    featured_url: "",
     min_population: 0,
     beneficiary_attributes: ""
   };
@@ -286,6 +287,8 @@ export class ProblemDetailComponent implements OnInit {
               created_by
               image_urls
               voted_by
+              featured_url
+              featured_type
               watched_by
               video_urls
               impact
