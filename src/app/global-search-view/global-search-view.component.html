@@ -2,41 +2,39 @@
   <div class="container-fluid">
     <div class="row justify-content-center">
       <div class="col-md-6">
-        <input
-          type="text"
-          value=""
-          class="form-control"
-          placeholder="Search..."
-          name="searchInput"
-          autofocus
-          data-toggle="dropdown"
-          [(ngModel)]="searchInput"
-          (input)="globalSearch($event.target.value)"
-          autocomplete="off"
-        />
+        <input type="text" value="" class="form-control" placeholder="Search..." name="searchInput" autofocus
+          data-toggle="dropdown" [(ngModel)]="searchInput" (input)="globalSearch($event.target.value)"
+          autocomplete="off" />
       </div>
     </div>
     <hr />
     <div class="row">
       <div class="col-md-4">
         <h4 class="card-title text-center">Problems</h4>
-        <div>
-          <app-problem-card
-            *ngFor="let problem of globalProblemSearchResults"
-            [problemData]="problem"
-          ></app-problem-card>
+        <div *ngFor="let problem of globalProblemSearchResults">
+          <app-problem-card *ngIf="problem" [problemData]="problem">
+          </app-problem-card>
+        </div>
+        <div class="card">
+          <h5 class="card-body text-center" *ngIf="globalProblemSearchResults.length === 0">No search results for
+            <b>Problems</b>
+          </h5>
         </div>
       </div>
       <div class="col-md-4">
         <h4 class="card-title text-center">Solutions</h4>
+        <div class="card">
+          <h5 class="card-body text-center">No search results for <b>Solutions</b></h5>
+        </div>
       </div>
       <div class="col-md-4">
         <h4 class="card-title text-center">Users</h4>
-        <div>
-          <app-profile-card
-            *ngFor="let user of userSearchResults"
-            [userData]="user"
-          ></app-profile-card>
+        <div *ngFor="let user of userSearchResults">
+          <app-profile-card *ngIf="user" [userData]="user"></app-profile-card>
+        </div>
+        <div class="card">
+          <h5 class="card-body text-center" *ngIf="userSearchResults.length === 0">No search results for <b>Users</b>
+          </h5>
         </div>
       </div>
     </div>

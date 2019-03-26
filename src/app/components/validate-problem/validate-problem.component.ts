@@ -20,6 +20,7 @@ export class ValidateProblemComponent {
 
   mode = "Add";
   Arr = [1, 2, 3, 4];
+  blankSpace: boolean;
   // validationData: any = {
   //   comment: "",
   //   problem_id: this.problemData.id,
@@ -94,5 +95,14 @@ export class ValidateProblemComponent {
       //   );
       // }
     });
+  }
+
+  checkForSpaces($event) {
+    let value = this.validationData.comment.trim();
+    if (value) {
+      this.blankSpace = false;
+    } else {
+      this.blankSpace = true;
+    }
   }
 }
