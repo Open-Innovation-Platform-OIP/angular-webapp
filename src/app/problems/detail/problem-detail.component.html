@@ -15,13 +15,13 @@
             <div class="row">
               <div class="col-md-4">
                 <div class="picture">
-                  <img src="{{problemData.featured_url || './assets/img/image_placeholder.jpg'}}" alt="Thumbnail Image"
-                    class="rounded img-fluid">
+                  <img
+                    src="{{(problemData.featured_url && checkUrlIsImg(problemData.featured_url)) ? problemData.featured_url : './assets/img/image_placeholder.jpg'}}"
+                    alt="Thumbnail Image" class="rounded img-fluid">
                   <div class="row justify-content-center">
                     <button mat-raised-button class="btn btn-raised btn-info btn-sm" data-toggle="modal"
-                      data-target="#viewMoreImgModal"
-                      *ngIf="this.problemData.image_urls && this.problemData.image_urls.length >0">
-                      {{modalBtnTxt}}
+                      data-target="#viewMoreImgModal">
+                      view media
                     </button>
                     <button mat-raised-button class="btn btn-raised btn-info btn-sm" data-toggle="modal"
                       data-target="#viewMoreVideosModal"
@@ -85,59 +85,34 @@
 
         <!--Show more images and videos-->
 
-        <!-- ----------------------------- show more images modal start----------------------------- -->
+        <!-- ----------------------------- problem attachments modal start----------------------------- -->
         <div class="modal fade" id="viewMoreImgModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel"
           aria-hidden="true">
           <div class="modal-dialog modal-dialog-centered modal-lg">
             <div class="modal-content">
-              <img src="{{modalImgSrc}}" alt="" height="500px">
-              <div class="modal-footer justify-content-center" *ngIf="!singleImg">
-                <button mat-raised-button type="button" (click)="toggleImgSrc(false)"
-                  class="btn btn-info btn-round"><span class="carousel-control-prev-icon"
-                    aria-hidden="true"></span></button>
+              <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true"
+                  (click)="pauseVideo($event)">close</button>
+              </div>
+              <div class="modal-body">
+                <app-display-modal *ngIf="problem_attachments_src && problem_attachments_src.url"
+                  [source]="problem_attachments[problem_attachments_index]">
+                </app-display-modal>
+              </div>
+              <div class="modal-footer justify-content-center" *ngIf="this.problem_attachments.length > 1">
+                <button mat-raised-button type="button" [disabled]="problem_attachments_index < 1"
+                  (click)="toggleProblemAttachmentsIndex(false)" class="btn btn-info btn-round"><span
+                    class="carousel-control-prev-icon" aria-hidden="true"></span></button>
                 <div class="col-3"></div>
-                <button mat-raised-button type="button" class="btn btn-info btn-round"
-                  (click)="toggleImgSrc(true)"><span class="carousel-control-next-icon"
-                    aria-hidden="true"></span></button>
+                <button mat-raised-button type="button"
+                  [disabled]="problem_attachments_index === problem_attachments.length - 1"
+                  class="btn btn-info btn-round" (click)="toggleProblemAttachmentsIndex(true)"><span
+                    class="carousel-control-next-icon" aria-hidden="true"></span></button>
               </div>
             </div>
           </div>
         </div>
-        <!-- ----------------------------- show more images modal ends----------------------------- -->
-
-        <!-- ----------------------------- show more videos modal start----------------------------- -->
-        <div class="modal fade" id="viewMoreVideosModal" data-backdrop="static" data-keyboard="false">
-          <div class="modal-dialog modal-dialog-centered modal-lg">
-            <div class="modal-content">
-              <div>
-                <button mat-button type="button" class="close" data-dismiss="modal" (click)="dimissVideoModal($event)"
-                  aria-hidden="true">
-                  <i class="material-icons">clear</i>
-                </button>
-              </div>
-              <video height="450px" id="problemVideoID" controls src="{{modalVideoSrc}}">
-
-              </video>
-              <div class="modal-footer justify-content-center"
-                *ngIf="problemData.video_urls && problemData.video_urls.length">
-                <button mat-raised-button type="button" class="btn btn-info btn-round"
-                  (click)="toggleVideoSrc('prev')"><span class="carousel-control-prev-icon"
-                    aria-hidden="true"></span></button>
-                <div class="col-3"></div>
-                <button mat-raised-button type="button" class="btn btn-info btn-round"
-                  (click)="toggleVideoSrc('next')"><span class="carousel-control-next-icon"
-                    aria-hidden="true"></span></button>
-              </div>
-            </div>
-          </div>
-
-        </div>
-        <!-- ----------------------------- show more videos modal end ----------------------------- -->
-
-
-
-
-        <!--Show more images and videos-->
+        <!-- ----------------------------- problem attachments modal ends----------------------------- -->
 
         <hr>
 
@@ -562,49 +537,5 @@
   </div>
 </div>
 <!-- discuss image and video modal ends -->
-
-<!-- ----------------------------- show more images modal start----------------------------- -->
-<div class="modal fade" id="viewMoreImgModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel"
-  aria-hidden="true">
-  <div class="modal-dialog modal-dialog-centered modal-lg">
-    <div class="modal-content">
-      <img src="{{modalImgSrc}}" alt="" height="500px">
-      <div class="modal-footer justify-content-center" *ngIf="!singleImg">
-        <button mat-raised-button type="button" (click)="toggleImgSrc(false)" class="btn btn-info btn-round"><span
-            class="carousel-control-prev-icon" aria-hidden="true"></span></button>
-        <div class="col-3"></div>
-        <button mat-raised-button type="button" class="btn btn-info btn-round" (click)="toggleImgSrc(true)"><span
-            class="carousel-control-next-icon" aria-hidden="true"></span></button>
-      </div>
-    </div>
-  </div>
-</div>
-<!-- ----------------------------- show more images modal ends----------------------------- -->
-
-<!-- ----------------------------- show more videos modal start----------------------------- -->
-<div class="modal fade" id="viewMoreVideosModal" data-backdrop="static" data-keyboard="false">
-  <div class="modal-dialog modal-dialog-centered modal-lg">
-    <div class="modal-content">
-      <div>
-        <button mat-button type="button" class="close" data-dismiss="modal" (click)="dimissVideoModal($event)"
-          aria-hidden="true">
-          <i class="material-icons">clear</i>
-        </button>
-      </div>
-      <video height="450px" id="problemVideoID" controls src="{{modalVideoSrc}}">
-
-      </video>
-      <div class="modal-footer justify-content-center" *ngIf="problemData.video_urls && problemData.video_urls.length">
-        <button mat-raised-button type="button" class="btn btn-info btn-round" (click)="toggleVideoSrc('prev')"><span
-            class="carousel-control-prev-icon" aria-hidden="true"></span></button>
-        <div class="col-3"></div>
-        <button mat-raised-button type="button" class="btn btn-info btn-round" (click)="toggleVideoSrc('next')"><span
-            class="carousel-control-next-icon" aria-hidden="true"></span></button>
-      </div>
-    </div>
-  </div>
-
-</div>
-<!-- ----------------------------- show more videos modal end ----------------------------- -->
 
 <!--REWRITE-->

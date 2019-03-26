@@ -96,10 +96,13 @@ export class ProblemDetailComponent implements OnInit {
   // enrich: number[] = [1, 2, 3, 4, 5];
   modalImgSrc: String;
   modalVideoSrc: String;
+  problem_attachments: any[] = [];
+  problem_attachments_index: number = 0;
+  problem_attachments_src: any;
   modalSrc: any;
   sources: any;
   singleImg: boolean = false;
-  modalBtnTxt: string;
+  // modalBtnTxt: string;
   imgUrlIndex: number = 0;
   videoUrlIndex: number = 0;
   disableEnrichButton: boolean = false;
@@ -378,6 +381,10 @@ export class ProblemDetailComponent implements OnInit {
                   });
                 }
 
+                // combining the video_urls and image_urls
+                this.problem_attachments = [...this.problemData['image_urls'], ...this.problemData['video_urls']];
+                this.problem_attachments_src = this.problem_attachments[this.problem_attachments_index];
+
                 // setting first image to image modal src
                 if (
                   this.problemData.image_urls &&
@@ -396,7 +403,7 @@ export class ProblemDetailComponent implements OnInit {
                   this.modalVideoSrc = this.problemData.video_urls[0].url;
                 }
 
-                // If image single image in the list
+                /* // If image single image in the list
                 if (
                   this.problemData.image_urls &&
                   this.problemData.image_urls.length === 1
@@ -406,7 +413,7 @@ export class ProblemDetailComponent implements OnInit {
                 } else {
                   this.singleImg = false;
                   this.modalBtnTxt = "View images";
-                }
+                } */
 
                 // this.getCollaborators(params.id);
                 console.log(this.collaborators, "collaborators check");
@@ -474,14 +481,23 @@ export class ProblemDetailComponent implements OnInit {
     console.log(discussionId);
   }
 
-  toggleImgSrc(flag: boolean) {
-    if (flag && this.imgUrlIndex < this.problemData.image_urls.length - 1) {
-      this.imgUrlIndex++;
-      this.modalImgSrc = this.problemData.image_urls[this.imgUrlIndex].url;
+  checkUrlIsImg(url) {
+    var arr = ["jpeg", "jpg", "gif", "png"];
+    var ext = url.substring(url.lastIndexOf(".") + 1);
+    if (arr.indexOf(ext) > -1) {
+      return true;
+    } else {
+      return false;
     }
-    if (!flag && this.imgUrlIndex > 0) {
-      this.imgUrlIndex--;
-      this.modalImgSrc = this.problemData.image_urls[this.imgUrlIndex].url;
+  }
+
+  toggleProblemAttachmentsIndex(dir: boolean) {
+    if (dir && this.problem_attachments_index < this.problem_attachments.length - 1) {
+      this.problem_attachments_index++;
+      this.problem_attachments_src = this.problem_attachments[this.problem_attachments_index];
+    } else if (!dir && this.problem_attachments_index > 0) {
+      this.problem_attachments_index--;
+      this.problem_attachments_src = this.problem_attachments[this.problem_attachments_index];
     }
   }
 

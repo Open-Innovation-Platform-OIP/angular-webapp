@@ -10,14 +10,23 @@ import {
   styleUrls: ['./display-modal.component.css']
 })
 export class DisplayModalComponent implements OnInit {
-  @Input() source: string;
+  @Input() source;
 
   ngOnInit() { }
 
-  checkUrl(url) {
+  checkUrlIsImg(url) {
     var arr = ["jpeg", "jpg", "gif", "png"];
     var ext = url.substring(url.lastIndexOf(".") + 1);
-    if (arr.indexOf(ext) > 0) {
+    if (arr.indexOf(ext) > -1) {
+      return true;
+    } else {
+      return false;
+    }
+  }
+  checkUrlIsVideo(url) {
+    var arr = ["mp4", "avi", "webm", "wmv"];
+    var ext = url.substring(url.lastIndexOf(".") + 1);
+    if (arr.indexOf(ext) > -1) {
       return true;
     } else {
       return false;
