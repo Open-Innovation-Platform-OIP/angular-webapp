@@ -15,11 +15,12 @@ export class ProblemCardComponent implements OnInit {
   votedBy: any;
   watchedBy: any;
   validatedBy: any;
+  // modifiedAt: any;
   // sectors: any[] = [];
-  constructor() {}
+  constructor() { }
 
   ngOnInit() {
-    console.log("problem card");
+    console.log("problem card", this.problemData);
     if (this.problemData.voted_by && this.problemData.voted_by.length) {
       this.votedBy = this.problemData.voted_by.length;
     }
@@ -27,8 +28,8 @@ export class ProblemCardComponent implements OnInit {
       this.watchedBy = this.problemData.watched_by.length;
     }
     if (
-      this.problemData.problem_validations &&
-      this.problemData.problem_validations.length
+      this.problemData.validatedBy &&
+      this.problemData.validatedBy.length
     ) {
       this.validatedBy = this.problemData.problem_validations.length;
     }
@@ -38,5 +39,15 @@ export class ProblemCardComponent implements OnInit {
     //     return sector;
     //   };
     // })
+  }
+
+  checkUrlIsImg(url) {
+    var arr = ["jpeg", "jpg", "gif", "png"];
+    var ext = url.substring(url.lastIndexOf(".") + 1);
+    if (arr.indexOf(ext) > -1) {
+      return true;
+    } else {
+      return false;
+    }
   }
 }

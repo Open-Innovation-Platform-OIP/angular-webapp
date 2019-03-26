@@ -13,7 +13,7 @@ import { AuthService } from "../../services/auth.service";
 export class ProblemsViewComponent implements OnInit {
   userProblems = [];
   problems = [];
-  constructor(private apollo: Apollo, private auth: AuthService) {}
+  constructor(private apollo: Apollo, private auth: AuthService) { }
 
   ngOnInit() {
     console.log(Number(this.auth.currentUserValue.id), "id");
@@ -23,8 +23,8 @@ export class ProblemsViewComponent implements OnInit {
           query PostsGetQuery {
             problems (
               where: {created_by: {_eq: ${Number(
-                this.auth.currentUserValue.id
-              )}}}
+          this.auth.currentUserValue.id
+        )}}}
               order_by: {modified_at: asc}
               
             ) {
@@ -34,7 +34,9 @@ export class ProblemsViewComponent implements OnInit {
               location
               resources_needed
               image_urls
+              modified_at
               voted_by
+              featured_url
               watched_by
               is_deleted
               problem_validations {
@@ -66,8 +68,8 @@ export class ProblemsViewComponent implements OnInit {
           query PostsGetQuery {
             problems (
               where: {created_by: {_neq: ${Number(
-                this.auth.currentUserValue.id
-              )}}}
+          this.auth.currentUserValue.id
+        )}}}
               order_by: {modified_at: asc}
               
             ) {
@@ -77,7 +79,9 @@ export class ProblemsViewComponent implements OnInit {
               location
               resources_needed
               image_urls
+              modified_at
               voted_by
+              featured_url
               watched_by
               is_deleted
               problem_validations {

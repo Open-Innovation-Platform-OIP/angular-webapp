@@ -46,11 +46,9 @@
 
 <div class="card card-product actions problem-card" [routerLink]="'/problems/' + problemData.id">
   <div class="card-header card-header-image">
-    <img src="{{
-        problemData.image_urls && problemData.image_urls[0]
-          ? problemData.image_urls[0].url
-          : './assets/img/image_placeholder.jpg'
-      }}" width="200px" height="180px" style="object-fit: cover;" />
+    <img
+      src="{{ (problemData.featured_url && checkUrlIsImg(problemData.featured_url)) ? problemData.featured_url : './assets/img/image_placeholder.jpg' }}"
+      width="200px" height="180px" style="object-fit: cover;" />
   </div>
   <div class="card-body">
     <p class="card-title title">
@@ -59,7 +57,6 @@
     <div class="description">
       <span> <b> Description : </b>{{ problemData.description }}</span>
     </div>
-
     <div>
       <span> <b> Location : </b>{{ problemData.location }}</span>
     </div>
@@ -96,9 +93,9 @@
       </i>
       {{ validatedBy }}
     </div>
-    <!-- <div class="stats">
-      <i class="material-icons">access_time</i> 4 minutes ago
-    </div> -->
+    <div class="stats">
+      <i class="material-icons">access_time</i> {{ problemData.modified_at | date:short }}
+    </div>
   </div>
 </div>
 <!-- </div> -->

@@ -31,6 +31,11 @@ const misc: any = {
 };
 
 declare var $: any;
+interface attachment_object {
+  key: string;
+  url: string;
+  mimeType: string;
+}
 
 @Component({
   selector: "app-problem-detail",
@@ -53,12 +58,14 @@ export class ProblemDetailComponent implements OnInit {
     location: "",
     resources_needed: "",
     created_by: 0,
+    modified_at: 0,
     image_urls: [],
     voted_by: [],
     watched_by: [],
     video_urls: [],
     impact: "",
     extent: "",
+    featured_url: "",
     min_population: 0,
     beneficiary_attributes: ""
   };
@@ -90,10 +97,13 @@ export class ProblemDetailComponent implements OnInit {
   // enrich: number[] = [1, 2, 3, 4, 5];
   modalImgSrc: String;
   modalVideoSrc: String;
-  modalSrc: String;
-  sources: { index: number; urls: string[] };
+  problem_attachments: any[] = [];
+  problem_attachments_index: number = 0;
+  problem_attachments_src: any;
+  modalSrc: any;
+  sources: any;
   singleImg: boolean = false;
-  modalBtnTxt: string;
+  // modalBtnTxt: string;
   imgUrlIndex: number = 0;
   videoUrlIndex: number = 0;
   disableEnrichButton: boolean = false;
@@ -163,7 +173,7 @@ export class ProblemDetailComponent implements OnInit {
     private collaborationService: CollaborationService,
     private validationService: ValidationService,
     private enrichmentService: EnrichmentService
-  ) {}
+  ) { }
 
   getUserPersonas(id) {
     this.apollo
@@ -279,8 +289,11 @@ export class ProblemDetailComponent implements OnInit {
               location
               resources_needed
               created_by
+              modified_at
               image_urls
               voted_by
+              featured_url
+              featured_type
               watched_by
               video_urls
               impact
@@ -370,6 +383,10 @@ export class ProblemDetailComponent implements OnInit {
                   });
                 }
 
+                // combining the video_urls and image_urls
+                this.problem_attachments = [...this.problemData['image_urls'], ...this.problemData['video_urls']];
+                this.problem_attachments_src = this.problem_attachments[this.problem_attachments_index];
+
                 // setting first image to image modal src
                 if (
                   this.problemData.image_urls &&
@@ -388,7 +405,7 @@ export class ProblemDetailComponent implements OnInit {
                   this.modalVideoSrc = this.problemData.video_urls[0].url;
                 }
 
-                // If image single image in the list
+                /* // If image single image in the list
                 if (
                   this.problemData.image_urls &&
                   this.problemData.image_urls.length === 1
@@ -398,7 +415,7 @@ export class ProblemDetailComponent implements OnInit {
                 } else {
                   this.singleImg = false;
                   this.modalBtnTxt = "View images";
-                }
+                } */
 
                 // this.getCollaborators(params.id);
                 console.log(this.collaborators, "collaborators check");
@@ -443,20 +460,46 @@ export class ProblemDetailComponent implements OnInit {
     });
   }
 
+  sortComments(comments) {
+    return comments.sort(this.compareDateForSort);
+  }
+
+  compareDateForSort(a, b) {
+    var dateA = a.modified_at;
+    var dateB = b.modified_at;
+    if (dateA < dateB) {
+      return 1;
+    }
+    if (dateA > dateB) {
+      return -1;
+    }
+
+    return 0;
+  }
+
   replyTo(discussionId) {
     this.showReplyBox = true;
     this.replyingTo = discussionId;
     console.log(discussionId);
   }
 
-  toggleImgSrc(flag: boolean) {
-    if (flag && this.imgUrlIndex < this.problemData.image_urls.length - 1) {
-      this.imgUrlIndex++;
-      this.modalImgSrc = this.problemData.image_urls[this.imgUrlIndex].url;
+  checkUrlIsImg(url) {
+    var arr = ["jpeg", "jpg", "gif", "png"];
+    var ext = url.substring(url.lastIndexOf(".") + 1);
+    if (arr.indexOf(ext) > -1) {
+      return true;
+    } else {
+      return false;
     }
-    if (!flag && this.imgUrlIndex > 0) {
-      this.imgUrlIndex--;
-      this.modalImgSrc = this.problemData.image_urls[this.imgUrlIndex].url;
+  }
+
+  toggleProblemAttachmentsIndex(dir: boolean) {
+    if (dir && this.problem_attachments_index < this.problem_attachments.length - 1) {
+      this.problem_attachments_index++;
+      this.problem_attachments_src = this.problem_attachments[this.problem_attachments_index];
+    } else if (!dir && this.problem_attachments_index > 0) {
+      this.problem_attachments_index--;
+      this.problem_attachments_src = this.problem_attachments[this.problem_attachments_index];
     }
   }
 
@@ -473,7 +516,7 @@ export class ProblemDetailComponent implements OnInit {
         cancelButtonClass: "btn btn-danger",
         buttonsStyling: false
       })
-        .then(function(result) {
+        .then(function (result) {
           swal({
             type: "success",
             html:
@@ -510,7 +553,7 @@ export class ProblemDetailComponent implements OnInit {
       body.classList.remove("sidebar-mini");
       misc.sidebar_mini_active = false;
     } else {
-      setTimeout(function() {
+      setTimeout(function () {
         body.classList.add("sidebar-mini");
 
         misc.sidebar_mini_active = true;
@@ -518,12 +561,12 @@ export class ProblemDetailComponent implements OnInit {
     }
 
     // we simulate the window Resize so the charts will get updated in realtime.
-    const simulateWindowResize = setInterval(function() {
+    const simulateWindowResize = setInterval(function () {
       window.dispatchEvent(new Event("resize"));
     }, 180);
 
     // we stop the simulation of Window Resize after the animations are completed
-    setTimeout(function() {
+    setTimeout(function () {
       clearInterval(simulateWindowResize);
     }, 1000);
   }
@@ -744,7 +787,7 @@ export class ProblemDetailComponent implements OnInit {
       $layer.remove();
     }
 
-    setTimeout(function() {
+    setTimeout(function () {
       $toggle.classList.remove("toggled");
     }, 400);
 
@@ -908,28 +951,32 @@ export class ProblemDetailComponent implements OnInit {
 
   async onCommentSubmit(event) {
     const [content, mentions, attachments] = event;
+    let file_links: attachment_object[];
+    let _links = [] //local array
 
-    if (attachments.length) {
-      let file_links = [];
+    let all_promise = await attachments.map((file) => {
+      return this.fileService.uploadFile(file, file.name).promise();
+    })
 
-      await attachments.forEach((file, index) => {
-        this.fileService
-          .uploadFile(file, file.name)
-          .promise()
-          .then(values => {
-            // console.log("val: ", values);
-            file_links.push(values.Location);
-          })
-          .catch(e => console.log("Err:: ", e))
-          .then(() => {
-            if (index === attachments.length - 1) {
-              this.submitComment(content, mentions, file_links);
-            }
-          });
-      });
-    } else {
-      this.submitComment(content, mentions);
+    try {
+      _links = await Promise.all(all_promise);
+    } catch (error) {
+      console.log("Err while uploading reply files")
     }
+
+    if (_links.length) {
+      file_links = [];
+
+      _links.forEach((link, i) => {
+        file_links.push({
+          key: link['key'],
+          url: link['Location'],
+          mimeType: attachments[i].type
+        });
+      });
+    }
+
+    this.submitComment(content, mentions, file_links);
   }
 
   submitComment(content, mentions, attachments?) {
@@ -952,31 +999,34 @@ export class ProblemDetailComponent implements OnInit {
   }
 
   async onReplySubmit(comment) {
-    if (comment.attachments.length) {
-      let file_links = [];
+    let file_links: attachment_object[];
+    let _links = [] // local array
 
-      await comment.attachments.forEach((file, index) => {
-        this.fileService
-          .uploadFile(file, file.name)
-          .promise()
-          .then(values => {
-            file_links.push(values.Location);
-          })
-          .catch(e => console.log("Err:: ", e))
-          .then(() => {
-            if (index === comment.attachments.length - 1) {
-              comment["attachments"] = file_links; // overwriting the incoming blobs
-              comment["created_by"] = this.auth.currentUserValue.id;
-              comment["problem_id"] = this.problemData["id"];
-              this.discussionsService.submitCommentToDB(comment);
-            }
-          });
-      });
-    } else {
-      comment["created_by"] = this.auth.currentUserValue.id;
-      comment["problem_id"] = this.problemData["id"];
-      this.discussionsService.submitCommentToDB(comment);
+    let all_promise = await comment.attachments.map((file) => {
+      return this.fileService.uploadFile(file, file.name).promise();
+    })
+
+    try {
+      _links = await Promise.all(all_promise);
+    } catch (error) {
+      console.log("Err while uploading reply files")
     }
+
+    if (_links.length) {
+      file_links = [];
+      _links.map((link, i) => {
+        file_links.push({
+          key: link['key'],
+          url: link['Location'],
+          mimeType: comment.attachments[i].type
+        });
+      });
+    }
+
+    comment["created_by"] = this.auth.currentUserValue.id;
+    comment["problem_id"] = this.problemData["id"];
+    comment["attachments"] = file_links; // overwriting the incoming blobs
+    this.discussionsService.submitCommentToDB(comment);
   }
 
   dismiss() {
@@ -997,9 +1047,10 @@ export class ProblemDetailComponent implements OnInit {
     });
   }
 
-  displayModal(files: { index: number; urls: string[] }) {
+  displayModal(files: { attachmentObj: attachment_object, index: number }) {
     this.sources = files;
-    this.modalSrc = files.urls[files.index];
+    this.modalSrc = files.attachmentObj[files.index];
+
     /* opening modal */
     $("#enlargeView").modal("show");
   }
@@ -1016,12 +1067,12 @@ export class ProblemDetailComponent implements OnInit {
   }
 
   toggleFileSrc(dir: boolean) {
-    if (dir && this.sources["index"] < this.sources["urls"].length - 1) {
+    if (dir && this.sources["index"] < this.sources["attachmentObj"].length - 1) {
       this.sources["index"]++;
-      this.modalSrc = this.sources["urls"][this.sources["index"]];
+      this.modalSrc = this.sources["attachmentObj"][this.sources["index"]];
     } else if (!dir && this.sources["index"] > 0) {
       this.sources["index"]--;
-      this.modalSrc = this.sources["urls"][this.sources["index"]];
+      this.modalSrc = this.sources["attachmentObj"][this.sources["index"]];
     }
   }
 }
