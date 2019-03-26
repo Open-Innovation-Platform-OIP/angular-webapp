@@ -780,6 +780,7 @@ export class WizardComponent
         .valueChanges.subscribe(
           result => {
             if (result.data.search_problems_v2.length > 0) {
+              console.log(result.data.search_problems_v2.length, "search");
               result.data.search_problems_v2.map(result => {
                 if (result.id != this.problem["id"]) {
                   this.searchResults[result.id] = result;

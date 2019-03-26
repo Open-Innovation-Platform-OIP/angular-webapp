@@ -73,6 +73,7 @@ export class MyErrorStateMatcher implements ErrorStateMatcher {
 export class WizardContainerComponent
   implements OnInit, OnChanges, AfterViewInit {
   @Input() content;
+
   @Input() sectors: string[] = [];
   @Input() contentType: any;
   @Output() fieldsPopulated = new EventEmitter();
@@ -179,13 +180,15 @@ export class WizardContainerComponent
   }
 
   ngOnInit() {
-    canProceed = true;
-
     console.log(this.content, "content");
     clearInterval(this.autosaveInterval);
     this.autosaveInterval = setInterval(() => {
       // this.autoSave();
     }, 10000);
+
+    canProceed = true;
+    console.log("wizard ngoninit");
+
     // this.route.params.pipe(first()).subscribe(params => {
     //   if (params.id) {
     //     this.apollo
@@ -333,6 +336,8 @@ export class WizardContainerComponent
       },
 
       onInit: function(tab: any, navigation: any, index: any) {
+        console.log("wizard oninit");
+
         // check number of tabs and fill the entire row
         let $total = navigation.find("li").length;
         const $wizard = navigation.closest(".card-wizard");
@@ -402,6 +407,7 @@ export class WizardContainerComponent
       },
 
       onTabShow: function(tab: any, navigation: any, index: any) {
+        console.log("on tab show");
         let $total = navigation.find("li").length;
         let $current = index + 1;
 
@@ -538,6 +544,8 @@ export class WizardContainerComponent
   }
 
   ngOnChanges(changes: SimpleChanges) {
+    console.log("wizard ngonchanges");
+
     const input = $(this);
     if (input[0].files && input[0].files[0]) {
       const reader: any = new FileReader();
@@ -564,6 +572,8 @@ export class WizardContainerComponent
   }
 
   ngAfterViewInit() {
+    console.log("wizard after view in it");
+
     $(window).resize(() => {
       $(".card-wizard").each(function() {
         const $wizard = $(this);

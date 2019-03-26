@@ -81,6 +81,7 @@ export class EnrichmentService {
         },
         err => {
           console.log(err, "error");
+          console.error(JSON.stringify(err));
         }
       );
   }

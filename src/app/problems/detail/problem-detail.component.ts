@@ -711,10 +711,7 @@ export class ProblemDetailComponent implements OnInit {
               featured_url
               embed_urls
               featured_type
-              usersBycreatedBy{
-                id 
-                name
-              }
+              
             }
           }
         `,
@@ -827,7 +824,18 @@ export class ProblemDetailComponent implements OnInit {
 
     enrichmentData.problem_id = this.problemData.id;
 
-    this.enrichmentService.submitEnrichmentToDB(enrichmentData);
+    if (typeof enrichmentData.voted_by === "string") {
+      // this.submitted.emit(this.enrichmentData);
+      this.enrichmentService.submitEnrichmentToDB(enrichmentData);
+    } else {
+      enrichmentData.voted_by = enrichmentData.voted_by = JSON.stringify(
+        enrichmentData.voted_by
+      )
+        .replace("[", "{")
+        .replace("]", "}");
+
+      this.enrichmentService.submitEnrichmentToDB(enrichmentData);
+    }
   }
 
   deleteEnrichment(id) {
