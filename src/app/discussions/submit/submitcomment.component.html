@@ -16,7 +16,7 @@
   </label>
 
   <input type="file" [disabled]="!content" style="display: none" id="fileInput-{{id}}" (change)="onFileSelected($event)"
-    name="..." multiple accept="image/*,video/*" />
+    name="..." multiple accept="{{file_types.join(',')}}" />
 </div>
 <!-- Displaying list of selected file -->
 <div *ngFor="let attachment of attachments; let i=index;">

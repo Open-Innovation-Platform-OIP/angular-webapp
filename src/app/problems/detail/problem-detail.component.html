@@ -15,9 +15,8 @@
             <div class="row">
               <div class="col-md-4">
                 <div class="picture">
-                  <img style="object-fit: cover;"
-                    src="{{ problemData.image_urls && problemData.image_urls[0] && problemData.image_urls[0].url ? problemData.image_urls[0].url : './assets/img/image_placeholder.jpg'}}"
-                    alt="Thumbnail Image" class="rounded img-fluid">
+                  <img src="{{problemData.featured_url || './assets/img/image_placeholder.jpg'}}" alt="Thumbnail Image"
+                    class="rounded img-fluid">
                   <div class="row justify-content-center">
                     <button mat-raised-button class="btn btn-raised btn-info btn-sm" data-toggle="modal"
                       data-target="#viewMoreImgModal"
@@ -507,6 +506,9 @@
             <h4 class="card-title">Discussions</h4>
           </div>
           <div class="card-body">
+            <button mat-raised-button class="btn btn-warning btn-sm">Latest</button>
+            <button mat-raised-button class="btn btn-warning btn-sm">Popular</button>
+
             <div id="accordion" role="tablist">
               <div class="card-collapse">
                 <div class="card-header" role="tab" id="headingOne">
@@ -526,7 +528,8 @@
               </div>
               <app-display-comment [users]="objectValues(usersService.allUsers)" [comment]="comment"
                 [replies]="replies[comment.id]" (reply)="onReplySubmit($event)" (fileClicked)="displayModal($event)"
-                *ngFor="let comment of objectValues(comments)"></app-display-comment>
+                *ngFor="let comment of sortComments(objectValues(comments))">
+              </app-display-comment>
             </div>
           </div>
         </div>
@@ -544,15 +547,16 @@
           (click)="pauseVideo($event)">close</button>
       </div>
       <div class="modal-body">
-        <app-display-modal *ngIf="modalSrc" [source]="modalSrc">
+        <app-display-modal *ngIf="modalSrc && modalSrc['url']" [source]="modalSrc">
         </app-display-modal>
       </div>
-      <div class="modal-footer justify-content-center" *ngIf="sources && sources['urls'].length > 1">
-        <button mat-raised-button type="button" (click)="toggleFileSrc(false)" class="btn btn-info btn-round"><span
-            class="carousel-control-prev-icon" aria-hidden="true"></span></button>
+      <div class="modal-footer justify-content-center" *ngIf="sources && sources['attachmentObj'].length > 1">
+        <button mat-raised-button type="button" [disabled]="sources['index'] < 1" (click)="toggleFileSrc(false)"
+          class="btn btn-info btn-round"><span class="carousel-control-prev-icon" aria-hidden="true"></span></button>
         <div class="col-3"></div>
-        <button mat-raised-button type="button" class="btn btn-info btn-round" (click)="toggleFileSrc(true)"><span
-            class="carousel-control-next-icon" aria-hidden="true"></span></button>
+        <button mat-raised-button type="button" [disabled]="sources['index'] == sources['attachmentObj'].length-1"
+          class="btn btn-info btn-round" (click)="toggleFileSrc(true)"><span class="carousel-control-next-icon"
+            aria-hidden="true"></span></button>
       </div>
     </div>
   </div>

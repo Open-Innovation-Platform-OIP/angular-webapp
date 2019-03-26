@@ -120,6 +120,7 @@ export class WizardComponent
     { value: 10000, viewValue: ">10000" },
     { value: 100000, viewValue: ">100,000" }
   ];
+  file_types = ["application/msword", " application/vnd.ms-excel", " application/vnd.ms-powerpoint", "text/plain", " application/pdf", " image/*", "video/*"];
   @ViewChild("sectorInput") sectorInput: ElementRef<HTMLInputElement>;
   @ViewChild("auto") matAutocomplete: MatAutocomplete;
   constructor(
@@ -313,19 +314,19 @@ export class WizardComponent
         }
       },
 
-      highlight: function(element) {
+      highlight: function (element) {
         $(element)
           .closest(".form-group")
           .removeClass("has-success")
           .addClass("has-danger");
       },
-      success: function(element) {
+      success: function (element) {
         $(element)
           .closest(".form-group")
           .removeClass("has-danger")
           .addClass("has-success");
       },
-      errorPlacement: function(error, element) {
+      errorPlacement: function (error, element) {
         $(element).append(error);
       }
     });
@@ -336,7 +337,7 @@ export class WizardComponent
       nextSelector: ".btn-next",
       previousSelector: ".btn-previous",
 
-      onNext: function(tab, navigation, index) {
+      onNext: function (tab, navigation, index) {
         const $valid = $(".card-wizard form").valid();
         if (!$valid) {
           $validator.focusInvalid();
@@ -355,7 +356,7 @@ export class WizardComponent
         }
       },
 
-      onInit: function(tab: any, navigation: any, index: any) {
+      onInit: function (tab: any, navigation: any, index: any) {
         // check number of tabs and fill the entire row
         let $total = navigation.find("li").length;
         const $wizard = navigation.closest(".card-wizard");
@@ -413,7 +414,7 @@ export class WizardComponent
         $(".moving-tab").css("transition", "transform 0s");
       },
 
-      onTabClick: function(tab: any, navigation: any, index: any) {
+      onTabClick: function (tab: any, navigation: any, index: any) {
         return true;
         const $valid = $(".card-wizard form").valid();
 
@@ -424,7 +425,7 @@ export class WizardComponent
         }
       },
 
-      onTabShow: function(tab: any, navigation: any, index: any) {
+      onTabShow: function (tab: any, navigation: any, index: any) {
         let $total = navigation.find("li").length;
         let $current = index + 1;
 
@@ -451,7 +452,7 @@ export class WizardComponent
           .find("li:nth-child(" + $current + ") a")
           .html();
 
-        setTimeout(function() {
+        setTimeout(function () {
           $(".moving-tab").text(button_text);
         }, 150);
 
@@ -517,13 +518,13 @@ export class WizardComponent
     });
 
     // Prepare the preview for profile picture
-    $("#wizard-picture").change(function() {
+    $("#wizard-picture").change(function () {
       const input = $(this);
 
       if (input[0].files && input[0].files[0]) {
         const reader = new FileReader();
 
-        reader.onload = function(e: any) {
+        reader.onload = function (e: any) {
           $("#wizardPicturePreview")
             .attr("src", e.target.result)
             .fadeIn("slow");
@@ -532,7 +533,7 @@ export class WizardComponent
       }
     });
 
-    $('[data-toggle="wizard-radio"]').click(function() {
+    $('[data-toggle="wizard-radio"]').click(function () {
       const wizard = $(this).closest(".card-wizard");
       wizard.find('[data-toggle="wizard-radio"]').removeClass("active");
       $(this).addClass("active");
@@ -544,7 +545,7 @@ export class WizardComponent
         .attr("checked", "true");
     });
 
-    $('[data-toggle="wizard-checkbox"]').click(function() {
+    $('[data-toggle="wizard-checkbox"]').click(function () {
       if ($(this).hasClass("active")) {
         $(this).removeClass("active");
         $(this)
@@ -564,7 +565,7 @@ export class WizardComponent
     const input = $(this);
     if (input[0].files && input[0].files[0]) {
       const reader: any = new FileReader();
-      reader.onload = function(e: any) {
+      reader.onload = function (e: any) {
         $("#wizardPicturePreview")
           .attr("src", e.target.result)
           .fadeIn("slow");
@@ -574,7 +575,7 @@ export class WizardComponent
   }
   ngAfterViewInit() {
     $(window).resize(() => {
-      $(".card-wizard").each(function() {
+      $(".card-wizard").each(function () {
         const $wizard = $(this);
         const index = $wizard.bootstrapWizard("currentIndex");
         const $total = $wizard.find(".nav li").length;
@@ -778,7 +779,7 @@ export class WizardComponent
               }
             }
           },
-          err => {}
+          err => { }
         );
     } else {
       this.searchResults = {};
@@ -1014,17 +1015,17 @@ export class WizardComponent
     }
   }
   setFeatured(type, index) {
-    console.log(type, index);
     if (type === "image") {
       this.problem.featured_type = "image";
       this.problem.featured_url = this.problem.image_urls[index].url;
-    } else if (type === "video") {
+    }
+    /* else if (type === "video") {
       this.problem.featured_type = "video";
       this.problem.featured_url = this.problem.video_urls[index].url;
     } else if (type === "embed") {
       this.problem.featured_type = "embed";
       this.problem.featured_url = this.problem.embed_urls[index];
-    }
+    } */
   }
 
   addMediaUrl() {

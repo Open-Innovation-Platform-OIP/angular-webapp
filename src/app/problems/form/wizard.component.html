@@ -247,7 +247,7 @@
                           <div class="picture">
                             <img src="./assets/img/plus.png" class="picture-src" id="wizardPicturePreview" title="" />
                             <input type="file" (change)="onFileSelected($event)" name="..." multiple
-                              accept="image/*,video/*">
+                              accept="{{file_types.join(',')}}">
                           </div>
                           <h6 class="description">Choose Media</h6>
                         </div>
@@ -302,11 +302,11 @@
                           <div class="card-body">{{video.key}}</div>
                           <div class="card-footer">
                             <div class="price">
-                              <button mat-raised-button type="button" class="btn btn-default btn-link"
+                              <!-- <button mat-raised-button type="button" class="btn btn-default btn-link"
                                 matTooltip="Feature" [matTooltipPosition]="'below'" (click)="setFeatured('video',i)">
                                 <i *ngIf="video.url !== problem.featured_url" class="material-icons">turned_in_not</i>
                                 <i *ngIf="video.url === problem.featured_url" class="material-icons">turned_in</i>
-                              </button>
+                              </button> -->
                             </div>
                             <div class="stats">
                               <button mat-raised-button type="button" class="btn btn-danger btn-link"
@@ -324,11 +324,11 @@
                           <div class="card-body">{{embed_url}}</div>
                           <div class="card-footer">
                             <div class="price">
-                              <button mat-raised-button type="button" class="btn btn-default btn-link"
+                              <!-- <button mat-raised-button type="button" class="btn btn-default btn-link"
                                 matTooltip="Feature" [matTooltipPosition]="'below'" (click)="setFeatured('embed',i)">
                                 <i *ngIf="embed_url !== problem.featured_url" class="material-icons">turned_in_not</i>
                                 <i *ngIf="embed_url === problem.featured_url" class="material-icons">turned_in</i>
-                              </button>
+                              </button> -->
                             </div>
                             <div class="stats">
                               <button mat-raised-button type="button" class="btn btn-danger btn-link"
