@@ -15,9 +15,16 @@ export class CommentDisplayComponent implements OnInit {
   @Input() replies;
   @Input() users;
   @Output() reply = new EventEmitter();
+  @Output() fileClicked = new EventEmitter();
   showReplyBox = false;
   replyingTo = 0;
   ngOnInit() {
+  }
+
+  sortReplies(replies) {
+    if (replies && replies.length) {
+      return replies.sort(this.compareDateForSort);
+    }
   }
 
   replyTo(commentId) {
@@ -41,5 +48,23 @@ export class CommentDisplayComponent implements OnInit {
     this.reply.emit(comment);
     this.replyingTo = 0;
     this.showReplyBox = false;
+  }
+
+  assignUrl(files: any[], index: number) {
+    // console.log("modal src: ", attachmentObj.length, index);
+    this.fileClicked.emit({ attachmentObj: files, index: index });
+  }
+
+  compareDateForSort(a, b) {
+    var dateA = a.modified_at;
+    var dateB = b.modified_at;
+    if (dateA < dateB) {
+      return 1;
+    }
+    if (dateA > dateB) {
+      return -1;
+    }
+
+    return 0;
   }
 }

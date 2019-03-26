@@ -35,6 +35,7 @@ export class CommentSubmitComponent implements OnInit {
   content = '';
   mentions = [];
   attachments: Blob[] = [];
+  file_types = ["application/msword", " application/vnd.ms-excel", " application/vnd.ms-powerpoint", "text/plain", " application/pdf", " image/*", "video/*"];
   modules = {
     mention: {
       allowedChars: /^[A-Za-z\sÅÄÖåäö]*$/,

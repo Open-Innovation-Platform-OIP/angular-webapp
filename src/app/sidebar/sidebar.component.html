@@ -14,7 +14,8 @@
 
   <div class="user">
     <div class="photo">
-      <img class="img" src="{{(usersService.currentUser.photo_url && usersService.currentUser.photo_url.url) ? usersService.currentUser.photo_url.url : './assets/img/default-avatar.png'}}" />
+      <img class="img"
+        src="{{(usersService.currentUser.photo_url && usersService.currentUser.photo_url.url) ? usersService.currentUser.photo_url.url : './assets/img/default-avatar.png'}}" />
     </div>
     <div class="user-info" *ngIf="auth.currentUserValue">
       <a data-toggle="collapse" href="#collapseExample" class="collapsed">
@@ -45,15 +46,23 @@
     <form class="navbar-form">
       <span class="bmd-form-group">
         <div class="input-group no-border">
-          <input type="text" value="" class="form-control" placeholder="Search...">
+          <!-- <input type="text" value="" class="form-control" placeholder="Search...">
           <button mat-raised-button type="submit" class="btn btn-white btn-round btn-just-icon">
             <i class="material-icons">search</i>
             <div class="ripple-container"></div>
-          </button>
+          </button> -->
         </div>
       </span>
     </form>
     <ul class="nav navbar-nav nav-mobile-menu">
+      <li class="nav-item">
+        <a class="nav-link" href="/search">
+          <i class="material-icons">search</i>
+          <p>
+            <span class="d-lg-none d-md-block">Search</span>
+          </p>
+        </a>
+      </li>
       <li class="nav-item">
         <a class="nav-link" href="#pablo">
           <i class="material-icons">dashboard</i>

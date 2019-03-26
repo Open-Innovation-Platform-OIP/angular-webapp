@@ -44,18 +44,18 @@ export class GlobalSearchViewComponent implements OnInit, OnChanges {
       this.apollo
         .watchQuery<any>({
           query: gql`query {
-              search_problems(
-              args: {search: "${searchInput}"}
-              ) {
+              search_problems(args: {search: "${searchInput}"}) {
                 id
                 title
                 description
-      }, search_users(args:{search:"${searchInput}"}) {
-              id
-              name
-              email
-              organization
-              location
+                voted_by
+                watched_by
+                }, search_users(args:{search:"${searchInput}"}) {
+                id
+                name
+                email
+                organization
+                location
               }
               }`,
           pollInterval: 500

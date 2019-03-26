@@ -92,12 +92,13 @@
   <div class="row">
     <div class="col-md-4">
       <!-- <div class="picture"> -->
-      <img src="{{(enrichmentData.image_urls && enrichmentData.image_urls[0] && enrichmentData.image_urls[0].url) ? enrichmentData.image_urls[0].url :'./assets/img/image_placeholder.jpg'}}"
+      <img
+        src="{{(enrichmentData.image_urls && enrichmentData.image_urls[0] && enrichmentData.image_urls[0].url) ? enrichmentData.image_urls[0].url :'./assets/img/image_placeholder.jpg'}}"
         alt="Thumbnail Image" class="rounded img-fluid" width="250px" height="200px" style="object-fit: cover;">
       <!-- </div> -->
       <div class="row justify-content-center" *ngIf="enrichmentData.image_urls && enrichmentData.image_urls.length > 0">
         <button mat-raised-button class="btn btn-raised btn-info btn-sm" (click)="toggleViewForImgNView()">
-          See More >>
+          view media
         </button>
       </div>
     </div>
@@ -141,10 +142,10 @@
 
   <div class="row" *ngIf="combinedImgAndVideo.length > 1">
     <div class="col text-center">
-      <button mat-button type="button" class="btn btn-info btn-round" (click)="toggleSrc('prev')"><span class="carousel-control-prev-icon"
-          aria-hidden="true"></span></button>
-      <button mat-button type="button" class="btn btn-info btn-round" (click)="toggleSrc('next')"><span class="carousel-control-next-icon"
-          aria-hidden="true"></span></button>
+      <button mat-button type="button" class="btn btn-info btn-round" (click)="toggleSrc('prev')"><span
+          class="carousel-control-prev-icon" aria-hidden="true"></span></button>
+      <button mat-button type="button" class="btn btn-info btn-round" (click)="toggleSrc('next')"><span
+          class="carousel-control-next-icon" aria-hidden="true"></span></button>
     </div>
   </div>
 </div>
@@ -179,12 +180,14 @@
   <!-- </div> -->
   <!-- <div class="text-center"> -->
   <button mat-button type="button" (click)="editEnrichment()" class="btn btn-warning pull-right" aria-hidden="true"
-    data-dismiss="modal" data-toggle="modal" data-target="#EditEnrichModal" *ngIf="enrichmentData.created_by===auth.currentUserValue.id && !showModal">
+    data-dismiss="modal" data-toggle="modal" data-target="#EditEnrichModal"
+    *ngIf="enrichmentData.created_by===auth.currentUserValue.id && !showModal">
     <i class="material-icons actions">
       create
     </i>
   </button>
-  <button mat-button type="button" class="btn btn-danger pull-right" (click)="deleteEnrichment()" *ngIf="enrichmentData.created_by===auth.currentUserValue.id && !showModal">
+  <button mat-button type="button" class="btn btn-danger pull-right" (click)="deleteEnrichment()"
+    *ngIf="enrichmentData.created_by===auth.currentUserValue.id && !showModal">
     <i class="material-icons actions">
       delete
     </i>

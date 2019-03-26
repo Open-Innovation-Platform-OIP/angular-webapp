@@ -4,3 +4,7 @@
     padding: 6px;
     cursor: pointer;
 }
+
+.validate-card {
+    height: 20em;
+}

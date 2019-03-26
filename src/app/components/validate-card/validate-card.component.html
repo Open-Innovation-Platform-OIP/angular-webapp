@@ -20,7 +20,7 @@
 
 <!--REWRITE-->
 
-<div class="card card-product" (click)="cardClicked()" *ngIf="validationData">
+<div class="card card-product validate-card" (click)="cardClicked()" *ngIf="validationData">
   <!-- <div class="card-header card-header-warning card-header-text">
       <div class="card-text">
         <h4 class="card-title">Validation Details</h4>
@@ -40,10 +40,6 @@
     <p class="description" *ngIf="validationData.files&&validationData.files[0]&&validationData.files[0].key">{{(validationData.files
       && validationData.files[0]) ? validationData.files[0].key : null}}</p>
 
-
-
-
-
     <!-- <div class="row">
         <label class="col-sm-3">Attachment</label>
         <div>
@@ -52,6 +48,8 @@
           </span>
         </div>
       </div> -->
+  </div>
+  <div class="card-footer">
     <p *ngIf="validationData&&validationData.user">Validated by : {{validationData.user.name}}</p>
   </div>
 </div>

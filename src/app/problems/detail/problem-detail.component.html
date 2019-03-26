@@ -9,19 +9,17 @@
         <div class="card card-product">
           <div class="card-header card-header-warning">
             <h4 class="card-title">{{problemData.title}}</h4>
-
-            <!-- <p class="card-category">Category subtitle</p> -->
+            <p class="card-category"><b>Created By : {{problemOwner}}</b></p>
           </div>
           <div class="card-body">
             <div class="row">
               <div class="col-md-4">
                 <div class="picture">
-                  <img style="object-fit: cover;" src="{{ problemData.image_urls && problemData.image_urls[0] && problemData.image_urls[0].url ? problemData.image_urls[0].url : './assets/img/image_placeholder.jpg'}}"
+                  <img src="{{(problemData.featured_url && checkUrlIsImg(problemData.featured_url)) ? problemData.featured_url : './assets/img/image_placeholder.jpg'}}"
                     alt="Thumbnail Image" class="rounded img-fluid">
                   <div class="row justify-content-center">
-                    <button mat-raised-button class="btn btn-raised btn-info btn-sm" data-toggle="modal" data-target="#viewMoreImgModal"
-                      *ngIf="this.problemData.image_urls && this.problemData.image_urls.length >0">
-                      {{modalBtnTxt}}
+                    <button mat-raised-button class="btn btn-raised btn-info btn-sm" data-toggle="modal" data-target="#viewMoreImgModal">
+                      view media
                     </button>
                     <button mat-raised-button class="btn btn-raised btn-info btn-sm" data-toggle="modal" data-target="#viewMoreVideosModal"
                       *ngIf="this.problemData.video_urls && this.problemData.video_urls.length > 0">
@@ -31,7 +29,7 @@
                 </div>
               </div>
               <div class="col-md-8">
-                <strong class="description">Description</strong>
+                <strong>Description</strong>
                 <p class="description">{{problemData.description}}</p>
                 <strong>Location</strong>
                 <!-- <p class="description">{{problemData.location}}</p> -->
@@ -49,12 +47,14 @@
                 <strong *ngIf="problemData.impact">Impact</strong>
                 <p class="description">{{problemData.impact}}</p>
                 <strong>Population Affected</strong>
-                <p class="description" *ngIf="problemData.min_population===0">Between {{problemData.min_population}} and {{problemData.max_population}}</p>
-                <p class="description" *ngIf="problemData.min_population!==0">Greater than {{problemData.min_population}}</p>
+                <p class="description" *ngIf="problemData.min_population===0">Between {{problemData.min_population}}
+                  and {{problemData.max_population}}</p>
+                <p class="description" *ngIf="problemData.min_population!==0">Greater than
+                  {{problemData.min_population}}</p>
 
                 <strong *ngIf="problemData.beneficiary_attributes">Beneficiary Attributes</strong>
                 <p class="description">{{problemData.beneficiary_attributes}}</p>
-                <strong *ngIf="tags">Sectors</strong>
+                <strong *ngIf="tags.length">Sectors</strong>
                 <div *ngFor="let tag of tags">
                   <span class="badge badge-warning">{{tag}}</span>
                   <span>&nbsp;</span>
@@ -81,7 +81,7 @@
                 create
               </i>
             </div>
-            <p>Created By:{{problemOwner}}</p>
+
           </div>
         </div>
         <!--Problem Details-->
@@ -89,54 +89,30 @@
 
         <!--Show more images and videos-->
 
-        <!-- ----------------------------- show more images modal start----------------------------- -->
+        <!-- ----------------------------- problem attachments modal start----------------------------- -->
         <div class="modal fade" id="viewMoreImgModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel"
           aria-hidden="true">
           <div class="modal-dialog modal-dialog-centered modal-lg">
             <div class="modal-content">
-              <img src="{{modalImgSrc}}" alt="" height="500px">
-              <div class="modal-footer justify-content-center" *ngIf="!singleImg">
-                <button mat-raised-button type="button" (click)="toggleImgSrc(false)" class="btn btn-info btn-round"><span
-                    class="carousel-control-prev-icon" aria-hidden="true"></span></button>
+              <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true" (click)="pauseVideo($event)">close</button>
+              </div>
+              <div class="modal-body">
+                <app-display-modal *ngIf="problem_attachments_src && problem_attachments_src.url" [source]="problem_attachments[problem_attachments_index]">
+                </app-display-modal>
+              </div>
+              <div class="modal-footer justify-content-center" *ngIf="this.problem_attachments.length > 1">
+                <button mat-raised-button type="button" [disabled]="problem_attachments_index < 1" (click)="toggleProblemAttachmentsIndex(false)"
+                  class="btn btn-info btn-round"><span class="carousel-control-prev-icon" aria-hidden="true"></span></button>
                 <div class="col-3"></div>
-                <button mat-raised-button type="button" class="btn btn-info btn-round" (click)="toggleImgSrc(true)"><span
-                    class="carousel-control-next-icon" aria-hidden="true"></span></button>
+                <button mat-raised-button type="button" [disabled]="problem_attachments_index === problem_attachments.length - 1"
+                  class="btn btn-info btn-round" (click)="toggleProblemAttachmentsIndex(true)"><span class="carousel-control-next-icon"
+                    aria-hidden="true"></span></button>
               </div>
             </div>
           </div>
         </div>
-        <!-- ----------------------------- show more images modal ends----------------------------- -->
-
-        <!-- ----------------------------- show more videos modal start----------------------------- -->
-        <div class="modal fade" id="viewMoreVideosModal" data-backdrop="static" data-keyboard="false">
-          <div class="modal-dialog modal-dialog-centered modal-lg">
-            <div class="modal-content">
-              <div>
-                <button mat-button type="button" class="close" data-dismiss="modal" (click)="dimissVideoModal($event)"
-                  aria-hidden="true">
-                  <i class="material-icons">clear</i>
-                </button>
-              </div>
-              <video height="450px" id="problemVideoID" controls src="{{modalVideoSrc}}">
-
-              </video>
-              <div class="modal-footer justify-content-center" *ngIf="problemData.video_urls && problemData.video_urls.length">
-                <button mat-raised-button type="button" class="btn btn-info btn-round" (click)="toggleVideoSrc('prev')"><span
-                    class="carousel-control-prev-icon" aria-hidden="true"></span></button>
-                <div class="col-3"></div>
-                <button mat-raised-button type="button" class="btn btn-info btn-round" (click)="toggleVideoSrc('next')"><span
-                    class="carousel-control-next-icon" aria-hidden="true"></span></button>
-              </div>
-            </div>
-          </div>
-
-        </div>
-        <!-- ----------------------------- show more videos modal end ----------------------------- -->
-
-
-
-
-        <!--Show more images and videos-->
+        <!-- ----------------------------- problem attachments modal ends----------------------------- -->
 
         <hr>
 
@@ -454,7 +430,7 @@
           <div class="modal-dialog modal-notice modal-lg">
             <div class="modal-content">
               <div class="modal-header">
-                <h5 class="modal-title" id="myModalLabel">Add New Collaborator</h5>
+                <h5 class="modal-title" id="myModalLabel">How do I collaborate</h5>
                 <button mat-button type="button" class="close" aria-hidden="true" (click)="dismiss()">
                   <i class="material-icons">close</i>
                 </button>
@@ -473,6 +449,20 @@
       </div> <!-- COL - 8-->
       <div class="col-md-4">
         <div class="card">
+          <div class="card-header">
+            <div class="row justify-content-center">
+              <i class="material-icons">
+                highlight
+              </i>
+              <span>&nbsp;</span>
+              <span>&nbsp;</span>
+              <span>&nbsp;</span>
+              <span>&nbsp;</span>
+              <h5>Do you have a solution? <a href="/solutions">click here</a></h5>
+            </div>
+          </div>
+        </div>
+        <div class="card">
           <div class="card-header card-header-icon card-header-warning">
             <div class="card-icon">
               <i class="material-icons">forum</i>
@@ -480,6 +470,9 @@
             <h4 class="card-title">Discussions</h4>
           </div>
           <div class="card-body">
+            <button mat-raised-button class="btn btn-warning btn-sm">Latest</button>
+            <button mat-raised-button class="btn btn-warning btn-sm">Popular</button>
+
             <div id="accordion" role="tablist">
               <div class="card-collapse">
                 <div class="card-header" role="tab" id="headingOne">
@@ -496,7 +489,8 @@
                 </div>
               </div>
               <app-display-comment [users]="objectValues(usersService.allUsers)" [comment]="comment" [replies]="replies[comment.id]"
-                (reply)="onReplySubmit($event)" *ngFor="let comment of objectValues(comments)"></app-display-comment>
+                (reply)="onReplySubmit($event)" (fileClicked)="displayModal($event)" *ngFor="let comment of sortComments(objectValues(comments))">
+              </app-display-comment>
             </div>
           </div>
         </div>
@@ -505,47 +499,28 @@
   </div>
 </div>
 
-<!-- ----------------------------- show more images modal start----------------------------- -->
-<div class="modal fade" id="viewMoreImgModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
-  <div class="modal-dialog modal-dialog-centered modal-lg">
+<!-- discuss image and video modal starts -->
+<div class="modal fade" id="enlargeView" style="display: none;">
+  <div class="modal-dialog modal-lg">
     <div class="modal-content">
-      <img src="{{modalImgSrc}}" alt="" height="500px">
-      <div class="modal-footer justify-content-center" *ngIf="!singleImg">
-        <button mat-raised-button type="button" (click)="toggleImgSrc(false)" class="btn btn-info btn-round"><span
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-hidden="true" (click)="pauseVideo($event)">close</button>
+      </div>
+      <div class="modal-body">
+        <app-display-modal *ngIf="modalSrc && modalSrc['url']" [source]="modalSrc">
+        </app-display-modal>
+      </div>
+      <div class="modal-footer justify-content-center" *ngIf="sources && sources['attachmentObj'].length > 1">
+        <button mat-raised-button type="button" [disabled]="sources['index'] < 1" (click)="toggleFileSrc(false)" class="btn btn-info btn-round"><span
             class="carousel-control-prev-icon" aria-hidden="true"></span></button>
         <div class="col-3"></div>
-        <button mat-raised-button type="button" class="btn btn-info btn-round" (click)="toggleImgSrc(true)"><span class="carousel-control-next-icon"
+        <button mat-raised-button type="button" [disabled]="sources['index'] == sources['attachmentObj'].length-1"
+          class="btn btn-info btn-round" (click)="toggleFileSrc(true)"><span class="carousel-control-next-icon"
             aria-hidden="true"></span></button>
       </div>
     </div>
   </div>
 </div>
-<!-- ----------------------------- show more images modal ends----------------------------- -->
-
-<!-- ----------------------------- show more videos modal start----------------------------- -->
-<div class="modal fade" id="viewMoreVideosModal" data-backdrop="static" data-keyboard="false">
-  <div class="modal-dialog modal-dialog-centered modal-lg">
-    <div class="modal-content">
-      <div>
-        <button mat-button type="button" class="close" data-dismiss="modal" (click)="dimissVideoModal($event)"
-          aria-hidden="true">
-          <i class="material-icons">clear</i>
-        </button>
-      </div>
-      <video height="450px" id="problemVideoID" controls src="{{modalVideoSrc}}">
-
-      </video>
-      <div class="modal-footer justify-content-center" *ngIf="problemData.video_urls && problemData.video_urls.length">
-        <button mat-raised-button type="button" class="btn btn-info btn-round" (click)="toggleVideoSrc('prev')"><span
-            class="carousel-control-prev-icon" aria-hidden="true"></span></button>
-        <div class="col-3"></div>
-        <button mat-raised-button type="button" class="btn btn-info btn-round" (click)="toggleVideoSrc('next')"><span
-            class="carousel-control-next-icon" aria-hidden="true"></span></button>
-      </div>
-    </div>
-  </div>
-
-</div>
-<!-- ----------------------------- show more videos modal end ----------------------------- -->
+<!-- discuss image and video modal ends -->
 
 <!--REWRITE-->

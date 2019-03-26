@@ -4,17 +4,19 @@
 <div class="stats">
   <button mat-raised-button class="btn btn-warning btn-sm btn-round" matTooltip="Click to add comment"
     [matTooltipPosition]="'below'" [disabled]="!content" (click)="submitComment()">{{actionText}}</button>
-  <button mat-raised-button *ngIf="cancelShown" class="btn btn-danger btn-sm btn-round" matTooltip="Click to close comment box"
-    [matTooltipPosition]="'below'" (click)="cancel.emit()">Cancel</button>
+  <button mat-raised-button *ngIf="cancelShown" class="btn btn-danger btn-sm btn-round"
+    matTooltip="Click to close comment box" [matTooltipPosition]="'below'" (click)="cancel.emit()">Cancel</button>
 
-  <label for="fileInput-{{id}}" class="btn btn-secondary btn-sm btn-round right">
+  <label for="fileInput-{{id}}" [ngStyle]="{ 'cursor' : (!content) ? 'default' : 'pointer' }"
+    class="btn btn-secondary btn-sm btn-round right">
     <i class="material-icons">
       attach_file
     </i>
     <span>Attach File</span>
   </label>
-  <input type="file" style="display: none" id="fileInput-{{id}}" (change)="onFileSelected($event)" name="..." multiple
-    accept="image/*,video/*" />
+
+  <input type="file" [disabled]="!content" style="display: none" id="fileInput-{{id}}" (change)="onFileSelected($event)"
+    name="..." multiple accept="{{file_types.join(',')}}" />
 </div>
 <!-- Displaying list of selected file -->
 <div *ngFor="let attachment of attachments; let i=index;">
