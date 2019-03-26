@@ -448,6 +448,23 @@ export class ProblemDetailComponent implements OnInit {
     });
   }
 
+  sortComments(comments) {
+    return comments.sort(this.compareDateForSort);
+  }
+
+  compareDateForSort(a, b) {
+    var dateA = a.modified_at;
+    var dateB = b.modified_at;
+    if (dateA < dateB) {
+      return 1;
+    }
+    if (dateA > dateB) {
+      return -1;
+    }
+
+    return 0;
+  }
+
   replyTo(discussionId) {
     this.showReplyBox = true;
     this.replyingTo = discussionId;

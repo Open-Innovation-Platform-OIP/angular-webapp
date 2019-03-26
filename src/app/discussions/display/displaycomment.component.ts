@@ -21,6 +21,12 @@ export class CommentDisplayComponent implements OnInit {
   ngOnInit() {
   }
 
+  sortReplies(replies) {
+    if (replies && replies.length) {
+      return replies.sort(this.compareDateForSort);
+    }
+  }
+
   replyTo(commentId) {
     this.showReplyBox = true;
     this.replyingTo = commentId;
@@ -47,5 +53,18 @@ export class CommentDisplayComponent implements OnInit {
   assignUrl(files: any[], index: number) {
     // console.log("modal src: ", attachmentObj.length, index);
     this.fileClicked.emit({ attachmentObj: files, index: index });
+  }
+
+  compareDateForSort(a, b) {
+    var dateA = a.modified_at;
+    var dateB = b.modified_at;
+    if (dateA < dateB) {
+      return 1;
+    }
+    if (dateA > dateB) {
+      return -1;
+    }
+
+    return 0;
   }
 }
