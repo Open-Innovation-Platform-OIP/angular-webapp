@@ -47,13 +47,14 @@ export class ProblemDetailComponent implements OnInit {
   showCommentBox = false;
   enrichmentData: any = {
     description: "",
-    location: "",
+    location: [],
     organization: "",
     resources_needed: "",
     image_urls: [],
     video_urls: [],
     impact: "",
     min_population: 0,
+    max_population:0,
     extent: "",
     beneficiary_attributes: "",
     voted_by: "{}",
@@ -76,6 +77,7 @@ export class ProblemDetailComponent implements OnInit {
     impact: "",
     extent: "",
     min_population: 0,
+    max_population:0,
     beneficiary_attributes: ""
   };
 
@@ -299,6 +301,7 @@ export class ProblemDetailComponent implements OnInit {
               impact
               extent
               min_population
+              max_population
               beneficiary_attributes
               featured_url
               embed_urls
@@ -698,6 +701,7 @@ export class ProblemDetailComponent implements OnInit {
               extent
               impact
               min_population
+              max_population
               organization
               beneficiary_attributes
               location
@@ -920,7 +924,7 @@ export class ProblemDetailComponent implements OnInit {
     this.enrichmentDataToView = enrichmentData;
   }
   handleEnrichEditMode(enrichData) {
-    this.enrichDataToEdit = enrichData;
+    this.enrichmentData = enrichData;
     console.log(enrichData, "event on edit");
   }
 

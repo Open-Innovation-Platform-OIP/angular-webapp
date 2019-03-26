@@ -34,7 +34,12 @@
                 <strong class="description">Description</strong>
                 <p class="description">{{problemData.description}}</p>
                 <strong>Location</strong>
-                <p class="description">{{problemData.location}}</p>
+                <!-- <p class="description">{{problemData.location}}</p> -->
+                <!-- <strong *ngIf="tags">Sectors</strong> -->
+                <div *ngFor="let location of problemData.location">
+                  <span class="badge badge-warning">{{location.Address.Label}}</span>
+                  <span>&nbsp;</span>
+                </div>
                 <strong *ngIf="problemData.resources_needed">Resources Needed</strong>
                 <p class="description">{{problemData.resources_needed}}</p>
                 <strong>Organization</strong>
@@ -44,7 +49,9 @@
                 <strong *ngIf="problemData.impact">Impact</strong>
                 <p class="description">{{problemData.impact}}</p>
                 <strong>Population Affected</strong>
-                <p class="description">More than {{problemData.min_population}}</p>
+                <p class="description" *ngIf="problemData.min_population===0">Between {{problemData.min_population}} and {{problemData.max_population}}</p>
+                <p class="description" *ngIf="problemData.min_population!==0">Greater than {{problemData.min_population}}</p>
+
                 <strong *ngIf="problemData.beneficiary_attributes">Beneficiary Attributes</strong>
                 <p class="description">{{problemData.beneficiary_attributes}}</p>
                 <strong *ngIf="tags">Sectors</strong>
@@ -250,8 +257,7 @@
               </div>
               <div class="modal-body">
                 <!-- <app-add-enrichment *ngIf="enrichDataToEdit" [enrichmentData]="enrichDataToEdit" (submitted)="onEnrichmentSubmit($event)"></app-add-enrichment> -->
-                <app-wizard-container *ngIf="enrichDataToEdit" [content]="enrichDataToEdit" [contentType]="'enrichment'"
-                  (contentSubmitted)="onEnrichmentSubmit($event)"></app-wizard-container>
+                <app-wizard-container [content]="enrichmentData" [contentType]="'enrichment'" (contentSubmitted)="onEnrichmentSubmit($event)"></app-wizard-container>
 
               </div>
             </div>

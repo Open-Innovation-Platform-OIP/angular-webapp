@@ -15,6 +15,7 @@ export interface enrichment {
   video_urls: any[];
   impact: String;
   min_population: Number;
+  max_population:Number;
   extent: String;
   beneficiary_attributes: String;
   id?: Number;
@@ -55,6 +56,7 @@ export class EnrichmentService {
                   video_urls
                   impact
                   min_population
+                  max_population
                   extent
                   beneficiary_attributes
                   featured_url

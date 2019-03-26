@@ -19,6 +19,7 @@ import { AuthService } from "../../services/auth.service";
 import { Router, ActivatedRoute } from "@angular/router";
 import { map, startWith } from "rxjs/operators";
 import { Observable } from "rxjs";
+import { GeocoderService } from "../../services/geocoder.service";
 
 import {
   FormControl,
@@ -85,12 +86,16 @@ export class WizardContainerComponent
   matcher = new MyErrorStateMatcher();
   type: FormGroup;
   is_edit = false;
+  populationValue: Number;
   media_url = "";
   autosaveInterval: any;
+  locations: any = [];
+  locationInputValue: any;
 
   readonly separatorKeysCodes: number[] = [ENTER, COMMA];
   searchResults = {};
   sectorCtrl = new FormControl();
+  locationCtrl = new FormControl();
   filteredSectors: Observable<string[]>;
   // sectors: string[] = [];
   tags = [];
@@ -99,10 +104,13 @@ export class WizardContainerComponent
     { value: 100, viewValue: ">100" },
     { value: 1000, viewValue: ">1000" },
     { value: 10000, viewValue: ">10000" },
-    { value: 100000, viewValue: ">100,000" }
+    { value: 100000, viewValue: ">100,000" },
+    { value: Number.MAX_VALUE, viewValue: "<100,000" }
   ];
 
   @ViewChild("sectorInput") sectorInput: ElementRef<HTMLInputElement>;
+  @ViewChild("locationInput") locationInput: ElementRef<HTMLInputElement>;
+
   @ViewChild("auto") matAutocomplete: MatAutocomplete;
   constructor(
     private router: Router,
@@ -111,7 +119,8 @@ export class WizardContainerComponent
     private filesService: FilesService,
     private tagService: TagsService,
     private usersService: UsersService,
-    private auth: AuthService
+    private auth: AuthService,
+    private here: GeocoderService
   ) {
     console.log(this.sectors, "sec");
     this.filteredSectors = this.sectorCtrl.valueChanges.pipe(
@@ -139,17 +148,89 @@ export class WizardContainerComponent
         input.value = "";
       }
       this.sectorCtrl.setValue(null);
-      this.tagAdded.emit(this.sectors);
+      // this.tagAdded.emit(this.sectors);
+    }
+  }
+
+  selectedLocation(event) {
+    console.log(event, "selected location");
+    console.log(this.content.location, "selected location content");
+
+    this.content.location.push(event.option.value);
+    console.log(this.content.location, "selected location content 2");
+
+    this.locationInput.nativeElement.value = "";
+    this.locationCtrl.setValue(null);
+    // this.tagAdded.emit(this.sectors);
+  }
+
+  addLocation(event) {
+    if (!this.matAutocomplete.isOpen) {
+      console.log(event, "event for add ");
+      const input = event.input;
+      const value = event.value;
+
+      // Add our sector
+      if ((value || "").trim()) {
+        this.content.location.push(value);
+      }
+      // Reset the input value
+      if (input) {
+        input.value = "";
+      }
+      this.sectorCtrl.setValue(null);
+      // this.tagAdded.emit(this.sectors);
+    }
+  }
+
+  removeLocation(location) {
+    const index = this.content.location.indexOf(location);
+    if (index >= 0) {
+      this.content.location.splice(index, 1);
     }
   }
 
   // sendTagsToParent(tags) {
   //   this.tagsChanged.emit(this.sectors);
   // }
+  organizationSelected(org) {
+    this.content.organization = org;
+  }
 
   remove(sector: string): void {
     this.tagRemoved.emit(sector);
+
     // this.tagsChanged.emit(this.sectors);
+  }
+
+  getLocation(input) {
+    console.log("get address", input);
+    if (this.locationInputValue != "Unknown") {
+      this.here.getAddress(this.locationInputValue).then(
+        result => {
+          console.log(result, "result");
+          this.locations = <Array<any>>result;
+          console.log(this.locations, "locations");
+        },
+        error => {
+          console.error(error);
+        }
+      );
+    }
+    // var obj = personas;
+    // console.log(personas);
+    // var keys = Object.keys(obj);
+
+    // var filtered = keys.filter(function(key) {
+    //   return obj[key];
+    // });
+    // console.log(JSON.parse("{" + filtered.toString() + "}"));
+    // console.log(typeof JSON.parse("{" + filtered.toString() + "}"));
+  }
+  public storeLocation(loc) {
+    // this.content.location = loc.srcElement.innerText;
+    console.log(loc, "location");
+    // console.log(this..location);
   }
 
   selected(event: MatAutocompleteSelectedEvent): void {
@@ -179,12 +260,40 @@ export class WizardContainerComponent
     return !form.get(field).valid && form.get(field).touched;
   }
 
+  populationValueChanged(event) {
+    console.log(event,"event");
+    if (event.value <= 100000) {
+
+      this.content.min_population = 0;
+      this.content.max_population = this.populationValue;
+    } else {
+      this.content.min_population = 100000;
+      this.content.max_population = Number.MAX_VALUE;
+    }
+  }
+
   ngOnInit() {
+    console.log(this.content, "content");
+    if (
+      this.usersService.allUsers[this.auth.currentUserValue.id].organization
+
+    ) {
+      this.content.organization = this.usersService.allUsers[
+        this.auth.currentUserValue.id
+      ].organization;
+    } else {
+      this.content.organization = "None";
+    }
+
+    this.populationValue = this.content.max_population;
+
     console.log(this.content, "content");
     clearInterval(this.autosaveInterval);
     this.autosaveInterval = setInterval(() => {
       // this.autoSave();
     }, 10000);
+
+    console.log(this.usersService.allOrgs, "orgs");
 
     canProceed = true;
     console.log("wizard ngoninit");
@@ -544,6 +653,8 @@ export class WizardContainerComponent
   }
 
   ngOnChanges(changes: SimpleChanges) {
+    this.populationValue = this.content.max_population;
+
     console.log("wizard ngonchanges");
 
     const input = $(this);
@@ -564,6 +675,16 @@ export class WizardContainerComponent
   }
 
   publishContent() {
+    console.log(Number.MAX_VALUE, "max value");
+    console.log(this.content.location, "content location");
+    if (this.populationValue <= 100000) {
+      console.log(Number.MAX_VALUE);
+      this.content.min_population = 0;
+      this.content.max_population = this.populationValue;
+    } else {
+      this.content.min_population = 100000;
+      this.content.max_population = Number.MAX_VALUE;
+    }
     this.contentSubmitted.emit(this.content);
   }
 
@@ -792,14 +913,15 @@ export class WizardContainerComponent
         this.content.title &&
         this.content.description &&
         this.content.organization &&
-        this.content.min_population &&
+        // this.content.min_population &&
+        this.populationValue &&
         this.content.location
       );
     } else {
       return (
         this.content.description &&
         this.content.organization &&
-        this.content.min_population &&
+        this.populationValue &&
         this.content.location
       );
     }

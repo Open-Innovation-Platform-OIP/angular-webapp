@@ -34,6 +34,7 @@ export class AddEnrichmentComponent implements OnChanges, OnInit {
     video_urls: [],
     impact: "",
     min_population: 0,
+    max_population: 0,
     extent: "",
     beneficiary_attributes: "",
     voted_by: "{}"

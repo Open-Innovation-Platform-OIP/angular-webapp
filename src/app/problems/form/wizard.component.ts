@@ -90,8 +90,9 @@ export class WizardComponent
     organization: "",
     impact: "",
     extent: "",
-    location: "",
+    location: [],
     min_population: 0,
+    max_population:0,
     beneficiary_attributes: "",
     resources_needed: "",
     image_urls: [],
@@ -233,6 +234,7 @@ export class WizardComponent
                             impact
                             extent
                             min_population
+                            max_population
                             beneficiary_attributes
                             organization
                             featured_url
@@ -803,7 +805,7 @@ export class WizardComponent
       this.problem.title &&
       this.problem.description &&
       this.problem.organization &&
-      this.problem.min_population &&
+      // this.problem.min_population &&
       this.problem.location
     );
   }
@@ -853,6 +855,7 @@ export class WizardComponent
               video_urls
               owners
               min_population
+              max_population
               modified_at
               featured_url
               featured_type
