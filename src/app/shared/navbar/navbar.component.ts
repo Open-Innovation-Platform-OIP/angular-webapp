@@ -423,6 +423,10 @@ export class NavbarComponent implements OnInit {
     return this.location.prepareExternalUrl(this.location.path());
   }
 
+  focus() {
+    document.getElementById("search").focus();
+  }
+
   // GlobalSearch() {
   //   if (this.searchT === undefined) {
   //     window.alert("Enter Text to Search");

@@ -53,6 +53,7 @@ export class ProblemDetailComponent implements OnInit {
     location: "",
     resources_needed: "",
     created_by: 0,
+    modified_at: 0,
     image_urls: [],
     voted_by: [],
     watched_by: [],
@@ -279,6 +280,7 @@ export class ProblemDetailComponent implements OnInit {
               location
               resources_needed
               created_by
+              modified_at
               image_urls
               voted_by
               watched_by
