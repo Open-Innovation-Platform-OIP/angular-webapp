@@ -34,6 +34,7 @@ export class ProblemsViewComponent implements OnInit {
               location
               resources_needed
               image_urls
+              modified_at
               voted_by
               featured_url
               watched_by
@@ -78,6 +79,7 @@ export class ProblemsViewComponent implements OnInit {
               location
               resources_needed
               image_urls
+              modified_at
               voted_by
               featured_url
               watched_by

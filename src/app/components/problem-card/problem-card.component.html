@@ -93,9 +93,9 @@
       </i>
       {{ validatedBy }}
     </div>
-    <!-- <div class="stats">
-      <i class="material-icons">access_time</i> 4 minutes ago
-    </div> -->
+    <div class="stats">
+      <i class="material-icons">access_time</i> {{ problemData.modified_at | date:short }}
+    </div>
   </div>
 </div>
 <!-- </div> -->

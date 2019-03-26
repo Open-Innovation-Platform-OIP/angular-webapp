@@ -30,6 +30,7 @@ export class AddCollaboratorComponent implements OnInit, OnChanges {
 
   objectKeys = Object.keys;
   mode = "Add";
+  blankSpace: boolean;
 
   constructor(private auth: AuthService) {}
 
@@ -46,5 +47,15 @@ export class AddCollaboratorComponent implements OnInit, OnChanges {
   collaborate() {
     console.log("working");
     this.submitted.emit(this.collaborator);
+  }
+
+  checkForSpaces(event) {
+    console.log("checking for spaces");
+    let value = this.collaborator.intent.trim();
+    if (value) {
+      this.blankSpace = false;
+    } else {
+      this.blankSpace = true;
+    }
   }
 }

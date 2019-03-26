@@ -15,11 +15,12 @@ export class ProblemCardComponent implements OnInit {
   votedBy: any;
   watchedBy: any;
   validatedBy: any;
+  // modifiedAt: any;
   // sectors: any[] = [];
   constructor() { }
 
   ngOnInit() {
-    console.log("problem card");
+    console.log("problem card", this.problemData);
     if (this.problemData.voted_by && this.problemData.voted_by.length) {
       this.votedBy = this.problemData.voted_by.length;
     }
