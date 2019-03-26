@@ -39,14 +39,14 @@
       <div class="card-collapse" *ngFor="let reply of sortReplies(replies)">
         <div class="card-header" role="tab" id="headingTwo">
           <h5 class="mb-0">
-            <a class="collapsed" data-toggle="collapse" href="#reply-{{reply.id}}" aria-expanded="true"
+            <a class="collapsed" data-toggle="collapse" href="#reply-{{reply.id}}" aria-expanded="false"
               attr.aria-controls="reply-{{reply.id}}">
               {{reply.usersBycreatedBy.name || 'Anonymous'}}, {{reply.modified_at | date:short}}
               <i class="material-icons">keyboard_arrow_down</i>
             </a>
           </h5>
         </div>
-        <div id="reply-{{reply.id}}" class="collapse show" role="tabpanel" aria-labelledby="headingTwo"
+        <div id="reply-{{reply.id}}" class="collapse" role="tabpanel" aria-labelledby="headingTwo"
           attr.data-target="#reply-{{reply.id}}">
           <div class="card-body">
             <div innerHTML="{{reply.text}}"></div>
