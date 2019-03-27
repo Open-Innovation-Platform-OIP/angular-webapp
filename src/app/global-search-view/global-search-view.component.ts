@@ -57,8 +57,8 @@ export class GlobalSearchViewComponent implements OnInit, OnChanges {
                 organization
                 location
               }
-              }`,
-          pollInterval: 500
+              }`
+          // pollInterval: 500
         })
         .valueChanges.subscribe(value => {
           this.globalProblemSearchResults = value.data.search_problems;

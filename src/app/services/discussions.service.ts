@@ -93,7 +93,7 @@ export class DiscussionsService {
           }
         }
       `,
-      pollInterval: 200
+      pollInterval: 500
     }).valueChanges;
   }
 }

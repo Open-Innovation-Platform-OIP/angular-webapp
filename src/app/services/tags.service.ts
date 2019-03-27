@@ -20,8 +20,8 @@ export class TagsService {
               name
             }
           }
-        `,
-        pollInterval: 500
+        `
+        // pollInterval: 500
       })
       .valueChanges.subscribe(({ data }) => {
         if (data.tags.length > 0) {

@@ -70,8 +70,8 @@ export class UserHandlerService {
             name
           }
         }
-      `,
-      pollInterval: 500
+      `
+      // pollInterval: 500
     }).valueChanges;
   }
 

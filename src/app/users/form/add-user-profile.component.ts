@@ -299,8 +299,8 @@ export class AddUserProfileComponent implements OnInit, OnChanges {
 
               
            
-        `,
-            pollInterval: 500
+        `
+            // pollInterval: 500
           })
           .valueChanges.subscribe(
             ({ data }) => {

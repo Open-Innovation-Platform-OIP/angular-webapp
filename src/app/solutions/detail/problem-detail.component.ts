@@ -273,7 +273,7 @@ export class ProblemDetailComponent implements OnInit {
         }
             
         `,
-            pollInterval: 500
+            // pollInterval: 500
           })
           .valueChanges.subscribe(
             result => {
@@ -549,7 +549,7 @@ export class ProblemDetailComponent implements OnInit {
     }
   }
 `,
-        pollInterval: 500
+        // pollInterval: 500
       })
       .valueChanges.subscribe(
         result => {
@@ -598,7 +598,7 @@ export class ProblemDetailComponent implements OnInit {
 
 }
 `,
-        pollInterval: 500
+        // pollInterval: 500
       })
       .valueChanges.subscribe(
         result => {
@@ -649,7 +649,7 @@ export class ProblemDetailComponent implements OnInit {
             }
           }
         `,
-        pollInterval: 500
+        // pollInterval: 500
       })
       .valueChanges.subscribe(
         data => {
