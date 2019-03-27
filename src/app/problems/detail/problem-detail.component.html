@@ -24,21 +24,10 @@
                     src="{{(problemData.featured_url && checkUrlIsImg(problemData.featured_url)) ? problemData.featured_url : './assets/img/image_placeholder.jpg'}}"
                     alt="Thumbnail Image" class="rounded img-fluid">
                   <div class="row justify-content-center">
-                    <<<<<<< HEAD <button mat-raised-button *ngIf="problem_attachments.length > 1"
+                    <button mat-raised-button *ngIf="problem_attachments.length > 1"
                       class="btn btn-raised btn-info btn-sm" data-toggle="modal" data-target="#viewMoreImgModal">
                       view media ({{problem_attachments.length}})
-                      </button>
-                      <!-- <button mat-raised-button class="btn btn-raised btn-info btn-sm" data-toggle="modal"
-                      data-target="#viewMoreVideosModal"
-=======
-                    <button mat-raised-button class="btn btn-raised btn-info btn-sm" data-toggle="modal" data-target="#viewMoreImgModal">
-                      view media
                     </button>
-                    <button mat-raised-button class="btn btn-raised btn-info btn-sm" data-toggle="modal" data-target="#viewMoreVideosModal"
->>>>>>> v-component-rewrite
-                      *ngIf="this.problemData.video_urls && this.problemData.video_urls.length > 0">
-                      Show videos
-                    </button> -->
                   </div>
                 </div>
               </div>
