@@ -3,16 +3,18 @@ import {
   OnInit,
   ChangeDetectionStrategy,
   Input,
-  ChangeDetectorRef
+  ChangeDetectorRef,
+  OnDestroy
 } from "@angular/core";
 import { Router, ActivatedRoute } from "@angular/router";
 import { Observable, Subscription, interval } from "rxjs";
 import { first, finalize, startWith, take, map } from "rxjs/operators";
+
 import { ProblemService } from "../../services/problem.service";
 import { AuthService } from "../../services/auth.service";
 import { UsersService } from "../../services/users.service";
 import * as Query from "../../services/queries";
-import { Apollo } from "apollo-angular";
+import { Apollo, QueryRef } from "apollo-angular";
 import gql from "graphql-tag";
 import swal from "sweetalert2";
 import { NgForm } from "@angular/forms";
@@ -44,7 +46,11 @@ interface attachment_object {
   animations: [slider],
   changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class ProblemDetailComponent implements OnInit {
+export class ProblemDetailComponent implements OnInit, OnDestroy {
+  // chartData: any;
+
+  problemDataQuery: QueryRef<any>;
+  problemDataSub: Subscription;
   objectValues = Object["values"];
   discussions = [];
   replyingTo = 0;
@@ -69,24 +75,26 @@ export class ProblemDetailComponent implements OnInit {
     featured_type: ""
   };
   problemData: any = {
-    id: 0,
+    id: "",
     title: "",
     description: "",
     organization: "",
-    location: "",
-    resources_needed: "",
-    created_by: 0,
-    modified_at: 0,
-    image_urls: [],
-    voted_by: [],
-    watched_by: [],
-    video_urls: [],
     impact: "",
     extent: "",
-    featured_url: "",
+    location: [],
     min_population: 0,
     max_population: 0,
-    beneficiary_attributes: ""
+    beneficiary_attributes: "",
+    resources_needed: "",
+    image_urls: [],
+    video_urls: [],
+    featured_url: "",
+    embed_urls: [],
+    featured_type: "",
+    voted_by: "",
+    watched_by: "",
+    created_by: "",
+    is_draft: true
   };
 
   public problemOwner: string;
@@ -292,13 +300,12 @@ export class ProblemDetailComponent implements OnInit {
     this.minimizeSidebar();
     this.route.params.pipe(first()).subscribe(params => {
       if (params.id) {
-        this.getEnrichmentData(params.id);
-        this.getCollaborators(params.id);
-        // this.getTags(params.id);
-        this.getValidations(params.id);
-        this.apollo
-          .watchQuery<any>({
-            query: gql`
+        // this.getEnrichmentData(params.id);
+        // this.getCollaborators(params.id);
+        // // this.getTags(params.id);
+        // this.getValidations(params.id);
+        this.problemDataQuery = this.apollo.watchQuery<any>({
+          query: gql`
           {
             problems(where: { id: { _eq: ${params.id} } }) {
               id
@@ -333,14 +340,87 @@ export class ProblemDetailComponent implements OnInit {
                     name
                 }
             }
+
+            problem_validations{
+              comment
+              agree
+              created_at
+              files
+              validated_by
+              edited_at
+              is_deleted
+      
+              problem_id
+              user {
+                id
+                name
+              } 
+              
+            }
+            problem_collaborators{
+              intent
+              is_ngo
+              is_innovator
+              is_expert
+              is_government
+              is_funder
+              is_beneficiary
+              is_incubator
+              is_entrepreneur
+              user_id
+              user {
+                id
+                name
+                photo_url
+              } 
+              
+            }
+
+            enrichmentsByproblemId{
+              id
+              
+              description
+              extent
+              impact
+              min_population
+              max_population
+              organization
+              beneficiary_attributes
+              location
+              resources_needed
+              image_urls
+              video_urls
+              created_by
+              edited_at
+              voted_by
+              is_deleted
+              featured_url
+              embed_urls
+              featured_type
+              
+            }
             }
         }
             
         `,
-            pollInterval: 200
-          })
-          .valueChanges.subscribe(
-            result => {
+          pollInterval: 500,
+          fetchPolicy: "network-only"
+        });
+        // this.chartQuery.valueChanges.subscribe
+        this.problemDataSub = this.problemDataQuery.valueChanges.subscribe(
+          result => {
+            if (
+              result.data.problems.length >= 1 &&
+              result.data.problems[0].id
+            ) {
+              Object.keys(this.problemData).map(key => {
+                // console.log(key, result.data.problems[0][key]);
+                if (result.data.problems[0][key]) {
+                  this.problemData[key] = result.data.problems[0][key];
+                }
+              });
+
+              console.log(this.problemData, "result from nested queries");
               console.log(result, "prob detail data");
               if (result.data.problems[0]) {
                 this.problemOwner =
@@ -479,11 +559,67 @@ export class ProblemDetailComponent implements OnInit {
                     }
                   });
               }
-            },
-            error => {
-              console.log("error", error);
             }
-          );
+
+            if (
+              result.data.problems.length &&
+              result.data.problems[0].enrichmentsByproblemId
+            ) {
+              result.data.problems[0].enrichmentsByproblemId.map(enrichment => {
+                if (
+                  enrichment.created_by ===
+                  Number(this.auth.currentUserValue.id)
+                ) {
+                  this.disableEnrichButton = true;
+                }
+              });
+              this.enrichment = result.data.problems[0].enrichmentsByproblemId;
+            }
+
+            if (
+              result.data.problems.length &&
+              result.data.problems[0].problem_validations
+            ) {
+              result.data.problems[0].problem_validations.map(validation => {
+                console.log(validation.validated_by, "test55");
+                if (
+                  validation.validated_by ===
+                  Number(this.auth.currentUserValue.id)
+                ) {
+                  this.disableValidateButton = true;
+                }
+              });
+
+              this.validation = result.data.problems[0].problem_validations;
+            }
+
+            if (
+              result.data.problems.length &&
+              result.data.problems[0].problem_collaborators
+            ) {
+              result.data.problems[0].problem_collaborators.map(
+                collaborator => {
+                  if (
+                    collaborator.user_id ===
+                    Number(this.auth.currentUserValue.id)
+                  ) {
+                    this.disableCollaborateButton = true;
+                  }
+                }
+              );
+              this.collaborators =
+                result.data.problems[0].problem_collaborators;
+            }
+
+            console.log(this.enrichment, "enrichments");
+            console.log(this.validation, "validations");
+
+            console.log(this.collaborators, "collaborators");
+          },
+          error => {
+            console.log("error", error);
+          }
+        );
       }
     });
   }
@@ -675,8 +811,8 @@ export class ProblemDetailComponent implements OnInit {
       }
     }
   }
-`,
-        pollInterval: 200
+`
+        // pollInterval: 200
       })
       .valueChanges.subscribe(
         result => {
@@ -732,8 +868,8 @@ export class ProblemDetailComponent implements OnInit {
   }
 
 }
-`,
-        pollInterval: 200
+`
+        // pollInterval: 200
       })
       .valueChanges.subscribe(
         result => {
@@ -788,8 +924,8 @@ export class ProblemDetailComponent implements OnInit {
               
             }
           }
-        `,
-        pollInterval: 200
+        `
+        // pollInterval: 200
       })
       .valueChanges.subscribe(
         data => {
@@ -924,6 +1060,10 @@ export class ProblemDetailComponent implements OnInit {
     if (collaborationData.__typename) {
       delete collaborationData.__typename;
     }
+    if (collaborationData.user) {
+      delete collaborationData.user;
+    }
+
     console.log(collaborationData, "collaboration data");
     collaborationData.user_id = Number(this.auth.currentUserValue.id);
 
@@ -1139,5 +1279,10 @@ export class ProblemDetailComponent implements OnInit {
       this.sources["index"]--;
       this.modalSrc = this.sources["attachmentObj"][this.sources["index"]];
     }
+  }
+
+  ngOnDestroy() {
+    this.problemDataQuery.stopPolling();
+    this.problemDataSub.unsubscribe();
   }
 }

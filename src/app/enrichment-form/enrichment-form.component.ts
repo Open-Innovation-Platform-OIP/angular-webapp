@@ -76,8 +76,8 @@ export class EnrichmentFormComponent implements OnInit {
                            
                             }
                         }
-                        `,
-            pollInterval: 500
+                        `
+            // pollInterval: 500
           })
           .valueChanges.subscribe(result => {
             console.log(result, "result");

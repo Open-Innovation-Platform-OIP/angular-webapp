@@ -101,11 +101,11 @@ export class WizardContainerComponent
   tags = [];
   removable = true;
   sizes = [
-    { value: 100, viewValue: ">100" },
-    { value: 1000, viewValue: ">1000" },
-    { value: 10000, viewValue: ">10000" },
-    { value: 100000, viewValue: ">100,000" },
-    { value: Number.MAX_VALUE, viewValue: "<100,000" }
+    { value: 100, viewValue: "<100" },
+    { value: 1000, viewValue: "<1000" },
+    { value: 10000, viewValue: "<10000" },
+    { value: 100000, viewValue: "<100,000" },
+    { value: Number.MAX_VALUE, viewValue: ">100,000" }
   ];
 
   @ViewChild("sectorInput") sectorInput: ElementRef<HTMLInputElement>;
@@ -279,7 +279,7 @@ export class WizardContainerComponent
     console.log(event, "event");
     if (event.value <= 100000) {
       this.content.min_population = 0;
-      this.content.max_population = this.populationValue;
+      this.content.max_population = event.value;
     } else {
       this.content.min_population = 100000;
       this.content.max_population = Number.MAX_VALUE;
@@ -299,8 +299,6 @@ export class WizardContainerComponent
       this.content.organization = "None";
     }
     // if (this.content.max_population > 0) {
-    //   this.populationValue = this.content.max_population;
-    // }
 
     console.log(this.content, "content");
     clearInterval(this.autosaveInterval);
@@ -606,8 +604,6 @@ export class WizardContainerComponent
 
   ngOnChanges(changes: SimpleChanges) {
     console.log(this.content, "content on ng on changes");
-    this.populationValue = this.content.max_population;
-    console.log(this.populationValue, "populaton value");
 
     console.log("wizard ngonchanges");
 
@@ -861,14 +857,14 @@ export class WizardContainerComponent
         this.content.description &&
         this.content.organization &&
         // this.content.min_population &&
-        this.populationValue &&
+        this.content.max_population &&
         this.content.location.length
       );
     } else {
       return (
         this.content.description &&
         this.content.organization &&
-        this.populationValue &&
+        this.content.max_population &&
         this.content.location.length
       );
     }

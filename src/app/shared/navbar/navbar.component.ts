@@ -183,8 +183,8 @@ export class NavbarComponent implements OnInit {
               }
             }
           }
-        `,
-        pollInterval: 500
+        `
+        // pollInterval: 500
       })
       .valueChanges.subscribe(({ data }) => {
         // console.log(data);

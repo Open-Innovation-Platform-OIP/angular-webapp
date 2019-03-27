@@ -60,8 +60,8 @@ export class ViewUserProfileComponent implements OnInit {
         }
               
            
-        `,
-            pollInterval: 500
+        `
+            // pollInterval: 500
           })
           .valueChanges.subscribe(result => {
             this.interests = [];

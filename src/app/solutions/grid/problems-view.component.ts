@@ -17,7 +17,7 @@ export class ProblemsViewComponent implements OnInit {
     this.apollo
       .watchQuery<any>({
         query: Query.GetQuery,
-        pollInterval: 500
+        pollInterval: 1000
       })
       .valueChanges.subscribe(result => {
         if (result.data.problems.length > 0) {

@@ -29,7 +29,7 @@ export class CollaborationService {
 
   submitCollaboratorToDB(collaborationData: collaborator) {
     console.log(collaborationData, "collab data");
-    console.log(collaborationData, "collab data 22");
+    console.log(collaborationData, "collab data in submit");
     const upsert_collaborators = gql`
       mutation upsert_collaborators(
         $collaborators: [collaborators_insert_input!]!
@@ -48,7 +48,6 @@ export class CollaborationService {
               is_expert
               is_beneficiary
               is_innovator
-              edited_at
             ]
           }
         ) {

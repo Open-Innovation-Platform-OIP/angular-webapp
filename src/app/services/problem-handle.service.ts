@@ -144,7 +144,7 @@ export class ProblemService {
           }
         }
       `,
-      pollInterval: 500
+      // pollInterval: 500
     }).valueChanges;
   }
 
@@ -380,7 +380,7 @@ export class ProblemService {
             }
           }
         `,
-        pollInterval: 500
+        // pollInterval: 500
       })
       .valueChanges.subscribe(result => {
         tags = result.data.problems[0].problem_tags.map(tagArray => {
