@@ -18,7 +18,7 @@ import { ProblemsViewComponent } from "./grid/problems-view.component";
 import { NguCarouselModule } from "@ngu/carousel";
 import { ComponentsModule } from "../components/components.module";
 import { DiscussionsModule } from "../discussions/discussions.module";
-import { WizardContainerComponent } from './wizard-container/wizard-container.component';
+// import { WizardContainerComponent } from './wizard-container/wizard-container.component';
 
 @NgModule({
   imports: [
@@ -36,8 +36,8 @@ import { WizardContainerComponent } from './wizard-container/wizard-container.co
   declarations: [
     WizardComponent,
     ProblemDetailComponent,
-    ProblemsViewComponent,
-    WizardContainerComponent
+    ProblemsViewComponent
+    // WizardContainerComponent
   ],
   providers: [
     {
@@ -48,4 +48,4 @@ import { WizardContainerComponent } from './wizard-container/wizard-container.co
     }
   ]
 })
-export class ProblemsModule { }
+export class ProblemsModule {}

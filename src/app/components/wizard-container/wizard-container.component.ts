@@ -131,6 +131,24 @@ export class WizardContainerComponent
           : Object.keys(this.tagService.allTags).slice()
       )
     );
+
+    this.type = this.formBuilder.group({
+      // To add a validator, we must first convert the string value into an array.
+      // The first tag in the array is the default value if any,
+      // then the next tag in the array is the validator.
+      // Here we are adding a required validator meaning that the firstName attribute must have a value in it.
+      title: [null, Validators.required],
+      description: [null, Validators.required],
+      location: [null, Validators.required],
+      population: [null, Validators.required],
+      organization: [null, Validators.required],
+      impact: [null, null],
+      extent: [null, null],
+      beneficiary: [null, null],
+      resources: [null, null],
+      sectors: [null, null],
+      media_url: [null, null]
+    });
   }
 
   add(event: MatChipInputEvent): void {
@@ -193,9 +211,6 @@ export class WizardContainerComponent
   // sendTagsToParent(tags) {
   //   this.tagsChanged.emit(this.sectors);
   // }
-  organizationSelected(org) {
-    this.content.organization = org;
-  }
 
   remove(sector: string): void {
     this.tagRemoved.emit(sector);
@@ -261,9 +276,8 @@ export class WizardContainerComponent
   }
 
   populationValueChanged(event) {
-    console.log(event,"event");
+    console.log(event, "event");
     if (event.value <= 100000) {
-
       this.content.min_population = 0;
       this.content.max_population = this.populationValue;
     } else {
@@ -273,10 +287,10 @@ export class WizardContainerComponent
   }
 
   ngOnInit() {
-    console.log(this.content, "content");
+    console.log(this.content, "content ngoninit");
     if (
+      this.usersService.allUsers[this.auth.currentUserValue.id] &&
       this.usersService.allUsers[this.auth.currentUserValue.id].organization
-
     ) {
       this.content.organization = this.usersService.allUsers[
         this.auth.currentUserValue.id
@@ -284,8 +298,9 @@ export class WizardContainerComponent
     } else {
       this.content.organization = "None";
     }
-
-    this.populationValue = this.content.max_population;
+    // if (this.content.max_population > 0) {
+    //   this.populationValue = this.content.max_population;
+    // }
 
     console.log(this.content, "content");
     clearInterval(this.autosaveInterval);
@@ -298,72 +313,8 @@ export class WizardContainerComponent
     canProceed = true;
     console.log("wizard ngoninit");
 
-    // this.route.params.pipe(first()).subscribe(params => {
-    //   if (params.id) {
-    //     this.apollo
-    //       .watchQuery<any>({
-    //         query: gql`
-    //                     {
-    //                         contents(where: { id: { _eq: ${params.id} } }) {
-    //                         id
-    //                         title
-    //                         created_by
-    //                         description
-    //                         location
-    //                         resources_needed
-    //                         image_urls
-    //                         video_urls
-    //                         impact
-    //                         extent
-    //                         min_population
-    //                         beneficiary_attributes
-    //                         organization
-    //                         featured_url
-    //                         featured_type
-    //                         voted_by
-    //                         watched_by
-    //                         content_tags{
-    //                             tag {
-    //                                 id
-    //                                 name
-    //                             }
-    //                         }
-    //                         }
-    //                     }
-    //                     `,
-    //         pollInterval: 500
-    //       })
-    //       .valueChanges.subscribe(result => {
-    //         if (
-    //           result.data.contents.length >= 1 &&
-    //           result.data.contents[0].id
-    //         ) {
-    //           canProceed = true;
-    //           this.content["id"] = result.data.contents[0].id;
-    //           Object.keys(this.content).map(key => {
-    //             // console.log(key, result.data.contents[0][key]);
-    //             if (result.data.contents[0][key]) {
-    //               this.content[key] = result.data.contents[0][key];
-    //             }
-    //           });
-    //           if (this.content.title) {
-    //             this.smartSearch(this.content.title);
-    //           }
-    //           this.sectors = result.data.contents[0].content_tags.map(
-    //             tagArray => {
-    //               return tagArray.tag.name;
-    //             }
-    //           );
-    //           this.is_edit = true;
-    //         } else {
-    //           this.router.navigate(["contents/add"]);
-    //         }
-    //       });
-    //   }
-    // });
-    // this.tagService.getTagsFromDB();
     console.log(this.content, "test for cont");
-    // this.usersService.getOrgsFromDB();
+    this.usersService.getOrgsFromDB();
     this.type = this.formBuilder.group({
       // To add a validator, we must first convert the string value into an array.
       // The first tag in the array is the default value if any,
@@ -445,6 +396,7 @@ export class WizardContainerComponent
       },
 
       onInit: function(tab: any, navigation: any, index: any) {
+        // this.populationValue = this.content.max_population;
         console.log("wizard oninit");
 
         // check number of tabs and fill the entire row
@@ -653,7 +605,9 @@ export class WizardContainerComponent
   }
 
   ngOnChanges(changes: SimpleChanges) {
+    console.log(this.content, "content on ng on changes");
     this.populationValue = this.content.max_population;
+    console.log(this.populationValue, "populaton value");
 
     console.log("wizard ngonchanges");
 
@@ -677,14 +631,7 @@ export class WizardContainerComponent
   publishContent() {
     console.log(Number.MAX_VALUE, "max value");
     console.log(this.content.location, "content location");
-    if (this.populationValue <= 100000) {
-      console.log(Number.MAX_VALUE);
-      this.content.min_population = 0;
-      this.content.max_population = this.populationValue;
-    } else {
-      this.content.min_population = 100000;
-      this.content.max_population = Number.MAX_VALUE;
-    }
+
     this.contentSubmitted.emit(this.content);
   }
 
@@ -915,14 +862,14 @@ export class WizardContainerComponent
         this.content.organization &&
         // this.content.min_population &&
         this.populationValue &&
-        this.content.location
+        this.content.location.length
       );
     } else {
       return (
         this.content.description &&
         this.content.organization &&
         this.populationValue &&
-        this.content.location
+        this.content.location.length
       );
     }
   }

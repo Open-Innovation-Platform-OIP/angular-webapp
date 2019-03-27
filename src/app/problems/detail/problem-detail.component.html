@@ -56,7 +56,7 @@
 
                 <p class="description" *ngIf="problemData.min_population===0">Between {{problemData.min_population}}
                   and {{problemData.max_population}}</p>
-                <p class="description" *ngIf="problemData.min_population!==0">Greater than
+                <p class="description" *ngIf="problemData.min_population!==0">More than
                   {{problemData.min_population}}</p>
 
                 <strong *ngIf="problemData.beneficiary_attributes">Beneficiary Attributes</strong>
@@ -132,8 +132,8 @@
                 keyboard_arrow_left
               </i>
             </a> -->
-          <button mat-raised-button class="btn btn-warning btn-round" data-toggle="modal" data-target="#enrichmentModal"
-            matTooltip="Click to add enrichment" [matTooltipPosition]="'below'" [disabled]="disableEnrichButton">Enrich</button>
+          <button mat-raised-button class="btn btn-warning btn-round" matTooltip="Click to add enrichment"
+            [matTooltipPosition]="'below'" [disabled]="disableEnrichButton" [routerLink]="['/enrichment/add',{problemId:problemData.id}]">Enrich</button>
           <!-- <a mat-button NguCarouselNext class="rightRs">
               <i class="material-icons">
                 keyboard_arrow_right
@@ -189,9 +189,11 @@
                 </button>
               </div>
               <div class="modal-body ">
-                <app-add-enrichment (submitted)="onEnrichmentSubmit($event)"></app-add-enrichment>
+                <!-- <app-add-enrichment (submitted)="onEnrichmentSubmit($event)"></app-add-enrichment> -->
                 <!-- <app-wizard-cmp></app-wizard-cmp> -->
                 <!-- <app-wizard-container></app-wizard-container> -->
+                <!-- <app-wizard-container [content]="enrichmentData" [contentType]="'enrichment'" (contentSubmitted)="onEnrichmentSubmit($event)"></app-wizard-container> -->
+
               </div>
             </div>
           </div>
@@ -239,7 +241,9 @@
                 </button>
               </div>
               <div class="modal-body">
-                <app-add-enrichment *ngIf="enrichDataToEdit" [enrichmentData]="enrichDataToEdit" (submitted)="onEnrichmentSubmit($event)"></app-add-enrichment>
+                <!-- <app-add-enrichment *ngIf="enrichDataToEdit" [enrichmentData]="enrichDataToEdit" (submitted)="onEnrichmentSubmit($event)"></app-add-enrichment> -->
+                <!-- <app-wizard-container [content]="enrichmentData" [contentType]="'enrichment'" (contentSubmitted)="onEnrichmentSubmit($event)"></app-wizard-container> -->
+
               </div>
             </div>
           </div>

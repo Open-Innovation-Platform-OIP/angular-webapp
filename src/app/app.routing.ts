@@ -44,6 +44,11 @@ export const AppRoutes: Routes = [
       {
         path: "solutions",
         loadChildren: "./solutions/solutions.module#SolutionsModule"
+      },
+      {
+        path: "enrichment",
+        loadChildren:
+          "./enrichment-form/enrichment-form.module#EnrichmentFormModule"
       }
     ]
   },

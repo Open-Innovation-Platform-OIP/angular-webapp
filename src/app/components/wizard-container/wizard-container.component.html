@@ -129,7 +129,7 @@
                   <div class="input-group-prepend">
                     <span class="input-group-text">
                       <i class="material-icons" [ngStyle]="{
-                      color: !content.location
+                      color: !content.location.length
                         ? 'red'
                         : '#AAAAAA'
                     }">place</i>
@@ -358,7 +358,8 @@
           <input type="button" class="btn btn-previous btn-fill btn-default btn-wd disabled" name="previous" value="Previous">
         </div>
         <div class="ml-auto">
-          <input type="button" class="btn btn-next btn-fill btn-warning btn-wd" name="next" value="Next">
+          <input type="button" class="btn btn-next btn-fill btn-warning btn-wd" [disabled]="!isComplete()" name="next"
+            value="Next">
 
           <input type="button" class="btn btn-finish btn-fill btn-warning btn-wd" [disabled]="!isComplete()" (click)="publishContent()"
             name="finish" value="Publish" style="display: none;">
