@@ -24,20 +24,9 @@
                     src="{{(problemData.featured_url && checkUrlIsImg(problemData.featured_url)) ? problemData.featured_url : './assets/img/image_placeholder.jpg'}}"
                     alt="Thumbnail Image" class="rounded img-fluid">
                   <div class="row justify-content-center">
-<<<<<<< HEAD
                     <button mat-raised-button *ngIf="problem_attachments.length > 1"
                       class="btn btn-raised btn-info btn-sm" data-toggle="modal" data-target="#viewMoreImgModal">
                       view media ({{problem_attachments.length}})
-=======
-                    <button mat-raised-button class="btn btn-raised btn-info btn-sm" data-toggle="modal"
-                      data-target="#viewMoreImgModal">
-                      view media
-                    </button>
-                    <button mat-raised-button class="btn btn-raised btn-info btn-sm" data-toggle="modal"
-                      data-target="#viewMoreVideosModal"
-                      *ngIf="this.problemData.video_urls && this.problemData.video_urls.length > 0">
-                      Show videos
->>>>>>> v-component-rewrite
                     </button>
                   </div>
                 </div>
@@ -524,11 +513,7 @@
                   </h5>
                 </div>
                 <div id="newComment" class="collapse show" role="tabpanel" aria-labelledby="headingOne"
-<<<<<<< HEAD
                   data-target="#newComment">
-=======
-                  data-target="#newComment" style="">
->>>>>>> v-component-rewrite
                   <app-submit-comment [users]="objectValues(usersService.allUsers)" [actionText]="'Comment'"
                     (submit)="onCommentSubmit($event)"></app-submit-comment>
                 </div>
