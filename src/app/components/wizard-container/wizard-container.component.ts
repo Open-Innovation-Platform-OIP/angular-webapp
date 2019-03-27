@@ -1,15 +1,26 @@
-// IMPORTANT: this is a plugin which requires jQuery for initialisation and data manipulation
-
 import {
   Component,
-  ElementRef,
-  ViewChild,
   OnInit,
+  Input,
   OnChanges,
   OnDestroy,
   AfterViewInit,
-  SimpleChanges
+  SimpleChanges,
+  Output,
+  EventEmitter,
+  ElementRef,
+  ViewChild
 } from "@angular/core";
+import { ErrorStateMatcher } from "@angular/material/core";
+import { TagsService } from "../../services/tags.service";
+import { FilesService } from "../../services/files.service";
+import { UsersService } from "../../services/users.service";
+import { AuthService } from "../../services/auth.service";
+import { Router, ActivatedRoute } from "@angular/router";
+import { map, startWith } from "rxjs/operators";
+import { Observable } from "rxjs";
+import { GeocoderService } from "../../services/geocoder.service";
+
 import {
   FormControl,
   FormBuilder,
@@ -18,40 +29,29 @@ import {
   Validators,
   FormGroup
 } from "@angular/forms";
-import { Router, ActivatedRoute } from "@angular/router";
-import { ErrorStateMatcher } from "@angular/material/core";
+import { Content } from "@angular/compiler/src/render3/r3_ast";
+
 import { COMMA, ENTER } from "@angular/cdk/keycodes";
 import {
   MatAutocompleteSelectedEvent,
   MatChipInputEvent,
   MatAutocomplete
 } from "@angular/material";
-import { Apollo } from "apollo-angular";
-import gql from "graphql-tag";
-import { TagsService } from "../../services/tags.service";
-import { FilesService } from "../../services/files.service";
-import { UsersService } from "../../services/users.service";
-import { AuthService } from "../../services/auth.service";
-// import { GeocoderService } from '../../services/geocoder.service';
-import { Observable } from "rxjs";
-import { map, startWith } from "rxjs/operators";
-import { first } from "rxjs/operators";
-declare var H: any;
 declare const $: any;
+
+let canProceed: boolean;
+
 interface FileReaderEventTarget extends EventTarget {
   result: string;
 }
-
-let canProceed: boolean;
 
 interface FileReaderEvent extends Event {
   target: EventTarget;
   getMessage(): string;
 }
-export interface Sector {
-  name: string;
-  id: number;
-}
+
+// import { Content } from '@angular/compiler/src/render3/r3_ast';
+
 export class MyErrorStateMatcher implements ErrorStateMatcher {
   isErrorState(
     control: FormControl | null,
@@ -67,74 +67,62 @@ export class MyErrorStateMatcher implements ErrorStateMatcher {
 }
 
 @Component({
-  selector: "app-wizard-cmp",
-  templateUrl: "wizard.component.html",
-  styleUrls: ["wizard.component.css"]
+  selector: "app-wizard-container",
+  templateUrl: "./wizard-container.component.html",
+  styleUrls: ["./wizard-container.component.css"]
 })
-export class WizardComponent
-  implements OnInit, OnChanges, OnDestroy, AfterViewInit {
-  objectValues = Object["values"];
-  visible = true;
-  selectable = true;
-  removable = true;
-  addOnBlur = true;
-  readonly separatorKeysCodes: number[] = [ENTER, COMMA];
+export class WizardContainerComponent
+  implements OnInit, OnChanges, AfterViewInit {
+  @Input() content;
+
+  @Input() sectors: string[] = [];
+  @Input() contentType: any;
+  @Output() fieldsPopulated = new EventEmitter();
+  @Output() smartSearchInput = new EventEmitter();
+  @Output() tagAdded = new EventEmitter();
+  @Output() tagRemoved = new EventEmitter();
+  @Output() contentSubmitted = new EventEmitter();
+
+  matcher = new MyErrorStateMatcher();
+  type: FormGroup;
   is_edit = false;
+  populationValue: Number;
   media_url = "";
-  owners = [];
-  voted_by = [];
-  watched_by = [];
-  problem = {
-    title: "",
-    description: "",
-    organization: "",
-    impact: "",
-    extent: "",
-    location: "",
-    min_population: 0,
-    max_population:0,
-    beneficiary_attributes: "",
-    resources_needed: "",
-    image_urls: [],
-    video_urls: [],
-    featured_url: "",
-    embed_urls: [],
-    featured_type: "",
-    voted_by: "",
-    watched_by: "",
-    created_by: Number(this.auth.currentUserValue.id),
-    is_draft: true,
-    owners: ""
-  };
+  autosaveInterval: any;
+  locations: any = [];
+  locationInputValue: any;
+
+  readonly separatorKeysCodes: number[] = [ENTER, COMMA];
   searchResults = {};
   sectorCtrl = new FormControl();
+  locationCtrl = new FormControl();
   filteredSectors: Observable<string[]>;
-  sectors: string[] = [];
-  matcher = new MyErrorStateMatcher();
-  // autoCompleteTags: any[] = [];
+  // sectors: string[] = [];
   tags = [];
-  autosaveInterval: any;
-  type: FormGroup;
+  removable = true;
   sizes = [
     { value: 100, viewValue: ">100" },
     { value: 1000, viewValue: ">1000" },
     { value: 10000, viewValue: ">10000" },
-    { value: 100000, viewValue: ">100,000" }
+    { value: 100000, viewValue: ">100,000" },
+    { value: Number.MAX_VALUE, viewValue: "<100,000" }
   ];
+
   @ViewChild("sectorInput") sectorInput: ElementRef<HTMLInputElement>;
+  @ViewChild("locationInput") locationInput: ElementRef<HTMLInputElement>;
+
   @ViewChild("auto") matAutocomplete: MatAutocomplete;
   constructor(
     private router: Router,
     private route: ActivatedRoute,
     private formBuilder: FormBuilder,
     private filesService: FilesService,
-    private apollo: Apollo,
     private tagService: TagsService,
     private usersService: UsersService,
-    private auth: AuthService // private geocoder: GeocoderService
+    private auth: AuthService,
+    private here: GeocoderService
   ) {
-    canProceed = true;
-    this.problem.organization = "Social Alpha";
+    console.log(this.sectors, "sec");
     this.filteredSectors = this.sectorCtrl.valueChanges.pipe(
       startWith(null),
       map((sector: string | null) =>
@@ -143,7 +131,24 @@ export class WizardComponent
           : Object.keys(this.tagService.allTags).slice()
       )
     );
-    // console.log(this.auth.currentUserValue);
+
+    this.type = this.formBuilder.group({
+      // To add a validator, we must first convert the string value into an array.
+      // The first tag in the array is the default value if any,
+      // then the next tag in the array is the validator.
+      // Here we are adding a required validator meaning that the firstName attribute must have a value in it.
+      title: [null, Validators.required],
+      description: [null, Validators.required],
+      location: [null, Validators.required],
+      population: [null, Validators.required],
+      organization: [null, Validators.required],
+      impact: [null, null],
+      extent: [null, null],
+      beneficiary: [null, null],
+      resources: [null, null],
+      sectors: [null, null],
+      media_url: [null, null]
+    });
   }
 
   add(event: MatChipInputEvent): void {
@@ -161,20 +166,94 @@ export class WizardComponent
         input.value = "";
       }
       this.sectorCtrl.setValue(null);
+      // this.tagAdded.emit(this.sectors);
     }
   }
 
-  remove(sector: string): void {
-    const index = this.sectors.indexOf(sector);
-    if (index >= 0) {
-      this.sectors.splice(index, 1);
+  selectedLocation(event) {
+    console.log(event, "selected location");
+    console.log(this.content.location, "selected location content");
+
+    this.content.location.push(event.option.value);
+    console.log(this.content.location, "selected location content 2");
+
+    this.locationInput.nativeElement.value = "";
+    this.locationCtrl.setValue(null);
+    // this.tagAdded.emit(this.sectors);
+  }
+
+  addLocation(event) {
+    if (!this.matAutocomplete.isOpen) {
+      console.log(event, "event for add ");
+      const input = event.input;
+      const value = event.value;
+
+      // Add our sector
+      if ((value || "").trim()) {
+        this.content.location.push(value);
+      }
+      // Reset the input value
+      if (input) {
+        input.value = "";
+      }
+      this.sectorCtrl.setValue(null);
+      // this.tagAdded.emit(this.sectors);
     }
+  }
+
+  removeLocation(location) {
+    const index = this.content.location.indexOf(location);
+    if (index >= 0) {
+      this.content.location.splice(index, 1);
+    }
+  }
+
+  // sendTagsToParent(tags) {
+  //   this.tagsChanged.emit(this.sectors);
+  // }
+
+  remove(sector: string): void {
+    this.tagRemoved.emit(sector);
+
+    // this.tagsChanged.emit(this.sectors);
+  }
+
+  getLocation(input) {
+    console.log("get address", input);
+    if (this.locationInputValue != "Unknown") {
+      this.here.getAddress(this.locationInputValue).then(
+        result => {
+          console.log(result, "result");
+          this.locations = <Array<any>>result;
+          console.log(this.locations, "locations");
+        },
+        error => {
+          console.error(error);
+        }
+      );
+    }
+    // var obj = personas;
+    // console.log(personas);
+    // var keys = Object.keys(obj);
+
+    // var filtered = keys.filter(function(key) {
+    //   return obj[key];
+    // });
+    // console.log(JSON.parse("{" + filtered.toString() + "}"));
+    // console.log(typeof JSON.parse("{" + filtered.toString() + "}"));
+  }
+  public storeLocation(loc) {
+    // this.content.location = loc.srcElement.innerText;
+    console.log(loc, "location");
+    // console.log(this..location);
   }
 
   selected(event: MatAutocompleteSelectedEvent): void {
+    console.log(this.sectors, "test for sector");
     this.sectors.push(event.option.viewValue);
     this.sectorInput.nativeElement.value = "";
     this.sectorCtrl.setValue(null);
+    this.tagAdded.emit(this.sectors);
   }
 
   private _filter(value: string): string[] {
@@ -185,10 +264,6 @@ export class WizardComponent
     );
   }
 
-  isFieldValid(form: FormGroup, field: string) {
-    return !form.get(field).valid && form.get(field).touched;
-  }
-
   displayFieldCss(form: FormGroup, field: string) {
     return {
       "has-error": this.isFieldValid(form, field),
@@ -196,78 +271,49 @@ export class WizardComponent
     };
   }
 
-  ngOnDestroy() {
-    clearInterval(this.autosaveInterval);
+  isFieldValid(form: FormGroup, field: string) {
+    return !form.get(field).valid && form.get(field).touched;
   }
+
+  populationValueChanged(event) {
+    console.log(event, "event");
+    if (event.value <= 100000) {
+      this.content.min_population = 0;
+      this.content.max_population = this.populationValue;
+    } else {
+      this.content.min_population = 100000;
+      this.content.max_population = Number.MAX_VALUE;
+    }
+  }
+
   ngOnInit() {
+    console.log(this.content, "content ngoninit");
+    if (
+      this.usersService.allUsers[this.auth.currentUserValue.id] &&
+      this.usersService.allUsers[this.auth.currentUserValue.id].organization
+    ) {
+      this.content.organization = this.usersService.allUsers[
+        this.auth.currentUserValue.id
+      ].organization;
+    } else {
+      this.content.organization = "None";
+    }
+    // if (this.content.max_population > 0) {
+    //   this.populationValue = this.content.max_population;
+    // }
+
+    console.log(this.content, "content");
     clearInterval(this.autosaveInterval);
     this.autosaveInterval = setInterval(() => {
-      this.autoSave();
+      // this.autoSave();
     }, 10000);
-    this.route.params.pipe(first()).subscribe(params => {
-      if (params.id) {
-        this.apollo
-          .watchQuery<any>({
-            query: gql`
-                        {
-                            problems(where: { id: { _eq: ${params.id} } }) {
-                            id
-                            title
-                            created_by
-                            description
-                            location
-                            resources_needed
-                            image_urls
-                            video_urls
-                            impact
-                            extent
-                            min_population
-                            beneficiary_attributes
-                            organization
-                            featured_url
-                            featured_type
-                            voted_by
-                            watched_by
-                            problem_tags{
-                                tag {
-                                    id
-                                    name
-                                }
-                            }
-                            }
-                        }
-                        `,
-            pollInterval: 500
-          })
-          .valueChanges.subscribe(result => {
-            if (
-              result.data.problems.length >= 1 &&
-              result.data.problems[0].id
-            ) {
-              canProceed = true;
-              this.problem["id"] = result.data.problems[0].id;
-              Object.keys(this.problem).map(key => {
-                // console.log(key, result.data.problems[0][key]);
-                if (result.data.problems[0][key]) {
-                  this.problem[key] = result.data.problems[0][key];
-                }
-              });
-              if (this.problem.title) {
-                this.smartSearch(this.problem.title);
-              }
-              this.sectors = result.data.problems[0].problem_tags.map(
-                tagArray => {
-                  return tagArray.tag.name;
-                }
-              );
-              this.is_edit = true;
-            } else {
-              this.router.navigate(["problems/add"]);
-            }
-          });
-      }
-    });
-    this.tagService.getTagsFromDB();
+
+    console.log(this.usersService.allOrgs, "orgs");
+
+    canProceed = true;
+    console.log("wizard ngoninit");
+
+    console.log(this.content, "test for cont");
     this.usersService.getOrgsFromDB();
     this.type = this.formBuilder.group({
       // To add a validator, we must first convert the string value into an array.
@@ -338,7 +384,7 @@ export class WizardComponent
         } else if (!canProceed) {
           if (
             confirm(
-              "Are you sure you want to add a new problem and not enrich an existing one?"
+              "Are you sure you want to add a new content and not enrich an existing one?"
             )
           ) {
             canProceed = true;
@@ -350,6 +396,9 @@ export class WizardComponent
       },
 
       onInit: function(tab: any, navigation: any, index: any) {
+        // this.populationValue = this.content.max_population;
+        console.log("wizard oninit");
+
         // check number of tabs and fill the entire row
         let $total = navigation.find("li").length;
         const $wizard = navigation.closest(".card-wizard");
@@ -419,6 +468,7 @@ export class WizardComponent
       },
 
       onTabShow: function(tab: any, navigation: any, index: any) {
+        console.log("on tab show");
         let $total = navigation.find("li").length;
         let $current = index + 1;
 
@@ -555,6 +605,12 @@ export class WizardComponent
   }
 
   ngOnChanges(changes: SimpleChanges) {
+    console.log(this.content, "content on ng on changes");
+    this.populationValue = this.content.max_population;
+    console.log(this.populationValue, "populaton value");
+
+    console.log("wizard ngonchanges");
+
     const input = $(this);
     if (input[0].files && input[0].files[0]) {
       const reader: any = new FileReader();
@@ -566,7 +622,26 @@ export class WizardComponent
       reader.readAsDataURL(input[0].files[0]);
     }
   }
+
+  sendInputToParent(input) {
+    console.log(event, "test for event");
+    this.smartSearchInput.emit(input);
+  }
+
+  publishContent() {
+    console.log(Number.MAX_VALUE, "max value");
+    console.log(this.content.location, "content location");
+
+    this.contentSubmitted.emit(this.content);
+  }
+
+  sendDataBack() {
+    this.fieldsPopulated.emit(this.content);
+  }
+
   ngAfterViewInit() {
+    console.log("wizard after view in it");
+
     $(window).resize(() => {
       $(".card-wizard").each(function() {
         const $wizard = $(this);
@@ -625,14 +700,14 @@ export class WizardComponent
 
   removePhoto(index) {
     this.filesService
-      .deleteFile(this.problem["image_urls"][index]["key"])
+      .deleteFile(this.content["image_urls"][index]["key"])
       .promise()
       .then(data => {
-        if (this.problem.image_urls[index].url === this.problem.featured_url) {
-          this.problem.featured_url = "";
-          this.problem.featured_type = "";
+        if (this.content.image_urls[index].url === this.content.featured_url) {
+          this.content.featured_url = "";
+          this.content.featured_type = "";
         }
-        this.problem.image_urls.splice(index, 1);
+        this.content.image_urls.splice(index, 1);
       })
       .catch(e => {
         console.log("Err: ", e);
@@ -640,14 +715,14 @@ export class WizardComponent
   }
 
   removeAll() {
-    this.problem.image_urls.forEach((imageObj, i) => {
+    this.content.image_urls.forEach((imageObj, i) => {
       this.filesService
         .deleteFile(imageObj["key"])
         .promise()
         .then(data => {
           console.log("Deleted file: ", data);
-          if (this.problem.image_urls.length === i + 1) {
-            this.problem.image_urls = [];
+          if (this.content.image_urls.length === i + 1) {
+            this.content.image_urls = [];
           }
         })
         .catch(e => {
@@ -671,13 +746,13 @@ export class WizardComponent
                 .uploadFile(e.target.result, img_id)
                 .promise()
                 .then(values => {
-                  this.problem.image_urls.push({
+                  this.content.image_urls.push({
                     url: values["Location"],
                     key: values["Key"]
                   });
-                  if (!this.problem.featured_url) {
-                    this.problem.featured_url = this.problem.image_urls[0].url;
-                    this.problem.featured_type = "image";
+                  if (!this.content.featured_url) {
+                    this.content.featured_url = this.content.image_urls[0].url;
+                    this.content.featured_type = "image";
                   }
                 })
                 .catch(e => console.log("Err:: ", e));
@@ -692,13 +767,13 @@ export class WizardComponent
             .uploadFile(video, video.name)
             .promise()
             .then(data => {
-              this.problem.video_urls.push({
+              this.content.video_urls.push({
                 key: data["Key"],
                 url: data["Location"]
               });
-              if (!this.problem.featured_url) {
-                this.problem.featured_url = this.problem.video_urls[0].url;
-                this.problem.featured_type = "video";
+              if (!this.content.featured_url) {
+                this.content.featured_url = this.content.video_urls[0].url;
+                this.content.featured_type = "video";
               }
             })
             .catch(e => console.log("Err:: ", e));
@@ -715,14 +790,14 @@ export class WizardComponent
 
   removeVideo(index: number) {
     this.filesService
-      .deleteFile(this.problem["video_urls"][index]["key"])
+      .deleteFile(this.content["video_urls"][index]["key"])
       .promise()
       .then(data => {
-        if (this.problem.video_urls[index].url === this.problem.featured_url) {
-          this.problem.featured_url = "";
-          this.problem.featured_type = "";
+        if (this.content.video_urls[index].url === this.content.featured_url) {
+          this.content.featured_url = "";
+          this.content.featured_type = "";
         }
-        this.problem.video_urls.splice(index, 1);
+        this.content.video_urls.splice(index, 1);
       })
       .catch(e => {
         console.log("Err: ", e);
@@ -730,280 +805,95 @@ export class WizardComponent
   }
 
   removeEmbed(index: number) {
-    this.problem.embed_urls.splice(index, 1);
-    if (this.problem.embed_urls[index] === this.problem.featured_url) {
-      this.problem.featured_url = "";
-      this.problem.featured_type = "";
+    this.content.embed_urls.splice(index, 1);
+    if (this.content.embed_urls[index] === this.content.featured_url) {
+      this.content.featured_url = "";
+      this.content.featured_type = "";
     }
   }
 
-  smartSearch(key: string) {
-    const searchKey = this.problem.title + " " + this.problem.description;
-    if (searchKey.length > 3) {
-      this.searchResults = {};
-      this.apollo
-        .watchQuery<any>({
-          query: gql`query {
-                    search_problems_v2(
-                    args: {search: "${searchKey.toLowerCase()}"}
-                    ){
-                    id
-                    title
-                    description
-                    problem_tags {
-                        tag {
-                            name
-                        }
-                    }
-                    }
-                    }`,
-          pollInterval: 500
-        })
-        .valueChanges.subscribe(
-          result => {
-            if (result.data.search_problems_v2.length > 0) {
-              result.data.search_problems_v2.map(result => {
-                if (result.id != this.problem["id"]) {
-                  this.searchResults[result.id] = result;
-                }
-              });
-              if (!this.is_edit) {
-                canProceed = false;
-              }
-            }
-          },
-          err => {}
-        );
-    } else {
-      this.searchResults = {};
-    }
-  }
+  // smartSearch(key: string) {
+  //   const searchKey = this.content.title + " " + this.content.description;
+  //   if (searchKey.length > 3) {
+  //     this.searchResults = {};
+  //     this.apollo
+  //       .watchQuery<any>({
+  //         query: gql`query {
+  //                   search_contents_v2(
+  //                   args: {search: "${searchKey.toLowerCase()}"}
+  //                   ){
+  //                   id
+  //                   title
+  //                   description
+  //                   content_tags {
+  //                       tag {
+  //                           name
+  //                       }
+  //                   }
+  //                   }
+  //                   }`,
+  //         pollInterval: 500
+  //       })
+  //       .valueChanges.subscribe(
+  //         result => {
+  //           if (result.data.search_contents_v2.length > 0) {
+  //             result.data.search_contents_v2.map(result => {
+  //               if (result.id != this.content["id"]) {
+  //                 this.searchResults[result.id] = result;
+  //               }
+  //             });
+  //             if (!this.is_edit) {
+  //               canProceed = false;
+  //             }
+  //           }
+  //         },
+  //         err => {}
+  //       );
+  //   } else {
+  //     this.searchResults = {};
+  //   }
+  // }
 
   isComplete() {
-    return (
-      this.problem.title &&
-      this.problem.description &&
-      this.problem.organization &&
-      // this.problem.min_population &&
-      this.problem.location
-    );
-  }
-
-  autoSave() {
-    console.log("trying to auto save");
-    if (this.problem.title) {
-      this.submitProblemToDB();
-    }
-  }
-
-  saveProblemDraft() {
-    this.autoSave();
-    alert("Problem draft has been saved. You can continue editing anytime");
-  }
-
-  publishProblem() {
-    this.problem.is_draft = false;
-    clearInterval(this.autosaveInterval);
-    this.submitProblemToDB();
-  }
-
-  submitProblemToDB() {
-    const upsert_problem = gql`
-      mutation upsert_problem($problems: [problems_insert_input!]!) {
-        insert_problems(
-          objects: $problems
-          on_conflict: {
-            constraint: problems_pkey
-            update_columns: [
-              title
-              description
-              location
-              resources_needed
-              organization
-              impact
-              extent
-              beneficiary_attributes
-              image_urls
-              video_urls
-              owners
-              min_population
-              max_population
-              modified_at
-              featured_url
-              featured_type
-              embed_urls
-            ]
-          }
-        ) {
-          affected_rows
-          returning {
-            id
-          }
-        }
-      }
-    `;
-    this.problem.owners = JSON.stringify(this.owners)
-      .replace("[", "{")
-      .replace("]", "}");
-    this.problem.voted_by = JSON.stringify(this.voted_by)
-      .replace("[", "{")
-      .replace("]", "}");
-    this.problem.watched_by = JSON.stringify(this.watched_by)
-      .replace("[", "{")
-      .replace("]", "}");
-
-    this.apollo
-      .mutate({
-        mutation: upsert_problem,
-        variables: {
-          problems: [this.problem]
-        }
-      })
-      .subscribe(
-        result => {
-          if (result.data.insert_problems.returning.length > 0) {
-            this.problem["id"] = result.data.insert_problems.returning[0].id;
-            const problem_tags = new Set();
-
-            this.sectors.map(sector => {
-              if (
-                this.tagService.allTags[sector] &&
-                this.tagService.allTags[sector].id
-              ) {
-                problem_tags.add({
-                  tag_id: this.tagService.allTags[sector].id,
-                  problem_id: this.problem["id"]
-                });
-              }
-            });
-            if (problem_tags.size > 0) {
-              const upsert_problem_tags = gql`
-                mutation upsert_problem_tags(
-                  $problems_tags: [problems_tags_insert_input!]!
-                ) {
-                  insert_problems_tags(
-                    objects: $problems_tags
-                    on_conflict: {
-                      constraint: problems_tags_pkey
-                      update_columns: [tag_id, problem_id]
-                    }
-                  ) {
-                    affected_rows
-                    returning {
-                      tag_id
-                      problem_id
-                    }
-                  }
-                }
-              `;
-              this.apollo
-                .mutate({
-                  mutation: upsert_problem_tags,
-                  variables: {
-                    problems_tags: Array.from(problem_tags)
-                  }
-                })
-                .subscribe(
-                  data => {
-                    if (!this.problem.is_draft) {
-                      this.confirmSubmission();
-                    } else if (!this.is_edit) {
-                      this.router.navigate([
-                        "problems",
-                        this.problem["id"],
-                        "edit"
-                      ]);
-                    }
-                  },
-                  err => {
-                    console.error("Error uploading tags", err);
-                    if (!this.problem.is_draft) {
-                      this.confirmSubmission();
-                    } else if (!this.is_edit) {
-                      this.router.navigate([
-                        "problems",
-                        this.problem["id"],
-                        "edit"
-                      ]);
-                    }
-                  }
-                );
-            } else {
-              if (!this.problem.is_draft) {
-                this.confirmSubmission();
-              } else if (!this.is_edit) {
-                this.router.navigate(["problems", this.problem["id"], "edit"]);
-              }
-            }
-          }
-        },
-        err => {
-          console.error(JSON.stringify(err));
-        }
+    if (this.contentType === "problem") {
+      return (
+        this.content.title &&
+        this.content.description &&
+        this.content.organization &&
+        // this.content.min_population &&
+        this.populationValue &&
+        this.content.location.length
       );
-  }
-
-  confirmSubmission() {
-    if (this.is_edit) {
-      alert("Your problem has been updated!");
     } else {
-      alert("Your problem has been submitted!");
+      return (
+        this.content.description &&
+        this.content.organization &&
+        this.populationValue &&
+        this.content.location.length
+      );
     }
-    this.router.navigate(["problems", this.problem["id"]]);
   }
 
-  deleteProblem() {
-    if (confirm("Are you sure you want to delete this problem?")) {
-      const delete_problem = gql`
-                mutation delete_problem {
-                    update_problems(
-                    where: {sku: {_eq: ${this.problem["id"]}}},
-                    _set: {
-                        is_deleted: true
-                    }
-                    ) {
-                    affected_rows
-                    returning {
-                        id
-                        is_deleted
-                    }
-                    }
-                }
-                `;
-      this.apollo
-        .mutate({
-          mutation: delete_problem
-        })
-        .subscribe(
-          data => {
-            this.router.navigate(["problems"]);
-          },
-          err => {
-            console.error(JSON.stringify(err));
-          }
-        );
-    }
-  }
   setFeatured(type, index) {
     console.log(type, index);
     if (type === "image") {
-      this.problem.featured_type = "image";
-      this.problem.featured_url = this.problem.image_urls[index].url;
+      this.content.featured_type = "image";
+      this.content.featured_url = this.content.image_urls[index].url;
     } else if (type === "video") {
-      this.problem.featured_type = "video";
-      this.problem.featured_url = this.problem.video_urls[index].url;
+      this.content.featured_type = "video";
+      this.content.featured_url = this.content.video_urls[index].url;
     } else if (type === "embed") {
-      this.problem.featured_type = "embed";
-      this.problem.featured_url = this.problem.embed_urls[index];
+      this.content.featured_type = "embed";
+      this.content.featured_url = this.content.embed_urls[index];
     }
   }
 
   addMediaUrl() {
     if (this.media_url) {
-      this.problem.embed_urls.push(this.media_url);
-      if (!this.problem.featured_url) {
-        this.problem.featured_url = this.media_url;
-        this.problem.featured_type = "embed";
+      this.content.embed_urls.push(this.media_url);
+      if (!this.content.featured_url) {
+        this.content.featured_url = this.media_url;
+        this.content.featured_type = "embed";
       }
     }
   }

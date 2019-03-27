@@ -1,9 +1,9 @@
 <!--      Wizard container        -->
-<!-- <div class="wizard-container">
+<div class="wizard-container">
   <div class="card card-wizard" data-color="orange" id="wizardProfile">
-    <form [formGroup]="type" action="" method="">
+    <form [formGroup]="type" action="" method="" (keyup)="sendDataBack($event)">
       <div class="card-header text-center">
-        <h3 class="card-title">
+        <h3 class="card-title" *ngIf="contentType==='problem'">
           {{content.title || "Let's add a content"}}
         </h3>
       </div>
@@ -25,12 +25,11 @@
       <div class="card-body">
         <div class="tab-content">
           <div class="tab-pane active" id="text">
-            <a href="#media" data-toggle="tab" role="tab" class="nav-link"
-              *ngIf="content.image_urls.length+content.video_urls.length>0">{{content.image_urls.length}}
+            <a href="#media" data-toggle="tab" role="tab" class="nav-link" *ngIf="content.image_urls.length+content.video_urls.length>0">{{content.image_urls.length}}
               image(s) and {{content.video_urls.length}} video(s) attached</a>
             <div class="row justify-content-center">
               <div class="col-sm-12">
-                <div class="input-group form-control-lg">
+                <div class="input-group form-control-lg" *ngIf="contentType==='problem'">
                   <div class="input-group-prepend">
                     <span class="input-group-text">
                       <i class="material-icons" [ngStyle]="{
@@ -42,7 +41,7 @@
                   </div>
                   <mat-form-field class="example-full-width has-label" [ngClass]="displayFieldCss(type, 'title')">
                     <input type="text" name="title" matInput id="title" placeholder="Title *" formControlName="title"
-                      [(ngModel)]="content.title" (input)="smartSearch($event.target.value)">
+                      [(ngModel)]="content.title" (input)="sendInputToParent($event.target.value)">
                   </mat-form-field>
                 </div>
               </div>
@@ -61,7 +60,7 @@
                   </div>
                   <mat-form-field class="example-full-width has-label" [ngClass]="displayFieldCss(type, 'description')">
                     <textarea type="text" name="description" matInput id="description" placeholder="Description *"
-                      formControlName="description" rows="3" (input)="smartSearch($event.target.value)"
+                      formControlName="description" rows="4" (input)="sendInputToParent($event.target.value)"
                       [(ngModel)]="content.description"></textarea>
                   </mat-form-field>
                 </div>
@@ -81,13 +80,21 @@
                     }">business_center</i>
                     </span>
                   </div>
-                  <mat-form-field class="example-full-width has-label"
-                    [ngClass]="displayFieldCss(type, 'organization')">
+                  <mat-form-field class="example-full-width has-label" [ngClass]="displayFieldCss(type, 'organization')">
                     <mat-select name="organization" placeholder="Select Organization *" matInput id="organization"
                       formControlName="organization" [(ngModel)]="content.organization">
                       <mat-option>None</mat-option>
                       <mat-option *ngFor="let org of usersService.allOrgs" value="{{org}}">{{org}}</mat-option>
                     </mat-select>
+
+                    <!-- <input placeholder="Organization" [matAutocomplete]="auto" matInput [(ngModel)]="content.organization"
+                      id="organization" formControlName="organization">
+
+                    <mat-autocomplete #auto="matAutocomplete" (optionSelected)="organizationSelected($event)">
+                      <mat-option *ngFor="let org of usersService.allOrgs" [value]="org">
+                        {{org}}
+                      </mat-option>
+                    </mat-autocomplete> -->
                   </mat-form-field>
                 </div>
               </div>
@@ -98,15 +105,16 @@
                   <div class="input-group-prepend">
                     <span class="input-group-text">
                       <i class="material-icons" [ngStyle]="{
-                      color: !content.min_population
+                      color: !populationValue
                         ? 'red'
                         : '#AAAAAA'
                     }">group_add</i>
                     </span>
                   </div>
                   <mat-form-field class="example-full-width has-label" [ngClass]="displayFieldCss(type, 'population')">
-                    <mat-select matInput formControlName="population" [(ngModel)]="content.min_population"
-                      placeholder="Select size of affected population *" id="population" name="population">
+                    <mat-select matInput formControlName="population" (selectionChange)="populationValueChanged($event)"
+                      [(ngModel)]="populationValue" placeholder="Select size of affected population *" id="population"
+                      name="population">
                       <mat-option *ngFor="let size of sizes" [value]="size.value">
                         {{ size.viewValue }}
                       </mat-option>
@@ -121,15 +129,36 @@
                   <div class="input-group-prepend">
                     <span class="input-group-text">
                       <i class="material-icons" [ngStyle]="{
-                      color: !content.location
+                      color: !content.location.length
                         ? 'red'
                         : '#AAAAAA'
                     }">place</i>
                     </span>
                   </div>
                   <mat-form-field class="example-full-width has-label" [ngClass]="displayFieldCss(type, 'location')">
-                    <input type="text" name="location" matInput id="location" placeholder="Location *"
-                      formControlName="location" [(ngModel)]="content.location">
+                    <!-- <input type="text" name="location" matInput id="location" [matAutocomplete]="auto" placeholder="Location *"
+                      (keyup)="getLocation()" formControlName="location" [(ngModel)]="content.location">
+                    <mat-autocomplete #auto="matAutocomplete" (optionSelected)="storeLocation($event)">
+                      <mat-option *ngFor="let location of locations" [value]="location.Location.Address.Label">
+                        {{location.Location.Address.Label}}
+                      </mat-option>
+                    </mat-autocomplete> -->
+
+                    <mat-chip-list #chipList>
+                      <mat-chip *ngFor="let location of content.location" [selectable]="selectable" [removable]="removable"
+                        (removed)="removeLocation(location)">
+                        {{location.Address.Label}}
+                        <mat-icon matChipRemove *ngIf="removable">cancel</mat-icon>
+                      </mat-chip>
+                      <input placeholder="Locations" [(ngModel)]="locationInputValue" #locationInput [formControl]="locationCtrl"
+                        [matAutocomplete]="auto" [matChipInputFor]="chipList" [matChipInputSeparatorKeyCodes]="separatorKeysCodes"
+                        (keyup)="getLocation()" [matChipInputAddOnBlur]="addOnBlur" (matChipInputTokenEnd)="addLocation($event)">
+                    </mat-chip-list>
+                    <mat-autocomplete #auto="matAutocomplete" (optionSelected)="selectedLocation($event)">
+                      <mat-option *ngFor="let location of locations" [value]="location.Location">
+                        {{location.Location.Address.Label}}
+                      </mat-option>
+                    </mat-autocomplete>
                   </mat-form-field>
                 </div>
               </div>
@@ -143,9 +172,8 @@
                     </span>
                   </div>
                   <mat-form-field class="example-full-width has-label" [ngClass]="displayFieldCss(type, 'location')">
-                    <input type="text" name="beneficiary" matInput id="beneficiary"
-                      placeholder="Who is affected by this content?" formControlName="beneficiary"
-                      [(ngModel)]="content.beneficiary_attributes">
+                    <input type="text" name="beneficiary" matInput id="beneficiary" placeholder="Who is affected by this content?"
+                      formControlName="beneficiary" [(ngModel)]="content.beneficiary_attributes">
                   </mat-form-field>
                 </div>
               </div>
@@ -195,7 +223,7 @@
                 </div>
               </div>
             </div>
-            <div class="row justify-content-center">
+            <div class="row justify-content-center" *ngIf="contentType==='problem'">
               <div class="col-sm-12">
                 <div class="input-group form-control-lg">
                   <div class="input-group-prepend">
@@ -238,12 +266,11 @@
               <div class="col-sm-6">
                 <div class="input-group">
                   <mat-form-field class="example-full-width has-label">
-                    <input type="text" name="media_url" matInput id="media_url" formControlName="media_url"
-                      placeholder="Video URL" [(ngModel)]="media_url">
+                    <input type="text" name="media_url" matInput id="media_url" formControlName="media_url" placeholder="Video URL"
+                      [(ngModel)]="media_url">
                   </mat-form-field>
-                  <input type="button" class="btn btn-finish btn-fill btn-success btn-wd" (click)="addMediaUrl()"
-                    name="add_media_url" [disabled]="!media_url.startsWith('http')" value="Add Video By URL"
-                    style="display: none;">
+                  <input type="button" class="btn btn-finish btn-fill btn-success btn-wd" (click)="addMediaUrl()" name="add_media_url"
+                    [disabled]="!media_url.startsWith('http')" value="Add Video By URL" style="display: none;">
                 </div>
               </div>
             </div>
@@ -328,19 +355,18 @@
       </div>
       <div class="card-footer">
         <div class="mr-auto">
-          <input type="button" class="btn btn-previous btn-fill btn-default btn-wd disabled" name="previous"
-            value="Previous">
+          <input type="button" class="btn btn-previous btn-fill btn-default btn-wd disabled" name="previous" value="Previous">
         </div>
         <div class="ml-auto">
-          <input type="button" class="btn btn-next btn-fill btn-warning btn-wd" name="next" value="Next">
-          <input type="button" class="btn btn-fill btn-rose btn-wd" [disabled]="!content.title"
-            (click)="saveProblemDraft()" name="draft" value="Save Draft">
-          <input type="button" class="btn btn-finish btn-fill btn-warning btn-wd" [disabled]="!isComplete()"
-            (click)="publishProblem()" name="finish" value="Publish" style="display: none;">
+          <input type="button" class="btn btn-next btn-fill btn-warning btn-wd" [disabled]="!isComplete()" name="next"
+            value="Next">
+
+          <input type="button" class="btn btn-finish btn-fill btn-warning btn-wd" [disabled]="!isComplete()" (click)="publishContent()"
+            name="finish" value="Publish" style="display: none;">
         </div>
         <div class="clearfix"></div>
       </div>
     </form>
   </div>
-</div> -->
+</div>
 <!-- wizard container -->

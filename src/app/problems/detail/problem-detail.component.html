@@ -1,3 +1,8 @@
+<!-- discuss image and video modal ends -->
+
+<!--REWRITE-->
+
+
 <!--REWRITE-->
 
 <div class="main-content">
@@ -19,12 +24,18 @@
                     src="{{(problemData.featured_url && checkUrlIsImg(problemData.featured_url)) ? problemData.featured_url : './assets/img/image_placeholder.jpg'}}"
                     alt="Thumbnail Image" class="rounded img-fluid">
                   <div class="row justify-content-center">
-                    <button mat-raised-button *ngIf="problem_attachments.length > 1"
+                    <<<<<<< HEAD <button mat-raised-button *ngIf="problem_attachments.length > 1"
                       class="btn btn-raised btn-info btn-sm" data-toggle="modal" data-target="#viewMoreImgModal">
                       view media ({{problem_attachments.length}})
-                    </button>
-                    <!-- <button mat-raised-button class="btn btn-raised btn-info btn-sm" data-toggle="modal"
+                      </button>
+                      <!-- <button mat-raised-button class="btn btn-raised btn-info btn-sm" data-toggle="modal"
                       data-target="#viewMoreVideosModal"
+=======
+                    <button mat-raised-button class="btn btn-raised btn-info btn-sm" data-toggle="modal" data-target="#viewMoreImgModal">
+                      view media
+                    </button>
+                    <button mat-raised-button class="btn btn-raised btn-info btn-sm" data-toggle="modal" data-target="#viewMoreVideosModal"
+>>>>>>> v-component-rewrite
                       *ngIf="this.problemData.video_urls && this.problemData.video_urls.length > 0">
                       Show videos
                     </button> -->
@@ -35,7 +46,11 @@
                 <strong>Description</strong>
                 <p class="description">{{problemData.description}}</p>
                 <strong>Location</strong>
-                <p class="description">{{problemData.location}}</p>
+                <!-- <p class="description">{{problemData.location}}</p> -->
+                <div *ngFor="let location of problemData.location">
+                  <span class="badge badge-warning" *ngIf="location.Address.Label">{{location.Address.Label}}</span>
+                  <span>&nbsp;</span>
+                </div>
                 <strong *ngIf="problemData.resources_needed">Resources Needed</strong>
                 <p class="description">{{problemData.resources_needed}}</p>
                 <strong>Organization</strong>
@@ -45,12 +60,19 @@
                 <strong *ngIf="problemData.impact">Impact</strong>
                 <p class="description">{{problemData.impact}}</p>
                 <strong>Population Affected</strong>
-                <p class="description">More than {{problemData.min_population}}</p>
+                <!-- <p class="description">More than {{problemData.min_population}}</p>
+                 -->
+
+                <p class="description" *ngIf="problemData.min_population===0">Between {{problemData.min_population}}
+                  and {{problemData.max_population}}</p>
+                <p class="description" *ngIf="problemData.min_population!==0">More than
+                  {{problemData.min_population}}</p>
+
                 <strong *ngIf="problemData.beneficiary_attributes">Beneficiary Attributes</strong>
                 <p class="description">{{problemData.beneficiary_attributes}}</p>
-                <strong *ngIf="tags">Sectors</strong>
-                <div *ngFor="let tag of tags">
-                  <span class="badge badge-warning">{{tag}}</span>
+                <strong *ngIf="tags.length">Sectors</strong>
+                <div>
+                  <span *ngFor="let tag of tags" class="badge badge-warning">{{tag}}</span>
                   <span>&nbsp;</span>
                 </div>
               </div>
@@ -72,7 +94,7 @@
               <span> {{watchedBy}}</span>
             </div>
             <div *ngIf="userId===problemData.created_by" [routerLink]="
-            '/problems/'+ problemData.id+'/edit'">
+              '/problems/'+ problemData.id+'/edit'">
               <i class="material-icons actions">
                 create
               </i>
@@ -121,18 +143,18 @@
         <!--Enrichment divider-->
         <div class="row justify-content-center">
           <!-- <a mat-button NguCarouselPrev class="leftRs">
-            <i class="material-icons">
-              keyboard_arrow_left
-            </i>
-          </a> -->
-          <button mat-raised-button class="btn btn-warning btn-round" data-toggle="modal" data-target="#enrichmentModal"
-            matTooltip="Click to add enrichment" [matTooltipPosition]="'below'"
-            [disabled]="disableEnrichButton">Enrich</button>
+              <i class="material-icons">
+                keyboard_arrow_left
+              </i>
+            </a> -->
+          <button mat-raised-button class="btn btn-warning btn-round" matTooltip="Click to add enrichment"
+            [matTooltipPosition]="'below'" [disabled]="disableEnrichButton"
+            [routerLink]="['/enrichment/add',{problemId:problemData.id}]">Enrich</button>
           <!-- <a mat-button NguCarouselNext class="rightRs">
-            <i class="material-icons">
-              keyboard_arrow_right
-            </i>
-          </a> -->
+              <i class="material-icons">
+                keyboard_arrow_right
+              </i>
+            </a> -->
         </div>
         <!--Enrichment divider-->
 
@@ -185,9 +207,11 @@
                 </button>
               </div>
               <div class="modal-body ">
-                <app-add-enrichment (submitted)="onEnrichmentSubmit($event)"></app-add-enrichment>
+                <!-- <app-add-enrichment (submitted)="onEnrichmentSubmit($event)"></app-add-enrichment> -->
                 <!-- <app-wizard-cmp></app-wizard-cmp> -->
                 <!-- <app-wizard-container></app-wizard-container> -->
+                <!-- <app-wizard-container [content]="enrichmentData" [contentType]="'enrichment'" (contentSubmitted)="onEnrichmentSubmit($event)"></app-wizard-container> -->
+
               </div>
             </div>
           </div>
@@ -215,7 +239,7 @@
               <!-- <div class="card-footer"> -->
               <!-- <div class="text-center"> -->
               <!-- <button mat-button type="button" class="btn btn-warning" aria-hidden="true" data-dismiss="modal"
-                    data-toggle="modal" data-target="#EditEnrichModal">Edit</button> -->
+                      data-toggle="modal" data-target="#EditEnrichModal">Edit</button> -->
               <!-- </div> -->
               <!-- </div> -->
             </div>
@@ -237,8 +261,9 @@
                 </button>
               </div>
               <div class="modal-body">
-                <app-add-enrichment *ngIf="enrichDataToEdit" [enrichmentData]="enrichDataToEdit"
-                  (submitted)="onEnrichmentSubmit($event)"></app-add-enrichment>
+                <!-- <app-add-enrichment *ngIf="enrichDataToEdit" [enrichmentData]="enrichDataToEdit" (submitted)="onEnrichmentSubmit($event)"></app-add-enrichment> -->
+                <!-- <app-wizard-container [content]="enrichmentData" [contentType]="'enrichment'" (contentSubmitted)="onEnrichmentSubmit($event)"></app-wizard-container> -->
+
               </div>
             </div>
           </div>
@@ -253,18 +278,18 @@
         <!--Validate divider-->
         <div class="row justify-content-center">
           <!-- <a mat-button>
-            <i class="material-icons">
-              keyboard_arrow_left
-            </i>
-          </a> -->
+              <i class="material-icons">
+                keyboard_arrow_left
+              </i>
+            </a> -->
           <button mat-raised-button class="btn btn-warning btn-round" data-toggle="modal" data-target="#validatorModal"
             matTooltip="Click to validate problem" [matTooltipPosition]="'below'"
             [disabled]="disableValidateButton || !userPersonas.is_expert || userId == problemData.created_by ||!sectorMatched">Validate</button>
           <!-- <a mat-button>
-            <i class="material-icons">
-              keyboard_arrow_right
-            </i>
-          </a> -->
+              <i class="material-icons">
+                keyboard_arrow_right
+              </i>
+            </a> -->
         </div>
         <!--Validate divider-->
 
@@ -394,18 +419,18 @@
         <!--Collaborate divider-->
         <div class="row justify-content-center">
           <!-- <a mat-button>
-            <i class="material-icons">
-              keyboard_arrow_left
-            </i>
-          </a> -->
+              <i class="material-icons">
+                keyboard_arrow_left
+              </i>
+            </a> -->
           <button mat-raised-button class="btn btn-warning btn-round" data-toggle="modal"
             data-target="#collaboratorModal" matTooltip="Click to collaborate" [matTooltipPosition]="'below'"
             [disabled]="disableCollaborateButton">Collaborate</button>
           <!-- <a mat-button>
-            <i class="material-icons">
-              keyboard_arrow_right
-            </i>
-          </a> -->
+              <i class="material-icons">
+                keyboard_arrow_right
+              </i>
+            </a> -->
         </div>
         <!--Collaborate divider-->
 

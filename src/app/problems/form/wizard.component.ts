@@ -90,8 +90,9 @@ export class WizardComponent
     organization: "",
     impact: "",
     extent: "",
-    location: "",
+    location: [],
     min_population: 0,
+    max_population:0,
     beneficiary_attributes: "",
     resources_needed: "",
     image_urls: [],
@@ -164,6 +165,11 @@ export class WizardComponent
     }
   }
 
+  addTags(tags) {
+    console.log(tags, "tag working");
+    this.sectors = tags;
+  }
+
   remove(sector: string): void {
     const index = this.sectors.indexOf(sector);
     if (index >= 0) {
@@ -229,6 +235,7 @@ export class WizardComponent
                             impact
                             extent
                             min_population
+                            max_population
                             beneficiary_attributes
                             organization
                             featured_url
@@ -262,11 +269,14 @@ export class WizardComponent
               if (this.problem.title) {
                 this.smartSearch(this.problem.title);
               }
-              this.sectors = result.data.problems[0].problem_tags.map(
-                tagArray => {
-                  return tagArray.tag.name;
-                }
-              );
+              if (result.data.problems[0].problem_tags) {
+                this.sectors = result.data.problems[0].problem_tags.map(
+                  tagArray => {
+                    return tagArray.tag.name;
+                  }
+                );
+              }
+
               this.is_edit = true;
             } else {
               this.router.navigate(["problems/add"]);
@@ -630,6 +640,10 @@ export class WizardComponent
     });
   }
 
+  test(event) {
+    console.log(event, "event");
+  }
+
   removePhoto(index) {
     this.filesService
       .deleteFile(this.problem["image_urls"][index]["key"])
@@ -764,11 +778,12 @@ export class WizardComponent
                     }
                     }
                     }`,
-          pollInterval: 500
+          pollInterval: 200
         })
         .valueChanges.subscribe(
           result => {
             if (result.data.search_problems_v2.length > 0) {
+              console.log(result.data.search_problems_v2.length, "search");
               result.data.search_problems_v2.map(result => {
                 if (result.id != this.problem["id"]) {
                   this.searchResults[result.id] = result;
@@ -791,30 +806,37 @@ export class WizardComponent
       this.problem.title &&
       this.problem.description &&
       this.problem.organization &&
-      this.problem.min_population &&
+      // this.problem.min_population &&
       this.problem.location
     );
+  }
+  updateProblem(updatedProblem) {
+    this.problem = updatedProblem;
   }
 
   autoSave() {
     console.log("trying to auto save");
-    if (this.problem.title) {
-      this.submitProblemToDB();
+    if (this.problem.is_draft) {
+      if (this.problem.title) {
+        this.submitProblemToDB(this.problem);
+      }
     }
   }
 
-  saveProblemDraft() {
-    this.autoSave();
-    alert("Problem draft has been saved. You can continue editing anytime");
-  }
+  // saveProblemDraft() {
+  //   this.autoSave();
+  //   alert("Problem draft has been saved. You can continue editing anytime");
+  // }
 
-  publishProblem() {
-    this.problem.is_draft = false;
+  publishProblem(problem) {
+    problem.is_draft = false;
+    console.log(problem, "problem before publishing");
     clearInterval(this.autosaveInterval);
-    this.submitProblemToDB();
+    this.submitProblemToDB(problem);
   }
 
-  submitProblemToDB() {
+  submitProblemToDB(problem) {
+    console.log(problem, "submitted");
     const upsert_problem = gql`
       mutation upsert_problem($problems: [problems_insert_input!]!) {
         insert_problems(
@@ -834,10 +856,12 @@ export class WizardComponent
               video_urls
               owners
               min_population
+              max_population
               modified_at
               featured_url
               featured_type
               embed_urls
+              is_draft
             ]
           }
         ) {
@@ -862,7 +886,7 @@ export class WizardComponent
       .mutate({
         mutation: upsert_problem,
         variables: {
-          problems: [this.problem]
+          problems: [problem]
         }
       })
       .subscribe(

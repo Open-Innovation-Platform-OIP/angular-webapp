@@ -54,6 +54,8 @@ import { AuthLayoutComponent } from "./layouts/auth/auth-layout.component";
 
 import { AppRoutes } from "./app.routing";
 import { GraphQLModule } from "./services/graphql.module";
+// import { EnrichmentFormComponent } from './enrichment/enrichment-form/enrichment-form.component';
+// import { EnrichmentComponent } from './enrichment/enrichment.component';
 // import { GlobalSearchViewModule } from "./global-search-view/global-search-view.module";
 @NgModule({
   exports: [

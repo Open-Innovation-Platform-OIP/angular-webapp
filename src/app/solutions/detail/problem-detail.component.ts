@@ -60,6 +60,7 @@ export class ProblemDetailComponent implements OnInit {
     impact: "",
     extent: "",
     min_population: 0,
+    max_population: 0,
     beneficiary_attributes: ""
   };
   enrichDataToEdit: any;
@@ -155,7 +156,7 @@ export class ProblemDetailComponent implements OnInit {
     private collaborationService: CollaborationService,
     private validationService: ValidationService,
     private enrichmentService: EnrichmentService
-  ) { }
+  ) {}
 
   getUserPersonas(id) {
     this.apollo
@@ -260,6 +261,7 @@ export class ProblemDetailComponent implements OnInit {
               impact
               extent
               min_population
+              max_population
               beneficiary_attributes
               problem_tags{
                 tag {
@@ -385,7 +387,9 @@ export class ProblemDetailComponent implements OnInit {
                             this.replies[comment.linked_comment_id] = [comment];
                           } else {
                             // comment reply already exists so push reply into the array
-                            this.replies[comment.linked_comment_id].push(comment);
+                            this.replies[comment.linked_comment_id].push(
+                              comment
+                            );
                           }
                         } else {
                           // this comment is a parent comment - add it to the comments object
@@ -436,7 +440,7 @@ export class ProblemDetailComponent implements OnInit {
         cancelButtonClass: "btn btn-danger",
         buttonsStyling: false
       })
-        .then(function (result) {
+        .then(function(result) {
           swal({
             type: "success",
             html:
@@ -473,7 +477,7 @@ export class ProblemDetailComponent implements OnInit {
       body.classList.remove("sidebar-mini");
       misc.sidebar_mini_active = false;
     } else {
-      setTimeout(function () {
+      setTimeout(function() {
         body.classList.add("sidebar-mini");
 
         misc.sidebar_mini_active = true;
@@ -481,12 +485,12 @@ export class ProblemDetailComponent implements OnInit {
     }
 
     // we simulate the window Resize so the charts will get updated in realtime.
-    const simulateWindowResize = setInterval(function () {
+    const simulateWindowResize = setInterval(function() {
       window.dispatchEvent(new Event("resize"));
     }, 180);
 
     // we stop the simulation of Window Resize after the animations are completed
-    setTimeout(function () {
+    setTimeout(function() {
       clearInterval(simulateWindowResize);
     }, 1000);
   }
@@ -631,6 +635,7 @@ export class ProblemDetailComponent implements OnInit {
               extent
               impact
               min_population
+              max_population
               organization
               beneficiary_attributes
               location
@@ -691,7 +696,7 @@ export class ProblemDetailComponent implements OnInit {
       $layer.remove();
     }
 
-    setTimeout(function () {
+    setTimeout(function() {
       $toggle.classList.remove("toggled");
     }, 400);
 
@@ -880,7 +885,6 @@ export class ProblemDetailComponent implements OnInit {
   }
 
   async onCommentSubmit(event) {
-
     const [content, mentions, attachments] = event;
     let file_links = [];
 
@@ -899,7 +903,7 @@ export class ProblemDetailComponent implements OnInit {
               created_by: this.auth.currentUserValue.id,
               problem_id: this.problemData["id"],
               text: content,
-              attachments: file_links,  // overwriting the incoming blobs
+              attachments: file_links, // overwriting the incoming blobs
               mentions: JSON.stringify(mentions)
                 .replace("[", "{")
                 .replace("]", "}")
@@ -913,7 +917,7 @@ export class ProblemDetailComponent implements OnInit {
             this.discussionsService.submitCommentToDB(comment);
           }
         });
-    })
+    });
   }
 
   async onReplySubmit(comment) {
@@ -929,12 +933,12 @@ export class ProblemDetailComponent implements OnInit {
         .catch(e => console.log("Err:: ", e))
         .then(() => {
           if (index === comment.attachments.length - 1) {
-            comment['attachments'] = file_links; // overwriting the incoming blobs
-            comment['created_by'] = this.auth.currentUserValue.id;
-            comment['problem_id'] = this.problemData["id"];
+            comment["attachments"] = file_links; // overwriting the incoming blobs
+            comment["created_by"] = this.auth.currentUserValue.id;
+            comment["problem_id"] = this.problemData["id"];
             this.discussionsService.submitCommentToDB(comment);
           }
         });
-    })
+    });
   }
 }

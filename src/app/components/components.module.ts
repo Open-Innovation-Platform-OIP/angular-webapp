@@ -1,9 +1,15 @@
-import { NgModule } from '@angular/core';
-import { CommonModule } from '@angular/common';
-import { FormsModule } from '@angular/forms';
-import { MdModule } from '../md/md.module';
-import { MaterialModule } from '../app.module';
-import { RouterModule } from '@angular/router';
+import { NgModule } from "@angular/core";
+import { CommonModule } from "@angular/common";
+import { FormsModule, ReactiveFormsModule } from "@angular/forms";
+import { MdModule } from "../md/md.module";
+import { MaterialModule } from "../app.module";
+import { RouterModule } from "@angular/router";
+
+import {
+  MatChipsModule,
+  MAT_CHIPS_DEFAULT_OPTIONS
+} from "@angular/material/chips";
+import { COMMA, ENTER } from "@angular/cdk/keycodes";
 
 import { AddEnrichmentComponent } from "./add-enrichment/add-enrichment.component";
 import { ViewEnrichmentComponent } from "./view-enrichment/view-enrichment.component";
@@ -16,53 +22,64 @@ import { DetailedValidateViewComponent } from "./detailed-validate-view/detailed
 import { AddCollaboratorComponent } from "./add-collaborator/add-collaborator.component";
 import { CollaboratorCardComponent } from "./collaborator-card/collaborator-card.component";
 import { ProblemCardComponent } from "./problem-card/problem-card.component";
-import { DisplayModalComponent } from './display-modal/display-modal.component';
+import { DisplayModalComponent } from "./display-modal/display-modal.component";
+import { WizardContainerComponent } from "./wizard-container/wizard-container.component";
 // import { GlobalSearchCardsComponent } from "./global-search-cards/global-search-cards.component";
 
 @NgModule({
-    imports: [
-        CommonModule,
-        FormsModule,
-        MdModule,
-        MaterialModule,
-        RouterModule
-    ],
-    declarations: [
-        AddEnrichmentComponent,
-        ViewEnrichmentComponent,
-        ViewCollaboratorsComponent,
-        ValidateProblemComponent,
-        AddEnrichmentComponent,
-        ViewEnrichmentComponent,
-        ViewCollaboratorsComponent,
-        ValidateProblemComponent,
-        ValidateCardComponent,
-        ProfileCardComponent,
-        EnrichmentCardComponent,
-        DetailedValidateViewComponent,
-        AddCollaboratorComponent,
-        CollaboratorCardComponent,
-        ProblemCardComponent,
-        DisplayModalComponent
-    ],
-    exports: [
-        AddEnrichmentComponent,
-        ViewEnrichmentComponent,
-        ViewCollaboratorsComponent,
-        ValidateProblemComponent,
-        AddEnrichmentComponent,
-        ViewEnrichmentComponent,
-        ViewCollaboratorsComponent,
-        ValidateProblemComponent,
-        ValidateCardComponent,
-        ProfileCardComponent,
-        EnrichmentCardComponent,
-        DetailedValidateViewComponent,
-        AddCollaboratorComponent,
-        CollaboratorCardComponent,
-        ProblemCardComponent,
-        DisplayModalComponent,
-    ]
+  imports: [
+    CommonModule,
+    FormsModule,
+    MdModule,
+    MaterialModule,
+    RouterModule,
+    ReactiveFormsModule
+  ],
+  declarations: [
+    AddEnrichmentComponent,
+    ViewEnrichmentComponent,
+    ViewCollaboratorsComponent,
+    ValidateProblemComponent,
+    AddEnrichmentComponent,
+    ViewEnrichmentComponent,
+    ViewCollaboratorsComponent,
+    ValidateProblemComponent,
+    ValidateCardComponent,
+    ProfileCardComponent,
+    EnrichmentCardComponent,
+    DetailedValidateViewComponent,
+    AddCollaboratorComponent,
+    CollaboratorCardComponent,
+    ProblemCardComponent,
+    DisplayModalComponent,
+    WizardContainerComponent
+  ],
+  exports: [
+    AddEnrichmentComponent,
+    ViewEnrichmentComponent,
+    ViewCollaboratorsComponent,
+    ValidateProblemComponent,
+    AddEnrichmentComponent,
+    ViewEnrichmentComponent,
+    ViewCollaboratorsComponent,
+    ValidateProblemComponent,
+    ValidateCardComponent,
+    ProfileCardComponent,
+    EnrichmentCardComponent,
+    DetailedValidateViewComponent,
+    AddCollaboratorComponent,
+    CollaboratorCardComponent,
+    ProblemCardComponent,
+    DisplayModalComponent,
+    WizardContainerComponent
+  ],
+  providers: [
+    {
+      provide: MAT_CHIPS_DEFAULT_OPTIONS,
+      useValue: {
+        separatorKeyCodes: [ENTER, COMMA]
+      }
+    }
+  ]
 })
-
-export class ComponentsModule { }
+export class ComponentsModule {}

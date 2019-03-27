@@ -17,7 +17,8 @@ export class ProblemCardComponent implements OnInit {
   validatedBy: any;
   // modifiedAt: any;
   // sectors: any[] = [];
-  constructor() { }
+
+  constructor() {}
 
   ngOnInit() {
     console.log("problem card", this.problemData);
@@ -27,10 +28,7 @@ export class ProblemCardComponent implements OnInit {
     if (this.problemData.watched_by && this.problemData.watched_by.length) {
       this.watchedBy = this.problemData.watched_by.length;
     }
-    if (
-      this.problemData.validatedBy &&
-      this.problemData.validatedBy.length
-    ) {
+    if (this.problemData.validatedBy && this.problemData.validatedBy.length) {
       this.validatedBy = this.problemData.problem_validations.length;
     }
 

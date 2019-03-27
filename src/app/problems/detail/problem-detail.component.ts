@@ -51,6 +51,23 @@ export class ProblemDetailComponent implements OnInit {
   showReplyBox = false;
   showCommentBox = false;
   numOfComments = 5;
+  enrichmentData: any = {
+    description: "",
+    location: [],
+    organization: "",
+    resources_needed: "",
+    image_urls: [],
+    video_urls: [],
+    impact: "",
+    min_population: 0,
+    max_population: 0,
+    extent: "",
+    beneficiary_attributes: "",
+    voted_by: "{}",
+    featured_url: "",
+    embed_urls: [],
+    featured_type: ""
+  };
   problemData: any = {
     id: 0,
     title: "",
@@ -68,6 +85,7 @@ export class ProblemDetailComponent implements OnInit {
     extent: "",
     featured_url: "",
     min_population: 0,
+    max_population: 0,
     beneficiary_attributes: ""
   };
 
@@ -300,7 +318,11 @@ export class ProblemDetailComponent implements OnInit {
               impact
               extent
               min_population
+              max_population
               beneficiary_attributes
+              featured_url
+              embed_urls
+              featured_type
               usersBycreatedBy {
                 id
                 name
@@ -385,8 +407,13 @@ export class ProblemDetailComponent implements OnInit {
                 }
 
                 // combining the video_urls and image_urls
-                this.problem_attachments = [...this.problemData['image_urls'], ...this.problemData['video_urls']];
-                this.problem_attachments_src = this.problem_attachments[this.problem_attachments_index];
+                this.problem_attachments = [
+                  ...this.problemData["image_urls"],
+                  ...this.problemData["video_urls"]
+                ];
+                this.problem_attachments_src = this.problem_attachments[
+                  this.problem_attachments_index
+                ];
 
                 // setting first image to image modal src
                 if (
@@ -506,12 +533,19 @@ export class ProblemDetailComponent implements OnInit {
   }
 
   toggleProblemAttachmentsIndex(dir: boolean) {
-    if (dir && this.problem_attachments_index < this.problem_attachments.length - 1) {
+    if (
+      dir &&
+      this.problem_attachments_index < this.problem_attachments.length - 1
+    ) {
       this.problem_attachments_index++;
-      this.problem_attachments_src = this.problem_attachments[this.problem_attachments_index];
+      this.problem_attachments_src = this.problem_attachments[
+        this.problem_attachments_index
+      ];
     } else if (!dir && this.problem_attachments_index > 0) {
       this.problem_attachments_index--;
-      this.problem_attachments_src = this.problem_attachments[this.problem_attachments_index];
+      this.problem_attachments_src = this.problem_attachments[
+        this.problem_attachments_index
+      ];
     }
   }
 
@@ -667,7 +701,9 @@ export class ProblemDetailComponent implements OnInit {
         }
       );
   }
-
+  test(event) {
+    console.log(event, "enriched data");
+  }
   getCollaborators(id) {
     this.apollo
       .watchQuery<any>({
@@ -735,6 +771,7 @@ export class ProblemDetailComponent implements OnInit {
               extent
               impact
               min_population
+              max_population
               organization
               beneficiary_attributes
               location
@@ -745,9 +782,10 @@ export class ProblemDetailComponent implements OnInit {
               edited_at
               voted_by
               is_deleted
-             
-
-             
+              featured_url
+              embed_urls
+              featured_type
+              
             }
           }
         `,
@@ -854,12 +892,24 @@ export class ProblemDetailComponent implements OnInit {
   onEnrichmentSubmit(enrichmentData) {
     if (enrichmentData.__typename) {
       delete enrichmentData.__typename;
+      // delete enrichmentData.usersBycreatedBy;
     }
     enrichmentData.created_by = Number(this.auth.currentUserValue.id);
 
     enrichmentData.problem_id = this.problemData.id;
 
-    this.enrichmentService.submitEnrichmentToDB(enrichmentData);
+    if (typeof enrichmentData.voted_by === "string") {
+      // this.submitted.emit(this.enrichmentData);
+      this.enrichmentService.submitEnrichmentToDB(enrichmentData);
+    } else {
+      enrichmentData.voted_by = enrichmentData.voted_by = JSON.stringify(
+        enrichmentData.voted_by
+      )
+        .replace("[", "{")
+        .replace("]", "}");
+
+      this.enrichmentService.submitEnrichmentToDB(enrichmentData);
+    }
   }
 
   deleteEnrichment(id) {
@@ -944,7 +994,7 @@ export class ProblemDetailComponent implements OnInit {
     this.enrichmentDataToView = enrichmentData;
   }
   handleEnrichEditMode(enrichData) {
-    this.enrichDataToEdit = enrichData;
+    this.enrichmentData = enrichData;
     console.log(enrichData, "event on edit");
   }
 
@@ -964,16 +1014,16 @@ export class ProblemDetailComponent implements OnInit {
   async onCommentSubmit(event) {
     const [content, mentions, attachments] = event;
     let file_links: attachment_object[];
-    let _links = [] //local array
+    let _links = []; //local array
 
-    let all_promise = await attachments.map((file) => {
+    let all_promise = await attachments.map(file => {
       return this.fileService.uploadFile(file, file.name).promise();
-    })
+    });
 
     try {
       _links = await Promise.all(all_promise);
     } catch (error) {
-      console.log("Err while uploading reply files")
+      console.log("Err while uploading reply files");
     }
 
     if (_links.length) {
@@ -981,8 +1031,8 @@ export class ProblemDetailComponent implements OnInit {
 
       _links.forEach((link, i) => {
         file_links.push({
-          key: link['key'],
-          url: link['Location'],
+          key: link["key"],
+          url: link["Location"],
           mimeType: attachments[i].type
         });
       });
@@ -1012,24 +1062,24 @@ export class ProblemDetailComponent implements OnInit {
 
   async onReplySubmit(comment) {
     let file_links: attachment_object[];
-    let _links = [] // local array
+    let _links = []; // local array
 
-    let all_promise = await comment.attachments.map((file) => {
+    let all_promise = await comment.attachments.map(file => {
       return this.fileService.uploadFile(file, file.name).promise();
-    })
+    });
 
     try {
       _links = await Promise.all(all_promise);
     } catch (error) {
-      console.log("Err while uploading reply files")
+      console.log("Err while uploading reply files");
     }
 
     if (_links.length) {
       file_links = [];
       _links.map((link, i) => {
         file_links.push({
-          key: link['key'],
-          url: link['Location'],
+          key: link["key"],
+          url: link["Location"],
           mimeType: comment.attachments[i].type
         });
       });
@@ -1059,7 +1109,7 @@ export class ProblemDetailComponent implements OnInit {
     });
   }
 
-  displayModal(files: { attachmentObj: attachment_object, index: number }) {
+  displayModal(files: { attachmentObj: attachment_object; index: number }) {
     this.sources = files;
     this.modalSrc = files.attachmentObj[files.index];
 
@@ -1079,7 +1129,10 @@ export class ProblemDetailComponent implements OnInit {
   }
 
   toggleFileSrc(dir: boolean) {
-    if (dir && this.sources["index"] < this.sources["attachmentObj"].length - 1) {
+    if (
+      dir &&
+      this.sources["index"] < this.sources["attachmentObj"].length - 1
+    ) {
       this.sources["index"]++;
       this.modalSrc = this.sources["attachmentObj"][this.sources["index"]];
     } else if (!dir && this.sources["index"] > 0) {

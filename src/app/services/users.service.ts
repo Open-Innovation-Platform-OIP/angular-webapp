@@ -49,7 +49,7 @@ export interface User {
   providedIn: "root"
 })
 export class UsersService {
-  public allOrgs = new Set();
+  public allOrgs: any = new Set();
   public allUsers = {};
   public currentUser = {
     id: 0,
@@ -107,6 +107,8 @@ export class UsersService {
           data.users.map(user => {
             if (user.organization) {
               this.allOrgs.add(user.organization);
+              // this.allOrgs = Array.from(this.allOrgs);
+              // console.log(this.allOrgs, "all orgs");
             }
           });
         }
@@ -121,6 +123,7 @@ export class UsersService {
             users {
               id
               name
+              organization
             }
           }
         `,
@@ -131,7 +134,13 @@ export class UsersService {
           data.users.map(user => {
             if (user.id && user.name) {
               // console.log(user.name);
-              this.allUsers[user.id] = { id: user.id, value: user.name };
+              this.allUsers[user.id] = {
+                id: user.id,
+                value: user.name
+              };
+            }
+            if (user.organization) {
+              this.allUsers[user.id].organization = user.organization;
             }
           });
         }

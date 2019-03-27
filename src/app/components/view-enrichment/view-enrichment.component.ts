@@ -7,6 +7,7 @@ import {
   EventEmitter
 } from "@angular/core";
 import { ProblemService } from "../../services/problem-handle.service";
+import { Router, ActivatedRoute } from "@angular/router";
 
 import { AuthService } from "../../services/auth.service";
 

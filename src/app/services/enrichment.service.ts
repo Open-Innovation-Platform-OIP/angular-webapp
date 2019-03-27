@@ -5,6 +5,8 @@ import * as Query from "./queries";
 import { Timestamp } from "aws-sdk/clients/workspaces";
 import { stringType } from "aws-sdk/clients/iam";
 import { String } from "aws-sdk/clients/sns";
+import { Router, ActivatedRoute } from "@angular/router";
+
 import swal from "sweetalert2";
 declare var $: any;
 
@@ -17,6 +19,7 @@ export interface enrichment {
   video_urls: any[];
   impact: String;
   min_population: Number;
+  max_population: Number;
   extent: String;
   beneficiary_attributes: String;
   id?: Number;
@@ -33,7 +36,7 @@ export interface enrichment {
   providedIn: "root"
 })
 export class EnrichmentService {
-  constructor(private apollo: Apollo) {}
+  constructor(private apollo: Apollo, private router: Router) {}
 
   submitEnrichmentToDB(enrichmentData: enrichment) {
     console.log(enrichmentData, "testing enrich on update");
@@ -57,15 +60,19 @@ export class EnrichmentService {
                   video_urls
                   impact
                   min_population
+                  max_population
                   extent
                   beneficiary_attributes
-                  voted_by
+                  featured_url
+                  featured_type
+                  embed_urls
                 ]
               }
             ) {
               affected_rows
               returning {
-                description
+                problem_id
+                solution_id
               }
             }
           }
@@ -84,6 +91,10 @@ export class EnrichmentService {
             showConfirmButton: false
           }).catch(swal.noop);
           // location.reload();
+          this.router.navigate([
+            "problems",
+            data.data.insert_enrichments.returning[0].problem_id
+          ]);
         },
         err => {
           console.log(err, "error");

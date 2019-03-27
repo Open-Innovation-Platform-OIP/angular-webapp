@@ -350,6 +350,12 @@ export class AddUserProfileComponent implements OnInit, OnChanges {
         this.user[persona] = true;
       });
     }
+
+    if (this.user.organization) {
+      this.userService.allUsers[
+        Number(this.auth.currentUserValue.id)
+      ].organization = this.user.organization;
+    }
     this.userService.submitUserToDB(this.user).subscribe(
       result => {
         this.user["id"] = result.data.insert_users.returning[0].id;
