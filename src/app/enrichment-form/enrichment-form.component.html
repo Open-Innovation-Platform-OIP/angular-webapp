@@ -1,6 +1,10 @@
-<p>
-  enrichment-form works!
-</p>
-
-
-<app-wizard-container [content]="enrichmentData" [contentType]="'enrichment'" (contentSubmitted)="onEnrichmentSubmit($event)"></app-wizard-container>
+<div class="main-content">
+  <div class="container-fluid">
+    <div class="row">
+      <div class="col-md-8">
+        <app-wizard-container [content]="enrichmentData" [contentType]="'enrichment'"
+          (contentSubmitted)="onEnrichmentSubmit($event)"></app-wizard-container>
+      </div>
+    </div>
+  </div>
+</div>
