@@ -779,6 +779,8 @@ export class WizardComponent
                     id
                     title
                     description
+                    voted_by
+                    watched_by
                     problem_tags {
                         tag {
                             name

@@ -37,33 +37,36 @@
                 </div>
               </div>
               <div class="col-md-8">
-                <strong>Description</strong>
+                <strong *ngIf="problemData.description">Description</strong>
                 <p class="description">{{problemData.description}}</p>
-                <strong>Location</strong>
-                <!-- <p class="description">{{problemData.location}}</p> -->
-                <div *ngFor="let location of problemData.location">
-                  <span class="badge badge-warning" *ngIf="location.Address.Label">{{location.Address.Label}}</span>
-                  <span>&nbsp;</span>
-                </div>
-                <strong *ngIf="problemData.resources_needed">Resources Needed</strong>
-                <p class="description">{{problemData.resources_needed}}</p>
-                <strong>Organization</strong>
-                <p class="description">{{problemData.organization}}</p>
-                <strong *ngIf="problemData.extent">Extent</strong>
-                <p class="description">{{problemData.extent}}</p>
-                <strong *ngIf="problemData.impact">Impact</strong>
-                <p class="description">{{problemData.impact}}</p>
-                <strong>Population Affected</strong>
-                <!-- <p class="description">More than {{problemData.min_population}}</p>
-                 -->
 
+                <strong *ngIf="problemData.organization">Organization</strong>
+                <p class="description">{{problemData.organization}}</p>
+
+                <strong>Population Affected</strong>
                 <p class="description" *ngIf="problemData.min_population===0">Between {{problemData.min_population}}
                   and {{problemData.max_population}}</p>
                 <p class="description" *ngIf="problemData.min_population!==0">More than
                   {{problemData.min_population}}</p>
 
+                <strong>Location</strong>
+                <div *ngFor="let location of problemData.location">
+                  <span class="badge badge-warning" *ngIf="location.Address.Label">{{location.Address.Label}}</span>
+                  <span>&nbsp;</span>
+                </div>
+
                 <strong *ngIf="problemData.beneficiary_attributes">Beneficiary Attributes</strong>
                 <p class="description">{{problemData.beneficiary_attributes}}</p>
+
+                <strong *ngIf="problemData.impact">Impact</strong>
+                <p class="description">{{problemData.impact}}</p>
+
+                <strong *ngIf="problemData.extent">Extent</strong>
+                <p class="description">{{problemData.extent}}</p>
+
+                <strong *ngIf="problemData.resources_needed">Resources Needed</strong>
+                <p class="description">{{problemData.resources_needed}}</p>
+
                 <strong *ngIf="tags.length">Sectors</strong>
                 <div>
                   <span *ngFor="let tag of tags" class="badge badge-warning">{{tag}}</span>
@@ -384,10 +387,9 @@
 
         <!--Validate-->
 
-        <hr>
+        <!-- <hr> -->
 
         <!--Collaborate-->
-
 
         <div class="modal fade editModal" id="EditCollaborateModal" tabindex="-1" role="dialog"
           aria-labelledby="myModalLabel" aria-hidden="true">
