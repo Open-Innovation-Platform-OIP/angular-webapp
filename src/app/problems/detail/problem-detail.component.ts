@@ -94,7 +94,7 @@ export class ProblemDetailComponent implements OnInit, OnDestroy {
     voted_by: "",
     watched_by: "",
     created_by: "",
-    is_draft: true
+    is_draft: ""
   };
 
   public problemOwner: string;
@@ -200,7 +200,7 @@ export class ProblemDetailComponent implements OnInit, OnDestroy {
     private collaborationService: CollaborationService,
     private validationService: ValidationService,
     private enrichmentService: EnrichmentService
-  ) { }
+  ) {}
 
   getUserPersonas(id) {
     this.apollo
@@ -314,6 +314,7 @@ export class ProblemDetailComponent implements OnInit, OnDestroy {
               organization
               location
               resources_needed
+              is_draft
               created_by
               modified_at
               image_urls
@@ -389,6 +390,7 @@ export class ProblemDetailComponent implements OnInit, OnDestroy {
               location
               resources_needed
               image_urls
+              
               video_urls
               created_by
               edited_at
@@ -421,7 +423,7 @@ export class ProblemDetailComponent implements OnInit, OnDestroy {
               });
 
               console.log(this.problemData, "result from nested queries");
-              console.log(result, "prob detail data");
+              console.log(result.data.problems[0].is_draft, "is draft");
               if (result.data.problems[0]) {
                 this.problemOwner =
                   result.data.problems[0].usersBycreatedBy.name;
@@ -628,7 +630,9 @@ export class ProblemDetailComponent implements OnInit, OnDestroy {
     if (comments.length < 4) {
       return comments.sort(this.compareDateForSort);
     } else {
-      return comments.sort(this.compareDateForSort).splice(0, this.numOfComments);
+      return comments
+        .sort(this.compareDateForSort)
+        .splice(0, this.numOfComments);
     }
   }
 
@@ -698,7 +702,7 @@ export class ProblemDetailComponent implements OnInit, OnDestroy {
         cancelButtonClass: "btn btn-danger",
         buttonsStyling: false
       })
-        .then(function (result) {
+        .then(function(result) {
           swal({
             type: "success",
             html:
@@ -735,7 +739,7 @@ export class ProblemDetailComponent implements OnInit, OnDestroy {
       body.classList.remove("sidebar-mini");
       misc.sidebar_mini_active = false;
     } else {
-      setTimeout(function () {
+      setTimeout(function() {
         body.classList.add("sidebar-mini");
 
         misc.sidebar_mini_active = true;
@@ -743,12 +747,12 @@ export class ProblemDetailComponent implements OnInit, OnDestroy {
     }
 
     // we simulate the window Resize so the charts will get updated in realtime.
-    const simulateWindowResize = setInterval(function () {
+    const simulateWindowResize = setInterval(function() {
       window.dispatchEvent(new Event("resize"));
     }, 180);
 
     // we stop the simulation of Window Resize after the animations are completed
-    setTimeout(function () {
+    setTimeout(function() {
       clearInterval(simulateWindowResize);
     }, 1000);
   }
@@ -973,7 +977,7 @@ export class ProblemDetailComponent implements OnInit, OnDestroy {
       $layer.remove();
     }
 
-    setTimeout(function () {
+    setTimeout(function() {
       $toggle.classList.remove("toggled");
     }, 400);
 

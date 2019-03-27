@@ -81,6 +81,7 @@ export class WizardComponent
   readonly separatorKeysCodes: number[] = [ENTER, COMMA];
   is_edit = false;
   media_url = "";
+  // canProceed: Boolean;
   owners = [];
   voted_by = [];
   watched_by = [];
@@ -238,6 +239,7 @@ export class WizardComponent
                             description
                             location
                             resources_needed
+                            is_draft
                             image_urls
                             video_urls
                             impact
@@ -266,6 +268,7 @@ export class WizardComponent
               result.data.problems.length >= 1 &&
               result.data.problems[0].id
             ) {
+              console.log(result.data.problems[0], "edit problem");
               canProceed = true;
               this.problem["id"] = result.data.problems[0].id;
               Object.keys(this.problem).map(key => {
@@ -273,6 +276,7 @@ export class WizardComponent
                 if (result.data.problems[0][key]) {
                   this.problem[key] = result.data.problems[0][key];
                 }
+                this.problem.is_draft = result.data.problems[0].is_draft;
               });
               if (this.problem.title) {
                 this.smartSearch(this.problem.title);
@@ -355,24 +359,24 @@ export class WizardComponent
       nextSelector: ".btn-next",
       previousSelector: ".btn-previous",
 
-      onNext: function(tab, navigation, index) {
-        const $valid = $(".card-wizard form").valid();
-        if (!$valid) {
-          $validator.focusInvalid();
-          return false;
-        } else if (!canProceed) {
-          if (
-            confirm(
-              "Are you sure you want to add a new problem and not enrich an existing one?"
-            )
-          ) {
-            canProceed = true;
-            return true;
-          } else {
-            return false;
-          }
-        }
-      },
+      // onNext: function(tab, navigation, index) {
+      //   const $valid = $(".card-wizard form").valid();
+      //   if (!$valid) {
+      //     $validator.focusInvalid();
+      //     return false;
+      //   } else if (!canProceed) {
+      //     if (
+      //       confirm(
+      //         "Are you sure you want to add a new problem and not enrich an existing one?"
+      //       )
+      //     ) {
+      //       canProceed = true;
+      //       return true;
+      //     } else {
+      //       return false;
+      //     }
+      //   }
+      // },
 
       onInit: function(tab: any, navigation: any, index: any) {
         // check number of tabs and fill the entire row
@@ -821,10 +825,12 @@ export class WizardComponent
     );
   }
   updateProblem(updatedProblem) {
+    console.log(updatedProblem, "updated problem");
     this.problem = updatedProblem;
   }
 
   autoSave() {
+    console.log(this.problem, "problem data");
     console.log("trying to auto save");
     if (this.problem.is_draft) {
       if (this.problem.title) {
@@ -839,6 +845,12 @@ export class WizardComponent
   // }
 
   publishProblem(problem) {
+    if (this.is_edit && !problem.is_draft) {
+      // console.log(this.is_edit, this.problem.is_draft, "alert");
+      alert("Your problem has been updated!");
+    } else {
+      alert("Your problem has been submitted!");
+    }
     problem.is_draft = false;
     console.log(problem, "problem before publishing");
     clearInterval(this.autosaveInterval);
@@ -1008,11 +1020,12 @@ export class WizardComponent
   }
 
   confirmSubmission() {
-    if (this.is_edit) {
-      alert("Your problem has been updated!");
-    } else {
-      alert("Your problem has been submitted!");
-    }
+    // if (this.is_edit && !this.problem.is_draft) {
+    //   console.log(this.is_edit, this.problem.is_draft, "alert");
+    //   alert("Your problem has been updated!");
+    // } else {
+    //   alert("Your problem has been submitted!");
+    // }
     this.router.navigate(["problems", this.problem["id"]]);
   }
 

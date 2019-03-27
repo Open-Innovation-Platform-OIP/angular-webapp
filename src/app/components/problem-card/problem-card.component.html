@@ -57,9 +57,18 @@
     <div class="description">
       <span> <b> Description : </b>{{ problemData.description }}</span>
     </div>
-    <div>
+    <!-- <div>
       <span> <b> Location : </b>{{ problemData.location }}</span>
-    </div>
+    </div> -->
+    <!-- <strong>Locations</strong>
+    <div *ngIf="problemData.location&&problemData.location.length">
+
+
+      <div *ngFor="let location of problemData.location">
+        <span *ngIf="location.Address&&location.Address.Label">{{location.Address.Label}}</span>
+        <span>&nbsp;</span>
+      </div>
+    </div> -->
   </div>
   <div class="card-footer">
     <!-- <div>
