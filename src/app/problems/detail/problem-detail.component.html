@@ -49,8 +49,8 @@
                 <strong *ngIf="problemData.beneficiary_attributes">Beneficiary Attributes</strong>
                 <p class="description">{{problemData.beneficiary_attributes}}</p>
                 <strong *ngIf="tags">Sectors</strong>
-                <div *ngFor="let tag of tags">
-                  <span class="badge badge-warning">{{tag}}</span>
+                <div>
+                  <span *ngFor="let tag of tags" class="badge badge-warning">{{tag}}</span>
                   <span>&nbsp;</span>
                 </div>
               </div>
