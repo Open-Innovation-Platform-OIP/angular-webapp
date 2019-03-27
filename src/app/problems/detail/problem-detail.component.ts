@@ -50,6 +50,7 @@ export class ProblemDetailComponent implements OnInit {
   replyingTo = 0;
   showReplyBox = false;
   showCommentBox = false;
+  numOfComments = 5;
   problemData: any = {
     id: 0,
     title: "",
@@ -461,7 +462,18 @@ export class ProblemDetailComponent implements OnInit {
   }
 
   sortComments(comments) {
-    return comments.sort(this.compareDateForSort);
+    if (comments.length < 4) {
+      return comments.sort(this.compareDateForSort);
+    } else {
+      return comments.sort(this.compareDateForSort).splice(0, this.numOfComments);
+    }
+  }
+
+  showMoreComments() {
+    if (this.numOfComments < this.objectValues(this.comments).length) {
+      this.numOfComments += 10;
+      this.sortComments(this.objectValues(this.comments));
+    }
   }
 
   compareDateForSort(a, b) {

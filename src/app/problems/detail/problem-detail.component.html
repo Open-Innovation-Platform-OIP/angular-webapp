@@ -496,7 +496,7 @@
                   </h5>
                 </div>
                 <div id="newComment" class="collapse show" role="tabpanel" aria-labelledby="headingOne"
-                  data-target="#newComment" style="">
+                  data-target="#newComment">
                   <app-submit-comment [users]="objectValues(usersService.allUsers)" [actionText]="'Comment'"
                     (submit)="onCommentSubmit($event)"></app-submit-comment>
                 </div>
@@ -506,6 +506,11 @@
                 *ngFor="let comment of sortComments(objectValues(comments))">
               </app-display-comment>
             </div>
+            <hr>
+            <a class="viewMoreComments" href="javascript:void(0)" *ngIf="objectValues(comments).length > 4"
+              (click)="showMoreComments()">
+              View more comments
+            </a>
           </div>
         </div>
       </div>

@@ -83,3 +83,12 @@ label {
     position: absolute;
     left: 47%;
 }
+
+.viewMoreComments {
+    color: grey;
+}
+
+.viewMoreComments:hover {
+    text-decoration: underline;
+    color: orange;
+}
