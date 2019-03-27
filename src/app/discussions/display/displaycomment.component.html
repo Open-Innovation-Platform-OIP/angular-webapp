@@ -12,22 +12,35 @@
     attr.data-target="#comment-{{comment.id}}">
     <div class="card-body">
       <div innerHTML="{{comment.text}}"></div>
-      <p>
+      <!-- Attachments for comments -->
+      <p style="height: 50px;">
         <span *ngFor="let attachment of comment.attachments; let i= index;" style="cursor:pointer;">
-          <img *ngIf="attachment.mimeType.startsWith('image')" src="{{attachment['url']}}"
+          <img *ngIf="attachment.mimeType.startsWith('image') && i < attachmentToShow" src="{{attachment['url']}}"
             (click)="assignUrl(comment.attachments, i)" width="50" />
 
           <!-- icon in case url is of video -->
-          <i class="material-icons" style="zoom:2; color: grey;" *ngIf="attachment.mimeType.startsWith('video')"
+          <i class="material-icons" style="line-height: 50px; color: grey;"
+            *ngIf="attachment.mimeType.startsWith('video') && i < attachmentToShow"
             (click)="assignUrl(comment.attachments, i)">
             movie
           </i>
-          <i class="material-icons" style="zoom:2; color: grey;"
-            *ngIf="!attachment.mimeType.startsWith('video') && !attachment.mimeType.startsWith('image')"
-            (click)="assignUrl(comment.attachments, i)">
+          <i class="material-icons" style="line-height: 50px; color: grey;" *ngIf="!attachment.mimeType.startsWith('video') && !attachment.mimeType.startsWith('image') && i <
+              attachmentToShow" (click)="assignUrl(comment.attachments, i)">
             description
           </i>
         </span>
+
+        <!-- show more for comments -->
+        <i class="material-icons" *ngIf="comment.attachments.length > 2 && !commentsExpanded"
+          style="padding: 5px; line-height: 50px;cursor: pointer;" (click)="displayMoreAttachComments()"
+          matTooltip="show more" [matTooltipPosition]="'right'">
+          arrow_forward_ios
+        </i>
+        <!-- show less for comments -->
+        <i class="material-icons" *ngIf="commentsExpanded" style="padding:5px; line-height: 50px;cursor: pointer;"
+          (click)="displayMoreAttachComments()" matTooltip="show less" [matTooltipPosition]="'right'">
+          arrow_back_ios
+        </i>
       </p>
 
       <button mat-raised-button class="btn btn-warning btn-round btn-sm" matTooltip="Click to reply"
@@ -50,22 +63,37 @@
           attr.data-target="#reply-{{reply.id}}">
           <div class="card-body">
             <div innerHTML="{{reply.text}}"></div>
-            <p>
+            <!-- Attachments for replies -->
+            <p style="height: 50px;">
               <span *ngFor="let attachment of reply.attachments; let i=index;" style="cursor:pointer;">
-                <img *ngIf="attachment.mimeType.startsWith('image')" (click)="assignUrl(reply.attachments, i)"
-                  src="{{attachment['url']}}" width="50" />
+                <img *ngIf="attachment.mimeType.startsWith('image') && i < repliesAttachmentNum"
+                  (click)="assignUrl(reply.attachments, i)" src="{{attachment['url']}}" width="50" />
 
                 <!-- icon in case url is of video -->
-                <i class="material-icons" style="zoom:2; color: grey" *ngIf="attachment.mimeType.startsWith('video')"
+                <i class="material-icons" style="zoom:2; color: grey"
+                  *ngIf="attachment.mimeType.startsWith('video') && i < repliesAttachmentNum"
                   (click)="assignUrl(reply.attachments, i)">
                   movie
                 </i>
-                <i class="material-icons" style="zoom:2; color: grey"
-                  *ngIf="!attachment.mimeType.startsWith('video') && !attachment.mimeType.startsWith('image')"
-                  (click)="assignUrl(reply.attachments, i)">
+                <i class="material-icons" style="zoom:2; color: grey" *ngIf="!attachment.mimeType.startsWith('video') && !attachment.mimeType.startsWith('image') && i <
+                    repliesAttachmentNum" (click)="assignUrl(reply.attachments, i)">
                   description
                 </i>
               </span>
+              <!-- Show more for replies -->
+              <i class="material-icons" *ngIf="reply.attachments.length > 2 && !repliesExpanded"
+                style="padding: 5px; line-height: 40px;cursor: pointer;"
+                (click)="displayMoreAttachReplies(reply.attachments)" matTooltip="show more"
+                [matTooltipPosition]="'right'">
+                arrow_forward_ios
+              </i>
+
+              <!-- Show less for replies -->
+              <i class="material-icons" *ngIf="repliesExpanded" style="padding:5px; line-height: 40px;cursor: pointer;"
+                (click)="displayMoreAttachReplies(reply.attachments)" matTooltip="show less"
+                [matTooltipPosition]="'right'">
+                arrow_back_ios
+              </i>
             </p>
 
             <!-- <button mat-raised-button class="btn btn-warning btn-round btn-sm" matTooltip="Click to reply" [matTooltipPosition]="'below'" *ngIf="!(showReplyBox && replyingTo === reply.id)"

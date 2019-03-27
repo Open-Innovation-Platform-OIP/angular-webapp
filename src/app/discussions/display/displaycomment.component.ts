@@ -18,6 +18,10 @@ export class CommentDisplayComponent implements OnInit {
   @Output() fileClicked = new EventEmitter();
   showReplyBox = false;
   replyingTo = 0;
+  attachmentToShow = 2;
+  repliesAttachmentNum = 2;
+  repliesExpanded = false;
+  commentsExpanded = false;
   ngOnInit() {
   }
 
@@ -48,6 +52,27 @@ export class CommentDisplayComponent implements OnInit {
     this.reply.emit(comment);
     this.replyingTo = 0;
     this.showReplyBox = false;
+  }
+
+  displayMoreAttachComments() {
+    if (this.attachmentToShow === 2) {
+      this.attachmentToShow = this.comment.attachments.length;
+      this.commentsExpanded = true;
+    } else {
+      this.attachmentToShow = 2;
+      this.commentsExpanded = false;
+    }
+
+  }
+
+  displayMoreAttachReplies(attachmentsArr) {
+    if (this.repliesAttachmentNum === 2) {
+      this.repliesAttachmentNum = attachmentsArr.length;
+      this.repliesExpanded = true;
+    } else {
+      this.repliesAttachmentNum = 2;
+      this.repliesExpanded = false;
+    }
   }
 
   assignUrl(files: any[], index: number) {
