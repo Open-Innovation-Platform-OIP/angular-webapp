@@ -48,30 +48,19 @@ export class ViewEnrichmentComponent implements OnInit, OnChanges {
       ...this.enrichmentData.video_urls,
       ...embedded_url_arr
     ];
-    console.log("combined>>>>>>>> ", this.combinedImgAndVideo);
-
 
     this.modalSrc = this.combinedImgAndVideo[this.index];
 
-    console.log(this.enrichmentData, "test enrich view");
     if (this.enrichmentData.voted_by) {
       this.enrichmentData.voted_by.forEach(userId => {
         if (Number(userId) === Number(this.auth.currentUserValue.id)) {
-          // console.log(userId, "userId");
           this.enrichmentVoted = true;
         }
       });
       this.numberOfVotes = this.enrichmentData.voted_by.length;
     }
-
-    // this.numberOfVotes = Object.keys(this.enrichmentData.voted_by).length;
-    // if (this.enrichmentData.voted_by.abc123) {
-    //   this.enrichmentVoted = true;
-    // }
   }
-  ngOnChanges() {
-    // console.log(this.enrichmentData, 'works');
-  }
+  ngOnChanges() { }
 
   voteEnrichment() {
     this.enrichmentVoted = !this.enrichmentVoted;
@@ -142,6 +131,18 @@ export class ViewEnrichmentComponent implements OnInit, OnChanges {
       return true;
     } else {
       return false;
+    }
+  }
+
+  toggleView(e) {
+    if (e.type === "click") {
+      let problemVideoTag: HTMLMediaElement = document.querySelector(
+        "#modalVideo"
+      );
+      this.showModal = false;
+      if (problemVideoTag) {
+        problemVideoTag.pause();
+      }
     }
   }
 }
