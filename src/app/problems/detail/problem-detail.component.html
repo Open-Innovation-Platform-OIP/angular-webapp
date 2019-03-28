@@ -115,13 +115,19 @@
               </div>
               <div class="modal-footer justify-content-center" *ngIf="this.problem_attachments.length > 1">
                 <button mat-raised-button type="button" [disabled]="problem_attachments_index < 1"
-                  (click)="toggleProblemAttachmentsIndex(false)" class="btn btn-info btn-round"><span
-                    class="carousel-control-prev-icon" aria-hidden="true"></span></button>
+                  (click)="toggleProblemAttachmentsIndex(false)" class="btn btn-link btn-round btn-twitter"><i
+                    class="material-icons" style="zoom:2;">
+                    keyboard_arrow_left
+                  </i>
+                </button>
                 <div class="col-3"></div>
                 <button mat-raised-button type="button"
                   [disabled]="problem_attachments_index === problem_attachments.length - 1"
-                  class="btn btn-info btn-round" (click)="toggleProblemAttachmentsIndex(true)"><span
-                    class="carousel-control-next-icon" aria-hidden="true"></span></button>
+                  class="btn btn-link btn-round btn-twitter" (click)="toggleProblemAttachmentsIndex(true)"><i
+                    class="material-icons" style="zoom:2;">
+                    keyboard_arrow_right
+                  </i>
+                </button>
               </div>
             </div>
           </div>

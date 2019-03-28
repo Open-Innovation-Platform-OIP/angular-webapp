@@ -40,6 +40,7 @@ import {
 declare const $: any;
 
 let canProceed: boolean;
+const re = /(youtube|youtu|vimeo|dailymotion)\.(com|be)\/((watch\?v=([-\w]+))|(video\/([-\w]+))|(projects\/([-\w]+)\/([-\w]+))|([-\w]+))/;
 
 interface FileReaderEventTarget extends EventTarget {
   result: string;
@@ -83,7 +84,7 @@ export class WizardContainerComponent
   @Output() tagAdded = new EventEmitter();
   @Output() tagRemoved = new EventEmitter();
   @Output() contentSubmitted = new EventEmitter();
-  
+
 
   matcher = new MyErrorStateMatcher();
   type: FormGroup;
@@ -354,19 +355,19 @@ export class WizardContainerComponent
         }
       },
 
-      highlight: function(element) {
+      highlight: function (element) {
         $(element)
           .closest(".form-group")
           .removeClass("has-success")
           .addClass("has-danger");
       },
-      success: function(element) {
+      success: function (element) {
         $(element)
           .closest(".form-group")
           .removeClass("has-danger")
           .addClass("has-success");
       },
-      errorPlacement: function(error, element) {
+      errorPlacement: function (error, element) {
         $(element).append(error);
       }
     });
@@ -377,8 +378,8 @@ export class WizardContainerComponent
       nextSelector: ".btn-next",
       previousSelector: ".btn-previous",
 
-      onNext: function(tab, navigation, index) {
-        
+      onNext: function (tab, navigation, index) {
+
         const $valid = $(".card-wizard form").valid();
         if (!$valid) {
           $validator.focusInvalid();
@@ -397,7 +398,7 @@ export class WizardContainerComponent
         }
       },
 
-      onInit: function(tab: any, navigation: any, index: any) {
+      onInit: function (tab: any, navigation: any, index: any) {
         // this.populationValue = this.content.max_population;
         console.log("wizard oninit");
 
@@ -458,7 +459,7 @@ export class WizardContainerComponent
         $(".moving-tab").css("transition", "transform 0s");
       },
 
-      onTabClick: function(tab: any, navigation: any, index: any) {
+      onTabClick: function (tab: any, navigation: any, index: any) {
         return true;
         const $valid = $(".card-wizard form").valid();
 
@@ -469,7 +470,7 @@ export class WizardContainerComponent
         }
       },
 
-      onTabShow: function(tab: any, navigation: any, index: any) {
+      onTabShow: function (tab: any, navigation: any, index: any) {
         console.log("on tab show");
         let $total = navigation.find("li").length;
         let $current = index + 1;
@@ -497,7 +498,7 @@ export class WizardContainerComponent
           .find("li:nth-child(" + $current + ") a")
           .html();
 
-        setTimeout(function() {
+        setTimeout(function () {
           $(".moving-tab").text(button_text);
         }, 150);
 
@@ -563,13 +564,13 @@ export class WizardContainerComponent
     });
 
     // Prepare the preview for profile picture
-    $("#wizard-picture").change(function() {
+    $("#wizard-picture").change(function () {
       const input = $(this);
 
       if (input[0].files && input[0].files[0]) {
         const reader = new FileReader();
 
-        reader.onload = function(e: any) {
+        reader.onload = function (e: any) {
           $("#wizardPicturePreview")
             .attr("src", e.target.result)
             .fadeIn("slow");
@@ -578,7 +579,7 @@ export class WizardContainerComponent
       }
     });
 
-    $('[data-toggle="wizard-radio"]').click(function() {
+    $('[data-toggle="wizard-radio"]').click(function () {
       const wizard = $(this).closest(".card-wizard");
       wizard.find('[data-toggle="wizard-radio"]').removeClass("active");
       $(this).addClass("active");
@@ -590,7 +591,7 @@ export class WizardContainerComponent
         .attr("checked", "true");
     });
 
-    $('[data-toggle="wizard-checkbox"]').click(function() {
+    $('[data-toggle="wizard-checkbox"]').click(function () {
       if ($(this).hasClass("active")) {
         $(this).removeClass("active");
         $(this)
@@ -614,7 +615,7 @@ export class WizardContainerComponent
     const input = $(this);
     if (input[0].files && input[0].files[0]) {
       const reader: any = new FileReader();
-      reader.onload = function(e: any) {
+      reader.onload = function (e: any) {
         $("#wizardPicturePreview")
           .attr("src", e.target.result)
           .fadeIn("slow");
@@ -639,13 +640,13 @@ export class WizardContainerComponent
     this.fieldsPopulated.emit(this.content);
   }
 
-  
+
 
   ngAfterViewInit() {
     console.log("wizard after view in it");
 
     $(window).resize(() => {
-      $(".card-wizard").each(function() {
+      $(".card-wizard").each(function () {
         const $wizard = $(this);
         const index = $wizard.bootstrapWizard("currentIndex");
         const $total = $wizard.find(".nav li").length;
@@ -748,8 +749,11 @@ export class WizardContainerComponent
                 .uploadFile(e.target.result, img_id)
                 .promise()
                 .then(values => {
+                  console.log("event>>>> ", event.target.files[i].type);
+
                   this.content.image_urls.push({
                     url: values["Location"],
+                    mimeType: event.target.files[i].type,
                     key: values["Key"]
                   });
                   if (!this.content.featured_url) {
@@ -771,6 +775,7 @@ export class WizardContainerComponent
             .then(data => {
               this.content.video_urls.push({
                 key: data["Key"],
+                mimeType: event.target.files[i].type,
                 url: data["Location"]
               });
               if (!this.content.featured_url) {
@@ -897,6 +902,18 @@ export class WizardContainerComponent
         this.content.featured_url = this.media_url;
         this.content.featured_type = "embed";
       }
+    }
+  }
+
+  checkMedialUrl(url: string) {
+    if (!url.startsWith('http')) {
+      return false;
+    }
+
+    if (url.match(re)) {
+      return true;
+    } else {
+      return false;
     }
   }
 }

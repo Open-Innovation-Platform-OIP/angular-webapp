@@ -1,5 +1,5 @@
 <video *ngIf="source && (source.mimeType && source.mimeType.startsWith('video')) || checkUrlIsVideo(source.url)"
-  id="modalVideo" controls width="100%">
+  id="modalVideo" controls width="100%" height="450">
   <source src="{{source.url}}" type="video/webm">
   <source src="{{source.url}}" type="video/mp4">
 
@@ -7,7 +7,7 @@
 </video>
 
 <img *ngIf="source && (source.mimeType && source.mimeType.startsWith('image')) || checkUrlIsImg(source.url)"
-  src="{{source.url}}" alt="" width="100%">
+  src="{{source.url}}" alt="" class="fix_view">
 
 <!-- for other than image and video -->
 <div
@@ -23,3 +23,6 @@
   </a>
 
 </div>
+
+<!-- for embedded videos -->
+<div *ngIf="source && checkUrlIsEmbeded(source.url)" [innerHtml]="iframe_html"></div>

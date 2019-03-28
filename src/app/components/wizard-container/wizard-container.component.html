@@ -270,13 +270,26 @@
               </div>
               <div class="col-sm-6">
                 <div class="input-group">
+                  <div class="input-group-prepend">
+                    <span class="input-group-text">
+                      <i class="material-icons" [ngStyle]="{
+                      color: checkMedialUrl(media_url) == false
+                        ? 'red'
+                        : '#AAAAAA'
+                    }">description</i>
+                    </span>
+                  </div>
                   <mat-form-field class="example-full-width has-label">
                     <input type="text" name="media_url" matInput id="media_url" formControlName="media_url"
-                      placeholder="Video URL" [(ngModel)]="media_url">
+                      placeholder="Video URL (youtube,vimeo and dailymotion)" [(ngModel)]="media_url">
                   </mat-form-field>
-                  <input type="button" class="btn btn-finish btn-fill btn-success btn-wd" (click)="addMediaUrl()"
+                  <button class="btn btn-success" [disabled]="checkMedialUrl(media_url) == false"
+                    (click)="addMediaUrl()">
+                    Add Video By URL
+                  </button>
+                  <!-- <input type="button" class="btn btn-finish btn-fill btn-success btn-wd" (click)="addMediaUrl()"
                     name="add_media_url" [disabled]="!media_url.startsWith('http')" value="Add Video By URL"
-                    style="display: none;">
+                    style="display: none;"> -->
                 </div>
               </div>
             </div>
@@ -289,8 +302,8 @@
                   <div class="card-body"></div>
                   <div class="card-footer">
                     <div class="price">
-                      <button mat-raised-button type="button" class="btn btn-default btn-link" matTooltip="Feature"
-                        [matTooltipPosition]="'below'" (click)="setFeatured('image',i)">
+                      <button mat-raised-button type="button" class="btn btn-default btn-link"
+                        matTooltip="Make default image" [matTooltipPosition]="'below'" (click)="setFeatured('image',i)">
                         <i *ngIf="imgSrc.url !== content.featured_url" class="material-icons">turned_in_not</i>
                         <i *ngIf="imgSrc.url === content.featured_url" class="material-icons">turned_in</i>
                       </button>
@@ -318,11 +331,11 @@
                   <div class="card-body">{{video.key}}</div>
                   <div class="card-footer">
                     <div class="price">
-                      <button mat-raised-button type="button" class="btn btn-default btn-link" matTooltip="Feature"
+                      <!-- <button mat-raised-button type="button" class="btn btn-default btn-link" matTooltip="Feature"
                         [matTooltipPosition]="'below'" (click)="setFeatured('video',i)">
                         <i *ngIf="video.url !== content.featured_url" class="material-icons">turned_in_not</i>
                         <i *ngIf="video.url === content.featured_url" class="material-icons">turned_in</i>
-                      </button>
+                      </button> -->
                     </div>
                     <div class="stats">
                       <button mat-raised-button type="button" class="btn btn-danger btn-link" matTooltip="Remove"
@@ -340,11 +353,11 @@
                   <div class="card-body">{{embed_url}}</div>
                   <div class="card-footer">
                     <div class="price">
-                      <button mat-raised-button type="button" class="btn btn-default btn-link" matTooltip="Feature"
+                      <!-- <button mat-raised-button type="button" class="btn btn-default btn-link" matTooltip="Feature"
                         [matTooltipPosition]="'below'" (click)="setFeatured('embed',i)">
                         <i *ngIf="embed_url !== content.featured_url" class="material-icons">turned_in_not</i>
                         <i *ngIf="embed_url === content.featured_url" class="material-icons">turned_in</i>
-                      </button>
+                      </button> -->
                     </div>
                     <div class="stats">
                       <button mat-raised-button type="button" class="btn btn-danger btn-link" matTooltip="Remove"

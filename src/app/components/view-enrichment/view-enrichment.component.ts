@@ -38,29 +38,29 @@ export class ViewEnrichmentComponent implements OnInit, OnChanges {
   }
 
   ngOnInit() {
+    // adding embedded links
+    let embedded_url_arr = this.enrichmentData.embed_urls.map((url) => {
+      return { 'url': url };
+    })
+
     this.combinedImgAndVideo = [
       ...this.enrichmentData.image_urls,
-      ...this.enrichmentData.video_urls
+      ...this.enrichmentData.video_urls,
+      ...embedded_url_arr
     ];
-    console.log(this.enrichmentData, "test enrich view");
+
+    this.modalSrc = this.combinedImgAndVideo[this.index];
+
     if (this.enrichmentData.voted_by) {
       this.enrichmentData.voted_by.forEach(userId => {
         if (Number(userId) === Number(this.auth.currentUserValue.id)) {
-          // console.log(userId, "userId");
           this.enrichmentVoted = true;
         }
       });
       this.numberOfVotes = this.enrichmentData.voted_by.length;
     }
-
-    // this.numberOfVotes = Object.keys(this.enrichmentData.voted_by).length;
-    // if (this.enrichmentData.voted_by.abc123) {
-    //   this.enrichmentVoted = true;
-    // }
   }
-  ngOnChanges() {
-    // console.log(this.enrichmentData, 'works');
-  }
+  ngOnChanges() { }
 
   voteEnrichment() {
     this.enrichmentVoted = !this.enrichmentVoted;
@@ -99,36 +99,19 @@ export class ViewEnrichmentComponent implements OnInit, OnChanges {
   }
 
   toggleViewForImgNView() {
-    this.modalSrc = this.combinedImgAndVideo[0].url;
-    this.videoStatus = false;
-    this.index = 0;
     this.showModal = true;
   }
 
-  toggleSrc(btn: String) {
-    if (btn === "next" && this.index < this.combinedImgAndVideo.length - 1) {
+  toggleFileSrc(dir: boolean) {
+    if (dir && this.index < this.combinedImgAndVideo.length - 1) {
       this.index++;
-      const url = this.combinedImgAndVideo[this.index].url;
-
-      if (url.substr(-4) === ".mp4") {
-        this.videoStatus = true;
-      } else {
-        this.videoStatus = false;
-      }
-      this.modalSrc = url;
+      this.modalSrc = this.combinedImgAndVideo[this.index];
     }
-
-    if (btn === "prev" && this.index > 0) {
+    if (!dir && this.index > 0) {
       this.index--;
-      const url = this.combinedImgAndVideo[this.index].url;
-
-      if (url.substr(-4) === ".mp4") {
-        this.videoStatus = true;
-      } else {
-        this.videoStatus = false;
-      }
-      this.modalSrc = url;
+      this.modalSrc = this.combinedImgAndVideo[this.index];
     }
+
   }
 
   editEnrichment() {
@@ -139,5 +122,27 @@ export class ViewEnrichmentComponent implements OnInit, OnChanges {
   deleteEnrichment() {
     this.deleteClicked.emit(this.enrichmentData.id);
     // this.enrichmentHandlerService.deleteEnrichment(this.enrichmentData.id);
+  }
+
+  checkUrlIsImg(url) {
+    var arr = ["jpeg", "jpg", "gif", "png"];
+    var ext = url.substring(url.lastIndexOf(".") + 1);
+    if (arr.indexOf(ext) > -1) {
+      return true;
+    } else {
+      return false;
+    }
+  }
+
+  toggleView(e) {
+    if (e.type === "click") {
+      let problemVideoTag: HTMLMediaElement = document.querySelector(
+        "#modalVideo"
+      );
+      this.showModal = false;
+      if (problemVideoTag) {
+        problemVideoTag.pause();
+      }
+    }
   }
 }
