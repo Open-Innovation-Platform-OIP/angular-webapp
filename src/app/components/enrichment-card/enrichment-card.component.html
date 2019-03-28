@@ -14,8 +14,9 @@
     <strong>Location</strong>
     <!-- <p class="description" *ngIf="enrichmentData.location">{{enrichmentData.location}}</p>
      -->
-    <div *ngFor="let location of enrichmentData.location">
-      <span class="badge badge-warning" *ngIf="location.Address.Label">{{location.Address.Label}}</span>
+    <div *ngIf="enrichmentData.location.length">
+      <span class="badge badge-warning"
+        *ngFor="let location of enrichmentData.location">{{location.Address.Label}}</span>
       <span>&nbsp;</span>
     </div>
 
@@ -31,13 +32,14 @@
     <!-- "https://mdbootstrap.com/img/Photos/Horizontal/Nature/4-col/img%20(34).jpg" -->
   </div>
   <div class="card-footer">
-    <!-- <p>Added by : {{enrichmentData.usersBycreatedBy.name}}</p> -->
     <div class="stats">
       <i class="material-icons">
         thumb_up
       </i>
       {{numberOfVotes}}
     </div>
+    <p>Added by : {{enrichmentData.usersBycreatedBy.name}}</p>
+
   </div>
 </div>
 

@@ -126,6 +126,7 @@
                 </div>
               </div>
             </div>
+
             <div class="row justify-content-center">
               <div class="col-sm-12">
                 <div class="input-group form-control-lg">
@@ -229,11 +230,22 @@
               </div>
             </div>
             <div class="row justify-content-center" *ngIf="contentType==='problem'">
-              <div class="col-sm-12">
+              <!-- <div class="col-sm-12">
                 <div class="input-group form-control-lg">
                   <div class="input-group-prepend">
                     <span class="input-group-text">
                       <i class="material-icons">label</i>
+                    </span>
+                  </div> -->
+              <div class="col-sm-12">
+                <div class="input-group form-control-lg">
+                  <div class="input-group-prepend">
+                    <span class="input-group-text">
+                      <i class="material-icons" [ngStyle]="{
+                            color: !sectors.length
+                              ? 'red'
+                              : '#AAAAAA'
+                          }">label</i>
                     </span>
                   </div>
                   <mat-form-field class="example-chip-list">

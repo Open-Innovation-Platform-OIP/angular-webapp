@@ -50,7 +50,7 @@ export class ProblemDetailComponent implements OnInit, OnDestroy {
   // chartData: any;
 
   problemDataQuery: QueryRef<any>;
-  problemDataSub: Subscription;
+  problemDataSubcription: Subscription;
   objectValues = Object["values"];
   discussions = [];
   replyingTo = 0;
@@ -245,7 +245,7 @@ export class ProblemDetailComponent implements OnInit, OnDestroy {
   }
 
   ngOnInit() {
-    console.log(this.collaborators, "collaborators on load");
+    console.log("ng on in it on load");
 
     this.userId = Number(this.auth.currentUserValue.id);
 
@@ -399,17 +399,22 @@ export class ProblemDetailComponent implements OnInit, OnDestroy {
               featured_url
               embed_urls
               featured_type
+              usersBycreatedBy{
+                id
+                name
+                photo_url
+              } 
               
             }
             }
         }
             
         `,
-          pollInterval: 500,
+          pollInterval: 1000,
           fetchPolicy: "network-only"
         });
         // this.chartQuery.valueChanges.subscribe
-        this.problemDataSub = this.problemDataQuery.valueChanges.subscribe(
+        this.problemDataSubcription = this.problemDataQuery.valueChanges.subscribe(
           result => {
             if (
               result.data.problems.length >= 1 &&
@@ -953,47 +958,53 @@ export class ProblemDetailComponent implements OnInit, OnDestroy {
   }
 
   watchProblem() {
-    this.isWatching = !this.isWatching;
-    if (this.isWatching) {
-      this.watchedBy++;
-      this.problemData.watched_by.push(Number(this.auth.currentUserValue.id));
+    if (!(this.userId == this.problemData.created_by)) {
+      this.isWatching = !this.isWatching;
+      if (this.isWatching) {
+        this.watchedBy++;
+        this.problemData.watched_by.push(Number(this.auth.currentUserValue.id));
 
-      this.problemData.watched_by = JSON.stringify(this.problemData.watched_by)
-        .replace("[", "{")
-        .replace("]", "}");
+        this.problemData.watched_by = JSON.stringify(
+          this.problemData.watched_by
+        )
+          .replace("[", "{")
+          .replace("]", "}");
 
-      console.log(this.problemData.watched_by, "watched_by");
+        console.log(this.problemData.watched_by, "watched_by");
 
-      this.problemService.storeProblemWatchedBy(
-        this.problemData.id,
-        this.problemData
-      );
+        this.problemService.storeProblemWatchedBy(
+          this.problemData.id,
+          this.problemData
+        );
 
-      this.problemData.watched_by = JSON.parse(
-        this.problemData.watched_by.replace("{", "[").replace("}", "]")
-      );
-    } else {
-      this.watchedBy--;
+        this.problemData.watched_by = JSON.parse(
+          this.problemData.watched_by.replace("{", "[").replace("}", "]")
+        );
+      } else {
+        this.watchedBy--;
 
-      let index = this.problemData.watched_by.indexOf(
-        Number(this.auth.currentUserValue.id).toString()
-      );
-      console.log(this.problemData.watched_by, "watched_by");
+        let index = this.problemData.watched_by.indexOf(
+          Number(this.auth.currentUserValue.id).toString()
+        );
+        console.log(this.problemData.watched_by, "watched_by");
 
-      this.problemData.watched_by.splice(index, 1);
+        this.problemData.watched_by.splice(index, 1);
 
-      this.problemData.watched_by = JSON.stringify(this.problemData.watched_by)
-        .replace("[", "{")
-        .replace("]", "}");
+        this.problemData.watched_by = JSON.stringify(
+          this.problemData.watched_by
+        )
+          .replace("[", "{")
+          .replace("]", "}");
 
-      this.problemService.storeProblemWatchedBy(
-        this.problemData.id,
-        this.problemData
-      );
+        this.problemService.storeProblemWatchedBy(
+          this.problemData.id,
+          this.problemData
+        );
 
-      this.problemData.watched_by = JSON.parse(
-        this.problemData.watched_by.replace("{", "[").replace("}", "]")
-      );
+        this.problemData.watched_by = JSON.parse(
+          this.problemData.watched_by.replace("{", "[").replace("}", "]")
+        );
+      }
     }
   }
 
@@ -1059,38 +1070,40 @@ export class ProblemDetailComponent implements OnInit, OnDestroy {
   }
 
   voteProblem() {
-    this.isVoted = !this.isVoted;
-    if (this.isVoted) {
-      this.number_of_votes++;
-      this.problemData.voted_by.push(Number(this.auth.currentUserValue.id));
-      this.problemData.voted_by = JSON.stringify(this.problemData.voted_by)
-        .replace("[", "{")
-        .replace("]", "}");
+    if (!(this.userId == this.problemData.created_by)) {
+      this.isVoted = !this.isVoted;
+      if (this.isVoted) {
+        this.number_of_votes++;
+        this.problemData.voted_by.push(Number(this.auth.currentUserValue.id));
+        this.problemData.voted_by = JSON.stringify(this.problemData.voted_by)
+          .replace("[", "{")
+          .replace("]", "}");
 
-      this.problemService.storeProblemVotedBy(
-        this.problemData.id,
-        this.problemData
-      );
-      this.problemData.voted_by = JSON.parse(
-        this.problemData.voted_by.replace("{", "[").replace("}", "]")
-      );
-    } else {
-      this.number_of_votes--;
-      let index = this.problemData.voted_by.indexOf(
-        Number(this.auth.currentUserValue.id)
-      );
-      this.problemData.voted_by.splice(index, 1);
-      this.problemData.voted_by = JSON.stringify(this.problemData.voted_by)
-        .replace("[", "{")
-        .replace("]", "}");
+        this.problemService.storeProblemVotedBy(
+          this.problemData.id,
+          this.problemData
+        );
+        this.problemData.voted_by = JSON.parse(
+          this.problemData.voted_by.replace("{", "[").replace("}", "]")
+        );
+      } else {
+        this.number_of_votes--;
+        let index = this.problemData.voted_by.indexOf(
+          Number(this.auth.currentUserValue.id)
+        );
+        this.problemData.voted_by.splice(index, 1);
+        this.problemData.voted_by = JSON.stringify(this.problemData.voted_by)
+          .replace("[", "{")
+          .replace("]", "}");
 
-      this.problemService.storeProblemVotedBy(
-        this.problemData.id,
-        this.problemData
-      );
-      this.problemData.voted_by = JSON.parse(
-        this.problemData.voted_by.replace("{", "[").replace("}", "]")
-      );
+        this.problemService.storeProblemVotedBy(
+          this.problemData.id,
+          this.problemData
+        );
+        this.problemData.voted_by = JSON.parse(
+          this.problemData.voted_by.replace("{", "[").replace("}", "]")
+        );
+      }
     }
   }
 
@@ -1255,6 +1268,6 @@ export class ProblemDetailComponent implements OnInit, OnDestroy {
 
   ngOnDestroy() {
     this.problemDataQuery.stopPolling();
-    this.problemDataSub.unsubscribe();
+    this.problemDataSubcription.unsubscribe();
   }
 }

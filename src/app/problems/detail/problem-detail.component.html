@@ -96,6 +96,8 @@
         </div>
         <!--Problem Details-->
 
+        <!-- <h2 *ngIf="collaborators[0].intent">{{collaborators[0].intent}}</h2> -->
+
 
         <!--Show more images and videos-->
 
@@ -296,6 +298,7 @@
           <!-- <button NguCarouselPrev class="btn btn-default leftRs" [style.opacity]="ValidCarousel.isFirst ? 0.5:1">&lt;</button> -->
           <!-- <button NguCarouselNext class="btn btn-default rightRs" [style.opacity]="ValidCarousel.isLast ? 0.5:1">&gt;</button> -->
 
+
           <a mat-button NguCarouselPrev class="btn btn-white btn-just-icon btn-round leftRs" *ngIf="validation[0]">
             <i class="material-icons">
               keyboard_arrow_left
@@ -311,10 +314,20 @@
 
         </ngu-carousel>
         <div class="row justify-content-center" *ngIf="!validation[0]">
-          <p *ngIf="userPersonas.expert">No validations yet. Be the first to validate.</p>
-          <p *ngIf="!userPersonas.expert">No validations yet.</p>
+          <!-- <p *ngIf="userPersonas.is_expert">No validations yet. Be the first to validate.</p> -->
+          <p>No validations yet.</p>
 
         </div>
+
+        <div class="row justify-content-center">
+
+          <p *ngIf="!(userId == problemData.created_by) && userPersonas.is_expert && !sectorMatched ">
+            Please ensure that
+            your interests match with the problem
+            sectors</p>
+
+        </div>
+
 
         <!--Validate Modal-->
         <div class="modal fade" id="validatorModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel"

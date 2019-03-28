@@ -25,9 +25,12 @@ export class ProblemsViewComponent implements OnInit, OnDestroy {
       query: gql`
           query PostsGetQuery {
             problems (
-              where: {created_by: {_eq: ${Number(
-                this.auth.currentUserValue.id
-              )}},
+              
+              where:{ _and: [
+                { created_by: {_eq: ${Number(this.auth.currentUserValue.id)}}},
+                { is_draft: {_eq: false}}
+              ] 
+            
               }
               order_by: {modified_at: desc}
               
@@ -74,9 +77,12 @@ export class ProblemsViewComponent implements OnInit, OnDestroy {
       query: gql`
           query PostsGetQuery {
             problems (
-              where: {created_by: {_neq: ${Number(
-                this.auth.currentUserValue.id
-              )}}}
+              where:{ _and: [
+                { created_by: {_neq: ${Number(this.auth.currentUserValue.id)}}},
+                { is_draft: {_eq: false}}
+              ] 
+            
+              }
               order_by: {modified_at: desc}
               
             ) {
