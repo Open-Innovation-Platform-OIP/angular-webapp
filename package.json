@@ -70,6 +70,7 @@
     "ng2-nouislider": "1.7.13",
     "ng2-select": "2.0.0",
     "ngx-chips": "1.9.8",
+    "ngx-embed-video": "^1.0.4",
     "ngx-quill": "^4.6.12",
     "nouislider": "9.2.0",
     "perfect-scrollbar": "1.1.0",

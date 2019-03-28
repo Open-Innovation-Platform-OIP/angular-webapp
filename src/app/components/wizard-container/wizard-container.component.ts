@@ -40,6 +40,7 @@ import {
 declare const $: any;
 
 let canProceed: boolean;
+const re = /(youtube|youtu|vimeo|dailymotion)\.(com|be)\/((watch\?v=([-\w]+))|(video\/([-\w]+))|(projects\/([-\w]+)\/([-\w]+))|([-\w]+))/;
 
 interface FileReaderEventTarget extends EventTarget {
   result: string;
@@ -744,8 +745,11 @@ export class WizardContainerComponent
                 .uploadFile(e.target.result, img_id)
                 .promise()
                 .then(values => {
+                  console.log("event>>>> ", event.target.files[i].type);
+
                   this.content.image_urls.push({
                     url: values["Location"],
+                    mimeType: event.target.files[i].type,
                     key: values["Key"]
                   });
                   if (!this.content.featured_url) {
@@ -767,6 +771,7 @@ export class WizardContainerComponent
             .then(data => {
               this.content.video_urls.push({
                 key: data["Key"],
+                mimeType: event.target.files[i].type,
                 url: data["Location"]
               });
               if (!this.content.featured_url) {
@@ -894,6 +899,18 @@ export class WizardContainerComponent
         this.content.featured_url = this.media_url;
         this.content.featured_type = "embed";
       }
+    }
+  }
+
+  checkMedialUrl(url: string) {
+    if (!url.startsWith("http")) {
+      return false;
+    }
+
+    if (url.match(re)) {
+      return true;
+    } else {
+      return false;
     }
   }
 }

@@ -54,6 +54,7 @@ import { AuthLayoutComponent } from "./layouts/auth/auth-layout.component";
 
 import { AppRoutes } from "./app.routing";
 import { GraphQLModule } from "./services/graphql.module";
+import { EmbedVideo } from 'ngx-embed-video';
 // import { EnrichmentFormComponent } from './enrichment/enrichment-form/enrichment-form.component';
 // import { EnrichmentComponent } from './enrichment/enrichment.component';
 // import { GlobalSearchViewModule } from "./global-search-view/global-search-view.module";
@@ -91,10 +92,10 @@ import { GraphQLModule } from "./services/graphql.module";
     MatToolbarModule,
     MatTooltipModule
   ],
-  imports: [GraphQLModule, HttpClientModule, QuillModule],
+  imports: [GraphQLModule, HttpClientModule, QuillModule, EmbedVideo.forRoot()],
   declarations: []
 })
-export class MaterialModule {}
+export class MaterialModule { }
 
 // Sentry.init({
 //   dsn: "https://aa3877830cee4ba6b6999be089316f57@sentry.io/1408858"
@@ -102,7 +103,7 @@ export class MaterialModule {}
 
 @Injectable()
 export class SentryErrorHandler implements ErrorHandler {
-  constructor() {}
+  constructor() { }
   handleError(error) {
     Sentry.captureException(error.originalError || error);
     throw error;
@@ -130,4 +131,4 @@ export class SentryErrorHandler implements ErrorHandler {
   ],
   bootstrap: [AppComponent]
 })
-export class AppModule {}
+export class AppModule { }

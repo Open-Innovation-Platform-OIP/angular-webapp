@@ -10,10 +10,9 @@ export class EnrichmentCardComponent implements OnInit {
   @Output() clicked = new EventEmitter();
   numberOfVotes: any = 0;
 
-  constructor() {}
+  constructor() { }
 
   ngOnInit() {
-    console.log(this.enrichmentData, "likes");
     if (this.enrichmentData && this.enrichmentData.voted_by) {
       this.numberOfVotes = this.enrichmentData.voted_by.length;
     }
@@ -22,5 +21,15 @@ export class EnrichmentCardComponent implements OnInit {
   cardClicked() {
     console.log("card clicked");
     this.clicked.emit(this.enrichmentData);
+  }
+
+  checkUrlIsImg(url) {
+    var arr = ["jpeg", "jpg", "gif", "png"];
+    var ext = url.substring(url.lastIndexOf(".") + 1);
+    if (arr.indexOf(ext) > -1) {
+      return true;
+    } else {
+      return false;
+    }
   }
 }

@@ -3,8 +3,8 @@
 
 
 <div class="card card-product enrich-card" (click)="cardClicked()" *ngIf="enrichmentData.description">
-  <img class="card-img-top" style="object-fit:cover;" *ngIf="enrichmentData.image_urls"
-    src="{{ (this.enrichmentData.image_urls && this.enrichmentData.image_urls[0]) ? this.enrichmentData.image_urls[0].url : './assets/img/image_placeholder.jpg'||enrichmentData.image_urls[0]}}"
+  <img class="card-img-top" style="object-fit:cover;"
+    src="{{ (this.enrichmentData.featured_url && checkUrlIsImg(enrichmentData.featured_url)) ? this.enrichmentData.featured_url : './assets/img/image_placeholder.jpg' }}"
     alt="Card image cap" width="150px" height="140px">
   <div class="card-body">
     <div class="description">
@@ -14,10 +14,9 @@
     <strong>Location</strong>
     <!-- <p class="description" *ngIf="enrichmentData.location">{{enrichmentData.location}}</p>
      -->
-    <div *ngIf="enrichmentData.location.length">
-      <span class="badge badge-warning"
-        *ngFor="let location of enrichmentData.location">{{location.Address.Label}}</span>
-      <span>&nbsp;</span>
+    <div *ngFor="let location of enrichmentData.location; let i=index;">
+      <span class="badge badge-warning" *ngIf="location.Address.Label && i < 2">{{location.Address.Label}}</span>
+      <span *ngIf="i<2">&nbsp;</span>
     </div>
 
     <!-- <h4 class="card-title">Description :</h4> -->

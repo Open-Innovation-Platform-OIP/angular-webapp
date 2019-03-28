@@ -31,7 +31,8 @@
         </span>
 
         <!-- show more for comments -->
-        <i class="material-icons" *ngIf="comment.attachments.length > 2 && !commentsExpanded"
+        <i class="material-icons"
+          *ngIf="comment && comment.attachments && comment.attachments.length > 2 && !commentsExpanded"
           style="padding: 5px; line-height: 50px;cursor: pointer;" (click)="displayMoreAttachComments()"
           matTooltip="show more" [matTooltipPosition]="'right'">
           arrow_forward_ios
@@ -81,7 +82,8 @@
                 </i>
               </span>
               <!-- Show more for replies -->
-              <i class="material-icons" *ngIf="reply.attachments.length > 2 && !repliesExpanded"
+              <i class="material-icons"
+                *ngIf="reply && reply.attachments && reply.attachments.length > 2 && !repliesExpanded"
                 style="padding: 5px; line-height: 40px;cursor: pointer;"
                 (click)="displayMoreAttachReplies(reply.attachments)" matTooltip="show more"
                 [matTooltipPosition]="'right'">
