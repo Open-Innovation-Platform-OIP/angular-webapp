@@ -140,4 +140,14 @@ export class ViewEnrichmentComponent implements OnInit, OnChanges {
     this.deleteClicked.emit(this.enrichmentData.id);
     // this.enrichmentHandlerService.deleteEnrichment(this.enrichmentData.id);
   }
+
+  checkUrlIsImg(url) {
+    var arr = ["jpeg", "jpg", "gif", "png"];
+    var ext = url.substring(url.lastIndexOf(".") + 1);
+    if (arr.indexOf(ext) > -1) {
+      return true;
+    } else {
+      return false;
+    }
+  }
 }
