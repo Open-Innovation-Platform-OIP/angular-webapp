@@ -9,3 +9,9 @@
     left: 40%;
     top: 40%;
 }
+
+.fix_view {
+    object-fit: cover;
+    width: 100%;
+    height: 500px;
+}

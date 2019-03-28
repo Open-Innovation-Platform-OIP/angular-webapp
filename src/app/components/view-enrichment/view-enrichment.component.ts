@@ -42,6 +42,8 @@ export class ViewEnrichmentComponent implements OnInit, OnChanges {
       ...this.enrichmentData.image_urls,
       ...this.enrichmentData.video_urls
     ];
+    this.modalSrc = this.combinedImgAndVideo[this.index];
+
     console.log(this.enrichmentData, "test enrich view");
     if (this.enrichmentData.voted_by) {
       this.enrichmentData.voted_by.forEach(userId => {
@@ -99,36 +101,19 @@ export class ViewEnrichmentComponent implements OnInit, OnChanges {
   }
 
   toggleViewForImgNView() {
-    this.modalSrc = this.combinedImgAndVideo[0].url;
-    this.videoStatus = false;
-    this.index = 0;
     this.showModal = true;
   }
 
-  toggleSrc(btn: String) {
-    if (btn === "next" && this.index < this.combinedImgAndVideo.length - 1) {
+  toggleFileSrc(dir: boolean) {
+    if (dir && this.index < this.combinedImgAndVideo.length - 1) {
       this.index++;
-      const url = this.combinedImgAndVideo[this.index].url;
-
-      if (url.substr(-4) === ".mp4") {
-        this.videoStatus = true;
-      } else {
-        this.videoStatus = false;
-      }
-      this.modalSrc = url;
+      this.modalSrc = this.combinedImgAndVideo[this.index];
     }
-
-    if (btn === "prev" && this.index > 0) {
+    if (!dir && this.index > 0) {
       this.index--;
-      const url = this.combinedImgAndVideo[this.index].url;
-
-      if (url.substr(-4) === ".mp4") {
-        this.videoStatus = true;
-      } else {
-        this.videoStatus = false;
-      }
-      this.modalSrc = url;
+      this.modalSrc = this.combinedImgAndVideo[this.index];
     }
+
   }
 
   editEnrichment() {

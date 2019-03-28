@@ -98,7 +98,7 @@
       <!-- </div> -->
       <div class="row justify-content-center" *ngIf="enrichmentData.image_urls && enrichmentData.image_urls.length > 0">
         <button mat-raised-button class="btn btn-raised btn-info btn-sm" (click)="toggleViewForImgNView()">
-          view media
+          view media ({{combinedImgAndVideo.length}})
         </button>
       </div>
     </div>
@@ -130,27 +130,23 @@
 
 
 <div *ngIf="showModal">
-  <div>
-    <button type="button" class="close" (click)="showModal = false" aria-hidden="true">
-      <i class="material-icons">close</i>
-    </button>
+  <div class="modal-header">
+    <button type="button" class="close" data-dismiss="modal" aria-hidden="true"
+      (click)="showModal = false">close</button>
   </div>
 
-  <div *ngIf="!videoStatus">
-    <img src="{{modalSrc}}" alt="" width="752px" height="500px">
-  </div>
-  <div *ngIf="videoStatus">
-    <video src="{{modalSrc}}" width="100%" controls height="500px"></video>
+  <div class="modal-body">
+    <app-display-modal *ngIf="modalSrc" [source]="modalSrc">
+    </app-display-modal>
   </div>
 
-
-  <div class="row" *ngIf="combinedImgAndVideo.length > 1">
-    <div class="col text-center">
-      <button mat-button type="button" class="btn btn-info btn-round" (click)="toggleSrc('prev')"><span
-          class="carousel-control-prev-icon" aria-hidden="true"></span></button>
-      <button mat-button type="button" class="btn btn-info btn-round" (click)="toggleSrc('next')"><span
-          class="carousel-control-next-icon" aria-hidden="true"></span></button>
-    </div>
+  <div class="modal-footer justify-content-center" *ngIf="combinedImgAndVideo.length > 1">
+    <button mat-raised-button type="button" [disabled]="index < 1" (click)="toggleFileSrc(false)"
+      class="btn btn-info btn-round"><span class="carousel-control-prev-icon" aria-hidden="true"></span></button>
+    <div class="col-3"></div>
+    <button mat-raised-button type="button" [disabled]="index === combinedImgAndVideo.length -1"
+      class="btn btn-info btn-round" (click)="toggleFileSrc(true)"><span class="carousel-control-next-icon"
+        aria-hidden="true"></span></button>
   </div>
 </div>
 
