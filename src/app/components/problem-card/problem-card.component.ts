@@ -12,9 +12,9 @@ const misc: any = {
 })
 export class ProblemCardComponent implements OnInit {
   @Input() problemData: any;
-  votedBy: Number = 0;
-  watchedBy: Number = 0;
-  validatedBy: Number = 0;
+  numOfVotes: Number = 0;
+  numOfWatchers: Number = 0;
+  numOfValidations: Number = 0;
   // modifiedAt: any;
   // sectors: any[] = [];
 
@@ -23,16 +23,16 @@ export class ProblemCardComponent implements OnInit {
   ngOnInit() {
     console.log("problem card", this.problemData);
     if (this.problemData.voted_by && this.problemData.voted_by.length) {
-      this.votedBy = this.problemData.voted_by.length;
+      this.numOfVotes = this.problemData.voted_by.length;
     }
     if (this.problemData.watched_by && this.problemData.watched_by.length) {
-      this.watchedBy = this.problemData.watched_by.length;
+      this.numOfWatchers = this.problemData.watched_by.length;
     }
     if (
       this.problemData.problem_validations &&
       this.problemData.problem_validations.length
     ) {
-      this.validatedBy = this.problemData.problem_validations.length;
+      this.numOfValidations = this.problemData.problem_validations.length;
     }
 
     // this.sectors = Object.keys(this.problemData.sectors).filter((sector) => {

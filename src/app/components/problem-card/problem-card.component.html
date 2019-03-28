@@ -86,21 +86,21 @@
       <i class="material-icons">
         thumb_up
       </i>
-      {{ votedBy }}
+      {{ numOfVotes }}
       <span>&nbsp;</span>
       <span>&nbsp;</span>
       <span>&nbsp;</span>
       <i class="material-icons">
         visibility
       </i>
-      {{ watchedBy }}
+      {{ numOfWatchers }}
       <span>&nbsp;</span>
       <span>&nbsp;</span>
       <span>&nbsp;</span>
       <i class="material-icons" matTooltip="Expert validations" [matTooltipPosition]="'below'">
         how_to_reg
       </i>
-      {{ validatedBy }}
+      {{ numOfValidations }}
     </div>
     <div class="stats">
       <i class="material-icons">access_time</i> {{ problemData.modified_at | date:short }}
