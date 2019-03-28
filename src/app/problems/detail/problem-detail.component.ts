@@ -150,6 +150,7 @@ export class ProblemDetailComponent implements OnInit, OnDestroy {
   collaboratorProfileInfo: any;
   comments = {};
   replies = {};
+  popularDiscussions: any = [];
 
   fabTogglerState: boolean = false;
 
@@ -518,6 +519,9 @@ export class ProblemDetailComponent implements OnInit, OnDestroy {
                       );
                       this.discussions = discussions.data.discussions;
                       discussions.data.discussions.map(comment => {
+                        // if (!comment.linked_comment_id) {
+                        //   this.replies[comment.id] = [];
+                        // } else
                         if (comment.linked_comment_id) {
                           // this comment is a reply - add it to the replies object
                           if (!this.replies[comment.linked_comment_id]) {
@@ -532,10 +536,28 @@ export class ProblemDetailComponent implements OnInit, OnDestroy {
                         } else {
                           // this comment is a parent comment - add it to the comments object
                           // comment object does not exist
+                          console.log("COMMENT IDDDD", comment.id);
                           this.comments[comment.id] = comment;
+
+                          this.replies[comment.id] = [];
                         }
                       });
-                      console.log(this.comments);
+                      // console.log(this.comments);
+                      // this.popularDiscussions = Object.
+                      this.popularDiscussions = Object.keys(this.replies).sort(
+                        (a, b) => {
+                          return (
+                            this.replies[a].length - this.replies[b].length
+                          );
+
+                          //   return a;
+                          // }
+                        }
+                      );
+
+                      console.log("POPULAR", this.popularDiscussions);
+                      console.log("COMMENTS", this.comments);
+                      console.log("REPLIES", this.replies);
                     }
                   });
               }
