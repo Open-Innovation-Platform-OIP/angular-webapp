@@ -28,7 +28,10 @@ export class ProblemCardComponent implements OnInit {
     if (this.problemData.watched_by && this.problemData.watched_by.length) {
       this.watchedBy = this.problemData.watched_by.length;
     }
-    if (this.problemData.validatedBy && this.problemData.validatedBy.length) {
+    if (
+      this.problemData.problem_validations &&
+      this.problemData.problem_validations.length
+    ) {
       this.validatedBy = this.problemData.problem_validations.length;
     }
 

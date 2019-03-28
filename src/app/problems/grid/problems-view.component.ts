@@ -67,6 +67,7 @@ export class ProblemsViewComponent implements OnInit, OnDestroy {
       result => {
         if (result.data.problems.length > 0) {
           this.userProblems = result.data.problems;
+          console.log(this.userProblems, "problem card data");
         }
         // console.log("PROBLEMS", this.problems);
       }
@@ -118,6 +119,7 @@ export class ProblemsViewComponent implements OnInit, OnDestroy {
       result => {
         if (result.data.problems.length > 0) {
           this.problems = result.data.problems;
+          console.log(this.problems, "problem card data", result.data.problems);
         }
         // console.log("PROBLEMS", this.problems);
       }
