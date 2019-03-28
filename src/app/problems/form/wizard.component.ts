@@ -245,6 +245,7 @@ export class WizardComponent
                             impact
                             extent
                             min_population
+                            embed_urls
                             max_population
                             beneficiary_attributes
                             organization
