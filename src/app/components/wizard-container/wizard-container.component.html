@@ -302,8 +302,8 @@
                   <div class="card-body"></div>
                   <div class="card-footer">
                     <div class="price">
-                      <button mat-raised-button type="button" class="btn btn-default btn-link" matTooltip="Feature"
-                        [matTooltipPosition]="'below'" (click)="setFeatured('image',i)">
+                      <button mat-raised-button type="button" class="btn btn-default btn-link"
+                        matTooltip="Make default image" [matTooltipPosition]="'below'" (click)="setFeatured('image',i)">
                         <i *ngIf="imgSrc.url !== content.featured_url" class="material-icons">turned_in_not</i>
                         <i *ngIf="imgSrc.url === content.featured_url" class="material-icons">turned_in</i>
                       </button>
