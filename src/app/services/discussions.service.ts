@@ -93,7 +93,8 @@ export class DiscussionsService {
           }
         }
       `,
-      pollInterval: 500
+      pollInterval: 500,
+      fetchPolicy: "network-only"
     }).valueChanges;
   }
 }

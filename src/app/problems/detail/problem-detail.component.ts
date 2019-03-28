@@ -757,201 +757,169 @@ export class ProblemDetailComponent implements OnInit, OnDestroy {
     }, 1000);
   }
 
-  //   getTags(id) {
+  //   getValidations(id) {
+  //     console.log("validation");
   //     this.apollo
   //       .watchQuery<any>({
   //         query: gql`
   //   {
   //     problems(where: { id: { _eq: ${id} } }) {
   //       id
-  //       problem_tags{
-  //         tag {
+  //       problem_validations{
+  //         comment
+  //         agree
+  //         created_at
+  //         files
+  //         validated_by
+  //         edited_at
+  //         is_deleted
+
+  //         problem_id
+  //         user {
   //           id
   //           name
   //         }
+
   //       }
   //     }
   //   }
   // `
+  //         // pollInterval: 200
   //       })
   //       .valueChanges.subscribe(
   //         result => {
-  //           if (result.data.problems[0].problem_tags) {
-  //             this.tags = result.data.problems[0].problem_tags.map(tagArray => {
-  //               // console.log(tagArray, "work");
-  //               return tagArray.tag.name;
+  //           console.log(result, "poll interval working");
+  //           if (result.data.problems[0].problem_validations) {
+  //             result.data.problems[0].problem_validations.map(validation => {
+  //               console.log(validation.validated_by, "test55");
+  //               if (
+  //                 validation.validated_by ===
+  //                 Number(this.auth.currentUserValue.id)
+  //               ) {
+  //                 this.disableValidateButton = true;
+  //               }
   //             });
+
+  //             this.validation = result.data.problems[0].problem_validations;
+  //           }
+  //           console.log(result, "result from validation");
+  //         },
+  //         error => {
+  //           console.log("could not get validations due to ", error);
+  //         }
+  //       );
+  //   }
+  //   test(event) {
+  //     console.log(event, "enriched data");
+  //   }
+  //   getCollaborators(id) {
+  //     this.apollo
+  //       .watchQuery<any>({
+  //         query: gql`
+  // {
+  //   problems(where: { id: { _eq: ${id} } }) {
+  //     id
+  //     problem_collaborators{
+  //       intent
+  //       is_ngo
+  //       is_innovator
+  //       is_expert
+  //       is_government
+  //       is_funder
+  //       is_beneficiary
+  //       is_incubator
+  //       is_entrepreneur
+  //       user_id
+  //       user {
+  //         id
+  //         name
+  //         photo_url
+  //       }
+
+  //     }
+  //   }
+
+  // }
+  // `
+  //         // pollInterval: 200
+  //       })
+  //       .valueChanges.subscribe(
+  //         result => {
+  //           console.log("pool on collab");
+  //           console.log(result, "result from collaborators");
+  //           if (result.data.problems[0].problem_collaborators) {
+  //             result.data.problems[0].problem_collaborators.map(collaborator => {
+  //               if (
+  //                 collaborator.user_id === Number(this.auth.currentUserValue.id)
+  //               ) {
+  //                 this.disableCollaborateButton = true;
+  //               }
+  //             });
+  //             this.collaborators = result.data.problems[0].problem_collaborators;
+
+  //             console.log(this.collaborators, "collaborators");
   //           }
   //         },
   //         error => {
-  //           console.log("error", error);
+  //           console.log("could not get collaborators due to ", error);
   //         }
   //       );
   //   }
 
-  getValidations(id) {
-    console.log("validation");
-    this.apollo
-      .watchQuery<any>({
-        query: gql`
-  {
-    problems(where: { id: { _eq: ${id} } }) {
-      id
-      problem_validations{
-        comment
-        agree
-        created_at
-        files
-        validated_by
-        edited_at
-        is_deleted
+  //   getEnrichmentData(problemId) {
+  //     console.log(this.problemData.id, "problem id");
+  //     this.apollo
+  //       .watchQuery<any>({
+  //         query: gql`
+  //           {
+  //             enrichments(where: { problem_id: { _eq: ${problemId} } }) {
+  //               id
 
-        problem_id
-        user {
-          id
-          name
-        } 
-        
-      }
-    }
-  }
-`
-        // pollInterval: 200
-      })
-      .valueChanges.subscribe(
-        result => {
-          console.log(result, "poll interval working");
-          if (result.data.problems[0].problem_validations) {
-            result.data.problems[0].problem_validations.map(validation => {
-              console.log(validation.validated_by, "test55");
-              if (
-                validation.validated_by ===
-                Number(this.auth.currentUserValue.id)
-              ) {
-                this.disableValidateButton = true;
-              }
-            });
+  //               description
+  //               extent
+  //               impact
+  //               min_population
+  //               max_population
+  //               organization
+  //               beneficiary_attributes
+  //               location
+  //               resources_needed
+  //               image_urls
+  //               video_urls
+  //               created_by
+  //               edited_at
+  //               voted_by
+  //               is_deleted
+  //               featured_url
+  //               embed_urls
+  //               featured_type
 
-            this.validation = result.data.problems[0].problem_validations;
-          }
-          console.log(result, "result from validation");
-        },
-        error => {
-          console.log("could not get validations due to ", error);
-        }
-      );
-  }
-  test(event) {
-    console.log(event, "enriched data");
-  }
-  getCollaborators(id) {
-    this.apollo
-      .watchQuery<any>({
-        query: gql`
-{
-  problems(where: { id: { _eq: ${id} } }) {
-    id
-    problem_collaborators{
-      intent
-      is_ngo
-      is_innovator
-      is_expert
-      is_government
-      is_funder
-      is_beneficiary
-      is_incubator
-      is_entrepreneur
-      user_id
-      user {
-        id
-        name
-        photo_url
-      } 
-      
-    }
-  }
+  //             }
+  //           }
+  //         `
+  //         // pollInterval: 200
+  //       })
+  //       .valueChanges.subscribe(
+  //         data => {
+  //           if (data.data.enrichments) {
+  //             console.log(data, "data");
+  //             data.data.enrichments.map(enrichment => {
+  //               if (
+  //                 enrichment.created_by === Number(this.auth.currentUserValue.id)
+  //               ) {
+  //                 this.disableEnrichButton = true;
+  //               }
+  //             });
+  //             this.enrichment = data.data.enrichments;
 
-}
-`
-        // pollInterval: 200
-      })
-      .valueChanges.subscribe(
-        result => {
-          console.log("pool on collab");
-          console.log(result, "result from collaborators");
-          if (result.data.problems[0].problem_collaborators) {
-            result.data.problems[0].problem_collaborators.map(collaborator => {
-              if (
-                collaborator.user_id === Number(this.auth.currentUserValue.id)
-              ) {
-                this.disableCollaborateButton = true;
-              }
-            });
-            this.collaborators = result.data.problems[0].problem_collaborators;
-
-            console.log(this.collaborators, "collaborators");
-          }
-        },
-        error => {
-          console.log("could not get collaborators due to ", error);
-        }
-      );
-  }
-
-  getEnrichmentData(problemId) {
-    console.log(this.problemData.id, "problem id");
-    this.apollo
-      .watchQuery<any>({
-        query: gql`
-          {
-            enrichments(where: { problem_id: { _eq: ${problemId} } }) {
-              id
-              
-              description
-              extent
-              impact
-              min_population
-              max_population
-              organization
-              beneficiary_attributes
-              location
-              resources_needed
-              image_urls
-              video_urls
-              created_by
-              edited_at
-              voted_by
-              is_deleted
-              featured_url
-              embed_urls
-              featured_type
-              
-            }
-          }
-        `
-        // pollInterval: 200
-      })
-      .valueChanges.subscribe(
-        data => {
-          if (data.data.enrichments) {
-            console.log(data, "data");
-            data.data.enrichments.map(enrichment => {
-              if (
-                enrichment.created_by === Number(this.auth.currentUserValue.id)
-              ) {
-                this.disableEnrichButton = true;
-              }
-            });
-            this.enrichment = data.data.enrichments;
-
-            console.log(this.enrichment, "id specifi enrichment");
-          }
-        },
-        err => {
-          console.log("error", err);
-        }
-      );
-  }
+  //             console.log(this.enrichment, "id specifi enrichment");
+  //           }
+  //         },
+  //         err => {
+  //           console.log("error", err);
+  //         }
+  //       );
+  //   }
 
   dimissVideoModal(e) {
     if (e.type === "click") {
