@@ -13,8 +13,6 @@ export class EnrichmentCardComponent implements OnInit {
   constructor() { }
 
   ngOnInit() {
-    console.log(">>>> ", this.enrichmentData);
-
     if (this.enrichmentData && this.enrichmentData.voted_by) {
       this.numberOfVotes = this.enrichmentData.voted_by.length;
     }

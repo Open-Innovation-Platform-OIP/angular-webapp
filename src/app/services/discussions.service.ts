@@ -18,11 +18,9 @@ export interface Comment {
   providedIn: "root"
 })
 export class DiscussionsService {
-  constructor(private apollo: Apollo, private auth: AuthService) {}
+  constructor(private apollo: Apollo, private auth: AuthService) { }
 
   submitCommentToDB(comment: Comment) {
-    console.log("comment>>>> ", comment);
-
     if (!(comment.problem_id || comment.solution_id)) {
       console.log("cannot continue without problem or solution id");
       return false;

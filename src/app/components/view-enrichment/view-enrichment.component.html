@@ -131,7 +131,8 @@
 
 <div *ngIf="showModal">
   <div class="modal-header">
-    <button type="button" class="close" data-dismiss="modal" aria-hidden="true" (click)="toggleView()">close</button>
+    <button type="button" class="close" data-dismiss="modal" aria-hidden="true"
+      (click)="toggleView($event)">close</button>
   </div>
 
   <div class="modal-body">
