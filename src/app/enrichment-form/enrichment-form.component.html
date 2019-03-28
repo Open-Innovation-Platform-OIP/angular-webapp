@@ -40,7 +40,7 @@
                 <p class="description" *ngIf="problemData.min_population!==0">More than
                   {{problemData.min_population}}</p>
 
-                <strong>Location</strong>
+                <strong>Location(s)</strong>
                 <div *ngFor="let location of problemData.location">
                   <span class="badge badge-warning" *ngIf="location.Address.Label">{{location.Address.Label}}</span>
                   <span>&nbsp;</span>

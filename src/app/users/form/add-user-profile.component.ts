@@ -137,7 +137,7 @@ export class AddUserProfileComponent implements OnInit, OnChanges {
       const value = event.value;
       // Add our sector
       if ((value || "").trim()) {
-        this.sectors.push(value.trim());
+        this.sectors.push(value.trim().toLowerCase());
       }
       // Reset the input value
       if (input) {

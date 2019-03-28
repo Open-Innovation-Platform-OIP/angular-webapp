@@ -180,12 +180,14 @@ export class ProblemDetailComponent implements OnInit, OnDestroy {
   public carouselTileItemsValid$: Observable<number[]>;
   public carouselTileItemCollab$: Observable<number[]>;
   public carouselTileConfig: NguCarouselConfig = {
-    grid: { xs: 1, sm: 1, md: 1, lg: 3, all: 0 },
+    grid: { xs: 2, sm: 2, md: 2, lg: 2, all: 0 },
+    slide: 2,
     speed: 250,
     point: {
       visible: true
     },
     touch: true,
+
     loop: true
   };
 
@@ -201,7 +203,7 @@ export class ProblemDetailComponent implements OnInit, OnDestroy {
     private collaborationService: CollaborationService,
     private validationService: ValidationService,
     private enrichmentService: EnrichmentService
-  ) { }
+  ) {}
 
   getUserPersonas(id) {
     this.apollo
@@ -494,9 +496,9 @@ export class ProblemDetailComponent implements OnInit, OnDestroy {
                   });
                 }
                 // adding embed urls
-                let embedded_urls_arr = this.problemData.embed_urls.map((url) => {
-                  return { 'url': url };
-                })
+                let embedded_urls_arr = this.problemData.embed_urls.map(url => {
+                  return { url: url };
+                });
 
                 // combining the video_urls and image_urls
                 this.problem_attachments = [
@@ -702,7 +704,7 @@ export class ProblemDetailComponent implements OnInit, OnDestroy {
         cancelButtonClass: "btn btn-danger",
         buttonsStyling: false
       })
-        .then(function (result) {
+        .then(function(result) {
           swal({
             type: "success",
             html:
@@ -739,7 +741,7 @@ export class ProblemDetailComponent implements OnInit, OnDestroy {
       body.classList.remove("sidebar-mini");
       misc.sidebar_mini_active = false;
     } else {
-      setTimeout(function () {
+      setTimeout(function() {
         body.classList.add("sidebar-mini");
 
         misc.sidebar_mini_active = true;
@@ -747,12 +749,12 @@ export class ProblemDetailComponent implements OnInit, OnDestroy {
     }
 
     // we simulate the window Resize so the charts will get updated in realtime.
-    const simulateWindowResize = setInterval(function () {
+    const simulateWindowResize = setInterval(function() {
       window.dispatchEvent(new Event("resize"));
     }, 180);
 
     // we stop the simulation of Window Resize after the animations are completed
-    setTimeout(function () {
+    setTimeout(function() {
       clearInterval(simulateWindowResize);
     }, 1000);
   }
@@ -809,9 +811,9 @@ export class ProblemDetailComponent implements OnInit, OnDestroy {
   //         }
   //       );
   //   }
-  //   test(event) {
-  //     console.log(event, "enriched data");
-  //   }
+  test(event) {
+    console.log(event, "carousel load");
+  }
   //   getCollaborators(id) {
   //     this.apollo
   //       .watchQuery<any>({
@@ -945,7 +947,7 @@ export class ProblemDetailComponent implements OnInit, OnDestroy {
       $layer.remove();
     }
 
-    setTimeout(function () {
+    setTimeout(function() {
       $toggle.classList.remove("toggled");
     }, 400);
 

@@ -11,11 +11,11 @@
       <strong>Description</strong>
       <p *ngIf="enrichmentData.description">{{enrichmentData.description}}</p>
     </div>
-    <strong>Location</strong>
+    <strong>Location(s)</strong>
     <!-- <p class="description" *ngIf="enrichmentData.location">{{enrichmentData.location}}</p>
      -->
     <div *ngFor="let location of enrichmentData.location; let i=index;">
-      <span class="badge badge-warning" *ngIf="location.Address.Label && i < 2">{{location.Address.Label}}</span>
+      <span *ngIf="location.Address.Label && i < 2">{{location.Address.Label}}</span>
       <span *ngIf="i<2">&nbsp;</span>
     </div>
 
