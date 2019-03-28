@@ -142,11 +142,18 @@
 
   <div class="modal-footer justify-content-center" *ngIf="combinedImgAndVideo.length > 1">
     <button mat-raised-button type="button" [disabled]="index < 1" (click)="toggleFileSrc(false)"
-      class="btn btn-info btn-round"><span class="carousel-control-prev-icon" aria-hidden="true"></span></button>
+      class="btn btn-link btn-round btn-twitter">
+      <i class="material-icons" style="zoom:2;">
+        keyboard_arrow_left
+      </i>
+    </button>
     <div class="col-3"></div>
     <button mat-raised-button type="button" [disabled]="index === combinedImgAndVideo.length -1"
-      class="btn btn-info btn-round" (click)="toggleFileSrc(true)"><span class="carousel-control-next-icon"
-        aria-hidden="true"></span></button>
+      class="btn btn-link btn-round btn-twitter" (click)="toggleFileSrc(true)">
+      <i class="material-icons" style="zoom:2;">
+        keyboard_arrow_right
+      </i>
+    </button>
   </div>
 </div>
 
@@ -170,7 +177,7 @@
         </div>
       </div> -->
 
-<div class="card-footer">
+<div class="card-footer" *ngIf="!showModal">
   <!-- <div> -->
   <i class="
     material-icons actions" (click)="voteEnrichment()" [ngStyle]="{'color':enrichmentVoted? '#1E90FF' : 'black' }">

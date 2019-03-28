@@ -38,10 +38,19 @@ export class ViewEnrichmentComponent implements OnInit, OnChanges {
   }
 
   ngOnInit() {
+    // adding embedded links
+    let embedded_url_arr = this.enrichmentData.embed_urls.map((url) => {
+      return { 'url': url }
+    })
+
     this.combinedImgAndVideo = [
       ...this.enrichmentData.image_urls,
-      ...this.enrichmentData.video_urls
+      ...this.enrichmentData.video_urls,
+      ...embedded_url_arr
     ];
+    console.log("combined>>>>>>>> ", this.combinedImgAndVideo);
+
+
     this.modalSrc = this.combinedImgAndVideo[this.index];
 
     console.log(this.enrichmentData, "test enrich view");
