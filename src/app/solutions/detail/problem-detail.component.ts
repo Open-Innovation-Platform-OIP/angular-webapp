@@ -175,8 +175,8 @@ export class ProblemDetailComponent implements OnInit {
               is_entrepreneur
             }
           }
-        `,
-        pollInterval: 500
+        `
+        // pollInterval: 500
       })
       .valueChanges.subscribe(result => {
         console.log("PERSONAS", result);
@@ -272,7 +272,7 @@ export class ProblemDetailComponent implements OnInit {
             }
         }
             
-        `,
+        `
             // pollInterval: 500
           })
           .valueChanges.subscribe(
@@ -548,7 +548,7 @@ export class ProblemDetailComponent implements OnInit {
       }
     }
   }
-`,
+`
         // pollInterval: 500
       })
       .valueChanges.subscribe(
@@ -597,7 +597,7 @@ export class ProblemDetailComponent implements OnInit {
   }
 
 }
-`,
+`
         // pollInterval: 500
       })
       .valueChanges.subscribe(
@@ -648,7 +648,7 @@ export class ProblemDetailComponent implements OnInit {
               is_deleted
             }
           }
-        `,
+        `
         // pollInterval: 500
       })
       .valueChanges.subscribe(

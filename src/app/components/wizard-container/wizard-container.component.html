@@ -153,7 +153,7 @@
                         {{location.Address.Label}}
                         <mat-icon matChipRemove *ngIf="removable">cancel</mat-icon>
                       </mat-chip>
-                      <input placeholder="Locations" [(ngModel)]="locationInputValue" #locationInput
+                      <input placeholder="Locations" [(ngModel)]="locationInputValue" rows="5" #locationInput
                         [formControl]="locationCtrl" [matAutocomplete]="auto" [matChipInputFor]="chipList"
                         [matChipInputSeparatorKeyCodes]="separatorKeysCodes" (keyup)="getLocation()"
                         [matChipInputAddOnBlur]="addOnBlur" (matChipInputTokenEnd)="addLocation($event)">

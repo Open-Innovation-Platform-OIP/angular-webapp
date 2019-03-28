@@ -83,7 +83,7 @@ export class EnrichmentService {
       })
       .subscribe(
         data => {
-          console.log(data);
+          console.log(data, "enrichment added");
           swal({
             type: "success",
             title: "Thank you for enriching!",

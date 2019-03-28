@@ -3,6 +3,8 @@
     <div class="row">
       <div class="col-md-8">
         <!--      Wizard container        -->
+        <!-- <button mat-raised-button class="btn btn-danger" router>Danger</button> -->
+
 
         <app-wizard-container [content]="problem" (smartSearchInput)="smartSearch($event)"
           (fieldsPopulated)="updateProblem($event)" (tagAdded)="addTags($event)" (tagRemoved)="remove($event)"
