@@ -77,11 +77,13 @@ export class WizardContainerComponent
 
   @Input() sectors: string[] = [];
   @Input() contentType: any;
+  // @Input() canProceed: any = true;
   @Output() fieldsPopulated = new EventEmitter();
   @Output() smartSearchInput = new EventEmitter();
   @Output() tagAdded = new EventEmitter();
   @Output() tagRemoved = new EventEmitter();
   @Output() contentSubmitted = new EventEmitter();
+  
 
   matcher = new MyErrorStateMatcher();
   type: FormGroup;
@@ -232,6 +234,7 @@ export class WizardContainerComponent
         }
       );
     }
+
     // var obj = personas;
     // console.log(personas);
     // var keys = Object.keys(obj);
@@ -375,6 +378,7 @@ export class WizardContainerComponent
       previousSelector: ".btn-previous",
 
       onNext: function(tab, navigation, index) {
+        
         const $valid = $(".card-wizard form").valid();
         if (!$valid) {
           $validator.focusInvalid();
@@ -634,6 +638,8 @@ export class WizardContainerComponent
   sendDataBack() {
     this.fieldsPopulated.emit(this.content);
   }
+
+  
 
   ngAfterViewInit() {
     console.log("wizard after view in it");

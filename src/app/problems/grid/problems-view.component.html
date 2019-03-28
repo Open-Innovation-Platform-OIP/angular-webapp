@@ -65,7 +65,7 @@
                 <app-problem-card [problemData]="problem"></app-problem-card>
             </div>
         </div>
-        <h3 *ngIf="userProblems.length" class="card-title text-center">Problems added by other users</h3>
+        <h3 *ngIf="problems.length" class="card-title text-center">Problems added by other users</h3>
         <br />
         <div class="row">
             <div class="col-md-4" *ngFor="let problem of problems">

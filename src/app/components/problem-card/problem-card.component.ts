@@ -12,9 +12,9 @@ const misc: any = {
 })
 export class ProblemCardComponent implements OnInit {
   @Input() problemData: any;
-  votedBy: any;
-  watchedBy: any;
-  validatedBy: any;
+  votedBy: Number = 0;
+  watchedBy: Number = 0;
+  validatedBy: Number = 0;
   // modifiedAt: any;
   // sectors: any[] = [];
 
