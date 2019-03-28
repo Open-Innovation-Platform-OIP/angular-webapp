@@ -14,9 +14,9 @@
     <strong>Location</strong>
     <!-- <p class="description" *ngIf="enrichmentData.location">{{enrichmentData.location}}</p>
      -->
-    <div *ngFor="let location of enrichmentData.location">
-      <span class="badge badge-warning" *ngIf="location.Address.Label">{{location.Address.Label}}</span>
-      <span>&nbsp;</span>
+    <div *ngFor="let location of enrichmentData.location; let i=index;">
+      <span class="badge badge-warning" *ngIf="location.Address.Label && i < 2">{{location.Address.Label}}</span>
+      <span *ngIf="i<2">&nbsp;</span>
     </div>
 
     <!-- <h4 class="card-title">Description :</h4> -->
