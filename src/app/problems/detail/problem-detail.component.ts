@@ -203,7 +203,11 @@ export class ProblemDetailComponent implements OnInit, OnDestroy {
     private collaborationService: CollaborationService,
     private validationService: ValidationService,
     private enrichmentService: EnrichmentService
-  ) { }
+  ) { 
+    setInterval(() => {
+      this.cdr.detectChanges();
+    }, 2000);
+  }
 
   getUserPersonas(id) {
     this.apollo
