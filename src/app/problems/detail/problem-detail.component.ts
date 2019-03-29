@@ -358,6 +358,20 @@ export class ProblemDetailComponent implements OnInit, OnDestroy {
             problem_watchers {
               user_id
             }
+            discussionssByproblemId(order_by: {created_at: desc}) {
+              id
+              created_by
+              created_at
+              modified_at
+              text
+              linked_comment_id
+              mentions
+              attachments
+              usersBycreatedBy {
+                name
+                photo_url
+              }
+            }
             problem_collaborators{
               intent
               is_ngo
@@ -403,14 +417,13 @@ export class ProblemDetailComponent implements OnInit, OnDestroy {
                 id
                 name
                 photo_url
-              } 
-              
+              }   
             }
             }
         }
             
         `,
-          pollInterval: 1000,
+          // pollInterval: 1000,
           fetchPolicy: "network-only"
         });
         // this.chartQuery.valueChanges.subscribe
@@ -429,6 +442,39 @@ export class ProblemDetailComponent implements OnInit, OnDestroy {
                   this.problemData[key] = problem[key];
                 }
               });
+              
+              problem.enrichmentsByproblemId.map(enrichment => {
+                if (
+                  enrichment.created_by ===
+                  Number(this.auth.currentUserValue.id)
+                ) {
+                  this.disableEnrichButton = true;
+                }
+              });
+              this.enrichment = problem.enrichmentsByproblemId;
+  
+              problem.problem_validations.map(validation => {
+                // console.log(validation.validated_by, "test55");
+                if (
+                  validation.validated_by ===
+                  Number(this.auth.currentUserValue.id)
+                ) {
+                  this.disableValidateButton = true;
+                }
+              });
+              this.validation = problem.problem_validations;
+  
+              problem.problem_collaborators.map(
+                collaborator => {
+                  if (
+                    collaborator.user_id ===
+                    Number(this.auth.currentUserValue.id)
+                  ) {
+                    this.disableCollaborateButton = true;
+                  }
+                }
+              );
+              this.collaborators = problem.problem_collaborators;
 
               // console.log(this.problemData, "result from nested queries");
               // console.log(problem.is_draft, "is draft");
@@ -490,117 +536,39 @@ export class ProblemDetailComponent implements OnInit, OnDestroy {
                   this.problem_attachments_index
                 ];
 
-                this.discussionsService
-                  .getComments(params.id)
-                  .subscribe(discussions => {
-                    if (discussions.data.discussions.length > 0) {
-                      console.log(
-                        discussions.data.discussions,
-                        "\n\n---->discussions<----\n\n\n"
+                // console.log(problem.discussionssByproblemId);
+                problem.discussionssByproblemId.map(comment => {
+                  if (comment.linked_comment_id) {
+                    // this comment is a reply - add it to the replies object
+                    if (!this.replies[comment.linked_comment_id]) {
+                      // create reply object so we can add reply
+                      this.replies[comment.linked_comment_id] = [comment];
+                    } else {
+                      // comment reply already exists so push reply into the array
+                      this.replies[comment.linked_comment_id].push(
+                        comment
                       );
-                      this.discussions = discussions.data.discussions;
-                      discussions.data.discussions.map(comment => {
-                        // if (!comment.linked_comment_id) {
-                        //   this.replies[comment.id] = [];
-                        // } else
-                        if (comment.linked_comment_id) {
-                          // this comment is a reply - add it to the replies object
-                          if (!this.replies[comment.linked_comment_id]) {
-                            // create reply object so we can add reply
-                            this.replies[comment.linked_comment_id] = [comment];
-                          } else {
-                            // comment reply already exists so push reply into the array
-                            this.replies[comment.linked_comment_id].push(
-                              comment
-                            );
-                          }
-                        } else {
-                          // this comment is a parent comment - add it to the comments object
-                          // comment object does not exist
-                          console.log("COMMENT IDDDD", comment.id);
-                          this.comments[comment.id] = comment;
-
-                          this.replies[comment.id] = [];
-                        }
-                      });
-                      // console.log(this.comments);
-                      // this.popularDiscussions = Object.
-                      this.popularDiscussions = Object.keys(this.replies).sort(
-                        (a, b) => {
-                          return (
-                            this.replies[a].length - this.replies[b].length
-                          );
-
-                          //   return a;
-                          // }
-                        }
-                      );
-
-                      console.log("POPULAR", this.popularDiscussions);
-                      console.log("COMMENTS", this.comments);
-                      console.log("REPLIES", this.replies);
                     }
-                  });
+                  } else {
+                    // this comment is a parent comment - add it to the comments object
+                    // comment object does not exist
+                    this.comments[comment.id] = comment;
+
+                    this.replies[comment.id] = [];
+                  }
+                });
+                this.popularDiscussions = Object.keys(this.replies).sort(
+                  (a, b) => {
+                    return (
+                      this.replies[a].length - this.replies[b].length
+                    );
+                  }
+                );
               }
             }
-
-            if (
-              result.data.problems.length &&
-              result.data.problems[0].enrichmentsByproblemId
-            ) {
-              result.data.problems[0].enrichmentsByproblemId.map(enrichment => {
-                if (
-                  enrichment.created_by ===
-                  Number(this.auth.currentUserValue.id)
-                ) {
-                  this.disableEnrichButton = true;
-                }
-              });
-              this.enrichment = result.data.problems[0].enrichmentsByproblemId;
-            }
-
-            if (
-              result.data.problems.length &&
-              result.data.problems[0].problem_validations
-            ) {
-              result.data.problems[0].problem_validations.map(validation => {
-                console.log(validation.validated_by, "test55");
-                if (
-                  validation.validated_by ===
-                  Number(this.auth.currentUserValue.id)
-                ) {
-                  this.disableValidateButton = true;
-                }
-              });
-
-              this.validation = result.data.problems[0].problem_validations;
-            }
-
-            if (
-              result.data.problems.length &&
-              result.data.problems[0].problem_collaborators
-            ) {
-              result.data.problems[0].problem_collaborators.map(
-                collaborator => {
-                  if (
-                    collaborator.user_id ===
-                    Number(this.auth.currentUserValue.id)
-                  ) {
-                    this.disableCollaborateButton = true;
-                  }
-                }
-              );
-              this.collaborators =
-                result.data.problems[0].problem_collaborators;
-            }
-
-            console.log(this.enrichment, "enrichments");
-            console.log(this.validation, "validations");
-
-            console.log(this.collaborators, "collaborators");
           },
           error => {
-            console.log("error", error);
+            console.error("error", error);
           }
         );
       }
@@ -739,170 +707,6 @@ export class ProblemDetailComponent implements OnInit, OnDestroy {
     }, 1000);
   }
 
-  //   getValidations(id) {
-  //     console.log("validation");
-  //     this.apollo
-  //       .watchQuery<any>({
-  //         query: gql`
-  //   {
-  //     problems(where: { id: { _eq: ${id} } }) {
-  //       id
-  //       problem_validations{
-  //         comment
-  //         agree
-  //         created_at
-  //         files
-  //         validated_by
-  //         edited_at
-  //         is_deleted
-
-  //         problem_id
-  //         user {
-  //           id
-  //           name
-  //         }
-
-  //       }
-  //     }
-  //   }
-  // `
-  //         // pollInterval: 200
-  //       })
-  //       .valueChanges.subscribe(
-  //         result => {
-  //           console.log(result, "poll interval working");
-  //           if (result.data.problems[0].problem_validations) {
-  //             result.data.problems[0].problem_validations.map(validation => {
-  //               console.log(validation.validated_by, "test55");
-  //               if (
-  //                 validation.validated_by ===
-  //                 Number(this.auth.currentUserValue.id)
-  //               ) {
-  //                 this.disableValidateButton = true;
-  //               }
-  //             });
-
-  //             this.validation = result.data.problems[0].problem_validations;
-  //           }
-  //           console.log(result, "result from validation");
-  //         },
-  //         error => {
-  //           console.log("could not get validations due to ", error);
-  //         }
-  //       );
-  //   }
-  test(event) {
-    console.log(event, "carousel load");
-  }
-  //   getCollaborators(id) {
-  //     this.apollo
-  //       .watchQuery<any>({
-  //         query: gql`
-  // {
-  //   problems(where: { id: { _eq: ${id} } }) {
-  //     id
-  //     problem_collaborators{
-  //       intent
-  //       is_ngo
-  //       is_innovator
-  //       is_expert
-  //       is_government
-  //       is_funder
-  //       is_beneficiary
-  //       is_incubator
-  //       is_entrepreneur
-  //       user_id
-  //       user {
-  //         id
-  //         name
-  //         photo_url
-  //       }
-
-  //     }
-  //   }
-
-  // }
-  // `
-  //         // pollInterval: 200
-  //       })
-  //       .valueChanges.subscribe(
-  //         result => {
-  //           console.log("pool on collab");
-  //           console.log(result, "result from collaborators");
-  //           if (result.data.problems[0].problem_collaborators) {
-  //             result.data.problems[0].problem_collaborators.map(collaborator => {
-  //               if (
-  //                 collaborator.user_id === Number(this.auth.currentUserValue.id)
-  //               ) {
-  //                 this.disableCollaborateButton = true;
-  //               }
-  //             });
-  //             this.collaborators = result.data.problems[0].problem_collaborators;
-
-  //             console.log(this.collaborators, "collaborators");
-  //           }
-  //         },
-  //         error => {
-  //           console.log("could not get collaborators due to ", error);
-  //         }
-  //       );
-  //   }
-
-  //   getEnrichmentData(problemId) {
-  //     console.log(this.problemData.id, "problem id");
-  //     this.apollo
-  //       .watchQuery<any>({
-  //         query: gql`
-  //           {
-  //             enrichments(where: { problem_id: { _eq: ${problemId} } }) {
-  //               id
-
-  //               description
-  //               extent
-  //               impact
-  //               min_population
-  //               max_population
-  //               organization
-  //               beneficiary_attributes
-  //               location
-  //               resources_needed
-  //               image_urls
-  //               video_urls
-  //               created_by
-  //               edited_at
-  //               voted_by
-  //               is_deleted
-  //               featured_url
-  //               embed_urls
-  //               featured_type
-
-  //             }
-  //           }
-  //         `
-  //         // pollInterval: 200
-  //       })
-  //       .valueChanges.subscribe(
-  //         data => {
-  //           if (data.data.enrichments) {
-  //             console.log(data, "data");
-  //             data.data.enrichments.map(enrichment => {
-  //               if (
-  //                 enrichment.created_by === Number(this.auth.currentUserValue.id)
-  //               ) {
-  //                 this.disableEnrichButton = true;
-  //               }
-  //             });
-  //             this.enrichment = data.data.enrichments;
-
-  //             console.log(this.enrichment, "id specifi enrichment");
-  //           }
-  //         },
-  //         err => {
-  //           console.log("error", err);
-  //         }
-  //       );
-  //   }
-
   dimissVideoModal(e) {
     if (e.type === "click") {
       let problemVideoTag: HTMLMediaElement = document.querySelector(
@@ -934,7 +738,7 @@ export class ProblemDetailComponent implements OnInit, OnDestroy {
     this.mobile_menu_visible = 0;
   }
   toggleWatchProblem() {
-    console.log('toggling watch flag');
+    // console.log('toggling watch flag');
     if (!(this.userId == this.problemData.created_by)) {
       if (!this.watchers.has(this.userId)) {
         // user is not currently watching this problem
@@ -964,7 +768,7 @@ export class ProblemDetailComponent implements OnInit, OnDestroy {
         .subscribe(
           result => {
             if (result.data) {
-              console.log(result.data);
+              // console.log(result.data);
             }
           },
           err => {
@@ -991,7 +795,7 @@ export class ProblemDetailComponent implements OnInit, OnDestroy {
         .subscribe(
           result => {
             if (result.data) {
-              console.log(result.data);
+              // console.log(result.data);
             }
           },
           err => {
