@@ -380,7 +380,7 @@ export class ProblemDetailComponent implements OnInit, OnDestroy {
               
             }
 
-            enrichmentsByproblemId{
+            enrichmentsByproblemId(order_by:{edited_at: asc}){
               id
               
               description
