@@ -153,6 +153,7 @@ export class ProblemDetailComponent implements OnInit, OnDestroy {
   comments = {};
   replies = {};
   popularDiscussions: any = [];
+  collaboratorIntent: any;
 
   fabTogglerState: boolean = false;
 
@@ -178,6 +179,7 @@ export class ProblemDetailComponent implements OnInit, OnDestroy {
   validation: any = [1];
   collaborators: any = [1];
   collaboratorDataToEdit: any;
+
   public carouselTileItems$: Observable<any>;
   public carouselTileItemsValid$: Observable<number[]>;
   public carouselTileItemCollab$: Observable<number[]>;
@@ -544,28 +546,13 @@ export class ProblemDetailComponent implements OnInit, OnDestroy {
                         } else {
                           // this comment is a parent comment - add it to the comments object
                           // comment object does not exist
-                          console.log("COMMENT IDDDD", comment.id);
+                          console.log("COMMENT ID", comment.id);
                           this.comments[comment.id] = comment;
 
                           this.replies[comment.id] = [];
                         }
                       });
-                      // console.log(this.comments);
-                      // this.popularDiscussions = Object.
-                      this.popularDiscussions = Object.keys(this.replies).sort(
-                        (a, b) => {
-                          return (
-                            this.replies[a].length - this.replies[b].length
-                          );
-
-                          //   return a;
-                          // }
-                        }
-                      );
-
-                      console.log("POPULAR", this.popularDiscussions);
-                      console.log("COMMENTS", this.comments);
-                      console.log("REPLIES", this.replies);
+                      console.log(this.comments);
                     }
                   });
               }
@@ -1219,22 +1206,30 @@ export class ProblemDetailComponent implements OnInit, OnDestroy {
     this.discussionsService.submitCommentToDB(comment);
   }
 
+  checkIntent(event) {
+    this.collaboratorIntent = event;
+  }
+
   dismiss() {
-    swal({
-      title: "Are you sure you want to leave?",
-      // text: "You won't be able to revert this!",
-      type: "warning",
-      showCancelButton: true,
-      confirmButtonClass: "btn btn-success",
-      cancelButtonClass: "btn btn-danger",
-      confirmButtonText: "Yes",
-      buttonsStyling: false
-    }).then(result => {
-      if (result.value) {
-        console.log("Received result", result);
-        $("#collaboratorModal").modal("hide");
-      }
-    });
+    if (this.collaboratorIntent) {
+      swal({
+        title: "Are you sure you want to leave?",
+        // text: "You won't be able to revert this!",
+        type: "warning",
+        showCancelButton: true,
+        confirmButtonClass: "btn btn-success",
+        cancelButtonClass: "btn btn-danger",
+        confirmButtonText: "Yes",
+        buttonsStyling: false
+      }).then(result => {
+        if (result.value) {
+          console.log("Received result", result);
+          $("#collaboratorModal").modal("hide");
+        }
+      });
+    } else {
+      $("#collaboratorModal").modal("hide");
+    }
   }
 
   displayModal(files: { attachmentObj: attachment_object; index: number }) {
