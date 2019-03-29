@@ -403,8 +403,15 @@
             value="Previous">
         </div>
         <div class="ml-auto">
+
+          <input type="button" class="btn btn-publish btn-fill btn-warning btn-wd" [disabled]="!isComplete()"
+            (click)="publishContent()" value="Publish">
           <input type="button" class="btn btn-next btn-fill btn-warning btn-wd" [disabled]="!isComplete()" name="next"
             value="Next">
+
+
+
+
 
           <input type="button" class="btn btn-finish btn-fill btn-warning btn-wd" [disabled]="!isComplete()"
             (click)="publishContent()" name="finish" value="Publish" style="display: none;">

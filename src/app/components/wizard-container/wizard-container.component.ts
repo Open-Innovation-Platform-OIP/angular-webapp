@@ -478,12 +478,18 @@ export class WizardContainerComponent
         // If it's the last tab then hide the last button and show the finish instead
         if ($current >= $total) {
           $($wizard)
+            .find(".btn-publish")
+            .hide();
+          $($wizard)
             .find(".btn-next")
             .hide();
           $($wizard)
             .find(".btn-finish")
             .show();
         } else {
+          $($wizard)
+            .find(".btn-publish")
+            .show();
           $($wizard)
             .find(".btn-next")
             .show();
