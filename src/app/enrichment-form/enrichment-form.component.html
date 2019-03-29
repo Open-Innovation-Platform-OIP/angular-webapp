@@ -40,20 +40,8 @@
                 <p class="description" *ngIf="problemData.min_population!==0">More than
                   {{problemData.min_population}}</p>
 
-                <strong>Location(s)</strong>
-                <div *ngFor="let location of problemData.location">
-                  <span class="badge badge-warning" *ngIf="location.Address.Label">{{location.Address.Label}}</span>
-                  <span>&nbsp;</span>
-                </div>
-
                 <strong *ngIf="problemData.beneficiary_attributes">Beneficiary Attributes</strong>
                 <p class="description">{{problemData.beneficiary_attributes}}</p>
-
-                <strong *ngIf="problemData.impact">Impact</strong>
-                <p class="description">{{problemData.impact}}</p>
-
-                <strong *ngIf="problemData.extent">Extent</strong>
-                <p class="description">{{problemData.extent}}</p>
 
                 <strong *ngIf="problemData.resources_needed">Resources Needed</strong>
                 <p class="description">{{problemData.resources_needed}}</p>
@@ -64,6 +52,19 @@
                     class="badge badge-warning">{{tags.tag.name}}</span>
                   <span>&nbsp;</span>
                 </div>
+
+                <strong *ngIf="problemData.impact">Impact</strong>
+                <p class="description">{{problemData.impact}}</p>
+
+                <strong *ngIf="problemData.extent">Extent</strong>
+                <p class="description">{{problemData.extent}}</p>
+
+                <strong>Location(s)</strong>
+                <div *ngFor="let location of problemData.location">
+                  <span class="badge badge-warning" *ngIf="location.Address.Label">{{location.Address.Label}}</span>
+                  <span>&nbsp;</span>
+                </div>
+
               </div>
             </div>
           </div>
