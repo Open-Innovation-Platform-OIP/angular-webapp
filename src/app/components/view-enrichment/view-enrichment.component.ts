@@ -46,6 +46,7 @@ export class ViewEnrichmentComponent implements OnInit, OnChanges {
     this.combinedImgAndVideo = [
       ...this.enrichmentData.image_urls,
       ...this.enrichmentData.video_urls,
+      ...this.enrichmentData.attachments,
       ...embedded_url_arr
     ];
 

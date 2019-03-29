@@ -22,7 +22,7 @@ export class ProblemCardComponent implements OnInit {
   constructor() {}
 
   ngOnInit() {
-    console.log("problem card", this.problemData);
+    // console.log("problem card", this.problemData);
     if (this.problemData.voted_by && this.problemData.voted_by.length) {
       this.numOfVotes = this.problemData.voted_by.length;
     }
