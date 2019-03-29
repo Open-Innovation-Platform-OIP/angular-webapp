@@ -30,6 +30,7 @@ export class AddCollaboratorComponent implements OnInit, OnChanges {
   };
   @Output() submitted = new EventEmitter();
   @Output() edit = new EventEmitter();
+  @Output() intentValue = new EventEmitter();
 
   objectKeys = Object.keys;
   mode = "Add";
@@ -60,6 +61,7 @@ export class AddCollaboratorComponent implements OnInit, OnChanges {
     } else {
       this.blankSpace = true;
     }
+    this.intentValue.emit(this.collaborator.intent);
   }
 
   confirmCancellation() {
