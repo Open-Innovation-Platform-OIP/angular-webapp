@@ -540,7 +540,7 @@ export class ProblemDetailComponent implements OnInit, OnDestroy {
                         } else {
                           // this comment is a parent comment - add it to the comments object
                           // comment object does not exist
-                          console.log("COMMENT IDDDD", comment.id);
+                          console.log("COMMENT ID", comment.id);
                           this.comments[comment.id] = comment;
 
                           this.replies[comment.id] = [];
