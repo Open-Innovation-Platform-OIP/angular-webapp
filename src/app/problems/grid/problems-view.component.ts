@@ -17,10 +17,10 @@ export class ProblemsViewComponent implements OnInit, OnDestroy {
   userProblemViewSubscription: Subscription;
   problemViewQuery: QueryRef<any>;
   problemViewSubscription: Subscription;
-  constructor(private apollo: Apollo, private auth: AuthService) {}
+  constructor(private apollo: Apollo, private auth: AuthService) { }
 
   ngOnInit() {
-    console.log(Number(this.auth.currentUserValue.id), "id");
+    // console.log(Number(this.auth.currentUserValue.id), "id");
     this.userProblemViewQuery = this.apollo.watchQuery<any>({
       query: gql`
           query PostsGetQuery {
@@ -67,13 +67,13 @@ export class ProblemsViewComponent implements OnInit, OnDestroy {
       result => {
         if (result.data.problems.length > 0) {
           this.userProblems = result.data.problems;
-          console.log(this.userProblems, "problem card data");
+          // console.log(this.userProblems, "problem card data");
         }
         // console.log("PROBLEMS", this.problems);
       }
     );
 
-    console.log(Number(this.auth.currentUserValue.id), "id");
+    // console.log(Number(this.auth.currentUserValue.id), "id");
     this.problemViewQuery = this.apollo.watchQuery<any>({
       query: gql`
           query PostsGetQuery {
@@ -119,7 +119,7 @@ export class ProblemsViewComponent implements OnInit, OnDestroy {
       result => {
         if (result.data.problems.length > 0) {
           this.problems = result.data.problems;
-          console.log(this.problems, "problem card data", result.data.problems);
+          // console.log(this.problems, "problem card data", result.data.problems);
         }
         // console.log("PROBLEMS", this.problems);
       }

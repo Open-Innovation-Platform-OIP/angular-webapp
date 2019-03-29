@@ -488,7 +488,8 @@
                 </button>
               </div>
               <div class="modal-body">
-                <app-add-collaborator (submitted)="onCollaborationSubmit($event)" (edit)=onCollaorationUpdate($event)>
+                <app-add-collaborator (submitted)="onCollaborationSubmit($event)" (intentValue)="checkIntent($event)"
+                  (edit)=onCollaorationUpdate($event)>
                 </app-add-collaborator>
               </div>
             </div>

@@ -63,6 +63,7 @@ export class ProblemDetailComponent implements OnInit, OnDestroy {
     organization: "",
     resources_needed: "",
     image_urls: [],
+    attachments: [],
     video_urls: [],
     impact: "",
     min_population: 0,
@@ -93,7 +94,8 @@ export class ProblemDetailComponent implements OnInit, OnDestroy {
     featured_type: "",
     voted_by: "",
     created_by: "",
-    is_draft: ""
+    is_draft: "",
+    attachments: []
   };
 
   public problemOwner: string;
@@ -149,6 +151,7 @@ export class ProblemDetailComponent implements OnInit, OnDestroy {
   comments = {};
   replies = {};
   popularDiscussions: any = [];
+  collaboratorIntent: any;
 
   fabTogglerState: boolean = false;
 
@@ -174,6 +177,7 @@ export class ProblemDetailComponent implements OnInit, OnDestroy {
   validation: any = [1];
   collaborators: any = [1];
   collaboratorDataToEdit: any;
+
   public carouselTileItems$: Observable<any>;
   public carouselTileItemsValid$: Observable<number[]>;
   public carouselTileItemCollab$: Observable<number[]>;
@@ -201,7 +205,7 @@ export class ProblemDetailComponent implements OnInit, OnDestroy {
     private collaborationService: CollaborationService,
     private validationService: ValidationService,
     private enrichmentService: EnrichmentService
-  ) {}
+  ) { }
 
   getUserPersonas(id) {
     this.apollo
@@ -328,6 +332,7 @@ export class ProblemDetailComponent implements OnInit, OnDestroy {
               featured_url
               embed_urls
               featured_type
+              attachments
               usersBycreatedBy {
                 id
                 name
@@ -404,7 +409,7 @@ export class ProblemDetailComponent implements OnInit, OnDestroy {
               location
               resources_needed
               image_urls
-              
+              attachments
               video_urls
               created_by
               edited_at
@@ -529,8 +534,11 @@ export class ProblemDetailComponent implements OnInit, OnDestroy {
                 this.problem_attachments = [
                   ...this.problemData["image_urls"],
                   ...this.problemData["video_urls"],
+                  ...this.problemData["attachments"],
                   ...embedded_urls_arr
                 ];
+                console.log(">>>>><<<<<< ", this.problemData);
+
 
                 this.problem_attachments_src = this.problem_attachments[
                   this.problem_attachments_index
@@ -652,7 +660,7 @@ export class ProblemDetailComponent implements OnInit, OnDestroy {
         cancelButtonClass: "btn btn-danger",
         buttonsStyling: false
       })
-        .then(function(result) {
+        .then(function (result) {
           swal({
             type: "success",
             html:
@@ -689,7 +697,7 @@ export class ProblemDetailComponent implements OnInit, OnDestroy {
       body.classList.remove("sidebar-mini");
       misc.sidebar_mini_active = false;
     } else {
-      setTimeout(function() {
+      setTimeout(function () {
         body.classList.add("sidebar-mini");
 
         misc.sidebar_mini_active = true;
@@ -697,12 +705,12 @@ export class ProblemDetailComponent implements OnInit, OnDestroy {
     }
 
     // we simulate the window Resize so the charts will get updated in realtime.
-    const simulateWindowResize = setInterval(function() {
+    const simulateWindowResize = setInterval(function () {
       window.dispatchEvent(new Event("resize"));
     }, 180);
 
     // we stop the simulation of Window Resize after the animations are completed
-    setTimeout(function() {
+    setTimeout(function () {
       clearInterval(simulateWindowResize);
     }, 1000);
   }
@@ -731,7 +739,7 @@ export class ProblemDetailComponent implements OnInit, OnDestroy {
       $layer.remove();
     }
 
-    setTimeout(function() {
+    setTimeout(function () {
       $toggle.classList.remove("toggled");
     }, 400);
 
@@ -1014,22 +1022,30 @@ export class ProblemDetailComponent implements OnInit, OnDestroy {
     this.discussionsService.submitCommentToDB(comment);
   }
 
+  checkIntent(event) {
+    this.collaboratorIntent = event;
+  }
+
   dismiss() {
-    swal({
-      title: "Are you sure you want to leave?",
-      // text: "You won't be able to revert this!",
-      type: "warning",
-      showCancelButton: true,
-      confirmButtonClass: "btn btn-success",
-      cancelButtonClass: "btn btn-danger",
-      confirmButtonText: "Yes",
-      buttonsStyling: false
-    }).then(result => {
-      if (result.value) {
-        console.log("Received result", result);
-        $("#collaboratorModal").modal("hide");
-      }
-    });
+    if (this.collaboratorIntent) {
+      swal({
+        title: "Are you sure you want to leave?",
+        // text: "You won't be able to revert this!",
+        type: "warning",
+        showCancelButton: true,
+        confirmButtonClass: "btn btn-success",
+        cancelButtonClass: "btn btn-danger",
+        confirmButtonText: "Yes",
+        buttonsStyling: false
+      }).then(result => {
+        if (result.value) {
+          console.log("Received result", result);
+          $("#collaboratorModal").modal("hide");
+        }
+      });
+    } else {
+      $("#collaboratorModal").modal("hide");
+    }
   }
 
   displayModal(files: { attachmentObj: attachment_object; index: number }) {
