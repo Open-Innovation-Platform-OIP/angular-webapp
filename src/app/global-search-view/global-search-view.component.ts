@@ -48,15 +48,35 @@ export class GlobalSearchViewComponent implements OnInit, OnChanges {
                 id
                 title
                 description
+                modified_at
+                image_urls
                 voted_by
                 watched_by
-                }, search_users(args:{search:"${searchInput}"}) {
+                problem_validations{
+                  comment
+                  agree
+                  created_at
+                  files
+                  validated_by
+                  edited_at
+                  is_deleted
+          
+                  problem_id
+                  user {
+                    id
+                    name
+                  } 
+                  
+                }
+                }
+                , search_users(args:{search:"${searchInput}"}) {
                 id
                 name
                 email
                 organization
                 location
               }
+              
               }`
           // pollInterval: 500
         })

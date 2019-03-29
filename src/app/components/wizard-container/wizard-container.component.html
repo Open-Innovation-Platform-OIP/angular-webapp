@@ -177,9 +177,8 @@
                     </span>
                   </div>
                   <mat-form-field class="example-full-width has-label" [ngClass]="displayFieldCss(type, 'location')">
-                    <input type="text" name="beneficiary" matInput id="beneficiary"
-                      placeholder="Who is affected by this content?" formControlName="beneficiary"
-                      [(ngModel)]="content.beneficiary_attributes">
+                    <input type="text" name="beneficiary" matInput id="beneficiary" placeholder="Beneficiary attributes"
+                      formControlName="beneficiary" [(ngModel)]="content.beneficiary_attributes">
                   </mat-form-field>
                 </div>
               </div>

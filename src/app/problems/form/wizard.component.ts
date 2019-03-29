@@ -784,12 +784,30 @@ export class WizardComponent
                     id
                     title
                     description
+                    modified_at
+                    image_urls
                     voted_by
                     watched_by
                     problem_tags {
                         tag {
                             name
                         }
+                    }
+                    problem_validations{
+                      comment
+                      agree
+                      created_at
+                      files
+                      validated_by
+                      edited_at
+                      is_deleted
+              
+                      problem_id
+                      user {
+                        id
+                        name
+                      } 
+                      
                     }
                     }
                     }`
