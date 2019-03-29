@@ -3,7 +3,6 @@
 <!-- [routerLink]="currentUser&&!(collaboratorData.user_id===currentUser)&&'/profiles/'+collaboratorData.user_id" -->
 <div class="card card-profile collaborate-card" *ngIf="collaboratorData" [routerLink]="
     currentUser &&
-    !(collaboratorData.user_id === currentUser) &&
     '/users/' + collaboratorData.user_id
   ">
   <div class="card-avatar">

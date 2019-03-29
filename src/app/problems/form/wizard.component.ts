@@ -790,6 +790,7 @@ export class WizardComponent
                     description
                     modified_at
                     image_urls
+                    featured_url
                     voted_by
                     watched_by
                     
