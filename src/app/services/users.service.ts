@@ -62,7 +62,6 @@ export class UsersService {
     this.getOrgsFromDB();
     this.getUsersFromDB();
     this.getCurrentUser();
-    console.log("test");
   }
 
   public getCurrentUser() {

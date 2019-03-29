@@ -281,7 +281,8 @@
                 <div class="picture-container">
                   <div class="picture">
                     <img src="./assets/img/plus.png" class="picture-src" id="wizardPicturePreview" title="" />
-                    <input type="file" (change)="onFileSelected($event)" name="..." multiple accept="image/*,video/*">
+                    <input type="file" (change)="onFileSelected($event)" name="..." multiple
+                      accept="{{file_types.join(',')}}">
                   </div>
                   <h6 class="description">Choose Media</h6>
                 </div>
@@ -294,7 +295,7 @@
                       color: checkMedialUrl(media_url) == false
                         ? 'red'
                         : '#AAAAAA'
-                    }">description</i>
+                    }">link</i>
                     </span>
                   </div>
                   <mat-form-field class="example-full-width has-label">
@@ -338,10 +339,10 @@
               </div>
             </div>
             <div class="row" *ngFor="let video of content.video_urls;let i = index">
-              <div class="col-md-12">
+              <div class="col-md-4">
                 <div class="card card-product">
                   <div class="card-header card-header-image" data-header-animation="false">
-                    <video controls>
+                    <video controls width="100%">
                       <source src="{{video.url}}">
                       Your browser does not support the video tag.
                     </video>
@@ -366,9 +367,36 @@
               </div>
             </div>
             <div class="row" *ngFor="let embed_url of content.embed_urls;let i = index">
-              <div class="col-md-12">
+              <div class="col-md-4">
                 <div class="card card-product">
                   <div class="card-body">{{embed_url}}</div>
+                  <div class="card-footer">
+                    <div class="price">
+                      <!-- <button mat-raised-button type="button" class="btn btn-default btn-link" matTooltip="Feature"
+                        [matTooltipPosition]="'below'" (click)="setFeatured('embed',i)">
+                        <i *ngIf="embed_url !== content.featured_url" class="material-icons">turned_in_not</i>
+                        <i *ngIf="embed_url === content.featured_url" class="material-icons">turned_in</i>
+                      </button> -->
+                    </div>
+                    <div class="stats">
+                      <button mat-raised-button type="button" class="btn btn-danger btn-link" matTooltip="Remove"
+                        [matTooltipPosition]="'below'" (click)="removeEmbed(i)">
+                        <i class="material-icons">close</i>
+                      </button>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="row" *ngFor="let attachment of content.attachments;let i = index">
+              <div class="col-md-4">
+                <div class="card card-product">
+                  <div class="card-body">
+                    <i class="material-icons" style="zoom:2; color: grey;">
+                      description
+                    </i>
+                    {{attachment.key}}
+                  </div>
                   <div class="card-footer">
                     <div class="price">
                       <!-- <button mat-raised-button type="button" class="btn btn-default btn-link" matTooltip="Feature"
