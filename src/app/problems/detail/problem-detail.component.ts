@@ -206,7 +206,7 @@ export class ProblemDetailComponent implements OnInit, OnDestroy {
   ) { 
     setInterval(() => {
       this.cdr.detectChanges();
-    }, 2000);
+    }, 1000);
   }
 
   getUserPersonas(id) {
@@ -441,7 +441,7 @@ export class ProblemDetailComponent implements OnInit, OnDestroy {
     // this.chartQuery.valueChanges.subscribe
     this.problemDataSubcription = this.problemDataQuery.valueChanges.subscribe(
       result => {
-        console.log('got a new result');
+        // console.log('got a new result');
         if (
           result.data.problems.length >= 1 &&
           result.data.problems[0].id
@@ -457,7 +457,8 @@ export class ProblemDetailComponent implements OnInit, OnDestroy {
   }
 
   parseProblem(problem) {
-    console.log(problem);
+    // console.log(problem);
+    console.log(this.replies);
     // map core keys
     Object.keys(this.problemData).map(key => {
       // console.log(key, result.data.problems[0][key]);
@@ -552,6 +553,7 @@ export class ProblemDetailComponent implements OnInit, OnDestroy {
       // console.log(problem.discussionssByproblemId);
       problem.discussionssByproblemId.map(comment => {
         if (comment.linked_comment_id) {
+          // console.log(comment);
           // this comment is a reply - add it to the replies object
           if (!this.replies[comment.linked_comment_id]) {
             // create reply object so we can add reply
@@ -567,8 +569,10 @@ export class ProblemDetailComponent implements OnInit, OnDestroy {
           // comment object does not exist
           // console.log("COMMENT ID", comment.id);
           this.comments[comment.id] = comment;
-
-          this.replies[comment.id] = [];
+          if (!this.replies[comment.id]) {
+            this.replies[comment.id] = []; // create an empty array for replies to this comment
+          }
+          
         }
       });
       this.popularDiscussions = Object.keys(this.replies).sort(
