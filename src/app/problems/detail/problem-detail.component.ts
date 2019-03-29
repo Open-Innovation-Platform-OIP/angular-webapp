@@ -49,6 +49,7 @@ interface attachment_object {
 export class ProblemDetailComponent implements OnInit, OnDestroy {
   // chartData: any;
   watchers = new Set();
+  voters = new Set();
   problemDataQuery: QueryRef<any>;
   problemDataSubcription: Subscription;
   objectValues = Object["values"];
@@ -106,9 +107,6 @@ export class ProblemDetailComponent implements OnInit, OnDestroy {
   enrichDataArray: any[];
   validationArray: any[];
   sectors: any[] = [];
-  number_of_votes: number = 0;
-  isWatching: boolean = false;
-  isVoted: boolean = false;
   userInterests: any = {};
   sectorsOfProblem: any[] = [];
   userPersonas = {
@@ -363,6 +361,9 @@ export class ProblemDetailComponent implements OnInit, OnDestroy {
             problem_watchers {
               user_id
             }
+            problem_voters {
+              user_id
+            }
             discussionssByproblemId(order_by: {created_at: desc}) {
               id
               created_by
@@ -428,7 +429,7 @@ export class ProblemDetailComponent implements OnInit, OnDestroy {
         }
             
         `,
-          // pollInterval: 1000,
+          pollInterval: 1000,
           fetchPolicy: "network-only"
         });
         // this.chartQuery.valueChanges.subscribe
@@ -439,140 +440,7 @@ export class ProblemDetailComponent implements OnInit, OnDestroy {
               result.data.problems[0].id
             ) {
               let problem = result.data.problems[0];
-              
-              // map core keys
-              Object.keys(this.problemData).map(key => {
-                // console.log(key, result.data.problems[0][key]);
-                if (problem[key]) {
-                  this.problemData[key] = problem[key];
-                }
-              });
-              
-              problem.enrichmentsByproblemId.map(enrichment => {
-                if (
-                  enrichment.created_by ===
-                  Number(this.auth.currentUserValue.id)
-                ) {
-                  this.disableEnrichButton = true;
-                }
-              });
-              this.enrichment = problem.enrichmentsByproblemId;
-  
-              problem.problem_validations.map(validation => {
-                // console.log(validation.validated_by, "test55");
-                if (
-                  validation.validated_by ===
-                  Number(this.auth.currentUserValue.id)
-                ) {
-                  this.disableValidateButton = true;
-                }
-              });
-              this.validation = problem.problem_validations;
-  
-              problem.problem_collaborators.map(
-                collaborator => {
-                  if (
-                    collaborator.user_id ===
-                    Number(this.auth.currentUserValue.id)
-                  ) {
-                    this.disableCollaborateButton = true;
-                  }
-                }
-              );
-              this.collaborators = problem.problem_collaborators;
-
-              // console.log(this.problemData, "result from nested queries");
-              // console.log(problem.is_draft, "is draft");
-              if (problem.usersBycreatedBy) {
-                this.problemOwner =
-                  problem.usersBycreatedBy.name;
-                problem.problem_tags.map(tags => {
-                  if (this.userInterests[tags.tag.name]) {
-                    this.sectorMatched = true;
-                    // console.log(this.sectorMatched, "sector matched");
-                  }
-                });
-                if (problem.problem_tags) {
-                  this.tags = problem.problem_tags.map(
-                    tagArray => {
-                      // console.log(tagArray, "work");
-                      return tagArray.tag.name;
-                    }
-                  );
-                }
-                Object.keys(this.problemData).map(key => {
-                  if (problem[key] && key !== "problem_tags") {
-                    this.problemData[key] = problem[key];
-                  }
-                });
-                problem.problem_watchers.map(watcher => {
-                  this.watchers.add(watcher.user_id);
-                })
-
-                // console.log(this.problemData, "problem data");
-                if (problem.voted_by) {
-                  this.number_of_votes =
-                    problem.voted_by.length;
-                }
-
-                if (problem.voted_by) {
-                  problem.voted_by.forEach(userId => {
-                    if (
-                      Number(userId) === Number(this.auth.currentUserValue.id)
-                    ) {
-                      // console.log(userId, "userId");
-                      this.isVoted = true;
-                    }
-                  });
-                }
-                // adding embed urls
-                let embedded_urls_arr = this.problemData.embed_urls.map(url => {
-                  return { url: url };
-                });
-
-                // combining the video_urls and image_urls
-                this.problem_attachments = [
-                  ...this.problemData["image_urls"],
-                  ...this.problemData["video_urls"],
-                  ...this.problemData["attachments"],
-                  ...embedded_urls_arr
-                ];
-                console.log(">>>>><<<<<< ", this.problemData);
-
-
-                this.problem_attachments_src = this.problem_attachments[
-                  this.problem_attachments_index
-                ];
-
-                // console.log(problem.discussionssByproblemId);
-                problem.discussionssByproblemId.map(comment => {
-                  if (comment.linked_comment_id) {
-                    // this comment is a reply - add it to the replies object
-                    if (!this.replies[comment.linked_comment_id]) {
-                      // create reply object so we can add reply
-                      this.replies[comment.linked_comment_id] = [comment];
-                    } else {
-                      // comment reply already exists so push reply into the array
-                      this.replies[comment.linked_comment_id].push(
-                        comment
-                      );
-                    }
-                  } else {
-                    // this comment is a parent comment - add it to the comments object
-                    // comment object does not exist
-                    this.comments[comment.id] = comment;
-
-                    this.replies[comment.id] = [];
-                  }
-                });
-                this.popularDiscussions = Object.keys(this.replies).sort(
-                  (a, b) => {
-                    return (
-                      this.replies[a].length - this.replies[b].length
-                    );
-                  }
-                );
-              }
+              this.parseProblem(problem);
             }
           },
           error => {
@@ -581,6 +449,130 @@ export class ProblemDetailComponent implements OnInit, OnDestroy {
         );
       }
     });
+  }
+
+  parseProblem(problem) {
+    // map core keys
+    Object.keys(this.problemData).map(key => {
+      // console.log(key, result.data.problems[0][key]);
+      if (problem[key]) {
+        this.problemData[key] = problem[key];
+      }
+    });
+    
+    problem.enrichmentsByproblemId.map(enrichment => {
+      if (
+        enrichment.created_by ===
+        Number(this.auth.currentUserValue.id)
+      ) {
+        this.disableEnrichButton = true;
+      }
+    });
+    this.enrichment = problem.enrichmentsByproblemId;
+
+    problem.problem_validations.map(validation => {
+      // console.log(validation.validated_by, "test55");
+      if (
+        validation.validated_by ===
+        Number(this.auth.currentUserValue.id)
+      ) {
+        this.disableValidateButton = true;
+      }
+    });
+    this.validation = problem.problem_validations;
+
+    problem.problem_collaborators.map(
+      collaborator => {
+        if (
+          collaborator.user_id ===
+          Number(this.auth.currentUserValue.id)
+        ) {
+          this.disableCollaborateButton = true;
+        }
+      }
+    );
+    this.collaborators = problem.problem_collaborators;
+
+    // console.log(this.problemData, "result from nested queries");
+    // console.log(problem.is_draft, "is draft");
+    if (problem.usersBycreatedBy) {
+      this.problemOwner =
+        problem.usersBycreatedBy.name;
+      problem.problem_tags.map(tags => {
+        if (this.userInterests[tags.tag.name]) {
+          this.sectorMatched = true;
+          // console.log(this.sectorMatched, "sector matched");
+        }
+      });
+      if (problem.problem_tags) {
+        this.tags = problem.problem_tags.map(
+          tagArray => {
+            // console.log(tagArray, "work");
+            return tagArray.tag.name;
+          }
+        );
+      }
+      Object.keys(this.problemData).map(key => {
+        if (problem[key] && key !== "problem_tags") {
+          this.problemData[key] = problem[key];
+        }
+      });
+      problem.problem_watchers.map(watcher => {
+        this.watchers.add(watcher.user_id);
+      });
+
+      problem.problem_voters.map(voter => {
+        this.voters.add(voter.user_id);
+      });
+      // adding embed urls
+      let embedded_urls_arr = this.problemData.embed_urls.map(url => {
+        return { url: url };
+      });
+
+      // combining the video_urls and image_urls
+      this.problem_attachments = [
+        ...this.problemData["image_urls"],
+        ...this.problemData["video_urls"],
+        ...this.problemData["attachments"],
+        ...embedded_urls_arr
+      ];
+      // console.log(">>>>><<<<<< ", this.problemData);
+
+
+      this.problem_attachments_src = this.problem_attachments[
+        this.problem_attachments_index
+      ];
+
+      // console.log(problem.discussionssByproblemId);
+      problem.discussionssByproblemId.map(comment => {
+        if (comment.linked_comment_id) {
+          // this comment is a reply - add it to the replies object
+          if (!this.replies[comment.linked_comment_id]) {
+            // create reply object so we can add reply
+            this.replies[comment.linked_comment_id] = [comment];
+          } else {
+            // comment reply already exists so push reply into the array
+            this.replies[comment.linked_comment_id].push(
+              comment
+            );
+          }
+        } else {
+          // this comment is a parent comment - add it to the comments object
+          // comment object does not exist
+          // console.log("COMMENT ID", comment.id);
+          this.comments[comment.id] = comment;
+
+          this.replies[comment.id] = [];
+        }
+      });
+      this.popularDiscussions = Object.keys(this.replies).sort(
+        (a, b) => {
+          return (
+            this.replies[a].length - this.replies[b].length
+          );
+        }
+      );
+    }
   }
 
   sortComments(comments) {
@@ -790,7 +782,7 @@ export class ProblemDetailComponent implements OnInit, OnDestroy {
         const delete_watcher = gql`
         mutation delete_problem_watcher {
           delete_problem_watchers(
-            where: {user_id: {_eq: ${Number(this.auth.currentUserValue.id)}}, problem_id: {_eq: ${Number(this.problemData.id)}}}
+            where: {user_id: {_eq: ${Number(this.userId)}}, problem_id: {_eq: ${Number(this.problemData.id)}}}
           ) {
             affected_rows
           }
@@ -799,6 +791,75 @@ export class ProblemDetailComponent implements OnInit, OnDestroy {
       this.apollo
         .mutate({
           mutation: delete_watcher
+        })
+        .subscribe(
+          result => {
+            if (result.data) {
+              // console.log(result.data);
+            }
+          },
+          err => {
+            console.error(JSON.stringify(err));
+          }
+        );
+      }
+    }
+  }
+
+  toggleVoteProblem() {
+    // console.log('toggling watch flag');
+    if (!(this.userId == this.problemData.created_by)) {
+      if (!this.voters.has(this.userId)) {
+        // user is not currently watching this problem
+        // let's add them
+        this.voters.add(this.userId);
+        const add_voter = gql`
+        mutation insert_problem_voter {
+          insert_problem_voters(
+            objects: [
+              {
+                user_id: ${Number(this.userId)},
+                problem_id: ${Number(this.problemData.id)},
+              }
+            ]
+          ) {
+            returning {
+              user_id
+              problem_id
+            }
+          }
+        }
+      `;
+      this.apollo
+        .mutate({
+          mutation: add_voter
+        })
+        .subscribe(
+          result => {
+            if (result.data) {
+              // console.log(result.data);
+            }
+          },
+          err => {
+            console.error(JSON.stringify(err));
+          }
+        );
+      } else {
+        // user is currently not watching this problem
+        // let's remove them
+        this.voters.delete(this.userId);
+        const delete_voter = gql`
+        mutation delete_problem_voter {
+          delete_problem_voters(
+            where: {user_id: {_eq: ${Number(this.userId)}}, problem_id: {_eq: ${Number(this.problemData.id)}}}
+          ) {
+            affected_rows
+          }
+        }
+      `;
+      this.apollo
+        .mutate({
+          mutation: delete_voter
         })
         .subscribe(
           result => {
@@ -873,44 +934,6 @@ export class ProblemDetailComponent implements OnInit, OnDestroy {
     validationData.problem_id = this.problemData.id;
 
     this.validationService.submitValidationToDB(validationData);
-  }
-
-  voteProblem() {
-    if (!(this.userId == this.problemData.created_by)) {
-      this.isVoted = !this.isVoted;
-      if (this.isVoted) {
-        this.number_of_votes++;
-        this.problemData.voted_by.push(Number(this.auth.currentUserValue.id));
-        this.problemData.voted_by = JSON.stringify(this.problemData.voted_by)
-          .replace("[", "{")
-          .replace("]", "}");
-
-        this.problemService.storeProblemVotedBy(
-          this.problemData.id,
-          this.problemData
-        );
-        this.problemData.voted_by = JSON.parse(
-          this.problemData.voted_by.replace("{", "[").replace("}", "]")
-        );
-      } else {
-        this.number_of_votes--;
-        let index = this.problemData.voted_by.indexOf(
-          Number(this.auth.currentUserValue.id)
-        );
-        this.problemData.voted_by.splice(index, 1);
-        this.problemData.voted_by = JSON.stringify(this.problemData.voted_by)
-          .replace("[", "{")
-          .replace("]", "}");
-
-        this.problemService.storeProblemVotedBy(
-          this.problemData.id,
-          this.problemData
-        );
-        this.problemData.voted_by = JSON.parse(
-          this.problemData.voted_by.replace("{", "[").replace("}", "]")
-        );
-      }
-    }
   }
 
   deleteValidation(validationData) {
