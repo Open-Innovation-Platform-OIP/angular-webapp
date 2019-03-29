@@ -203,9 +203,9 @@ export class ProblemDetailComponent implements OnInit, OnDestroy {
     private collaborationService: CollaborationService,
     private validationService: ValidationService,
     private enrichmentService: EnrichmentService
-  ) { 
+  ) {
     setInterval(() => {
-      this.cdr.detectChanges();
+      this.cdr.markForCheck();
     }, 1000);
   }
 
@@ -233,8 +233,9 @@ export class ProblemDetailComponent implements OnInit, OnDestroy {
             }
         }
             
-        `
-        // pollInterval: 500
+        `,
+        fetchPolicy: "network-only",
+        pollInterval: 750
       })
       .valueChanges.subscribe(result => {
         // console.log("PERSONAS", result);
@@ -309,7 +310,7 @@ export class ProblemDetailComponent implements OnInit, OnDestroy {
     });
   }
 
-  getProblemData(id){
+  getProblemData(id) {
     this.problemDataQuery = this.apollo.watchQuery<any>({
       query: gql`
       {
@@ -405,7 +406,6 @@ export class ProblemDetailComponent implements OnInit, OnDestroy {
 
         enrichmentsByproblemId(order_by:{edited_at: asc}){
           id
-          
           description
           extent
           impact
@@ -442,10 +442,7 @@ export class ProblemDetailComponent implements OnInit, OnDestroy {
     this.problemDataSubcription = this.problemDataQuery.valueChanges.subscribe(
       result => {
         // console.log('got a new result');
-        if (
-          result.data.problems.length >= 1 &&
-          result.data.problems[0].id
-        ) {
+        if (result.data.problems.length >= 1 && result.data.problems[0].id) {
           let problem = result.data.problems[0];
           this.parseProblem(problem);
         }
@@ -466,12 +463,9 @@ export class ProblemDetailComponent implements OnInit, OnDestroy {
         this.problemData[key] = problem[key];
       }
     });
-    
+
     problem.enrichmentsByproblemId.map(enrichment => {
-      if (
-        enrichment.created_by ===
-        Number(this.auth.currentUserValue.id)
-      ) {
+      if (enrichment.created_by === Number(this.auth.currentUserValue.id)) {
         this.disableEnrichButton = true;
       }
     });
@@ -479,32 +473,23 @@ export class ProblemDetailComponent implements OnInit, OnDestroy {
 
     problem.problem_validations.map(validation => {
       // console.log(validation.validated_by, "test55");
-      if (
-        validation.validated_by ===
-        Number(this.auth.currentUserValue.id)
-      ) {
+      if (validation.validated_by === Number(this.auth.currentUserValue.id)) {
         this.disableValidateButton = true;
       }
     });
     this.validation = problem.problem_validations;
 
-    problem.problem_collaborators.map(
-      collaborator => {
-        if (
-          collaborator.user_id ===
-          Number(this.auth.currentUserValue.id)
-        ) {
-          this.disableCollaborateButton = true;
-        }
+    problem.problem_collaborators.map(collaborator => {
+      if (collaborator.user_id === Number(this.auth.currentUserValue.id)) {
+        this.disableCollaborateButton = true;
       }
-    );
+    });
     this.collaborators = problem.problem_collaborators;
 
     // console.log(this.problemData, "result from nested queries");
     // console.log(problem.is_draft, "is draft");
     if (problem.usersBycreatedBy) {
-      this.problemOwner =
-        problem.usersBycreatedBy.name;
+      this.problemOwner = problem.usersBycreatedBy.name;
       problem.problem_tags.map(tags => {
         if (this.userInterests[tags.tag.name]) {
           this.sectorMatched = true;
@@ -512,12 +497,10 @@ export class ProblemDetailComponent implements OnInit, OnDestroy {
         }
       });
       if (problem.problem_tags) {
-        this.tags = problem.problem_tags.map(
-          tagArray => {
-            // console.log(tagArray, "work");
-            return tagArray.tag.name;
-          }
-        );
+        this.tags = problem.problem_tags.map(tagArray => {
+          // console.log(tagArray, "work");
+          return tagArray.tag.name;
+        });
       }
       Object.keys(this.problemData).map(key => {
         if (problem[key] && key !== "problem_tags") {
@@ -545,7 +528,6 @@ export class ProblemDetailComponent implements OnInit, OnDestroy {
       ];
       // console.log(">>>>><<<<<< ", this.problemData);
 
-
       this.problem_attachments_src = this.problem_attachments[
         this.problem_attachments_index
       ];
@@ -560,9 +542,7 @@ export class ProblemDetailComponent implements OnInit, OnDestroy {
             this.replies[comment.linked_comment_id] = [comment];
           } else {
             // comment reply already exists so push reply into the array
-            this.replies[comment.linked_comment_id].push(
-              comment
-            );
+            this.replies[comment.linked_comment_id].push(comment);
           }
         } else {
           // this comment is a parent comment - add it to the comments object
@@ -572,16 +552,11 @@ export class ProblemDetailComponent implements OnInit, OnDestroy {
           if (!this.replies[comment.id]) {
             this.replies[comment.id] = []; // create an empty array for replies to this comment
           }
-          
         }
       });
-      this.popularDiscussions = Object.keys(this.replies).sort(
-        (a, b) => {
-          return (
-            this.replies[a].length - this.replies[b].length
-          );
-        }
-      );
+      this.popularDiscussions = Object.keys(this.replies).sort((a, b) => {
+        return this.replies[a].length - this.replies[b].length;
+      });
     }
   }
 
@@ -614,7 +589,6 @@ export class ProblemDetailComponent implements OnInit, OnDestroy {
 
     return 0;
   }
-
 
   replyTo(discussionId) {
     this.showReplyBox = true;
@@ -662,7 +636,7 @@ export class ProblemDetailComponent implements OnInit, OnDestroy {
         cancelButtonClass: "btn btn-danger",
         buttonsStyling: false
       })
-        .then(function (result) {
+        .then(function(result) {
           swal({
             type: "success",
             html:
@@ -699,7 +673,7 @@ export class ProblemDetailComponent implements OnInit, OnDestroy {
       body.classList.remove("sidebar-mini");
       misc.sidebar_mini_active = false;
     } else {
-      setTimeout(function () {
+      setTimeout(function() {
         body.classList.add("sidebar-mini");
 
         misc.sidebar_mini_active = true;
@@ -707,12 +681,12 @@ export class ProblemDetailComponent implements OnInit, OnDestroy {
     }
 
     // we simulate the window Resize so the charts will get updated in realtime.
-    const simulateWindowResize = setInterval(function () {
+    const simulateWindowResize = setInterval(function() {
       window.dispatchEvent(new Event("resize"));
     }, 180);
 
     // we stop the simulation of Window Resize after the animations are completed
-    setTimeout(function () {
+    setTimeout(function() {
       clearInterval(simulateWindowResize);
     }, 1000);
   }
@@ -741,7 +715,7 @@ export class ProblemDetailComponent implements OnInit, OnDestroy {
       $layer.remove();
     }
 
-    setTimeout(function () {
+    setTimeout(function() {
       $toggle.classList.remove("toggled");
     }, 400);
 
@@ -771,20 +745,20 @@ export class ProblemDetailComponent implements OnInit, OnDestroy {
           }
         }
       `;
-      this.apollo
-        .mutate({
-          mutation: add_watcher
-        })
-        .subscribe(
-          result => {
-            if (result.data) {
-              // console.log(result.data);
+        this.apollo
+          .mutate({
+            mutation: add_watcher
+          })
+          .subscribe(
+            result => {
+              if (result.data) {
+                // console.log(result.data);
+              }
+            },
+            err => {
+              console.error(JSON.stringify(err));
             }
-          },
-          err => {
-            console.error(JSON.stringify(err));
-          }
-        );
+          );
       } else {
         // user is currently not watching this problem
         // let's remove them
@@ -792,26 +766,28 @@ export class ProblemDetailComponent implements OnInit, OnDestroy {
         const delete_watcher = gql`
         mutation delete_problem_watcher {
           delete_problem_watchers(
-            where: {user_id: {_eq: ${Number(this.userId)}}, problem_id: {_eq: ${Number(this.problemData.id)}}}
+            where: {user_id: {_eq: ${Number(
+              this.userId
+            )}}, problem_id: {_eq: ${Number(this.problemData.id)}}}
           ) {
             affected_rows
           }
         }
       `;
-      this.apollo
-        .mutate({
-          mutation: delete_watcher
-        })
-        .subscribe(
-          result => {
-            if (result.data) {
-              // console.log(result.data);
+        this.apollo
+          .mutate({
+            mutation: delete_watcher
+          })
+          .subscribe(
+            result => {
+              if (result.data) {
+                // console.log(result.data);
+              }
+            },
+            err => {
+              console.error(JSON.stringify(err));
             }
-          },
-          err => {
-            console.error(JSON.stringify(err));
-          }
-        );
+          );
       }
     }
   }
@@ -840,20 +816,20 @@ export class ProblemDetailComponent implements OnInit, OnDestroy {
           }
         }
       `;
-      this.apollo
-        .mutate({
-          mutation: add_voter
-        })
-        .subscribe(
-          result => {
-            if (result.data) {
-              // console.log(result.data);
+        this.apollo
+          .mutate({
+            mutation: add_voter
+          })
+          .subscribe(
+            result => {
+              if (result.data) {
+                // console.log(result.data);
+              }
+            },
+            err => {
+              console.error(JSON.stringify(err));
             }
-          },
-          err => {
-            console.error(JSON.stringify(err));
-          }
-        );
+          );
       } else {
         // user is currently not watching this problem
         // let's remove them
@@ -861,26 +837,28 @@ export class ProblemDetailComponent implements OnInit, OnDestroy {
         const delete_voter = gql`
         mutation delete_problem_voter {
           delete_problem_voters(
-            where: {user_id: {_eq: ${Number(this.userId)}}, problem_id: {_eq: ${Number(this.problemData.id)}}}
+            where: {user_id: {_eq: ${Number(
+              this.userId
+            )}}, problem_id: {_eq: ${Number(this.problemData.id)}}}
           ) {
             affected_rows
           }
         }
       `;
-      this.apollo
-        .mutate({
-          mutation: delete_voter
-        })
-        .subscribe(
-          result => {
-            if (result.data) {
-              // console.log(result.data);
+        this.apollo
+          .mutate({
+            mutation: delete_voter
+          })
+          .subscribe(
+            result => {
+              if (result.data) {
+                // console.log(result.data);
+              }
+            },
+            err => {
+              console.error(JSON.stringify(err));
             }
-          },
-          err => {
-            console.error(JSON.stringify(err));
-          }
-        );
+          );
       }
     }
   }
@@ -1116,5 +1094,6 @@ export class ProblemDetailComponent implements OnInit, OnDestroy {
   ngOnDestroy() {
     this.problemDataQuery.stopPolling();
     this.problemDataSubcription.unsubscribe();
+    // this.cdr.detach();
   }
 }
