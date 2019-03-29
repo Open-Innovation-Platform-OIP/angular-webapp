@@ -546,22 +546,7 @@ export class ProblemDetailComponent implements OnInit, OnDestroy {
                           this.replies[comment.id] = [];
                         }
                       });
-                      // console.log(this.comments);
-                      // this.popularDiscussions = Object.
-                      this.popularDiscussions = Object.keys(this.replies).sort(
-                        (a, b) => {
-                          return (
-                            this.replies[a].length - this.replies[b].length
-                          );
-
-                          //   return a;
-                          // }
-                        }
-                      );
-
-                      console.log("POPULAR", this.popularDiscussions);
-                      console.log("COMMENTS", this.comments);
-                      console.log("REPLIES", this.replies);
+                      console.log(this.comments);
                     }
                   });
               }
