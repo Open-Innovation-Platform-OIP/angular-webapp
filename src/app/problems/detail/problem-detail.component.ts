@@ -300,158 +300,160 @@ export class ProblemDetailComponent implements OnInit, OnDestroy {
     this.minimizeSidebar();
     this.route.params.pipe(first()).subscribe(params => {
       if (params.id) {
-        // this.getEnrichmentData(params.id);
-        // this.getCollaborators(params.id);
-        // // this.getTags(params.id);
-        // this.getValidations(params.id);
-        this.problemDataQuery = this.apollo.watchQuery<any>({
-          query: gql`
-          {
-            problems(where: { id: { _eq: ${params.id} } }) {
-              id
-              title
-              description
-              organization
-              location
-              resources_needed
-              is_draft
-              created_by
-              modified_at
-              image_urls
-              voted_by
-              featured_url
-              featured_type
-              video_urls
-              impact
-              extent
-              min_population
-              max_population
-              beneficiary_attributes
-              featured_url
-              embed_urls
-              featured_type
-              attachments
-              usersBycreatedBy {
-                id
-                name
-              } 
-              problem_tags{
-                tag {
-                    id
-                    name
-                }
-            }
-
-            problem_validations{
-              comment
-              agree
-              created_at
-              files
-              validated_by
-              edited_at
-              is_deleted
-      
-              problem_id
-              user {
-                id
-                name
-              } 
-              
-            }
-            problem_watchers {
-              user_id
-            }
-            problem_voters {
-              user_id
-            }
-            discussionssByproblemId(order_by: {created_at: desc}) {
-              id
-              created_by
-              created_at
-              modified_at
-              text
-              linked_comment_id
-              mentions
-              attachments
-              usersBycreatedBy {
-                name
-                photo_url
-              }
-            }
-            problem_collaborators{
-              intent
-              is_ngo
-              is_innovator
-              is_expert
-              is_government
-              is_funder
-              is_beneficiary
-              is_incubator
-              is_entrepreneur
-              user_id
-              user {
-                id
-                name
-                photo_url
-              } 
-              
-            }
-
-            enrichmentsByproblemId(order_by:{edited_at: asc}){
-              id
-              
-              description
-              extent
-              impact
-              min_population
-              max_population
-              organization
-              beneficiary_attributes
-              location
-              resources_needed
-              image_urls
-              attachments
-              video_urls
-              created_by
-              edited_at
-              voted_by
-              is_deleted
-              featured_url
-              embed_urls
-              featured_type
-              usersBycreatedBy{
-                id
-                name
-                photo_url
-              }   
-            }
-            }
-        }
-            
-        `,
-          pollInterval: 1000,
-          fetchPolicy: "network-only"
-        });
-        // this.chartQuery.valueChanges.subscribe
-        this.problemDataSubcription = this.problemDataQuery.valueChanges.subscribe(
-          result => {
-            if (
-              result.data.problems.length >= 1 &&
-              result.data.problems[0].id
-            ) {
-              let problem = result.data.problems[0];
-              this.parseProblem(problem);
-            }
-          },
-          error => {
-            console.error("error", error);
-          }
-        );
+        this.getProblemData(params.id);
       }
     });
   }
 
+  getProblemData(id){
+    this.problemDataQuery = this.apollo.watchQuery<any>({
+      query: gql`
+      {
+        problems(where: { id: { _eq: ${id} } }) {
+          id
+          title
+          description
+          organization
+          location
+          resources_needed
+          is_draft
+          created_by
+          modified_at
+          image_urls
+          voted_by
+          featured_url
+          featured_type
+          video_urls
+          impact
+          extent
+          min_population
+          max_population
+          beneficiary_attributes
+          featured_url
+          embed_urls
+          featured_type
+          attachments
+          usersBycreatedBy {
+            id
+            name
+          } 
+          problem_tags{
+            tag {
+                id
+                name
+            }
+        }
+
+        problem_validations{
+          comment
+          agree
+          created_at
+          files
+          validated_by
+          edited_at
+          is_deleted
+  
+          problem_id
+          user {
+            id
+            name
+          } 
+          
+        }
+        problem_watchers {
+          user_id
+        }
+        problem_voters {
+          user_id
+        }
+        discussionssByproblemId(order_by: {created_at: desc}) {
+          id
+          created_by
+          created_at
+          modified_at
+          text
+          linked_comment_id
+          mentions
+          attachments
+          usersBycreatedBy {
+            name
+            photo_url
+          }
+        }
+        problem_collaborators{
+          intent
+          is_ngo
+          is_innovator
+          is_expert
+          is_government
+          is_funder
+          is_beneficiary
+          is_incubator
+          is_entrepreneur
+          user_id
+          user {
+            id
+            name
+            photo_url
+          } 
+          
+        }
+
+        enrichmentsByproblemId(order_by:{edited_at: asc}){
+          id
+          
+          description
+          extent
+          impact
+          min_population
+          max_population
+          organization
+          beneficiary_attributes
+          location
+          resources_needed
+          image_urls
+          attachments
+          video_urls
+          created_by
+          edited_at
+          voted_by
+          is_deleted
+          featured_url
+          embed_urls
+          featured_type
+          usersBycreatedBy{
+            id
+            name
+            photo_url
+          }   
+        }
+        }
+    }
+        
+    `,
+      pollInterval: 1000,
+      fetchPolicy: "network-only"
+    });
+    // this.chartQuery.valueChanges.subscribe
+    this.problemDataSubcription = this.problemDataQuery.valueChanges.subscribe(
+      result => {
+        console.log('got a new result');
+        if (
+          result.data.problems.length >= 1 &&
+          result.data.problems[0].id
+        ) {
+          let problem = result.data.problems[0];
+          this.parseProblem(problem);
+        }
+      },
+      error => {
+        console.error("error", error);
+      }
+    );
+  }
+
   parseProblem(problem) {
+    console.log(problem);
     // map core keys
     Object.keys(this.problemData).map(key => {
       // console.log(key, result.data.problems[0][key]);
