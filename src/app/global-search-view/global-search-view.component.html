@@ -3,7 +3,8 @@
     <div class="row justify-content-center">
       <div class="col-md-6">
         <input type="text" value="" class="form-control" placeholder="Search..." name="searchInput" autofocus
-          data-toggle="dropdown" [(ngModel)]="searchInput" (input)="globalSearch($event.target.value)" autocomplete="off" />
+          data-toggle="dropdown" [(ngModel)]="searchInput" (input)="globalSearch($event.target.value)"
+          autocomplete="off" />
       </div>
     </div>
     <hr />
@@ -15,7 +16,8 @@
           </app-problem-card>
         </div>
         <div class="card">
-          <h5 class="card-body text-center" *ngIf="globalProblemSearchResults.length === 0">No search results for
+          <h5 class="card-body text-center"
+            *ngIf="globalProblemSearchResults && globalProblemSearchResults.length === 0">No search results for
             <b>Problems</b>
           </h5>
         </div>
@@ -32,7 +34,8 @@
           <app-profile-card *ngIf="user" [userData]="user"></app-profile-card>
         </div>
         <div class="card">
-          <h5 class="card-body text-center" *ngIf="userSearchResults.length === 0">No search results for <b>Users</b>
+          <h5 class="card-body text-center" *ngIf="userSearchResults && userSearchResults.length === 0">No search
+            results for <b>Users</b>
           </h5>
         </div>
       </div>

@@ -7,6 +7,9 @@ import {
   EventEmitter
 } from "@angular/core";
 import { AuthService } from "../../services/auth.service";
+import swal from "sweetalert2";
+
+declare var $: any;
 
 @Component({
   selector: "app-add-collaborator",
@@ -56,6 +59,28 @@ export class AddCollaboratorComponent implements OnInit, OnChanges {
       this.blankSpace = false;
     } else {
       this.blankSpace = true;
+    }
+  }
+
+  confirmCancellation() {
+    if (this.collaborator.intent) {
+      swal({
+        title: "Are you sure you want to leave?",
+        // text: "You won't be able to revert this!",
+        type: "warning",
+        showCancelButton: true,
+        confirmButtonClass: "btn btn-success",
+        cancelButtonClass: "btn btn-danger",
+        confirmButtonText: "Yes",
+        buttonsStyling: false
+      }).then(result => {
+        if (result.value) {
+          console.log("Received result", result);
+          $("#collaboratorModal").modal("hide");
+        }
+      });
+    } else {
+      $("#collaboratorModal").modal("hide");
     }
   }
 }
