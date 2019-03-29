@@ -48,30 +48,30 @@ export class CollaboratorCardComponent implements OnInit, OnChanges {
         }
       });
 
-      this.apollo
-        .watchQuery<any>({
-          query: gql`
-            {
-             users(where: { id: { _eq: ${this.collaboratorData.user_id} } }) {
-               id
-               name
-               photo_url
-   
-             } 
+      //   this.apollo
+      //     .watchQuery<any>({
+      //       query: gql`
+      //         {
+      //          users(where: { id: { _eq: ${this.collaboratorData.user_id} } }) {
+      //            id
+      //            name
+      //            photo_url
 
-            }
-               `
-          // pollInterval: 500
-        })
-        .valueChanges.subscribe(
-          result => {
-            console.log(result, "user in collaborator card");
-            this.collaboratorProfileData = result.data.users[0];
-          },
-          error => {
-            console.log("could not get collaborators due to ", error);
-          }
-        );
+      //          }
+
+      //         }
+      //            `
+      //       // pollInterval: 500
+      //     })
+      //     .valueChanges.subscribe(
+      //       result => {
+      //         console.log(result, "user in collaborator card");
+      //         this.collaboratorProfileData = result.data.users[0];
+      //       },
+      //       error => {
+      //         console.log("could not get collaborators due to ", error);
+      //       }
+      //     );
     }
   }
 

@@ -105,7 +105,8 @@ export class WizardComponent
     watched_by: "",
     created_by: Number(this.auth.currentUserValue.id),
     is_draft: true,
-    owners: ""
+    owners: "",
+    attachments: []
   };
   searchResults = {};
   sectorCtrl = new FormControl();
@@ -903,6 +904,7 @@ export class WizardComponent
               featured_type
               embed_urls
               is_draft
+              attachments
             ]
           }
         ) {

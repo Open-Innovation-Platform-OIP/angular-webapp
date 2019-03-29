@@ -66,6 +66,7 @@ export class EnrichmentService {
                   featured_url
                   featured_type
                   embed_urls
+                  attachments
                 ]
               }
             ) {

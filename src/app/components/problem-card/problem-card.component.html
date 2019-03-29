@@ -55,20 +55,27 @@
       {{ problemData.title }}
     </p>
     <div class="description">
-      <span> <b> Description : </b>{{ problemData.description }}</span>
+      <strong>Description</strong>
+      <p>{{ problemData.description }}</p>
     </div>
     <!-- <div>
-      <span> <b> Location : </b>{{ problemData.location }}</span>
     </div> -->
     <!-- <strong>Locations</strong>
     <div *ngIf="problemData.location&&problemData.location.length">
 
-
+      
       <div *ngFor="let location of problemData.location">
         <span *ngIf="location.Address&&location.Address.Label">{{location.Address.Label}}</span>
         <span>&nbsp;</span>
       </div>
     </div> -->
+    <span> <b> Location(s) </b></span>
+
+
+    <div *ngFor="let location of problemData.location; let i=index;">
+      <span *ngIf="location.Address.Label && i < 2">{{location.Address.Label}}</span>
+      <span *ngIf="i<2">&nbsp;</span>
+    </div>
   </div>
   <div class="card-footer">
     <!-- <div>
@@ -97,7 +104,8 @@
       <span>&nbsp;</span>
       <span>&nbsp;</span>
       <span>&nbsp;</span>
-      <i class="material-icons" matTooltip="Expert validations" [matTooltipPosition]="'below'">
+      <i class="material-icons" [ngStyle]="{'color': validated ? '#38e038' : '#878787' }"
+        matTooltip="Expert validations" [matTooltipPosition]="'below'">
         how_to_reg
       </i>
       {{ numOfValidations }}

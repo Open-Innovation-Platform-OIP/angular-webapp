@@ -14,15 +14,15 @@ export class ProblemsViewComponent implements OnInit {
   constructor(private apollo: Apollo) {}
 
   ngOnInit() {
-    this.apollo
-      .watchQuery<any>({
-        query: Query.GetQuery
-        // pollInterval: 1000
-      })
-      .valueChanges.subscribe(result => {
-        if (result.data.problems.length > 0) {
-          this.problems = result.data.problems;
-        }
-      });
+    //   this.apollo
+    //     .watchQuery<any>({
+    //       query: Query.GetQuery
+    //       // pollInterval: 1000
+    //     })
+    //     .valueChanges.subscribe(result => {
+    //       if (result.data.problems.length > 0) {
+    //         this.problems = result.data.problems;
+    //       }
+    //     });
   }
 }

@@ -1,3 +1,7 @@
 .collaborate-card {
     height: 20em;
 }
+
+.card-avatar {
+    margin-top: -40px;
+}

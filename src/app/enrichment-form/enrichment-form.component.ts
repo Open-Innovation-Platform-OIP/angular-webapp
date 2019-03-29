@@ -32,7 +32,8 @@ export class EnrichmentFormComponent implements OnInit {
     voted_by: "{}",
     featured_url: "",
     embed_urls: [],
-    featured_type: ""
+    featured_type: "",
+    attachments: []
   };
 
   constructor(

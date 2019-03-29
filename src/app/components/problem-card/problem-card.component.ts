@@ -15,6 +15,7 @@ export class ProblemCardComponent implements OnInit {
   numOfVotes: Number = 0;
   numOfWatchers: Number = 0;
   numOfValidations: Number = 0;
+  validated: Boolean = false;
   // modifiedAt: any;
   // sectors: any[] = [];
 
@@ -33,6 +34,7 @@ export class ProblemCardComponent implements OnInit {
       this.problemData.problem_validations.length
     ) {
       this.numOfValidations = this.problemData.problem_validations.length;
+      this.validated = true;
     }
 
     // this.sectors = Object.keys(this.problemData.sectors).filter((sector) => {

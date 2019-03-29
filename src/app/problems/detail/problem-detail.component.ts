@@ -180,12 +180,14 @@ export class ProblemDetailComponent implements OnInit, OnDestroy {
   public carouselTileItemsValid$: Observable<number[]>;
   public carouselTileItemCollab$: Observable<number[]>;
   public carouselTileConfig: NguCarouselConfig = {
-    grid: { xs: 1, sm: 1, md: 1, lg: 3, all: 0 },
+    grid: { xs: 2, sm: 2, md: 2, lg: 2, all: 0 },
+    slide: 2,
     speed: 250,
     point: {
       visible: true
     },
     touch: true,
+
     loop: true
   };
 
@@ -378,7 +380,7 @@ export class ProblemDetailComponent implements OnInit, OnDestroy {
               
             }
 
-            enrichmentsByproblemId{
+            enrichmentsByproblemId(order_by:{edited_at: asc}){
               id
               
               description
@@ -809,9 +811,9 @@ export class ProblemDetailComponent implements OnInit, OnDestroy {
   //         }
   //       );
   //   }
-  //   test(event) {
-  //     console.log(event, "enriched data");
-  //   }
+  test(event) {
+    console.log(event, "carousel load");
+  }
   //   getCollaborators(id) {
   //     this.apollo
   //       .watchQuery<any>({
