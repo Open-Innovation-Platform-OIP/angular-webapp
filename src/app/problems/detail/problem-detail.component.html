@@ -77,13 +77,13 @@
                 thumb_up
               </i>
               <span>{{number_of_votes}}</span>
-              <i class="material-icons actions col-md-3" (click)="watchProblem()"
-                [ngStyle]="{'color':isWatching ? '#1E90FF' : 'black' }">
+              <i class="material-icons actions col-md-3" (click)="toggleWatchProblem()"
+                [ngStyle]="{'color':watchers.has(userId) ? '#1E90FF' : 'black' }">
                 visibility
               </i>
               <span>&nbsp;</span>
               <span>&nbsp;</span>
-              <span> {{watchedBy}}</span>
+              <span> {{watchers.size}}</span>
             </div>
             <div *ngIf="userId===problemData.created_by" [routerLink]="
               '/problems/'+ problemData.id+'/edit'">

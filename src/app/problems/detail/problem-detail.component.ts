@@ -48,7 +48,7 @@ interface attachment_object {
 })
 export class ProblemDetailComponent implements OnInit, OnDestroy {
   // chartData: any;
-
+  watchers = new Set();
   problemDataQuery: QueryRef<any>;
   problemDataSubcription: Subscription;
   objectValues = Object["values"];
@@ -92,7 +92,6 @@ export class ProblemDetailComponent implements OnInit, OnDestroy {
     embed_urls: [],
     featured_type: "",
     voted_by: "",
-    watched_by: "",
     created_by: "",
     is_draft: ""
   };
@@ -108,7 +107,6 @@ export class ProblemDetailComponent implements OnInit, OnDestroy {
   number_of_votes: number = 0;
   isWatching: boolean = false;
   isVoted: boolean = false;
-  watchedBy: number = 0;
   userInterests: any = {};
   sectorsOfProblem: any[] = [];
   userPersonas = {
@@ -233,23 +231,21 @@ export class ProblemDetailComponent implements OnInit, OnDestroy {
         // pollInterval: 500
       })
       .valueChanges.subscribe(result => {
-        console.log("PERSONAS", result);
+        // console.log("PERSONAS", result);
         if (result.data.users[0]) {
           Object.keys(result.data.users[0]).map(persona => {
             this.userPersonas[persona] = result.data.users[0][persona];
           });
-          console.log("persona assignment", result.data.users[0]);
+          // console.log("persona assignment", result.data.users[0]);
           result.data.users[0].user_tags.map(tag => {
             this.userInterests[tag.tag.name] = tag.tag;
           });
-          console.log(this.userInterests, "user interests");
+          // console.log(this.userInterests, "user interests");
         }
       });
   }
 
   ngOnInit() {
-    console.log("ng on in it on load");
-
     this.userId = Number(this.auth.currentUserValue.id);
 
     this.getUserPersonas(Number(this.auth.currentUserValue.id));
@@ -265,7 +261,6 @@ export class ProblemDetailComponent implements OnInit, OnDestroy {
         } else {
           data = this.enrichment;
         }
-        console.log(data, "carousel data");
         return data;
       })
     );
@@ -324,7 +319,6 @@ export class ProblemDetailComponent implements OnInit, OnDestroy {
               voted_by
               featured_url
               featured_type
-              watched_by
               video_urls
               impact
               extent
@@ -360,6 +354,9 @@ export class ProblemDetailComponent implements OnInit, OnDestroy {
                 name
               } 
               
+            }
+            problem_watchers {
+              user_id
             }
             problem_collaborators{
               intent
@@ -423,26 +420,29 @@ export class ProblemDetailComponent implements OnInit, OnDestroy {
               result.data.problems.length >= 1 &&
               result.data.problems[0].id
             ) {
+              let problem = result.data.problems[0];
+              
+              // map core keys
               Object.keys(this.problemData).map(key => {
                 // console.log(key, result.data.problems[0][key]);
-                if (result.data.problems[0][key]) {
-                  this.problemData[key] = result.data.problems[0][key];
+                if (problem[key]) {
+                  this.problemData[key] = problem[key];
                 }
               });
 
-              console.log(this.problemData, "result from nested queries");
-              console.log(result.data.problems[0].is_draft, "is draft");
-              if (result.data.problems[0]) {
+              // console.log(this.problemData, "result from nested queries");
+              // console.log(problem.is_draft, "is draft");
+              if (problem.usersBycreatedBy) {
                 this.problemOwner =
-                  result.data.problems[0].usersBycreatedBy.name;
-                result.data.problems[0].problem_tags.map(tags => {
+                  problem.usersBycreatedBy.name;
+                problem.problem_tags.map(tags => {
                   if (this.userInterests[tags.tag.name]) {
                     this.sectorMatched = true;
-                    console.log(this.sectorMatched, "sector matched");
+                    // console.log(this.sectorMatched, "sector matched");
                   }
                 });
-                if (result.data.problems[0].problem_tags) {
-                  this.tags = result.data.problems[0].problem_tags.map(
+                if (problem.problem_tags) {
+                  this.tags = problem.problem_tags.map(
                     tagArray => {
                       // console.log(tagArray, "work");
                       return tagArray.tag.name;
@@ -450,48 +450,27 @@ export class ProblemDetailComponent implements OnInit, OnDestroy {
                   );
                 }
                 Object.keys(this.problemData).map(key => {
-                  if (result.data.problems[0][key] && key !== "problem_tags") {
-                    this.problemData[key] = result.data.problems[0][key];
+                  if (problem[key] && key !== "problem_tags") {
+                    this.problemData[key] = problem[key];
                   }
                 });
+                problem.problem_watchers.map(watcher => {
+                  this.watchers.add(watcher.user_id);
+                })
 
-                console.log(this.problemData, "problem data");
-                if (result.data.problems[0].voted_by) {
+                // console.log(this.problemData, "problem data");
+                if (problem.voted_by) {
                   this.number_of_votes =
-                    result.data.problems[0].voted_by.length;
+                    problem.voted_by.length;
                 }
 
-                if (
-                  result.data.problems[0] &&
-                  result.data.problems[0].watched_by
-                ) {
-                  this.watchedBy = result.data.problems[0].watched_by.length;
-                }
-
-                if (result.data.problems[0].voted_by) {
-                  result.data.problems[0].voted_by.forEach(userId => {
+                if (problem.voted_by) {
+                  problem.voted_by.forEach(userId => {
                     if (
                       Number(userId) === Number(this.auth.currentUserValue.id)
                     ) {
-                      console.log(userId, "userId");
+                      // console.log(userId, "userId");
                       this.isVoted = true;
-                    }
-                  });
-                }
-                if (
-                  result.data.problems[0] &&
-                  result.data.problems[0].watched_by
-                ) {
-                  console.log(
-                    result.data.problems[0].watched_by,
-                    "watchedBy",
-                    typeof result.data.problems[0].watched_by
-                  );
-                  result.data.problems[0].watched_by.forEach(userId => {
-                    if (
-                      Number(userId) === Number(this.auth.currentUserValue.id)
-                    ) {
-                      this.isWatching = true;
                     }
                   });
                 }
@@ -657,6 +636,7 @@ export class ProblemDetailComponent implements OnInit, OnDestroy {
 
     return 0;
   }
+
 
   replyTo(discussionId) {
     this.showReplyBox = true;
@@ -953,53 +933,70 @@ export class ProblemDetailComponent implements OnInit, OnDestroy {
 
     this.mobile_menu_visible = 0;
   }
-
-  watchProblem() {
+  toggleWatchProblem() {
+    console.log('toggling watch flag');
     if (!(this.userId == this.problemData.created_by)) {
-      this.isWatching = !this.isWatching;
-      if (this.isWatching) {
-        this.watchedBy++;
-        this.problemData.watched_by.push(Number(this.auth.currentUserValue.id));
-
-        this.problemData.watched_by = JSON.stringify(
-          this.problemData.watched_by
-        )
-          .replace("[", "{")
-          .replace("]", "}");
-
-        console.log(this.problemData.watched_by, "watched_by");
-
-        this.problemService.storeProblemWatchedBy(
-          this.problemData.id,
-          this.problemData
-        );
-
-        this.problemData.watched_by = JSON.parse(
-          this.problemData.watched_by.replace("{", "[").replace("}", "]")
+      if (!this.watchers.has(this.userId)) {
+        // user is not currently watching this problem
+        // let's add them
+        this.watchers.add(this.userId);
+        const add_watcher = gql`
+        mutation insert_problem_watcher {
+          insert_problem_watchers(
+            objects: [
+              {
+                user_id: ${Number(this.userId)},
+                problem_id: ${Number(this.problemData.id)},
+              }
+            ]
+          ) {
+            returning {
+              user_id
+              problem_id
+            }
+          }
+        }
+      `;
+      this.apollo
+        .mutate({
+          mutation: add_watcher
+        })
+        .subscribe(
+          result => {
+            if (result.data) {
+              console.log(result.data);
+            }
+          },
+          err => {
+            console.error(JSON.stringify(err));
+          }
         );
       } else {
-        this.watchedBy--;
-
-        let index = this.problemData.watched_by.indexOf(
-          Number(this.auth.currentUserValue.id).toString()
-        );
-        console.log(this.problemData.watched_by, "watched_by");
-
-        this.problemData.watched_by.splice(index, 1);
-
-        this.problemData.watched_by = JSON.stringify(
-          this.problemData.watched_by
-        )
-          .replace("[", "{")
-          .replace("]", "}");
-
-        this.problemService.storeProblemWatchedBy(
-          this.problemData.id,
-          this.problemData
-        );
-
-        this.problemData.watched_by = JSON.parse(
-          this.problemData.watched_by.replace("{", "[").replace("}", "]")
+        // user is currently not watching this problem
+        // let's remove them
+        this.watchers.delete(this.userId);
+        const delete_watcher = gql`
+        mutation delete_problem_watcher {
+          delete_problem_watchers(
+            where: {user_id: {_eq: ${Number(this.auth.currentUserValue.id)}}, problem_id: {_eq: ${Number(this.problemData.id)}}}
+          ) {
+            affected_rows
+          }
+        }
+      `;
+      this.apollo
+        .mutate({
+          mutation: delete_watcher
+        })
+        .subscribe(
+          result => {
+            if (result.data) {
+              console.log(result.data);
+            }
+          },
+          err => {
+            console.error(JSON.stringify(err));
+          }
         );
       }
     }
