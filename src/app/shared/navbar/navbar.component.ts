@@ -79,7 +79,7 @@ export class NavbarComponent implements OnInit {
     this.nativeElement = element.nativeElement;
     this.sidebarVisible = false;
     this.user_id = this.auth.currentUserValue.id;
-    console.log(this.user_id);
+    // console.log(this.user_id);
   }
 
   minimizeSidebar() {
@@ -89,7 +89,7 @@ export class NavbarComponent implements OnInit {
       body.classList.remove("sidebar-mini");
       misc.sidebar_mini_active = false;
     } else {
-      setTimeout(function() {
+      setTimeout(function () {
         body.classList.add("sidebar-mini");
 
         misc.sidebar_mini_active = true;
@@ -97,12 +97,12 @@ export class NavbarComponent implements OnInit {
     }
 
     // we simulate the window Resize so the charts will get updated in realtime.
-    const simulateWindowResize = setInterval(function() {
+    const simulateWindowResize = setInterval(function () {
       window.dispatchEvent(new Event("resize"));
     }, 180);
 
     // we stop the simulation of Window Resize after the animations are completed
-    setTimeout(function() {
+    setTimeout(function () {
       clearInterval(simulateWindowResize);
     }, 1000);
   }
@@ -112,16 +112,16 @@ export class NavbarComponent implements OnInit {
     const sidebar = document.getElementsByClassName("sidebar")[0];
 
     if (misc.hide_sidebar_active === true) {
-      setTimeout(function() {
+      setTimeout(function () {
         body.classList.remove("hide-sidebar");
         misc.hide_sidebar_active = false;
       }, 300);
-      setTimeout(function() {
+      setTimeout(function () {
         sidebar.classList.remove("animation");
       }, 600);
       sidebar.classList.add("animation");
     } else {
-      setTimeout(function() {
+      setTimeout(function () {
         body.classList.add("hide-sidebar");
         // $('.sidebar').addClass('animation');
         misc.hide_sidebar_active = true;
@@ -129,12 +129,12 @@ export class NavbarComponent implements OnInit {
     }
 
     // we simulate the window Resize so the charts will get updated in realtime.
-    const simulateWindowResize = setInterval(function() {
+    const simulateWindowResize = setInterval(function () {
       window.dispatchEvent(new Event("resize"));
     }, 180);
 
     // we stop the simulation of Window Resize after the animations are completed
-    setTimeout(function() {
+    setTimeout(function () {
       clearInterval(simulateWindowResize);
     }, 1000);
   }
@@ -207,11 +207,11 @@ export class NavbarComponent implements OnInit {
     var $toggle = document.getElementsByClassName("navbar-toggler")[0];
     const toggleButton = this.toggleButton;
     const body = document.getElementsByTagName("body")[0];
-    setTimeout(function() {
+    setTimeout(function () {
       toggleButton.classList.add("toggled");
     }, 500);
     body.classList.add("nav-open");
-    setTimeout(function() {
+    setTimeout(function () {
       $toggle.classList.add("toggled");
     }, 430);
 
@@ -226,18 +226,18 @@ export class NavbarComponent implements OnInit {
         .appendChild($layer);
     }
 
-    setTimeout(function() {
+    setTimeout(function () {
       $layer.classList.add("visible");
     }, 100);
 
-    $layer.onclick = function() {
+    $layer.onclick = function () {
       //asign a function
       body.classList.remove("nav-open");
       this.mobile_menu_visible = 0;
       this.sidebarVisible = false;
 
       $layer.classList.remove("visible");
-      setTimeout(function() {
+      setTimeout(function () {
         $layer.remove();
         $toggle.classList.remove("toggled");
       }, 400);
@@ -371,7 +371,7 @@ export class NavbarComponent implements OnInit {
       $layer.remove();
     }
 
-    setTimeout(function() {
+    setTimeout(function () {
       $toggle.classList.remove("toggled");
     }, 400);
 
