@@ -1090,11 +1090,29 @@ export class ProblemDetailComponent implements OnInit, OnDestroy {
   }
 
   deleteValidation(validationData) {
-    this.validationService.deleteValidation(validationData);
+    this.validationService.deleteValidation(validationData).subscribe(
+      ({ data }) => {
+        $("#validModal").modal("hide");
+        this.disableValidateButton = false;
+
+        return;
+      },
+      error => {
+        console.log("Could delete due to " + error);
+      }
+    );
   }
 
   deleteCollaboration(collaborationData) {
-    this.collaborationService.deleteCollaboration(collaborationData);
+    this.collaborationService.deleteCollaboration(collaborationData).subscribe(
+      ({ data }) => {
+        $("#collaboratorModal").modal("hide");
+        this.disableCollaborateButton = false;
+      },
+      error => {
+        console.log("Could delete due to " + error);
+      }
+    );
   }
 
   handleEnrichCardClicked(enrichmentData) {

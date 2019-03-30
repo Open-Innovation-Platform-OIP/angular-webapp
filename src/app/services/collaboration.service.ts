@@ -85,40 +85,27 @@ export class CollaborationService {
   }
 
   deleteCollaboration(collaboratorData) {
-    this.apollo
-      .mutate<any>({
-        mutation: gql`
-          mutation DeleteMutation($where: collaborators_bool_exp!) {
-            delete_collaborators(where: $where) {
-              affected_rows
-              returning {
-                problem_id
-              }
-            }
-          }
-        `,
-        variables: {
-          where: {
-            user_id: {
-              _eq: collaboratorData.user_id
-            },
-            problem_id: {
-              _eq: collaboratorData.problem_id
+    return this.apollo.mutate<any>({
+      mutation: gql`
+        mutation DeleteMutation($where: collaborators_bool_exp!) {
+          delete_collaborators(where: $where) {
+            affected_rows
+            returning {
+              problem_id
             }
           }
         }
-      })
-      .subscribe(
-        ({ data }) => {
-          // location.reload();
-          location.reload();
-          // this.router.navigateByUrl("/problems");
-
-          return;
-        },
-        error => {
-          console.log("Could delete due to " + error);
+      `,
+      variables: {
+        where: {
+          user_id: {
+            _eq: collaboratorData.user_id
+          },
+          problem_id: {
+            _eq: collaboratorData.problem_id
+          }
         }
-      );
+      }
+    });
   }
 }

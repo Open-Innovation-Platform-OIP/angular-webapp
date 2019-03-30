@@ -63,40 +63,27 @@ export class ValidationService {
   deleteValidation(validationData: validation) {
     console.log(validationData, "delete validation");
     // console.log(id, "ID");
-    this.apollo
-      .mutate<any>({
-        mutation: gql`
-          mutation DeleteMutation($where: validations_bool_exp!) {
-            delete_validations(where: $where) {
-              affected_rows
-              returning {
-                problem_id
-              }
-            }
-          }
-        `,
-        variables: {
-          where: {
-            validated_by: {
-              _eq: validationData.validated_by
-            },
-            problem_id: {
-              _eq: validationData.problem_id
+    return this.apollo.mutate<any>({
+      mutation: gql`
+        mutation DeleteMutation($where: validations_bool_exp!) {
+          delete_validations(where: $where) {
+            affected_rows
+            returning {
+              problem_id
             }
           }
         }
-      })
-      .subscribe(
-        ({ data }) => {
-          // location.reload();
-          location.reload();
-          // this.router.navigateByUrl("/problems");
-
-          return;
-        },
-        error => {
-          console.log("Could delete due to " + error);
+      `,
+      variables: {
+        where: {
+          validated_by: {
+            _eq: validationData.validated_by
+          },
+          problem_id: {
+            _eq: validationData.problem_id
+          }
         }
-      );
+      }
+    });
   }
 }
