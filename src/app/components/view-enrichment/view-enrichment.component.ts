@@ -39,9 +39,9 @@ export class ViewEnrichmentComponent implements OnInit, OnChanges {
 
   ngOnInit() {
     // adding embedded links
-    let embedded_url_arr = this.enrichmentData.embed_urls.map((url) => {
-      return { 'url': url };
-    })
+    let embedded_url_arr = this.enrichmentData.embed_urls.map(url => {
+      return { url: url };
+    });
 
     this.combinedImgAndVideo = [
       ...this.enrichmentData.image_urls,
@@ -61,41 +61,49 @@ export class ViewEnrichmentComponent implements OnInit, OnChanges {
       this.numberOfVotes = this.enrichmentData.voted_by.length;
     }
   }
-  ngOnChanges() { }
+  ngOnChanges() {}
 
   voteEnrichment() {
-    this.enrichmentVoted = !this.enrichmentVoted;
-    console.log("clicked");
-    if (this.enrichmentVoted) {
-      this.numberOfVotes++;
-
-      this.enrichmentData.voted_by.push(Number(this.auth.currentUserValue.id));
-      this.enrichmentData.voted_by = JSON.stringify(
-        this.enrichmentData.voted_by
+    if (
+      !(
+        this.enrichmentData.created_by === Number(this.auth.currentUserValue.id)
       )
-        .replace("[", "{")
-        .replace("]", "}");
+    ) {
+      this.enrichmentVoted = !this.enrichmentVoted;
+      console.log("clicked");
+      if (this.enrichmentVoted) {
+        this.numberOfVotes++;
 
-      this.voteClicked.emit(this.enrichmentData);
-      this.enrichmentData.voted_by = JSON.parse(
-        this.enrichmentData.voted_by.replace("{", "[").replace("}", "]")
-      );
-    } else {
-      this.numberOfVotes--;
-      let index = this.enrichmentData.voted_by.indexOf(
-        Number(this.auth.currentUserValue.id)
-      );
-      this.enrichmentData.voted_by.splice(index, 1);
-      this.enrichmentData.voted_by = JSON.stringify(
-        this.enrichmentData.voted_by
-      )
-        .replace("[", "{")
-        .replace("]", "}");
+        this.enrichmentData.voted_by.push(
+          Number(this.auth.currentUserValue.id)
+        );
+        this.enrichmentData.voted_by = JSON.stringify(
+          this.enrichmentData.voted_by
+        )
+          .replace("[", "{")
+          .replace("]", "}");
 
-      this.voteClicked.emit(this.enrichmentData);
-      this.enrichmentData.voted_by = JSON.parse(
-        this.enrichmentData.voted_by.replace("{", "[").replace("}", "]")
-      );
+        this.voteClicked.emit(this.enrichmentData);
+        this.enrichmentData.voted_by = JSON.parse(
+          this.enrichmentData.voted_by.replace("{", "[").replace("}", "]")
+        );
+      } else {
+        this.numberOfVotes--;
+        let index = this.enrichmentData.voted_by.indexOf(
+          Number(this.auth.currentUserValue.id)
+        );
+        this.enrichmentData.voted_by.splice(index, 1);
+        this.enrichmentData.voted_by = JSON.stringify(
+          this.enrichmentData.voted_by
+        )
+          .replace("[", "{")
+          .replace("]", "}");
+
+        this.voteClicked.emit(this.enrichmentData);
+        this.enrichmentData.voted_by = JSON.parse(
+          this.enrichmentData.voted_by.replace("{", "[").replace("}", "]")
+        );
+      }
     }
   }
 
@@ -112,7 +120,6 @@ export class ViewEnrichmentComponent implements OnInit, OnChanges {
       this.index--;
       this.modalSrc = this.combinedImgAndVideo[this.index];
     }
-
   }
 
   editEnrichment() {

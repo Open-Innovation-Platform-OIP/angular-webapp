@@ -164,7 +164,8 @@
               </i>
             </a> -->
           <button mat-raised-button class="btn btn-warning btn-round" matTooltip="Click to add enrichment"
-            [matTooltipPosition]="'below'" [routerLink]="['/enrichment/add',{problemId:problemData.id}]">Enrich</button>
+            [matTooltipPosition]="'below'" [disabled]="disableEnrichButton"
+            [routerLink]="['/enrichment/add',{problemId:problemData.id}]">Enrich</button>
           <!-- <a mat-button NguCarouselNext class="rightRs">
               <i class="material-icons">
                 keyboard_arrow_right
