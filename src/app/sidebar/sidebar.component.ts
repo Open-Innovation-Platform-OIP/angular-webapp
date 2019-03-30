@@ -39,7 +39,7 @@ export const ROUTES: RouteInfo[] = [
     icontype: "help"
   },
   {
-    path: "/solutions",
+    path: "/abc",
     title: "Solutions",
     type: "link",
     icontype: "highlight"
@@ -56,7 +56,7 @@ export class SidebarComponent implements OnInit {
     public auth: AuthService,
     private router: Router,
     private usersService: UsersService
-  ) { }
+  ) {}
 
   isMobileMenu() {
     if ($(window).width() > 991) {
