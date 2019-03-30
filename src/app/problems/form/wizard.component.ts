@@ -783,7 +783,7 @@ export class WizardComponent
         .watchQuery<any>({
           query: gql`query {
                     search_problems_v2(
-                    args: {search: "${searchKey.toLowerCase()}"}
+                    args: {search: "${searchKey.toLowerCase()}"},where: { is_draft: { _eq: false } }
                     ){
                     id
                     title

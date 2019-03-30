@@ -44,7 +44,7 @@ export class GlobalSearchViewComponent implements OnInit, OnChanges {
       this.apollo
         .watchQuery<any>({
           query: gql`query {
-              search_problems(args: {search: "${searchInput}"}) {
+              search_problems(args: {search: "${searchInput}"},where: { is_draft: { _eq: false } }) {
                 id
                 title
                 description
