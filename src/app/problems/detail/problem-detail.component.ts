@@ -368,6 +368,7 @@ export class ProblemDetailComponent implements OnInit, OnDestroy {
         }
 
         problem_validations{
+          validated_by
           comment
           agree
           created_at
