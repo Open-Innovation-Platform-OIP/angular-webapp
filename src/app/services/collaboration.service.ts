@@ -62,6 +62,7 @@ export class CollaborationService {
     this.apollo
       .mutate({
         mutation: upsert_collaborators,
+
         variables: {
           collaborators: [collaborationData]
         }

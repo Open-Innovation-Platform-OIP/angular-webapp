@@ -103,9 +103,11 @@ export class WizardComponent
     featured_type: "",
     voted_by: "",
     watched_by: "",
+
     created_by: Number(this.auth.currentUserValue.id),
     is_draft: true,
     owners: "",
+
     attachments: []
   };
   searchResults = {};
@@ -254,6 +256,7 @@ export class WizardComponent
                             featured_type
                             voted_by
                             watched_by
+                          
                             problem_tags{
                                 tag {
                                     id
@@ -790,6 +793,16 @@ export class WizardComponent
                     featured_url
                     voted_by
                     watched_by
+                    
+                    problem_voters{
+                      problem_id
+                      user_id
+                    }
+                    problem_watchers{
+                      problem_id
+                      user_id
+      
+                    }
                     problem_tags {
                         tag {
                             name

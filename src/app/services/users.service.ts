@@ -170,7 +170,6 @@ export class UsersService {
                 is_funder
                 is_government
                 is_beneficiary
-                edited_at
               ]
             }
           ) {

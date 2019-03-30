@@ -285,7 +285,7 @@
               </i>
             </a> -->
           <button mat-raised-button class="btn btn-warning btn-round" data-toggle="modal" data-target="#validatorModal"
-            matTooltip="Click to validate problem" [matTooltipPosition]="'below'"
+            matTooltip="Click to validate problem" [matTooltipPosition]="'below'" *ngIf="problemData.id"
             [disabled]="disableValidateButton || !userPersonas.is_expert || userId == problemData.created_by ||!sectorMatched">Validate</button>
           <!-- <a mat-button>
               <i class="material-icons">

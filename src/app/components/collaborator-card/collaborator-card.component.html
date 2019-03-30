@@ -6,18 +6,19 @@
     '/users/' + collaboratorData.user_id
   ">
   <div class="card-avatar">
-    <a *ngIf="collaboratorData.user && collaboratorData.user.photo_url">
-      <img class="img" style="object-fit: cover;" *ngIf="collaboratorData.user && collaboratorData.user.photo_url" src="{{
-          collaboratorData.user.photo_url && collaboratorData.user.photo_url.url
-            ? collaboratorData.user.photo_url.url
+    <a *ngIf="collaboratorProfileData && collaboratorProfileData.photo_url">
+      <img class="img" style="object-fit: cover;" *ngIf="collaboratorProfileData && collaboratorProfileData.photo_url"
+        src="{{
+        collaboratorProfileData.photo_url && collaboratorProfileData.photo_url.url
+            ? collaboratorProfileData.photo_url.url
             : './assets/img/default-avatar.png'
         }}" />
     </a>
   </div>
   <div class="card-body">
     <h6 class="card-category text-gray"></h6>
-    <h4 class="card-title" *ngIf="collaboratorData.user && collaboratorData.user.name">
-      {{ collaboratorData.user.name }}
+    <h4 class="card-title" *ngIf="collaboratorProfileData && collaboratorProfileData.name">
+      {{ collaboratorProfileData.name }}
     </h4>
     <p class="card-description">
       {{ collaboratorData.intent }}

@@ -23,11 +23,17 @@ export class ProblemCardComponent implements OnInit {
 
   ngOnInit() {
     // console.log("problem card", this.problemData);
-    if (this.problemData.voted_by && this.problemData.voted_by.length) {
-      this.numOfVotes = this.problemData.voted_by.length;
+    if (
+      this.problemData.problem_voters &&
+      this.problemData.problem_voters.length
+    ) {
+      this.numOfVotes = this.problemData.problem_voters.length;
     }
-    if (this.problemData.watched_by && this.problemData.watched_by.length) {
-      this.numOfWatchers = this.problemData.watched_by.length;
+    if (
+      this.problemData.problem_watchers &&
+      this.problemData.problem_watchers.length
+    ) {
+      this.numOfWatchers = this.problemData.problem_watchers.length;
     }
     if (
       this.problemData.problem_validations &&

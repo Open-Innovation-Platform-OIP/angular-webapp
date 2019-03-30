@@ -51,8 +51,16 @@ export class GlobalSearchViewComponent implements OnInit, OnChanges {
                 modified_at
                 image_urls
                 featured_url
-                voted_by
-                watched_by
+               
+                problem_voters{
+                  problem_id
+                  user_id
+                }
+                problem_watchers{
+                  problem_id
+                  user_id
+  
+                }
                 problem_validations{
                   comment
                   agree

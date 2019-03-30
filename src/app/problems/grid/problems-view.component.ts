@@ -17,7 +17,7 @@ export class ProblemsViewComponent implements OnInit, OnDestroy {
   userProblemViewSubscription: Subscription;
   problemViewQuery: QueryRef<any>;
   problemViewSubscription: Subscription;
-  constructor(private apollo: Apollo, private auth: AuthService) { }
+  constructor(private apollo: Apollo, private auth: AuthService) {}
 
   ngOnInit() {
     // console.log(Number(this.auth.currentUserValue.id), "id");
@@ -46,6 +46,15 @@ export class ProblemsViewComponent implements OnInit, OnDestroy {
               featured_url
               watched_by
               is_deleted
+              problem_voters{
+                problem_id
+                user_id
+              }
+              problem_watchers{
+                problem_id
+                user_id
+
+              }
               problem_validations {
                 comment
                 agree
@@ -98,6 +107,15 @@ export class ProblemsViewComponent implements OnInit, OnDestroy {
               featured_url
               watched_by
               is_deleted
+              problem_voters{
+                problem_id
+                user_id
+              }
+              problem_watchers{
+                problem_id
+                user_id
+
+              }
               problem_validations {
                 comment
                 agree

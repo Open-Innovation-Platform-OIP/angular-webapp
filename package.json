@@ -88,7 +88,7 @@
     "uglify-js": "3.3.28",
     "validate": "3.0.1",
     "validator": "^10.11.0",
-    "web-animations-js": "2.3.1",
+    "web-animations-js": "^2.3.1",
     "zone.js": "0.8.26"
   },
   "devDependencies": {
