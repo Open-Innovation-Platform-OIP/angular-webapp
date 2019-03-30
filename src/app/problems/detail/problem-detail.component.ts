@@ -608,6 +608,7 @@ export class ProblemDetailComponent implements OnInit, OnDestroy {
             // comment reply already exists so push reply into the array
             this.replies[comment.linked_comment_id].push(comment);
           }
+          this.replies[comment.linked_comment_id] = this.removeDuplicateReplies(this.replies[comment.linked_comment_id]);
         } else {
           // this comment is a parent comment - add it to the comments object
           // comment object does not exist
@@ -624,8 +625,8 @@ export class ProblemDetailComponent implements OnInit, OnDestroy {
     }
   }
 
-  removeDuplicateReplies(replies: any[]) {
-    return replies.filter((item, index, self) =>
+  removeDuplicateReplies(_replies: any[]) {
+    return _replies.filter((item, index, self) =>
       index === self.findIndex((t) => (
         t.id === item.id
       ))
