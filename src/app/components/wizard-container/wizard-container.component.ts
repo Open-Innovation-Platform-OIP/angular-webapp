@@ -736,7 +736,6 @@ export class WizardContainerComponent
     for (let i = 0; i < event.target.files.length; i++) {
       const file = event.target.files[i];
       const type = event.target.files[i].type.split("/")[0];
-      console.log("file type::>>>>> ", type);
 
       switch (type) {
         case "image": {
@@ -786,7 +785,8 @@ export class WizardContainerComponent
             .catch(e => console.log("Err:: ", e));
           break;
         }
-        case ("application" || "text"): {
+        case "application":
+        case "text": {
           const doc = event.target.files[i];
           this.filesService
             .uploadFile(doc, doc.name)

@@ -512,7 +512,7 @@ export class ProblemDetailComponent implements OnInit, OnDestroy {
                   ...this.problemData["attachments"],
                   ...embedded_urls_arr
                 ];
-                console.log(">>>>><<<<<< ", this.problemData);
+                console.log(">>>>><<<<<< ", this.problem_attachments);
 
 
                 this.problem_attachments_src = this.problem_attachments[
