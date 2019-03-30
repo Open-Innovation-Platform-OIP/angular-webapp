@@ -161,6 +161,7 @@ export class ProblemService {
         },
         error => {
           console.log("Could delete due to " + error);
+          console.error(JSON.stringify(error));
         }
       );
   }

@@ -282,6 +282,56 @@ export class ProblemDetailComponent implements OnInit, OnDestroy {
       }
     });
   }
+  collaboratorCarouselRefresh() {
+    this.carouselTileItemCollab$ = interval(500).pipe(
+      startWith(-1),
+      take(2),
+      map(val => {
+        let data;
+
+        if (this.collaborators && this.collaborators.length < 1) {
+          this.collaborators = [false];
+        } else {
+          data = this.collaborators;
+        }
+        return data;
+      })
+    );
+  }
+
+  validateCarouselRefresh() {
+    this.carouselTileItemsValid$ = interval(500).pipe(
+      startWith(-1),
+      take(2),
+      map(val => {
+        let data;
+
+        if (this.validation.length < 1) {
+          this.validation = [false];
+        } else {
+          data = this.validation;
+        }
+        return data;
+      })
+    );
+  }
+
+  enrichmentCarouselRefresh() {
+    this.carouselTileItems$ = interval(500).pipe(
+      startWith(-1),
+      take(2),
+      map(val => {
+        let data;
+
+        if (this.enrichment.length < 1) {
+          this.enrichment = [false];
+        } else {
+          data = this.enrichment;
+        }
+        return data;
+      })
+    );
+  }
 
   ngOnInit() {
     this.userId = Number(this.auth.currentUserValue.id);
@@ -580,6 +630,11 @@ export class ProblemDetailComponent implements OnInit, OnDestroy {
       }
     });
     this.collaborators = problem.problem_collaborators;
+    console.log(this.collaborators, "collaborators refresh");
+
+    this.collaboratorCarouselRefresh();
+    this.validateCarouselRefresh();
+    this.enrichmentCarouselRefresh();
 
     // console.log(this.problemData, "result from nested queries");
     // console.log(problem.is_draft, "is draft");
