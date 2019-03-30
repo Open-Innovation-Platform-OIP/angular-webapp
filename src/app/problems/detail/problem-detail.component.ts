@@ -197,7 +197,7 @@ export class ProblemDetailComponent implements OnInit, OnDestroy {
   public carouselTileItemCollab$: Observable<number[]>;
   public carouselTileConfig: NguCarouselConfig = {
     grid: { xs: 2, sm: 2, md: 2, lg: 2, all: 0 },
-    slide: 2,
+
     speed: 250,
     point: {
       visible: true
@@ -431,7 +431,7 @@ export class ProblemDetailComponent implements OnInit, OnDestroy {
             }
         }
 
-        problem_validations{
+        problem_validations(order_by:{edited_at: desc}){
           validated_by
           comment
           agree
@@ -468,7 +468,7 @@ export class ProblemDetailComponent implements OnInit, OnDestroy {
             photo_url
           }
         }
-        problem_collaborators{
+        problem_collaborators(order_by:{edited_at: desc}){
           intent
           is_ngo
           is_innovator
@@ -487,7 +487,7 @@ export class ProblemDetailComponent implements OnInit, OnDestroy {
           
         }
 
-        enrichmentsByproblemId(order_by:{edited_at: asc}){
+        enrichmentsByproblemId(order_by:{edited_at: desc}){
           id
           description
           extent
