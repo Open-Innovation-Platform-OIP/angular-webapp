@@ -7,7 +7,11 @@ import {
   OnDestroy,
   Inject
 } from "@angular/core";
-import {Location, LocationStrategy, PathLocationStrategy} from '@angular/common';
+import {
+  Location,
+  LocationStrategy,
+  PathLocationStrategy
+} from "@angular/common";
 import { Router, ActivatedRoute } from "@angular/router";
 import { Observable, Subscription, interval } from "rxjs";
 import { first, finalize, startWith, take, map } from "rxjs/operators";
@@ -43,7 +47,10 @@ interface attachment_object {
 
 @Component({
   selector: "app-problem-detail",
-  providers: [Location, {provide: LocationStrategy, useClass: PathLocationStrategy}],
+  providers: [
+    Location,
+    { provide: LocationStrategy, useClass: PathLocationStrategy }
+  ],
   templateUrl: "./problem-detail.component.html",
   styleUrls: ["./problem-detail.component.css"],
   animations: [slider],
@@ -154,8 +161,8 @@ export class ProblemDetailComponent implements OnInit, OnDestroy {
   replies = {};
   popularDiscussions: any = [];
   collaboratorIntent: any;
-  pageUrl = '';
-  mailToLink = '';
+  pageUrl = "";
+  mailToLink = "";
 
   fabTogglerState: boolean = false;
 
@@ -210,16 +217,20 @@ export class ProblemDetailComponent implements OnInit, OnDestroy {
     private collaborationService: CollaborationService,
     private validationService: ValidationService,
     private enrichmentService: EnrichmentService,
-    location: Location,
+    location: Location
   ) {
     setInterval(() => {
       this.cdr.markForCheck();
     }, 1000);
     // console.log(location);
-    const domain = "https://social-alpha-open-innovation.firebaseapp.com"
-    this.pageUrl = domain+location.path();
-    const subject = encodeURI('Can you help solve this problem?');
-    const body = encodeURI(`Hello,\n\nCheck out this link on Social Alpha's Open Innovation platform - ${this.pageUrl}\n\nRegards,`);
+    const domain = "https://social-alpha-open-innovation.firebaseapp.com";
+    this.pageUrl = domain + location.path();
+    const subject = encodeURI("Can you help solve this problem?");
+    const body = encodeURI(
+      `Hello,\n\nCheck out this link on Social Alpha's Open Innovation platform - ${
+        this.pageUrl
+      }\n\nRegards,`
+    );
     this.mailToLink = `mailto:?subject=${subject}&body=${body}`;
     // console.log(this.pageUrl);
   }
@@ -339,6 +350,7 @@ export class ProblemDetailComponent implements OnInit, OnDestroy {
           is_draft
           created_by
           modified_at
+          updated_at
           image_urls
           voted_by
           featured_url
@@ -470,31 +482,47 @@ export class ProblemDetailComponent implements OnInit, OnDestroy {
   }
 
   fbShare() {
-    window.open('https://www.facebook.com/sharer/sharer.php?u=' + this.pageUrl, 'facebook-popup', 'height=350,width=600');
+    window.open(
+      "https://www.facebook.com/sharer/sharer.php?u=" + this.pageUrl,
+      "facebook-popup",
+      "height=350,width=600"
+    );
   }
 
   twitterShare() {
-    window.open('https://twitter.com/share?url=' + this.pageUrl, 'twitter-popup', 'height=350,width=600');
+    window.open(
+      "https://twitter.com/share?url=" + this.pageUrl,
+      "twitter-popup",
+      "height=350,width=600"
+    );
   }
 
   linkedInShare() {
-    window.open('https://www.linkedin.com/shareArticle?mini=true&url=' + this.pageUrl, 'linkedin-popup', 'height=350,width=600');
+    window.open(
+      "https://www.linkedin.com/shareArticle?mini=true&url=" + this.pageUrl,
+      "linkedin-popup",
+      "height=350,width=600"
+    );
   }
 
   mailShare() {
     // not a great approach as the popup doesn't autoclose. Better to use href on button click.
-    const subject = encodeURI('Can you help solve this problem?');
-    const body = encodeURI(`Hello,\n\nCheck out this link on Social Alpha's Open Innovation platform - ${this.pageUrl}\n\nRegards,`);
+    const subject = encodeURI("Can you help solve this problem?");
+    const body = encodeURI(
+      `Hello,\n\nCheck out this link on Social Alpha's Open Innovation platform - ${
+        this.pageUrl
+      }\n\nRegards,`
+    );
     const href = `mailto:?subject=${subject}&body=${body}`;
-    this.popup = window.open(href, 'email-popup', 'height=350,width=600');
+    this.popup = window.open(href, "email-popup", "height=350,width=600");
   }
 
   smsShare() {
     const url = "https://sms.socialalpha.jaagalabs.com/send";
     const data = {
-      text: `Can you help solve this problem? ${this.pageUrl}` ,
-      numbers: prompt("Enter phone numbers separated by commas.").split(',')
-    }
+      text: `Can you help solve this problem? ${this.pageUrl}`,
+      numbers: prompt("Enter phone numbers separated by commas.").split(",")
+    };
     // Default options are marked with *
     return fetch(url, {
       method: "POST", // *GET, POST, PUT, DELETE, etc.
@@ -502,20 +530,20 @@ export class ProblemDetailComponent implements OnInit, OnDestroy {
       // cache: "no-cache", // *default, no-cache, reload, force-cache, only-if-cached
       // credentials: "same-origin", // include, *same-origin, omit
       headers: {
-          "Content-Type": "application/json",
-          "x-api-key": "socialalpha"
+        "Content-Type": "application/json",
+        "x-api-key": "socialalpha"
       },
       // redirect: "follow", // manual, *follow, error
       // referrer: "no-referrer", // no-referrer, *client
-      body: JSON.stringify(data), // body data type must match "Content-Type" header
-  })
-  .then(response => {
-    // console.log(response.json());
-    alert('Your message has been sent');
-  }) // parses JSON response into native Javascript objects
-  .catch(e => {
-    console.error("SMS error",e);
-  })
+      body: JSON.stringify(data) // body data type must match "Content-Type" header
+    })
+      .then(response => {
+        // console.log(response.json());
+        alert("Your message has been sent");
+      }) // parses JSON response into native Javascript objects
+      .catch(e => {
+        console.error("SMS error", e);
+      });
   }
   parseProblem(problem) {
     // map core keys
@@ -616,9 +644,16 @@ export class ProblemDetailComponent implements OnInit, OnDestroy {
           }
         }
       });
-      this.popularDiscussions = Object.keys(this.replies).sort((a, b) => {
-        return this.replies[a].length - this.replies[b].length;
-      });
+      this.popularDiscussions = Object.keys(this.replies)
+        .sort((a, b) => {
+          return this.replies[b].length - this.replies[a].length;
+        })
+        .map(commentId => {
+          return this.comments[commentId];
+        });
+      console.log("REPLIES", this.replies);
+      console.log("COMMENTS", this.comments);
+      console.log("POPULAR", this.popularDiscussions);
     }
   }
 
