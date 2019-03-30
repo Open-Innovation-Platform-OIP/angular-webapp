@@ -32,7 +32,7 @@ export class ProblemsViewComponent implements OnInit, OnDestroy {
               ] 
             
               }
-              order_by: {modified_at: desc}
+              order_by: {updated_at: desc}
               
             ) {
               id
@@ -42,6 +42,7 @@ export class ProblemsViewComponent implements OnInit, OnDestroy {
               resources_needed
               image_urls
               modified_at
+              updated_at
               voted_by
               featured_url
               watched_by
@@ -109,7 +110,7 @@ export class ProblemsViewComponent implements OnInit, OnDestroy {
               ] 
             
               }
-              order_by: {modified_at: desc}
+              order_by: {updated_at: desc}
               
             ) {
               id
@@ -119,6 +120,7 @@ export class ProblemsViewComponent implements OnInit, OnDestroy {
               resources_needed
               image_urls
               modified_at
+              updated_at
               voted_by
               featured_url
               watched_by
