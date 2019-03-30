@@ -175,6 +175,7 @@ export class ProblemDetailComponent implements OnInit, OnDestroy {
   validation: any = [1];
   collaborators: any = [1];
   collaboratorDataToEdit: any;
+  interval = null;
 
   public carouselTileItems$: Observable<any>;
   public carouselTileItemsValid$: Observable<number[]>;
@@ -204,7 +205,11 @@ export class ProblemDetailComponent implements OnInit, OnDestroy {
     private validationService: ValidationService,
     private enrichmentService: EnrichmentService
   ) {
-    setInterval(() => {
+    this.startInterval();
+  }
+
+  startInterval() {
+    this.interval = setInterval(() => {
       this.cdr.markForCheck();
     }, 1000);
   }
@@ -636,7 +641,7 @@ export class ProblemDetailComponent implements OnInit, OnDestroy {
         cancelButtonClass: "btn btn-danger",
         buttonsStyling: false
       })
-        .then(function(result) {
+        .then(function (result) {
           swal({
             type: "success",
             html:
@@ -673,7 +678,7 @@ export class ProblemDetailComponent implements OnInit, OnDestroy {
       body.classList.remove("sidebar-mini");
       misc.sidebar_mini_active = false;
     } else {
-      setTimeout(function() {
+      setTimeout(function () {
         body.classList.add("sidebar-mini");
 
         misc.sidebar_mini_active = true;
@@ -681,12 +686,12 @@ export class ProblemDetailComponent implements OnInit, OnDestroy {
     }
 
     // we simulate the window Resize so the charts will get updated in realtime.
-    const simulateWindowResize = setInterval(function() {
+    const simulateWindowResize = setInterval(function () {
       window.dispatchEvent(new Event("resize"));
     }, 180);
 
     // we stop the simulation of Window Resize after the animations are completed
-    setTimeout(function() {
+    setTimeout(function () {
       clearInterval(simulateWindowResize);
     }, 1000);
   }
@@ -715,7 +720,7 @@ export class ProblemDetailComponent implements OnInit, OnDestroy {
       $layer.remove();
     }
 
-    setTimeout(function() {
+    setTimeout(function () {
       $toggle.classList.remove("toggled");
     }, 400);
 
@@ -767,8 +772,8 @@ export class ProblemDetailComponent implements OnInit, OnDestroy {
         mutation delete_problem_watcher {
           delete_problem_watchers(
             where: {user_id: {_eq: ${Number(
-              this.userId
-            )}}, problem_id: {_eq: ${Number(this.problemData.id)}}}
+          this.userId
+        )}}, problem_id: {_eq: ${Number(this.problemData.id)}}}
           ) {
             affected_rows
           }
@@ -838,8 +843,8 @@ export class ProblemDetailComponent implements OnInit, OnDestroy {
         mutation delete_problem_voter {
           delete_problem_voters(
             where: {user_id: {_eq: ${Number(
-              this.userId
-            )}}, problem_id: {_eq: ${Number(this.problemData.id)}}}
+          this.userId
+        )}}, problem_id: {_eq: ${Number(this.problemData.id)}}}
           ) {
             affected_rows
           }
@@ -1063,15 +1068,23 @@ export class ProblemDetailComponent implements OnInit, OnDestroy {
     this.sources = files;
     this.modalSrc = files.attachmentObj[files.index];
 
+    clearInterval(this.interval);
     /* opening modal */
+    $("#enlargeView").modal({
+      backdrop: 'static',
+      keyboard: false
+    });
+
     $("#enlargeView").modal("show");
   }
 
-  pauseVideo(e) {
+  closeModal(e) {
     if (e.type === "click") {
       let problemVideoTag: HTMLMediaElement = document.querySelector(
         "#modalVideo"
       );
+
+      this.startInterval();
       if (problemVideoTag) {
         problemVideoTag.pause();
       }
@@ -1089,6 +1102,18 @@ export class ProblemDetailComponent implements OnInit, OnDestroy {
       this.sources["index"]--;
       this.modalSrc = this.sources["attachmentObj"][this.sources["index"]];
     }
+  }
+
+  openModal(id) {
+    clearInterval(this.interval);
+
+    /* opening modal */
+    $(id).modal({
+      backdrop: 'static',
+      keyboard: false
+    });
+
+    $(id).modal("show");
   }
 
   ngOnDestroy() {

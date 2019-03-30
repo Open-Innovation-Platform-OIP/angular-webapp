@@ -25,7 +25,8 @@
                     alt="Thumbnail Image" class="rounded img-fluid">
                   <div class="row justify-content-center">
                     <button mat-raised-button *ngIf="problem_attachments.length > 1"
-                      class="btn btn-raised btn-info btn-sm" data-toggle="modal" data-target="#viewMoreImgModal">
+                      class="btn btn-raised btn-info btn-sm" data-toggle="modal"
+                      (click)="openModal('#viewMoreImgModal')">
                       view media ({{problem_attachments.length}})
                     </button>
                   </div>
@@ -109,7 +110,7 @@
             <div class="modal-content">
               <div class="modal-header">
                 <button type="button" class="close" data-dismiss="modal" aria-hidden="true"
-                  (click)="pauseVideo($event)">close</button>
+                  (click)="closeModal($event)">close</button>
               </div>
               <div class="modal-body">
                 <app-display-modal *ngIf="problem_attachments_src && problem_attachments_src.url"
@@ -161,7 +162,7 @@
         <ngu-carousel #enrichCarousel [inputs]="carouselTileConfig" (onMove)="test($event)"
           [dataSource]="carouselTileItems$ | async" *ngIf="enrichment[0]">
           <ngu-tile *nguCarouselDef="let enrichment; let i = index; let ani = animate" data-toggle="modal"
-            data-target="#enrichModal">
+            (click)="openModal('#enrichModal')">
 
             <app-enrichment-card [enrichmentData]="enrichment" (clicked)=handleEnrichCardClicked($event)>
             </app-enrichment-card>
@@ -229,7 +230,8 @@
             <div class="modal-content">
               <div class="modal-header">
                 <h5 class="modal-title" id="myModalLabel">Enrichment Detail</h5>
-                <button mat-button type="button" class="close" data-dismiss="modal" aria-hidden="true">
+                <button mat-button type="button" class="close" data-dismiss="modal" aria-hidden="true"
+                  (click)="closeModal()">
                   <i class="material-icons">close</i>
                 </button>
               </div>
@@ -567,7 +569,7 @@
     <div class="modal-content">
       <div class="modal-header">
         <button type="button" class="close" data-dismiss="modal" aria-hidden="true"
-          (click)="pauseVideo($event)">close</button>
+          (click)="closeModal($event)">close</button>
       </div>
       <div class="modal-body">
         <app-display-modal *ngIf="modalSrc && modalSrc['url']" [source]="modalSrc">
