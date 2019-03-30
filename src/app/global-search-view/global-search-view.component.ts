@@ -49,6 +49,7 @@ export class GlobalSearchViewComponent implements OnInit, OnChanges {
                 title
                 description
                 modified_at
+                updated_at
                 image_urls
                 featured_url
                

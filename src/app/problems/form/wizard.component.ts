@@ -239,6 +239,7 @@ export class WizardComponent
                             id
                             title
                             created_by
+                            updated_at
                             description
                             location
                             resources_needed
@@ -789,6 +790,7 @@ export class WizardComponent
                     title
                     description
                     modified_at
+                    updated_at
                     image_urls
                     featured_url
                     voted_by
