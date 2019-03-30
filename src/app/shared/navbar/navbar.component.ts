@@ -338,7 +338,6 @@ export class NavbarComponent implements OnInit {
         ) {
           affected_rows
           returning {
-            id
             is_read
           }
         }
