@@ -105,13 +105,25 @@
             <div *ngFor="let notification of objectValues(notifications)">
 
 
-              <a *ngIf="!notification.enrichment_id && !notification.collaborator && !notification.validated_by && !notification.tag_id"
+              <a *ngIf="!notification.enrichment_id && !notification.collaborator && !notification.validated_by && notification.tag_id && !notification.is_update"
                 class="dropdown-item" name="{{ notification.id }}" [routerLink]="
                 
                 '/problems/' + notification.problem_id
               " (click)="onRead($event)">
 
-                {{ notification.problemsByproblemId.title }} is
+                New problem "{{ notification.problemsByproblemId.title }}" is
+                {{ (notification.is_update && "updated") || "added" }} in sector "{{notification.tag.name}}"
+
+
+              </a>
+
+              <a *ngIf="!notification.enrichment_id && !notification.collaborator && !notification.validated_by && !notification.tag_id "
+                class="dropdown-item" name="{{ notification.id }}" [routerLink]="
+                
+                '/problems/' + notification.problem_id
+              " (click)="onRead($event)">
+
+                Problem "{{ notification.problemsByproblemId.title }}" is
                 {{ (notification.is_update && "updated") || "added" }}
 
 

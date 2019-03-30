@@ -173,8 +173,8 @@
         </div>
         <!--Enrichment divider-->
 
-        <ngu-carousel #enrichCarousel [inputs]="carouselTileConfig" (onMove)="test($event)"
-          [dataSource]="carouselTileItems$ | async" *ngIf="enrichment[0]">
+        <ngu-carousel #enrichCarousel [inputs]="carouselTileConfig" [dataSource]="carouselTileItems$ | async"
+          *ngIf="enrichment[0]">
           <ngu-tile *nguCarouselDef="let enrichment; let i = index; let ani = animate" data-toggle="modal"
             (click)="openModal('#enrichModal')">
 
