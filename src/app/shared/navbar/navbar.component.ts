@@ -7,6 +7,7 @@ import {
   Directive
 } from "@angular/core";
 import { ROUTES } from "../.././sidebar/sidebar.component";
+
 import {
   Router,
   ActivatedRoute,
@@ -175,6 +176,10 @@ export class NavbarComponent implements OnInit {
               user_id
               is_update
               is_read
+              enrichment_id
+              collaborator
+              validated_by
+              tag_id
               problemsByproblemId {
                 title
                 problem_tags {
@@ -185,8 +190,9 @@ export class NavbarComponent implements OnInit {
               }
             }
           }
-        `
-        // pollInterval: 500
+        `,
+        pollInterval: 3000,
+        fetchPolicy: "network-only"
       })
       .valueChanges.subscribe(
         ({ data }) => {
@@ -194,6 +200,7 @@ export class NavbarComponent implements OnInit {
           data.notifications.map(notification => {
             this.notifications[notification.id] = notification;
           });
+
           // this.notifications = data.notifications;
           // this.no_notification = this.notifications.length;
         },
@@ -270,9 +277,14 @@ export class NavbarComponent implements OnInit {
   // }
 
   onRead(event) {
+    console.log(event.srcElement.name, "event.srcElem");
     const notification_id = event.srcElement.name;
 
     delete this.notifications[notification_id];
+    console.log(
+      Object.values(this.notifications).length,
+      "notification delete"
+    );
 
     this.apollo
       .mutate<any>({
@@ -280,12 +292,12 @@ export class NavbarComponent implements OnInit {
           mutation set_read {
             update_notifications(
               where: { id: { _eq: ${notification_id} } }
-              _set: { read: true }
+              _set: { is_read: true }
             ) {
               affected_rows
               returning {
                 id
-                read
+                is_read
               }
             }
           }
@@ -304,23 +316,24 @@ export class NavbarComponent implements OnInit {
       notifications.push({
         id: notification_id,
         user_id: notification.user_id,
-        read: true
+        is_read: true
       });
       delete this.notifications[notification_id];
     });
+
     const upsert_notifications = gql`
       mutation upsert_notifications($objects: [notifications_insert_input!]!) {
         insert_notifications(
           objects: $objects
           on_conflict: {
             constraint: notifications_pkey
-            update_columns: [read]
+            update_columns: [is_read]
           }
         ) {
           affected_rows
           returning {
             id
-            read
+            is_read
           }
         }
       }

@@ -477,13 +477,8 @@ export class WizardContainerComponent
         }
       },
 
-<<<<<<< HEAD
       onTabShow: function(tab: any, navigation: any, index: any) {
-        console.log("on tab show");
-=======
-      onTabShow: function (tab: any, navigation: any, index: any) {
         // console.log("on tab show");
->>>>>>> 94abbe7bc1e4582a75809d3f368a5f069d259a40
         let $total = navigation.find("li").length;
         let $current = index + 1;
 

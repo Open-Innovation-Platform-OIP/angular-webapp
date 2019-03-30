@@ -89,22 +89,22 @@
               <span>&nbsp;</span>
               <i *ngIf="userId===problemData.created_by" [routerLink]="
                 '/problems/'+ problemData.id+'/edit'" class="material-icons actions">
-                  create
-                </i>
+                create
+              </i>
             </div>
             <div class="dropdown">
-                <button href="#" class="btn btn-sm btn-warning" data-toggle="dropdown" aria-expanded="true">
-                    <i class="material-icons actions">
-                        share
-                      </i>
-                </button>
-                <ul class="dropdown-menu">
-                    <li><a (click)="linkedInShare()">LinkedIn</a></li>
-                    <li><a (click)="fbShare()">Facebook</a></li>
-                    <li><a (click)="twitterShare()">Twitter</a></li>
-                    <li><a (click)="mailShare()">Email</a></li>
-                    <li><a (click)="smsShare()">SMS</a></li>
-                </ul>
+              <button href="#" class="btn btn-sm btn-warning" data-toggle="dropdown" aria-expanded="true">
+                <i class="material-icons actions">
+                  share
+                </i>
+              </button>
+              <ul class="dropdown-menu">
+                <li><a (click)="linkedInShare()">LinkedIn</a></li>
+                <li><a (click)="fbShare()">Facebook</a></li>
+                <li><a (click)="twitterShare()">Twitter</a></li>
+                <li><a (click)="mailShare()">Email</a></li>
+                <li><a (click)="smsShare()">SMS</a></li>
+              </ul>
             </div>
 
           </div>
@@ -454,7 +454,7 @@
             </a> -->
           <button mat-raised-button class="btn btn-warning btn-round" data-toggle="modal"
             data-target="#collaboratorModal" matTooltip="Click to collaborate" [matTooltipPosition]="'below'"
-            [disabled]="disableCollaborateButton">Collaborate</button>
+            [disabled]="disableCollaborateButton || userId == problemData.created_by">Collaborate</button>
           <!-- <a mat-button>
               <i class="material-icons">
                 keyboard_arrow_right
@@ -488,7 +488,11 @@
           </a>
         </ngu-carousel>
         <div class="row justify-content-center">
-          <p *ngIf="!collaborators[0]">No collaborators yet. Be the first one to collaborate.</p>
+          <!-- <p *ngIf="!collaborators[0]">No collaborators yet.</p> -->
+
+          <p *ngIf="!collaborators[0]">No collaborators yet.</p>
+          <!-- <ng-template #notUser>&nbsp; No collaborators yet.</ng-template> -->
+
         </div>
 
         <!--Add Collaborator Modal-->

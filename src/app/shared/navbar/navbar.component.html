@@ -102,11 +102,63 @@
             </p>
           </a>
           <div class="dropdown-menu dropdown-menu-right" aria-labelledby="navbarDropdownMenuLink">
-            <a class="dropdown-item" name="{{ notification.id }}" href="problems/{{ notification.id }}"
-              (click)="onRead($event)" *ngFor="let notification of objectValues(notifications)">
-              {{ notification.problemsByproblemId.title }}
-              {{ (notification.is_update && "updated") || "added" }}
-            </a>
+            <div *ngFor="let notification of objectValues(notifications)">
+
+
+              <a *ngIf="!notification.enrichment_id && !notification.collaborator && !notification.validated_by && !notification.tag_id"
+                class="dropdown-item" name="{{ notification.id }}" [routerLink]="
+                
+                '/problems/' + notification.problem_id
+              " (click)="onRead($event)">
+
+                {{ notification.problemsByproblemId.title }} is
+                {{ (notification.is_update && "updated") || "added" }}
+
+
+              </a>
+
+              <a *ngIf="notification.enrichment_id" class="dropdown-item" name="{{ notification.id }}"
+                (click)="onRead($event)" [routerLink]="
+                
+                '/problems/' + notification.problem_id
+              ">
+
+                Enrichment added for {{ notification.problemsByproblemId.title }}
+
+              </a>
+
+              <a *ngIf="notification.collaborator" class="dropdown-item" name="{{ notification.id }}"
+                (click)="onRead($event)" [routerLink]="
+                
+                '/problems/' + notification.problem_id
+              ">
+
+                New Collaboration on {{ notification.problemsByproblemId.title }}
+
+
+              </a>
+
+              <a *ngIf="notification.validated_by" class="dropdown-item" name="{{ notification.id }}"
+                (click)="onRead($event)" [routerLink]="
+                
+                '/problems/' + notification.problem_id
+              ">
+
+                {{ notification.problemsByproblemId.title }} is validated by an expert
+
+              </a>
+
+              <!-- <a *ngIf="notification.validated_by" class="dropdown-item" name="{{ notification.id }}"
+            href="problems/{{ notification.id }}" (click)="onRead($event)">
+
+             {{ notification.problemsByproblemId.title }} is validated by an expert
+
+          </a> -->
+
+
+
+
+            </div>
 
             <div class="text-center" *ngIf="objectValues(notifications).length > 0; else noNotification">
               <button mat-raised-button class="btn btn-success" (click)="allRead()"
