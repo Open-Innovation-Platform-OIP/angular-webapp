@@ -107,19 +107,36 @@
       <p class="description">{{enrichmentData.description}}</p>
       <strong *ngIf="enrichmentData.organization">Organization :</strong>
       <p class="description">{{enrichmentData.organization}}</p>
-      <strong>Location :</strong>
-      <!-- <p class="description">{{enrichmentData.location}}</p> -->
-      <div>
-        <span class="badge badge-warning"
-          *ngFor="let location of enrichmentData.location">{{location.Address.Label}}</span>
-        <span>&nbsp;</span>
-      </div>
+
+      <strong>Population Affected</strong>
+      <p class="description" *ngIf="enrichmentData.min_population===0">Between {{enrichmentData.min_population}}
+        and {{enrichmentData.max_population}}</p>
+      <p class="description" *ngIf="enrichmentData.min_population!==0">More than
+        {{enrichmentData.min_population}}</p>
+
+
       <strong *ngIf="enrichmentData.impact">Impact :</strong>
       <p class="description">{{enrichmentData.impact}}</p>
       <strong *ngIf="enrichmentData.extent">Extent :</strong>
       <p class="description">{{enrichmentData.extent}}</p>
+
+
+      <strong>Location(s) :</strong>
+      <div *ngFor="let location of enrichmentData.location">
+        <span class="badge badge-warning" *ngIf="location.Address.Label">{{location.Address.Label}}</span>
+        <span>&nbsp;</span>
+      </div>
+      <!-- <p class="description">{{enrichmentData.location}}</p> -->
+      <!-- <div>
+        <span class="badge badge-warning"
+          *ngFor="let location of enrichmentData.location">{{location.Address.Label}}</span>
+        <span>&nbsp;</span>
+      </div> -->
+
       <!-- <strong>Population Affected :</strong> -->
       <!-- <p class="description">{{enrichmentData.population_affected}}</p> -->
+
+
       <strong *ngIf="enrichmentData.beneficiary_attributes">Beneficiary Attributes :</strong>
       <p class="description">{{enrichmentData.beneficiary_attributes}}</p>
       <strong *ngIf="enrichmentData.resources_needed">Resources needed :</strong>
