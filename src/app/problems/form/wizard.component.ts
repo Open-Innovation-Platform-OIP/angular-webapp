@@ -178,7 +178,7 @@ export class WizardComponent
   }
 
   addTags(tags) {
-    console.log(tags, "tag working");
+    // console.log(tags, "tag working");
     this.sectors = tags;
   }
 
@@ -273,7 +273,7 @@ export class WizardComponent
               result.data.problems.length >= 1 &&
               result.data.problems[0].id
             ) {
-              console.log(result.data.problems[0], "edit problem");
+              // console.log(result.data.problems[0], "edit problem");
               canProceed = true;
               this.problem["id"] = result.data.problems[0].id;
               Object.keys(this.problem).map(key => {
@@ -658,7 +658,7 @@ export class WizardComponent
   }
 
   test(event) {
-    console.log(event, "event");
+    // console.log(event, "event");
   }
 
   removePhoto(index) {
@@ -683,7 +683,7 @@ export class WizardComponent
         .deleteFile(imageObj["key"])
         .promise()
         .then(data => {
-          console.log("Deleted file: ", data);
+          // console.log("Deleted file: ", data);
           if (this.problem.image_urls.length === i + 1) {
             this.problem.image_urls = [];
           }
@@ -831,7 +831,7 @@ export class WizardComponent
         .valueChanges.subscribe(
           result => {
             if (result.data.search_problems_v2.length > 0) {
-              console.log(result.data.search_problems_v2.length, "search");
+              // console.log(result.data.search_problems_v2.length, "search");
               result.data.search_problems_v2.map(result => {
                 if (result.id != this.problem["id"]) {
                   this.searchResults[result.id] = result;
@@ -859,13 +859,13 @@ export class WizardComponent
     );
   }
   updateProblem(updatedProblem) {
-    console.log(updatedProblem, "updated problem");
+    // console.log(updatedProblem, "updated problem");
     this.problem = updatedProblem;
   }
 
   autoSave() {
-    console.log(this.problem, "problem data");
-    console.log("trying to auto save");
+    // console.log(this.problem, "problem data");
+    // console.log("trying to auto save");
     if (this.problem.is_draft) {
       if (this.problem.title) {
         this.submitProblemToDB(this.problem);
@@ -886,13 +886,13 @@ export class WizardComponent
       alert("Your problem has been submitted!");
     }
     problem.is_draft = false;
-    console.log(problem, "problem before publishing");
+    // console.log(problem, "problem before publishing");
     clearInterval(this.autosaveInterval);
     this.submitProblemToDB(problem);
   }
 
   submitProblemToDB(problem) {
-    console.log(problem, "submitted");
+    // console.log(problem, "submitted");
     const upsert_problem = gql`
       mutation upsert_problem($problems: [problems_insert_input!]!) {
         insert_problems(
@@ -968,11 +968,11 @@ export class WizardComponent
             const tags = [];
 
             const problem_tags = new Set();
-            console.log(this.sectors, "sectors");
+            // console.log(this.sectors, "sectors");
 
             this.sectors.map(sector => {
               tags.push({ name: sector });
-              console.log(tags, "tags in array");
+              // console.log(tags, "tags in array");
 
               if (
                 this.tagService.allTags[sector] &&
