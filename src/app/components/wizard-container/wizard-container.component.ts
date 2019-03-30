@@ -133,7 +133,7 @@ export class WizardContainerComponent
     private auth: AuthService,
     private here: GeocoderService
   ) {
-    console.log(this.sectors, "sec");
+    // console.log(this.sectors, "sec");
     this.filteredSectors = this.sectorCtrl.valueChanges.pipe(
       startWith(null),
       map((sector: string | null) =>
@@ -182,11 +182,11 @@ export class WizardContainerComponent
   }
 
   selectedLocation(event) {
-    console.log(event, "selected location");
-    console.log(this.content.location, "selected location content");
+    // console.log(event, "selected location");
+    // console.log(this.content.location, "selected location content");
 
     this.content.location.push(event.option.value);
-    console.log(this.content.location, "selected location content 2");
+    // console.log(this.content.location, "selected location content 2");
 
     this.locationInput.nativeElement.value = "";
     this.locationCtrl.setValue(null);
@@ -195,7 +195,7 @@ export class WizardContainerComponent
 
   addLocation(event) {
     if (!this.matAutocomplete.isOpen) {
-      console.log(event, "event for add ");
+      // console.log(event, "event for add ");
       const input = event.input;
       const value = event.value;
 
@@ -230,13 +230,13 @@ export class WizardContainerComponent
   }
 
   getLocation(input) {
-    console.log("get address", input);
+    // console.log("get address", input);
     if (this.locationInputValue != "Unknown") {
       this.here.getAddress(this.locationInputValue).then(
         result => {
-          console.log(result, "result");
+          // console.log(result, "result");
           this.locations = <Array<any>>result;
-          console.log(this.locations, "locations");
+          // console.log(this.locations, "locations");
         },
         error => {
           console.error(error);
@@ -256,12 +256,12 @@ export class WizardContainerComponent
   }
   public storeLocation(loc) {
     // this.content.location = loc.srcElement.innerText;
-    console.log(loc, "location");
+    // console.log(loc, "location");
     // console.log(this..location);
   }
 
   selected(event: MatAutocompleteSelectedEvent): void {
-    console.log(this.sectors, "test for sector");
+    // console.log(this.sectors, "test for sector");
     this.sectors.push(event.option.viewValue);
     this.sectorInput.nativeElement.value = "";
     this.sectorCtrl.setValue(null);
@@ -288,7 +288,7 @@ export class WizardContainerComponent
   }
 
   populationValueChanged(event) {
-    console.log(event, "event");
+    // console.log(event, "event");
     if (event.value <= 100000) {
       this.content.min_population = 0;
       this.content.max_population = event.value;
@@ -299,7 +299,7 @@ export class WizardContainerComponent
   }
 
   ngOnInit() {
-    console.log(this.content, "content ngoninit");
+    // console.log(this.content, "content ngoninit");
     if (
       this.usersService.allUsers[this.auth.currentUserValue.id] &&
       this.usersService.allUsers[this.auth.currentUserValue.id].organization
@@ -312,18 +312,18 @@ export class WizardContainerComponent
     }
     // if (this.content.max_population > 0) {
 
-    console.log(this.content, "content");
+    // console.log(this.content, "content");
     clearInterval(this.autosaveInterval);
     this.autosaveInterval = setInterval(() => {
       // this.autoSave();
     }, 10000);
 
-    console.log(this.usersService.allOrgs, "orgs");
+    // console.log(this.usersService.allOrgs, "orgs");
 
     canProceed = true;
-    console.log("wizard ngoninit");
+    // console.log("wizard ngoninit");
 
-    console.log(this.content, "test for cont");
+    // console.log(this.content, "test for cont");
     this.usersService.getOrgsFromDB();
     this.type = this.formBuilder.group({
       // To add a validator, we must first convert the string value into an array.
@@ -407,7 +407,7 @@ export class WizardContainerComponent
 
       onInit: function(tab: any, navigation: any, index: any) {
         // this.populationValue = this.content.max_population;
-        console.log("wizard oninit");
+        // console.log("wizard oninit");
 
         // check number of tabs and fill the entire row
         let $total = navigation.find("li").length;
@@ -477,8 +477,13 @@ export class WizardContainerComponent
         }
       },
 
+<<<<<<< HEAD
       onTabShow: function(tab: any, navigation: any, index: any) {
         console.log("on tab show");
+=======
+      onTabShow: function (tab: any, navigation: any, index: any) {
+        // console.log("on tab show");
+>>>>>>> 94abbe7bc1e4582a75809d3f368a5f069d259a40
         let $total = navigation.find("li").length;
         let $current = index + 1;
 
@@ -621,9 +626,9 @@ export class WizardContainerComponent
   }
 
   ngOnChanges(changes: SimpleChanges) {
-    console.log(this.content, "content on ng on changes");
+    // console.log(this.content, "content on ng on changes");
 
-    console.log("wizard ngonchanges");
+    // console.log("wizard ngonchanges");
 
     const input = $(this);
     if (input[0].files && input[0].files[0]) {
@@ -638,13 +643,13 @@ export class WizardContainerComponent
   }
 
   sendInputToParent(input) {
-    console.log(event, "test for event");
+    // console.log(event, "test for event");
     this.smartSearchInput.emit(input);
   }
 
   publishContent() {
-    console.log(Number.MAX_VALUE, "max value");
-    console.log(this.content.location, "content location");
+    // console.log(Number.MAX_VALUE, "max value");
+    // console.log(this.content.location, "content location");
 
     this.contentSubmitted.emit(this.content);
   }
@@ -654,7 +659,7 @@ export class WizardContainerComponent
   }
 
   ngAfterViewInit() {
-    console.log("wizard after view in it");
+    // console.log("wizard after view in it");
 
     $(window).resize(() => {
       $(".card-wizard").each(function() {
@@ -734,7 +739,7 @@ export class WizardContainerComponent
         .deleteFile(imageObj["key"])
         .promise()
         .then(data => {
-          console.log("Deleted file: ", data);
+          // console.log("Deleted file: ", data);
           if (this.content.image_urls.length === i + 1) {
             this.content.image_urls = [];
           }
@@ -761,7 +766,7 @@ export class WizardContainerComponent
                 .uploadFile(e.target.result, img_id)
                 .promise()
                 .then(values => {
-                  console.log("event>>>> ", event.target.files[i].type);
+                  // console.log("event>>>> ", event.target.files[i].type);
 
                   this.content.image_urls.push({
                     url: values["Location"],
@@ -911,7 +916,7 @@ export class WizardContainerComponent
   }
 
   setFeatured(type, index) {
-    console.log(type, index);
+    // console.log(type, index);
     if (type === "image") {
       this.content.featured_type = "image";
       this.content.featured_url = this.content.image_urls[index].url;
