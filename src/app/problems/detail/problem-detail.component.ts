@@ -51,6 +51,8 @@ export class ProblemDetailComponent implements OnInit, OnDestroy {
   watchers = new Set();
   voters = new Set();
   problemDataQuery: QueryRef<any>;
+  userDataQuery: QueryRef<any>;
+
   problemDataSubcription: Subscription;
   objectValues = Object["values"];
   discussions = [];
@@ -209,10 +211,9 @@ export class ProblemDetailComponent implements OnInit, OnDestroy {
     }, 1000);
   }
 
-  getUserPersonas(id) {
-    this.apollo
-      .watchQuery<any>({
-        query: gql`
+  getUserData(id) {
+    this.userDataQuery = this.apollo.watchQuery<any>({
+      query: gql`
           {
             users(where: { id: { _eq: ${id} } }) {
               
@@ -234,28 +235,29 @@ export class ProblemDetailComponent implements OnInit, OnDestroy {
         }
             
         `,
-        fetchPolicy: "network-only",
-        pollInterval: 750
-      })
-      .valueChanges.subscribe(result => {
-        // console.log("PERSONAS", result);
-        if (result.data.users[0]) {
-          Object.keys(result.data.users[0]).map(persona => {
-            this.userPersonas[persona] = result.data.users[0][persona];
-          });
-          // console.log("persona assignment", result.data.users[0]);
-          result.data.users[0].user_tags.map(tag => {
-            this.userInterests[tag.tag.name] = tag.tag;
-          });
-          // console.log(this.userInterests, "user interests");
-        }
-      });
+      fetchPolicy: "network-only",
+      pollInterval: 1000
+    });
+
+    this.userDataQuery.valueChanges.subscribe(result => {
+      // console.log("PERSONAS", result);
+      if (result.data.users[0]) {
+        Object.keys(result.data.users[0]).map(persona => {
+          this.userPersonas[persona] = result.data.users[0][persona];
+        });
+        // console.log("persona assignment", result.data.users[0]);
+        result.data.users[0].user_tags.map(tag => {
+          this.userInterests[tag.tag.name] = tag.tag;
+        });
+        // console.log(this.userInterests, "user interests");
+      }
+    });
   }
 
   ngOnInit() {
     this.userId = Number(this.auth.currentUserValue.id);
 
-    this.getUserPersonas(Number(this.auth.currentUserValue.id));
+    this.getUserData(Number(this.auth.currentUserValue.id));
 
     this.carouselTileItems$ = interval(500).pipe(
       startWith(-1),
@@ -1095,5 +1097,6 @@ export class ProblemDetailComponent implements OnInit, OnDestroy {
     this.problemDataQuery.stopPolling();
     this.problemDataSubcription.unsubscribe();
     // this.cdr.detach();
+    this.userDataQuery.stopPolling();
   }
 }
