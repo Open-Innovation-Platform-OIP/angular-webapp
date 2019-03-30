@@ -7,7 +7,7 @@ import {
   OnDestroy,
   Inject
 } from "@angular/core";
-import {Location, LocationStrategy, PathLocationStrategy} from '@angular/common';
+import { Location, LocationStrategy, PathLocationStrategy } from '@angular/common';
 import { Router, ActivatedRoute } from "@angular/router";
 import { Observable, Subscription, interval } from "rxjs";
 import { first, finalize, startWith, take, map } from "rxjs/operators";
@@ -43,7 +43,7 @@ interface attachment_object {
 
 @Component({
   selector: "app-problem-detail",
-  providers: [Location, {provide: LocationStrategy, useClass: PathLocationStrategy}],
+  providers: [Location, { provide: LocationStrategy, useClass: PathLocationStrategy }],
   templateUrl: "./problem-detail.component.html",
   styleUrls: ["./problem-detail.component.css"],
   animations: [slider],
@@ -211,22 +211,20 @@ export class ProblemDetailComponent implements OnInit, OnDestroy {
     private collaborationService: CollaborationService,
     private validationService: ValidationService,
     private enrichmentService: EnrichmentService,
-    location: Location,
+    ngLocation: Location,
   ) {
     this.startInterval();
+    const domain = "https://social-alpha-open-innovation.firebaseapp.com"
+    this.pageUrl = domain + ngLocation.path();
+    const subject = encodeURI('Can you help solve this problem?');
+    const body = encodeURI(`Hello,\n\nCheck out this link on Social Alpha's Open Innovation platform - ${this.pageUrl}\n\nRegards,`);
+    this.mailToLink = `mailto:?subject=${subject}&body=${body}`;
   }
 
   startInterval() {
     this.interval = setInterval(() => {
       this.cdr.markForCheck();
     }, 1000);
-    // console.log(location);
-    const domain = "https://social-alpha-open-innovation.firebaseapp.com"
-    this.pageUrl = domain+location.path();
-    const subject = encodeURI('Can you help solve this problem?');
-    const body = encodeURI(`Hello,\n\nCheck out this link on Social Alpha's Open Innovation platform - ${this.pageUrl}\n\nRegards,`);
-    this.mailToLink = `mailto:?subject=${subject}&body=${body}`;
-    // console.log(this.pageUrl);
   }
 
   getUserPersonas(id) {
@@ -496,7 +494,7 @@ export class ProblemDetailComponent implements OnInit, OnDestroy {
   smsShare() {
     const url = "https://sms.socialalpha.jaagalabs.com/send";
     const data = {
-      text: `Can you help solve this problem? ${this.pageUrl}` ,
+      text: `Can you help solve this problem? ${this.pageUrl}`,
       numbers: prompt("Enter phone numbers separated by commas.").split(',')
     }
     // Default options are marked with *
@@ -506,20 +504,20 @@ export class ProblemDetailComponent implements OnInit, OnDestroy {
       // cache: "no-cache", // *default, no-cache, reload, force-cache, only-if-cached
       // credentials: "same-origin", // include, *same-origin, omit
       headers: {
-          "Content-Type": "application/json",
-          "x-api-key": "socialalpha"
+        "Content-Type": "application/json",
+        "x-api-key": "socialalpha"
       },
       // redirect: "follow", // manual, *follow, error
       // referrer: "no-referrer", // no-referrer, *client
       body: JSON.stringify(data), // body data type must match "Content-Type" header
-  })
-  .then(response => {
-    // console.log(response.json());
-    alert('Your message has been sent');
-  }) // parses JSON response into native Javascript objects
-  .catch(e => {
-    console.error("SMS error",e);
-  })
+    })
+      .then(response => {
+        // console.log(response.json());
+        alert('Your message has been sent');
+      }) // parses JSON response into native Javascript objects
+      .catch(e => {
+        console.error("SMS error", e);
+      })
   }
   parseProblem(problem) {
     // map core keys
@@ -592,7 +590,6 @@ export class ProblemDetailComponent implements OnInit, OnDestroy {
         ...this.problemData["attachments"],
         ...embedded_urls_arr
       ];
-      // console.log(">>>>><<<<<< ", this.problemData);
 
       this.problem_attachments_src = this.problem_attachments[
         this.problem_attachments_index
@@ -624,6 +621,14 @@ export class ProblemDetailComponent implements OnInit, OnDestroy {
         return this.replies[a].length - this.replies[b].length;
       });
     }
+  }
+
+  removeDuplicateReplies(replies: any[]) {
+    return replies.filter((item, index, self) =>
+      index === self.findIndex((t) => (
+        t.id === item.id
+      ))
+    )
   }
 
   sortComments(comments) {
