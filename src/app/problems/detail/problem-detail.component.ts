@@ -4,8 +4,10 @@ import {
   ChangeDetectionStrategy,
   Input,
   ChangeDetectorRef,
-  OnDestroy
+  OnDestroy,
+  Inject
 } from "@angular/core";
+import {Location, LocationStrategy, PathLocationStrategy} from '@angular/common';
 import { Router, ActivatedRoute } from "@angular/router";
 import { Observable, Subscription, interval } from "rxjs";
 import { first, finalize, startWith, take, map } from "rxjs/operators";
@@ -41,6 +43,7 @@ interface attachment_object {
 
 @Component({
   selector: "app-problem-detail",
+  providers: [Location, {provide: LocationStrategy, useClass: PathLocationStrategy}],
   templateUrl: "./problem-detail.component.html",
   styleUrls: ["./problem-detail.component.css"],
   animations: [slider],
@@ -48,6 +51,7 @@ interface attachment_object {
 })
 export class ProblemDetailComponent implements OnInit, OnDestroy {
   // chartData: any;
+  popup: any;
   watchers = new Set();
   voters = new Set();
   problemDataQuery: QueryRef<any>;
@@ -150,6 +154,8 @@ export class ProblemDetailComponent implements OnInit, OnDestroy {
   replies = {};
   popularDiscussions: any = [];
   collaboratorIntent: any;
+  pageUrl = '';
+  mailToLink = '';
 
   fabTogglerState: boolean = false;
 
@@ -193,6 +199,7 @@ export class ProblemDetailComponent implements OnInit, OnDestroy {
   };
 
   constructor(
+    private router: Router,
     private route: ActivatedRoute,
     private problemService: ProblemService,
     private apollo: Apollo,
@@ -203,7 +210,8 @@ export class ProblemDetailComponent implements OnInit, OnDestroy {
     private discussionsService: DiscussionsService,
     private collaborationService: CollaborationService,
     private validationService: ValidationService,
-    private enrichmentService: EnrichmentService
+    private enrichmentService: EnrichmentService,
+    location: Location,
   ) {
     this.startInterval();
   }
@@ -212,6 +220,13 @@ export class ProblemDetailComponent implements OnInit, OnDestroy {
     this.interval = setInterval(() => {
       this.cdr.markForCheck();
     }, 1000);
+    // console.log(location);
+    const domain = "https://social-alpha-open-innovation.firebaseapp.com"
+    this.pageUrl = domain+location.path();
+    const subject = encodeURI('Can you help solve this problem?');
+    const body = encodeURI(`Hello,\n\nCheck out this link on Social Alpha's Open Innovation platform - ${this.pageUrl}\n\nRegards,`);
+    this.mailToLink = `mailto:?subject=${subject}&body=${body}`;
+    // console.log(this.pageUrl);
   }
 
   getUserPersonas(id) {
@@ -458,9 +473,55 @@ export class ProblemDetailComponent implements OnInit, OnDestroy {
     );
   }
 
+  fbShare() {
+    window.open('https://www.facebook.com/sharer/sharer.php?u=' + this.pageUrl, 'facebook-popup', 'height=350,width=600');
+  }
+
+  twitterShare() {
+    window.open('https://twitter.com/share?url=' + this.pageUrl, 'twitter-popup', 'height=350,width=600');
+  }
+
+  linkedInShare() {
+    window.open('https://www.linkedin.com/shareArticle?mini=true&url=' + this.pageUrl, 'linkedin-popup', 'height=350,width=600');
+  }
+
+  mailShare() {
+    // not a great approach as the popup doesn't autoclose. Better to use href on button click.
+    const subject = encodeURI('Can you help solve this problem?');
+    const body = encodeURI(`Hello,\n\nCheck out this link on Social Alpha's Open Innovation platform - ${this.pageUrl}\n\nRegards,`);
+    const href = `mailto:?subject=${subject}&body=${body}`;
+    this.popup = window.open(href, 'email-popup', 'height=350,width=600');
+  }
+
+  smsShare() {
+    const url = "https://sms.socialalpha.jaagalabs.com/send";
+    const data = {
+      text: `Can you help solve this problem? ${this.pageUrl}` ,
+      numbers: prompt("Enter phone numbers separated by commas.").split(',')
+    }
+    // Default options are marked with *
+    return fetch(url, {
+      method: "POST", // *GET, POST, PUT, DELETE, etc.
+      // mode: "cors", // no-cors, cors, *same-origin
+      // cache: "no-cache", // *default, no-cache, reload, force-cache, only-if-cached
+      // credentials: "same-origin", // include, *same-origin, omit
+      headers: {
+          "Content-Type": "application/json",
+          "x-api-key": "socialalpha"
+      },
+      // redirect: "follow", // manual, *follow, error
+      // referrer: "no-referrer", // no-referrer, *client
+      body: JSON.stringify(data), // body data type must match "Content-Type" header
+  })
+  .then(response => {
+    // console.log(response.json());
+    alert('Your message has been sent');
+  }) // parses JSON response into native Javascript objects
+  .catch(e => {
+    console.error("SMS error",e);
+  })
+  }
   parseProblem(problem) {
-    // console.log(problem);
-    console.log(this.replies);
     // map core keys
     Object.keys(this.problemData).map(key => {
       // console.log(key, result.data.problems[0][key]);

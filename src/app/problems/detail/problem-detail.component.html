@@ -86,12 +86,26 @@
               <span>&nbsp;</span>
               <span>&nbsp;</span>
               <span> {{watchers.size}}</span>
+              <span>&nbsp;</span>
+              <span>&nbsp;</span>
+              <i *ngIf="userId===problemData.created_by" [routerLink]="
+                '/problems/'+ problemData.id+'/edit'" class="material-icons actions">
+                  create
+                </i>
             </div>
-            <div *ngIf="userId===problemData.created_by" [routerLink]="
-              '/problems/'+ problemData.id+'/edit'">
-              <i class="material-icons actions">
-                create
-              </i>
+            <div class="dropdown">
+                <button href="#" class="btn btn-sm btn-warning" data-toggle="dropdown" aria-expanded="true">
+                    <i class="material-icons actions">
+                        share
+                      </i>
+                </button>
+                <ul class="dropdown-menu">
+                    <li><a (click)="linkedInShare()">LinkedIn</a></li>
+                    <li><a (click)="fbShare()">Facebook</a></li>
+                    <li><a (click)="twitterShare()">Twitter</a></li>
+                    <li><a (click)="mailShare()">Email</a></li>
+                    <li><a (click)="smsShare()">SMS</a></li>
+                </ul>
             </div>
 
           </div>
