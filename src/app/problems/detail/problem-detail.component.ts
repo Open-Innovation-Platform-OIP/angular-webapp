@@ -1081,6 +1081,7 @@ export class ProblemDetailComponent implements OnInit, OnDestroy {
   onValidationSubmit(validationData) {
     if (validationData.__typename) {
       delete validationData.__typename;
+      delete validationData.user;
     }
     validationData.validated_by = Number(this.auth.currentUserValue.id);
 

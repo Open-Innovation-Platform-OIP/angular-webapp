@@ -1,4 +1,4 @@
-import { Component, Input, Output, EventEmitter } from "@angular/core";
+import { Component, Input, Output, EventEmitter, OnInit } from "@angular/core";
 import { FilesService } from "../../services/files.service";
 import { ProblemService } from "../../services/problem-handle.service";
 import swal from "sweetalert2";
@@ -9,7 +9,7 @@ import { ValidationService } from "../../services/validation.service";
   templateUrl: "./validate-problem.component.html",
   styleUrls: ["./validate-problem.component.css"]
 })
-export class ValidateProblemComponent {
+export class ValidateProblemComponent implements OnInit {
   // @Input() problemData: any;
   @Input() validationData: any = {
     comment: "",
@@ -31,7 +31,16 @@ export class ValidateProblemComponent {
     private space: FilesService,
     private problemService: ProblemService,
     private validationService: ValidationService
-  ) { }
+  ) {}
+
+  ngOnInit() {
+    // console.log(this.validationData, "validation data");
+    // if (this.validationData.files.length) {
+    //   this.validationData.files.forEach(file => {
+    //     this.file_blob.push(file);
+    //   });
+    // }
+  }
 
   onValidateFileSelected(event) {
     console.log("Event: ", event);
@@ -84,7 +93,7 @@ export class ValidateProblemComponent {
     let _links = []; //local array
 
     let all_promise = await this.file_blob.map(file => {
-      return this.space.uploadFile(file, file['name']).promise();
+      return this.space.uploadFile(file, file["name"]).promise();
     });
 
     try {

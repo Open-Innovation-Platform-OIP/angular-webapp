@@ -95,8 +95,8 @@
       accept="application/*,text/plain" style="display:none;" />
 
     <div *ngFor="let file of validationData.files; let i=index;">
-      <div>
-        {{file.name}}
+      <div *ngIf="file">
+        {{file.key}}
         &nbsp;
         <i class="fa fa-close" style="cursor:pointer" (click)="removeAttachment(i)"></i>
       </div>

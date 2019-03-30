@@ -35,7 +35,7 @@ export class ValidationService {
               objects: $validations
               on_conflict: {
                 constraint: validations_pkey
-                update_columns: [comment, files, agree, edited_at]
+                update_columns: [comment, files, agree]
               }
             ) {
               affected_rows
