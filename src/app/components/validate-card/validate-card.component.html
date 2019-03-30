@@ -31,23 +31,19 @@
     <p class="description" *ngIf="validationData.comment">{{validationData.comment}}</p>
     <strong>Status</strong>
     <p class="description">{{(validationData.agree)?"Agree":"Disagree"}}
-      <i class="material-icons" *ngIf="validationData.agree" style="color: green; font-size: 2em;">
+      <i class="material-icons" [ngStyle]="{'color': validationData.agree ? 'green' : 'orangered'}"
+        style="font-size: 2em;">
         check_circle_outline
       </i>
     </p>
 
-    <strong *ngIf="validationData.files&&validationData.files[0]">Attachment</strong>
-    <p class="description" *ngIf="validationData.files&&validationData.files[0]&&validationData.files[0].key">{{(validationData.files
-      && validationData.files[0]) ? validationData.files[0].key : null}}</p>
-
-    <!-- <div class="row">
-        <label class="col-sm-3">Attachment</label>
-        <div>
-          <span class="downloadBtn">
-            <span><i class="fa fa-paperclip" aria-hidden="true"></i> Download</span>
-          </span>
-        </div>
-      </div> -->
+    <strong *ngIf="validationData && validationData.files && validationData.files.length">Attachment</strong>
+    <p class="description" *ngIf="validationData.files&&validationData.files[0]&&validationData.files[0].key">
+      {{(validationData.files
+      && validationData.files[0]) ? validationData.files[0].key : null}}
+      <span class="description"
+        *ngIf="validationData && validationData.files && validationData.files.length > 1">({{validationData.files.length}})</span>
+    </p>
   </div>
   <div class="card-footer">
     <p *ngIf="validationData&&validationData.user">Validated by : {{validationData.user.name}}</p>

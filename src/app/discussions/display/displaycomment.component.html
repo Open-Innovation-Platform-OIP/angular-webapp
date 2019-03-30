@@ -13,7 +13,7 @@
     <div class="card-body">
       <div innerHTML="{{comment.text}}"></div>
       <!-- Attachments for comments -->
-      <p style="height: 50px;">
+      <p>
         <span *ngFor="let attachment of comment.attachments; let i= index;" style="cursor:pointer;">
           <img *ngIf="attachment.mimeType.startsWith('image') && i < attachmentToShow" src="{{attachment['url']}}"
             (click)="assignUrl(comment.attachments, i)" width="50" />

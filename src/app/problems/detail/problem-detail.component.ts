@@ -188,6 +188,7 @@ export class ProblemDetailComponent implements OnInit, OnDestroy {
   validation: any = [1];
   collaborators: any = [1];
   collaboratorDataToEdit: any;
+  interval = null;
 
   public carouselTileItems$: Observable<any>;
   public carouselTileItemsValid$: Observable<number[]>;
@@ -217,14 +218,11 @@ export class ProblemDetailComponent implements OnInit, OnDestroy {
     private collaborationService: CollaborationService,
     private validationService: ValidationService,
     private enrichmentService: EnrichmentService,
-    location: Location
+    ngLocation: Location
   ) {
-    setInterval(() => {
-      this.cdr.markForCheck();
-    }, 1000);
-    // console.log(location);
+    this.startInterval();
     const domain = "https://social-alpha-open-innovation.firebaseapp.com";
-    this.pageUrl = domain + location.path();
+    this.pageUrl = domain + ngLocation.path();
     const subject = encodeURI("Can you help solve this problem?");
     const body = encodeURI(
       `Hello,\n\nCheck out this link on Social Alpha's Open Innovation platform - ${
@@ -232,7 +230,12 @@ export class ProblemDetailComponent implements OnInit, OnDestroy {
       }\n\nRegards,`
     );
     this.mailToLink = `mailto:?subject=${subject}&body=${body}`;
-    // console.log(this.pageUrl);
+  }
+
+  startInterval() {
+    this.interval = setInterval(() => {
+      this.cdr.markForCheck();
+    }, 1000);
   }
 
   getUserPersonas(id) {
@@ -616,7 +619,6 @@ export class ProblemDetailComponent implements OnInit, OnDestroy {
         ...this.problemData["attachments"],
         ...embedded_urls_arr
       ];
-      // console.log(">>>>><<<<<< ", this.problemData);
 
       this.problem_attachments_src = this.problem_attachments[
         this.problem_attachments_index
@@ -634,6 +636,9 @@ export class ProblemDetailComponent implements OnInit, OnDestroy {
             // comment reply already exists so push reply into the array
             this.replies[comment.linked_comment_id].push(comment);
           }
+          this.replies[comment.linked_comment_id] = this.removeDuplicateReplies(
+            this.replies[comment.linked_comment_id]
+          );
         } else {
           // this comment is a parent comment - add it to the comments object
           // comment object does not exist
@@ -655,6 +660,12 @@ export class ProblemDetailComponent implements OnInit, OnDestroy {
       console.log("COMMENTS", this.comments);
       console.log("POPULAR", this.popularDiscussions);
     }
+  }
+
+  removeDuplicateReplies(_replies: any[]) {
+    return _replies.filter(
+      (item, index, self) => index === self.findIndex(t => t.id === item.id)
+    );
   }
 
   sortComments(comments) {
@@ -1160,15 +1171,23 @@ export class ProblemDetailComponent implements OnInit, OnDestroy {
     this.sources = files;
     this.modalSrc = files.attachmentObj[files.index];
 
+    clearInterval(this.interval);
     /* opening modal */
+    $("#enlargeView").modal({
+      backdrop: "static",
+      keyboard: false
+    });
+
     $("#enlargeView").modal("show");
   }
 
-  pauseVideo(e) {
+  closeModal(e) {
     if (e.type === "click") {
       let problemVideoTag: HTMLMediaElement = document.querySelector(
         "#modalVideo"
       );
+
+      this.startInterval();
       if (problemVideoTag) {
         problemVideoTag.pause();
       }
@@ -1186,6 +1205,18 @@ export class ProblemDetailComponent implements OnInit, OnDestroy {
       this.sources["index"]--;
       this.modalSrc = this.sources["attachmentObj"][this.sources["index"]];
     }
+  }
+
+  openModal(id) {
+    clearInterval(this.interval);
+
+    /* opening modal */
+    $(id).modal({
+      backdrop: "static",
+      keyboard: false
+    });
+
+    $(id).modal("show");
   }
 
   ngOnDestroy() {
