@@ -11,7 +11,7 @@
     <div class="row">
       <div class="col-md-4">
         <h4 class="card-title text-center">Problems</h4>
-        <div *ngFor="let problem of globalProblemSearchResults">
+        <div class="row" *ngFor="let problem of globalProblemSearchResults">
           <app-problem-card *ngIf="problem" [problemData]="problem">
           </app-problem-card>
         </div>
