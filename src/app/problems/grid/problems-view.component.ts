@@ -56,6 +56,7 @@ export class ProblemsViewComponent implements OnInit, OnDestroy {
 
               }
               problem_validations {
+                validated_by
                 comment
                 agree
                 created_at
@@ -64,6 +65,21 @@ export class ProblemsViewComponent implements OnInit, OnDestroy {
                 edited_at
                 is_deleted
                 problem_id
+              }
+              problem_collaborators {
+                user_id
+                problem_id
+                edited_at
+              }
+              discussionssByproblemId {
+                id
+                problem_id
+                modified_at
+              }
+              enrichmentsByproblemId {
+                id
+                problem_id
+                edited_at
               }
             }
           }
@@ -117,6 +133,7 @@ export class ProblemsViewComponent implements OnInit, OnDestroy {
 
               }
               problem_validations {
+                validated_by
                 comment
                 agree
                 created_at
@@ -125,6 +142,21 @@ export class ProblemsViewComponent implements OnInit, OnDestroy {
                 edited_at
                 is_deleted
                 problem_id
+              }
+              problem_collaborators {
+                user_id
+                problem_id
+                edited_at
+              }
+              discussionssByproblemId {
+                id
+                problem_id
+                modified_at
+              }
+              enrichmentsByproblemId {
+                id
+                problem_id
+                edited_at
               }
             }
           }
