@@ -282,7 +282,38 @@ export class ProblemDetailComponent implements OnInit, OnDestroy {
       }
     });
   }
-  collaboratorCarouselRefresh() {
+
+  loadCarousels() {
+    this.carouselTileItems$ = interval(500).pipe(
+      startWith(-1),
+      take(2),
+      map(val => {
+        let data;
+
+        if (this.enrichment.length < 1) {
+          this.enrichment = [false];
+        } else {
+          data = this.enrichment;
+        }
+        return data;
+      })
+    );
+
+    this.carouselTileItemsValid$ = interval(500).pipe(
+      startWith(-1),
+      take(2),
+      map(val => {
+        let data;
+
+        if (this.validation.length < 1) {
+          this.validation = [false];
+        } else {
+          data = this.validation;
+        }
+        return data;
+      })
+    );
+
     this.carouselTileItemCollab$ = interval(500).pipe(
       startWith(-1),
       take(2),
@@ -298,90 +329,14 @@ export class ProblemDetailComponent implements OnInit, OnDestroy {
       })
     );
   }
-
-  validateCarouselRefresh() {
-    this.carouselTileItemsValid$ = interval(500).pipe(
-      startWith(-1),
-      take(2),
-      map(val => {
-        let data;
-
-        if (this.validation.length < 1) {
-          this.validation = [false];
-        } else {
-          data = this.validation;
-        }
-        return data;
-      })
-    );
-  }
-
-  enrichmentCarouselRefresh() {
-    this.carouselTileItems$ = interval(500).pipe(
-      startWith(-1),
-      take(2),
-      map(val => {
-        let data;
-
-        if (this.enrichment.length < 1) {
-          this.enrichment = [false];
-        } else {
-          data = this.enrichment;
-        }
-        return data;
-      })
-    );
-  }
+  
 
   ngOnInit() {
     this.userId = Number(this.auth.currentUserValue.id);
 
     this.getUserData(Number(this.auth.currentUserValue.id));
-
-    this.carouselTileItems$ = interval(500).pipe(
-      startWith(-1),
-      take(2),
-      map(val => {
-        let data;
-
-        if (this.enrichment.length < 1) {
-          this.enrichment = [false];
-        } else {
-          data = this.enrichment;
-        }
-        return data;
-      })
-    );
-
-    this.carouselTileItemsValid$ = interval(500).pipe(
-      startWith(-1),
-      take(2),
-      map(val => {
-        let data;
-
-        if (this.validation.length < 1) {
-          this.validation = [false];
-        } else {
-          data = this.validation;
-        }
-        return data;
-      })
-    );
-
-    this.carouselTileItemCollab$ = interval(500).pipe(
-      startWith(-1),
-      take(2),
-      map(val => {
-        let data;
-
-        if (this.collaborators && this.collaborators.length < 1) {
-          this.collaborators = [false];
-        } else {
-          data = this.collaborators;
-        }
-        return data;
-      })
-    );
+    
+    this.loadCarousels();
 
     this.minimizeSidebar();
     this.route.params.pipe(first()).subscribe(params => {
@@ -632,9 +587,7 @@ export class ProblemDetailComponent implements OnInit, OnDestroy {
     this.collaborators = problem.problem_collaborators;
     console.log(this.collaborators, "collaborators refresh");
 
-    this.collaboratorCarouselRefresh();
-    this.validateCarouselRefresh();
-    this.enrichmentCarouselRefresh();
+    this.loadCarousels();
 
     // console.log(this.problemData, "result from nested queries");
     // console.log(problem.is_draft, "is draft");
@@ -1258,7 +1211,7 @@ export class ProblemDetailComponent implements OnInit, OnDestroy {
   }
 
   closeModal(e) {
-    console.log(e,"e");
+    console.log(e, "e");
     if (e.type === "click") {
       let problemVideoTag: HTMLMediaElement = document.querySelector(
         "#modalVideo"
