@@ -1258,6 +1258,7 @@ export class ProblemDetailComponent implements OnInit, OnDestroy {
   }
 
   closeModal(e) {
+    console.log(e,"e");
     if (e.type === "click") {
       let problemVideoTag: HTMLMediaElement = document.querySelector(
         "#modalVideo"

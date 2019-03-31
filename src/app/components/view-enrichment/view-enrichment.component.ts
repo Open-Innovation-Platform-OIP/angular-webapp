@@ -38,7 +38,23 @@ export class ViewEnrichmentComponent implements OnInit, OnChanges {
   }
 
   ngOnInit() {
+    let embedded_url_arr = this.enrichmentData.embed_urls.map(url => {
+      return { url: url };
+    });
+
+    this.combinedImgAndVideo = [
+      ...this.enrichmentData.image_urls,
+      ...this.enrichmentData.video_urls,
+      ...this.enrichmentData.attachments,
+      ...embedded_url_arr
+    ];
+
+    this.modalSrc = this.combinedImgAndVideo[this.index];
+
     // adding embedded links
+  }
+  ngOnChanges() {
+    console.log("ng on change");
     let embedded_url_arr = this.enrichmentData.embed_urls.map(url => {
       return { url: url };
     });
@@ -53,6 +69,7 @@ export class ViewEnrichmentComponent implements OnInit, OnChanges {
     this.modalSrc = this.combinedImgAndVideo[this.index];
 
     if (this.enrichmentData.voted_by) {
+      console.log(this.enrichmentData.voted_by, "enrich voted by");
       this.enrichmentData.voted_by.forEach(userId => {
         if (Number(userId) === Number(this.auth.currentUserValue.id)) {
           this.enrichmentVoted = true;
@@ -61,7 +78,6 @@ export class ViewEnrichmentComponent implements OnInit, OnChanges {
       this.numberOfVotes = this.enrichmentData.voted_by.length;
     }
   }
-  ngOnChanges() {}
 
   voteEnrichment() {
     if (

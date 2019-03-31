@@ -245,8 +245,7 @@
             <div class="modal-content">
               <div class="modal-header">
                 <h5 class="modal-title" id="myModalLabel">Enrichment Detail</h5>
-                <button mat-button type="button" class="close" data-dismiss="modal" aria-hidden="true"
-                  (click)="closeModal()">
+                <button mat-button class="close" data-dismiss="modal" aria-hidden="true" (click)="closeModal($event)">
                   <i class="material-icons">close</i>
                 </button>
               </div>
@@ -351,7 +350,7 @@
           <p *ngIf="!(userId == problemData.created_by) && userPersonas.is_expert && !sectorMatched ">
             Please ensure that
             your interests match with the problem
-            sectors</p>
+            sectors in order to validate</p>
 
         </div>
 
