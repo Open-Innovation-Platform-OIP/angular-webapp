@@ -9,10 +9,10 @@ export class ValidateCardComponent implements OnInit {
   @Input() validationData: any;
   @Output() clicked = new EventEmitter();
 
-  constructor() {}
+  constructor() { }
 
   ngOnInit() {
-    console.log("validate-card: ", this.validationData);
+    // console.log("validate-card: ", this.validationData);
   }
   cardClicked() {
     this.clicked.emit(this.validationData);

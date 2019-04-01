@@ -404,13 +404,12 @@
             <div class="modal-content">
               <div class="modal-header">
                 <h5 class="modal-title" id="myModalLabel">Edit Validation</h5>
-                <button mat-button type="button" class="close" data-dismiss="modal" aria-hidden="true">
+                <button mat-button type="button" class="close" data-dismiss="modal" aria-hidden="true"
+                  (click)="closeModal($event)">
                   <i class="material-icons">close</i>
                 </button>
               </div>
               <div class="modal-body">
-
-
                 <app-validate-problem *ngIf="validationDataToEdit" [validationData]="validationDataToEdit"
                   (submitted)="onValidationSubmit($event)"></app-validate-problem>
               </div>
