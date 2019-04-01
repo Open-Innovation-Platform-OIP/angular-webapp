@@ -88,12 +88,21 @@
               <span> {{watchers.size}}</span>
               <span>&nbsp;</span>
               <span>&nbsp;</span>
-              <i *ngIf="userId===problemData.created_by" [routerLink]="
+              <!-- <i *ngIf="userId===problemData.created_by" [routerLink]="
                 '/problems/'+ problemData.id+'/edit'" class="material-icons actions">
                 create
-              </i>
+              </i> -->
             </div>
+
             <div class="dropdown">
+              <button *ngIf="userId===problemData.created_by" [routerLink]="
+                '/problems/'+ problemData.id+'/edit'" class="btn btn-sm btn-warning" aria-expanded="true">
+                <i class="material-icons actions">
+                  create
+                </i>
+              </button>
+              <span>&nbsp;</span>
+              <span>&nbsp;</span>
               <button href="#" class="btn btn-sm btn-warning" data-toggle="dropdown" aria-expanded="true">
                 <i class="material-icons actions">
                   share
