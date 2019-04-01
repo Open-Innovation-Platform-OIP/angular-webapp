@@ -14,7 +14,7 @@ import { AuthService } from "../../services/auth.service";
 })
 export class ViewUserProfileComponent implements OnInit {
   userData: any = {};
-  interests: any[];
+  interests: any[] = [];
   loggedInUsersProfile: boolean = false;
   objectEntries = Object.entries;
   personas: any = [];
@@ -60,7 +60,9 @@ export class ViewUserProfileComponent implements OnInit {
         }
               
            
-        `
+        `,
+            fetchPolicy: "network-only"
+
             // pollInterval: 500
           })
           .valueChanges.subscribe(result => {

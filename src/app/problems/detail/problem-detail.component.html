@@ -173,7 +173,8 @@
               </i>
             </a> -->
           <button mat-raised-button class="btn btn-warning btn-round" matTooltip="Click to add enrichment"
-            [matTooltipPosition]="'below'" [routerLink]="['/enrichment/add',{problemId:problemData.id}]">Enrich</button>
+            [matTooltipPosition]="'below'" [disabled]="disableEnrichButton"
+            [routerLink]="['/enrichment/add',{problemId:problemData.id}]">Enrich</button>
           <!-- <a mat-button NguCarouselNext class="rightRs">
               <i class="material-icons">
                 keyboard_arrow_right
@@ -182,8 +183,8 @@
         </div>
         <!--Enrichment divider-->
 
-        <ngu-carousel #enrichCarousel [inputs]="carouselTileConfig" (onMove)="test($event)"
-          [dataSource]="carouselTileItems$ | async" *ngIf="enrichment[0]">
+        <ngu-carousel #enrichCarousel [inputs]="carouselTileConfig" [dataSource]="carouselTileItems$ | async"
+          *ngIf="enrichment[0]">
           <ngu-tile *nguCarouselDef="let enrichment; let i = index; let ani = animate" data-toggle="modal"
             (click)="openModal('#enrichModal')">
 
@@ -253,8 +254,7 @@
             <div class="modal-content">
               <div class="modal-header">
                 <h5 class="modal-title" id="myModalLabel">Enrichment Detail</h5>
-                <button mat-button type="button" class="close" data-dismiss="modal" aria-hidden="true"
-                  (click)="closeModal()">
+                <button mat-button class="close" data-dismiss="modal" aria-hidden="true" (click)="closeModal($event)">
                   <i class="material-icons">close</i>
                 </button>
               </div>
@@ -359,7 +359,7 @@
           <p *ngIf="!(userId == problemData.created_by) && userPersonas.is_expert && !sectorMatched ">
             Please ensure that
             your interests match with the problem
-            sectors</p>
+            sectors in order to validate</p>
 
         </div>
 

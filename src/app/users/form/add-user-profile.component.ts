@@ -299,7 +299,9 @@ export class AddUserProfileComponent implements OnInit, OnChanges {
 
               
            
-        `
+        `,
+
+            fetchPolicy: "network-only"
             // pollInterval: 500
           })
           .valueChanges.subscribe(

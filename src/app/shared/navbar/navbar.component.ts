@@ -180,6 +180,9 @@ export class NavbarComponent implements OnInit {
               collaborator
               validated_by
               tag_id
+              tag{
+                name
+              }
               problemsByproblemId {
                 title
                 problem_tags {
@@ -278,12 +281,15 @@ export class NavbarComponent implements OnInit {
 
   onRead(event) {
     console.log(event.srcElement.name, "event.srcElem");
-    const notification_id = event.srcElement.name;
+    const notification_id = Number(event.srcElement.name);
 
     delete this.notifications[notification_id];
+    console.log(this.notifications, "notifications");
     console.log(
       Object.values(this.notifications).length,
-      "notification delete"
+      "notification delete",
+      "notification id==",
+      notification_id
     );
 
     this.apollo
@@ -296,7 +302,7 @@ export class NavbarComponent implements OnInit {
             ) {
               affected_rows
               returning {
-                id
+                
                 is_read
               }
             }
@@ -332,7 +338,6 @@ export class NavbarComponent implements OnInit {
         ) {
           affected_rows
           returning {
-            id
             is_read
           }
         }

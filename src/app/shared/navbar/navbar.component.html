@@ -105,13 +105,25 @@
             <div *ngFor="let notification of objectValues(notifications)">
 
 
-              <a *ngIf="!notification.enrichment_id && !notification.collaborator && !notification.validated_by && !notification.tag_id"
+              <a *ngIf="!notification.enrichment_id && !notification.collaborator && !notification.validated_by && notification.tag_id && !notification.is_update"
                 class="dropdown-item" name="{{ notification.id }}" [routerLink]="
                 
                 '/problems/' + notification.problem_id
               " (click)="onRead($event)">
 
-                {{ notification.problemsByproblemId.title }} is
+                New problem "{{ notification.problemsByproblemId.title }}"
+                {{ (notification.is_update && "updated") || "added" }} in sector "{{notification.tag.name}}"
+
+
+              </a>
+
+              <a *ngIf="!notification.enrichment_id && !notification.collaborator && !notification.validated_by && !notification.tag_id "
+                class="dropdown-item" name="{{ notification.id }}" [routerLink]="
+                
+                '/problems/' + notification.problem_id
+              " (click)="onRead($event)">
+
+                Problem "{{ notification.problemsByproblemId.title }}" is
                 {{ (notification.is_update && "updated") || "added" }}
 
 
@@ -123,7 +135,7 @@
                 '/problems/' + notification.problem_id
               ">
 
-                Enrichment added for {{ notification.problemsByproblemId.title }}
+                Enrichment added for problem "{{ notification.problemsByproblemId.title }}"
 
               </a>
 
@@ -133,7 +145,7 @@
                 '/problems/' + notification.problem_id
               ">
 
-                New Collaboration on {{ notification.problemsByproblemId.title }}
+                New Collaboration on problem "{{ notification.problemsByproblemId.title }}"
 
 
               </a>
@@ -144,7 +156,7 @@
                 '/problems/' + notification.problem_id
               ">
 
-                {{ notification.problemsByproblemId.title }} is validated by an expert
+                Problem "{{ notification.problemsByproblemId.title }}" is validated by an expert
 
               </a>
 

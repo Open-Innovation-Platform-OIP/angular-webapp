@@ -182,9 +182,6 @@ export class WizardContainerComponent
   }
 
   selectedLocation(event) {
-    // console.log(event, "selected location");
-    // console.log(this.content.location, "selected location content");
-
     this.content.location.push(event.option.value);
     // console.log(this.content.location, "selected location content 2");
 
@@ -310,6 +307,8 @@ export class WizardContainerComponent
     } else {
       this.content.organization = "None";
     }
+
+    // if(this.content.problem_tags)
     // if (this.content.max_population > 0) {
 
     // console.log(this.content, "content");
@@ -487,7 +486,7 @@ export class WizardContainerComponent
         // If it's the last tab then hide the last button and show the finish instead
         if ($current >= $total) {
           $($wizard)
-            .find(".check")
+            .find(".publish")
             .hide();
           $($wizard)
             .find(".btn-next")
@@ -497,7 +496,7 @@ export class WizardContainerComponent
             .show();
         } else {
           $($wizard)
-            .find(".check")
+            .find(".publish")
             .show();
           $($wizard)
             .find(".btn-next")

@@ -40,9 +40,9 @@
             <p class="description">{{userData.organization}}</p> -->
             <strong>E-mail</strong>
             <p class="description">{{userData.email}}</p>
-            <strong *ngIf="interests">Interests</strong>
-            <div>
-              <span *ngFor="let interest of interests" class="badge badge-warning">{{interest }} </span>
+            <strong *ngIf="interests.length">Interests</strong>
+            <div *ngFor="let interest of interests">
+              <span class="badge badge-warning">{{interest }} </span>
               <span>&nbsp;</span>
             </div>
 

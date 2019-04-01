@@ -98,7 +98,9 @@ export class UsersService {
               organization
             }
           }
-        `
+        `,
+        fetchPolicy: "network-only"
+
         // pollInterval: 500
       })
       .valueChanges.subscribe(({ data }) => {
@@ -125,8 +127,9 @@ export class UsersService {
               organization
             }
           }
-        `
+        `,
         // pollInterval: 500
+        fetchPolicy: "network-only"
       })
       .valueChanges.subscribe(({ data }) => {
         if (data.users.length > 0) {

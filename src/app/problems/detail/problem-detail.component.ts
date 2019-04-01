@@ -197,7 +197,7 @@ export class ProblemDetailComponent implements OnInit, OnDestroy {
   public carouselTileItemCollab$: Observable<number[]>;
   public carouselTileConfig: NguCarouselConfig = {
     grid: { xs: 2, sm: 2, md: 2, lg: 2, all: 0 },
-    slide: 2,
+
     speed: 250,
     point: {
       visible: true
@@ -283,11 +283,7 @@ export class ProblemDetailComponent implements OnInit, OnDestroy {
     });
   }
 
-  ngOnInit() {
-    this.userId = Number(this.auth.currentUserValue.id);
-
-    this.getUserData(Number(this.auth.currentUserValue.id));
-
+  loadCarousels() {
     this.carouselTileItems$ = interval(500).pipe(
       startWith(-1),
       take(2),
@@ -332,6 +328,15 @@ export class ProblemDetailComponent implements OnInit, OnDestroy {
         return data;
       })
     );
+  }
+  
+
+  ngOnInit() {
+    this.userId = Number(this.auth.currentUserValue.id);
+
+    this.getUserData(Number(this.auth.currentUserValue.id));
+    
+    this.loadCarousels();
 
     this.minimizeSidebar();
     this.route.params.pipe(first()).subscribe(params => {
@@ -381,7 +386,7 @@ export class ProblemDetailComponent implements OnInit, OnDestroy {
             }
         }
 
-        problem_validations{
+        problem_validations(order_by:{edited_at: desc}){
           validated_by
           comment
           agree
@@ -418,7 +423,7 @@ export class ProblemDetailComponent implements OnInit, OnDestroy {
             photo_url
           }
         }
-        problem_collaborators{
+        problem_collaborators(order_by:{edited_at: desc}){
           intent
           is_ngo
           is_innovator
@@ -437,7 +442,7 @@ export class ProblemDetailComponent implements OnInit, OnDestroy {
           
         }
 
-        enrichmentsByproblemId(order_by:{edited_at: asc}){
+        enrichmentsByproblemId(order_by:{edited_at: desc}){
           id
           description
           extent
@@ -580,6 +585,9 @@ export class ProblemDetailComponent implements OnInit, OnDestroy {
       }
     });
     this.collaborators = problem.problem_collaborators;
+    console.log(this.collaborators, "collaborators refresh");
+
+    this.loadCarousels();
 
     // console.log(this.problemData, "result from nested queries");
     // console.log(problem.is_draft, "is draft");
@@ -1026,6 +1034,7 @@ export class ProblemDetailComponent implements OnInit, OnDestroy {
   onValidationSubmit(validationData) {
     if (validationData.__typename) {
       delete validationData.__typename;
+      delete validationData.user;
     }
     validationData.validated_by = Number(this.auth.currentUserValue.id);
 
@@ -1035,11 +1044,29 @@ export class ProblemDetailComponent implements OnInit, OnDestroy {
   }
 
   deleteValidation(validationData) {
-    this.validationService.deleteValidation(validationData);
+    this.validationService.deleteValidation(validationData).subscribe(
+      ({ data }) => {
+        $("#validModal").modal("hide");
+        this.disableValidateButton = false;
+
+        return;
+      },
+      error => {
+        console.log("Could delete due to " + error);
+      }
+    );
   }
 
   deleteCollaboration(collaborationData) {
-    this.collaborationService.deleteCollaboration(collaborationData);
+    this.collaborationService.deleteCollaboration(collaborationData).subscribe(
+      ({ data }) => {
+        $("#collaboratorModal").modal("hide");
+        this.disableCollaborateButton = false;
+      },
+      error => {
+        console.log("Could delete due to " + error);
+      }
+    );
   }
 
   handleEnrichCardClicked(enrichmentData) {
@@ -1184,6 +1211,7 @@ export class ProblemDetailComponent implements OnInit, OnDestroy {
   }
 
   closeModal(e) {
+    console.log(e, "e");
     if (e.type === "click") {
       let problemVideoTag: HTMLMediaElement = document.querySelector(
         "#modalVideo"
