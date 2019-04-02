@@ -657,7 +657,7 @@ export class WizardContainerComponent
         type: "warning",
         showCancelButton: true,
         confirmButtonClass: "btn btn-success",
-        cancelButtonClass: "btn btn-danger",
+        cancelButtonClass: "btn btn-warning",
         confirmButtonText: "Yes",
         buttonsStyling: false
       }).then(result => {
