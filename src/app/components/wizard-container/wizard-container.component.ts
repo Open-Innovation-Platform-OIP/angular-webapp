@@ -20,6 +20,7 @@ import { Router, ActivatedRoute } from "@angular/router";
 import { map, startWith } from "rxjs/operators";
 import { Observable } from "rxjs";
 import { GeocoderService } from "../../services/geocoder.service";
+import swal from "sweetalert2";
 
 import {
   FormControl,
@@ -119,8 +120,8 @@ export class WizardContainerComponent
     { value: Number.MAX_VALUE, viewValue: ">100,000" }
   ];
 
-  regularItems = ['Pizza', 'Pasta', 'Parmesan'];
-    touch: boolean;
+  regularItems = ["Pizza", "Pasta", "Parmesan"];
+  touch: boolean;
 
   @ViewChild("sectorInput") sectorInput: ElementRef<HTMLInputElement>;
   @ViewChild("locationInput") locationInput: ElementRef<HTMLInputElement>;
@@ -645,10 +646,39 @@ export class WizardContainerComponent
   }
 
   publishContent() {
+    if (
+      !this.content.image_urls.length &&
+      !this.content.video_urls.length &&
+      !this.content.embed_urls.length
+    ) {
+      swal({
+        title: "Are you sure you want to publish without adding media content",
+        // text: "You won't be able to revert this!",
+        type: "warning",
+        showCancelButton: true,
+        confirmButtonClass: "btn btn-success",
+        cancelButtonClass: "btn btn-danger",
+        confirmButtonText: "Yes",
+        buttonsStyling: false
+      }).then(result => {
+        if (result.value) {
+          this.contentSubmitted.emit(this.content);
+
+          // swal({
+          //   title: "Deleted!",
+          //   // text: "Your file has been deleted.",
+          //   type: "success",
+          //   confirmButtonClass: "btn btn-success",
+          //   buttonsStyling: false
+          // });
+        }
+      });
+    }
     // console.log(Number.MAX_VALUE, "max value");
     // console.log(this.content.location, "content location");
-
-    this.contentSubmitted.emit(this.content);
+    else {
+      this.contentSubmitted.emit(this.content);
+    }
   }
 
   sendDataBack() {
