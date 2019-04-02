@@ -147,6 +147,7 @@ export class WizardComponent
     private auth: AuthService // private geocoder: GeocoderService
   ) {
     canProceed = true;
+
     this.problem.organization = "Social Alpha";
     this.filteredSectors = this.sectorCtrl.valueChanges.pipe(
       startWith(null),
@@ -266,8 +267,9 @@ export class WizardComponent
                             }
                             }
                         }
-                        `
+                        `,
             // pollInterval: 500
+            fetchPolicy: "network-only"
           })
           .valueChanges.subscribe(result => {
             if (
@@ -827,7 +829,8 @@ export class WizardComponent
                       
                     }
                     }
-                    }`
+                    }`,
+          fetchPolicy: "network-only"
           // pollInterval: 200
         })
         .valueChanges.subscribe(

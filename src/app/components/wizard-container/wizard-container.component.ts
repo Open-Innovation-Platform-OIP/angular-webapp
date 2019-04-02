@@ -296,7 +296,7 @@ export class WizardContainerComponent
   }
 
   ngOnInit() {
-    // console.log(this.content, "content ngoninit");
+    console.log(this.content, "wizard ngoninit");
     if (
       this.usersService.allUsers[this.auth.currentUserValue.id] &&
       this.usersService.allUsers[this.auth.currentUserValue.id].organization
