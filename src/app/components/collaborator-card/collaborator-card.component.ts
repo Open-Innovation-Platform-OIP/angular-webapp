@@ -12,6 +12,8 @@ import { Router, ActivatedRoute } from "@angular/router";
 
 import { Apollo } from "apollo-angular";
 import gql from "graphql-tag";
+import swal from "sweetalert2";
+declare var $: any;
 
 @Component({
   selector: "app-collaborator-card",
@@ -80,6 +82,26 @@ export class CollaboratorCardComponent implements OnInit, OnChanges {
   }
 
   deleteCollaboration() {
-    this.deleteClicked.emit(this.collaboratorData);
+    swal({
+      title: "Are you sure you want to delete collaboration?",
+      // text: "You won't be able to revert this!",
+      type: "warning",
+      showCancelButton: true,
+      confirmButtonClass: "btn btn-success",
+      cancelButtonClass: "btn btn-danger",
+      confirmButtonText: "Yes, delete it!",
+      buttonsStyling: false
+    }).then(result => {
+      if (result.value) {
+        this.deleteClicked.emit(this.collaboratorData);
+        swal({
+          title: "Deleted!",
+          // text: "Your file has been deleted.",
+          type: "success",
+          confirmButtonClass: "btn btn-success",
+          buttonsStyling: false
+        });
+      }
+    });
   }
 }

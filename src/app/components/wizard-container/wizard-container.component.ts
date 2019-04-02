@@ -119,6 +119,9 @@ export class WizardContainerComponent
     { value: Number.MAX_VALUE, viewValue: ">100,000" }
   ];
 
+  regularItems = ['Pizza', 'Pasta', 'Parmesan'];
+    touch: boolean;
+
   @ViewChild("sectorInput") sectorInput: ElementRef<HTMLInputElement>;
   @ViewChild("locationInput") locationInput: ElementRef<HTMLInputElement>;
 

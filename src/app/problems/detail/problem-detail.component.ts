@@ -228,7 +228,7 @@ export class ProblemDetailComponent implements OnInit, OnDestroy {
     const subject = encodeURI("Can you help solve this problem?");
     const body = encodeURI(
       `Hello,\n\nCheck out this link on Social Alpha's Open Innovation platform - ${
-        this.pageUrl
+      this.pageUrl
       }\n\nRegards,`
     );
     this.mailToLink = `mailto:?subject=${subject}&body=${body}`;
@@ -329,13 +329,12 @@ export class ProblemDetailComponent implements OnInit, OnDestroy {
       })
     );
   }
-  
 
   ngOnInit() {
     this.userId = Number(this.auth.currentUserValue.id);
 
     this.getUserData(Number(this.auth.currentUserValue.id));
-    
+
     this.loadCarousels();
 
     this.minimizeSidebar();
@@ -520,7 +519,7 @@ export class ProblemDetailComponent implements OnInit, OnDestroy {
     const subject = encodeURI("Can you help solve this problem?");
     const body = encodeURI(
       `Hello,\n\nCheck out this link on Social Alpha's Open Innovation platform - ${
-        this.pageUrl
+      this.pageUrl
       }\n\nRegards,`
     );
     const href = `mailto:?subject=${subject}&body=${body}`;
@@ -754,7 +753,7 @@ export class ProblemDetailComponent implements OnInit, OnDestroy {
         cancelButtonClass: "btn btn-danger",
         buttonsStyling: false
       })
-        .then(function(result) {
+        .then(function (result) {
           swal({
             type: "success",
             html:
@@ -791,7 +790,7 @@ export class ProblemDetailComponent implements OnInit, OnDestroy {
       body.classList.remove("sidebar-mini");
       misc.sidebar_mini_active = false;
     } else {
-      setTimeout(function() {
+      setTimeout(function () {
         body.classList.add("sidebar-mini");
 
         misc.sidebar_mini_active = true;
@@ -799,12 +798,12 @@ export class ProblemDetailComponent implements OnInit, OnDestroy {
     }
 
     // we simulate the window Resize so the charts will get updated in realtime.
-    const simulateWindowResize = setInterval(function() {
+    const simulateWindowResize = setInterval(function () {
       window.dispatchEvent(new Event("resize"));
     }, 180);
 
     // we stop the simulation of Window Resize after the animations are completed
-    setTimeout(function() {
+    setTimeout(function () {
       clearInterval(simulateWindowResize);
     }, 1000);
   }
@@ -833,7 +832,7 @@ export class ProblemDetailComponent implements OnInit, OnDestroy {
       $layer.remove();
     }
 
-    setTimeout(function() {
+    setTimeout(function () {
       $toggle.classList.remove("toggled");
     }, 400);
 
@@ -885,8 +884,8 @@ export class ProblemDetailComponent implements OnInit, OnDestroy {
         mutation delete_problem_watcher {
           delete_problem_watchers(
             where: {user_id: {_eq: ${Number(
-              this.userId
-            )}}, problem_id: {_eq: ${Number(this.problemData.id)}}}
+          this.userId
+        )}}, problem_id: {_eq: ${Number(this.problemData.id)}}}
           ) {
             affected_rows
           }
@@ -956,8 +955,8 @@ export class ProblemDetailComponent implements OnInit, OnDestroy {
         mutation delete_problem_voter {
           delete_problem_voters(
             where: {user_id: {_eq: ${Number(
-              this.userId
-            )}}, problem_id: {_eq: ${Number(this.problemData.id)}}}
+          this.userId
+        )}}, problem_id: {_eq: ${Number(this.problemData.id)}}}
           ) {
             affected_rows
           }
@@ -1082,7 +1081,9 @@ export class ProblemDetailComponent implements OnInit, OnDestroy {
   }
 
   handleValidationEditMode(validationData) {
+    // console.log("valid>>>>>> ", validationData);
     this.validationDataToEdit = validationData;
+    this.openModal('#EditValidationModal')
   }
 
   handleCollaborationEditMode(collaborationData) {
