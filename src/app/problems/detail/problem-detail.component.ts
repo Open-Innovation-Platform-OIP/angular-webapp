@@ -329,10 +329,6 @@ export class ProblemDetailComponent implements OnInit, OnDestroy {
       })
     );
   }
-<<<<<<< HEAD
-=======
-
->>>>>>> c9126bbce99b098fb4aac1e9f7ae9e8acc1d779f
 
   ngOnInit() {
     this.userId = Number(this.auth.currentUserValue.id);
