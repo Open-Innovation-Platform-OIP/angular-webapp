@@ -20,7 +20,6 @@ import { Router, ActivatedRoute } from "@angular/router";
 import { map, startWith } from "rxjs/operators";
 import { Observable } from "rxjs";
 import { GeocoderService } from "../../services/geocoder.service";
-import swal from "sweetalert2";
 
 import {
   FormControl,
@@ -119,8 +118,6 @@ export class WizardContainerComponent
     { value: 100000, viewValue: "<100,000" },
     { value: Number.MAX_VALUE, viewValue: ">100,000" }
   ];
-
-  regularItems = ["Pizza", "Pasta", "Parmesan"];
   touch: boolean;
 
   @ViewChild("sectorInput") sectorInput: ElementRef<HTMLInputElement>;
