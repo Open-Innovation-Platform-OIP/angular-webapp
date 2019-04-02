@@ -24,13 +24,13 @@ export class DetailedValidateViewComponent implements OnInit, OnChanges {
   constructor(
     private auth: AuthService,
     private problemService: ProblemService
-  ) {}
+  ) { }
 
   ngOnInit() {
     console.log(this.validationData, "in detailed validate");
   }
   ngOnChanges() {
-    console.log(this.validationData, "in detailed validate");
+    // console.log(this.validationData, "in detailed validate");
   }
   editValidation() {
     this.editClicked.emit(this.validationData);

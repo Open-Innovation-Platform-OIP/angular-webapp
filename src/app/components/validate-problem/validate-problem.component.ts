@@ -10,7 +10,6 @@ import { ValidationService } from "../../services/validation.service";
   styleUrls: ["./validate-problem.component.css"]
 })
 export class ValidateProblemComponent implements OnInit {
-  // @Input() problemData: any;
   @Input() validationData: any = {
     comment: "",
     agree: false,
@@ -21,62 +20,31 @@ export class ValidateProblemComponent implements OnInit {
   mode = "Add";
   Arr = [1, 2, 3, 4];
   blankSpace: boolean;
-  file_blob: Blob[] = [];
-  // validationData: any = {
-  //   comment: "",
-  //   problem_id: this.problemData.id,
-  //   file_url: ""
-  // };
+
   constructor(
     private space: FilesService,
-    private problemService: ProblemService,
-    private validationService: ValidationService
-  ) {}
+    // private problemService: ProblemService,
+    // private validationService: ValidationService
+  ) { }
 
   ngOnInit() {
-    // console.log(this.validationData, "validation data");
-    // if (this.validationData.files.length) {
-    //   this.validationData.files.forEach(file => {
-    //     this.file_blob.push(file);
-    //   });
-    // }
+    // console.log(this.validationData, "validation data check");
   }
 
-  onValidateFileSelected(event) {
+  async onValidateFileSelected(event) {
     console.log("Event: ", event);
+
     for (let i = 0; i < event.target.files.length; i++) {
       const file = event.target.files[i];
+      let attachment = await this.space.uploadFile(file, file["name"]).promise();
 
-      this.file_blob.push(file);
-      /* if (typeof FileReader !== "undefined") {
-        let reader = new FileReader();
+      this.validationData.files.push({
+        key: attachment["key"],
+        url: attachment["Location"],
+        mimeType: file.type
+      });
+      // console.log(">>>>>> ", this.validationData.files);
 
-        reader.onload = (e: any) => {
-          console.log("Onload: ", e);
-
-          this.space
-            .uploadFile(e.target.result, file.name)
-            .promise()
-            .then(values => {
-              console.log("val: ", values);
-              this.validationData.files.push({
-                url: values["Location"],
-                mimeType: file.type,
-                key: values["Key"]
-              });
-            })
-            .catch(e => console.log("Err:: ", e));
-        };
-        reader.readAsArrayBuffer(file);
-      } */
-    }
-  }
-
-  removeAttachedFile(index) {
-    if (this.file_blob.length < 2) {
-      this.file_blob = [];
-    } else {
-      this.file_blob.splice(index, 1);
     }
   }
 
@@ -89,51 +57,14 @@ export class ValidateProblemComponent implements OnInit {
   }
 
   async validateConsent(userConsent) {
-    let attachments: any[] = [];
-    let _links = []; //local array
-
-    let all_promise = await this.file_blob.map(file => {
-      return this.space.uploadFile(file, file["name"]).promise();
-    });
-
-    try {
-      _links = await Promise.all(all_promise);
-    } catch (error) {
-      console.log("Err while uploading reply files");
-    }
-
-    if (_links.length) {
-      attachments = [];
-
-      _links.forEach((link, i) => {
-        attachments.push({
-          key: link["key"],
-          url: link["Location"],
-          mimeType: this.file_blob[i].type
-        });
-      });
-    }
-
     swal({
       type: "success",
       text: "Thank you for validation",
-      confirmButtonClass: "btn btn-success",
-      buttonsStyling: false
+      timer: 3000,
+      showConfirmButton: false
     }).then(res => {
       this.validationData.agree = userConsent;
-      this.validationData.files = [...attachments];
-      // this.problemService.displayValidateProblem = false;
-
-      // this.validationData.problem_id = this.problemData.id;
-      // this.validationService.submitValidationToDB(this.validationData);
-
       this.submitted.emit(this.validationData);
-
-      // if (this.mode === "Edit") {
-      //   this.problemService.submitValidation(
-      //     this.problemService.problemValidationData
-      //   );
-      // }
     });
   }
 
