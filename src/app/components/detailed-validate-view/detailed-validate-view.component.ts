@@ -8,6 +8,8 @@ import {
 } from "@angular/core";
 import { AuthService } from "../../services/auth.service";
 import { ProblemService } from "../../services/problem-handle.service";
+import swal from "sweetalert2";
+declare var $: any;
 
 @Component({
   selector: "app-detailed-validate-view",
@@ -35,7 +37,27 @@ export class DetailedValidateViewComponent implements OnInit, OnChanges {
   }
 
   deleteValidation() {
-    this.deleteClicked.emit(this.validationData);
+    swal({
+      title: "Are you sure you want to delete validation?",
+      // text: "You won't be able to revert this!",
+      type: "warning",
+      showCancelButton: true,
+      confirmButtonClass: "btn btn-success",
+      cancelButtonClass: "btn btn-danger",
+      confirmButtonText: "Yes, delete it!",
+      buttonsStyling: false
+    }).then(result => {
+      if (result.value) {
+        this.deleteClicked.emit(this.validationData);
+        swal({
+          title: "Deleted!",
+          // text: "Your file has been deleted.",
+          type: "success",
+          confirmButtonClass: "btn btn-success",
+          buttonsStyling: false
+        });
+      }
+    });
     // this.ValidaService.deleteValidation(this.validationData);
   }
 }

@@ -329,13 +329,12 @@ export class ProblemDetailComponent implements OnInit, OnDestroy {
       })
     );
   }
-  
 
   ngOnInit() {
     this.userId = Number(this.auth.currentUserValue.id);
 
     this.getUserData(Number(this.auth.currentUserValue.id));
-    
+
     this.loadCarousels();
 
     this.minimizeSidebar();
