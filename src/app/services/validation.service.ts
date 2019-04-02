@@ -23,7 +23,7 @@ export class ValidationService {
   }
 
   submitValidationToDB(validationData: validation) {
-    console.log(validationData, "validation data");
+    console.log(validationData, "validation data on submit");
 
     this.apollo
       .mutate({

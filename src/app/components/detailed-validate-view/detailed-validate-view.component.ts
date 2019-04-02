@@ -20,11 +20,16 @@ export class DetailedValidateViewComponent implements OnInit, OnChanges {
   @Input() validationData: any;
   @Output() editClicked = new EventEmitter();
   @Output() deleteClicked = new EventEmitter();
+  validationDataToEdit: any = {
+    comment: "",
+    agree: false,
+    files: []
+  };
 
   constructor(
     private auth: AuthService,
     private problemService: ProblemService
-  ) { }
+  ) {}
 
   ngOnInit() {
     console.log(this.validationData, "in detailed validate");
@@ -33,7 +38,11 @@ export class DetailedValidateViewComponent implements OnInit, OnChanges {
     // console.log(this.validationData, "in detailed validate");
   }
   editValidation() {
-    this.editClicked.emit(this.validationData);
+    Object.keys(this.validationDataToEdit).map(key => {
+      this.validationDataToEdit[key] = this.validationData[key];
+    });
+
+    this.editClicked.emit(this.validationDataToEdit);
   }
 
   deleteValidation() {
