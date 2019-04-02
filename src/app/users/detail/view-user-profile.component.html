@@ -41,8 +41,9 @@
             <strong>E-mail</strong>
             <p class="description">{{userData.email}}</p>
             <strong *ngIf="interests.length">Interests</strong>
-            <div *ngFor="let interest of interests">
-              <span class="badge badge-warning">{{interest }} </span>
+            <div>
+              <span class="badge badge-warning" *ngFor="let interest of interests"
+                style="margin-right: 0.3em;">{{interest }} </span>
               <span>&nbsp;</span>
             </div>
 
@@ -50,7 +51,8 @@
             <p class="description">{{userData.location}}</p>
             <strong>Persona</strong>
             <div>
-              <span *ngFor="let persona of personas " class="badge badge-warning">{{persona.slice(3)}}</span>
+              <span *ngFor="let persona of personas" class="badge badge-warning"
+                style="margin-right: 0.3em;">{{persona.slice(3)}}</span>
               <span>&nbsp;</span>
             </div>
           </div>

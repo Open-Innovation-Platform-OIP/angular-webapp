@@ -53,7 +53,7 @@
 
                 <strong *ngIf="tags.length">Sectors</strong>
                 <div>
-                  <span *ngFor="let tag of tags" class="badge badge-warning">{{tag}}</span>
+                  <span *ngFor="let tag of tags" class="badge badge-warning" style="margin-right: 0.3em;">{{tag}}</span>
                   <span>&nbsp;</span>
                 </div>
 
@@ -64,8 +64,9 @@
                 <p class="description">{{problemData.extent}}</p>
 
                 <strong>Location(s)</strong>
-                <div *ngFor="let location of problemData.location">
-                  <span class="badge badge-warning" *ngIf="location.Address.Label">{{location.Address.Label}}</span>
+                <div *ngIf="problemData.location.length">
+                  <span class="badge badge-warning" *ngFor="let location of problemData.location"
+                    style="margin-right: 0.3em;">{{location.Address.Label}}</span>
                   <span>&nbsp;</span>
                 </div>
 
