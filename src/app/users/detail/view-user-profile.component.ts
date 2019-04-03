@@ -18,6 +18,7 @@ export class ViewUserProfileComponent implements OnInit {
   loggedInUsersProfile: boolean = false;
   objectEntries = Object.entries;
   personas: any = [];
+  userId: any;
 
   constructor(
     private userHandlerService: UserHandlerService,
@@ -27,6 +28,7 @@ export class ViewUserProfileComponent implements OnInit {
   ) {}
 
   ngOnInit() {
+    this.userId = Number(this.auth.currentUserValue.id);
     this.route.params.pipe(first()).subscribe(params => {
       console.log(params.id, "params id");
       if (params.id) {
