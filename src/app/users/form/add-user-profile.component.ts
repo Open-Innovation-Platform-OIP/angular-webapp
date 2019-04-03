@@ -232,6 +232,7 @@ export class AddUserProfileComponent implements OnInit, OnChanges {
       this.here.getAddress(this.user.location).then(
         result => {
           this.locations = <Array<any>>result;
+          console.log(this.locations, "locations");
         },
         error => {
           console.error(error);
@@ -248,9 +249,10 @@ export class AddUserProfileComponent implements OnInit, OnChanges {
     // console.log(JSON.parse("{" + filtered.toString() + "}"));
     // console.log(typeof JSON.parse("{" + filtered.toString() + "}"));
   }
-  public storeLocation(loc) {
-    this.user.location = loc.srcElement.innerText;
-    this.locations = [];
+  public storeLocation(location) {
+    console.log(location, "location");
+    this.user.location = location.option.value;
+    // this.locations = [];
     console.log(this.user.location);
   }
   ngOnInit() {
