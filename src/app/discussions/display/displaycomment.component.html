@@ -14,20 +14,20 @@
       <div innerHTML="{{comment.text}}"></div>
       <!-- Attachments for comments -->
       <p>
-        <span *ngFor="let attachment of comment.attachments; let i= index;" style="cursor:pointer;">
+        <span *ngFor="let attachment of comment.attachments; let i= index;" class="discussion_thumbnail">
           <img *ngIf="attachment.mimeType.startsWith('image') && i < attachmentToShow" src="{{attachment['url']}}"
-            (click)="assignUrl(comment.attachments, i)" width="50" />
+            (click)="assignUrl(comment.attachments, i)" />
 
           <!-- icon in case url is of video -->
-          <i class="material-icons" style="line-height: 50px; color: grey;"
+          <img src="../../../assets/img/video_icon.png" alt="video"
             *ngIf="attachment.mimeType.startsWith('video') && i < attachmentToShow"
             (click)="assignUrl(comment.attachments, i)">
-            movie
-          </i>
-          <i class="material-icons" style="line-height: 50px; color: grey;" *ngIf="!attachment.mimeType.startsWith('video') && !attachment.mimeType.startsWith('image') && i <
+          <!-- <p>{{testMimeType(attachment.mimeType)}}</p> -->
+          <img src="../../../assets/img/document_icon.png" alt="document" *ngIf="testMimeType(attachment.mimeType) && i <
               attachmentToShow" (click)="assignUrl(comment.attachments, i)">
-            description
-          </i>
+
+          <img src="../../../assets/img/pdf_icon.png" alt="document" *ngIf="attachment.mimeType.endsWith('pdf') && i <
+              attachmentToShow" (click)="assignUrl(comment.attachments, i)">
         </span>
 
         <!-- show more for comments -->
@@ -65,21 +65,21 @@
           <div class="card-body">
             <div innerHTML="{{reply.text}}"></div>
             <!-- Attachments for replies -->
-            <p style="height: 50px;">
-              <span *ngFor="let attachment of reply.attachments; let i=index;" style="cursor:pointer;">
+            <p>
+              <span *ngFor="let attachment of reply.attachments; let i=index;" class="discussion_thumbnail">
                 <img *ngIf="attachment.mimeType.startsWith('image') && i < repliesAttachmentNum"
-                  (click)="assignUrl(reply.attachments, i)" src="{{attachment['url']}}" width="50" />
+                  (click)="assignUrl(reply.attachments, i)" src="{{attachment['url']}}" />
 
                 <!-- icon in case url is of video -->
-                <i class="material-icons" style="zoom:2; color: grey"
+                <img src="../../../assets/img/video_icon.png" alt="video"
                   *ngIf="attachment.mimeType.startsWith('video') && i < repliesAttachmentNum"
                   (click)="assignUrl(reply.attachments, i)">
-                  movie
-                </i>
-                <i class="material-icons" style="zoom:2; color: grey" *ngIf="!attachment.mimeType.startsWith('video') && !attachment.mimeType.startsWith('image') && i <
+
+                <img src="../../../assets/img/document_icon.png" alt="document" *ngIf="testMimeType(attachment.mimeType) && i <
                     repliesAttachmentNum" (click)="assignUrl(reply.attachments, i)">
-                  description
-                </i>
+
+                <img src="../../../assets/img/pdf_icon.png" alt="document" *ngIf="attachment.mimeType.endsWith('pdf') && i <
+                    repliesAttachmentNum" (click)="assignUrl(reply.attachments, i)">
               </span>
               <!-- Show more for replies -->
               <i class="material-icons"

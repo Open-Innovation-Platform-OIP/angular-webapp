@@ -1,14 +1,20 @@
 .doc_div {
+    text-align: center;
     width: 100%;
     height: 50vh;
     background-color: orange;
 }
 
-.doc_div>a>button {
+.doc_div>h3 {
+    padding-top: 17%;
+    color: white;
+}
+
+/* .doc_div>a>button {
     position: relative;
     left: 40%;
     top: 40%;
-}
+} */
 
 .fix_view {
     object-fit: cover;
