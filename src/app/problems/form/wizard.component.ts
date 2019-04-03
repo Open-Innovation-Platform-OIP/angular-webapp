@@ -226,6 +226,7 @@ export class WizardComponent
     clearInterval(this.autosaveInterval);
   }
   ngOnInit() {
+    console.log("wizard ng on in it");
     clearInterval(this.autosaveInterval);
     this.autosaveInterval = setInterval(() => {
       this.autoSave();

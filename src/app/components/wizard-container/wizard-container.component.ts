@@ -624,7 +624,7 @@ export class WizardContainerComponent
   ngOnChanges(changes: SimpleChanges) {
     // console.log(this.content, "content on ng on changes");
 
-    // console.log("wizard ngonchanges");
+    console.log("wizard container ngonchanges");
 
     const input = $(this);
     if (input[0].files && input[0].files[0]) {
