@@ -16,8 +16,8 @@
           </li>
           <li class="nav-item">
             <a class="nav-link" href="#media" data-toggle="tab" role="tab">
-              Media: {{content.image_urls.length}}
-              image(s) and {{content.video_urls.length}} video(s)
+              Media:
+              image(s) and video(s)
             </a>
           </li>
         </ul>
@@ -312,6 +312,11 @@
 
           </div>
           <div class="tab-pane" id="media">
+            <div class="row justify-content-center">
+              <a href="#media" data-toggle="tab" role="tab" class="nav-link"
+                *ngIf="content.image_urls.length+content.video_urls.length>0">{{content.image_urls.length}}
+                image(s) and {{content.video_urls.length}} video(s) attached</a>
+            </div>
             <div class="row justify-content-center">
               <div class="col-sm-6">
                 <div class="picture-container">

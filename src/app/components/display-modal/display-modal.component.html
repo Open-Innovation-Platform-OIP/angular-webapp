@@ -13,6 +13,7 @@
 <div
   *ngIf="source && ( source.mimeType && !source.mimeType.startsWith('image') && !source.mimeType.startsWith('video') )"
   class="doc_div">
+  <h3>{{source.key}}</h3>
   <a href="{{source.url}}">
     <button mat-raised-button class="btn btn-secondary btn-round btn-lg">
       <i class="material-icons">

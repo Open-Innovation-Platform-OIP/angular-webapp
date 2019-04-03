@@ -84,3 +84,10 @@ pre {
 .mention>span {
     margin: 0 3px
 }
+
+.discussion_thumbnail>img {
+    padding: 0 2px;
+    height: 40px;
+    width: 40px;
+    object-fit: cover;
+}

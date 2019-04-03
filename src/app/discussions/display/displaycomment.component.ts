@@ -92,4 +92,13 @@ export class CommentDisplayComponent implements OnInit {
 
     return 0;
   }
+
+  testMimeType(type) {
+    // let allowed;
+    if (type && !type.startsWith('video') && !type.startsWith('image') && !type.endsWith('pdf')) {
+      return true;
+    } else {
+      return false;
+    }
+  }
 }

@@ -40,7 +40,7 @@
                 <div class="row">
                   <label class="col-md-2 col-2 col-form-label" [ngStyle]="{
                       color: !user.name ? 'red' : '#AAAAAA'
-                    }">Fullname</label>
+                    }">Full Name</label>
                   <div class="col-md-10 col-9">
                     <mat-form-field class="example-full-width">
                       <input matInput type="text" name="name" required [(ngModel)]="user.name" #name="ngModel"
@@ -65,8 +65,14 @@
                   <label class="col-sm-2 col-form-label">Persona</label>
                   <div class="col-md-10 col-9">
                     <div class="form-check" *ngFor="let persona of objectKeys(user)">
-                      <label class="form-check-label"
+                      <label class="form-check-label" <<<<<<< HEAD
                         *ngIf="persona!=='id' && persona!=='email' && persona!=='token' && persona!=='password' && persona!=='name' && persona!=='organization' && persona!=='qualification' && persona!=='photo_url' && persona!=='phone_number' && persona!=='location'">
+                        =======
+                        *ngIf="persona!=='id' && persona!=='email' && persona!=='token' && persona!=='password' &&
+                        persona!=='name' && persona!=='organization' && persona!=='qualification' &&
+                        persona!=='photo_url' && persona!=='phone_number' && persona!=='location' &&
+                        persona!=='notify_email' && persona!=='notify_sms' && persona!=='notify_app'">
+                        >>>>>>> ffbe371f4eee478fb6f55c7287f25ed4201bce83
                         <input class="form-check-input" type="checkbox" [(ngModel)]="user[persona]"
                           [ngModelOptions]="{standalone: true}">
                         {{persona.slice(3)}}
@@ -178,6 +184,75 @@
                     </div>
                   </div>
                 </div>
+
+                <div class="row">
+                  <label class="col-sm-2 col-form-label">Notification preference</label>
+                  <div class="col-sm-10">
+                    <div class="form-check form-check-inline">
+                      <label class="form-check-label">
+                        <input class="form-check-input" type="checkbox" [(ngModel)]="user.notify_email"> E-mail
+                        <span class="form-check-sign">
+                          <span class="check"></span>
+                        </span>
+                      </label>
+                    </div>
+                    <div class="form-check form-check-inline">
+                      <label class="form-check-label">
+                        <input class="form-check-input" type="checkbox" [(ngModel)]="user.notify_sms"> SMS
+                        <span class="form-check-sign">
+                          <span class="check"></span>
+                        </span>
+                      </label>
+                    </div>
+                    <div class="form-check form-check-inline">
+                      <label class="form-check-label">
+                        <input class="form-check-input" type="checkbox" [(ngModel)]="user.notify_app"> In-App
+                        <span class="form-check-sign">
+                          <span class="check"></span>
+                        </span>
+                      </label>
+                    </div>
+                  </div>
+                </div>
+                <!-- <div class="row">
+                <label class="col-md-2 col-2 col-form-label">Persona</label>
+                <div class="col-md-10 col-9">
+                  <mat-form-field class="example-full-width">
+                    <input matInput type="text" name="personas" [(ngModel)]="user.personas">
+                  </mat-form-field>
+                </div>
+              </div> -->
+                <!-- <div class="row">
+                <label class="col-md-2 col-2 col-form-label">Select Persona</label>
+                <div class="col-lg-4 col-md-6 col-sm-3">
+                  <div class="dropdown">
+                    <button mat-raised-button href="#pablo" class="dropdown-toggle btn btn-warning btn-round btn-block"
+                      data-toggle="dropdown">Persona
+                      <b class="caret"></b>
+                    </button>
+                    <ul class="dropdown-menu dropdown-menu-left">
+                      <li class="dropdown-header">Dropdown header</li>
+                      <li>
+                        <a href="#pablo">Persona 1</a>
+                      </li>
+                      <li>
+                        <a href="#pablo">Persona 2</a>
+                      </li>
+                      <li>
+                        <a href="#pablo">Persona 3</a>
+                      </li>
+                      <li class="divider"></li>
+                      <li>
+                        <a href="#pablo">Persona 4</a>
+                      </li>
+                      <li class="divider"></li>
+                      <li>
+                        <a href="#pablo">Persona 5</a>
+                      </li>
+                    </ul>
+                  </div>
+                </div>
+
 
               </div>
             </form>

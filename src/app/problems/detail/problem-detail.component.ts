@@ -162,6 +162,7 @@ export class ProblemDetailComponent implements OnInit, OnDestroy {
   comments = {};
   replies = {};
   popularDiscussions: any = [];
+  popular: boolean;
   collaboratorIntent: any;
   pageUrl = "";
   mailToLink = "";
@@ -1243,6 +1244,14 @@ export class ProblemDetailComponent implements OnInit, OnDestroy {
     });
 
     $(id).modal("show");
+  }
+
+  showPopularDiscussions(id) {
+    if (id == "popular") {
+      this.popular = true;
+    } else if (id == "latest") {
+      this.popular = false;
+    }
   }
 
   ngOnDestroy() {
