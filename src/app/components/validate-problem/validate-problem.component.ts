@@ -22,10 +22,10 @@ export class ValidateProblemComponent implements OnInit {
   blankSpace: boolean;
 
   constructor(
-    private space: FilesService,
-    // private problemService: ProblemService,
-    // private validationService: ValidationService
-  ) { }
+    private space: FilesService
+  ) // private problemService: ProblemService,
+  // private validationService: ValidationService
+  {}
 
   ngOnInit() {
     // console.log(this.validationData, "validation data check");
@@ -36,7 +36,9 @@ export class ValidateProblemComponent implements OnInit {
 
     for (let i = 0; i < event.target.files.length; i++) {
       const file = event.target.files[i];
-      let attachment = await this.space.uploadFile(file, file["name"]).promise();
+      let attachment = await this.space
+        .uploadFile(file, file["name"])
+        .promise();
 
       this.validationData.files.push({
         key: attachment["key"],
@@ -44,7 +46,6 @@ export class ValidateProblemComponent implements OnInit {
         mimeType: file.type
       });
       // console.log(">>>>>> ", this.validationData.files);
-
     }
   }
 

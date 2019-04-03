@@ -61,8 +61,8 @@
                   </div>
                   <mat-form-field class="example-full-width has-label" [ngClass]="displayFieldCss(type, 'description')">
                     <textarea type="text" name="description" matInput id="description" placeholder="Description *"
-                      formControlName="description" rows="4" (input)="sendInputToParent($event.target.value)"
-                      [(ngModel)]="content.description"></textarea>
+                      formControlName="description" rows="4" wrap="hard"
+                      (input)="sendInputToParent($event.target.value)" [(ngModel)]="content.description"></textarea>
                   </mat-form-field>
                 </div>
               </div>

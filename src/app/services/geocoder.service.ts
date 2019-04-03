@@ -7,6 +7,7 @@ declare var H: any;
 export class GeocoderService {
   public platform: any;
   public geocoder: any;
+  public geocodingParameters: any;
 
   constructor() {
     this.platform = new H.service.Platform({
@@ -14,7 +15,11 @@ export class GeocoderService {
       app_code: "GSl6bG5_ksXDw4sBTnhr_w",
       useHTTPS: true
     });
+    this.geocodingParameters = {
+      country: "IND"
+    };
     this.geocoder = this.platform.getGeocodingService();
+    // this.geocoder.geocode(this.geocodingParameters);
     console.log(this.geocoder, "coder");
   }
 
@@ -23,7 +28,7 @@ export class GeocoderService {
 
     return new Promise((resolve, reject) => {
       this.geocoder.geocode(
-        { searchText: query2 },
+        { searchText: query2, country: "IND" },
         result => {
           if (result.Response.View.length > 0) {
             if (result.Response.View[0].Result.length > 0) {
@@ -40,5 +45,8 @@ export class GeocoderService {
         }
       );
     });
+  }
+  public error(error) {
+    console.log("error", error);
   }
 }

@@ -32,7 +32,7 @@ export class ProblemsViewComponent implements OnInit, OnDestroy {
               ] 
             
               }
-              order_by: {updated_at: desc}
+              order_by: {modified_at: desc}
               
             ) {
               id
@@ -110,7 +110,7 @@ export class ProblemsViewComponent implements OnInit, OnDestroy {
               ] 
             
               }
-              order_by: {updated_at: desc}
+              order_by: {modified_at: desc}
               
             ) {
               id
