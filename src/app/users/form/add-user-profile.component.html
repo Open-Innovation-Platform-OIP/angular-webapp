@@ -145,10 +145,10 @@
                   </label>
                   <div class="col-md-10 col-9">
                     <mat-form-field class="example-full-width">
-                      <input matInput type="text" name="location" required [matAutocomplete]="test"
+                      <input matInput type="text" name="location" required [matAutocomplete]="locationAuto"
                         (keyup)="getLocation()" [(ngModel)]="user.location" #location="ngModel" />
 
-                      <mat-autocomplete #test="matAutocomplete" (optionSelected)="storeLocation($event)">
+                      <mat-autocomplete #locationAuto="matAutocomplete" (optionSelected)="storeLocation($event)">
                         <mat-option *ngFor="let location of locations" [value]="location.Location.Address.Label">
                           {{location.Location.Address.Label}}
                         </mat-option>

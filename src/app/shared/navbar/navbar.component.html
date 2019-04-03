@@ -160,6 +160,18 @@
 
               </a>
 
+              <a *ngIf="notification.discussion_id" class="dropdown-item" name="{{ notification.id }}"
+                (click)="onRead($event)" [routerLink]="
+                
+                '/problems/' + notification.problem_id
+              ">
+
+                You were mentioned on discussion "{{ notification.discussion.text }}" on problem
+                "{{ notification.problemsByproblemId.title }}"
+
+              </a>
+
+
               <!-- <a *ngIf="notification.validated_by" class="dropdown-item" name="{{ notification.id }}"
             href="problems/{{ notification.id }}" (click)="onRead($event)">
 

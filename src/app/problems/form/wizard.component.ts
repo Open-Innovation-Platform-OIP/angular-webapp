@@ -226,6 +226,8 @@ export class WizardComponent
     clearInterval(this.autosaveInterval);
   }
   ngOnInit() {
+    // this.tagService.getTagsFromDB();
+
     console.log("wizard ng on in it");
     clearInterval(this.autosaveInterval);
     this.autosaveInterval = setInterval(() => {
@@ -287,7 +289,7 @@ export class WizardComponent
                 }
                 this.problem.is_draft = result.data.problems[0].is_draft;
               });
-              if (this.problem.title) {
+              if (this.problem.title && this.problem.is_draft) {
                 this.smartSearch(this.problem.title);
               }
               if (result.data.problems[0].problem_tags) {

@@ -183,6 +183,10 @@ export class NavbarComponent implements OnInit {
               tag{
                 name
               }
+              discussion{
+                text
+              }
+             
               problemsByproblemId {
                 title
                 problem_tags {

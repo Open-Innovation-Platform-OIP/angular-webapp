@@ -20,7 +20,8 @@ export class TagsService {
               name
             }
           }
-        `
+        `,
+        fetchPolicy: "network-only"
         // pollInterval: 500
       })
       .valueChanges.subscribe(({ data }) => {
