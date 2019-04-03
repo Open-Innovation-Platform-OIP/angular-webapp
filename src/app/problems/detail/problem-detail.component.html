@@ -553,8 +553,10 @@
             <h4 class="card-title">Discussions</h4>
           </div>
           <div class="card-body">
-            <button mat-raised-button class="btn btn-warning btn-sm">Latest</button>
-            <!-- <button mat-raised-button class="btn btn-warning btn-sm">Popular</button> -->
+            <button mat-raised-button class="btn btn-warning btn-sm"
+              (click)="showPopularDiscussions('latest')">Latest</button>
+            <button mat-raised-button class="btn btn-warning btn-sm"
+              (click)="showPopularDiscussions('popular')">Popular</button>
 
             <div id="accordion" role="tablist">
               <div class="card-collapse">
@@ -574,10 +576,24 @@
                 </div>
               </div>
 
-              <app-display-comment [users]="objectValues(usersService.allUsers)" [comment]="comment"
-                [replies]="replies[comment.id]" (reply)="onReplySubmit($event)" (fileClicked)="displayModal($event)"
-                *ngFor="let comment of sortComments(objectValues(comments))">
-              </app-display-comment>
+
+              <div *ngIf="!popular">
+                <app-display-comment [users]="objectValues(usersService.allUsers)" [comment]="comment"
+                  [replies]="replies[comment.id]" (reply)="onReplySubmit($event)" (fileClicked)="displayModal($event)"
+                  *ngFor="let comment of sortComments(objectValues(comments))">
+                </app-display-comment>
+              </div>
+
+              <!--Popular-->
+
+              <div *ngIf="popular">
+                <app-display-comment [users]="objectValues(usersService.allUsers)" [comment]="popularDiscussion"
+                  [replies]="replies[popularDiscussion.id]" (reply)="onReplySubmit($event)"
+                  (fileClicked)="displayModal($event)" *ngFor="let popularDiscussion of popularDiscussions">
+                </app-display-comment>
+              </div>
+
+              <!--Popular-->
 
             </div>
             <hr>
