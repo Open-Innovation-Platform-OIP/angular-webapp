@@ -286,7 +286,7 @@ export class WizardComponent
                 this.problem.is_draft = result.data.problems[0].is_draft;
               });
               if (this.problem.title && this.problem.is_draft) {
-                this.smartSearch(this.problem.title);
+                this.smartSearch();
               }
               if (result.data.problems[0].problem_tags) {
                 this.sectors = result.data.problems[0].problem_tags.map(
@@ -778,8 +778,11 @@ export class WizardComponent
     }
   }
 
-  smartSearch(key: string) {
-    const searchKey = this.problem.title + " " + this.problem.description;
+  smartSearch() {
+    let searchKey = this.problem.title + " " + this.problem.description;
+    searchKey = searchKey.replace(/[^a-zA-Z ]/g, "");
+    console.log(searchKey, "searchkey");
+
     if (searchKey.length > 3) {
       this.searchResults = {};
       this.apollo
@@ -829,11 +832,12 @@ export class WizardComponent
                     }
                     }
                     }`,
-          fetchPolicy: "network-only"
+          fetchPolicy: "no-cache"
           // pollInterval: 200
         })
         .valueChanges.subscribe(
           result => {
+            console.log(result, "result from search");
             if (result.data.search_problems_v2.length > 0) {
               // console.log(result.data.search_problems_v2.length, "search");
               result.data.search_problems_v2.map(result => {
@@ -841,12 +845,16 @@ export class WizardComponent
                   this.searchResults[result.id] = result;
                 }
               });
+              console.log(this.searchResults, ">>>>>searchresults");
               if (!this.is_edit) {
                 canProceed = false;
               }
             }
           },
-          err => {}
+          err => {
+            // console.log(err, "error from smart search");
+            console.error(JSON.stringify(err));
+          }
         );
     } else {
       this.searchResults = {};

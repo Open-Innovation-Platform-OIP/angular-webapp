@@ -96,7 +96,7 @@ export class WizardContainerComponent
     "video/*"
   ];
 
-  localSectors: any = [];
+  localSectors: any[]=[];
   matcher = new MyErrorStateMatcher();
   type: FormGroup;
   is_edit = false;
@@ -137,7 +137,8 @@ export class WizardContainerComponent
     private auth: AuthService,
     private here: GeocoderService
   ) {
-    // console.log(this.sectors, "sec");
+    
+   
     this.filteredSectors = this.sectorCtrl.valueChanges.pipe(
       startWith(null),
       map((sector: string | null) =>
@@ -148,10 +149,7 @@ export class WizardContainerComponent
     );
 
     this.type = this.formBuilder.group({
-      // To add a validator, we must first convert the string value into an array.
-      // The first tag in the array is the default value if any,
-      // then the next tag in the array is the validator.
-      // Here we are adding a required validator meaning that the firstName attribute must have a value in it.
+      
       title: [null, Validators.required],
       description: [null, Validators.required],
       location: [null, Validators.required],
@@ -174,7 +172,7 @@ export class WizardContainerComponent
       const value = event.value;
       // Add our sector
       if ((value || "").trim()) {
-        this.sectors.push(value.trim().toLowerCase());
+        this.localSectors.push(value.trim().toUpperCase());
       }
       // Reset the input value
       if (input) {
@@ -225,6 +223,11 @@ export class WizardContainerComponent
   // }
 
   remove(sector: string): void {
+    const index = this.localSectors.indexOf(sector);
+    if (index >= 0) {
+      this.localSectors.splice(index, 1);
+    }
+
     this.tagRemoved.emit(sector);
 
     // this.tagsChanged.emit(this.sectors);
@@ -245,15 +248,7 @@ export class WizardContainerComponent
       );
     }
 
-    // var obj = personas;
-    // console.log(personas);
-    // var keys = Object.keys(obj);
-
-    // var filtered = keys.filter(function(key) {
-    //   return obj[key];
-    // });
-    // console.log(JSON.parse("{" + filtered.toString() + "}"));
-    // console.log(typeof JSON.parse("{" + filtered.toString() + "}"));
+  
   }
   public storeLocation(loc) {
     // this.content.location = loc.srcElement.innerText;
@@ -263,10 +258,10 @@ export class WizardContainerComponent
 
   selected(event: MatAutocompleteSelectedEvent): void {
     // console.log(this.sectors, "test for sector");
-    this.sectors.push(event.option.viewValue);
+    this.localSectors.push(event.option.viewValue);
     this.sectorInput.nativeElement.value = "";
     this.sectorCtrl.setValue(null);
-    this.tagAdded.emit(this.sectors);
+    this.tagAdded.emit(this.localSectors);
   }
 
   private _filter(value: string): string[] {
@@ -300,7 +295,7 @@ export class WizardContainerComponent
   }
 
   ngOnInit() {
-    console.log(this.content, "wizard ngoninit");
+    console.log(this.localSectors, "wizard ngoninit sectors");
     if (
       this.usersService.allUsers[this.auth.currentUserValue.id] &&
       this.usersService.allUsers[this.auth.currentUserValue.id].organization
@@ -625,6 +620,22 @@ export class WizardContainerComponent
 
   ngOnChanges(changes: SimpleChanges) {
     // console.log(this.content, "content on ng on changes");
+    if (this.localSectors.length <= this.sectors.length) {
+      console.log(this.localSectors, ">>>>> local sectors ");
+      this.localSectors = this.sectors;
+      console.log(
+        this.localSectors,
+        "local sectors on ng on change",
+        this.sectors
+      );
+    } else {
+      console.log(
+        this.localSectors,
+        "local sectors on ng on change",
+        "sectors from parent==",
+        this.sectors
+      );
+    }
 
     console.log("wizard container ngonchanges");
 
@@ -900,47 +911,7 @@ export class WizardContainerComponent
     }
   }
 
-  // smartSearch(key: string) {
-  //   const searchKey = this.content.title + " " + this.content.description;
-  //   if (searchKey.length > 3) {
-  //     this.searchResults = {};
-  //     this.apollo
-  //       .watchQuery<any>({
-  //         query: gql`query {
-  //                   search_contents_v2(
-  //                   args: {search: "${searchKey.toLowerCase()}"}
-  //                   ){
-  //                   id
-  //                   title
-  //                   description
-  //                   content_tags {
-  //                       tag {
-  //                           name
-  //                       }
-  //                   }
-  //                   }
-  //                   }`,
-  //         pollInterval: 500
-  //       })
-  //       .valueChanges.subscribe(
-  //         result => {
-  //           if (result.data.search_contents_v2.length > 0) {
-  //             result.data.search_contents_v2.map(result => {
-  //               if (result.id != this.content["id"]) {
-  //                 this.searchResults[result.id] = result;
-  //               }
-  //             });
-  //             if (!this.is_edit) {
-  //               canProceed = false;
-  //             }
-  //           }
-  //         },
-  //         err => {}
-  //       );
-  //   } else {
-  //     this.searchResults = {};
-  //   }
-  // }
+  
 
   isComplete() {
     if (this.contentType === "problem") {
@@ -948,7 +919,7 @@ export class WizardContainerComponent
         this.content.title &&
         this.content.description &&
         this.content.organization &&
-        this.sectors.length &&
+        this.localSectors.length &&
         // this.content.min_population &&
         this.content.max_population &&
         this.content.location.length

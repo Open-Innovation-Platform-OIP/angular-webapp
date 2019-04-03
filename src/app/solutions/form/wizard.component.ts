@@ -739,6 +739,7 @@ export class WizardComponent
 
   smartSearch(key: string) {
     const searchKey = this.problem.title + " " + this.problem.description;
+    console.log(searchKey, "searchKey");
     if (searchKey.length > 3) {
       this.searchResults = {};
       this.apollo
