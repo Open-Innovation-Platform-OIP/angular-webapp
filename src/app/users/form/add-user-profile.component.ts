@@ -101,7 +101,10 @@ export class AddUserProfileComponent implements OnInit, OnChanges {
     is_funder: false,
     is_beneficiary: false,
     is_incubator: false,
-    is_entrepreneur: false
+    is_entrepreneur: false,
+    notify_email: false,
+    notify_sms: false,
+    notify_app: false
   };
 
   @ViewChild("sectorInput") sectorInput: ElementRef<HTMLInputElement>;
@@ -288,6 +291,9 @@ export class AddUserProfileComponent implements OnInit, OnChanges {
               is_beneficiary
               is_incubator
               is_funder
+              notify_email
+              notify_sms
+              notify_app
               user_tags{
                 tag {
                     id

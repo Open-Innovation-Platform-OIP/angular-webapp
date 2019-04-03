@@ -24,6 +24,9 @@ export interface User {
   is_beneficiary: Boolean;
   is_incubator: Boolean;
   is_entrepreneur: Boolean;
+  notify_email: Boolean;
+  notify_sms: Boolean;
+  notify_app: Boolean;
 }
 
 // id: "",
@@ -173,6 +176,9 @@ export class UsersService {
                 is_funder
                 is_government
                 is_beneficiary
+                notify_email
+                notify_sms
+                notify_app
               ]
             }
           ) {
