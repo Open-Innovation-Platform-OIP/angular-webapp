@@ -178,16 +178,12 @@
                             }">label</i>
                     </span>
                   </div>
+
                   <mat-form-field class="example-chip-list">
+                    <input placeholder="Sectors" #sectorInput [formControl]="sectorCtrl" [matAutocomplete]="auto"
+                      [matChipInputFor]="chipList" [matChipInputSeparatorKeyCodes]="separatorKeysCodes"
+                      [matChipInputAddOnBlur]="addOnBlur" (matChipInputTokenEnd)="add($event)">
                     <mat-chip-list #chipList>
-                      <mat-chip *ngFor="let sector of sectors" [selectable]="selectable" [removable]="removable"
-                        (removed)="remove(sector)">
-                        {{sector}}
-                        <mat-icon matChipRemove *ngIf="removable">cancel</mat-icon>
-                      </mat-chip>
-                      <input placeholder="Sectors" #sectorInput [formControl]="sectorCtrl" [matAutocomplete]="auto"
-                        [matChipInputFor]="chipList" [matChipInputSeparatorKeyCodes]="separatorKeysCodes"
-                        [matChipInputAddOnBlur]="addOnBlur" (matChipInputTokenEnd)="add($event)">
                     </mat-chip-list>
                     <mat-autocomplete #auto="matAutocomplete" (optionSelected)="selected($event)">
                       <mat-option *ngFor="let sector of filteredSectors | async" [value]="sector">
@@ -195,9 +191,25 @@
                       </mat-option>
                     </mat-autocomplete>
                   </mat-form-field>
+
                 </div>
               </div>
             </div>
+
+            <div>
+              <div class="row justify-content-center">
+                <div class="col-sm-10">
+
+                  <mat-chip *ngFor="let sector of sectors" [selectable]="selectable" [removable]="removable"
+                    (removed)="remove(sector)" style="margin-right:0.3em; margin-bottom: 0.4em;">
+                    {{sector}}
+                    <mat-icon matChipRemove *ngIf="removable">cancel</mat-icon>
+                  </mat-chip>
+
+                </div>
+              </div>
+            </div>
+
             <div class="row justify-content-center">
               <div class="col-sm-12">
                 <div class="input-group form-control-lg">
@@ -213,6 +225,7 @@
                 </div>
               </div>
             </div>
+
             <div class="row justify-content-center">
               <div class="col-sm-12">
                 <div class="input-group form-control-lg">
