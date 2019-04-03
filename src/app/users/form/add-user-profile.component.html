@@ -184,7 +184,8 @@
                   <div class="col-sm-10">
                     <div class="form-check form-check-inline">
                       <label class="form-check-label">
-                        <input class="form-check-input" type="checkbox" [(ngModel)]="user.notify_email"> E-mail
+                        <input class="form-check-input" type="checkbox" [(ngModel)]="user.notify_email"
+                          [ngModelOptions]="{standalone: true}"> E-mail
                         <span class="form-check-sign">
                           <span class="check"></span>
                         </span>
@@ -192,7 +193,8 @@
                     </div>
                     <div class="form-check form-check-inline">
                       <label class="form-check-label">
-                        <input class="form-check-input" type="checkbox" [(ngModel)]="user.notify_sms"> SMS
+                        <input class="form-check-input" type="checkbox" [(ngModel)]="user.notify_sms"
+                          [ngModelOptions]="{standalone: true}"> SMS
                         <span class="form-check-sign">
                           <span class="check"></span>
                         </span>
@@ -200,7 +202,8 @@
                     </div>
                     <div class="form-check form-check-inline">
                       <label class="form-check-label">
-                        <input class="form-check-input" type="checkbox" [(ngModel)]="user.notify_app"> In-App
+                        <input class="form-check-input" type="checkbox" [(ngModel)]="user.notify_app"
+                          [ngModelOptions]="{standalone: true}"> In-App
                         <span class="form-check-sign">
                           <span class="check"></span>
                         </span>
