@@ -196,19 +196,19 @@
               </div>
             </div>
 
-            <div>
-              <div class="row justify-content-center">
-                <div class="col-sm-10">
 
-                  <mat-chip *ngFor="let sector of sectors" [selectable]="selectable" [removable]="removable"
-                    (removed)="remove(sector)" style="margin-right:0.3em; margin-bottom: 0.4em;">
-                    {{sector}}
-                    <mat-icon matChipRemove *ngIf="removable">cancel</mat-icon>
-                  </mat-chip>
+            <div class="row justify-content-center">
+              <div class="col-sm-10">
 
-                </div>
+                <mat-chip *ngFor="let sector of sectors" [selectable]="selectable" [removable]="removable"
+                  (removed)="remove(sector)" style="margin-right:0.3em; margin-bottom: 0.4em;">
+                  {{sector}}
+                  <mat-icon matChipRemove *ngIf="removable">cancel</mat-icon>
+                </mat-chip>
+
               </div>
             </div>
+
 
             <div class="row justify-content-center">
               <div class="col-sm-12">
@@ -264,18 +264,15 @@
                           {{location.Location.Address.Label}}
                         </mat-option>
                       </mat-autocomplete> -->
+                    <input placeholder="Locations" [(ngModel)]="locationInputValue" rows="2" #locationInput
+                      [formControl]="locationCtrl" [matAutocomplete]="auto" [matChipInputFor]="chipList"
+                      [matChipInputSeparatorKeyCodes]="separatorKeysCodes" (keyup)="getLocation()"
+                      [matChipInputAddOnBlur]="addOnBlur" (matChipInputTokenEnd)="addLocation($event)">
 
                     <mat-chip-list #chipList>
-                      <mat-chip *ngFor="let location of content.location" [selectable]="selectable"
-                        [removable]="removable" (removed)="removeLocation(location)">
-                        {{location.Address.Label}}
-                        <mat-icon matChipRemove *ngIf="removable">cancel</mat-icon>
-                      </mat-chip>
 
-                      <input placeholder="Locations" [(ngModel)]="locationInputValue" rows="2" #locationInput
-                        [formControl]="locationCtrl" [matAutocomplete]="auto" [matChipInputFor]="chipList"
-                        [matChipInputSeparatorKeyCodes]="separatorKeysCodes" (keyup)="getLocation()"
-                        [matChipInputAddOnBlur]="addOnBlur" (matChipInputTokenEnd)="addLocation($event)">
+
+
                     </mat-chip-list>
                     <mat-autocomplete #auto="matAutocomplete" (optionSelected)="selectedLocation($event)">
                       <mat-option *ngFor="let location of locations" [value]="location.Location">
@@ -284,6 +281,18 @@
                     </mat-autocomplete>
                   </mat-form-field>
                 </div>
+              </div>
+            </div>
+            <div class="row justify-content-center">
+              <div class="col-sm-10">
+                <mat-chip *ngFor="let location of content.location" [selectable]="selectable" [removable]="removable"
+                  (removed)="removeLocation(location)" style="margin-right:0.3em; margin-bottom: 0.4em;">
+                  {{location.Address.Label}}
+                  <mat-icon matChipRemove *ngIf="removable">cancel</mat-icon>
+                </mat-chip>
+
+
+
               </div>
             </div>
 
