@@ -20,8 +20,7 @@ export const GetQuery = gql`
       location
       resources_needed
       image_urls
-      voted_by
-      watched_by
+
       is_deleted
     }
   }

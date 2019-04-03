@@ -101,12 +101,9 @@ export class WizardComponent
     featured_url: "",
     embed_urls: [],
     featured_type: "",
-    voted_by: "",
-    watched_by: "",
 
     created_by: Number(this.auth.currentUserValue.id),
     is_draft: true,
-    owners: "",
 
     attachments: []
   };
@@ -259,8 +256,7 @@ export class WizardComponent
                             organization
                             featured_url
                             featured_type
-                            voted_by
-                            watched_by
+                           
                           
                             problem_tags{
                                 tag {
@@ -298,6 +294,7 @@ export class WizardComponent
                     return tagArray.tag.name;
                   }
                 );
+                console.log(this.sectors, "sectors from db");
               }
 
               this.is_edit = true;
@@ -798,8 +795,7 @@ export class WizardComponent
                     updated_at
                     image_urls
                     featured_url
-                    voted_by
-                    watched_by
+                   
                     
                     problem_voters{
                       problem_id
@@ -918,7 +914,6 @@ export class WizardComponent
               beneficiary_attributes
               image_urls
               video_urls
-              owners
               min_population
               max_population
               modified_at
@@ -937,15 +932,15 @@ export class WizardComponent
         }
       }
     `;
-    this.problem.owners = JSON.stringify(this.owners)
-      .replace("[", "{")
-      .replace("]", "}");
-    this.problem.voted_by = JSON.stringify(this.voted_by)
-      .replace("[", "{")
-      .replace("]", "}");
-    this.problem.watched_by = JSON.stringify(this.watched_by)
-      .replace("[", "{")
-      .replace("]", "}");
+    // this.problem.owners = JSON.stringify(this.owners)
+    //   .replace("[", "{")
+    //   .replace("]", "}");
+    // this.problem.voted_by = JSON.stringify(this.voted_by)
+    //   .replace("[", "{")
+    //   .replace("]", "}");
+    // this.problem.watched_by = JSON.stringify(this.watched_by)
+    //   .replace("[", "{")
+    //   .replace("]", "}");
 
     this.apollo
       .mutate({
@@ -980,7 +975,6 @@ export class WizardComponent
 
             this.sectors.map(sector => {
               tags.push({ name: sector });
-              // console.log(tags, "tags in array");
 
               if (
                 this.tagService.allTags[sector] &&

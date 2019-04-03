@@ -362,7 +362,7 @@ export class ProblemDetailComponent implements OnInit, OnDestroy {
           modified_at
           updated_at
           image_urls
-          voted_by
+         
           featured_url
           featured_type
           video_urls

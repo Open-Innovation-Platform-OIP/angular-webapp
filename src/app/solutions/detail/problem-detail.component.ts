@@ -55,8 +55,7 @@ export class ProblemDetailComponent implements OnInit {
     created_by: 0,
     image_urls: [],
     voted_by: [],
-    watched_by: [],
-    video_urls: [],
+   
     impact: "",
     extent: "",
     min_population: 0,

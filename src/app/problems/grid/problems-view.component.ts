@@ -43,9 +43,9 @@ export class ProblemsViewComponent implements OnInit, OnDestroy {
               image_urls
               modified_at
               updated_at
-              voted_by
+            
               featured_url
-              watched_by
+              
               is_deleted
               problem_voters{
                 problem_id
@@ -121,9 +121,9 @@ export class ProblemsViewComponent implements OnInit, OnDestroy {
               image_urls
               modified_at
               updated_at
-              voted_by
+             
               featured_url
-              watched_by
+             
               is_deleted
               problem_voters{
                 problem_id
