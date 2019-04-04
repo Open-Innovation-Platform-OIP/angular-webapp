@@ -12,14 +12,14 @@
 <div class="row">
   <label class="col-sm-3 col-form-label">Attachment</label>
   <div class="col-md-9">
-    <label for="validate_attach" class="btn btn-secondary btn-sm btn-round right">
+    <span class="btn btn-secondary btn-sm btn-round btn-file">
       <i class="material-icons">
         attach_file
       </i>
       <span>Attach File</span>
-    </label>
-    <input type="file" id="validate_attach" (change)="onValidateFileSelected($event)" name="..." multiple
-      accept="application/*,text/plain" style="display:none;" />
+      <input type="file" name="..." (change)="onValidateFileSelected($event)" multiple
+        accept="application/pdf,text/plain,image/*" />
+    </span>
 
     <div *ngFor="let file of validationData.files; let i=index;">
       <div *ngIf="file">

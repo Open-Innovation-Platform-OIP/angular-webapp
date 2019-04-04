@@ -1,4 +1,4 @@
-import { Component, Input, Output, EventEmitter, OnInit } from "@angular/core";
+import { Component, Input, Output, EventEmitter, OnInit, DoCheck } from "@angular/core";
 import { FilesService } from "../../services/files.service";
 import { ProblemService } from "../../services/problem-handle.service";
 import swal from "sweetalert2";
@@ -25,17 +25,17 @@ export class ValidateProblemComponent implements OnInit {
     private space: FilesService
   ) // private problemService: ProblemService,
   // private validationService: ValidationService
-  {}
+  { }
 
   ngOnInit() {
     // console.log(this.validationData, "validation data check");
   }
 
   async onValidateFileSelected(event) {
-    console.log("Event: ", event);
-
+    // console.log("Event: ", event);
     for (let i = 0; i < event.target.files.length; i++) {
       const file = event.target.files[i];
+
       let attachment = await this.space
         .uploadFile(file, file["name"])
         .promise();
@@ -45,7 +45,6 @@ export class ValidateProblemComponent implements OnInit {
         url: attachment["Location"],
         mimeType: file.type
       });
-      // console.log(">>>>>> ", this.validationData.files);
     }
   }
 
