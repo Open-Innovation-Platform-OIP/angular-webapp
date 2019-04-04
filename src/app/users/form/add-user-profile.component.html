@@ -17,19 +17,19 @@
                     <div class="fileinput fileinput-new text-center" data-provides="fileinput">
                       <div class="fileinput-new thumbnail img-circle">
                         <img src="{{
-                            user.photo_url &&
-                            user.photo_url.url
+                            user.photo_url && user.photo_url.url
                               ? user.photo_url.url
                               : './assets/img/placeholder.jpg'
                           }}" alt="..." />
                       </div>
                       <div class="fileinput-preview fileinput-exists thumbnail img-circle"></div>
                       <div>
-                        <span class="btn btn-round btn-rose btn-file">
-                          <span class="fileinput-new">Add Photo</span>
+                        <label class="btn btn-round btn-rose btn-file">
+                          <span *ngIf="!user.photo_url" class="fileinput-new">Add Photo</span>
+                          <span *ngIf="user.photo_url" class="fileinput-new">update Photo</span>
                           <span class="fileinput-exists">Change</span>
                           <input type="file" name="..." (change)="getBlob($event)" accept="image/*" />
-                        </span>
+                        </label>
                         <br />
                         <a href="#pablo" class="btn btn-danger btn-round fileinput-exists" data-dismiss="fileinput"><i
                             class="fa fa-times"></i> Remove</a>
@@ -53,6 +53,17 @@
                 </div>
 
                 <div class="row">
+                  <label class="col-md-2 col-2 col-form-label">E-mail ID
+                  </label>
+                  <div class="col-md-10 col-9">
+                    <mat-form-field class="example-full-width">
+                      <input matInput type="email" name="email" [(ngModel)]="user.email"
+                        [ngModelOptions]="{ standalone: true }" required readonly />
+                    </mat-form-field>
+                  </div>
+                </div>
+
+                <div class="row">
                   <label class="col-md-2 col-2 col-form-label">Organization</label>
                   <div class="col-md-10 col-9">
                     <mat-form-field class="example-full-width">
@@ -65,11 +76,24 @@
                   <label class="col-sm-2 col-form-label">Persona</label>
                   <div class="col-md-10 col-9">
                     <div class="form-check" *ngFor="let persona of objectKeys(user)">
-                      <label class="form-check-label"
-                        *ngIf="persona!=='id' && persona!=='email' && persona!=='token' && persona!=='password' && persona!=='name' && persona!=='organization' && persona!=='qualification' && persona!=='photo_url' && persona!=='phone_number' && persona!=='location' && persona!=='notify_email' && persona!=='notify_sms' && persona!=='notify_app'">
+                      <label class="form-check-label" *ngIf="
+                          persona !== 'id' &&
+                          persona !== 'email' &&
+                          persona !== 'token' &&
+                          persona !== 'password' &&
+                          persona !== 'name' &&
+                          persona !== 'organization' &&
+                          persona !== 'qualification' &&
+                          persona !== 'photo_url' &&
+                          persona !== 'phone_number' &&
+                          persona !== 'location' &&
+                          persona !== 'notify_email' &&
+                          persona !== 'notify_sms' &&
+                          persona !== 'notify_app'
+                        ">
                         <input class="form-check-input" type="checkbox" [(ngModel)]="user[persona]"
-                          [ngModelOptions]="{standalone: true}">
-                        {{persona.slice(3)}}
+                          [ngModelOptions]="{ standalone: true }" />
+                        {{ persona.slice(3) }}
                         <span class="form-check-sign">
                           <span class="check"></span>
                         </span>
@@ -80,11 +104,8 @@
 
                 <div class="row">
                   <label class="col-md-2 col-2 col-form-label" [ngStyle]="{
-                      color: !user.phone_number
-                        ? 'red'
-                        : '#AAAAAA'
-                    }">Phone
-                    number
+                      color: !user.phone_number ? 'red' : '#AAAAAA'
+                    }">Phone number
                   </label>
                   <div class="col-md-10 col-9">
                     <mat-form-field class="example-full-width">
@@ -97,7 +118,6 @@
                   </div>
                 </div>
 
-
                 <div class="row justify-content-center">
                   <label class="col-md-2 col-2 col-form-label">
                     Interests</label>
@@ -106,14 +126,11 @@
                       <mat-form-field class="example-chip-list">
                         <input placeholder="Sectors" #sectorInput [formControl]="sectorCtrl" [matAutocomplete]="auto"
                           [matChipInputFor]="chipList" [matChipInputSeparatorKeyCodes]="separatorKeysCodes"
-                          [matChipInputAddOnBlur]="addOnBlur" (matChipInputTokenEnd)="add($event)">
-                        <mat-chip-list #chipList>
-
-
-                        </mat-chip-list>
+                          [matChipInputAddOnBlur]="addOnBlur" (matChipInputTokenEnd)="add($event)" />
+                        <mat-chip-list #chipList> </mat-chip-list>
                         <mat-autocomplete #auto="matAutocomplete" (optionSelected)="selected($event)">
-                          <mat-option *ngFor="let sector of filteredSectors | async" [value]="sector">
-                            {{sector}}
+                          <mat-option *ngFor="let sector of (filteredSectors | async)" [value]="sector">
+                            {{ sector }}
                           </mat-option>
                         </mat-autocomplete>
                       </mat-form-field>
@@ -122,16 +139,13 @@
                 </div>
 
                 <div class="row justify-content-center">
-                  <label class="col-md-2 col-2 col-form-label">
-                  </label>
+                  <label class="col-md-2 col-2 col-form-label"> </label>
                   <div class="col-md-10 col-9">
-
                     <mat-chip *ngFor="let sector of sectors" [selectable]="selectable" [removable]="removable"
                       (removed)="remove(sector)" style="margin-right:0.3em; margin-bottom: 0.4em;">
-                      {{sector}}
+                      {{ sector }}
                       <mat-icon matChipRemove *ngIf="removable">cancel</mat-icon>
                     </mat-chip>
-
                   </div>
                 </div>
 
@@ -140,8 +154,7 @@
                 <div class="row">
                   <label class="col-md-2 col-2 col-form-label" [ngStyle]="{
                       color: !user.location ? 'red' : '#AAAAAA'
-                    }">Location
-                    (Geo)
+                    }">Location (Geo)
                   </label>
                   <div class="col-md-10 col-9">
                     <mat-form-field class="example-full-width">
@@ -150,16 +163,13 @@
 
                       <mat-autocomplete #locationAuto="matAutocomplete" (optionSelected)="storeLocation($event)">
                         <mat-option *ngFor="let location of locations" [value]="location.Location.Address.Label">
-                          {{location.Location.Address.Label}}
+                          {{ location.Location.Address.Label }}
                         </mat-option>
                       </mat-autocomplete>
-
 
                       <!-- <input type="text" name="location" matInput id="location" [matAutocomplete]="auto"
                         placeholder="Location *" (keyup)="getLocation()" formControlName="location"
                         [(ngModel)]="content.location"> -->
-
-
 
                       <!-- <table style="width: 100%" id="table">
                         <tbody>
@@ -249,8 +259,6 @@
                     </ul>
                   </div>
                 </div>-->
-
-
               </div>
             </form>
           </div>
@@ -259,8 +267,6 @@
               (click)="onSubmit()">
               Save Details
             </button>
-
-
           </div>
 
           <div class="card-footer row justify-content-center" *ngIf="mode === 'Edit'">
@@ -268,8 +274,6 @@
               (click)="onSubmit()">
               Update
             </button>
-
-
           </div>
         </div>
       </div>
