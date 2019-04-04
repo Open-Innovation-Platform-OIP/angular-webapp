@@ -845,7 +845,7 @@ export class WizardComponent
                   this.searchResults[result.id] = result;
                 }
               });
-              console.log(this.searchResults, ">>>>>searchresults");
+              // console.log(this.searchResults, ">>>>>searchresults");
               if (!this.is_edit) {
                 canProceed = false;
               }
