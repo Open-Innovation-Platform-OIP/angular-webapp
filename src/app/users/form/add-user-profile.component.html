@@ -25,11 +25,12 @@
                       </div>
                       <div class="fileinput-preview fileinput-exists thumbnail img-circle"></div>
                       <div>
-                        <span class="btn btn-round btn-rose btn-file">
-                          <span class="fileinput-new">Add Photo</span>
+                        <label class="btn btn-round btn-rose btn-file">
+                          <span *ngIf="!user.photo_url" class="fileinput-new">Add Photo</span>
+                          <span *ngIf="user.photo_url" class="fileinput-new">update Photo</span>
                           <span class="fileinput-exists">Change</span>
                           <input type="file" name="..." (change)="getBlob($event)" accept="image/*" />
-                        </span>
+                        </label>
                         <br />
                         <a href="#pablo" class="btn btn-danger btn-round fileinput-exists" data-dismiss="fileinput"><i
                             class="fa fa-times"></i> Remove</a>

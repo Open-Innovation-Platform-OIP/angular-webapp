@@ -422,7 +422,7 @@ export class AddUserProfileComponent implements OnInit, OnChanges {
                 users_tags: Array.from(user_tags)
               }
             })
-            .subscribe(data => {}, err => {});
+            .subscribe(data => { }, err => { });
         }
       },
       err => {
@@ -448,6 +448,7 @@ export class AddUserProfileComponent implements OnInit, OnChanges {
           // console.log("val: ", values);
           this.user.photo_url = {};
           this.user.photo_url.url = values["Location"];
+          this.user.photo_url.mimeType = this.imageBlob['type'];
           this.user.photo_url.key = values["Key"];
 
           this.updateProfileToDb();
