@@ -74,7 +74,7 @@
             </div>
           </div>
           <div class="card-footer">
-            <div>
+            <div class="stats">
               <i class="material-icons actions" (click)="toggleVoteProblem()"
                 [ngStyle]="{'color':voters.has(userId) ? '#1E90FF' : 'black' }">
                 thumb_up
@@ -84,11 +84,7 @@
                 [ngStyle]="{'color':watchers.has(userId) ? '#1E90FF' : 'black' }">
                 visibility
               </i>
-              <span>&nbsp;</span>
-              <span>&nbsp;</span>
               <span> {{watchers.size}}</span>
-              <span>&nbsp;</span>
-              <span>&nbsp;</span>
               <!-- <i *ngIf="userId===problemData.created_by" [routerLink]="
                 '/problems/'+ problemData.id+'/edit'" class="material-icons actions">
                 create

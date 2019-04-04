@@ -3,7 +3,8 @@ import {
   OnInit,
   OnChanges,
   ElementRef,
-  ViewChild
+  ViewChild,
+  Input
 } from "@angular/core";
 import { ErrorStateMatcher } from "@angular/material/core";
 
@@ -281,6 +282,7 @@ export class AddUserProfileComponent implements OnInit, OnChanges {
               id
               organization
               name
+              email
               qualification
               photo_url
               location
