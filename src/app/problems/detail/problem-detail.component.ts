@@ -1114,6 +1114,8 @@ export class ProblemDetailComponent implements OnInit, OnDestroy {
       });
     }
 
+    console.log(mentions, "mentions of discussions");
+
     this.submitComment(content, mentions, file_links);
   }
 
