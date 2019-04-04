@@ -350,6 +350,7 @@ export class AddUserProfileComponent implements OnInit, OnChanges {
   }
 
   updateProfileToDb() {
+    this.user.phone_number = this.user.phone_number.toString();
     if (Number(this.auth.currentUserValue.id)) {
       this.user.id = Number(this.auth.currentUserValue.id);
     }

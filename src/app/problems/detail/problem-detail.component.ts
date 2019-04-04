@@ -12,9 +12,16 @@ import {
   LocationStrategy,
   PathLocationStrategy
 } from "@angular/common";
-import { Router, ActivatedRoute } from "@angular/router";
+import { Router, ActivatedRoute, ParamMap } from "@angular/router";
 import { Observable, Subscription, interval } from "rxjs";
-import { first, finalize, startWith, take, map } from "rxjs/operators";
+import {
+  first,
+  finalize,
+  startWith,
+  take,
+  map,
+  switchMap
+} from "rxjs/operators";
 
 import { ProblemService } from "../../services/problem.service";
 import { AuthService } from "../../services/auth.service";
@@ -64,7 +71,7 @@ export class ProblemDetailComponent implements OnInit, OnDestroy {
   problemDataQuery: QueryRef<any>;
   userDataQuery: QueryRef<any>;
 
-  problemDataSubcription: Subscription;
+  problemDataSubcription: any;
   objectValues = Object["values"];
   discussions = [];
   replyingTo = 0;
@@ -339,11 +346,34 @@ export class ProblemDetailComponent implements OnInit, OnDestroy {
     this.loadCarousels();
 
     this.minimizeSidebar();
-    this.route.params.pipe(first()).subscribe(params => {
-      if (params.id) {
-        this.getProblemData(params.id);
+
+    this.problemDataSubcription = this.route.paramMap.pipe(
+      switchMap((params: ParamMap) => {
+        return this.getProblemData(params.get("id"));
+      })
+    );
+    this.problemDataSubcription.subscribe(
+      result => {
+        if (result.data.problems.length >= 1 && result.data.problems[0].id) {
+          let problem = result.data.problems[0];
+          this.parseProblem(problem);
+        }
+      },
+      error => {
+        console.log("error", error);
       }
-    });
+    );
+    // this.problem.subscribe(result => {
+
+    //   }
+    //   // console.log(this.problemService.problem, "problem");
+    // });
+
+    // this.route.params.pipe(first()).subscribe(params => {
+    //   if (params.id) {
+    //     this.getProblemData(params.id);
+    //   }
+    // });
   }
 
   getProblemData(id) {
@@ -477,18 +507,8 @@ export class ProblemDetailComponent implements OnInit, OnDestroy {
       fetchPolicy: "network-only"
     });
     // this.chartQuery.valueChanges.subscribe
-    this.problemDataSubcription = this.problemDataQuery.valueChanges.subscribe(
-      result => {
-        // console.log('got a new result');
-        if (result.data.problems.length >= 1 && result.data.problems[0].id) {
-          let problem = result.data.problems[0];
-          this.parseProblem(problem);
-        }
-      },
-      error => {
-        console.error("error", error);
-      }
-    );
+    return this.problemDataQuery.valueChanges;
+    // return problemDataSubcription;
   }
 
   fbShare() {
@@ -1135,7 +1155,8 @@ export class ProblemDetailComponent implements OnInit, OnDestroy {
       this.replyingTo = 0;
       this.showReplyBox = false;
     }
-    this.discussionsService.submitCommentToDB(comment);
+
+    this.discussionsService.submitCommentToDB(comment, mentions);
   }
 
   async onReplySubmit(comment) {

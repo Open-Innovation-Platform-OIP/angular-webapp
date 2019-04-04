@@ -18,9 +18,9 @@ export interface Comment {
   providedIn: "root"
 })
 export class DiscussionsService {
-  constructor(private apollo: Apollo, private auth: AuthService) { }
+  constructor(private apollo: Apollo, private auth: AuthService) {}
 
-  submitCommentToDB(comment: Comment) {
+  submitCommentToDB(comment: Comment, mentions?) {
     if (!(comment.problem_id || comment.solution_id)) {
       console.log("cannot continue without problem or solution id");
       return false;
@@ -54,6 +54,15 @@ export class DiscussionsService {
         result => {
           if (result.data.insert_discussions.returning.length > 0) {
             console.log(result.data.insert_discussions);
+            mentions = mentions.map(mention => {
+              return {
+                discussion_id: result.data.insert_discussions.returning[0].id,
+                user_id: mention
+              };
+            });
+            console.log(mentions, "mentions array of objects");
+
+            this.submitMentionsToDB(mentions);
           }
         },
         err => {
@@ -94,5 +103,44 @@ export class DiscussionsService {
       pollInterval: 500,
       fetchPolicy: "network-only"
     }).valueChanges;
+  }
+
+  submitMentionsToDB(mentions) {
+    const upsert_mentions = gql`
+      mutation upsert_mentions(
+        $discussion_mentions: [discussion_mentions_insert_input!]!
+      ) {
+        insert_discussion_mentions(
+          objects: $discussion_mentions
+          on_conflict: {
+            constraint: discussion_mentions_pkey
+            update_columns: []
+          }
+        ) {
+          affected_rows
+          returning {
+            user_id
+          }
+        }
+      }
+    `;
+    this.apollo
+      .mutate({
+        mutation: upsert_mentions,
+        variables: {
+          discussion_mentions: mentions
+        }
+      })
+      .subscribe(
+        result => {
+          console.log(result, "mention worked");
+          // if (result.data.insert_discussions.returning.length > 0) {
+          //   console.log(result.data.insert_discussions);
+          // }
+        },
+        err => {
+          console.error(JSON.stringify(err));
+        }
+      );
   }
 }

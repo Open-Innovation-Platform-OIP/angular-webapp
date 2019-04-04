@@ -105,7 +105,7 @@
             <div *ngFor="let notification of objectValues(notifications)">
 
 
-              <a *ngIf="!notification.enrichment_id && !notification.collaborator && !notification.validated_by && notification.tag_id && !notification.is_update"
+              <a *ngIf="!notification.enrichment_id && !notification.collaborator && !notification.discussion_id && !notification.validated_by && notification.tag_id && !notification.is_update"
                 class="dropdown-item" name="{{ notification.id }}" [routerLink]="
                 
                 '/problems/' + notification.problem_id
@@ -117,7 +117,7 @@
 
               </a>
 
-              <a *ngIf="!notification.enrichment_id && !notification.collaborator && !notification.validated_by && !notification.tag_id "
+              <a *ngIf="!notification.enrichment_id && !notification.collaborator && !notification.discussion_id && !notification.validated_by && !notification.tag_id "
                 class="dropdown-item" name="{{ notification.id }}" [routerLink]="
                 
                 '/problems/' + notification.problem_id
@@ -166,7 +166,8 @@
                 '/problems/' + notification.problem_id
               ">
 
-                You were mentioned on discussion "{{ notification.discussion.text }}" on problem
+                You were mentioned on discussion "{{ notification.discussion.text}}" on
+                problem
                 "{{ notification.problemsByproblemId.title }}"
 
               </a>

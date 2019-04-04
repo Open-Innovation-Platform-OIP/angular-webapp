@@ -178,6 +178,7 @@ export class NavbarComponent implements OnInit {
               is_read
               enrichment_id
               collaborator
+              discussion_id
               validated_by
               tag_id
               tag{
@@ -205,6 +206,12 @@ export class NavbarComponent implements OnInit {
         ({ data }) => {
           console.log(data, "from notifications");
           data.notifications.map(notification => {
+            if (notification.discussion) {
+              notification.discussion.text = notification.discussion.text.replace(
+                /<[^>]*>/g,
+                ""
+              );
+            }
             this.notifications[notification.id] = notification;
           });
 
