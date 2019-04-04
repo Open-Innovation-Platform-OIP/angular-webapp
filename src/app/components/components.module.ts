@@ -25,6 +25,7 @@ import { ProblemCardComponent } from "./problem-card/problem-card.component";
 import { DisplayModalComponent } from "./display-modal/display-modal.component";
 import { WizardContainerComponent } from "./wizard-container/wizard-container.component";
 // import { GlobalSearchCardsComponent } from "./global-search-cards/global-search-cards.component";
+import { ShareAutofocusModule } from "../share-autofocus/share-autofocus.module";
 
 @NgModule({
   imports: [
@@ -33,7 +34,8 @@ import { WizardContainerComponent } from "./wizard-container/wizard-container.co
     MdModule,
     MaterialModule,
     RouterModule,
-    ReactiveFormsModule
+    ReactiveFormsModule,
+    ShareAutofocusModule
   ],
   declarations: [
     AddEnrichmentComponent,

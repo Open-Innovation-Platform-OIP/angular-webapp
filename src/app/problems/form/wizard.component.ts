@@ -781,7 +781,7 @@ export class WizardComponent
   smartSearch() {
     let searchKey = this.problem.title + " " + this.problem.description;
     searchKey = searchKey.replace(/[^a-zA-Z ]/g, "");
-    console.log(searchKey, "searchkey");
+    // console.log(searchKey, "searchkey");
 
     if (searchKey.length > 3) {
       this.searchResults = {};

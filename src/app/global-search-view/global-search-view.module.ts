@@ -5,13 +5,15 @@ import { GlobalSearchViewComponent } from "./global-search-view.component";
 import { ComponentsModule } from "./../components/components.module";
 import { FormsModule } from "@angular/forms";
 import { GlobalSearchViewRoutes } from "./global-search-view.routing";
+import { ShareAutofocusModule } from "../share-autofocus/share-autofocus.module";
 
 @NgModule({
   imports: [
     RouterModule.forChild(GlobalSearchViewRoutes),
     CommonModule,
     FormsModule,
-    ComponentsModule
+    ComponentsModule,
+    ShareAutofocusModule
   ],
   declarations: [GlobalSearchViewComponent],
   exports: [GlobalSearchViewComponent]

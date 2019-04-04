@@ -72,7 +72,7 @@ export class EnrichmentFormComponent implements OnInit {
                         featured_url
                         featured_type
                         embed_urls
-                        voted_by
+                        
                         usersBycreatedBy {
                           id
                           name
@@ -112,7 +112,8 @@ export class EnrichmentFormComponent implements OnInit {
             }
           },
           err => {
-            console.log("error", err);
+            // console.log("error", err);
+            console.error(JSON.stringify(err));
           }
         );
     }
