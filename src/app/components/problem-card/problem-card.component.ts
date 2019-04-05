@@ -16,6 +16,7 @@ export class ProblemCardComponent implements OnInit {
   numOfWatchers: Number = 0;
   numOfValidations: Number = 0;
   validated: Boolean = false;
+  link = '';
   // modifiedAt: any;
   // sectors: any[] = [];
 
@@ -23,6 +24,11 @@ export class ProblemCardComponent implements OnInit {
 
   ngOnInit() {
     // console.log("problem card", this.problemData);
+    if (this.problemData.is_draft) {
+      this.link += `/problems/${this.problemData.id}/edit`;
+    } else {
+      this.link += `/problems/${this.problemData.id}`;
+    }
     if (
       this.problemData.problem_voters &&
       this.problemData.problem_voters.length

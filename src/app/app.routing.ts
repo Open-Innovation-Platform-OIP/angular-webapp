@@ -6,7 +6,7 @@ import { AuthGuard } from "./services/auth.guard";
 export const AppRoutes: Routes = [
   {
     path: "",
-    redirectTo: "problems",
+    redirectTo: "dashboard",
     pathMatch: "full",
     canActivate: [AuthGuard]
   },
@@ -23,6 +23,10 @@ export const AppRoutes: Routes = [
       {
         path: "problems",
         loadChildren: "./problems/problems.module#ProblemsModule"
+      },
+      {
+        path: "dashboard",
+        loadChildren: "./dashboard/dashboard.module#DashboardModule"
       },
       {
         path: "users",
@@ -64,6 +68,6 @@ export const AppRoutes: Routes = [
   },
   {
     path: "**",
-    redirectTo: "problems"
+    redirectTo: "dashboard"
   }
 ];
