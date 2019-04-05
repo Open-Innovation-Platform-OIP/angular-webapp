@@ -1158,9 +1158,6 @@ export class ProblemDetailComponent implements OnInit, OnDestroy {
       problem_id: this.problemData["id"],
       text: content,
       attachments: attachments, // overwriting the incoming blobs
-      mentions: JSON.stringify(mentions)
-        .replace("[", "{")
-        .replace("]", "}")
     };
     if (comment_id) {
         comment["linked_comment_id"] = comment_id;
@@ -1175,36 +1172,36 @@ export class ProblemDetailComponent implements OnInit, OnDestroy {
     this.discussionsService.submitCommentToDB(comment, mentions);
   }
 
-  async onReplySubmit(comment) {
-    let file_links: attachment_object[];
-    let _links = []; // local array
+  // async onReplySubmit(comment) {
+  //   let file_links: attachment_object[];
+  //   let _links = []; // local array
 
-    let all_promise = await comment.attachments.map(file => {
-      return this.fileService.uploadFile(file, file.name).promise();
-    });
+  //   let all_promise = await comment.attachments.map(file => {
+  //     return this.fileService.uploadFile(file, file.name).promise();
+  //   });
 
-    try {
-      _links = await Promise.all(all_promise);
-    } catch (error) {
-      console.log("Err while uploading reply files");
-    }
+  //   try {
+  //     _links = await Promise.all(all_promise);
+  //   } catch (error) {
+  //     console.log("Err while uploading reply files");
+  //   }
 
-    if (_links.length) {
-      file_links = [];
-      _links.map((link, i) => {
-        file_links.push({
-          key: link["key"],
-          url: link["Location"],
-          mimeType: comment.attachments[i].type
-        });
-      });
-    }
+  //   if (_links.length) {
+  //     file_links = [];
+  //     _links.map((link, i) => {
+  //       file_links.push({
+  //         key: link["key"],
+  //         url: link["Location"],
+  //         mimeType: comment.attachments[i].type
+  //       });
+  //     });
+  //   }
 
-    comment["created_by"] = this.auth.currentUserValue.id;
-    comment["problem_id"] = this.problemData["id"];
-    comment["attachments"] = file_links; // overwriting the incoming blobs
-    this.discussionsService.submitCommentToDB(comment);
-  }
+  //   comment["created_by"] = this.auth.currentUserValue.id;
+  //   comment["problem_id"] = this.problemData["id"];
+  //   comment["attachments"] = file_links; // overwriting the incoming blobs
+  //   this.discussionsService.submitCommentToDB(comment);
+  // }
 
   checkIntent(event) {
     this.collaboratorIntent = event;

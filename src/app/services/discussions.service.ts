@@ -31,7 +31,7 @@ export class DiscussionsService {
           objects: $discussions
           on_conflict: {
             constraint: discussions_pkey
-            update_columns: [text, mentions, modified_at]
+            update_columns: [text, modified_at]
           }
         ) {
           affected_rows

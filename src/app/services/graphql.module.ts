@@ -4,7 +4,7 @@ import { ApolloModule, APOLLO_OPTIONS } from 'apollo-angular';
 import { HttpLinkModule, HttpLink } from 'apollo-angular-link-http';
 import { InMemoryCache } from 'apollo-cache-inmemory';
 
-const uri = "https://hasura1-sa.jaaga.in/v1alpha1/graphql";
+const uri = "https://hasura.socialalpha.jaagalabs.com/v1alpha1/graphql";
 // <-- add the URL of the GraphQL server here
 const authHeader = new HttpHeaders()
     .set("X-Hasura-Access-Key", "socialalpha")
