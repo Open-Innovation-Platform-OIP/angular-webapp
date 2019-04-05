@@ -94,7 +94,7 @@ export class AddUserProfileComponent implements OnInit, OnChanges {
     qualification: "",
     photo_url: {},
     phone_number: "",
-    location: "",
+    location: {},
     is_ngo: false,
     is_innovator: false,
     is_expert: false,
@@ -230,6 +230,11 @@ export class AddUserProfileComponent implements OnInit, OnChanges {
     // this.query2 = " ";
   }
 
+  storeOrg(org) {
+    this.user.organization = org.option.value;
+    console.log(this.user, "user on org select");
+  }
+
   getLocation() {
     console.log("get address");
     if (this.user.location != "Unknown") {
@@ -254,8 +259,8 @@ export class AddUserProfileComponent implements OnInit, OnChanges {
     // console.log(typeof JSON.parse("{" + filtered.toString() + "}"));
   }
   public storeLocation(location) {
-    console.log(location, "location");
-    this.user.location = location.option.value;
+    // console.log(location, "location");
+    this.user.location = location;
     // this.locations = [];
     console.log(this.user.location);
   }
@@ -425,7 +430,7 @@ export class AddUserProfileComponent implements OnInit, OnChanges {
                 users_tags: Array.from(user_tags)
               }
             })
-            .subscribe(data => { }, err => { });
+            .subscribe(data => {}, err => {});
         }
       },
       err => {
@@ -451,7 +456,7 @@ export class AddUserProfileComponent implements OnInit, OnChanges {
           // console.log("val: ", values);
           this.user.photo_url = {};
           this.user.photo_url.url = values["Location"];
-          this.user.photo_url.mimeType = this.imageBlob['type'];
+          this.user.photo_url.mimeType = this.imageBlob["type"];
           this.user.photo_url.key = values["Key"];
 
           this.updateProfileToDb();

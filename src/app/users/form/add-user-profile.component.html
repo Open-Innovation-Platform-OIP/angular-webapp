@@ -67,10 +67,18 @@
                   <label class="col-md-2 col-2 col-form-label">Organization</label>
                   <div class="col-md-10 col-9">
                     <mat-form-field class="example-full-width">
-                      <input matInput type="text" name="organization" [(ngModel)]="user.organization" />
+                      <input matInput type="text" name="organization" [(ngModel)]="user.organization"
+                        [matAutocomplete]="orgAuto" />
+                      <mat-autocomplete #orgAuto="matAutocomplete" (optionSelected)="storeOrg($event)">
+                        <mat-option *ngFor="let org of userService.allOrgs" value="{{org}}">
+                          {{org}}
+                        </mat-option>
+                      </mat-autocomplete>
                     </mat-form-field>
                   </div>
                 </div>
+
+                <!-- *ngFor="let org of usersService.allOrgs" -->
 
                 <div class="row">
                   <label class="col-sm-2 col-form-label">Persona</label>
@@ -162,7 +170,7 @@
                         (keyup)="getLocation()" [(ngModel)]="user.location" #location="ngModel" />
 
                       <mat-autocomplete #locationAuto="matAutocomplete" (optionSelected)="storeLocation($event)">
-                        <mat-option *ngFor="let location of locations" [value]="location.Location.Address.Label">
+                        <mat-option *ngFor="let location of locations" [value]="location.Location">
                           {{ location.Location.Address.Label }}
                         </mat-option>
                       </mat-autocomplete>
