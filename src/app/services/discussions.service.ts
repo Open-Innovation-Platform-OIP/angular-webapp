@@ -10,7 +10,6 @@ export interface Comment {
   solution_id?: number; // linked solution
   text: String; // text/html for comment
   linked_comment_id?: number; // include parent comment id if this is a reply
-  mentions?: String;
   attachments?: String[];
 }
 
@@ -54,15 +53,16 @@ export class DiscussionsService {
         result => {
           if (result.data.insert_discussions.returning.length > 0) {
             console.log(result.data.insert_discussions);
-            mentions = mentions.map(mention => {
-              return {
-                discussion_id: result.data.insert_discussions.returning[0].id,
-                user_id: mention
-              };
-            });
-            console.log(mentions, "mentions array of objects");
-
-            this.submitMentionsToDB(mentions);
+            if (mentions && mentions.length > 0) {
+              mentions = mentions.map(mention => {
+                return {
+                  discussion_id: result.data.insert_discussions.returning[0].id,
+                  user_id: mention
+                };
+              });
+              console.log(mentions, "mentions array of objects");
+              this.submitMentionsToDB(mentions);
+            }
           }
         },
         err => {
@@ -91,7 +91,6 @@ export class DiscussionsService {
             modified_at
             text
             linked_comment_id
-            mentions
             attachments
             usersBycreatedBy{
               name

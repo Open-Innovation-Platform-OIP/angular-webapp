@@ -446,7 +446,6 @@ export class ProblemDetailComponent implements OnInit, OnDestroy {
           modified_at
           text
           linked_comment_id
-          mentions
           attachments
           usersBycreatedBy {
             name
@@ -1106,8 +1105,9 @@ export class ProblemDetailComponent implements OnInit, OnDestroy {
     this.collaboratorDataToEdit = collaborationData;
   }
 
-  async onCommentSubmit(event) {
+  async onCommentSubmit(event, comment_id?) {
     const [content, mentions, attachments] = event;
+    console.log(event);
     let file_links: attachment_object[];
     let _links = []; //local array
 
@@ -1134,11 +1134,25 @@ export class ProblemDetailComponent implements OnInit, OnDestroy {
     }
 
     console.log(mentions, "mentions of discussions");
+    // let comment = {
+    //   created_by: this.auth.currentUserValue.id,
+    //   problem_id: this.problemData["id"],
+    //   text: content,
+    //   attachments: file_links, // overwriting the incoming blobs
+    // };
+    // // console.log(content, mentions);
+    // if (comment_id) {
+    //   comment["linked_comment_id"] = comment_id;
+    //   // this.replyingTo = 0;
+    //   // this.showReplyBox = false;
+    // }
 
-    this.submitComment(content, mentions, file_links);
+    // this.discussionsService.submitCommentToDB(comment, mentions);
+
+    this.submitComment(content, mentions, file_links, comment_id);
   }
 
-  submitComment(content, mentions, attachments?) {
+  submitComment(content, mentions, attachments?, comment_id?) {
     let comment = {
       created_by: this.auth.currentUserValue.id,
       problem_id: this.problemData["id"],
@@ -1148,6 +1162,9 @@ export class ProblemDetailComponent implements OnInit, OnDestroy {
         .replace("[", "{")
         .replace("]", "}")
     };
+    if (comment_id) {
+        comment["linked_comment_id"] = comment_id;
+    }
     // console.log(content, mentions);
     if (this.showReplyBox) {
       comment["linked_comment_id"] = this.replyingTo;
