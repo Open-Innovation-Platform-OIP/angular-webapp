@@ -27,7 +27,8 @@
             <div class="card-icon">
               <i class="material-icons">perm_identity</i>
             </div>
-            <h4 class="card-title" style="text-align:left;">My Profile
+            <h4 class="card-title" style="text-align:left;">
+              {{userData.id===userId?"My Profile":"Profile"}}
               <!-- <small class="category">Complete your profile</small> -->
             </h4>
           </div>
@@ -35,7 +36,7 @@
             <strong>E-mail</strong>
             <p class="description">{{userData.email}}</p>
 
-            <strong *ngIf="loggedInUsersProfile">Phone Number</strong>
+            <strong *ngIf="loggedInUsersProfile && userData.phone_number">Phone Number</strong>
             <p class="description" *ngIf="loggedInUsersProfile">{{userData.phone_number}}</p>
 
             <strong *ngIf="userData.organization">Organization</strong>

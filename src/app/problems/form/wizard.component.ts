@@ -781,7 +781,7 @@ export class WizardComponent
   smartSearch() {
     let searchKey = this.problem.title + " " + this.problem.description;
     searchKey = searchKey.replace(/[^a-zA-Z ]/g, "");
-    console.log(searchKey, "searchkey");
+    // console.log(searchKey, "searchkey");
 
     if (searchKey.length > 3) {
       this.searchResults = {};
@@ -845,7 +845,7 @@ export class WizardComponent
                   this.searchResults[result.id] = result;
                 }
               });
-              console.log(this.searchResults, ">>>>>searchresults");
+              // console.log(this.searchResults, ">>>>>searchresults");
               if (!this.is_edit) {
                 canProceed = false;
               }

@@ -353,7 +353,8 @@
 
         <div class="row justify-content-center">
 
-          <p *ngIf="!(userId == problemData.created_by) && userPersonas.is_expert && !sectorMatched ">
+          <p
+            *ngIf="!(userId == problemData.created_by) && userPersonas.is_expert && !sectorMatched && !disableValidateButton">
             Please ensure that
             your interests match with the problem
             sectors in order to validate</p>

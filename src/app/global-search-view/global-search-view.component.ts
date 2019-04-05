@@ -1,5 +1,5 @@
 import { Component, OnInit, Input, OnChanges } from "@angular/core";
-import { Router, ActivatedRoute } from "@angular/router";
+import { Router, ActivatedRoute, NavigationEnd } from "@angular/router";
 import { first, finalize, startWith, take, map } from "rxjs/operators";
 
 import * as Query from "../services/queries";
@@ -26,10 +26,21 @@ export class GlobalSearchViewComponent implements OnInit, OnChanges {
   constructor(
     private route: ActivatedRoute,
     private apollo: Apollo,
-    private auth: AuthService
+    private auth: AuthService,
+    private router: Router
   ) {}
 
-  ngOnInit() {}
+  ngOnInit() {
+    this.router.routeReuseStrategy.shouldReuseRoute = function() {
+      return false;
+    };
+    this.router.events.subscribe(evt => {
+      if (evt instanceof NavigationEnd) {
+        this.router.navigated = false;
+        window.scrollTo(0, 0);
+      }
+    });
+  }
 
   ngOnChanges() {
     this.route.params.pipe(first()).subscribe(params => {

@@ -19,6 +19,7 @@ export class ViewUserProfileComponent implements OnInit {
   loggedInUsersProfile: boolean = false;
   objectEntries = Object.entries;
   personas: any = [];
+  userId: any;
 
   constructor(
     private userHandlerService: UserHandlerService,
