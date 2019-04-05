@@ -6,17 +6,14 @@ import { first } from 'rxjs/operators';
 declare var $: any;
 
 @Component({
-    selector: 'app-forgotpassword-cmp',
-    templateUrl: './forgotpassword.component.html'
+    selector: 'app-verifyemail-cmp',
+    templateUrl: './verifyemail.component.html'
 })
 
-export class ForgotPasswordComponent implements OnInit, OnDestroy {
-    step = 0;
-    resetDetails = {
+export class VerifyEmailComponent implements OnInit, OnDestroy {
+    verifyDetails = {
         email: '',
         otp: '',
-        password: '',
-        confirmPassword: '',
     };
     loading = false;
     submitted = false;
@@ -72,7 +69,7 @@ export class ForgotPasswordComponent implements OnInit, OnDestroy {
         body.classList.remove('off-canvas-sidebar');
     }
     canSubmit() {
-        if (isEmail(this.resetDetails.email) && this.resetDetails.otp.length >= 4 && this.resetDetails.password.length >= 4 && this.resetDetails.password === this.resetDetails.confirmPassword) {
+        if (isEmail(this.verifyDetails.email) && this.verifyDetails.otp.length >= 4) {
             return true;
         }
         return false;
@@ -83,12 +80,11 @@ export class ForgotPasswordComponent implements OnInit, OnDestroy {
     }
     requestOTP() {
         this.loading = true;
-        this.auth.requestResetCode(this.resetDetails.email)
+        this.auth.requestResetCode(this.verifyDetails.email)
         .pipe(first())
         .subscribe(
             data => {
                 this.loading = false;
-                this.step = 1;
                 // this.router.navigate(['/login']);
                 // this.router.navigate([this.returnUrl]);
             },
@@ -102,16 +98,20 @@ export class ForgotPasswordComponent implements OnInit, OnDestroy {
     submit() {
         this.submitted = true;
         this.loading = true;
-        // this.auth.login(this.resetDetails, this.done);
-        this.auth.resetPassword(this.resetDetails)
+        // this.auth.login(this.verifyDetails, this.done);
+        this.auth.completeVerification(this.verifyDetails)
             .pipe(first())
             .subscribe(
                 data => {
-                    this.router.navigate(['/login']);
+                    // console.log(data);
+                    alert('Thank you! You have been verified. Please click OK to continue to the login page.')
+                    this.router.navigateByUrl('/auth/login');
                     // this.router.navigate([this.returnUrl]);
                 },
                 error => {
+                    console.log(error);
                     this.error = error;
+                    alert(error.response);
                     this.loading = false;
                 });
     }

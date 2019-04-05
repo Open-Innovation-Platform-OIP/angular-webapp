@@ -11,6 +11,7 @@ import { RegisterComponent } from './register/register.component';
 import { LockComponent } from './lock/lock.component';
 import { LoginComponent } from './login/login.component';
 import { ForgotPasswordComponent } from './forgot-password/forgotpassword.component';
+import { VerifyEmailComponent} from './verify-email/verifyemail.component';
 
 @NgModule({
   imports: [
@@ -24,7 +25,8 @@ import { ForgotPasswordComponent } from './forgot-password/forgotpassword.compon
     LoginComponent,
     RegisterComponent,
     LockComponent,
-    ForgotPasswordComponent
+    ForgotPasswordComponent,
+    VerifyEmailComponent
   ]
 })
 
