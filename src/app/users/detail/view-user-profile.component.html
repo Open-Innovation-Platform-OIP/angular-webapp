@@ -32,14 +32,34 @@
             </h4>
           </div>
           <div class="card-body">
-            <strong *ngIf="userData.organization">Organization</strong>
-            <p class="description">{{userData.organization}}</p>
-            <strong *ngIf="userData.qualification">Qualification</strong>
-            <p class="description">{{userData.qualification}}</p>
-            <!-- <strong>Phone number</strong>
-            <p class="description">{{userData.organization}}</p> -->
             <strong>E-mail</strong>
             <p class="description">{{userData.email}}</p>
+
+            <strong *ngIf="loggedInUsersProfile">Phone Number</strong>
+            <p class="description" *ngIf="loggedInUsersProfile">{{userData.phone_number}}</p>
+
+            <strong *ngIf="userData.organization">Organization</strong>
+            <p class="description">{{userData.organization}}</p>
+
+            <strong *ngIf="personas.length">Persona</strong>
+            <div>
+              <span *ngFor="let persona of personas" class="badge badge-warning"
+                style="margin-right: 0.3em;">{{persona.slice(3)}}</span>
+              <span>&nbsp;</span>
+            </div>
+
+            <br />
+
+            <!-- <strong *ngIf="userData.qualification">Qualification</strong> -->
+            <!-- <p class="description">{{userData.qualification}}</p> -->
+            <!-- <strong>Phone number</strong>
+            <p class="description">{{userData.organization}}</p> -->
+
+
+
+            <strong>Location</strong>
+            <p class="description">{{userData.location}}</p>
+
             <strong *ngIf="interests.length">Interests</strong>
             <div>
               <span class="badge badge-warning" *ngFor="let interest of interests"
@@ -47,14 +67,6 @@
               <span>&nbsp;</span>
             </div>
 
-            <strong>Location</strong>
-            <p class="description">{{userData.location}}</p>
-            <strong>Persona</strong>
-            <div>
-              <span *ngFor="let persona of personas" class="badge badge-warning"
-                style="margin-right: 0.3em;">{{persona.slice(3)}}</span>
-              <span>&nbsp;</span>
-            </div>
           </div>
           <div class="card-footer">
             <div [routerLink]="'/users/'+ userData.id+'/edit'" *ngIf="loggedInUsersProfile">
