@@ -20,16 +20,7 @@ export class CommentSubmitComponent implements OnInit {
   @Input() actionText = "Comment";
   @Input() cancelShown = false;
   @Input() id;
-  @Input() users = [
-    {
-      id: 1,
-      value: 'Vineeth'
-    },
-    {
-      id: 2,
-      value: 'Jacob'
-    }
-  ];
+  @Input() users;
   @Output() submit = new EventEmitter();
   @Output() cancel = new EventEmitter();
   content = '';
@@ -38,10 +29,12 @@ export class CommentSubmitComponent implements OnInit {
   file_types = ["application/msword", " application/vnd.ms-excel", " application/vnd.ms-powerpoint", "text/plain", " application/pdf", " image/*", "video/*"];
   modules = {
     mention: {
-      allowedChars: /^[A-Za-z\sÅÄÖåäö]*$/,
       listItemClass: 'ql-mention-list-item',
       mentionListClass: 'ql-mention-list',
       mentionContainerClass: 'ql-mention-list-container',
+      allowedChars: /^[A-Za-z\sÅÄÖåäö]*$/,
+      contenteditable: false,
+      isolateCharacter: true,
       onSelect: (item, insertItem) => {
         const editor = this.editor.quillEditor as Quill;
         insertItem(item);
