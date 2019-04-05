@@ -16,7 +16,7 @@ interface User {
 })
 export class AuthService {
 
-  authEndpoint = 'https://hasura1-sa.jaaga.in/auth/';
+  authEndpoint = 'https://auth.socialalpha.jaagalabs.com/auth/';
   private jwtHelper;
   public user: Observable<any>;
   private currentUserSubject: BehaviorSubject<User>;
