@@ -1,10 +1,9 @@
 <div class="main-content">
-    <div class="container-fluid">
+    <div class="container-fluid" *ngIf="drafts.length || contributions.size || recommendedProblems.size || recommendedUsers.size; else new_user">
         <h3 *ngIf="drafts.length" class="card-title text-center">You are working on these drafts</h3>
         <br />
         <div class="row">
             <div class="col-md-4" *ngFor="let problem of drafts">
-              <!-- {{problem.id}} -->
                 <app-problem-card [problemData]="problem"></app-problem-card>
             </div>
         </div>
@@ -31,5 +30,20 @@
         </div>
     </div>
 </div>
+
+<ng-template #new_user>
+<div class="main-content">
+        <div class="container-fluid">
+                <h3>New here?</h3>
+                <p>
+                    Why not help enrich some of <a [routerLink]="'/problems'">the problems</a> on the platform? Or perhaps add a new one?
+                </p>
+                <p>
+                    Don't forget to <a [routerLink]="'/users/'+ auth.currentUserValue.id">update your profile</a> so that other users can find you!
+                </p>
+        </div>
+</div>    
+</ng-template>
+
 
 <!-- Hello -->
