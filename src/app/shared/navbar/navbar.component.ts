@@ -4,6 +4,7 @@ import {
   Renderer,
   ViewChild,
   ElementRef,
+  Input,
   Directive
 } from "@angular/core";
 import { ROUTES } from "../.././sidebar/sidebar.component";
@@ -29,6 +30,7 @@ import * as Query from "../../services/queries";
 import { Apollo } from "apollo-angular";
 import gql from "graphql-tag";
 import { AuthService } from "../../services/auth.service";
+import { UsersService } from "../../services/users.service";
 import { Integer } from "aws-sdk/clients/comprehendmedical";
 // import { NotificationsComponent } from "src/app/components/notifications/notifications.component";
 // import { SearchService } from "../../search.service";
@@ -38,6 +40,7 @@ declare var $: any;
   templateUrl: "navbar.component.html"
 })
 export class NavbarComponent implements OnInit {
+  @Input() userData: any;
   private listTitles: any[];
   objectValues = Object["values"];
   location: Location;
@@ -74,6 +77,7 @@ export class NavbarComponent implements OnInit {
     private router: Router,
     private apollo: Apollo,
     private auth: AuthService,
+    private usersService: UsersService,
     private route: ActivatedRoute // private search: SearchService
   ) {
     this.location = location;
@@ -461,6 +465,11 @@ export class NavbarComponent implements OnInit {
 
   focus() {
     document.getElementById("search").focus();
+  }
+
+  logout() {
+    this.auth.logout();
+    this.router.navigate(["/auth/login"]);
   }
 
   // GlobalSearch() {

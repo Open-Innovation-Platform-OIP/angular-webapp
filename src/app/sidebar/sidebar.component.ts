@@ -27,10 +27,10 @@ export interface ChildrenItems {
 //Menu Items
 export const ROUTES: RouteInfo[] = [
   {
-      path: '/dashboard',
-      title: 'Dashboard',
-      type: 'link',
-      icontype: 'dashboard'
+    path: "/dashboard",
+    title: "Dashboard",
+    type: "link",
+    icontype: "dashboard"
   },
   {
     path: "/problems",
@@ -89,8 +89,8 @@ export class SidebarComponent implements OnInit {
     }
     return bool;
   }
-  logout() {
-    this.auth.logout();
-    this.router.navigate(["/auth/login"]);
-  }
+  // logout() {
+  //   this.auth.logout();
+  //   this.router.navigate(["/auth/login"]);
+  // }
 }
