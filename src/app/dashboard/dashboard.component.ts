@@ -101,11 +101,11 @@ export class DashboardComponent implements OnInit, AfterViewInit {
       query: contributionsQuery
     });
     this.contributionsSub = this.contributionsQueryRef.valueChanges.subscribe(({data}) => {
-      Object.values(data).map(results => {
-        results.map(problem => {
+      Object.keys(data).map(key => {
+        data[key].map(problem => {
           this.contributions.add(Object.values(problem)[0]);
         });
-      })
+      });
     });
   }
 
