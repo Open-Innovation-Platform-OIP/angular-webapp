@@ -64,6 +64,22 @@
                 </div>
 
                 <div class="row">
+                  <label class="col-md-2 col-2 col-form-label" [ngStyle]="{
+                      color: !user.phone_number ? 'red' : '#AAAAAA'
+                    }">Phone number
+                  </label>
+                  <div class="col-md-10 col-9">
+                    <mat-form-field class="example-full-width">
+                      <input matInput type="number" name="phone_number" required [(ngModel)]="user.phone_number"
+                        #phone_number="ngModel" />
+                    </mat-form-field>
+                    <div [hidden]="phone_number.valid || phone_number.pristine" class="text-danger error-msg">
+                      Phone number is required
+                    </div>
+                  </div>
+                </div>
+
+                <div class="row">
                   <label class="col-md-2 col-2 col-form-label">Organization</label>
                   <div class="col-md-10 col-9">
                     <mat-form-field class="example-full-width">
@@ -104,19 +120,42 @@
 
                 <div class="row">
                   <label class="col-md-2 col-2 col-form-label" [ngStyle]="{
-                      color: !user.phone_number ? 'red' : '#AAAAAA'
-                    }">Phone number
+                        color: !user.location ? 'red' : '#AAAAAA'
+                      }">Location (Geo)
                   </label>
                   <div class="col-md-10 col-9">
                     <mat-form-field class="example-full-width">
-                      <input matInput type="number" name="phone_number" required [(ngModel)]="user.phone_number"
-                        #phone_number="ngModel" />
+                      <input matInput type="text" name="location" required [matAutocomplete]="locationAuto"
+                        (keyup)="getLocation()" [(ngModel)]="user.location" #location="ngModel" />
+
+                      <mat-autocomplete #locationAuto="matAutocomplete" (optionSelected)="storeLocation($event)">
+                        <mat-option *ngFor="let location of locations" [value]="location.Location.Address.Label">
+                          {{ location.Location.Address.Label }}
+                        </mat-option>
+                      </mat-autocomplete>
+
+                      <!-- <input type="text" name="location" matInput id="location" [matAutocomplete]="auto"
+                          placeholder="Location *" (keyup)="getLocation()" formControlName="location"
+                          [(ngModel)]="content.location"> -->
+
+                      <!-- <table style="width: 100%" id="table">
+                          <tbody>
+                            <tr *ngFor="let location of locations">
+                              <td (click)="storeLocation($event)">
+                                <button style="width: 50%; background-color: #FFFF">
+                                  {{ location.Location.Address.Label }}
+                                </button>
+                              </td>
+                            </tr>
+                          </tbody>
+                        </table> -->
                     </mat-form-field>
-                    <div [hidden]="phone_number.valid || phone_number.pristine" class="text-danger error-msg">
-                      Phone number is required
+                    <div [hidden]="location.valid || location.pristine" class="text-danger error-msg">
+                      Location is required
                     </div>
                   </div>
                 </div>
+
 
                 <div class="row justify-content-center">
                   <label class="col-md-2 col-2 col-form-label">
@@ -151,43 +190,7 @@
 
                 <!-- </div> -->
 
-                <div class="row">
-                  <label class="col-md-2 col-2 col-form-label" [ngStyle]="{
-                      color: !user.location ? 'red' : '#AAAAAA'
-                    }">Location (Geo)
-                  </label>
-                  <div class="col-md-10 col-9">
-                    <mat-form-field class="example-full-width">
-                      <input matInput type="text" name="location" required [matAutocomplete]="locationAuto"
-                        (keyup)="getLocation()" [(ngModel)]="user.location" #location="ngModel" />
 
-                      <mat-autocomplete #locationAuto="matAutocomplete" (optionSelected)="storeLocation($event)">
-                        <mat-option *ngFor="let location of locations" [value]="location.Location.Address.Label">
-                          {{ location.Location.Address.Label }}
-                        </mat-option>
-                      </mat-autocomplete>
-
-                      <!-- <input type="text" name="location" matInput id="location" [matAutocomplete]="auto"
-                        placeholder="Location *" (keyup)="getLocation()" formControlName="location"
-                        [(ngModel)]="content.location"> -->
-
-                      <!-- <table style="width: 100%" id="table">
-                        <tbody>
-                          <tr *ngFor="let location of locations">
-                            <td (click)="storeLocation($event)">
-                              <button style="width: 50%; background-color: #FFFF">
-                                {{ location.Location.Address.Label }}
-                              </button>
-                            </td>
-                          </tr>
-                        </tbody>
-                      </table> -->
-                    </mat-form-field>
-                    <div [hidden]="location.valid || location.pristine" class="text-danger error-msg">
-                      Location is required
-                    </div>
-                  </div>
-                </div>
 
                 <div class="row">
                   <label class="col-sm-2 col-form-label">Notification preference</label>

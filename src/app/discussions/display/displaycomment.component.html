@@ -15,19 +15,21 @@
       <!-- Attachments for comments -->
       <p>
         <span *ngFor="let attachment of comment.attachments; let i= index;" class="discussion_thumbnail">
-          <img *ngIf="attachment.mimeType.startsWith('image') && i < attachmentToShow" src="{{attachment['url']}}"
-            (click)="assignUrl(comment.attachments, i)" />
+          <ng-container *ngIf="attachment.mimeType">
+            <img *ngIf="attachment.mimeType.startsWith('image') && i < attachmentToShow" src="{{attachment['url']}}"
+              (click)="assignUrl(comment.attachments, i)" />
 
-          <!-- icon in case url is of video -->
-          <img src="../../../assets/img/video_icon.png" alt="video"
-            *ngIf="attachment.mimeType.startsWith('video') && i < attachmentToShow"
-            (click)="assignUrl(comment.attachments, i)">
-          <!-- <p>{{testMimeType(attachment.mimeType)}}</p> -->
-          <img src="../../../assets/img/document_icon.png" alt="document" *ngIf="testMimeType(attachment.mimeType) && i <
+            <!-- icon in case url is of video -->
+            <img src="../../../assets/img/video_icon.png" alt="video"
+              *ngIf="attachment.mimeType && attachment.mimeType.startsWith('video') && i < attachmentToShow"
+              (click)="assignUrl(comment.attachments, i)">
+            <!-- <p>{{testMimeType(attachment.mimeType)}}</p> -->
+            <img src="../../../assets/img/document_icon.png" alt="document" *ngIf="testMimeType(attachment.mimeType) && i <
               attachmentToShow" (click)="assignUrl(comment.attachments, i)">
 
-          <img src="../../../assets/img/pdf_icon.png" alt="document" *ngIf="attachment.mimeType.endsWith('pdf') && i <
+            <img src="../../../assets/img/pdf_icon.png" alt="document" *ngIf="attachment.mimeType.endsWith('pdf') && i <
               attachmentToShow" (click)="assignUrl(comment.attachments, i)">
+          </ng-container>
         </span>
 
         <!-- show more for comments -->

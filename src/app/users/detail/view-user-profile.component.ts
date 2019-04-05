@@ -42,7 +42,6 @@ export class ViewUserProfileComponent implements OnInit {
         return this.getProfile(params.get("id"));
       })
     );
-
     this.user.subscribe(result => {
       this.interests = [];
       this.personas = [];
@@ -77,6 +76,7 @@ export class ViewUserProfileComponent implements OnInit {
               photo_url
               location
               email
+              phone_number
               is_ngo
               is_innovator
               is_entrepreneur

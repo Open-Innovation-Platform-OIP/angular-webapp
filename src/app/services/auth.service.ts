@@ -16,7 +16,7 @@ interface User {
 })
 export class AuthService {
 
-  authEndpoint = 'https://hasura1-sa.jaaga.in/auth/';
+  authEndpoint = 'https://auth.socialalpha.jaagalabs.com/auth/';
   private jwtHelper;
   public user: Observable<any>;
   private currentUserSubject: BehaviorSubject<User>;
@@ -88,6 +88,6 @@ export class AuthService {
         'Content-Type': 'application/json',
       })
     };
-    return this.http.post(this.authEndpoint + 'reset', JSON.stringify(resetDetails), httpOptions);
+    return this.http.post(this.authEndpoint + 'passwordreset', JSON.stringify(resetDetails), httpOptions);
   }
 }
