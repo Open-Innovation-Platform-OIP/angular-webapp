@@ -1,50 +1,4 @@
-<!-- <div class="row"> -->
-<!-- <div class="col-4"> -->
-<!-- <div class="card card-product actions problem-card" [routerLink]="'/problems/'+problemData.id"> -->
-<!-- <div class="card-header card-header-image">
-    <img src="{{(problemData.image_urls && problemData.image_urls[0]) ? problemData.image_urls[0].url : './assets/img/image_placeholder.jpg'}}" />
-  </div>
-  <div class="card-body">
-    <p class="card-title title">
-      {{problemData.title}}
-    </p>
-    <ul style="list-style-type:none;">
-
-      <li class="description"><b>Description : </b> {{problemData.description}}</li>
-      <li><b>Location : </b> {{problemData.location}}</li> -->
-<!-- <li><b>Resources needed : </b> {{problemData.resources_needed}}</li> -->
-<!-- <li><b>Sectors :</b> {{sectors.length ? sectors.join(','):"None"}}</li> -->
-<!-- <li>Sector:{{problemData.sectors}}</li> -->
-
-<!-- </ul>
-  </div>
-  <div class="card-footer"> -->
-
-<!-- <div>
-      <i class="material-icons">
-        thumb_up
-      </i>
-      <span>67</span>
-    </div> -->
-
-<!-- <button mat-raised-button class="btn btn-warning btn-sm" [routerLink]="'/problems/'+ problemData.id+'/edit'">EDIT</button> -->
-<!-- <i class="material-icons actions" [routerLink]="'/problems/'+ problemData.id+'/edit'">
-      create
-    </i> -->
-
-<!-- </div>
-</div> -->
-
-<!-- </div> -->
-<!-- </div> -->
-
-<!--REWRITE-->
-
-<!-- <div class="row"> -->
-
-<!-- <div class="col-4"> -->
-
-<div class="card card-product actions problem-card" [routerLink]="'/problems/' + problemData.id">
+<div class="card card-product actions problem-card" [routerLink]="link">
   <div class="card-header card-header-image">
     <img
       src="{{ (problemData.featured_url && checkUrlIsImg(problemData.featured_url)) ? problemData.featured_url : './assets/img/image_placeholder.jpg' }}"
@@ -58,49 +12,25 @@
       <strong>Description</strong>
       <p>{{ problemData.description }}</p>
     </div>
-    <!-- <div>
-    </div> -->
-    <!-- <strong>Locations</strong>
-    <div *ngIf="problemData.location&&problemData.location.length">
-
-      
-      <div *ngFor="let location of problemData.location">
-        <span *ngIf="location.Address&&location.Address.Label">{{location.Address.Label}}</span>
-        <span>&nbsp;</span>
-      </div>
-    </div> -->
     <span> <b> Location(s) </b></span>
-
-
     <div *ngFor="let location of problemData.location; let i=index;">
       <span *ngIf="location.Address.Label && i < 2">{{location.Address.Label}}</span>
       <span *ngIf="i<2">&nbsp;</span>
     </div>
   </div>
   <div class="card-footer">
-    <!-- <div>
-          <i class="material-icons">
-            thumb_up
-          </i>
-          <span>67</span>
-        </div> -->
-
-    <!-- <button mat-raised-button class="btn btn-warning btn-sm" [routerLink]="'/problems/'+ problemData.id+'/edit'">EDIT</button> -->
-    <!-- <i class="material-icons actions" [routerLink]="'/problems/'+ problemData.id+'/edit'">
-      create
-    </i> -->
     <div class="stats">
       <i class="material-icons">
         thumb_up
       </i>
-      {{ numOfVotes }}
+      {{ problemData.problem_voters.length }}
       <span>&nbsp;</span>
       <span>&nbsp;</span>
       <span>&nbsp;</span>
       <i class="material-icons">
         visibility
       </i>
-      {{ numOfWatchers }}
+      {{ problemData.problem_watchers.length }}
       <span>&nbsp;</span>
       <span>&nbsp;</span>
       <span>&nbsp;</span>
@@ -108,14 +38,10 @@
         matTooltip="Expert validations" [matTooltipPosition]="'below'">
         how_to_reg
       </i>
-      {{ numOfValidations }}
+      {{ problemData.problem_validations.length }}
     </div>
     <div class="stats">
       <i class="material-icons">access_time</i> {{ problemData.updated_at | date:short }}
     </div>
   </div>
 </div>
-<!-- </div> -->
-<!-- </div> -->
-
-<!--REWRITE-->

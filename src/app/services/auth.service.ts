@@ -88,6 +88,6 @@ export class AuthService {
         'Content-Type': 'application/json',
       })
     };
-    return this.http.post(this.authEndpoint + 'reset', JSON.stringify(resetDetails), httpOptions);
+    return this.http.post(this.authEndpoint + 'passwordreset', JSON.stringify(resetDetails), httpOptions);
   }
 }
