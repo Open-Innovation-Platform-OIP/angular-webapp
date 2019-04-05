@@ -4,6 +4,7 @@ import {
   Renderer,
   ViewChild,
   ElementRef,
+  Input,
   Directive
 } from "@angular/core";
 import { ROUTES } from "../.././sidebar/sidebar.component";
@@ -38,6 +39,7 @@ declare var $: any;
   templateUrl: "navbar.component.html"
 })
 export class NavbarComponent implements OnInit {
+  @Input() userData: any;
   private listTitles: any[];
   objectValues = Object["values"];
   location: Location;
