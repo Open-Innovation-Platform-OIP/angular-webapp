@@ -11,6 +11,18 @@ interface User {
   token: string;
 }
 
+interface resetDetails {
+  email: string;
+  password: string;
+  confirmPassword: string;
+  otp: string;
+}
+
+interface verificationDetails {
+  email: string;
+  otp: string;
+}
+
 @Injectable({
   providedIn: 'root'
 })
@@ -72,7 +84,7 @@ export class AuthService {
   }
 
   register(user) {
-    console.log(user);
+    // console.log(user);
     const httpOptions = {
       headers: new HttpHeaders({
         'Content-Type': 'application/json',
@@ -81,13 +93,46 @@ export class AuthService {
     return this.http.post(this.authEndpoint + 'signup', JSON.stringify(user), httpOptions);
   }
 
-  resetPassword(resetDetails) {
-    console.log(resetDetails);
+  requestVerificationEmail(email:string) {
     const httpOptions = {
       headers: new HttpHeaders({
         'Content-Type': 'application/json',
       })
     };
-    return this.http.post(this.authEndpoint + 'passwordreset', JSON.stringify(resetDetails), httpOptions);
+    const payload = {
+      email: email
+    }
+    return this.http.post(this.authEndpoint + 'verification', JSON.stringify(payload), httpOptions);
+  }
+
+  completeVerification(payload:verificationDetails) {
+    const httpOptions = {
+      headers: new HttpHeaders({
+        'Content-Type': 'application/json',
+      })
+    };
+    return this.http.post(this.authEndpoint + 'verify', JSON.stringify(payload), httpOptions);
+  }
+
+  requestResetCode(email:string) {
+    const httpOptions = {
+      headers: new HttpHeaders({
+        'Content-Type': 'application/json',
+      })
+    };
+    const payload = {
+      email: email
+    }
+    return this.http.post(this.authEndpoint + 'passwordreset', JSON.stringify(payload), httpOptions);
+  }
+
+  resetPassword(payload:resetDetails) {
+    // console.log(resetDetails);
+    const httpOptions = {
+      headers: new HttpHeaders({
+        'Content-Type': 'application/json',
+      })
+    };
+    return this.http.post(this.authEndpoint + 'changepassword', JSON.stringify(payload), httpOptions);
   }
 }

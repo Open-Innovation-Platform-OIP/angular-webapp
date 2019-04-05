@@ -50,30 +50,34 @@ export class RegisterComponent implements OnInit, OnDestroy {
     }
   }
   register() {
+    this.loading = true;
     this.auth.register(this.user).subscribe(
       res => {
-        this.auth
-          .login(this.user)
-          .pipe(first())
-          .subscribe(
-            data => {
-              swal({
-                type: "success",
-                title: "Thank you for signing up!",
-                timer: 4000,
-                showConfirmButton: false
-              }).catch(swal.noop);
-              this.router.navigate([""]);
-            },
-            error => {
-              console.error(error);
-              // this.error = error;
-              this.loading = false;
-            }
-          );
+        console.log(res);
+        this.router.navigateByUrl('/auth/verify');
+        // this.auth
+        //   .login(this.user)
+        //   .pipe(first())
+        //   .subscribe(
+        //     data => {
+        //       swal({
+        //         type: "success",
+        //         title: "Thank you for signing up!",
+        //         timer: 4000,
+        //         showConfirmButton: false
+        //       }).catch(swal.noop);
+        //       this.router.navigate([""]);
+        //     },
+        //     error => {
+        //       console.error(error);
+        //       // this.error = error;
+        //       this.loading = false;
+        //     }
+        //   );
       },
       err => {
         console.error(err);
+        alert(err.message);
       }
     );
   }

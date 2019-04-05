@@ -80,7 +80,7 @@ export class DashboardComponent implements OnInit, AfterViewInit {
   }
 
   getContributions() {
-    console.log(this.problemQueryString);
+    // console.log(this.problemQueryString);
     const contributionsQuery = gql`
     {
       enrichments(where:{created_by:{_eq: ${this.auth.currentUserValue.id}}}) {
