@@ -105,7 +105,7 @@ export class AddUserProfileComponent implements OnInit, OnChanges {
     is_entrepreneur: false,
     notify_email: false,
     notify_sms: false,
-    notify_app: false
+    notify_app: true
   };
 
   @ViewChild("sectorInput") sectorInput: ElementRef<HTMLInputElement>;
