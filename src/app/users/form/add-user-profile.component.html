@@ -52,6 +52,7 @@
                   </div>
                 </div>
 
+
                 <div class="row">
                   <label class="col-md-2 col-2 col-form-label">E-mail ID
                   </label>
@@ -65,8 +66,8 @@
 
                 <div class="row">
                   <label class="col-md-2 col-2 col-form-label" [ngStyle]="{
-                      color: !user.phone_number ? 'red' : '#AAAAAA'
-                    }">Phone number
+                  color: !user.phone_number ? 'red' : '#AAAAAA'
+                }">Phone number
                   </label>
                   <div class="col-md-10 col-9">
                     <mat-form-field class="example-full-width">
@@ -83,38 +84,30 @@
                   <label class="col-md-2 col-2 col-form-label">Organization</label>
                   <div class="col-md-10 col-9">
                     <mat-form-field class="example-full-width">
-                      <input matInput type="text" name="organization" [(ngModel)]="user.organization"
-                        [matAutocomplete]="orgAuto" />
-                      <mat-autocomplete #orgAuto="matAutocomplete" (optionSelected)="storeOrg($event)">
-                        <mat-option *ngFor="let org of userService.allOrgs" value="{{org}}">
-                          {{org}}
-                        </mat-option>
-                      </mat-autocomplete>
+                      <input matInput type="text" name="organization" [(ngModel)]="user.organization" />
                     </mat-form-field>
                   </div>
                 </div>
-
-                <!-- *ngFor="let org of usersService.allOrgs" -->
 
                 <div class="row">
                   <label class="col-sm-2 col-form-label">Persona</label>
                   <div class="col-md-10 col-9">
                     <div class="form-check" *ngFor="let persona of objectKeys(user)">
                       <label class="form-check-label" *ngIf="
-                          persona !== 'id' &&
-                          persona !== 'email' &&
-                          persona !== 'token' &&
-                          persona !== 'password' &&
-                          persona !== 'name' &&
-                          persona !== 'organization' &&
-                          persona !== 'qualification' &&
-                          persona !== 'photo_url' &&
-                          persona !== 'phone_number' &&
-                          persona !== 'location' &&
-                          persona !== 'notify_email' &&
-                          persona !== 'notify_sms' &&
-                          persona !== 'notify_app'
-                        ">
+                      persona !== 'id' &&
+                      persona !== 'email' &&
+                      persona !== 'token' &&
+                      persona !== 'password' &&
+                      persona !== 'name' &&
+                      persona !== 'organization' &&
+                      persona !== 'qualification' &&
+                      persona !== 'photo_url' &&
+                      persona !== 'phone_number' &&
+                      persona !== 'location' &&
+                      persona !== 'notify_email' &&
+                      persona !== 'notify_sms' &&
+                      persona !== 'notify_app'
+                    ">
                         <input class="form-check-input" type="checkbox" [(ngModel)]="user[persona]"
                           [ngModelOptions]="{ standalone: true }" />
                         {{ persona.slice(3) }}
@@ -128,8 +121,8 @@
 
                 <div class="row">
                   <label class="col-md-2 col-2 col-form-label" [ngStyle]="{
-                        color: !user.location ? 'red' : '#AAAAAA'
-                      }">Location (Geo)
+                    color: !user.location.length ? 'red' : '#AAAAAA'
+                  }">Location (Geo)
                   </label>
                   <div class="col-md-10 col-9">
                     <mat-form-field class="example-full-width">
@@ -143,20 +136,20 @@
                       </mat-autocomplete>
 
                       <!-- <input type="text" name="location" matInput id="location" [matAutocomplete]="auto"
-                          placeholder="Location *" (keyup)="getLocation()" formControlName="location"
-                          [(ngModel)]="content.location"> -->
+                      placeholder="Location *" (keyup)="getLocation()" formControlName="location"
+                      [(ngModel)]="content.location"> -->
 
                       <!-- <table style="width: 100%" id="table">
-                          <tbody>
-                            <tr *ngFor="let location of locations">
-                              <td (click)="storeLocation($event)">
-                                <button style="width: 50%; background-color: #FFFF">
-                                  {{ location.Location.Address.Label }}
-                                </button>
-                              </td>
-                            </tr>
-                          </tbody>
-                        </table> -->
+                      <tbody>
+                        <tr *ngFor="let location of locations">
+                          <td (click)="storeLocation($event)">
+                            <button style="width: 50%; background-color: #FFFF">
+                              {{ location.Location.Address.Label }}
+                            </button>
+                          </td>
+                        </tr>
+                      </tbody>
+                    </table> -->
                     </mat-form-field>
                     <div [hidden]="location.valid || location.pristine" class="text-danger error-msg">
                       Location is required
@@ -199,122 +192,95 @@
                 <!-- </div> -->
 
 
-                <mat-autocomplete #locationAuto="matAutocomplete" (optionSelected)="storeLocation($event)">
-                  <mat-option *ngFor="let location of locations" [value]="location.Location">
-                    {{ location.Location.Address.Label }}
-                  </mat-option>
-                </mat-autocomplete>
 
-                <!-- <input type="text" name="location" matInput id="location" [matAutocomplete]="auto"
-                        placeholder="Location *" (keyup)="getLocation()" formControlName="location"
-                        [(ngModel)]="content.location"> -->
-
-                <!-- <table style="width: 100%" id="table">
-                        <tbody>
-                          <tr *ngFor="let location of locations">
-                            <td (click)="storeLocation($event)">
-                              <button style="width: 50%; background-color: #FFFF">
-                                {{ location.Location.Address.Label }}
-                              </button>
-                            </td>
-                          </tr>
-                        </tbody>
-                      </table> -->
-                </mat-form-field>
-                <div [hidden]="location.valid || location.pristine" class="text-danger error-msg">
-                  Location is required
-                </div>
-              </div>
-          </div>
-
-          <div class="row">
-            <label class="col-sm-2 col-form-label">Notification preference</label>
-            <div class="col-sm-10">
-              <div class="form-check form-check-inline">
-                <label class="form-check-label">
-                  <input class="form-check-input" type="checkbox" [(ngModel)]="user.notify_email"
-                    [ngModelOptions]="{standalone: true}"> E-mail
-                  <span class="form-check-sign">
-                    <span class="check"></span>
-                  </span>
-                </label>
-              </div>
-              <div class="form-check form-check-inline">
-                <label class="form-check-label">
-                  <input class="form-check-input" type="checkbox" [(ngModel)]="user.notify_sms"
-                    [ngModelOptions]="{standalone: true}"> SMS
-                  <span class="form-check-sign">
-                    <span class="check"></span>
-                  </span>
-                </label>
-              </div>
-              <div class="form-check form-check-inline">
-                <label class="form-check-label">
-                  <input class="form-check-input" type="checkbox" [(ngModel)]="user.notify_app"
-                    [ngModelOptions]="{standalone: true}"> In-App
-                  <span class="form-check-sign">
-                    <span class="check"></span>
-                  </span>
-                </label>
-              </div>
-            </div>
-          </div>
-          <!-- <div class="row">
-                <label class="col-md-2 col-2 col-form-label">Persona</label>
-                <div class="col-md-10 col-9">
-                  <mat-form-field class="example-full-width">
-                    <input matInput type="text" name="personas" [(ngModel)]="user.personas">
-                  </mat-form-field>
-                </div>
-              </div> -->
-          <!-- <div class="row">
-                <label class="col-md-2 col-2 col-form-label">Select Persona</label>
-                <div class="col-lg-4 col-md-6 col-sm-3">
-                  <div class="dropdown">
-                    <button mat-raised-button href="#pablo" class="dropdown-toggle btn btn-warning btn-round btn-block"
-                      data-toggle="dropdown">Persona
-                      <b class="caret"></b>
-                    </button>
-                    <ul class="dropdown-menu dropdown-menu-left">
-                      <li class="dropdown-header">Dropdown header</li>
-                      <li>
-                        <a href="#pablo">Persona 1</a>
-                      </li>
-                      <li>
-                        <a href="#pablo">Persona 2</a>
-                      </li>
-                      <li>
-                        <a href="#pablo">Persona 3</a>
-                      </li>
-                      <li class="divider"></li>
-                      <li>
-                        <a href="#pablo">Persona 4</a>
-                      </li>
-                      <li class="divider"></li>
-                      <li>
-                        <a href="#pablo">Persona 5</a>
-                      </li>
-                    </ul>
+                <div class="row">
+                  <label class="col-sm-2 col-form-label">Notification preference</label>
+                  <div class="col-sm-10">
+                    <div class="form-check form-check-inline">
+                      <label class="form-check-label">
+                        <input class="form-check-input" type="checkbox" [(ngModel)]="user.notify_email"
+                          [ngModelOptions]="{standalone: true}"> E-mail
+                        <span class="form-check-sign">
+                          <span class="check"></span>
+                        </span>
+                      </label>
+                    </div>
+                    <div class="form-check form-check-inline">
+                      <label class="form-check-label">
+                        <input class="form-check-input" type="checkbox" [(ngModel)]="user.notify_sms"
+                          [ngModelOptions]="{standalone: true}"> SMS
+                        <span class="form-check-sign">
+                          <span class="check"></span>
+                        </span>
+                      </label>
+                    </div>
+                    <div class="form-check form-check-inline">
+                      <label class="form-check-label">
+                        <input class="form-check-input" type="checkbox" [(ngModel)]="user.notify_app"
+                          [ngModelOptions]="{standalone: true}" disabled> In-App
+                        <span class="form-check-sign">
+                          <span class="check"></span>
+                        </span>
+                      </label>
+                    </div>
                   </div>
-                </div>-->
-        </div>
-        </form>
-      </div>
-      <div class="card-footer row justify-content-center" *ngIf="mode === 'Add'">
-        <button mat-raised-button class="btn btn-warning" type="submit" [disabled]="!userForm.form.valid"
-          (click)="onSubmit()">
-          Save Details
-        </button>
-      </div>
+                </div>
+                <!-- <div class="row">
+            <label class="col-md-2 col-2 col-form-label">Persona</label>
+            <div class="col-md-10 col-9">
+              <mat-form-field class="example-full-width">
+                <input matInput type="text" name="personas" [(ngModel)]="user.personas">
+              </mat-form-field>
+            </div>
+          </div> -->
+                <!-- <div class="row">
+            <label class="col-md-2 col-2 col-form-label">Select Persona</label>
+            <div class="col-lg-4 col-md-6 col-sm-3">
+              <div class="dropdown">
+                <button mat-raised-button href="#pablo" class="dropdown-toggle btn btn-warning btn-round btn-block"
+                  data-toggle="dropdown">Persona
+                  <b class="caret"></b>
+                </button>
+                <ul class="dropdown-menu dropdown-menu-left">
+                  <li class="dropdown-header">Dropdown header</li>
+                  <li>
+                    <a href="#pablo">Persona 1</a>
+                  </li>
+                  <li>
+                    <a href="#pablo">Persona 2</a>
+                  </li>
+                  <li>
+                    <a href="#pablo">Persona 3</a>
+                  </li>
+                  <li class="divider"></li>
+                  <li>
+                    <a href="#pablo">Persona 4</a>
+                  </li>
+                  <li class="divider"></li>
+                  <li>
+                    <a href="#pablo">Persona 5</a>
+                  </li>
+                </ul>
+              </div>
+            </div>-->
+              </div>
+            </form>
+          </div>
+          <div class="card-footer row justify-content-center" *ngIf="mode === 'Add'">
+            <button mat-raised-button class="btn btn-warning" type="submit" [disabled]="!userForm.form.valid"
+              (click)="onSubmit()">
+              Save Details
+            </button>
+          </div>
 
-      <div class="card-footer row justify-content-center" *ngIf="mode === 'Edit'">
-        <button mat-raised-button class="btn btn-warning" type="submit" [disabled]="!userForm.form.valid"
-          (click)="onSubmit()">
-          Update
-        </button>
+          <div class="card-footer row justify-content-center" *ngIf="mode === 'Edit'">
+            <button mat-raised-button class="btn btn-warning" type="submit" [disabled]="!userForm.form.valid"
+              (click)="onSubmit()">
+              Update
+            </button>
+          </div>
+        </div>
       </div>
     </div>
   </div>
-</div>
-</div>
 </div>

@@ -94,7 +94,7 @@ export class AddUserProfileComponent implements OnInit, OnChanges {
     qualification: "",
     photo_url: {},
     phone_number: "",
-    location: {},
+    location: [],
     is_ngo: false,
     is_innovator: false,
     is_expert: false,
@@ -260,7 +260,7 @@ export class AddUserProfileComponent implements OnInit, OnChanges {
   }
   public storeLocation(location) {
     // console.log(location, "location");
-    this.user.location = location;
+    this.user.location = location.option.value;
     // this.locations = [];
     console.log(this.user.location);
   }
