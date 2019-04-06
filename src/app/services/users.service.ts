@@ -128,6 +128,9 @@ export class UsersService {
               id
               name
               organization
+              organizationByOrganizationId {
+                name
+              }
             }
           }
         `,
@@ -144,8 +147,9 @@ export class UsersService {
                 value: user.name
               };
             }
-            if (user.organization) {
-              this.allUsers[user.id].organization = user.organization;
+            if (user.organizationByOrganizationId) {
+              this.allUsers[user.id].organization =
+                user.organizationByOrganizationId.name;
             }
           });
         }
