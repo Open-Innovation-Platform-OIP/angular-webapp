@@ -96,7 +96,9 @@ export class WizardContainerComponent
     "video/*"
   ];
 
-  localSectors: any[]=[];
+  objectKeys = Object.keys;
+
+  localSectors: any[] = [];
   matcher = new MyErrorStateMatcher();
   type: FormGroup;
   is_edit = false;
@@ -137,8 +139,6 @@ export class WizardContainerComponent
     private auth: AuthService,
     private here: GeocoderService
   ) {
-    
-   
     this.filteredSectors = this.sectorCtrl.valueChanges.pipe(
       startWith(null),
       map((sector: string | null) =>
@@ -149,7 +149,6 @@ export class WizardContainerComponent
     );
 
     this.type = this.formBuilder.group({
-      
       title: [null, Validators.required],
       description: [null, Validators.required],
       location: [null, Validators.required],
@@ -247,8 +246,6 @@ export class WizardContainerComponent
         }
       );
     }
-
-  
   }
   public storeLocation(loc) {
     // this.content.location = loc.srcElement.innerText;
@@ -295,14 +292,14 @@ export class WizardContainerComponent
   }
 
   ngOnInit() {
-    console.log(this.localSectors, "wizard ngoninit sectors");
+    console.log(this.usersService.currentUser, "current user");
+    // console.log(this.localSectors, "wizard ngoninit sectors");
     if (
-      this.usersService.allUsers[this.auth.currentUserValue.id] &&
-      this.usersService.allUsers[this.auth.currentUserValue.id].organization
+      this.usersService.currentUser &&
+      this.usersService.currentUser.organization
     ) {
-      this.content.organization = this.usersService.allUsers[
-        this.auth.currentUserValue.id
-      ].organization;
+      this.content.organization = this.usersService.currentUser.organization;
+      console.log(this.content.organization, "test orgs on user");
     } else {
       this.content.organization = "None";
     }
@@ -910,8 +907,6 @@ export class WizardContainerComponent
       this.content.featured_type = "";
     }
   }
-
-  
 
   isComplete() {
     if (this.contentType === "problem") {

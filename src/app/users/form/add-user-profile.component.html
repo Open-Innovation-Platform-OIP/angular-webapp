@@ -85,10 +85,10 @@
                   <div class="col-md-10 col-9">
                     <mat-form-field class="example-full-width">
                       <!-- <input matInput type="text" name="organization" [(ngModel)]="user.organization" /> -->
-                      <mat-select name="organization" placeholder="Select Organization" matInput id="organization"
-                        [(ngModel)]="user.organization" (selectionChange)="storeOrganization($event)">
-                        <mat-option>None</mat-option>
-                        <mat-option *ngFor="let org of userService.allOrgs" [value]="org">{{org.name}}
+                      <mat-select name="organization" placeholder="Select Organization" matInput id="organizations"
+                        [(ngModel)]="organization" (selectionChange)="storeOrganization($event)">
+                        <!-- <mat-option>None</mat-option> -->
+                        <mat-option *ngFor="let org of objectKeys(userService.allOrgs)" value="{{org}}">{{org}}
                         </mat-option>
                       </mat-select>
 
@@ -129,16 +129,16 @@
 
                 <div class="row">
                   <label class="col-md-2 col-2 col-form-label" [ngStyle]="{
-                    color: !user.location.length ? 'red' : '#AAAAAA'
+                    color: !objectKeys(user.location).length ? 'red' : '#AAAAAA'
                   }">Location (Geo)
                   </label>
                   <div class="col-md-10 col-9">
                     <mat-form-field class="example-full-width">
                       <input matInput type="text" name="location" required [matAutocomplete]="locationAuto"
-                        (keyup)="getLocation()" [(ngModel)]="user.location" #location="ngModel" />
+                        (keyup)="getLocation()" [(ngModel)]="userLocation" #location="ngModel" />
 
                       <mat-autocomplete #locationAuto="matAutocomplete" (optionSelected)="storeLocation($event)">
-                        <mat-option *ngFor="let location of locations" [value]="location.Location.Address.Label">
+                        <mat-option *ngFor="let location of locations" [value]="location.Location">
                           {{ location.Location.Address.Label }}
                         </mat-option>
                       </mat-autocomplete>

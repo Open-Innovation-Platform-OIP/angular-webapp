@@ -52,13 +52,14 @@ export interface User {
   providedIn: "root"
 })
 export class UsersService {
-  public allOrgs: any = new Set();
+  public allOrgs: any = {};
   public allUsers = {};
   public currentUser = {
     id: 0,
     email: "",
     name: "",
-    photo_url: ""
+    photo_url: "",
+    organization: ""
   };
 
   constructor(private apollo: Apollo, private auth: AuthService) {
@@ -77,20 +78,32 @@ export class UsersService {
             name
             email
             photo_url
+            organizationByOrganizationId {
+              name
+            }
+
           }
         }
-      `
+      `,
+        fetchPolicy: "no-cache"
         // pollInterval: 500
       })
       .valueChanges.subscribe(({ data }) => {
+        console.log("<<<curr user data", data);
         if (data.users.length > 0) {
           Object.keys(this.currentUser).map(key => {
             if (data.users[0][key]) {
               this.currentUser[key] = data.users[0][key];
             }
           });
+
+          if (data.users[0].organizationByOrganizationId) {
+            this.currentUser.organization =
+              data.users[0].organizationByOrganizationId.name;
+          }
         }
       });
+    console.log(this.currentUser, "current user on user service");
   }
   public getOrgsFromDB() {
     this.apollo
@@ -110,7 +123,7 @@ export class UsersService {
       .valueChanges.subscribe(({ data }) => {
         if (data.organizations.length > 0) {
           data.organizations.map(organization => {
-            this.allOrgs.add(organization);
+            this.allOrgs[organization.name] = organization;
             // this.allOrgs = Array.from(this.allOrgs);
             // / console.log(this.allOrgs, "all orgs");
           });

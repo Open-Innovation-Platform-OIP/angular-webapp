@@ -82,7 +82,8 @@ export class AddUserProfileComponent implements OnInit, OnChanges {
   objectEntries = Object.entries;
   objectKeys = Object.keys;
   personaArray = [];
-  organizationTest: string;
+  organization: any = {};
+  userLocation: any = {};
 
   user: any = {
     id: "",
@@ -233,14 +234,23 @@ export class AddUserProfileComponent implements OnInit, OnChanges {
   }
 
   storeOrganization(event) {
-    // console.log(org, "org on select");
-    this.user.organization_id = event.value.id;
+    console.log(event, "event on select");
+
+    // this.userService.allOrgs.map(org => {
+    //   if (org.name === this.organization) {
+    //     this.user.organization_id = org.id;
+    //   }
+    // });
+    this.user.organization_id = this.userService.allOrgs[this.organization].id;
+    // this.user.organization = event.value.name;
+
+    console.log(this.organization, "on select organazation");
   }
 
   getLocation() {
     console.log("get address");
-    if (this.user.location != "Unknown") {
-      this.here.getAddress(this.user.location).then(
+    if (this.userLocation != "Unknown") {
+      this.here.getAddress(this.userLocation).then(
         result => {
           this.locations = <Array<any>>result;
           console.log(this.locations, "locations");
@@ -261,12 +271,16 @@ export class AddUserProfileComponent implements OnInit, OnChanges {
     // console.log(typeof JSON.parse("{" + filtered.toString() + "}"));
   }
   public storeLocation(location) {
-    // console.log(location, "location");
+    console.log(location, "location");
     this.user.location = location.option.value;
-    // this.locations = [];
-    console.log(this.user.location);
+    this.userLocation = location.option.value.Address.Label;
+
+    // console.log(this.user.location);
   }
   ngOnInit() {
+    // this.organizationTest = "jaaga";
+    console.log(this.userService.allOrgs, "org on ng on init");
+
     this.tagService.getTagsFromDB();
 
     Object.entries(this.user).map(persona => {
@@ -333,6 +347,7 @@ export class AddUserProfileComponent implements OnInit, OnChanges {
                 Object.keys(this.user).map(key => {
                   if (data.users[0][key]) {
                     this.user[key] = data.users[0][key];
+
                     // if (typeof data.users[0][key] === "boolean") {
                     // this.personaArray.push(data.users[0][key]);
                     // if (data.users[0][key]) {
@@ -341,10 +356,14 @@ export class AddUserProfileComponent implements OnInit, OnChanges {
                     // }
                   }
                 });
+                if (data.users[0].location.Address) {
+                  this.userLocation = data.users[0].location.Address.Label;
+                }
+
                 if (data.users[0].organizationByOrganizationId) {
-                  this.organizationTest =
+                  this.organization =
                     data.users[0].organizationByOrganizationId.name;
-                  console.log(this.organizationTest, "org");
+                  // console.log(this.organizationTest, "org");
                 }
               }
               this.sectors = data.users[0].user_tags.map(tagArray => {
@@ -388,6 +407,8 @@ export class AddUserProfileComponent implements OnInit, OnChanges {
     }
     this.userService.submitUserToDB(this.user).subscribe(
       result => {
+        this.userService.getCurrentUser();
+
         this.user["id"] = result.data.insert_users.returning[0].id;
         this.router.navigateByUrl(
           `/profiles/${result.data.insert_users.returning[0].id}`
