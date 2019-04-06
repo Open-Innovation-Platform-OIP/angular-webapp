@@ -82,6 +82,7 @@ export class AddUserProfileComponent implements OnInit, OnChanges {
   objectEntries = Object.entries;
   objectKeys = Object.keys;
   personaArray = [];
+  organizationTest: string;
 
   user: any = {
     id: "",
@@ -105,7 +106,8 @@ export class AddUserProfileComponent implements OnInit, OnChanges {
     is_entrepreneur: false,
     notify_email: false,
     notify_sms: false,
-    notify_app: true
+    notify_app: true,
+    organization_id: ""
   };
 
   @ViewChild("sectorInput") sectorInput: ElementRef<HTMLInputElement>;
@@ -230,9 +232,9 @@ export class AddUserProfileComponent implements OnInit, OnChanges {
     // this.query2 = " ";
   }
 
-  storeOrg(org) {
-    this.user.organization = org.option.value;
-    console.log(this.user, "user on org select");
+  storeOrganization(event) {
+    // console.log(org, "org on select");
+    this.user.organization_id = event.value.id;
   }
 
   getLocation() {
@@ -303,6 +305,11 @@ export class AddUserProfileComponent implements OnInit, OnChanges {
               notify_email
               notify_sms
               notify_app
+              organization_id
+              organizationByOrganizationId{
+                id
+                name
+              }
               user_tags{
                 tag {
                     id
@@ -321,7 +328,7 @@ export class AddUserProfileComponent implements OnInit, OnChanges {
           })
           .valueChanges.subscribe(
             ({ data }) => {
-              // console.log(data, "user profile");
+              console.log(data, "user profile");
               if (data.users.length > 0) {
                 Object.keys(this.user).map(key => {
                   if (data.users[0][key]) {
@@ -334,12 +341,17 @@ export class AddUserProfileComponent implements OnInit, OnChanges {
                     // }
                   }
                 });
+                if (data.users[0].organizationByOrganizationId) {
+                  this.organizationTest =
+                    data.users[0].organizationByOrganizationId.name;
+                  console.log(this.organizationTest, "org");
+                }
               }
               this.sectors = data.users[0].user_tags.map(tagArray => {
                 return tagArray.tag.name;
               });
-              console.log(this.personas, "personas");
-              console.log(this.personaArray, "persona array");
+              // console.log(this.personas, "personas");
+              console.log(this.user, "user");
 
               // });
             },

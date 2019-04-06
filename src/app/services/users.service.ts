@@ -97,8 +97,9 @@ export class UsersService {
       .watchQuery<any>({
         query: gql`
           query {
-            users {
-              organization
+            organizations {
+              id
+              name
             }
           }
         `,
@@ -107,15 +108,14 @@ export class UsersService {
         // pollInterval: 500
       })
       .valueChanges.subscribe(({ data }) => {
-        if (data.users.length > 0) {
-          data.users.map(user => {
-            if (user.organization) {
-              this.allOrgs.add(user.organization);
-              // this.allOrgs = Array.from(this.allOrgs);
-              // console.log(this.allOrgs, "all orgs");
-            }
+        if (data.organizations.length > 0) {
+          data.organizations.map(organization => {
+            this.allOrgs.add(organization);
+            // this.allOrgs = Array.from(this.allOrgs);
+            // / console.log(this.allOrgs, "all orgs");
           });
         }
+        console.log(data, "data from all orgs");
       });
   }
 
@@ -179,6 +179,7 @@ export class UsersService {
                 notify_email
                 notify_sms
                 notify_app
+                organization_id
               ]
             }
           ) {
