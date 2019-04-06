@@ -1,4 +1,4 @@
-import { Component, OnInit, AfterViewInit } from '@angular/core';
+import { Component, OnInit, OnDestroy } from '@angular/core';
 import { Apollo, QueryRef } from "apollo-angular";
 import gql from "graphql-tag";
 import { Observable, Subscription } from "rxjs";
@@ -10,7 +10,7 @@ declare const $: any;
   selector: 'app-dashboard',
   templateUrl: './dashboard.component.html'
 })
-export class DashboardComponent implements OnInit, AfterViewInit {
+export class DashboardComponent implements OnInit, OnDestroy {
   objectValues = Object['values'];
   objectKeys = Object['keys'];
   drafts = [];
@@ -25,7 +25,6 @@ export class DashboardComponent implements OnInit, AfterViewInit {
   contributionsSub: Subscription;
   recommendedProblemsSub: Subscription;
   recommendedUsersSub: Subscription;
-  draftsObs: Observable<any>;
   // problemFields = ['id', 'featured_url','title','description','location','problem_voters{user_id}','problem_watchers{user_id}','problem_validations{validated_by}'];
   problemQueryString = `{
     id
@@ -69,7 +68,8 @@ export class DashboardComponent implements OnInit, AfterViewInit {
     }
     `;
     this.draftsQueryRef = this.apollo.watchQuery({
-      query: draftsQuery
+      query: draftsQuery,
+      pollInterval: 1000
     });
     // this.draftsObs = this.draftsQueryRef.valueChanges;
     this.draftsSub = this.draftsQueryRef.valueChanges.subscribe(({data}) => {
@@ -99,7 +99,8 @@ export class DashboardComponent implements OnInit, AfterViewInit {
     }
     `;
     this.contributionsQueryRef = this.apollo.watchQuery({
-      query: contributionsQuery
+      query: contributionsQuery,
+      pollInterval: 1000
     });
     this.contributionsSub = this.contributionsQueryRef.valueChanges.subscribe(({data}) => {
       Object.keys(data).map(key => {
@@ -129,7 +130,8 @@ export class DashboardComponent implements OnInit, AfterViewInit {
     }
     `;
     this.recommendedProblemsQueryRef = this.apollo.watchQuery({
-      query: recoProblemsQuery
+      query: recoProblemsQuery,
+      pollInterval: 1000
     });
     this.recommendedProblemsSub = this.recommendedProblemsQueryRef.valueChanges.subscribe(({data}) => {
       if(data.users_tags.length > 0) {
@@ -166,7 +168,8 @@ export class DashboardComponent implements OnInit, AfterViewInit {
     }
     `;
     this.recommendedUsersQueryRef = this.apollo.watchQuery({
-      query: recommendedUsersQuery
+      query: recommendedUsersQuery,
+      pollInterval: 1000
     });
     this.recommendedUsersSub = this.recommendedUsersQueryRef.valueChanges.subscribe(({data}) => {
       if(data.users_tags.length > 0) {
@@ -197,6 +200,14 @@ export class DashboardComponent implements OnInit, AfterViewInit {
     });
   }
 
-   ngAfterViewInit() {
+   ngOnDestroy() {
+     this.draftsQueryRef.stopPolling();
+     this.contributionsQueryRef.stopPolling();
+     this.recommendedProblemsQueryRef.stopPolling();
+     this.recommendedUsersQueryRef.stopPolling();
+     this.draftsSub.unsubscribe();
+     this.contributionsSub.unsubscribe();
+     this.recommendedProblemsSub.unsubscribe();
+     this.recommendedUsersSub.unsubscribe();
    }
 }
