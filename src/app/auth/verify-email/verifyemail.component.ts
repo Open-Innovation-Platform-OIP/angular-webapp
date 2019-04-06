@@ -15,6 +15,7 @@ export class VerifyEmailComponent implements OnInit, OnDestroy {
         email: '',
         otp: '',
     };
+    step = 0;
     loading = false;
     submitted = false;
     returnUrl: string;
@@ -80,20 +81,29 @@ export class VerifyEmailComponent implements OnInit, OnDestroy {
     }
     requestOTP() {
         this.loading = true;
-        this.auth.requestResetCode(this.verifyDetails.email)
+        this.auth.requestVerificationEmail(this.verifyDetails.email)
         .pipe(first())
         .subscribe(
             data => {
                 this.loading = false;
+                this.step = 1;
                 // this.router.navigate(['/login']);
                 // this.router.navigate([this.returnUrl]);
             },
             error => {
                 console.log(error);
                 this.error = error;
-                alert(error.response);
+                const msg = error.error.msg;
+                if (msg.search('already verified') !== -1) {
+                    alert('Your email is already verified. You can login or request a password reset');
+                } else {
+                    alert(msg);
+                }
                 this.loading = false;
             });
+    }
+    goToStep1() {
+        this.step = 1;
     }
     submit() {
         this.submitted = true;

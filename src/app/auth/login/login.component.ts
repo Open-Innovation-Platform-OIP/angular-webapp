@@ -94,12 +94,13 @@ export class LoginComponent implements OnInit, OnDestroy {
         error => {
           this.error = error;
           this.loading = false;
+          alert(error.error.errors[0].msg);
         }
       );
   }
   forgotPassword() {
     // send reset request to server
-    console.log("sending reset email to your inbox");
+    // console.log("sending reset email to your inbox");
     this.router.navigate(["/auth/forgot"]);
   }
 
