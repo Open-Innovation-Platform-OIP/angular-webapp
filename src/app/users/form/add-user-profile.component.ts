@@ -96,7 +96,7 @@ export class AddUserProfileComponent implements OnInit, OnChanges {
     qualification: "",
     photo_url: {},
     phone_number: "",
-    location: [],
+    location: {},
     is_ngo: false,
     is_innovator: false,
     is_expert: false,

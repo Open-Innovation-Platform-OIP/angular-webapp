@@ -25,8 +25,8 @@
                       <div class="fileinput-preview fileinput-exists thumbnail img-circle"></div>
                       <div>
                         <label class="btn btn-round btn-rose btn-file">
-                          <span *ngIf="!user.photo_url" class="fileinput-new">Add Photo</span>
-                          <span *ngIf="user.photo_url" class="fileinput-new">update Photo</span>
+                          <span *ngIf="!objectKeys(user.photo_url).length" class="fileinput-new">Add Photo</span>
+                          <span *ngIf="objectKeys(user.photo_url).length" class="fileinput-new">update Photo</span>
                           <span class="fileinput-exists">Change</span>
                           <input type="file" name="..." (change)="getBlob($event)" accept="image/*" />
                         </label>
@@ -129,7 +129,7 @@
 
                 <div class="row">
                   <label class="col-md-2 col-2 col-form-label" [ngStyle]="{
-                    color: !objectKeys(user.location).length ? 'red' : '#AAAAAA'
+                    color: !userLocation ? 'red' : '#AAAAAA'
                   }">Location (Geo)
                   </label>
                   <div class="col-md-10 col-9">
