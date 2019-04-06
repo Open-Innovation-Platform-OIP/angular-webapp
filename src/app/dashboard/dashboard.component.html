@@ -7,24 +7,24 @@
                 <app-problem-card [problemData]="problem"></app-problem-card>
             </div>
         </div>
-        <h3 *ngIf="contributions.size" class="card-title text-center">Problems you have contributed to</h3>
+        <h3 *ngIf="objectKeys(contributions).length>0" class="card-title text-center">Problems you have contributed to</h3>
         <br />
         <div class="row">
-            <div class="col-md-4" *ngFor="let problem of contributions">
+            <div class="col-md-4" *ngFor="let problem of objectValues(contributions)">
                 <app-problem-card [problemData]="problem"></app-problem-card>
             </div>
         </div>
-        <h3 *ngIf="recommendedProblems.size" class="card-title text-center">Problems you may be interested in</h3>
+        <h3 *ngIf="objectKeys(recommendedProblems).length>0" class="card-title text-center">Problems you may be interested in</h3>
         <br />
         <div class="row">
-            <div class="col-md-4" *ngFor="let problem of recommendedProblems">
+            <div class="col-md-4" *ngFor="let problem of objectValues(recommendedProblems)">
                 <app-problem-card [problemData]="problem"></app-problem-card>
             </div>
         </div>
-        <h3 *ngIf="recommendedUsers.size" class="card-title text-center">People you may be interested in</h3>
+        <h3 *ngIf="objectKeys(recommendedUsers).length>0" class="card-title text-center">People you may be interested in</h3>
         <br />
         <div class="row">
-            <div class="col-md-4" *ngFor="let user of recommendedUsers">
+            <div class="col-md-4" *ngFor="let user of objectValues(recommendedUsers)">
                 <app-profile-card [userData]="user"></app-profile-card>
             </div>
         </div>

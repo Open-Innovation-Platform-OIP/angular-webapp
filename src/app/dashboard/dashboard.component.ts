@@ -11,11 +11,12 @@ declare const $: any;
   templateUrl: './dashboard.component.html'
 })
 export class DashboardComponent implements OnInit, AfterViewInit {
-
+  objectValues = Object['values'];
+  objectKeys = Object['keys'];
   drafts = [];
-  contributions = new Set();
-  recommendedProblems = new Set();
-  recommendedUsers = new Set();
+  contributions = {};
+  recommendedProblems = {};
+  recommendedUsers = {};
   draftsQueryRef: QueryRef<any>;
   contributionsQueryRef: QueryRef<any>;
   recommendedProblemsQueryRef: QueryRef<any>;
@@ -102,8 +103,14 @@ export class DashboardComponent implements OnInit, AfterViewInit {
     });
     this.contributionsSub = this.contributionsQueryRef.valueChanges.subscribe(({data}) => {
       Object.keys(data).map(key => {
-        data[key].map(problem => {
-          this.contributions.add(Object.values(problem)[0]);
+        data[key].map(p => {
+          if(p[0]) {
+            const problem = Object.values(p[0]);
+            if(problem['id']) {
+              this.contributions[problem['id']] = problem;
+            }
+          }
+          // this.contributions.add(Object.values(problem)[0]);
         });
       });
     });
@@ -128,8 +135,12 @@ export class DashboardComponent implements OnInit, AfterViewInit {
       if(data.users_tags.length > 0) {
         data.users_tags.map(tagData => {
           if (tagData.tag && tagData.tag.tag_problems.length>0) {
-            tagData.tag.tag_problems.map(problem => {
-              this.recommendedProblems.add(problem.problem);
+            tagData.tag.tag_problems.map(p => {
+              if (p && p.problem && p.problem.id) {
+                const problem = p.problem;
+                this.recommendedProblems[problem['id']] = problem;
+              }
+              // this.recommendedProblems.add(problem.problem);
             })
           }
         })
@@ -161,8 +172,12 @@ export class DashboardComponent implements OnInit, AfterViewInit {
       if(data.users_tags.length > 0) {
         data.users_tags.map(users => {
           if (users.tag && users.tag.tag_users.length>0) {
-            users.tag.tag_users.map(user => {
-              this.recommendedUsers.add(user.user);
+            users.tag.tag_users.map(u => {
+              if (u && u.user && u.user.id) {
+                const user = u.user;
+                this.recommendedUsers[user.id] = user;
+              }
+              // this.recommendedUsers.add(user.user);
             });
           }
         });
@@ -171,8 +186,10 @@ export class DashboardComponent implements OnInit, AfterViewInit {
         data.users.map(org => {
           if (org.organizationByOrganizationId && org.organizationByOrganizationId.users.length > 0) {
             org.organizationByOrganizationId.users.map(user => {
-              // console.log(user);
-              this.recommendedUsers.add(user);
+              if (user && user.id) {
+                this.recommendedUsers[user['id']] = user;
+              }
+              // this.recommendedUsers.add(user);
             })
           }
         });
