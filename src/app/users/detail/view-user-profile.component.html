@@ -33,8 +33,12 @@
             </h4>
           </div>
           <div class="card-body">
-            <strong>E-mail</strong>
-            <p class="description">{{userData.email}}</p>
+            <div>
+              <strong>E-mail</strong>
+              <p class="description">{{userData.email}}</p>
+
+            </div>
+
 
             <div *ngIf="loggedInUsersProfile && userData.phone_number">
               <strong>Phone Number</strong>

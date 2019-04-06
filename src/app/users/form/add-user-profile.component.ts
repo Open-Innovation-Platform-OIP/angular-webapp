@@ -83,7 +83,7 @@ export class AddUserProfileComponent implements OnInit, OnChanges {
   objectKeys = Object.keys;
   personaArray = [];
   organization: any = {};
-  userLocation: any = {};
+  userLocation: any;
 
   user: any = {
     id: "",
@@ -108,7 +108,7 @@ export class AddUserProfileComponent implements OnInit, OnChanges {
     notify_email: false,
     notify_sms: false,
     notify_app: true,
-    organization_id: ""
+    organization_id: 0
   };
 
   @ViewChild("sectorInput") sectorInput: ElementRef<HTMLInputElement>;
