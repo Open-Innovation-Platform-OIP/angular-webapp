@@ -208,7 +208,7 @@ export class NavbarComponent implements OnInit {
       })
       .valueChanges.subscribe(
         ({ data }) => {
-          console.log(data, "from notifications");
+          // console.log(data, "from notifications");
           data.notifications.map(notification => {
             if (notification.discussion) {
               notification.discussion.text = notification.discussion.text.replace(

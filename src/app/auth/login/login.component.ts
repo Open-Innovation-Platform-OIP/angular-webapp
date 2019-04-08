@@ -44,14 +44,20 @@ export class LoginComponent implements OnInit, OnDestroy {
       card.classList.remove("card-hidden");
     }, 700);
     this.route.queryParams.subscribe(params => {
-      console.log(params);
+      // console.log(params);
+      const err = params['err'];
+      if (err) {
+        console.log(err);
+        alert(err);
+        return false;
+      }
       const user = {
         id: params['id'],
         email: params['email'],
         token: params['token']
       };
       this.returnUrl = params['returnUrl'] || '/';
-      console.log(user, this.returnUrl);
+      // console.log(user, this.returnUrl);
       if (user && user['token'] && user['id'] && user['email']) {
         const res = this.auth.storeUser(user);
         if (res) {
@@ -113,9 +119,17 @@ export class LoginComponent implements OnInit, OnDestroy {
           this.showNotification("bottom", "left");
         },
         error => {
+          console.error(error);
           this.error = error;
+          const msg = error.error.msg;
+          if (msg.search('already verified') !== -1) {
+              alert('Your email is already verified. You can login or request a password reset');
+          } else if (msg.search('not been verified') !== -1) {
+              alert('Your email has not been verified. Click OK to proceed to the email verification page.');
+              this.router.navigateByUrl(`/auth/verify?email=${this.loginDetails.email}`);
+          }
           this.loading = false;
-          alert(error.error.errors[0].msg);
+          // alert(error.error.errors[0].msg);
         }
       );
   }
