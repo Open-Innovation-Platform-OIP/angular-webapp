@@ -44,8 +44,8 @@
     <div class="price">
       <!-- <h4>$459/night</h4> -->
     </div>
-    <div class="stats">
-      <p class="card-category"><i class="material-icons">place</i> {{userData.location}}</p>
+    <div class="stats" *ngIf="userData.location.Address">
+      <p class="card-category"><i class="material-icons">place</i> {{userData.location.Address.Label}}</p>
     </div>
   </div>
 </div>

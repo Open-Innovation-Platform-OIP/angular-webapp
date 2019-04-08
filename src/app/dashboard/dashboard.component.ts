@@ -1,18 +1,18 @@
-import { Component, OnInit, OnDestroy } from '@angular/core';
+import { Component, OnInit, OnDestroy } from "@angular/core";
 import { Apollo, QueryRef } from "apollo-angular";
 import gql from "graphql-tag";
 import { Observable, Subscription } from "rxjs";
 import { AuthService } from "../services/auth.service";
-import { isArray } from 'util';
+import { isArray } from "util";
 declare const $: any;
 
 @Component({
-  selector: 'app-dashboard',
-  templateUrl: './dashboard.component.html'
+  selector: "app-dashboard",
+  templateUrl: "./dashboard.component.html"
 })
 export class DashboardComponent implements OnInit, OnDestroy {
-  objectValues = Object['values'];
-  objectKeys = Object['keys'];
+  objectValues = Object["values"];
+  objectKeys = Object["keys"];
   drafts = [];
   contributions = {};
   recommendedProblems = {};
@@ -47,7 +47,7 @@ export class DashboardComponent implements OnInit, OnDestroy {
       }
       location
   }`;
-  
+
   constructor(private apollo: Apollo, private auth: AuthService) {
     // console.log('dashboard')
   }
@@ -59,22 +59,25 @@ export class DashboardComponent implements OnInit, OnDestroy {
     this.getRecommendedUsers();
     // this.problemQueryString = '{' + this.problemFields.join('\n') + '}';
   }
-  
-   getDrafts() {
+
+  getDrafts() {
     //  console.log(this.problemQueryString);
     const draftsQuery = gql`
       {
-        problems(where:{is_draft:{_eq:true}, created_by:{_eq: ${this.auth.currentUserValue.id}}}) ${this.problemQueryString}
+        problems(where:{is_draft:{_eq:true},is_deleted:{_eq:false}, created_by:{_eq: ${
+          this.auth.currentUserValue.id
+        }}} order_by: {modified_at: desc}) ${this.problemQueryString}
     }
     `;
     this.draftsQueryRef = this.apollo.watchQuery({
       query: draftsQuery,
-      pollInterval: 1000
+      pollInterval: 1000,
+      fetchPolicy: "network-only"
     });
     // this.draftsObs = this.draftsQueryRef.valueChanges;
-    this.draftsSub = this.draftsQueryRef.valueChanges.subscribe(({data}) => {
+    this.draftsSub = this.draftsQueryRef.valueChanges.subscribe(({ data }) => {
       // console.log(data);
-      if(data.problems.length > 0) {
+      if (data.problems.length > 0) {
         this.drafts = data.problems;
       }
     });
@@ -100,21 +103,24 @@ export class DashboardComponent implements OnInit, OnDestroy {
     `;
     this.contributionsQueryRef = this.apollo.watchQuery({
       query: contributionsQuery,
-      pollInterval: 1000
+      pollInterval: 1000,
+      fetchPolicy: "network-only"
     });
-    this.contributionsSub = this.contributionsQueryRef.valueChanges.subscribe(({data}) => {
-      Object.keys(data).map(key => {
-        data[key].map(p => {
-          if(p[0]) {
-            const problem = Object.values(p[0]);
-            if(problem['id']) {
-              this.contributions[problem['id']] = problem;
+    this.contributionsSub = this.contributionsQueryRef.valueChanges.subscribe(
+      ({ data }) => {
+        Object.keys(data).map(key => {
+          data[key].map(p => {
+            if (p[0]) {
+              const problem = Object.values(p[0]);
+              if (problem["id"]) {
+                this.contributions[problem["id"]] = problem;
+              }
             }
-          }
-          // this.contributions.add(Object.values(problem)[0]);
+            // this.contributions.add(Object.values(problem)[0]);
+          });
         });
-      });
-    });
+      }
+    );
   }
 
   getRecommendedProblems() {
@@ -131,23 +137,26 @@ export class DashboardComponent implements OnInit, OnDestroy {
     `;
     this.recommendedProblemsQueryRef = this.apollo.watchQuery({
       query: recoProblemsQuery,
-      pollInterval: 1000
+      pollInterval: 1000,
+      fetchPolicy: "network-only"
     });
-    this.recommendedProblemsSub = this.recommendedProblemsQueryRef.valueChanges.subscribe(({data}) => {
-      if(data.users_tags.length > 0) {
-        data.users_tags.map(tagData => {
-          if (tagData.tag && tagData.tag.tag_problems.length>0) {
-            tagData.tag.tag_problems.map(p => {
-              if (p && p.problem && p.problem.id) {
-                const problem = p.problem;
-                this.recommendedProblems[problem['id']] = problem;
-              }
-              // this.recommendedProblems.add(problem.problem);
-            })
-          }
-        })
+    this.recommendedProblemsSub = this.recommendedProblemsQueryRef.valueChanges.subscribe(
+      ({ data }) => {
+        if (data.users_tags.length > 0) {
+          data.users_tags.map(tagData => {
+            if (tagData.tag && tagData.tag.tag_problems.length > 0) {
+              tagData.tag.tag_problems.map(p => {
+                if (p && p.problem && p.problem.id) {
+                  const problem = p.problem;
+                  this.recommendedProblems[problem["id"]] = problem;
+                }
+                // this.recommendedProblems.add(problem.problem);
+              });
+            }
+          });
+        }
       }
-    });
+    );
   }
 
   getRecommendedUsers() {
@@ -162,52 +171,60 @@ export class DashboardComponent implements OnInit, OnDestroy {
       }
       users(where:{id:{_eq:${this.auth.currentUserValue.id}}}) {
         organizationByOrganizationId{
-          users(where:{id:{_neq:${this.auth.currentUserValue.id}}}) ${this.userQueryString}
+          users(where:{id:{_neq:${this.auth.currentUserValue.id}}}) ${
+      this.userQueryString
+    }
         }
       }
     }
     `;
     this.recommendedUsersQueryRef = this.apollo.watchQuery({
       query: recommendedUsersQuery,
-      pollInterval: 1000
+      pollInterval: 1000,
+      fetchPolicy: "network-only"
     });
-    this.recommendedUsersSub = this.recommendedUsersQueryRef.valueChanges.subscribe(({data}) => {
-      if(data.users_tags.length > 0) {
-        data.users_tags.map(users => {
-          if (users.tag && users.tag.tag_users.length>0) {
-            users.tag.tag_users.map(u => {
-              if (u && u.user && u.user.id) {
-                const user = u.user;
-                this.recommendedUsers[user.id] = user;
-              }
-              // this.recommendedUsers.add(user.user);
-            });
-          }
-        });
+    this.recommendedUsersSub = this.recommendedUsersQueryRef.valueChanges.subscribe(
+      ({ data }) => {
+        if (data.users_tags.length > 0) {
+          data.users_tags.map(users => {
+            if (users.tag && users.tag.tag_users.length > 0) {
+              users.tag.tag_users.map(u => {
+                if (u && u.user && u.user.id) {
+                  const user = u.user;
+                  this.recommendedUsers[user.id] = user;
+                }
+                // this.recommendedUsers.add(user.user);
+              });
+            }
+          });
+        }
+        if (data.users.length > 0) {
+          data.users.map(org => {
+            if (
+              org.organizationByOrganizationId &&
+              org.organizationByOrganizationId.users.length > 0
+            ) {
+              org.organizationByOrganizationId.users.map(user => {
+                if (user && user.id) {
+                  this.recommendedUsers[user["id"]] = user;
+                }
+                // this.recommendedUsers.add(user);
+              });
+            }
+          });
+        }
       }
-      if (data.users.length > 0) {
-        data.users.map(org => {
-          if (org.organizationByOrganizationId && org.organizationByOrganizationId.users.length > 0) {
-            org.organizationByOrganizationId.users.map(user => {
-              if (user && user.id) {
-                this.recommendedUsers[user['id']] = user;
-              }
-              // this.recommendedUsers.add(user);
-            })
-          }
-        });
-      }
-    });
+    );
   }
 
-   ngOnDestroy() {
-     this.draftsQueryRef.stopPolling();
-     this.contributionsQueryRef.stopPolling();
-     this.recommendedProblemsQueryRef.stopPolling();
-     this.recommendedUsersQueryRef.stopPolling();
-     this.draftsSub.unsubscribe();
-     this.contributionsSub.unsubscribe();
-     this.recommendedProblemsSub.unsubscribe();
-     this.recommendedUsersSub.unsubscribe();
-   }
+  ngOnDestroy() {
+    this.draftsQueryRef.stopPolling();
+    this.contributionsQueryRef.stopPolling();
+    this.recommendedProblemsQueryRef.stopPolling();
+    this.recommendedUsersQueryRef.stopPolling();
+    this.draftsSub.unsubscribe();
+    this.contributionsSub.unsubscribe();
+    this.recommendedProblemsSub.unsubscribe();
+    this.recommendedUsersSub.unsubscribe();
+  }
 }
