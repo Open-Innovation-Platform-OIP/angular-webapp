@@ -75,12 +75,21 @@ export class AuthService {
       .pipe(map(user => {
         if (user && user['token'] && user['id']) {
           user['email'] = loginDetails.email;
-          localStorage.setItem('currentUser', JSON.stringify(user));
-          // this.storeUser(user);
-          this.currentUserSubject.next(<User>user);
+          // localStorage.setItem('currentUser', JSON.stringify(user));
+          return this.storeUser(user);
+          // this.currentUserSubject.next(<User>user);
         }
         return user;
       }));
+  }
+
+  storeUser(user) {
+    if (user && user['token'] && user['id'] && user['email'] && !this.isExpired(user['token'])) {
+      localStorage.setItem('currentUser', JSON.stringify(user));
+      this.currentUserSubject.next(<User>user);
+      return user;
+    }
+    return false;
   }
 
   register(user) {
