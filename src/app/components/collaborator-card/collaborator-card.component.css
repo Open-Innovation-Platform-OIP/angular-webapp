@@ -1,7 +1,11 @@
 .collaborate-card {
-    height: 20em;
+    height: 22em;
 }
 
 .card-avatar {
     margin-top: -40px;
+}
+
+.actions {
+    cursor: pointer;
 }

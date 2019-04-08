@@ -1,11 +1,8 @@
 <!--REWRITE-->
 
 <!-- [routerLink]="currentUser&&!(collaboratorData.user_id===currentUser)&&'/profiles/'+collaboratorData.user_id" -->
-<div class="card card-profile collaborate-card" *ngIf="collaboratorData" [routerLink]="
-    currentUser &&
-    '/users/' + collaboratorData.user_id
-  ">
-  <div class="card-avatar">
+<div class="card card-profile collaborate-card" *ngIf="collaboratorData">
+  <div class="card-avatar actions" [routerLink]="currentUser && '/users/' + collaboratorData.user_id">
     <a *ngIf="collaboratorData.user && collaboratorData.user.photo_url">
       <img class="img" style="object-fit: cover;" *ngIf="collaboratorData.user && collaboratorData.user.photo_url" src="{{
         collaboratorData.user.photo_url && collaboratorData.user.photo_url.url
@@ -16,7 +13,8 @@
   </div>
   <div class="card-body">
     <h6 class="card-category text-gray"></h6>
-    <h4 class="card-title" *ngIf="collaboratorData.user && collaboratorData.user.name">
+    <h4 class="card-title actions" *ngIf="collaboratorData.user && collaboratorData.user.name"
+      [routerLink]="currentUser && '/users/' + collaboratorData.user_id">
       {{ collaboratorData.user.name }}
     </h4>
     <p class="card-description">
@@ -32,19 +30,29 @@
       <span>&nbsp;</span>
     </div>
   </div>
+
+  <hr *ngIf="collaboratorData.user_id === auth.currentUserValue.id">
+
+
+  <div class="stats">
+    <button mat-button type="button" class="btn btn-sm btn-danger"
+      *ngIf="collaboratorData.user_id === auth.currentUserValue.id" (click)="deleteCollaboration()">
+      <i class="material-icons">
+        delete
+      </i>
+    </button>
+    <span>&nbsp;</span>
+    <button mat-button type="button" class="btn btn-sm btn-warning"
+      *ngIf="collaboratorData.user_id === auth.currentUserValue.id" (click)="editCollaboration()" data-toggle="modal"
+      data-target="#EditCollaborateModal">
+      <i class="material-icons">
+        create
+      </i>
+    </button>
+  </div>
+
 </div>
 
-<button *ngIf="collaboratorData.user_id === auth.currentUserValue.id" mat-button type="button" class="btn btn-danger"
-  (click)="deleteCollaboration()">
-  <i class="material-icons actions">
-    delete
-  </i>
-</button>
-<button *ngIf="collaboratorData.user_id === auth.currentUserValue.id" mat-button type="button" class="btn btn-warning"
-  (click)="editCollaboration()" data-toggle="modal" data-target="#EditCollaborateModal">
-  <i class="material-icons actions">
-    create
-  </i>
-</button>
+
 
 <!--REWRITE-->

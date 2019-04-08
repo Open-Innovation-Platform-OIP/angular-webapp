@@ -45,28 +45,28 @@ export class LoginComponent implements OnInit, OnDestroy {
     }, 700);
     this.route.queryParams.subscribe(params => {
       // console.log(params);
-      const err = params['err'];
+      const err = params["err"];
       if (err) {
         console.log(err);
         alert(err);
         return false;
       }
       const user = {
-        id: params['id'],
-        email: params['email'],
-        token: params['token']
+        id: params["id"],
+        email: params["email"],
+        token: params["token"]
       };
-      this.returnUrl = params['returnUrl'] || '/';
+      this.returnUrl = params["returnUrl"] || "/";
       // console.log(user, this.returnUrl);
-      if (user && user['token'] && user['id'] && user['email']) {
+      if (user && user["token"] && user["id"] && user["email"]) {
         const res = this.auth.storeUser(user);
         if (res) {
           // this.
-          console.log('valid token for', this.auth.currentUserValue.email);
+          console.log("valid token for", this.auth.currentUserValue.email);
           this.router.navigate([this.returnUrl]);
         } else {
           // console.log('invalid token');
-          alert('Invalid login. Please try again');
+          alert("Invalid login. Please try again");
         }
       }
     });
@@ -112,7 +112,7 @@ export class LoginComponent implements OnInit, OnDestroy {
   }
   login() {
     if (!(isEmail(this.loginDetails.email) && this.loginDetails.password)) {
-      return alert('Please enter a valid email and password');
+      return alert("Please enter a valid email and password");
     }
     this.submitted = true;
     this.loading = true;
@@ -129,13 +129,28 @@ export class LoginComponent implements OnInit, OnDestroy {
           console.error(error);
           this.error = error;
           const msg = error.error.msg;
-          if (typeof(msg)==='string' && msg.toLowerCase().search('already verified') !== -1) {
-              alert('Your email is already verified. You can login or request a password reset');
-          } else if (typeof(msg)==='string' && msg.toLowerCase().search('not been verified') !== -1) {
-              alert('Your email has not been verified. Click OK to proceed to the email verification page.');
-              this.router.navigateByUrl(`/auth/verify?email=${this.loginDetails.email}`);
-          } else if (typeof(msg)==='string' && msg.toLowerCase().search('unknown') !== -1) {
-            alert('Unknown email address. Perhaps you have not signed up yet?');
+          if (
+            typeof msg === "string" &&
+            msg.toLowerCase().search("already verified") !== -1
+          ) {
+            alert(
+              "Your email is already verified. You can login or request a password reset"
+            );
+          } else if (
+            typeof msg === "string" &&
+            msg.toLowerCase().search("not been verified") !== -1
+          ) {
+            alert(
+              "Your email has not been verified. Click OK to proceed to the email verification page."
+            );
+            this.router.navigateByUrl(
+              `/auth/verify?email=${this.loginDetails.email}`
+            );
+          } else if (
+            typeof msg === "string" &&
+            msg.toLowerCase().search("unknown") !== -1
+          ) {
+            alert("Unknown email address. Perhaps you have not signed up yet?");
           } else {
             alert(msg);
           }
@@ -173,7 +188,7 @@ export class LoginComponent implements OnInit, OnDestroy {
       },
       {
         type: type[color],
-        timer: 90000,
+        timer: 10000,
         placement: {
           from: from,
           align: align
