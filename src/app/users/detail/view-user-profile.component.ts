@@ -20,6 +20,7 @@ export class ViewUserProfileComponent implements OnInit {
   objectEntries = Object.entries;
   personas: any = [];
   userId: any;
+  organizationName: any;
 
   constructor(
     private userHandlerService: UserHandlerService,
@@ -46,21 +47,30 @@ export class ViewUserProfileComponent implements OnInit {
       this.interests = [];
       this.personas = [];
       console.log(result, "result");
-      this.userData = result.data.users[0];
-      Object.entries(this.userData).map(data => {
-        if (typeof data[1] === "boolean" && data[1]) {
-          this.personas.push(data[0]);
-        }
-      });
+      if (result.data.users[0]) {
+        this.userData = result.data.users[0];
+        Object.entries(this.userData).map(data => {
+          if (typeof data[1] === "boolean" && data[1]) {
+            this.personas.push(data[0]);
+          }
+        });
 
-      this.interests = result.data.users[0].user_tags.map(tagArray => {
-        return tagArray.tag.name;
-      });
-      console.log(this.userData, "userData");
-      if (this.userData.id === Number(this.auth.currentUserValue.id)) {
-        this.loggedInUsersProfile = true;
+        if (result.data.users[0].organizationByOrganizationId) {
+          this.organizationName =
+            result.data.users[0].organizationByOrganizationId.name;
+        }
+        if (result.data.users[0].user_tags) {
+          this.interests = result.data.users[0].user_tags.map(tagArray => {
+            return tagArray.tag.name;
+          });
+        }
+
+        console.log(this.userData, "userData");
+        // if (this.userData.id === Number(this.auth.currentUserValue.id)) {
+        //   this.loggedInUsersProfile = true;
+        // }
+        // console.log(this.problemService.problem, "problem");
       }
-      // console.log(this.problemService.problem, "problem");
     });
   }
 
@@ -85,6 +95,10 @@ export class ViewUserProfileComponent implements OnInit {
               is_funder
               is_government
               is_beneficiary
+              organizationByOrganizationId{
+                id
+                name
+              }
               user_tags{
                 tag {
                     id

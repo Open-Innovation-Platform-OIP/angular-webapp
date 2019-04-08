@@ -52,13 +52,14 @@ export interface User {
   providedIn: "root"
 })
 export class UsersService {
-  public allOrgs: any = new Set();
+  public allOrgs: any = {};
   public allUsers = {};
   public currentUser = {
     id: 0,
     email: "",
     name: "",
-    photo_url: ""
+    photo_url: "",
+    organization: ""
   };
 
   constructor(private apollo: Apollo, private auth: AuthService) {
@@ -77,28 +78,41 @@ export class UsersService {
             name
             email
             photo_url
+            organizationByOrganizationId {
+              name
+            }
+
           }
         }
-      `
+      `,
+        fetchPolicy: "no-cache"
         // pollInterval: 500
       })
       .valueChanges.subscribe(({ data }) => {
+        console.log("<<<curr user data", data);
         if (data.users.length > 0) {
           Object.keys(this.currentUser).map(key => {
             if (data.users[0][key]) {
               this.currentUser[key] = data.users[0][key];
             }
           });
+
+          if (data.users[0].organizationByOrganizationId) {
+            this.currentUser.organization =
+              data.users[0].organizationByOrganizationId.name;
+          }
         }
       });
+    console.log(this.currentUser, "current user on user service");
   }
   public getOrgsFromDB() {
     this.apollo
       .watchQuery<any>({
         query: gql`
           query {
-            users {
-              organization
+            organizations {
+              id
+              name
             }
           }
         `,
@@ -107,15 +121,14 @@ export class UsersService {
         // pollInterval: 500
       })
       .valueChanges.subscribe(({ data }) => {
-        if (data.users.length > 0) {
-          data.users.map(user => {
-            if (user.organization) {
-              this.allOrgs.add(user.organization);
-              // this.allOrgs = Array.from(this.allOrgs);
-              // console.log(this.allOrgs, "all orgs");
-            }
+        if (data.organizations.length > 0) {
+          data.organizations.map(organization => {
+            this.allOrgs[organization.name] = organization;
+            // this.allOrgs = Array.from(this.allOrgs);
+            // / console.log(this.allOrgs, "all orgs");
           });
         }
+        console.log(data, "data from all orgs");
       });
   }
 
@@ -128,6 +141,9 @@ export class UsersService {
               id
               name
               organization
+              organizationByOrganizationId {
+                name
+              }
             }
           }
         `,
@@ -144,8 +160,9 @@ export class UsersService {
                 value: user.name
               };
             }
-            if (user.organization) {
-              this.allUsers[user.id].organization = user.organization;
+            if (user.organizationByOrganizationId) {
+              this.allUsers[user.id].organization =
+                user.organizationByOrganizationId.name;
             }
           });
         }
@@ -179,6 +196,7 @@ export class UsersService {
                 notify_email
                 notify_sms
                 notify_app
+                organization_id
               ]
             }
           ) {

@@ -1,5 +1,6 @@
 <div class="main-content">
-    <div class="container-fluid" *ngIf="drafts.length || contributions.size || recommendedProblems.size || recommendedUsers.size; else new_user">
+    <div class="container-fluid"
+        *ngIf="drafts.length || objectKeys(contributions).length || objectKeys(recommendedProblems).length || objectKeys(recommendedUsers).length; else new_user">
         <h3 *ngIf="drafts.length" class="card-title text-center">You are working on these drafts</h3>
         <br />
         <div class="row">
@@ -7,21 +8,24 @@
                 <app-problem-card [problemData]="problem"></app-problem-card>
             </div>
         </div>
-        <h3 *ngIf="objectKeys(contributions).length>0" class="card-title text-center">Problems you have contributed to</h3>
+        <h3 *ngIf="objectKeys(contributions).length>0" class="card-title text-center">Problems you have contributed to
+        </h3>
         <br />
         <div class="row">
             <div class="col-md-4" *ngFor="let problem of objectValues(contributions)">
                 <app-problem-card [problemData]="problem"></app-problem-card>
             </div>
         </div>
-        <h3 *ngIf="objectKeys(recommendedProblems).length>0" class="card-title text-center">Problems you may be interested in</h3>
+        <h3 *ngIf="objectKeys(recommendedProblems).length>0" class="card-title text-center">Problems you may be
+            interested in</h3>
         <br />
         <div class="row">
             <div class="col-md-4" *ngFor="let problem of objectValues(recommendedProblems)">
                 <app-problem-card [problemData]="problem"></app-problem-card>
             </div>
         </div>
-        <h3 *ngIf="objectKeys(recommendedUsers).length>0" class="card-title text-center">People you may be interested in</h3>
+        <h3 *ngIf="objectKeys(recommendedUsers).length>0" class="card-title text-center">People you may be interested in
+        </h3>
         <br />
         <div class="row">
             <div class="col-md-4" *ngFor="let user of objectValues(recommendedUsers)">
@@ -32,17 +36,19 @@
 </div>
 
 <ng-template #new_user>
-<div class="main-content">
+    <div class="main-content">
         <div class="container-fluid">
-                <h3>New here?</h3>
-                <p>
-                    Why not help enrich some of <a [routerLink]="'/problems'">the problems</a> on the platform? Or perhaps add a new one?
-                </p>
-                <p>
-                    Don't forget to <a [routerLink]="'/users/'+ auth.currentUserValue.id">update your profile</a> so that other users can find you!
-                </p>
+            <h3>New here?</h3>
+            <p>
+                Why not help enrich some of <a [routerLink]="'/problems'">the problems</a> on the platform? Or perhaps
+                add a new one?
+            </p>
+            <p>
+                Don't forget to <a [routerLink]="'/users/'+ auth.currentUserValue.id">update your profile</a> so that
+                other users can find you!
+            </p>
         </div>
-</div>    
+    </div>
 </ng-template>
 
 

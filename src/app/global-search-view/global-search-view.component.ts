@@ -31,15 +31,15 @@ export class GlobalSearchViewComponent implements OnInit, OnChanges {
   ) {}
 
   ngOnInit() {
-    this.router.routeReuseStrategy.shouldReuseRoute = function() {
-      return false;
-    };
-    this.router.events.subscribe(evt => {
-      if (evt instanceof NavigationEnd) {
-        this.router.navigated = false;
-        window.scrollTo(0, 0);
-      }
-    });
+    // this.router.routeReuseStrategy.shouldReuseRoute = function() {
+    //   return false;
+    // };
+    // this.router.events.subscribe(evt => {
+    //   if (evt instanceof NavigationEnd) {
+    //     this.router.navigated = false;
+    //     window.scrollTo(0, 0);
+    //   }
+    // });
   }
 
   ngOnChanges() {
@@ -73,7 +73,7 @@ export class GlobalSearchViewComponent implements OnInit, OnChanges {
                   user_id
   
                 }
-                problem_validations{
+                problem_validations {
                   comment
                   agree
                   created_at

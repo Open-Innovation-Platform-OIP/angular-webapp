@@ -44,7 +44,7 @@ export class EnrichmentFormComponent implements OnInit {
   ) {}
 
   ngOnInit() {
-    console.log(this.route.snapshot.paramMap.get("problemId"), "problemid");
+    // console.log(this.route.snapshot.paramMap.get("problemId"), "problemid");
     this.problemId = Number(this.route.snapshot.paramMap.get("problemId"));
 
     if (this.problemId) {
@@ -88,8 +88,9 @@ export class EnrichmentFormComponent implements OnInit {
                        
                         }
                     }
-                    `
-          // pollInterval: 500
+                    `,
+          fetchPolicy: "network-only"
+          // pollInterval: 500,
         })
         .valueChanges.subscribe(
           result => {
@@ -112,7 +113,7 @@ export class EnrichmentFormComponent implements OnInit {
             }
           },
           err => {
-            // console.log("error", err);
+            console.log("error", err);
             console.error(JSON.stringify(err));
           }
         );
@@ -120,6 +121,7 @@ export class EnrichmentFormComponent implements OnInit {
 
     this.route.params.pipe(first()).subscribe(params => {
       if (params.id) {
+        console.log(params.id, "params id in enrichment");
         this.apollo
           .watchQuery<any>({
             query: gql`
@@ -128,6 +130,7 @@ export class EnrichmentFormComponent implements OnInit {
                             
                             
                             id
+                            
                             created_by
                             description
                             location
@@ -162,7 +165,7 @@ export class EnrichmentFormComponent implements OnInit {
                               featured_url
                               featured_type
                               embed_urls
-                              voted_by
+                             
                               usersBycreatedBy {
                                 id
                                 name
@@ -175,33 +178,42 @@ export class EnrichmentFormComponent implements OnInit {
                             }
 
                             }
+                           
 
                             
                            
                             }
                         }
-                        `
+                        `,
+            fetchPolicy: "network-only"
             // pollInterval: 500
           })
-          .valueChanges.subscribe(result => {
-            console.log(result, "result");
-            if (
-              result.data.enrichments.length >= 1 &&
-              result.data.enrichments[0].id
-            ) {
-              // this.enrichmentData = result.data.enrichments[0];
-              this.enrichmentData["id"] = result.data.enrichments[0].id;
-              Object.keys(this.enrichmentData).map(key => {
-                // console.log(key, result.data.problems[0][key]);
-                if (result.data.enrichments[0][key]) {
-                  this.enrichmentData[key] = result.data.enrichments[0][key];
-                }
-              });
+          .valueChanges.subscribe(
+            result => {
+              console.log(result, "result");
+              if (
+                result.data.enrichments.length >= 1 &&
+                result.data.enrichments[0].id
+              ) {
+                // this.enrichmentData = result.data.enrichments[0];
+                this.enrichmentData["id"] = result.data.enrichments[0].id;
+                Object.keys(this.enrichmentData).map(key => {
+                  // console.log(key, result.data.problems[0][key]);
+                  if (result.data.enrichments[0][key]) {
+                    this.enrichmentData[key] = result.data.enrichments[0][key];
+                  }
+                });
 
-              this.problemData = result.data.enrichments[0].problemsByproblemId;
-              console.log(this.problemData, "on edit problme data");
+                this.problemData =
+                  result.data.enrichments[0].problemsByproblemId;
+                console.log(this.problemData, "on edit problme data");
+              }
+            },
+            err => {
+              console.log("error", err);
+              console.error(JSON.stringify(err));
             }
-          });
+          );
       }
     });
   }

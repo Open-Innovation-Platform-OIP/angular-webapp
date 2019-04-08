@@ -33,23 +33,39 @@
             </h4>
           </div>
           <div class="card-body">
-            <strong>E-mail</strong>
-            <p class="description">{{userData.email}}</p>
-
-            <strong *ngIf="loggedInUsersProfile && userData.phone_number">Phone Number</strong>
-            <p class="description" *ngIf="loggedInUsersProfile">{{userData.phone_number}}</p>
-
-            <strong *ngIf="userData.organization">Organization</strong>
-            <p class="description">{{userData.organization}}</p>
-
-            <strong *ngIf="personas.length">Persona</strong>
             <div>
-              <span *ngFor="let persona of personas" class="badge badge-warning"
-                style="margin-right: 0.3em;">{{persona.slice(3)}}</span>
-              <span>&nbsp;</span>
+              <strong>E-mail</strong>
+              <p class="description">{{userData.email}}</p>
+
             </div>
 
-            <br />
+
+            <div *ngIf="loggedInUsersProfile && userData.phone_number">
+              <strong>Phone Number</strong>
+              <p class="description" *ngIf="userData.id==auth.currentUserValue.id">{{userData.phone_number}}</p>
+
+            </div>
+
+
+            <div *ngIf="organizationName">
+              <strong>Organization</strong>
+              <p class="description">{{organizationName}}</p>
+
+            </div>
+
+            <div *ngIf="personas.length">
+
+              <strong>Persona</strong>
+              <div>
+                <span *ngFor="let persona of personas" class="badge badge-warning"
+                  style="margin-right: 0.3em;">{{persona.slice(3)}}</span>
+                <span>&nbsp;</span>
+              </div>
+
+
+            </div>
+
+
 
             <!-- <strong *ngIf="userData.qualification">Qualification</strong> -->
             <!-- <p class="description">{{userData.qualification}}</p> -->
@@ -57,20 +73,27 @@
             <p class="description">{{userData.organization}}</p> -->
 
 
-
-            <strong>Location</strong>
-            <p class="description">{{userData.location}}</p>
-
-            <strong *ngIf="interests.length">Interests</strong>
-            <div>
-              <span class="badge badge-warning" *ngFor="let interest of interests"
-                style="margin-right: 0.3em;">{{interest }} </span>
-              <span>&nbsp;</span>
+            <div *ngIf="userData.location && userData.location.Address">
+              <strong>Location</strong>
+              <p class="description">
+                {{userData.location.Address.Label}}</p>
             </div>
+
+            <div *ngIf="interests.length">
+
+              <strong>Interests</strong>
+              <div>
+                <span class="badge badge-warning" *ngFor="let interest of interests"
+                  style="margin-right: 0.3em;">{{interest }} </span>
+                <span>&nbsp;</span>
+              </div>
+
+            </div>
+
 
           </div>
           <div class="card-footer">
-            <div [routerLink]="'/users/'+ userData.id+'/edit'" *ngIf="loggedInUsersProfile">
+            <div [routerLink]="'/users/'+ userData.id+'/edit'" *ngIf="userData.id==auth.currentUserValue.id">
               <button mat-raised-button class="btn btn-info pull-right">Edit</button>
             </div>
             <!-- <button mat-raised-button type="submit" class="btn btn-rose pull-right">Update Profile</button> -->

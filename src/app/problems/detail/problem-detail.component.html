@@ -91,9 +91,13 @@
               </i> -->
             </div>
 
+            <!-- [disabled]="this.collaborators.length>0 || this.enrichment.length>0 || this.validation.length >0" -->
+
             <div class="dropdown">
               <button *ngIf="userId===problemData.created_by" [routerLink]="
-                '/problems/'+ problemData.id+'/edit'" class="btn btn-sm btn-warning" aria-expanded="true">
+                '/problems/'+ problemData.id+'/edit'"
+                [disabled]="this.collaborators.length || this.enrichment.length || this.validation.length"
+                class="btn btn-sm btn-warning" aria-expanded="true">
                 <i class="material-icons actions">
                   create
                 </i>
@@ -230,7 +234,7 @@
                   <i class="material-icons">close</i>
                 </button>
               </div>
-              <div class="modal-body ">
+              <div class="modal-body">
                 <!-- <app-add-enrichment (submitted)="onEnrichmentSubmit($event)"></app-add-enrichment> -->
                 <!-- <app-wizard-cmp></app-wizard-cmp> -->
                 <!-- <app-wizard-container></app-wizard-container> -->
@@ -576,8 +580,8 @@
 
               <div *ngIf="!popular">
                 <app-display-comment [users]="objectValues(usersService.allUsers)" [comment]="comment"
-                  [replies]="replies[comment.id]" (reply)="onCommentSubmit($event, comment.id)" (fileClicked)="displayModal($event)"
-                  *ngFor="let comment of sortComments(objectValues(comments))">
+                  [replies]="replies[comment.id]" (reply)="onCommentSubmit($event, comment.id)"
+                  (fileClicked)="displayModal($event)" *ngFor="let comment of sortComments(objectValues(comments))">
                 </app-display-comment>
               </div>
 

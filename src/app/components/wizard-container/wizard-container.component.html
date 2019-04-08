@@ -87,7 +87,8 @@
                     <mat-select name="organization" placeholder="Select Organization *" matInput id="organization"
                       formControlName="organization" [(ngModel)]="content.organization">
                       <mat-option>None</mat-option>
-                      <mat-option *ngFor="let org of usersService.allOrgs" value="{{org}}">{{org}}</mat-option>
+                      <mat-option *ngFor="let org of objectKeys(usersService.allOrgs)" value="{{org}}">{{org}}
+                      </mat-option>
                     </mat-select>
 
                     <!-- <input placeholder="Organization" [matAutocomplete]="auto" matInput [(ngModel)]="content.organization"
