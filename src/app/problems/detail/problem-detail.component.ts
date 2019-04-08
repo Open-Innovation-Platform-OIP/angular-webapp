@@ -650,8 +650,6 @@ export class ProblemDetailComponent implements OnInit, OnDestroy {
         ...embedded_urls_arr
       ];
 
-      console.log("<<<<<<<>>>>>> ", this.problem_attachments);
-
       this.problem_attachments_src = this.problem_attachments[
         this.problem_attachments_index
       ];
