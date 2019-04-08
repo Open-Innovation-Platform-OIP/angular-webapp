@@ -16,7 +16,7 @@ export class LoginComponent implements OnInit, OnDestroy {
   };
   loading = false;
   submitted = false;
-  returnUrl: string;
+  returnUrl: string = "/";
   error = "";
   private toggleButton: any;
   private sidebarVisible: boolean;
@@ -43,7 +43,28 @@ export class LoginComponent implements OnInit, OnDestroy {
       // after 1000 ms we add the class animated to the login/register card
       card.classList.remove("card-hidden");
     }, 700);
-    this.returnUrl = this.route.snapshot.queryParams["returnUrl"] || "/";
+    this.route.queryParams.subscribe(params => {
+      console.log(params);
+      const user = {
+        id: params['id'],
+        email: params['email'],
+        token: params['token']
+      };
+      this.returnUrl = params['returnUrl'] || '/';
+      console.log(user, this.returnUrl);
+      if (user && user['token'] && user['id'] && user['email']) {
+        const res = this.auth.storeUser(user);
+        if (res) {
+          // this.
+          console.log('valid token for', this.auth.currentUserValue.email);
+          this.router.navigate([this.returnUrl]);
+        } else {
+          // console.log('invalid token');
+          alert('Invalid login. Please try again');
+        }
+      }
+    });
+    // this.returnUrl = this.route.snapshot.queryParams["returnUrl"] || "/";
   }
   sidebarToggle() {
     var toggleButton = this.toggleButton;
