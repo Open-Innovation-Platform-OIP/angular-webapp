@@ -48,7 +48,18 @@ export class ForgotPasswordComponent implements OnInit, OnDestroy {
         //     // after 1000 ms we add the class animated to the login/register card
         //     card.classList.remove('card-hidden');
         // }, 700);
-        this.returnUrl = this.route.snapshot.queryParams['returnUrl'] || '/';
+        // this.returnUrl = this.route.snapshot.queryParams['returnUrl'] || '/';
+        this.route.queryParams.subscribe(params => {
+            this.returnUrl = params['returnUrl'] || '/';
+            this.resetDetails.email = params['email'] || '';
+            this.step = Number(params['step']);
+            if (this.step === 1) {
+                $("#otpfield").focus();
+            } else {
+                this.step = 0;
+            }
+            console.log(this.step);
+        })
     }
     sidebarToggle() {
         var toggleButton = this.toggleButton;
@@ -107,6 +118,7 @@ export class ForgotPasswordComponent implements OnInit, OnDestroy {
             .pipe(first())
             .subscribe(
                 data => {
+                    alert('Your password has been updated. You can now login with the new password.');
                     this.router.navigate(['/login']);
                     // this.router.navigate([this.returnUrl]);
                 },

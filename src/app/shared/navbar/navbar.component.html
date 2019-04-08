@@ -229,7 +229,8 @@
             </div>
             <hr>
             <a class="dropdown-item" [routerLink]="'/users/'+auth.currentUserValue.id">My Profile</a>
-            <a class="dropdown-item" (click)="logout()" style="cursor: pointer;object-fit: cover;">Logout</a>
+            <a class="dropdown-item" (click)="logout()" style="cursor: pointer;object-fit: cover;"
+              *ngIf="auth.currentUserValue">Logout</a>
           </div>
         </li>
       </ul>

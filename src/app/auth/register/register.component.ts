@@ -54,13 +54,14 @@ export class RegisterComponent implements OnInit, OnDestroy {
     this.auth.register(this.user).subscribe(
       res => {
         console.log(res);
-        this.router.navigateByUrl('/auth/verify');
+        // this.router.navigateByUrl('/auth/verify');
+        this.router.navigateByUrl(`/auth/verify?email=${this.user.email}&step=1`);
       },
       err => {
         console.error(err.error);
         this.loading = false;
         const msg = err.error.message;
-        if (msg.search('duplicate') != -1) {
+        if (typeof(msg)==='string' && msg.toLowerCase().search('duplicate') != -1) {
           alert('Email already registered. Please try logging in instead.');
         } else {
           alert(msg);

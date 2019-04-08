@@ -18,7 +18,7 @@ export class VerifyEmailComponent implements OnInit, OnDestroy {
     step = 0;
     loading = false;
     submitted = false;
-    returnUrl: string;
+    returnUrl: string = '/';
     error = '';
     private toggleButton: any;
     private sidebarVisible: boolean;
@@ -46,7 +46,18 @@ export class VerifyEmailComponent implements OnInit, OnDestroy {
         //     // after 1000 ms we add the class animated to the login/register card
         //     card.classList.remove('card-hidden');
         // }, 700);
-        this.returnUrl = this.route.snapshot.queryParams['returnUrl'] || '/';
+        this.route.queryParams.subscribe(params => {
+            this.returnUrl = params['returnUrl'] || '/';
+            this.verifyDetails.email = params['email'] || '';
+            this.step = Number(params['step']);
+            if (this.step === 1) {
+                $("#otpfield").focus();
+            } else {
+                this.step = 0;
+            }
+            console.log(this.step);
+        })
+        // this.returnUrl = this.route.snapshot.queryParams['returnUrl'] || '/';
     }
     sidebarToggle() {
         var toggleButton = this.toggleButton;
@@ -94,7 +105,7 @@ export class VerifyEmailComponent implements OnInit, OnDestroy {
                 console.log(error);
                 this.error = error;
                 const msg = error.error.msg;
-                if (msg.search('already verified') !== -1) {
+                if (typeof(msg)==='string' && msg.toLowerCase().search('already verified') !== -1) {
                     alert('Your email is already verified. You can login or request a password reset');
                 } else {
                     alert(msg);
