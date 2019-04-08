@@ -96,7 +96,21 @@ export class ViewUserProfileComponent implements OnInit, OnDestroy {
               is_incubator
               is_funder
               is_government
-              is_beneficiary
+              is_beneficiary 
+              
+
+              problemsByUser(where: { is_draft: { _eq: false } }){
+                id
+              }
+              user_collaborators{
+                intent
+              }
+              user_validations{
+                comment
+              }
+              enrichmentssBycreatedBy{
+                id
+              }
               organizationByOrganizationId{
                 id
                 name

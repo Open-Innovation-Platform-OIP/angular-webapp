@@ -105,18 +105,7 @@ export class GlobalSearchViewComponent implements OnInit, OnChanges {
                       name
                   }
               }
-                problemsByUser(where: { is_draft: { _eq: false } }){
-                  id
-                }
-                user_collaborators{
-                  intent
-                }
-                user_validations{
-                  comment
-                }
-                enrichmentssBycreatedBy{
-                  id
-                }
+               
               }
               
               }`
