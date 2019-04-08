@@ -113,7 +113,7 @@ export class WizardComponent
   searchResults = {};
   sectorCtrl = new FormControl();
   filteredSectors: Observable<string[]>;
-  sectors: string[] = [];
+  sectors: any = [];
   matcher = new MyErrorStateMatcher();
   // autoCompleteTags: any[] = [];
   tags = [];
@@ -878,6 +878,9 @@ export class WizardComponent
     // console.log(updatedProblem, "updated problem");
     this.problem = updatedProblem;
   }
+  removeDuplicates(array) {
+    return Array.from(new Set(array));
+  }
 
   autoSave() {
     // console.log(this.problem, "problem data");
@@ -935,8 +938,6 @@ export class WizardComponent
             console.error(JSON.stringify(error));
           }
         );
-
-           
       }
     });
   }
@@ -987,6 +988,11 @@ export class WizardComponent
     // this.problem.watched_by = JSON.stringify(this.watched_by)
     //   .replace("[", "{")
     //   .replace("]", "}");
+
+    console.log(this.sectors, "sectors before removing duplicates");
+
+    this.sectors = this.removeDuplicates(this.sectors);
+    console.log(this.sectors, "sectors after removing duplicates");
 
     this.apollo
       .mutate({

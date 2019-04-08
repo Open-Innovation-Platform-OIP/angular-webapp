@@ -69,7 +69,7 @@ export class AddUserProfileComponent implements OnInit, OnChanges {
   searchResults = {};
   sectorCtrl = new FormControl();
   filteredSectors: Observable<string[]>;
-  sectors: string[] = [];
+  sectors: any = [];
   tags = [];
   preTags: any = [];
   imageBlob: Blob;
@@ -144,7 +144,7 @@ export class AddUserProfileComponent implements OnInit, OnChanges {
       const value = event.value;
       // Add our sector
       if ((value || "").trim()) {
-        this.sectors.push(value.trim().toLowerCase());
+        this.sectors.push(value.trim().toUpperCase());
       }
       // Reset the input value
       if (input) {
@@ -387,7 +387,13 @@ export class AddUserProfileComponent implements OnInit, OnChanges {
     this.imageBlob = event.target.files[0];
   }
 
+  removeDuplicates(array) {
+    return Array.from(new Set(array));
+  }
+
   updateProfileToDb() {
+    this.sectors = this.removeDuplicates(this.sectors);
+    console.log(this.sectors, "sectors after removing duplicates");
     this.user.phone_number = this.user.phone_number.toString();
     if (Number(this.auth.currentUserValue.id)) {
       this.user.id = Number(this.auth.currentUserValue.id);

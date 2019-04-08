@@ -19,9 +19,9 @@ export class GlobalSearchViewComponent implements OnInit, OnChanges {
   @Input() userData: any;
 
   noResult: string = "No Search Results";
-  problemSearchResults: any;
-  userSearchResults: any;
-  globalProblemSearchResults: any;
+  problemSearchResults: any = [];
+  userSearchResults: any = [];
+  globalProblemSearchResults: any = [];
 
   constructor(
     private route: ActivatedRoute,
@@ -51,6 +51,8 @@ export class GlobalSearchViewComponent implements OnInit, OnChanges {
   globalSearch(searchInput: string) {
     // this.router.navigateByUrl(`/search/${searchInput}`);
     if (searchInput.length >= 3) {
+      this.globalProblemSearchResults = [];
+      this.userSearchResults = [];
       // this.searchResults = [];
       this.apollo
         .watchQuery<any>({
@@ -94,8 +96,16 @@ export class GlobalSearchViewComponent implements OnInit, OnChanges {
                 id
                 name
                 email
+                photo_url
                 organization
                 location
+                user_tags{
+                  tag {
+                      id
+                      name
+                  }
+              }
+               
               }
               
               }`
@@ -103,6 +113,7 @@ export class GlobalSearchViewComponent implements OnInit, OnChanges {
         })
         .valueChanges.subscribe(value => {
           this.globalProblemSearchResults = value.data.search_problems;
+          console.log(value.data.search_users, "user results on global search");
           this.userSearchResults = value.data.search_users;
           console.log("Problem results = ", this.globalProblemSearchResults);
           console.log("User results = ", this.userSearchResults);
@@ -111,8 +122,8 @@ export class GlobalSearchViewComponent implements OnInit, OnChanges {
           // console.log('SearchUser : ', this.searchUser);
         });
     } else {
-      this.globalProblemSearchResults = null;
-      this.userSearchResults = null;
+      this.globalProblemSearchResults = [];
+      this.userSearchResults = [];
     }
   }
 }

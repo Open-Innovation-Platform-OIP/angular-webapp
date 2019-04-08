@@ -1,10 +1,10 @@
-import { Component, OnInit } from "@angular/core";
+import { Component, OnInit, OnDestroy } from "@angular/core";
 import { UserHandlerService } from "../../services/user-handler.service";
 import { Router, ActivatedRoute, ParamMap } from "@angular/router";
 import { Observable, Subscription } from "rxjs";
 import { first, finalize, switchMap } from "rxjs/operators";
 import * as Query from "../../services/queries";
-import { Apollo } from "apollo-angular";
+import { Apollo, QueryRef } from "apollo-angular";
 import gql from "graphql-tag";
 import { AuthService } from "../../services/auth.service";
 @Component({
@@ -12,9 +12,11 @@ import { AuthService } from "../../services/auth.service";
   templateUrl: "./view-user-profile.component.html",
   styleUrls: ["./view-user-profile.component.css"]
 })
-export class ViewUserProfileComponent implements OnInit {
+export class ViewUserProfileComponent implements OnInit, OnDestroy {
   user: any;
   userData: any = {};
+  userDataQuery: QueryRef<any>;
+
   interests: any[] = [];
   loggedInUsersProfile: boolean = false;
   objectEntries = Object.entries;
@@ -75,7 +77,7 @@ export class ViewUserProfileComponent implements OnInit {
   }
 
   getProfile(id) {
-    return this.apollo.watchQuery<any>({
+    this.userDataQuery = this.apollo.watchQuery<any>({
       query: gql`
           {
             users(where: { id: { _eq: ${id} } }) {
@@ -94,7 +96,21 @@ export class ViewUserProfileComponent implements OnInit {
               is_incubator
               is_funder
               is_government
-              is_beneficiary
+              is_beneficiary 
+              
+
+              problemsByUser(where: { is_draft: { _eq: false } }){
+                id
+              }
+              user_collaborators{
+                intent
+              }
+              user_validations{
+                comment
+              }
+              enrichmentssBycreatedBy{
+                id
+              }
               organizationByOrganizationId{
                 id
                 name
@@ -110,10 +126,12 @@ export class ViewUserProfileComponent implements OnInit {
               
            
         `,
-      fetchPolicy: "network-only"
+      fetchPolicy: "network-only",
 
-      // pollInterval: 500
-    }).valueChanges;
+      pollInterval: 1000
+    });
+
+    return this.userDataQuery.valueChanges;
     // .subscribe(result => {
     //   this.interests = [];
     //   this.personas = [];
@@ -134,5 +152,9 @@ export class ViewUserProfileComponent implements OnInit {
     //   }
     //   // console.log(this.problemService.problem, "problem");
     // });
+  }
+
+  ngOnDestroy() {
+    this.userDataQuery.stopPolling();
   }
 }
