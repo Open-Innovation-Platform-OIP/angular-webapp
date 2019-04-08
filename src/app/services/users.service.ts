@@ -89,7 +89,7 @@ export class UsersService {
         // pollInterval: 500
       })
       .valueChanges.subscribe(({ data }) => {
-        console.log("<<<curr user data", data);
+        // console.log("<<<curr user data", data);
         if (data.users.length > 0) {
           Object.keys(this.currentUser).map(key => {
             if (data.users[0][key]) {
@@ -103,7 +103,7 @@ export class UsersService {
           }
         }
       });
-    console.log(this.currentUser, "current user on user service");
+    // console.log(this.currentUser, "current user on user service");
   }
   public getOrgsFromDB() {
     this.apollo
@@ -128,7 +128,7 @@ export class UsersService {
             // / console.log(this.allOrgs, "all orgs");
           });
         }
-        console.log(data, "data from all orgs");
+        // console.log(data, "data from all orgs");
       });
   }
 

@@ -84,3 +84,12 @@ pre {
 .mention>span {
     margin: 0 3px
 }
+
+.webkit-autofill {
+    /* Expose a hook for JavaScript when auto fill is shown. */
+    /* JavaScript can capture 'animationstart' events */
+    animation-name: onAutoFillStart;
+
+    /* Make the backgound color become yellow _really slowly_ */
+    transition: background-color 50000s ease-in-out 0s;
+  }
