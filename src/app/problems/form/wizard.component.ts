@@ -904,6 +904,7 @@ export class WizardComponent
     } else {
       alert("Your problem has been submitted!");
     }
+
     problem.is_draft = false;
     // console.log(problem, "problem before publishing");
     clearInterval(this.autosaveInterval);
@@ -1003,6 +1004,7 @@ export class WizardComponent
       })
       .subscribe(
         result => {
+          
           if (result.data.insert_problems.returning.length > 0) {
             this.problem["id"] = result.data.insert_problems.returning[0].id;
             const upsert_tags = gql`

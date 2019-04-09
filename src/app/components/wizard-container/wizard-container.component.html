@@ -474,7 +474,7 @@
             value="Previous">
         </div>
         <div class="ml-auto">
-          <button *ngIf="content.is_draft" class="btn btn-danger" (click)="deleteClicked()">
+          <button *ngIf="content.is_draft && content.title" class="btn btn-danger" (click)="deleteClicked()">
             Delete
           </button>
 
