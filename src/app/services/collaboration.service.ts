@@ -80,6 +80,7 @@ export class CollaborationService {
         },
         error => {
           console.log("error", error);
+          console.error(JSON.stringify(error));
         }
       );
   }
