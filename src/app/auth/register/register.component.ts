@@ -18,6 +18,8 @@ export class RegisterComponent implements OnInit, OnDestroy {
     password: "",
     confirmPassword: ""
   };
+  passwordRegex = new RegExp("^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.{6,})");
+  // mediumRegex = new RegExp("^(((?=.*[a-z])(?=.*[A-Z]))|((?=.*[a-z])(?=.*[0-9]))|((?=.*[A-Z])(?=.*[0-9])))(?=.{6,})");
   loading = false;
   constructor(private auth: AuthService, private router: Router) {}
 
@@ -36,7 +38,8 @@ export class RegisterComponent implements OnInit, OnDestroy {
       this.user.name &&
       isEmail(this.user.email) &&
       this.user.password.length >= 4 &&
-      this.user.password === this.user.confirmPassword
+      this.user.password === this.user.confirmPassword &&
+      this.passwordRegex.test(this.user.password)
     ) {
       return true;
     }
