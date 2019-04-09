@@ -217,11 +217,12 @@
             <div class="photo">
               <img class="img"
                 src="{{(usersService.currentUser.photo_url && usersService.currentUser.photo_url.url) ? usersService.currentUser.photo_url.url : './assets/img/default-avatar.png'}}"
-                style="border-radius:50%;height:3em;" />
+                style="border-radius:50%;object-fit: cover;" width="40" height="40" />
             </div>
           </a>
           <div class="dropdown-menu dropdown-menu-right" aria-labelledby="navbarDropdownMenuLink">
-            <a class="dropdown-item" [routerLink]="'/users/'+auth.currentUserValue.id" *ngIf="auth.currentUserValue">My Profile</a>
+            <a class="dropdown-item" [routerLink]="'/users/'+auth.currentUserValue.id" *ngIf="auth.currentUserValue">My
+              Profile</a>
             <a class="dropdown-item" (click)="logout()" style="cursor: pointer;object-fit: cover;">Logout</a>
           </div>
         </li>

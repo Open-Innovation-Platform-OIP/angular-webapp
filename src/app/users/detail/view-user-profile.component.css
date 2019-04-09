@@ -1,6 +1,12 @@
 .actions {
     cursor: pointer;
 }
+
 .mycontent-left {
     border-right: 1px solid black;
-  }
+}
+
+.profile_photo {
+    height: 8.5em !important;
+    object-fit: cover;
+}
