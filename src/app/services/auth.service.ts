@@ -4,6 +4,8 @@ import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { JwtHelper } from 'angular2-jwt';
 import { Observable, BehaviorSubject } from 'rxjs';
 import { map } from 'rxjs/operators';
+import { Apollo } from 'apollo-angular';
+import { Router } from '@angular/router';
 
 interface User {
   email: string;
@@ -36,6 +38,8 @@ export class AuthService {
 
   constructor(
     private http: HttpClient,
+    private apollo: Apollo,
+    private router: Router
     // protected localStorage: LocalStorage
   ) {
     this.jwtHelper = new JwtHelper();
@@ -62,6 +66,10 @@ export class AuthService {
     // this.localStorage.removeItem('user').subscribe(() => { });
     localStorage.removeItem('currentUser');
     this.currentUserSubject.next(null);
+    this.apollo.getClient().resetStore();
+    this.router.navigateByUrl('/auth/login');
+    // location.replace('https://app.socialalpha.jaagalabs.com')
+    location.reload();
   }
 
   login(loginDetails) {
