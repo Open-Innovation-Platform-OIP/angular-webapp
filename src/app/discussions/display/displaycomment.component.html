@@ -76,6 +76,21 @@
         </i>
         <span>&nbsp;&nbsp;{{2}}</span>
       </button>
+      <span class="dropdown">
+        <button class="btn btn-warning btn-link" type="button" id="discussion_share_btn" data-toggle="dropdown"
+          aria-haspopup="true" aria-expanded="false">
+          <i class="material-icons actions">
+            share
+          </i>
+        </button>
+        <ul class="dropdown-menu" aria-labelledby="discussion_share_btn">
+          <li><a (click)="getCommentIdToShare(comment.id,'linkedin')">LinkedIn</a></li>
+          <li><a (click)="getCommentIdToShare(comment.id,'facebook')">Facebook</a></li>
+          <li><a (click)="getCommentIdToShare(comment.id,'twitter')">Twitter</a></li>
+          <li><a (click)="getCommentIdToShare(comment.id,'email')">Email</a></li>
+          <li><a (click)="getCommentIdToShare(comment.id,'sms')">SMS</a></li>
+        </ul>
+      </span>
 
       <button mat-raised-button class="btn btn-link btn-warning btn-sm" matTooltip="Click to reply"
         [matTooltipPosition]="'below'" *ngIf="!(showReplyBox && replyingTo === comment.id)"

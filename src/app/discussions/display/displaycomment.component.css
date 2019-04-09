@@ -102,8 +102,8 @@ pre {
     color: black;
 }
 
-.dropdown-menu>a {
-    background-color: var(--light);
-    color: #363030;
-    box-shadow: none;
+.dropdown-menu a:hover {
+    background-color: var(--orange);
+    color: var(--light);
+    cursor: pointer;
 }

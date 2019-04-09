@@ -17,7 +17,8 @@ export class CommentDisplayComponent implements OnInit {
   @Input() users;
   @Output() reply = new EventEmitter();
   @Output() fileClicked = new EventEmitter();
-  @Output() commentToDelete = new EventEmitter()
+  @Output() commentToDelete = new EventEmitter();
+  @Output() shareCommentId = new EventEmitter();
   showReplyBox = false;
   replyingTo = 0;
   attachmentToShow = 2;
@@ -110,6 +111,13 @@ export class CommentDisplayComponent implements OnInit {
         }
       })
       .catch(swal.noop)
+  }
+
+  getCommentIdToShare(commentId, platform) {
+    this.shareCommentId.emit({
+      id: commentId,
+      platform: platform
+    });
   }
 
   testMimeType(type) {
