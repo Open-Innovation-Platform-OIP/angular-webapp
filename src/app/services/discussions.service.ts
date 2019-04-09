@@ -17,7 +17,7 @@ export interface Comment {
   providedIn: "root"
 })
 export class DiscussionsService {
-  constructor(private apollo: Apollo, private auth: AuthService) {}
+  constructor(private apollo: Apollo, private auth: AuthService) { }
 
   submitCommentToDB(comment: Comment, mentions?) {
     if (!(comment.problem_id || comment.solution_id)) {
@@ -141,5 +141,9 @@ export class DiscussionsService {
           console.error(JSON.stringify(err));
         }
       );
+  }
+
+  deleteCommentsFromDB(comments: number[]) {
+
   }
 }

@@ -708,6 +708,16 @@ export class ProblemDetailComponent implements OnInit, OnDestroy {
     }
   }
 
+  deleteComment(comment) {
+    let allComments = [];
+    if (!comment.linked_comment_id) {
+      allComments = this.replies[comment.id].map((comment) => comment.id);
+    }
+    allComments.push(comment.id);
+    console.log("allComments>>>>>", allComments);
+
+  }
+
   showMoreComments() {
     if (this.numOfComments < this.objectValues(this.comments).length) {
       this.numOfComments += 10;

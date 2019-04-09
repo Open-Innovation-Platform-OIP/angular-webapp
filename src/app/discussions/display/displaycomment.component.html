@@ -8,9 +8,32 @@
       </a>
     </h5>
   </div>
+
+
   <div id="comment-{{comment.id}}" class="collapse show" role="tabpanel" aria-labelledby="headingTwo"
     attr.data-target="#comment-{{comment.id}}">
     <div class="card-body">
+
+      <!-- More button for comment -->
+      <ul class="navbar-nav" style="float:right;">
+        <li class="nav-item dropdown">
+          <a class="nav-link more_icon" href="#pablo" id="discussion_more_btn" data-toggle="dropdown"
+            aria-haspopup="true" aria-expanded="false">
+            <i class="material-icons">
+              more_vert
+            </i>
+          </a>
+          <div class="dropdown-menu" aria-labelledby="discussion_more_btn">
+            <a class="dropdown-item" href="javascript:void(0)" (click)="idToDelete(comment)">
+              <i class="material-icons" style="color:var(--danger);">
+                delete_outline
+              </i>
+              Delete
+            </a>
+          </div>
+        </li>
+      </ul>
+
       <div innerHTML="{{comment.text}}"></div>
       <!-- Attachments for comments -->
       <p>
@@ -46,7 +69,15 @@
         </i>
       </p>
 
-      <button mat-raised-button class="btn btn-warning btn-round btn-sm" matTooltip="Click to reply"
+      <button class="btn btn-link btn-sm" matTooltip="upvote"
+        [ngStyle]="{'color':enrichmentVoted? '#ff9800' : 'black' }">
+        <i class="material-icons">
+          thumb_up
+        </i>
+        <span>&nbsp;&nbsp;{{2}}</span>
+      </button>
+
+      <button mat-raised-button class="btn btn-link btn-warning btn-sm" matTooltip="Click to reply"
         [matTooltipPosition]="'below'" *ngIf="!(showReplyBox && replyingTo === comment.id)"
         (click)="replyTo(comment.id)">Reply</button>
       <app-submit-comment *ngIf="showReplyBox && replyingTo === comment.id" [users]="users" [actionText]="'Reply'"
@@ -65,6 +96,27 @@
         <div id="reply-{{reply.id}}" class="collapse" role="tabpanel" aria-labelledby="headingTwo"
           attr.data-target="#reply-{{reply.id}}">
           <div class="card-body">
+
+            <!-- More button for replies -->
+            <ul class="navbar-nav" style="float:right;">
+              <li class="nav-item dropdown">
+                <a class="nav-link more_icon" href="#pablo" id="discussion_more_btn" data-toggle="dropdown"
+                  aria-haspopup="true" aria-expanded="false">
+                  <i class="material-icons">
+                    more_vert
+                  </i>
+                </a>
+                <div class="dropdown-menu" aria-labelledby="discussion_more_btn">
+                  <a class="dropdown-item" href="javascript:void(0)" (click)="idToDelete(reply)">
+                    <i class="material-icons" style="color:var(--danger);">
+                      delete_outline
+                    </i>
+                    Delete
+                  </a>
+                </div>
+              </li>
+            </ul>
+
             <div innerHTML="{{reply.text}}"></div>
             <!-- Attachments for replies -->
             <p>

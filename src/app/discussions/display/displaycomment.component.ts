@@ -3,6 +3,7 @@ import {
   Output,
   EventEmitter
 } from '@angular/core';
+import swal from 'sweetalert2';
 import { Comment } from '../../services/discussions.service';
 @Component({
   selector: 'app-display-comment',
@@ -16,6 +17,7 @@ export class CommentDisplayComponent implements OnInit {
   @Input() users;
   @Output() reply = new EventEmitter();
   @Output() fileClicked = new EventEmitter();
+  @Output() commentToDelete = new EventEmitter()
   showReplyBox = false;
   replyingTo = 0;
   attachmentToShow = 2;
@@ -91,6 +93,23 @@ export class CommentDisplayComponent implements OnInit {
     }
 
     return 0;
+  }
+
+  idToDelete(commentId) {
+    // console.log("you clicked delete!", commentId);
+    swal({
+      title: 'Are you sure?',
+      text: "You won't be able to revert this!",
+      buttonsStyling: false,
+      confirmButtonClass: "btn btn-warning",
+      confirmButtonText: 'Yes, delete it!',
+    })
+      .then((result) => {
+        if (result.value === true) {
+          this.commentToDelete.emit(commentId);
+        }
+      })
+      .catch(swal.noop)
   }
 
   testMimeType(type) {

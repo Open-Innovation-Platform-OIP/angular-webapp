@@ -581,7 +581,8 @@
               <div *ngIf="!popular">
                 <app-display-comment [users]="objectValues(usersService.allUsers)" [comment]="comment"
                   [replies]="replies[comment.id]" (reply)="onCommentSubmit($event, comment.id)"
-                  (fileClicked)="displayModal($event)" *ngFor="let comment of sortComments(objectValues(comments))">
+                  (commentToDelete)="deleteComment($event)" (fileClicked)="displayModal($event)"
+                  *ngFor="let comment of sortComments(objectValues(comments))">
                 </app-display-comment>
               </div>
 
