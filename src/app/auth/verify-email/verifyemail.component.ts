@@ -105,7 +105,7 @@ export class VerifyEmailComponent implements OnInit, OnDestroy {
                 console.log(error);
                 this.error = error;
                 const msg = error.error.msg;
-                if (msg.search('already verified') !== -1) {
+                if (typeof(msg)==='string' && msg.toLowerCase().search('already verified') !== -1) {
                     alert('Your email is already verified. You can login or request a password reset');
                 } else {
                     alert(msg);

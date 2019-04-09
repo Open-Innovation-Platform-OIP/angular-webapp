@@ -61,7 +61,7 @@ export class RegisterComponent implements OnInit, OnDestroy {
         console.error(err.error);
         this.loading = false;
         const msg = err.error.message;
-        if (msg.search('duplicate') != -1) {
+        if (typeof(msg)==='string' && msg.toLowerCase().search('duplicate') != -1) {
           alert('Email already registered. Please try logging in instead.');
         } else {
           alert(msg);

@@ -14,7 +14,7 @@ export class LoginComponent implements OnInit, OnDestroy {
     email: "",
     password: ""
   };
-  loading = false;
+  loading = true;
   submitted = false;
   returnUrl: string = "/";
   error = "";
@@ -45,31 +45,32 @@ export class LoginComponent implements OnInit, OnDestroy {
     }, 700);
     this.route.queryParams.subscribe(params => {
       // console.log(params);
-      const err = params['err'];
+      const err = params["err"];
       if (err) {
         console.log(err);
         alert(err);
         return false;
       }
       const user = {
-        id: params['id'],
-        email: params['email'],
-        token: params['token']
+        id: params["id"],
+        email: params["email"],
+        token: params["token"]
       };
-      this.returnUrl = params['returnUrl'] || '/';
+      this.returnUrl = params["returnUrl"] || "/";
       // console.log(user, this.returnUrl);
-      if (user && user['token'] && user['id'] && user['email']) {
+      if (user && user["token"] && user["id"] && user["email"]) {
         const res = this.auth.storeUser(user);
         if (res) {
           // this.
-          console.log('valid token for', this.auth.currentUserValue.email);
+          console.log("valid token for", this.auth.currentUserValue.email);
           this.router.navigate([this.returnUrl]);
         } else {
           // console.log('invalid token');
-          alert('Invalid login. Please try again');
+          alert("Invalid login. Please try again");
         }
       }
     });
+    this.loading = false;
     // this.returnUrl = this.route.snapshot.queryParams["returnUrl"] || "/";
   }
   sidebarToggle() {
@@ -93,11 +94,14 @@ export class LoginComponent implements OnInit, OnDestroy {
     body.classList.remove("login-page");
     body.classList.remove("off-canvas-sidebar");
   }
+
+  onTyping(event) {
+    // console.log(this.loginDetails);
+  }
+
   canSubmit() {
-    if (
-      isEmail(this.loginDetails.email) &&
-      this.loginDetails.password.length >= 4
-    ) {
+    if (isEmail(this.loginDetails.email) && this.loginDetails.password) {
+      // console.log('ok');
       return true;
     }
     return false;
@@ -107,6 +111,9 @@ export class LoginComponent implements OnInit, OnDestroy {
     if (res) console.log(res);
   }
   login() {
+    if (!(isEmail(this.loginDetails.email) && this.loginDetails.password)) {
+      return alert("Please enter a valid email and password");
+    }
     this.submitted = true;
     this.loading = true;
     // this.auth.login(this.loginDetails, this.done);
@@ -122,11 +129,30 @@ export class LoginComponent implements OnInit, OnDestroy {
           console.error(error);
           this.error = error;
           const msg = error.error.msg;
-          if (msg.search('already verified') !== -1) {
-              alert('Your email is already verified. You can login or request a password reset');
-          } else if (msg.search('not been verified') !== -1) {
-              alert('Your email has not been verified. Click OK to proceed to the email verification page.');
-              this.router.navigateByUrl(`/auth/verify?email=${this.loginDetails.email}`);
+          if (
+            typeof msg === "string" &&
+            msg.toLowerCase().search("already verified") !== -1
+          ) {
+            alert(
+              "Your email is already verified. You can login or request a password reset"
+            );
+          } else if (
+            typeof msg === "string" &&
+            msg.toLowerCase().search("not been verified") !== -1
+          ) {
+            alert(
+              "Your email has not been verified. Click OK to proceed to the email verification page."
+            );
+            this.router.navigateByUrl(
+              `/auth/verify?email=${this.loginDetails.email}`
+            );
+          } else if (
+            typeof msg === "string" &&
+            msg.toLowerCase().search("unknown") !== -1
+          ) {
+            alert("Unknown email address. Perhaps you have not signed up yet?");
+          } else {
+            alert(msg);
           }
           this.loading = false;
           // alert(error.error.errors[0].msg);
@@ -136,7 +162,9 @@ export class LoginComponent implements OnInit, OnDestroy {
   forgotPassword() {
     // send reset request to server
     // console.log("sending reset email to your inbox");
-    this.router.navigate(["/auth/forgot"]);
+    // this.router.navigate(["/auth/forgot",]);
+    console.log(this.loginDetails);
+    this.router.navigateByUrl(`/auth/forgot?email=${this.loginDetails.email}`);
   }
 
   showNotification(from: any, align: any) {
@@ -160,7 +188,7 @@ export class LoginComponent implements OnInit, OnDestroy {
       },
       {
         type: type[color],
-        timer: 90000,
+        timer: 10000,
         placement: {
           from: from,
           align: align
