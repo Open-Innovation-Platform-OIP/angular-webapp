@@ -108,7 +108,7 @@ export class ViewUserProfileComponent implements OnInit, OnDestroy {
               user_validations{
                 comment
               }
-              enrichmentssBycreatedBy{
+              enrichmentssBycreatedBy(where: { is_deleted: { _eq: false } }){
                 id
               }
               organizationByOrganizationId{

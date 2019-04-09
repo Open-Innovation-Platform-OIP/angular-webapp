@@ -46,6 +46,25 @@ export class DashboardComponent implements OnInit, OnDestroy {
         name
       }
       location
+
+      problemsByUser(where: { is_draft: { _eq: false } }){
+        id
+      }
+      user_collaborators{
+        intent
+      }
+      user_validations{
+        comment
+      }
+      enrichmentssBycreatedBy(where: { is_deleted: { _eq: false } }){
+        id
+      }
+      user_tags{
+        tag {
+            id
+            name
+        }
+    }
   }`;
 
   constructor(private apollo: Apollo, private auth: AuthService) {
@@ -87,7 +106,10 @@ export class DashboardComponent implements OnInit, OnDestroy {
     // console.log(this.problemQueryString);
     const contributionsQuery = gql`
     {
-      enrichments(where:{created_by:{_eq: ${this.auth.currentUserValue.id}}}) {
+      enrichments( where:{ _and: [
+        { created_by: {_eq: ${this.auth.currentUserValue.id}}},
+        { is_deleted: {_eq: false}}
+      ] }) {
        problemsByproblemId ${this.problemQueryString}
      }
      validations(where:{validated_by:{_eq: ${this.auth.currentUserValue.id}}}) {
@@ -108,17 +130,17 @@ export class DashboardComponent implements OnInit, OnDestroy {
     });
     this.contributionsSub = this.contributionsQueryRef.valueChanges.subscribe(
       ({ data }) => {
-        console.log(data, "data from contributions");
+        // console.log(data, "data from contributions");
         Object.keys(data).map(key => {
           data[key].map(p => {
             // console.log(p, "p");
             if (p.problem || p.problemsByproblemId) {
               // console.log(p, "p");
               const problem = p.problem || p.problemsByproblemId;
-              console.log(problem, "problem");
+              // console.log(problem, "problem");
               if (problem["id"]) {
                 this.contributions[problem["id"]] = problem;
-                console.log(this.contributions, "contributions");
+                // console.log(this.contributions, "contributions");
               }
             }
             // this.contributions.add(Object.values(problem)[0]);

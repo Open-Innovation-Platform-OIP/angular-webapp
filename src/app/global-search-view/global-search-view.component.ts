@@ -93,6 +93,11 @@ export class GlobalSearchViewComponent implements OnInit, OnChanges {
                 }
                 }
                 , search_users(args:{search:"${searchInput}"}) {
+
+
+
+
+
                 id
                 name
                 email
@@ -104,6 +109,19 @@ export class GlobalSearchViewComponent implements OnInit, OnChanges {
                       id
                       name
                   }
+              }
+              problemsByUser(where: { is_draft: { _eq: false } }){
+                id
+
+              }
+              user_collaborators{
+                intent
+              }
+              user_validations{
+                comment
+              }
+              enrichmentssBycreatedBy(where: { is_deleted: { _eq: false } }){
+                id
               }
                
               }

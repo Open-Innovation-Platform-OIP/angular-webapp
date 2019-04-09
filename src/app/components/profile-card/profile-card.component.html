@@ -43,12 +43,16 @@
     </div>
     <div
       *ngIf="(userData.problemsByUser&& userData.problemsByUser.length)||(userData.user_collaborators&& userData.user_collaborators.length)||(userData.user_validations&& userData.user_validations.length)||(userData.enrichmentssBycreatedBy&& userData.enrichmentssBycreatedBy.length)">
-      <p *ngIf="userData.problemsByUser.length">Added {{userData.problemsByUser.length}} problem(s)</p>
+      <!-- <p *ngIf="userData.problemsByUser.length">Added {{userData.problemsByUser.length}} problem(s)</p>
       <p *ngIf="userData.user_collaborators.length"> {{userData.user_collaborators.length}} collaboration(s)</p>
       <p *ngIf="userData.user_validations.length">{{userData.user_validations.length}} validation(s) </p>
       <p *ngIf="userData.enrichmentssBycreatedBy.length">{{userData.enrichmentssBycreatedBy.length}} enrichment(s)
-      </p>
+      </p> -->
 
+      <p>
+        {{userData.problemsByUser.length+userData.user_collaborators.length+userData.user_validations.length+userData.enrichmentssBycreatedBy.length}}
+        contribution(s)
+      </p>
 
 
     </div>
