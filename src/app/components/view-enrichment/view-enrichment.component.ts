@@ -10,6 +10,7 @@ import { ProblemService } from "../../services/problem-handle.service";
 import { Router, ActivatedRoute } from "@angular/router";
 
 import { AuthService } from "../../services/auth.service";
+import swal from "sweetalert2";
 
 @Component({
   selector: "app-view-enrichment",
@@ -144,7 +145,29 @@ export class ViewEnrichmentComponent implements OnInit, OnChanges {
   }
 
   deleteEnrichment() {
-    this.deleteClicked.emit(this.enrichmentData.id);
+    swal({
+      title: "Are you sure you want to delete enrichment?",
+      // text: "You won't be able to revert this!",
+      type: "warning",
+      showCancelButton: true,
+      confirmButtonClass: "btn btn-success",
+      cancelButtonClass: "btn btn-danger",
+      confirmButtonText: "Yes, delete it!",
+      buttonsStyling: false
+    }).then(result => {
+      if (result.value) {
+        this.deleteClicked.emit(this.enrichmentData.id);
+
+        // swal({
+        //   title: "Deleted!",
+        //   // text: "Your file has been deleted.",
+        //   type: "success",
+        //   confirmButtonClass: "btn btn-success",
+        //   buttonsStyling: false
+        // });
+      }
+    });
+    // this.Vali
     // this.enrichmentHandlerService.deleteEnrichment(this.enrichmentData.id);
   }
 

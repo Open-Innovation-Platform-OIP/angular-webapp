@@ -108,12 +108,17 @@ export class DashboardComponent implements OnInit, OnDestroy {
     });
     this.contributionsSub = this.contributionsQueryRef.valueChanges.subscribe(
       ({ data }) => {
+        console.log(data, "data from contributions");
         Object.keys(data).map(key => {
           data[key].map(p => {
-            if (p[0]) {
-              const problem = Object.values(p[0]);
+            // console.log(p, "p");
+            if (p.problem || p.problemsByproblemId) {
+              // console.log(p, "p");
+              const problem = p.problem || p.problemsByproblemId;
+              console.log(problem, "problem");
               if (problem["id"]) {
                 this.contributions[problem["id"]] = problem;
+                console.log(this.contributions, "contributions");
               }
             }
             // this.contributions.add(Object.values(problem)[0]);
