@@ -475,7 +475,7 @@ export class ProblemDetailComponent implements OnInit, OnDestroy {
           
         }
 
-        enrichmentsByproblemId(order_by:{edited_at: desc}){
+        enrichmentsByproblemId(where: { is_deleted: { _eq: false } },order_by:{edited_at: desc}){
           id
           description
           extent
@@ -1028,7 +1028,15 @@ export class ProblemDetailComponent implements OnInit, OnDestroy {
   }
 
   deleteEnrichment(id) {
-    this.enrichmentService.deleteEnrichment(id);
+    this.enrichmentService.deleteEnrichment(id).subscribe(
+      ({ data }) => {
+        $("#enrichModal").modal("hide");
+        this.disableEnrichButton = false;
+      },
+      error => {
+        console.log("Could delete due to " + error);
+      }
+    );
   }
 
   voteEnrichment(enrichmentData) {

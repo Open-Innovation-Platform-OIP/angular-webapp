@@ -109,7 +109,7 @@ export class WizardComponent
   searchResults = {};
   sectorCtrl = new FormControl();
   filteredSectors: Observable<string[]>;
-  sectors: string[] = [];
+  sectors: any = [];
   matcher = new MyErrorStateMatcher();
   // autoCompleteTags: any[] = [];
   tags = [];
@@ -797,6 +797,10 @@ export class WizardComponent
     }
   }
 
+  removeDuplicates(array) {
+    return Array.from(new Set(array));
+  }
+
   saveProblemDraft() {
     this.autoSave();
     alert("Problem draft has been saved. You can continue editing anytime");
@@ -809,6 +813,7 @@ export class WizardComponent
   }
 
   submitProblemToDB() {
+    console.log("hellooooooooooo");
     const upsert_problem = gql`
       mutation upsert_problem($problems: [problems_insert_input!]!) {
         insert_problems(
@@ -843,15 +848,19 @@ export class WizardComponent
         }
       }
     `;
-    this.problem.owners = JSON.stringify(this.owners)
-      .replace("[", "{")
-      .replace("]", "}");
-    this.problem.voted_by = JSON.stringify(this.voted_by)
-      .replace("[", "{")
-      .replace("]", "}");
-    this.problem.watched_by = JSON.stringify(this.watched_by)
-      .replace("[", "{")
-      .replace("]", "}");
+    console.log(this.sectors, "sectors before removing duplicates");
+
+    this.sectors = this.removeDuplicates(this.sectors);
+    console.log(this.sectors, "sectors after removing duplicates");
+    // this.problem.owners = JSON.stringify(this.owners)
+    //   .replace("[", "{")
+    //   .replace("]", "}");
+    // this.problem.voted_by = JSON.stringify(this.voted_by)
+    //   .replace("[", "{")
+    //   .replace("]", "}");
+    // this.problem.watched_by = JSON.stringify(this.watched_by)
+    //   .replace("[", "{")
+    //   .replace("]", "}");
 
     this.apollo
       .mutate({

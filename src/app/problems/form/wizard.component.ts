@@ -27,6 +27,8 @@ import {
   MatAutocomplete
 } from "@angular/material";
 import { Apollo } from "apollo-angular";
+import swal from "sweetalert2";
+
 import gql from "graphql-tag";
 import { TagsService } from "../../services/tags.service";
 import { FilesService } from "../../services/files.service";
@@ -36,6 +38,7 @@ import { AuthService } from "../../services/auth.service";
 import { Observable } from "rxjs";
 import { map, startWith } from "rxjs/operators";
 import { first } from "rxjs/operators";
+import { ProblemService } from "../../services/problem.service";
 declare var H: any;
 declare const $: any;
 interface FileReaderEventTarget extends EventTarget {
@@ -110,7 +113,7 @@ export class WizardComponent
   searchResults = {};
   sectorCtrl = new FormControl();
   filteredSectors: Observable<string[]>;
-  sectors: string[] = [];
+  sectors: any = [];
   matcher = new MyErrorStateMatcher();
   // autoCompleteTags: any[] = [];
   tags = [];
@@ -141,7 +144,8 @@ export class WizardComponent
     private apollo: Apollo,
     private tagService: TagsService,
     private usersService: UsersService,
-    private auth: AuthService // private geocoder: GeocoderService
+    private auth: AuthService,
+    private problemService: ProblemService
   ) {
     canProceed = true;
 
@@ -874,6 +878,9 @@ export class WizardComponent
     // console.log(updatedProblem, "updated problem");
     this.problem = updatedProblem;
   }
+  removeDuplicates(array) {
+    return Array.from(new Set(array));
+  }
 
   autoSave() {
     // console.log(this.problem, "problem data");
@@ -897,10 +904,43 @@ export class WizardComponent
     } else {
       alert("Your problem has been submitted!");
     }
+
     problem.is_draft = false;
     // console.log(problem, "problem before publishing");
     clearInterval(this.autosaveInterval);
     this.submitProblemToDB(problem);
+  }
+
+  deleteDraft(id) {
+    swal({
+      title: "Are you sure you want to delete this draft?",
+      // text: "You won't be able to revert this!",
+      type: "warning",
+      showCancelButton: true,
+      confirmButtonClass: "btn btn-success",
+      cancelButtonClass: "btn btn-danger",
+      confirmButtonText: "Yes, delete it!",
+      buttonsStyling: false
+    }).then(result => {
+      if (result.value) {
+        this.problemService.deleteProblem(id).subscribe(
+          ({ data }) => {
+            swal({
+              title: "Deleted!",
+              // text: "Your file has been deleted.",
+              type: "success",
+              confirmButtonClass: "btn btn-success",
+              buttonsStyling: false
+            });
+            this.router.navigateByUrl("/dashboard");
+          },
+          error => {
+            console.log("Could delete due to " + error);
+            console.error(JSON.stringify(error));
+          }
+        );
+      }
+    });
   }
 
   submitProblemToDB(problem) {
@@ -950,6 +990,11 @@ export class WizardComponent
     //   .replace("[", "{")
     //   .replace("]", "}");
 
+    console.log(this.sectors, "sectors before removing duplicates");
+
+    this.sectors = this.removeDuplicates(this.sectors);
+    console.log(this.sectors, "sectors after removing duplicates");
+
     this.apollo
       .mutate({
         mutation: upsert_problem,
@@ -959,6 +1004,7 @@ export class WizardComponent
       })
       .subscribe(
         result => {
+          
           if (result.data.insert_problems.returning.length > 0) {
             this.problem["id"] = result.data.insert_problems.returning[0].id;
             const upsert_tags = gql`

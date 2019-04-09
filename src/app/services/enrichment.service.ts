@@ -105,40 +105,66 @@ export class EnrichmentService {
   }
 
   deleteEnrichment(id: number) {
-    console.log(id, "ID");
-    this.apollo
-      .mutate<any>({
-        mutation: gql`
-          mutation DeleteMutation($where: enrichments_bool_exp!) {
-            delete_enrichments(where: $where) {
-              affected_rows
-              returning {
-                problem_id
-              }
-            }
-          }
-        `,
-        variables: {
-          where: {
-            id: {
-              _eq: id
-            }
-          }
-        }
-      })
-      .subscribe(
-        ({ data }) => {
-          // location.reload();
-          location.reload();
-          // this.router.navigateByUrl("/problems");
+    // console.log(id, "ID");
+    // this.apollo
+    //   .mutate<any>({
+    //     mutation: gql`
+    //       mutation DeleteMutation($where: enrichments_bool_exp!) {
+    //         delete_enrichments(where: $where) {
+    //           affected_rows
+    //           returning {
+    //             problem_id
+    //           }
+    //         }
+    //       }
+    //     `,
+    //     variables: {
+    //       where: {
+    //         id: {
+    //           _eq: id
+    //         }
+    //       }
+    //     }
+    //   })
+    //   .subscribe(
+    //     ({ data }) => {
+    //       // location.reload();
+    //       location.reload();
+    //       // this.router.navigateByUrl("/problems");
 
-          return;
-        },
-        error => {
-          console.log("Could delete due to " + error);
-          console.error(JSON.stringify(error));
+    //       return;
+    //     },
+    //     error => {
+    //       console.log("Could delete due to " + error);
+    //       console.error(JSON.stringify(error));
+    //     }
+    //   );
+
+    return this.apollo.mutate<any>({
+      mutation: gql`
+        mutation updateMutation(
+          $where: enrichments_bool_exp!
+          $set: enrichments_set_input!
+        ) {
+          update_enrichments(where: $where, _set: $set) {
+            affected_rows
+            returning {
+              id
+            }
+          }
         }
-      );
+      `,
+      variables: {
+        where: {
+          id: {
+            _eq: id
+          }
+        },
+        set: {
+          is_deleted: true
+        }
+      }
+    });
   }
 
   voteEnrichment(enrichmentData: any) {
