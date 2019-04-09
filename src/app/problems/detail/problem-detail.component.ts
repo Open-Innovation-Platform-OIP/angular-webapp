@@ -39,6 +39,8 @@ import { CollaborationService } from "src/app/services/collaboration.service";
 import { ValidationService } from "src/app/services/validation.service";
 import { EnrichmentService } from "src/app/services/enrichment.service";
 
+import {sharing} from '../../globalconfig';
+
 const misc: any = {
   navbar_menu_visible: 0,
   active_collapse: true,
@@ -64,6 +66,7 @@ interface attachment_object {
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class ProblemDetailComponent implements OnInit, OnDestroy {
+  channels = sharing;
   // chartData: any;
   popup: any;
   watchers = new Set();
