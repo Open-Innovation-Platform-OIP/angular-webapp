@@ -74,7 +74,8 @@
                             <i class="material-icons">lock_outline</i>
                           </span>
                         </div>
-                        <input type="password" name="password" [(ngModel)]="user.password" placeholder="Password"
+                        <!-- Password must be at least 6 characters long & include a lowercase letter, an uppercase letter and a number -->
+                        <input type="password" name="password" [(ngModel)]="user.password" placeholder="Password: min 6 chars, lower & upper, numbers"
                           class="form-control">
                       </div>
                     </div>
@@ -86,7 +87,7 @@
                           </span>
                         </div>
                         <input type="password" name="confirmPassword" [(ngModel)]="user.confirmPassword"
-                          placeholder="Confirm Password" class="form-control">
+                        placeholder="Confirm password: min 6 chars, lower & upper, numbers" class="form-control">
                       </div>
                     </div>
                     <div class="text-center">

@@ -14,6 +14,19 @@
           <div class="card-body">
             <!-- <h6 class="card-category text-gray">CEO / Co-Founder</h6> -->
             <h4 class="card-title">{{userData.name}}</h4>
+            <div
+              *ngIf="(userData.problemsByUser&& userData.problemsByUser.length)||(userData.user_collaborators&& userData.user_collaborators.length)||(userData.user_validations&& userData.user_validations.length)||(userData.enrichmentssBycreatedBy&& userData.enrichmentssBycreatedBy.length)">
+              <h6>Contributions</h6>
+              <p *ngIf="userData.problemsByUser.length">Added {{userData.problemsByUser.length}} problem(s)</p>
+              <p *ngIf="userData.user_collaborators.length"> {{userData.user_collaborators.length}} collaboration(s)</p>
+              <p *ngIf="userData.user_validations.length">{{userData.user_validations.length}} validation(s) </p>
+              <p *ngIf="userData.enrichmentssBycreatedBy.length">{{userData.enrichmentssBycreatedBy.length}}
+                enrichment(s)
+              </p>
+
+
+
+            </div>
             <!-- <p class="card-description">
                 Don't be scared of the truth because we need to restart the human foundation in truth And I love you like
                 Kanye loves Kanye I love Rick Owens’ bed design but the back is...

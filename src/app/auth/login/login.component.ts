@@ -188,7 +188,7 @@ export class LoginComponent implements OnInit, OnDestroy {
       },
       {
         type: type[color],
-        timer: 10000,
+        timer: 5000,
         placement: {
           from: from,
           align: align

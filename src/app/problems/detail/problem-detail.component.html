@@ -91,8 +91,7 @@
               </i> -->
             </div>
 
-            <!-- [disabled]="this.collaborators.length>0 || this.enrichment.length>0 || this.validation.length >0" -->
-
+            <!--  -->
             <div class="dropdown">
               <button *ngIf="userId===problemData.created_by" [routerLink]="
                 '/problems/'+ problemData.id+'/edit'"
@@ -110,11 +109,11 @@
                 </i>
               </button>
               <ul class="dropdown-menu">
-                <li><a (click)="linkedInShare()">LinkedIn</a></li>
-                <li><a (click)="fbShare()">Facebook</a></li>
-                <li><a (click)="twitterShare()">Twitter</a></li>
-                <li><a (click)="mailShare()">Email</a></li>
-                <li><a (click)="smsShare()">SMS</a></li>
+                <li *ngIf="channels.linkedin"><a (click)="linkedInShare()">LinkedIn</a></li>
+                <li *ngIf="channels.facebook"><a (click)="fbShare()">Facebook</a></li>
+                <li *ngIf="channels.twitter"><a (click)="twitterShare()">Twitter</a></li>
+                <li *ngIf="channels.email"><a (click)="mailShare()">Email</a></li>
+                <li *ngIf="channels.sms"><a (click)="smsShare()">SMS</a></li>
               </ul>
             </div>
 

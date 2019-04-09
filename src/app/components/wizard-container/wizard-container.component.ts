@@ -85,6 +85,7 @@ export class WizardContainerComponent
   @Output() tagAdded = new EventEmitter();
   @Output() tagRemoved = new EventEmitter();
   @Output() contentSubmitted = new EventEmitter();
+  @Output() deleteDraft = new EventEmitter();
 
   file_types = [
     "application/msword",
@@ -215,6 +216,10 @@ export class WizardContainerComponent
     if (index >= 0) {
       this.content.location.splice(index, 1);
     }
+  }
+
+  deleteClicked() {
+    this.deleteDraft.emit(this.content.id);
   }
 
   // sendTagsToParent(tags) {

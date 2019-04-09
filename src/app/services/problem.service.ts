@@ -137,33 +137,31 @@ export class ProblemService {
   }
 
   deleteProblem(id: number) {
-    this.apollo
-      .mutate<any>({
-        mutation: Query.DeleteProblemMutation,
-        variables: {
-          where: {
-            id: {
-              _eq: id
+    return this.apollo.mutate<any>({
+      mutation: gql`
+        mutation updateMutation(
+          $where: problems_bool_exp!
+          $set: problems_set_input!
+        ) {
+          update_problems(where: $where, _set: $set) {
+            affected_rows
+            returning {
+              id
             }
-          },
-          set: {
-            is_deleted: true
           }
         }
-      })
-      .subscribe(
-        ({ data }) => {
-          // location.reload();
-          location.reload();
-          this.router.navigateByUrl("/problems");
-
-          return;
+      `,
+      variables: {
+        where: {
+          id: {
+            _eq: id
+          }
         },
-        error => {
-          console.log("Could delete due to " + error);
-          console.error(JSON.stringify(error));
+        set: {
+          is_deleted: true
         }
-      );
+      }
+    });
   }
 
   storeProblemWatchedBy(id: number, problemData: any) {
