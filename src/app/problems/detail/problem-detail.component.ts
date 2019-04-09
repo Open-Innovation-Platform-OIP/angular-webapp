@@ -39,7 +39,7 @@ import { CollaborationService } from "src/app/services/collaboration.service";
 import { ValidationService } from "src/app/services/validation.service";
 import { EnrichmentService } from "src/app/services/enrichment.service";
 
-import {sharing} from '../../globalconfig';
+import { sharing } from "../../globalconfig";
 
 const misc: any = {
   navbar_menu_visible: 0,
@@ -578,6 +578,12 @@ export class ProblemDetailComponent implements OnInit, OnDestroy {
         console.error("SMS error", e);
       });
   }
+
+  shareComment(shareObj) {
+    console.log("Share object>>>> ", shareObj,this.pageUrl);
+
+  }
+
   parseProblem(problem) {
     // map core keys
     Object.keys(this.problemData).map(key => {
@@ -709,6 +715,16 @@ export class ProblemDetailComponent implements OnInit, OnDestroy {
         .sort(this.compareDateForSort)
         .splice(0, this.numOfComments);
     }
+  }
+
+  deleteComment(comment) {
+    let allComments = [];
+    if (!comment.linked_comment_id) {
+      allComments = this.replies[comment.id].map((comment) => comment.id);
+    }
+    allComments.push(comment.id);
+    console.log("allComments>>>>>", allComments);
+
   }
 
   showMoreComments() {

@@ -19,17 +19,15 @@
           <div class="card-body">
             <div class="row">
               <div class="col-md-4">
-                <div class="picture">
+                <div class="picture text-center">
                   <img
                     src="{{(problemData.featured_url && checkUrlIsImg(problemData.featured_url)) ? problemData.featured_url : './assets/img/image_placeholder.jpg'}}"
                     alt="Thumbnail Image" class="rounded img-fluid">
-                  <div class="row justify-content-center">
-                    <button mat-raised-button *ngIf="problem_attachments.length > 0"
-                      class="btn btn-raised btn-info btn-sm" data-toggle="modal"
-                      (click)="openModal('#viewMoreImgModal')">
-                      view media ({{problem_attachments.length}})
-                    </button>
-                  </div>
+
+                  <button mat-raised-button *ngIf="problem_attachments.length > 0"
+                    class="btn btn-raised btn-info btn-sm" data-toggle="modal" (click)="openModal('#viewMoreImgModal')">
+                    view media ({{problem_attachments.length}})
+                  </button>
                 </div>
               </div>
               <div class="col-md-8">
@@ -580,6 +578,7 @@
               <div *ngIf="!popular">
                 <app-display-comment [users]="objectValues(usersService.allUsers)" [comment]="comment"
                   [replies]="replies[comment.id]" (reply)="onCommentSubmit($event, comment.id)"
+                  (commentToDelete)="deleteComment($event)" (shareCommentId)="shareComment($event)"
                   (fileClicked)="displayModal($event)" *ngFor="let comment of sortComments(objectValues(comments))">
                 </app-display-comment>
               </div>
@@ -597,7 +596,8 @@
 
             </div>
             <hr>
-            <a class="viewMoreComments" href="javascript:void(0)" *ngIf="objectValues(comments).length > 4"
+            <a class="viewMoreComments" href="javascript:void(0)"
+              *ngIf="objectValues(comments).length > 5 && numOfComments < objectValues(comments).length"
               (click)="showMoreComments()">
               View more comments
             </a>

@@ -29,13 +29,13 @@
         </div>
       </div>
       <div class="col-md-4">
-        <h4 class="card-title text-center">Users</h4>
+        <h4 class="card-title text-center">Contributors</h4>
         <div *ngFor="let user of userSearchResults">
           <app-profile-card *ngIf="user" [userData]="user"></app-profile-card>
         </div>
         <div class="card">
           <h5 class="card-body text-center" *ngIf="userSearchResults && userSearchResults.length === 0">No search
-            results for <b>Users</b>
+            results for <b>Contributors</b>
           </h5>
         </div>
       </div>

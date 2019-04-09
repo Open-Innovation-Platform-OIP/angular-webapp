@@ -91,3 +91,19 @@ pre {
     width: 40px;
     object-fit: cover;
 }
+
+.more_icon {
+    float: right;
+    cursor: pointer;
+    color: #b2b2b2;
+}
+
+.more_icon:hover {
+    color: black;
+}
+
+.dropdown-menu a:hover {
+    background-color: var(--orange);
+    color: var(--light);
+    cursor: pointer;
+}
