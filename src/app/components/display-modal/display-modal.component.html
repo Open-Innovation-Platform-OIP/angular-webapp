@@ -7,7 +7,7 @@
 </video>
 
 <img *ngIf="source && (source.mimeType && source.mimeType.startsWith('image')) || checkUrlIsImg(source.url)"
-  src="{{source.url}}" alt="" class="fix_view">
+  src="{{source.url}}" alt="{{source.key}}" class="fix_view">
 
 <!-- for other than image and video -->
 <div
