@@ -1,17 +1,24 @@
 import {
-  Component, ViewChild, OnInit, Input,
+  Component,
+  ViewChild,
+  OnInit,
+  Input,
   Output,
   EventEmitter
-} from '@angular/core';
-import swal from 'sweetalert2';
-import { Comment } from '../../services/discussions.service';
+} from "@angular/core";
+import swal from "sweetalert2";
+import { Comment } from "../../services/discussions.service";
+import { Apollo, QueryRef } from "apollo-angular";
+import { AuthService } from "../../services/auth.service";
+
+import gql from "graphql-tag";
 @Component({
-  selector: 'app-display-comment',
-  templateUrl: './displaycomment.component.html',
-  styleUrls: ['./displaycomment.component.css']
+  selector: "app-display-comment",
+  templateUrl: "./displaycomment.component.html",
+  styleUrls: ["./displaycomment.component.css"]
 })
 export class CommentDisplayComponent implements OnInit {
-  objectValues = Object['values'];
+  objectValues = Object["values"];
   @Input() comment;
   @Input() replies;
   @Input() users;
@@ -19,13 +26,22 @@ export class CommentDisplayComponent implements OnInit {
   @Output() fileClicked = new EventEmitter();
   @Output() commentToDelete = new EventEmitter();
   @Output() shareCommentId = new EventEmitter();
+  userId: Number;
+  voters = new Set();
+
   showReplyBox = false;
   replyingTo = 0;
   attachmentToShow = 2;
   repliesAttachmentNum = 2;
   repliesExpanded = false;
   commentsExpanded = false;
+
+  constructor(private apollo: Apollo, private auth: AuthService) {}
   ngOnInit() {
+    this.comment.discussion_voters.map(voter => {
+      this.voters.add(voter.user_id);
+    });
+    this.userId = Number(this.auth.currentUserValue.id);
   }
 
   sortReplies(replies) {
@@ -65,7 +81,6 @@ export class CommentDisplayComponent implements OnInit {
       this.attachmentToShow = 2;
       this.commentsExpanded = false;
     }
-
   }
 
   displayMoreAttachReplies(attachmentsArr) {
@@ -99,18 +114,18 @@ export class CommentDisplayComponent implements OnInit {
   idToDelete(commentId) {
     // console.log("you clicked delete!", commentId);
     swal({
-      title: 'Are you sure?',
+      title: "Are you sure?",
       text: "You won't be able to revert this!",
       buttonsStyling: false,
       confirmButtonClass: "btn btn-warning",
-      confirmButtonText: 'Yes, delete it!',
+      confirmButtonText: "Yes, delete it!"
     })
-      .then((result) => {
+      .then(result => {
         if (result.value === true) {
           this.commentToDelete.emit(commentId);
         }
       })
-      .catch(swal.noop)
+      .catch(swal.noop);
   }
 
   getCommentIdToShare(commentId, platform) {
@@ -120,9 +135,87 @@ export class CommentDisplayComponent implements OnInit {
     });
   }
 
+  toggleVoteDiscussions() {
+    console.log(this.comment, "comment", this.userId, "user id");
+    // console.log('toggling watch flag');
+    // if (!(this.userId == this.comment.created_by)) {
+    if (!this.voters.has(this.userId)) {
+      // user is not currently watching this problem
+      // let's add them
+      this.voters.add(this.userId);
+      const add_voter = gql`
+        mutation insert_discussion_voter {
+          insert_discussion_voters(
+            objects: [
+              {
+                user_id: ${Number(this.userId)},
+                discussion_id: ${Number(this.comment.id)}
+              }
+            ]
+          ) {
+            returning {
+              discussion_id
+              user_id
+
+            }
+          }
+        }
+      `;
+      this.apollo
+        .mutate({
+          mutation: add_voter
+        })
+        .subscribe(
+          result => {
+            if (result.data) {
+              // console.log(result.data);
+            }
+          },
+          err => {
+            console.error(JSON.stringify(err));
+          }
+        );
+    } else {
+      // user is currently not watching this problem
+      // let's remove them
+      this.voters.delete(this.userId);
+      const delete_voter = gql`
+        mutation delete_discussion_voter {
+          delete_discussion_voters(
+            where: {user_id: {_eq: ${Number(
+              this.userId
+            )}}, discussion_id: {_eq: ${Number(this.comment.id)}}}
+          ) {
+            affected_rows
+          }
+        }
+      `;
+      this.apollo
+        .mutate({
+          mutation: delete_voter
+        })
+        .subscribe(
+          result => {
+            if (result.data) {
+              // console.log(result.data);
+            }
+          },
+          err => {
+            console.error(JSON.stringify(err));
+          }
+        );
+    }
+    // }
+  }
+
   testMimeType(type) {
     // let allowed;
-    if (type && !type.startsWith('video') && !type.startsWith('image') && !type.endsWith('pdf')) {
+    if (
+      type &&
+      !type.startsWith("video") &&
+      !type.startsWith("image") &&
+      !type.endsWith("pdf")
+    ) {
       return true;
     } else {
       return false;

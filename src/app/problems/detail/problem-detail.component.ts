@@ -239,7 +239,7 @@ export class ProblemDetailComponent implements OnInit, OnDestroy {
     const subject = encodeURI("Can you help solve this problem?");
     const body = encodeURI(
       `Hello,\n\nCheck out this link on Social Alpha's Open Innovation platform - ${
-      this.pageUrl
+        this.pageUrl
       }\n\nRegards,`
     );
     this.mailToLink = `mailto:?subject=${subject}&body=${body}`;
@@ -449,11 +449,16 @@ export class ProblemDetailComponent implements OnInit, OnDestroy {
           created_at
           modified_at
           text
+          is_deleted
           linked_comment_id
           attachments
           usersBycreatedBy {
             name
             photo_url
+          }
+          discussion_voters{
+            user_id
+            discussion_id
           }
         }
         problem_collaborators(order_by:{edited_at: desc}){
@@ -543,7 +548,7 @@ export class ProblemDetailComponent implements OnInit, OnDestroy {
     const subject = encodeURI("Can you help solve this problem?");
     const body = encodeURI(
       `Hello,\n\nCheck out this link on Social Alpha's Open Innovation platform - ${
-      this.pageUrl
+        this.pageUrl
       }\n\nRegards,`
     );
     const href = `mailto:?subject=${subject}&body=${body}`;
@@ -580,8 +585,7 @@ export class ProblemDetailComponent implements OnInit, OnDestroy {
   }
 
   shareComment(shareObj) {
-    console.log("Share object>>>> ", shareObj,this.pageUrl);
-
+    console.log("Share object>>>> ", shareObj, this.pageUrl);
   }
 
   parseProblem(problem) {
@@ -718,13 +722,17 @@ export class ProblemDetailComponent implements OnInit, OnDestroy {
   }
 
   deleteComment(comment) {
+    console.log(comment, "comment on delete comment");
     let allComments = [];
     if (!comment.linked_comment_id) {
-      allComments = this.replies[comment.id].map((comment) => comment.id);
+      allComments = this.replies[comment.id].map(comment => {
+        comment.is_deleted = true;
+        return comment;
+      });
     }
-    allComments.push(comment.id);
+    comment.is_deleted = true;
+    allComments.push(comment);
     console.log("allComments>>>>>", allComments);
-
   }
 
   showMoreComments() {
@@ -793,7 +801,7 @@ export class ProblemDetailComponent implements OnInit, OnDestroy {
         cancelButtonClass: "btn btn-danger",
         buttonsStyling: false
       })
-        .then(function (result) {
+        .then(function(result) {
           swal({
             type: "success",
             html:
@@ -830,7 +838,7 @@ export class ProblemDetailComponent implements OnInit, OnDestroy {
       body.classList.remove("sidebar-mini");
       misc.sidebar_mini_active = false;
     } else {
-      setTimeout(function () {
+      setTimeout(function() {
         body.classList.add("sidebar-mini");
 
         misc.sidebar_mini_active = true;
@@ -838,12 +846,12 @@ export class ProblemDetailComponent implements OnInit, OnDestroy {
     }
 
     // we simulate the window Resize so the charts will get updated in realtime.
-    const simulateWindowResize = setInterval(function () {
+    const simulateWindowResize = setInterval(function() {
       window.dispatchEvent(new Event("resize"));
     }, 180);
 
     // we stop the simulation of Window Resize after the animations are completed
-    setTimeout(function () {
+    setTimeout(function() {
       clearInterval(simulateWindowResize);
     }, 1000);
   }
@@ -872,7 +880,7 @@ export class ProblemDetailComponent implements OnInit, OnDestroy {
       $layer.remove();
     }
 
-    setTimeout(function () {
+    setTimeout(function() {
       $toggle.classList.remove("toggled");
     }, 400);
 
@@ -924,8 +932,8 @@ export class ProblemDetailComponent implements OnInit, OnDestroy {
         mutation delete_problem_watcher {
           delete_problem_watchers(
             where: {user_id: {_eq: ${Number(
-          this.userId
-        )}}, problem_id: {_eq: ${Number(this.problemData.id)}}}
+              this.userId
+            )}}, problem_id: {_eq: ${Number(this.problemData.id)}}}
           ) {
             affected_rows
           }
@@ -968,7 +976,7 @@ export class ProblemDetailComponent implements OnInit, OnDestroy {
           ) {
             returning {
               user_id
-              problem_id
+              problem_id    
             }
           }
         }
@@ -995,8 +1003,8 @@ export class ProblemDetailComponent implements OnInit, OnDestroy {
         mutation delete_problem_voter {
           delete_problem_voters(
             where: {user_id: {_eq: ${Number(
-          this.userId
-        )}}, problem_id: {_eq: ${Number(this.problemData.id)}}}
+              this.userId
+            )}}, problem_id: {_eq: ${Number(this.problemData.id)}}}
           ) {
             affected_rows
           }

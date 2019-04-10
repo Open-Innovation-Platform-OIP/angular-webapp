@@ -139,6 +139,7 @@ export class EnrichmentFormComponent implements OnInit {
                             video_urls
                             impact
                             extent
+                            attachments
                             min_population
                             max_population
                             beneficiary_attributes
