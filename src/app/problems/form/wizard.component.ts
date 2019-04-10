@@ -251,6 +251,7 @@ export class WizardComponent
                             is_draft
                             image_urls
                             video_urls
+                            attachments
                             impact
                             extent
                             min_population

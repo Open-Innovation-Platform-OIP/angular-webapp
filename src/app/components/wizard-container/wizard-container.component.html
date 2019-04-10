@@ -139,8 +139,9 @@
                     </span>
                   </div>
                   <mat-form-field class="example-full-width has-label" [ngClass]="displayFieldCss(type, 'location')">
-                    <input type="text" name="beneficiary" matInput id="beneficiary" placeholder="Beneficiary attributes"
-                      formControlName="beneficiary" [(ngModel)]="content.beneficiary_attributes">
+                    <textarea type="text" name="beneficiary" matInput id="beneficiary"
+                      placeholder="Beneficiary attributes" formControlName="beneficiary"
+                      [(ngModel)]="content.beneficiary_attributes"></textarea>
                   </mat-form-field>
                 </div>
               </div>
@@ -155,8 +156,8 @@
                     </span>
                   </div>
                   <mat-form-field class="example-full-width has-label" [ngClass]="displayFieldCss(type, 'resources')">
-                    <input type="text" name="resources" matInput id="resources" placeholder="Resources Needed"
-                      formControlName="resources" [(ngModel)]="content.resources_needed">
+                    <textarea type="text" name="resources" matInput id="resources" placeholder="Resources Needed"
+                      formControlName="resources" [(ngModel)]="content.resources_needed"></textarea>
                   </mat-form-field>
                 </div>
               </div>
@@ -235,8 +236,8 @@
                     </span>
                   </div>
                   <mat-form-field class="example-full-width has-label" [ngClass]="displayFieldCss(type, 'impact')">
-                    <input type="text" name="impact" matInput id="impact" placeholder="Impact" formControlName="impact"
-                      [(ngModel)]="content.impact">
+                    <textarea type="text" name="impact" matInput id="impact" placeholder="Impact"
+                      formControlName="impact" [(ngModel)]="content.impact"></textarea>
                   </mat-form-field>
                 </div>
               </div>
@@ -251,8 +252,8 @@
                     </span>
                   </div>
                   <mat-form-field class="example-full-width has-label" [ngClass]="displayFieldCss(type, 'extent')">
-                    <input type="text" name="extent" matInput id="extent" placeholder="Extent" formControlName="extent"
-                      [(ngModel)]="content.extent">
+                    <textarea type="text" name="extent" matInput id="extent" placeholder="Extent"
+                      formControlName="extent" [(ngModel)]="content.extent"></textarea>
                   </mat-form-field>
                 </div>
               </div>
@@ -470,19 +471,21 @@
 
       <div class="card-footer">
         <div class="mr-auto">
-          <input type="button" class="btn btn-previous btn-fill btn-default btn-wd disabled" name="previous"
-            value="Previous">
+          <input type="button" *ngIf="!content.is_draft && !content.title" class="btn" onclick="window.history.back()"
+            name="cancel" value="Cancel">
+          <!-- <input type="button" class="btn btn-previous btn-fill btn-default btn-wd disabled" name="previous"
+            value="Previous"> -->
         </div>
         <div class="ml-auto">
           <button *ngIf="content.is_draft && content.title" class="btn btn-danger" (click)="deleteClicked()">
             Delete
           </button>
-
+          <input type="button" class="btn btn-previous btn-fill btn-default btn-wd disabled" name="previous"
+            value="Previous">
           <input type="button" class="publish btn btn-fill btn-warning btn-wd" [disabled]="!isComplete()"
             (click)="publishContent()" value="Publish">
           <input type="button" class="btn btn-next btn-fill btn-warning btn-wd" [disabled]="!isComplete()" name="next"
             value="Next">
-
 
 
 
