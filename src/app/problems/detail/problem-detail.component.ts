@@ -53,6 +53,11 @@ interface attachment_object {
   url: string;
   mimeType: string;
 }
+interface queryString {
+  commentId: number
+}
+
+const domain = "https://social-alpha-open-innovation.firebaseapp.com";
 
 @Component({
   selector: "app-problem-detail",
@@ -202,6 +207,7 @@ export class ProblemDetailComponent implements OnInit, OnDestroy {
   collaborators: any = [];
   collaboratorDataToEdit: any;
   interval = null;
+  qs: queryString = { commentId: 0 };
 
   public carouselTileItems$: Observable<any>;
   public carouselTileItemsValid$: Observable<number[]>;
@@ -231,10 +237,9 @@ export class ProblemDetailComponent implements OnInit, OnDestroy {
     private collaborationService: CollaborationService,
     private validationService: ValidationService,
     private enrichmentService: EnrichmentService,
-    ngLocation: Location
+    public ngLocation: Location
   ) {
     this.startInterval();
-    const domain = "https://social-alpha-open-innovation.firebaseapp.com";
     this.pageUrl = domain + ngLocation.path();
     const subject = encodeURI("Can you help solve this problem?");
     const body = encodeURI(
@@ -350,6 +355,13 @@ export class ProblemDetailComponent implements OnInit, OnDestroy {
     this.loadCarousels();
 
     this.minimizeSidebar();
+
+    this.route.queryParams.subscribe(params => {
+      console.log("params ", params, this.qs);
+      if (params.commentId) {
+        this.qs.commentId = params.commentId;
+      }
+    })
 
     this.problemDataSubcription = this.route.paramMap.pipe(
       switchMap((params: ParamMap) => {
@@ -580,8 +592,30 @@ export class ProblemDetailComponent implements OnInit, OnDestroy {
   }
 
   shareComment(shareObj) {
-    console.log("Share object>>>> ", shareObj,this.pageUrl);
+    this.pageUrl += `?commentId=${shareObj.id}`;
 
+    switch (shareObj.platform) {
+      case 'linkedin':
+        this.linkedInShare();
+        break;
+      case 'facebook':
+        this.fbShare();
+        break;
+      case 'twitter':
+        this.twitterShare();
+        break;
+      case 'email':
+        this.mailShare();
+        break;
+      case 'sms':
+        this.smsShare();
+        break;
+
+      default:
+        break;
+    }
+
+    this.pageUrl = domain + this.ngLocation.path();
   }
 
   parseProblem(problem) {
@@ -708,11 +742,20 @@ export class ProblemDetailComponent implements OnInit, OnDestroy {
   }
 
   sortComments(comments) {
+    // console.log("comments>>>>> ", comments);
+    let sortByDate = comments.sort(this.compareDateForSort);
+    let sharedComment = comments.filter((comment) => {
+      if (this.qs.commentId) {
+        return comment.id === Number(this.qs.commentId);
+      }
+    })
+
+    let sortedComments = this.removeDuplicateReplies([...sharedComment, ...sortByDate])
+
     if (comments.length < 4) {
-      return comments.sort(this.compareDateForSort);
+      return sortedComments;
     } else {
-      return comments
-        .sort(this.compareDateForSort)
+      return sortedComments
         .splice(0, this.numOfComments);
     }
   }
