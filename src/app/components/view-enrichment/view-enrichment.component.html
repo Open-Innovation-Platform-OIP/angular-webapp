@@ -104,7 +104,7 @@
     </div>
     <div class="col-md-8">
       <strong>Description :</strong>
-      <p class="description">{{enrichmentData.description}}</p>
+      <p class="description" style="white-space: pre-wrap;">{{enrichmentData.description}}</p>
       <strong *ngIf="enrichmentData.organization">Organization :</strong>
       <p class="description">{{enrichmentData.organization}}</p>
 
@@ -116,9 +116,9 @@
 
 
       <strong *ngIf="enrichmentData.impact">Impact :</strong>
-      <p class="description">{{enrichmentData.impact}}</p>
+      <p class="description" style="white-space: pre-wrap;">{{enrichmentData.impact}}</p>
       <strong *ngIf="enrichmentData.extent">Extent :</strong>
-      <p class="description">{{enrichmentData.extent}}</p>
+      <p class="description" style="white-space: pre-wrap;">{{enrichmentData.extent}}</p>
 
 
       <strong>Location(s) :</strong>
@@ -138,9 +138,9 @@
 
 
       <strong *ngIf="enrichmentData.beneficiary_attributes">Beneficiary Attributes :</strong>
-      <p class="description">{{enrichmentData.beneficiary_attributes}}</p>
+      <p class="description" style="white-space: pre-wrap;">{{enrichmentData.beneficiary_attributes}}</p>
       <strong *ngIf="enrichmentData.resources_needed">Resources needed :</strong>
-      <p class="description">{{enrichmentData.resources_needed}}</p>
+      <p class="description" style="white-space: pre-wrap;">{{enrichmentData.resources_needed}}</p>
     </div>
   </div>
 </div>

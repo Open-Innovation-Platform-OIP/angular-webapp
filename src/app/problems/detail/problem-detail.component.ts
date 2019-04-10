@@ -54,7 +54,7 @@ interface attachment_object {
   mimeType: string;
 }
 interface queryString {
-  commentId: number
+  commentId: number;
 }
 
 const domain = "https://social-alpha-open-innovation.firebaseapp.com";
@@ -244,7 +244,7 @@ export class ProblemDetailComponent implements OnInit, OnDestroy {
     const subject = encodeURI("Can you help solve this problem?");
     const body = encodeURI(
       `Hello,\n\nCheck out this link on Social Alpha's Open Innovation platform - ${
-      this.pageUrl
+        this.pageUrl
       }\n\nRegards,`
     );
     this.mailToLink = `mailto:?subject=${subject}&body=${body}`;
@@ -363,7 +363,7 @@ export class ProblemDetailComponent implements OnInit, OnDestroy {
       if (params.commentId) {
         this.qs.commentId = params.commentId;
       }
-    })
+    });
 
     this.problemDataSubcription = this.route.paramMap.pipe(
       switchMap((params: ParamMap) => {
@@ -457,17 +457,22 @@ export class ProblemDetailComponent implements OnInit, OnDestroy {
         problem_voters {
           user_id
         }
-        discussionssByproblemId(order_by: {created_at: desc}) {
+        discussionssByproblemId(where: { is_deleted: { _eq: false } },order_by: {created_at: desc}) {
           id
           created_by
           created_at
           modified_at
           text
+          is_deleted
           linked_comment_id
           attachments
           usersBycreatedBy {
             name
             photo_url
+          }
+          discussion_voters{
+            user_id
+            discussion_id
           }
         }
         problem_collaborators(order_by:{edited_at: desc}){
@@ -557,7 +562,7 @@ export class ProblemDetailComponent implements OnInit, OnDestroy {
     const subject = encodeURI("Can you help solve this problem?");
     const body = encodeURI(
       `Hello,\n\nCheck out this link on Social Alpha's Open Innovation platform - ${
-      this.pageUrl
+        this.pageUrl
       }\n\nRegards,`
     );
     const href = `mailto:?subject=${subject}&body=${body}`;
@@ -597,19 +602,19 @@ export class ProblemDetailComponent implements OnInit, OnDestroy {
     this.pageUrl += `?commentId=${shareObj.id}`;
 
     switch (shareObj.platform) {
-      case 'linkedin':
+      case "linkedin":
         this.linkedInShare();
         break;
-      case 'facebook':
+      case "facebook":
         this.fbShare();
         break;
-      case 'twitter':
+      case "twitter":
         this.twitterShare();
         break;
-      case 'email':
+      case "email":
         this.mailShare();
         break;
-      case 'sms':
+      case "sms":
         this.smsShare();
         break;
 
@@ -746,30 +751,40 @@ export class ProblemDetailComponent implements OnInit, OnDestroy {
   sortComments(comments) {
     // console.log("comments>>>>> ", comments);
     let sortByDate = comments.sort(this.compareDateForSort);
-    let sharedComment = comments.filter((comment) => {
+    let sharedComment = comments.filter(comment => {
       if (this.qs.commentId) {
         return comment.id === Number(this.qs.commentId);
       }
-    })
+    });
 
-    let sortedComments = this.removeDuplicateReplies([...sharedComment, ...sortByDate])
+    let sortedComments = this.removeDuplicateReplies([
+      ...sharedComment,
+      ...sortByDate
+    ]);
 
     if (comments.length < 4) {
       return sortedComments;
     } else {
-      return sortedComments
-        .splice(0, this.numOfComments);
+      return sortedComments.splice(0, this.numOfComments);
     }
   }
 
   deleteComment(comment) {
-    let allComments = [];
-    if (!comment.linked_comment_id) {
-      allComments = this.replies[comment.id].map((comment) => comment.id);
-    }
-    allComments.push(comment.id);
-    console.log("allComments>>>>>", allComments);
+    console.log(comment, "comment on delete comment");
+    // let allComments = [];
+    // if (!comment.linked_comment_id) {
+    //   allComments = this.replies[comment.id].map(comment => {
+    //     comment.is_deleted = true;
+    //     delete comment.__typename;
+    //     return comment;
+    //   });
+    // }
+    // delete comment.__typename;
 
+    // comment.is_deleted = true;
+    // allComments.push(comment);
+    // console.log("allComments>>>>>", allComments);
+    this.discussionsService.deleteCommentsFromDB(comment.id);
   }
 
   showMoreComments() {
@@ -838,7 +853,7 @@ export class ProblemDetailComponent implements OnInit, OnDestroy {
         cancelButtonClass: "btn btn-danger",
         buttonsStyling: false
       })
-        .then(function (result) {
+        .then(function(result) {
           swal({
             type: "success",
             html:
@@ -875,7 +890,7 @@ export class ProblemDetailComponent implements OnInit, OnDestroy {
       body.classList.remove("sidebar-mini");
       misc.sidebar_mini_active = false;
     } else {
-      setTimeout(function () {
+      setTimeout(function() {
         body.classList.add("sidebar-mini");
 
         misc.sidebar_mini_active = true;
@@ -883,12 +898,12 @@ export class ProblemDetailComponent implements OnInit, OnDestroy {
     }
 
     // we simulate the window Resize so the charts will get updated in realtime.
-    const simulateWindowResize = setInterval(function () {
+    const simulateWindowResize = setInterval(function() {
       window.dispatchEvent(new Event("resize"));
     }, 180);
 
     // we stop the simulation of Window Resize after the animations are completed
-    setTimeout(function () {
+    setTimeout(function() {
       clearInterval(simulateWindowResize);
     }, 1000);
   }
@@ -917,7 +932,7 @@ export class ProblemDetailComponent implements OnInit, OnDestroy {
       $layer.remove();
     }
 
-    setTimeout(function () {
+    setTimeout(function() {
       $toggle.classList.remove("toggled");
     }, 400);
 
@@ -969,8 +984,8 @@ export class ProblemDetailComponent implements OnInit, OnDestroy {
         mutation delete_problem_watcher {
           delete_problem_watchers(
             where: {user_id: {_eq: ${Number(
-          this.userId
-        )}}, problem_id: {_eq: ${Number(this.problemData.id)}}}
+              this.userId
+            )}}, problem_id: {_eq: ${Number(this.problemData.id)}}}
           ) {
             affected_rows
           }
@@ -1013,7 +1028,7 @@ export class ProblemDetailComponent implements OnInit, OnDestroy {
           ) {
             returning {
               user_id
-              problem_id
+              problem_id    
             }
           }
         }
@@ -1040,8 +1055,8 @@ export class ProblemDetailComponent implements OnInit, OnDestroy {
         mutation delete_problem_voter {
           delete_problem_voters(
             where: {user_id: {_eq: ${Number(
-          this.userId
-        )}}, problem_id: {_eq: ${Number(this.problemData.id)}}}
+              this.userId
+            )}}, problem_id: {_eq: ${Number(this.problemData.id)}}}
           ) {
             affected_rows
           }
@@ -1093,6 +1108,7 @@ export class ProblemDetailComponent implements OnInit, OnDestroy {
       ({ data }) => {
         $("#enrichModal").modal("hide");
         this.disableEnrichButton = false;
+        location.reload();
       },
       error => {
         console.log("Could delete due to " + error);

@@ -140,6 +140,7 @@ export class EnrichmentFormComponent implements OnInit {
                             attachments
                             impact
                             extent
+                            attachments
                             min_population
                             max_population
                             beneficiary_attributes

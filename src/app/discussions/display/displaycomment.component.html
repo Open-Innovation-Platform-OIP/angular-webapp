@@ -15,7 +15,7 @@
     <div class="card-body">
 
       <!-- More button for comment -->
-      <ul class="navbar-nav" style="float:right;">
+      <ul class="navbar-nav" style="float:right;" *ngIf="comment.created_by==auth.currentUserValue.id">
         <li class="nav-item dropdown">
           <a class="nav-link more_icon" href="#pablo" id="discussion_more_btn" data-toggle="dropdown"
             aria-haspopup="true" aria-expanded="false">
@@ -69,13 +69,18 @@
         </i>
       </p>
 
-      <button class="btn btn-link btn-sm" matTooltip="upvote"
+      <!-- <button class="btn btn-link btn-sm" matTooltip="upvote"
         [ngStyle]="{'color':enrichmentVoted? '#ff9800' : 'black' }">
         <i class="material-icons">
           thumb_up
         </i>
         <span>&nbsp;&nbsp;{{2}}</span>
-      </button>
+      </button> -->
+      <i class="material-icons actions" (click)="toggleVoteDiscussions()"
+        [ngStyle]="{'color':voters.has(userId) ? '#1E90FF' : 'black' }">
+        thumb_up
+      </i>
+      <span>{{voters.size}}</span>
       <span class="dropdown">
         <button class="btn btn-warning btn-link" type="button" id="discussion_share_btn" data-toggle="dropdown"
           aria-haspopup="true" aria-expanded="false">
@@ -113,7 +118,7 @@
           <div class="card-body">
 
             <!-- More button for replies -->
-            <ul class="navbar-nav" style="float:right;">
+            <ul class="navbar-nav" style="float:right;" *ngIf="reply.created_by==auth.currentUserValue.id">
               <li class="nav-item dropdown">
                 <a class="nav-link more_icon" href="#pablo" id="discussion_more_btn" data-toggle="dropdown"
                   aria-haspopup="true" aria-expanded="false">

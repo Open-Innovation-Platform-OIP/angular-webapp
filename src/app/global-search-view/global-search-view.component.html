@@ -11,30 +11,32 @@
     <div class="row">
       <div class="col-md-4">
         <h4 class="card-title text-center">Problems</h4>
+        <br />
         <div *ngFor="let problem of globalProblemSearchResults">
           <app-problem-card *ngIf="problem" [problemData]="problem">
           </app-problem-card>
         </div>
-        <div class="card">
-          <h5 class="card-body text-center"
-            *ngIf="globalProblemSearchResults && globalProblemSearchResults.length === 0">No search results for
+        <div class="card" *ngIf="searchInput && globalProblemSearchResults && globalProblemSearchResults.length === 0">
+          <h5 class="card-body text-center">No search results for
             <b>Problems</b>
           </h5>
         </div>
       </div>
       <div class="col-md-4">
         <h4 class="card-title text-center">Solutions</h4>
-        <div class="card">
+        <br />
+        <div class="card" *ngIf="searchInput">
           <h5 class="card-body text-center">No search results for <b>Solutions</b></h5>
         </div>
       </div>
       <div class="col-md-4">
         <h4 class="card-title text-center">Contributors</h4>
+        <br />
         <div *ngFor="let user of userSearchResults">
           <app-profile-card *ngIf="user" [userData]="user"></app-profile-card>
         </div>
-        <div class="card">
-          <h5 class="card-body text-center" *ngIf="userSearchResults && userSearchResults.length === 0">No search
+        <div class="card" *ngIf="searchInput && userSearchResults && userSearchResults.length === 0">
+          <h5 class="card-body text-center">No search
             results for <b>Contributors</b>
           </h5>
         </div>
