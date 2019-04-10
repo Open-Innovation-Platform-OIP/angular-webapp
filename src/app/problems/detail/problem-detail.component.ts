@@ -443,7 +443,7 @@ export class ProblemDetailComponent implements OnInit, OnDestroy {
         problem_voters {
           user_id
         }
-        discussionssByproblemId(order_by: {created_at: desc}) {
+        discussionssByproblemId(where: { is_deleted: { _eq: false } },order_by: {created_at: desc}) {
           id
           created_by
           created_at
@@ -723,16 +723,20 @@ export class ProblemDetailComponent implements OnInit, OnDestroy {
 
   deleteComment(comment) {
     console.log(comment, "comment on delete comment");
-    let allComments = [];
-    if (!comment.linked_comment_id) {
-      allComments = this.replies[comment.id].map(comment => {
-        comment.is_deleted = true;
-        return comment;
-      });
-    }
-    comment.is_deleted = true;
-    allComments.push(comment);
-    console.log("allComments>>>>>", allComments);
+    // let allComments = [];
+    // if (!comment.linked_comment_id) {
+    //   allComments = this.replies[comment.id].map(comment => {
+    //     comment.is_deleted = true;
+    //     delete comment.__typename;
+    //     return comment;
+    //   });
+    // }
+    // delete comment.__typename;
+
+    // comment.is_deleted = true;
+    // allComments.push(comment);
+    // console.log("allComments>>>>>", allComments);
+    this.discussionsService.deleteCommentsFromDB(comment.id);
   }
 
   showMoreComments() {
@@ -1056,6 +1060,7 @@ export class ProblemDetailComponent implements OnInit, OnDestroy {
       ({ data }) => {
         $("#enrichModal").modal("hide");
         this.disableEnrichButton = false;
+        location.reload();
       },
       error => {
         console.log("Could delete due to " + error);
