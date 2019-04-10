@@ -139,8 +139,9 @@
                     </span>
                   </div>
                   <mat-form-field class="example-full-width has-label" [ngClass]="displayFieldCss(type, 'location')">
-                    <input type="text" name="beneficiary" matInput id="beneficiary" placeholder="Beneficiary attributes"
-                      formControlName="beneficiary" [(ngModel)]="content.beneficiary_attributes">
+                    <textarea type="text" name="beneficiary" matInput id="beneficiary"
+                      placeholder="Beneficiary attributes" formControlName="beneficiary"
+                      [(ngModel)]="content.beneficiary_attributes"></textarea>
                   </mat-form-field>
                 </div>
               </div>
@@ -155,8 +156,8 @@
                     </span>
                   </div>
                   <mat-form-field class="example-full-width has-label" [ngClass]="displayFieldCss(type, 'resources')">
-                    <input type="text" name="resources" matInput id="resources" placeholder="Resources Needed"
-                      formControlName="resources" [(ngModel)]="content.resources_needed">
+                    <textarea type="text" name="resources" matInput id="resources" placeholder="Resources Needed"
+                      formControlName="resources" [(ngModel)]="content.resources_needed"></textarea>
                   </mat-form-field>
                 </div>
               </div>
@@ -235,8 +236,8 @@
                     </span>
                   </div>
                   <mat-form-field class="example-full-width has-label" [ngClass]="displayFieldCss(type, 'impact')">
-                    <input type="text" name="impact" matInput id="impact" placeholder="Impact" formControlName="impact"
-                      [(ngModel)]="content.impact">
+                    <textarea type="text" name="impact" matInput id="impact" placeholder="Impact"
+                      formControlName="impact" [(ngModel)]="content.impact"></textarea>
                   </mat-form-field>
                 </div>
               </div>
@@ -251,8 +252,8 @@
                     </span>
                   </div>
                   <mat-form-field class="example-full-width has-label" [ngClass]="displayFieldCss(type, 'extent')">
-                    <input type="text" name="extent" matInput id="extent" placeholder="Extent" formControlName="extent"
-                      [(ngModel)]="content.extent">
+                    <textarea type="text" name="extent" matInput id="extent" placeholder="Extent"
+                      formControlName="extent" [(ngModel)]="content.extent"></textarea>
                   </mat-form-field>
                 </div>
               </div>
