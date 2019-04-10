@@ -41,7 +41,7 @@ export class EnrichmentFormComponent implements OnInit {
     private auth: AuthService,
     private enrichmentService: EnrichmentService,
     private apollo: Apollo
-  ) {}
+  ) { }
 
   ngOnInit() {
     // console.log(this.route.snapshot.paramMap.get("problemId"), "problemid");
@@ -137,6 +137,7 @@ export class EnrichmentFormComponent implements OnInit {
                             resources_needed
                             image_urls
                             video_urls
+                            attachments
                             impact
                             extent
                             min_population

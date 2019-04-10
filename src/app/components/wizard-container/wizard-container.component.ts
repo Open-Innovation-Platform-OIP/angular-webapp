@@ -662,7 +662,8 @@ export class WizardContainerComponent
     if (
       !this.content.image_urls.length &&
       !this.content.video_urls.length &&
-      !this.content.embed_urls.length
+      !this.content.embed_urls.length &&
+      !this.content.attachments
     ) {
       swal({
         title: "Are you sure you want to publish without adding media content",
