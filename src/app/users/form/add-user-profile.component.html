@@ -71,14 +71,16 @@
                   </label>
                   <div class="col-md-10 col-9">
                     <mat-form-field class="example-full-width">
-                      <input matInput type="number" name="phone_number" required [(ngModel)]="user.phone_number"
-                        #phone_number="ngModel" />
+                      <input matInput type="number" name="phone_number" min="10" required
+                        [(ngModel)]="user.phone_number" #phone_number="ngModel" />
                     </mat-form-field>
                     <div [hidden]="phone_number.valid || phone_number.pristine" class="text-danger error-msg">
                       Phone number is required
                     </div>
                   </div>
                 </div>
+
+                <br />
 
                 <div class="row">
                   <label class="col-md-2 col-2 col-form-label">Organization</label>
