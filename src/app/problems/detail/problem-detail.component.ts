@@ -253,6 +253,8 @@ export class ProblemDetailComponent implements OnInit, OnDestroy {
   startInterval() {
     this.interval = setInterval(() => {
       this.cdr.markForCheck();
+      console.log("timer is running");
+
     }, 1000);
   }
 
@@ -1120,6 +1122,7 @@ export class ProblemDetailComponent implements OnInit, OnDestroy {
     validationData.problem_id = this.problemData.id;
 
     this.validationService.submitValidationToDB(validationData);
+    this.startInterval();
   }
 
   deleteValidation(validationData) {
