@@ -376,6 +376,7 @@ export class AddUserProfileComponent implements OnInit, OnChanges {
             },
             error => {
               console.log("could not get user due to", error);
+              console.error(JSON.stringify(error));
             }
           );
       }

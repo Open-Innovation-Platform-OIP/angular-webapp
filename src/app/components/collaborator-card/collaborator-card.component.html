@@ -15,7 +15,10 @@
     <h6 class="card-category text-gray"></h6>
     <h4 class="card-title actions" *ngIf="collaboratorData.user && collaboratorData.user.name"
       [routerLink]="currentUser && '/users/' + collaboratorData.user_id">
-      {{ collaboratorData.user.name }}
+      <a>
+        {{ collaboratorData.user.name }}
+
+      </a>
     </h4>
     <p class="card-description">
       {{ collaboratorData.intent }}

@@ -68,6 +68,10 @@ pre {
     vertical-align: middle
 }
 
+.actions {
+    cursor: pointer;
+}
+
 .ql-mention-list-item.selected {
     background-color: #d3e1eb;
     text-decoration: none

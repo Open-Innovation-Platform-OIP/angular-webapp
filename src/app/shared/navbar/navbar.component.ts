@@ -224,6 +224,7 @@ export class NavbarComponent implements OnInit {
         },
         err => {
           console.log("could not get notifications", err);
+          console.error(JSON.stringify(err));
         }
       );
   }

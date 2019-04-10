@@ -471,19 +471,21 @@
 
       <div class="card-footer">
         <div class="mr-auto">
-          <input type="button" class="btn btn-previous btn-fill btn-default btn-wd disabled" name="previous"
-            value="Previous">
+          <input type="button" *ngIf="!content.is_draft && !content.title" class="btn" onclick="window.history.back()"
+            name="cancel" value="Cancel">
+          <!-- <input type="button" class="btn btn-previous btn-fill btn-default btn-wd disabled" name="previous"
+            value="Previous"> -->
         </div>
         <div class="ml-auto">
           <button *ngIf="content.is_draft && content.title" class="btn btn-danger" (click)="deleteClicked()">
             Delete
           </button>
-
+          <input type="button" class="btn btn-previous btn-fill btn-default btn-wd disabled" name="previous"
+            value="Previous">
           <input type="button" class="publish btn btn-fill btn-warning btn-wd" [disabled]="!isComplete()"
             (click)="publishContent()" value="Publish">
           <input type="button" class="btn btn-next btn-fill btn-warning btn-wd" [disabled]="!isComplete()" name="next"
             value="Next">
-
 
 
 

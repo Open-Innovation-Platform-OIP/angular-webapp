@@ -251,6 +251,7 @@ export class WizardComponent
                             is_draft
                             image_urls
                             video_urls
+                            attachments
                             impact
                             extent
                             min_population
@@ -272,7 +273,7 @@ export class WizardComponent
                         }
                         `,
             // pollInterval: 500
-            fetchPolicy: "network-only"
+            fetchPolicy: "no-cache"
           })
           .valueChanges.subscribe(result => {
             if (
@@ -1004,7 +1005,6 @@ export class WizardComponent
       })
       .subscribe(
         result => {
-          
           if (result.data.insert_problems.returning.length > 0) {
             this.problem["id"] = result.data.insert_problems.returning[0].id;
             const upsert_tags = gql`

@@ -17,7 +17,7 @@ export interface Comment {
   providedIn: "root"
 })
 export class DiscussionsService {
-  constructor(private apollo: Apollo, private auth: AuthService) { }
+  constructor(private apollo: Apollo, private auth: AuthService) {}
 
   submitCommentToDB(comment: Comment, mentions?) {
     if (!(comment.problem_id || comment.solution_id)) {
@@ -143,7 +143,44 @@ export class DiscussionsService {
       );
   }
 
-  deleteCommentsFromDB(comments: number[]) {
-
+  deleteCommentsFromDB(commentId) {
+    this.apollo
+      .mutate<any>({
+        mutation: gql`
+          mutation updateMutation(
+            $where: discussions_bool_exp!
+            $set: discussions_set_input!
+          ) {
+            update_discussions(where: $where, _set: $set) {
+              affected_rows
+              returning {
+                id
+              }
+            }
+          }
+        `,
+        variables: {
+          where: {
+            id: {
+              _eq: commentId
+            }
+          },
+          set: {
+            is_deleted: true
+          }
+        }
+      })
+      .subscribe(
+        result => {
+          console.log(result, "delete worked");
+          location.reload();
+          // if (result.data.insert_discussions.returning.length > 0) {
+          //   console.log(result.data.insert_discussions);
+          // }
+        },
+        err => {
+          console.error(JSON.stringify(err));
+        }
+      );
   }
 }
