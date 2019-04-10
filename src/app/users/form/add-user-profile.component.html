@@ -15,24 +15,34 @@
                   <label class="col-md-2 col-2 col-form-label">Photo</label>
                   <div class="col-md-3 col-sm-4">
                     <div class="fileinput fileinput-new text-center" data-provides="fileinput">
-                      <div class="fileinput-new thumbnail img-circle">
+                      <div class="fileinput-new thumbnail profile_photo_div">
                         <img src="{{
                             user.photo_url && user.photo_url.url
                               ? user.photo_url.url
                               : './assets/img/placeholder.jpg'
                           }}" alt="..." />
                       </div>
-                      <div class="fileinput-preview fileinput-exists thumbnail img-circle"></div>
+                      <!-- <div class="photo_div"> -->
+                      <div class="fileinput-preview fileinput-exists thumbnail profile_photo_div ">
+                      </div>
+                      <!-- </div> -->
                       <div>
-                        <label class="btn btn-round btn-rose btn-file">
+                        <label class="btn btn-round btn-sm btn-rose btn-file">
                           <span *ngIf="!objectKeys(user.photo_url).length" class="fileinput-new">Add Photo</span>
                           <span *ngIf="objectKeys(user.photo_url).length" class="fileinput-new">update Photo</span>
                           <span class="fileinput-exists">Change</span>
                           <input type="file" name="..." (change)="getBlob($event)" accept="image/*" />
                         </label>
-                        <br />
-                        <a href="#pablo" class="btn btn-danger btn-round fileinput-exists" data-dismiss="fileinput"><i
-                            class="fa fa-times"></i> Remove</a>
+                        <button *ngIf="objectKeys(user.photo_url).length"
+                          class="btn btn-sm btn-danger btn-round fileinput-new" (click)="user.photo_url = {}">
+                          <i class="material-icons">
+                            delete_outline
+                          </i>
+                          Remove
+                        </button>
+                        <!-- <br /> -->
+                        <a href="#pablo" class="btn btn-sm btn-danger btn-round fileinput-exists"
+                          data-dismiss="fileinput"><i class="fa fa-times"></i> cancel</a>
                       </div>
                     </div>
                   </div>
