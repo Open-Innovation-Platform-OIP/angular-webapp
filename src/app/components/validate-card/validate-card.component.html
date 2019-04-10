@@ -28,7 +28,7 @@
     </div> -->
   <div class="card-body">
     <strong>Comment</strong>
-    <p class="description" *ngIf="validationData.comment">{{validationData.comment}}</p>
+    <p class="description" *ngIf="validationData.comment" style="white-space: pre-wrap;">{{validationData.comment}}</p>
     <strong>Status</strong>
     <p class="description">{{(validationData.agree)?"Agree":"Disagree"}}
       <i class="material-icons" [ngStyle]="{'color': validationData.agree ? 'green' : 'orangered'}"

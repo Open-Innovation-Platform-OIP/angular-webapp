@@ -32,7 +32,7 @@
               </div>
               <div class="col-md-8">
                 <strong *ngIf="problemData.description">Description</strong>
-                <p class="description">{{problemData.description}}</p>
+                <p class="description" style="white-space: pre-wrap;">{{problemData.description}}</p>
 
                 <strong *ngIf="problemData.organization">Organization</strong>
                 <p class="description">{{problemData.organization}}</p>
@@ -44,10 +44,10 @@
                   {{problemData.min_population}}</p>
 
                 <strong *ngIf="problemData.beneficiary_attributes">Beneficiary Attributes</strong>
-                <p class="description">{{problemData.beneficiary_attributes}}</p>
+                <p class="description" style="white-space: pre-wrap;">{{problemData.beneficiary_attributes}}</p>
 
                 <strong *ngIf="problemData.resources_needed">Resources Needed</strong>
-                <p class="description">{{problemData.resources_needed}}</p>
+                <p class="description" style="white-space: pre-wrap;">{{problemData.resources_needed}}</p>
 
                 <strong *ngIf="tags.length">Sectors</strong>
                 <div>
@@ -56,10 +56,10 @@
                 </div>
 
                 <strong *ngIf="problemData.impact">Impact</strong>
-                <p class="description">{{problemData.impact}}</p>
+                <p class="description" style="white-space: pre-wrap;">{{problemData.impact}}</p>
 
                 <strong *ngIf="problemData.extent">Extent</strong>
-                <p class="description">{{problemData.extent}}</p>
+                <p class="description" style="white-space: pre-wrap;">{{problemData.extent}}</p>
 
                 <strong>Location(s)</strong>
                 <div *ngIf="problemData.location.length">
