@@ -1,3 +1,9 @@
+.description {
+    max-lines: 2;
+    max-height: 5.5em;
+    overflow: hidden;
+}
+
 .downloadBtn:hover {
     background-color: #e99b54;
     color: white;
