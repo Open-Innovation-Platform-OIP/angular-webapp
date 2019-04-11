@@ -1,31 +1,6 @@
-<!-- <div class="card card-product" (click)="cardClicked()" *ngIf="validationData">
-  
-  <div class="card-body">
-    <div class="row">
-      <label class="col-6">Comment</label>
-      <div class="col-6">
-        {{validationData.comment}}
-      </div>
-    </div>
-    <div class="row">
-      <label class="col-6">Status</label>
-      <div class="col-6">
-        {{(validationData.agree)?"Agree":"Disagree"}}
-      </div>
-    </div>
-    
-  </div>
-
-</div> -->
-
 <!--REWRITE-->
 
 <div class="card card-product validate-card" (click)="cardClicked()" *ngIf="validationData">
-  <!-- <div class="card-header card-header-warning card-header-text">
-      <div class="card-text">
-        <h4 class="card-title">Validation Details</h4>
-      </div>
-    </div> -->
   <div class="card-body">
     <strong>Comment</strong>
     <p class="description" *ngIf="validationData.comment" style="white-space: pre-wrap;">{{validationData.comment}}</p>
@@ -40,12 +15,8 @@
     </p>
 
     <strong *ngIf="validationData && validationData.files && validationData.files.length">Attachment</strong>
-    <!-- <p class="description" *ngIf="validationData.files&&validationData.files[0]&&validationData.files[0].key">
-      {{(validationData.files
-      && validationData.files[0]) ? validationData.files[0].key : null}} -->
     <p class="description" *ngIf="validationData && validationData.files && validationData.files.length > 0">
       {{validationData.files.length}} File(s)</p>
-    <!-- </p> -->
   </div>
   <div class="card-footer">
     <p *ngIf="validationData&&validationData.user">Validated by : {{validationData.user.name}}</p>
