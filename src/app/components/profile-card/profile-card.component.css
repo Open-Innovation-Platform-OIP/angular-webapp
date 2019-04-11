@@ -1,3 +1,7 @@
 .actions {
     cursor: pointer;
 }
+
+.profile-card {
+    height: 22em;
+}
