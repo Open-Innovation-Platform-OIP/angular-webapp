@@ -21,6 +21,7 @@ import { map, startWith } from "rxjs/operators";
 import { Observable } from "rxjs";
 import { GeocoderService } from "../../services/geocoder.service";
 import swal from "sweetalert2";
+var Buffer = require('buffer/').Buffer
 
 import {
   FormControl,
@@ -793,18 +794,83 @@ export class WizardContainerComponent
 
   // function trigger the multipart upload for more than 5MB
   onFileSelectedForBiggerFiles(event) {
-    const file = event.target.files[0];
-    if (typeof FileReader !== "undefined") {
-      const reader = new FileReader();
+    for (let i = 0; i < event.target.files.length; i++) {
+      const file = event.target.files[i];
+      const type = event.target.files[i].type;
 
-      reader.onload = (e: any) => {
+      if (typeof FileReader !== "undefined") {
+        const reader = new FileReader();
+
+        reader.onload = (e: any) => {
+          let buffer = Buffer.from(e.target.result);
+          this.manageUploads(type, file.name, buffer);
+
+          /* this.filesService
+            .multiPartUpload(buffer, file.name)
+            .then(data => {
+              console.log(">>>>>data: ", data);
+            }); */
+        };
+        reader.readAsArrayBuffer(file);
+      }
+    }
+  }
+
+  manageUploads(type, name, file) {
+    let startWith = type.split("/")[0];
+    switch (startWith) {
+      case 'image':
         this.filesService
-          .multiPartUpload(e.target.result, file.name)
-          .then(data => {
-            console.log(">>>>>data: ", data);
-          });
-      };
-      reader.readAsBinaryString(file);
+          .multiPartUpload(file, name)
+          .then(values => {
+            // console.log(">>>>>data: ", data);
+            this.content.image_urls.push({
+              url: values["Location"],
+              mimeType: type,
+              key: values["Key"]
+            });
+            if (!this.content.featured_url) {
+              this.content.featured_url = this.content.image_urls[0].url;
+              this.content.featured_type = "image";
+            }
+          })
+          .catch(err => console.log("Image Err: ", err))
+
+        break;
+
+      case 'video':
+        this.filesService
+          .multiPartUpload(file, name)
+          .then(values => {
+            // console.log(">>>>>data: ", data);
+            this.content.image_urls.push({
+              url: values["Location"],
+              mimeType: type,
+              key: values["Key"]
+            });
+          })
+          .catch(err => console.log("Video Err: ", err))
+        break;
+
+      case 'application':
+      case 'text':
+        this.filesService
+          .multiPartUpload(file, name)
+          .then(values => {
+            // console.log(">>>>>data: ", data);
+            this.content.image_urls.push({
+              url: values["Location"],
+              mimeType: type,
+              key: values["Key"]
+            });
+          })
+          .catch(err => console.log("Docs Err: ", err))
+        break;
+
+      default:
+        console.log("unknown file type");
+        alert("Unknown file type.");
+        break;
     }
   }
 
