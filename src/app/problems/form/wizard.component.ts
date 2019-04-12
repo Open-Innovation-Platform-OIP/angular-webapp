@@ -379,7 +379,7 @@ export class WizardComponent
                   }
                 });
 
-                console.log(this.owners, "owners from db");
+                // console.log(this.owners, "owners from db");
               }
 
               this.is_edit = true;
