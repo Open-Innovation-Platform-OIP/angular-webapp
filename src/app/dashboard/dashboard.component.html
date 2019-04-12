@@ -4,7 +4,7 @@
         <h3 *ngIf="drafts.length" class="card-title text-center">You are working on these drafts</h3>
         <br />
         <div class="row">
-            <div class="col-md-4" *ngFor="let problem of drafts">
+            <div class="col-md-3" *ngFor="let problem of drafts">
                 <app-problem-card [problemData]="problem"></app-problem-card>
             </div>
         </div>
@@ -12,7 +12,7 @@
         </h3>
         <br />
         <div class="row">
-            <div class="col-md-4" *ngFor="let problem of objectValues(contributions)">
+            <div class="col-md-3" *ngFor="let problem of objectValues(contributions)">
                 <app-problem-card [problemData]="problem"></app-problem-card>
             </div>
         </div>
@@ -20,7 +20,7 @@
             interested in</h3>
         <br />
         <div class="row">
-            <div class="col-md-4" *ngFor="let problem of objectValues(recommendedProblems)">
+            <div class="col-md-3" *ngFor="let problem of objectValues(recommendedProblems)">
                 <app-problem-card [problemData]="problem"></app-problem-card>
             </div>
         </div>
@@ -28,7 +28,7 @@
         </h3>
         <br />
         <div class="row">
-            <div class="col-md-4" *ngFor="let user of objectValues(recommendedUsers)">
+            <div class="col-md-3" *ngFor="let user of objectValues(recommendedUsers)">
                 <app-profile-card [userData]="user"></app-profile-card>
             </div>
         </div>

@@ -8,14 +8,14 @@
         <h3 *ngIf="userProblems.length" class="card-title text-center">Problems added by you</h3>
         <br />
         <div class="row">
-            <div class="col-md-4" *ngFor="let problem of userProblems">
+            <div class="col-md-3" *ngFor="let problem of userProblems">
                 <app-problem-card [problemData]="problem"></app-problem-card>
             </div>
         </div>
         <h3 *ngIf="problems.length" class="card-title text-center">Problems added by other users</h3>
         <br />
         <div class="row">
-            <div class="col-md-4" *ngFor="let problem of problems">
+            <div class="col-md-3" *ngFor="let problem of problems">
                 <app-problem-card [problemData]="problem"></app-problem-card>
             </div>
         </div>
