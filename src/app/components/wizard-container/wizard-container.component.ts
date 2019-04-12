@@ -158,11 +158,7 @@ export class WizardContainerComponent
 
     this.filteredOwners = this.ownersCtrl.valueChanges.pipe(
       startWith(null),
-      map((owner: string | null) =>
-        owner
-          ? this.filterOwners(owner)
-          : Object.keys(this.usersService.allUsers).slice()
-      )
+      map((owner: string | null) => (owner ? this.filterOwners(owner) : []))
     );
 
     this.type = this.formBuilder.group({

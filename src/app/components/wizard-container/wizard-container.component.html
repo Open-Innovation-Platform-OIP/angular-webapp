@@ -325,16 +325,12 @@
                 <div class="input-group form-control-lg">
                   <div class="input-group-prepend">
                     <span class="input-group-text">
-                      <i class="material-icons" [ngStyle]="{
-                                  color: !localSectors.length
-                                    ? 'red'
-                                    : '#AAAAAA'
-                                }">label</i>
+                      <i class="material-icons">supervisor_account</i>
                     </span>
                   </div>
 
                   <mat-form-field class="example-chip-list">
-                    <input placeholder="Owners" #ownerInput [formControl]="ownersCtrl" [matAutocomplete]="owner"
+                    <input placeholder="Co-Owners" #ownerInput [formControl]="ownersCtrl" [matAutocomplete]="owner"
                       [matChipInputFor]="chipList" [matChipInputSeparatorKeyCodes]="separatorKeysCodes"
                       [matChipInputAddOnBlur]="addOnBlur" (matChipInputTokenEnd)="addOwner($event)">
                     <mat-chip-list #chipList>
