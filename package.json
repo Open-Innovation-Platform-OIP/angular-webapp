@@ -50,6 +50,7 @@
     "bootstrap-rtl": "3.3.4",
     "bootstrap-select": "1.12.4",
     "bootstrap-tagsinput": "0.7.1",
+    "buffer": "^5.2.1",
     "chartist": "0.9.8",
     "chartist-plugin-zoom": "0.4.1",
     "core-js": "2.4.1",
