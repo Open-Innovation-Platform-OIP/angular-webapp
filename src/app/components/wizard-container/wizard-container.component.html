@@ -366,8 +366,8 @@
                   <div class="card-footer">
                     <div class="price">
                       <button mat-raised-button type="button" class="btn btn-default btn-link"
-                        matTooltip="Click to make this as the featured image of your problem"
-                        [matTooltipPosition]="'below'" (click)="setFeatured('image',i)">
+                        matTooltip="Select icon to set as featured image" [matTooltipPosition]="'below'"
+                        (click)="setFeatured('image',i)">
                         <i *ngIf="imgSrc.url !== content.featured_url" class="material-icons">turned_in_not</i>
                         <i *ngIf="imgSrc.url === content.featured_url" class="material-icons">turned_in</i>
                       </button>

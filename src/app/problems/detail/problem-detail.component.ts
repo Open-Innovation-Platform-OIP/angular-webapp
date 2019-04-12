@@ -769,21 +769,30 @@ export class ProblemDetailComponent implements OnInit, OnDestroy {
   }
 
   deleteComment(comment) {
-    console.log(comment, "comment on delete comment");
-    // let allComments = [];
-    // if (!comment.linked_comment_id) {
-    //   allComments = this.replies[comment.id].map(comment => {
-    //     comment.is_deleted = true;
-    //     delete comment.__typename;
-    //     return comment;
-    //   });
-    // }
-    // delete comment.__typename;
-
-    // comment.is_deleted = true;
-    // allComments.push(comment);
-    // console.log("allComments>>>>>", allComments);
-    this.discussionsService.deleteCommentsFromDB(comment.id);
+    let deleteResp = this.discussionsService.deleteCommentsFromDB(comment.id);
+    deleteResp.subscribe(
+      result => {
+        console.log(result, "delete worked");
+        // location.reload();
+        if (this.comments.hasOwnProperty(comment.id) && !this.comments[comment.id].linked_comment_id) {
+          delete (this.comments[comment.id]);
+        } else if (this.replies.hasOwnProperty(comment.linked_comment_id)) {
+          this.replies[comment.linked_comment_id].forEach((reply, index) => {
+            if (reply.linked_comment_id === comment.linked_comment_id) {
+              if (index < 1) {
+                this.replies[comment.linked_comment_id] = [];
+              } else {
+                this.replies[comment.linked_comment_id].splice(0, index);
+              }
+              return;
+            }
+          })
+        }
+      },
+      err => {
+        console.error(JSON.stringify(err));
+      }
+    );
   }
 
   showMoreComments() {
