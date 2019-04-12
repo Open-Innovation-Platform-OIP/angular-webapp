@@ -173,7 +173,7 @@ export class DiscussionsService {
       .subscribe(
         result => {
           console.log(result, "delete worked");
-          location.reload();
+          // location.reload();
           // if (result.data.insert_discussions.returning.length > 0) {
           //   console.log(result.data.insert_discussions);
           // }

@@ -364,13 +364,22 @@ export class WizardComponent
               }
               if (result.data.problems[0].problem_owners) {
                 // this.owners = result.data.problems[0].problem_owners;
-                this.owners = result.data.problems[0].problem_owners.map(
-                  ownerArray => {
-                    return ownerArray.user;
-                  }
-                );
+                result.data.problems[0].problem_owners.forEach(ownerArray => {
+                  if (
+                    ownerArray.user.id != Number(this.auth.currentUserValue.id)
+                  ) {
+                    this.owners.push(ownerArray.user);
+                    // console.log(
+                    //   ownerArray.user.id,
+                    //   "owner array",
+                    //   Number(this.auth.currentUserValue.id)
+                    // );
 
-                // console.log(this.sectors, "sectors from db");
+                    // return ownerArray.user;
+                  }
+                });
+
+                console.log(this.owners, "owners from db");
               }
 
               this.is_edit = true;

@@ -30,12 +30,15 @@ export class ViewEnrichmentComponent implements OnInit, OnChanges {
   index = 0;
   videoStatus = false;
   modalSrc: String;
+  userId: any;
+  voters: any;
 
   constructor(
     private problemService: ProblemService,
     private auth: AuthService
   ) {
     console.log("aswewrwe");
+    this.enrichmentVoted = false;
   }
 
   ngOnInit() {
@@ -55,7 +58,7 @@ export class ViewEnrichmentComponent implements OnInit, OnChanges {
     // adding embedded links
   }
   ngOnChanges() {
-    console.log("ng on change");
+    console.log("ng on change", this.enrichmentVoted);
     let embedded_url_arr = this.enrichmentData.embed_urls.map(url => {
       return { url: url };
     });
@@ -73,6 +76,11 @@ export class ViewEnrichmentComponent implements OnInit, OnChanges {
       console.log(this.enrichmentData.voted_by, "enrich voted by");
       this.enrichmentData.voted_by.forEach(userId => {
         if (Number(userId) === Number(this.auth.currentUserValue.id)) {
+          console.log(
+            Number(userId),
+            "voted by array",
+            Number(this.auth.currentUserValue.id)
+          );
           this.enrichmentVoted = true;
         }
       });
@@ -123,6 +131,77 @@ export class ViewEnrichmentComponent implements OnInit, OnChanges {
       }
     }
   }
+
+  // toggleVoteProblem() {
+  //   // console.log('toggling watch flag');
+  //   if (!(this.userId == this.enrichmentData.created_by)) {
+  //     if (!this.voters.has(this.userId)) {
+  //       // user is not currently watching this problem
+  //       // let's add them
+  //       this.voters.add(this.userId);
+  //       const add_voter = gql`
+  //       mutation insert_problem_voter {
+  //         insert_problem_voters(
+  //           objects: [
+  //             {
+  //               user_id: ${Number(this.userId)},
+  //               problem_id: ${Number(this.problemData.id)},
+  //             }
+  //           ]
+  //         ) {
+  //           returning {
+  //             user_id
+  //             problem_id
+  //           }
+  //         }
+  //       }
+  //     `;
+  //       this.apollo
+  //         .mutate({
+  //           mutation: add_voter
+  //         })
+  //         .subscribe(
+  //           result => {
+  //             if (result.data) {
+  //               // console.log(result.data);
+  //             }
+  //           },
+  //           err => {
+  //             console.error(JSON.stringify(err));
+  //           }
+  //         );
+  //     } else {
+  //       // user is currently not watching this problem
+  //       // let's remove them
+  //       this.voters.delete(this.userId);
+  //       const delete_voter = gql`
+  //       mutation delete_problem_voter {
+  //         delete_problem_voters(
+  //           where: {user_id: {_eq: ${Number(
+  //             this.userId
+  //           )}}, problem_id: {_eq: ${Number(this.problemData.id)}}}
+  //         ) {
+  //           affected_rows
+  //         }
+  //       }
+  //     `;
+  //       this.apollo
+  //         .mutate({
+  //           mutation: delete_voter
+  //         })
+  //         .subscribe(
+  //           result => {
+  //             if (result.data) {
+  //               // console.log(result.data);
+  //             }
+  //           },
+  //           err => {
+  //             console.error(JSON.stringify(err));
+  //           }
+  //         );
+  //     }
+  //   }
+  // }
 
   toggleViewForImgNView() {
     this.showModal = true;
