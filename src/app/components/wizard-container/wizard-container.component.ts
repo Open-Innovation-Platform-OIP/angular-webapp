@@ -290,7 +290,7 @@ export class WizardContainerComponent
   }
 
   private filterOwners(value: String): any[] {
-    if (value) {
+    if (typeof value === "string") {
       console.log(value, "value in filtered owners");
       const filterValue = value.toLowerCase();
       console.log(filterValue, "value from filter");
