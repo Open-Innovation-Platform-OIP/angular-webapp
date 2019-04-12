@@ -8,14 +8,15 @@
 
         <app-wizard-container *ngIf="is_edit" [content]="problem" (smartSearchInput)="smartSearch($event)"
           (fieldsPopulated)="updateProblem($event)" (tagAdded)="addTags($event)" (tagRemoved)="remove($event)"
-          (contentSubmitted)="publishProblem(problem)" (deleteDraft)="deleteDraft($event)" [sectors]="sectors"
+          (contentSubmitted)="publishProblem(problem)" [owners]="owners" (deleteDraft)="deleteDraft($event)"
+          (addedOwners)="addOwners($event)" (removedOwners)="removeOwners($event)" [sectors]="sectors"
           [contentType]="'problem'">
         </app-wizard-container>
 
-        <app-wizard-container *ngIf="!is_edit" [content]="problem" (deleteDraft)="deleteDraft($event)"
+        <app-wizard-container *ngIf="!is_edit" [owners]="owners" [content]="problem" (deleteDraft)="deleteDraft($event)"
           (smartSearchInput)="smartSearch($event)" (fieldsPopulated)="updateProblem($event)"
-          (tagAdded)="addTags($event)" (tagRemoved)="remove($event)" (contentSubmitted)="publishProblem(problem)"
-          [contentType]="'problem'">
+          (tagAdded)="addTags($event)" (addedOwners)="addOwners($event)" (removedOwners)="removeOwners($event)"
+          (tagRemoved)="remove($event)" (contentSubmitted)="publishProblem(problem)" [contentType]="'problem'">
         </app-wizard-container>
 
 

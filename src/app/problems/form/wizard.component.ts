@@ -81,11 +81,12 @@ export class WizardComponent
   selectable = true;
   removable = true;
   addOnBlur = true;
+  owners: any[] = [];
   readonly separatorKeysCodes: number[] = [ENTER, COMMA];
   is_edit = false;
   media_url = "";
   // canProceed: Boolean;
-  owners = [];
+  // owners = [];
   voted_by = [];
   watched_by = [];
   problem = {
@@ -198,6 +199,57 @@ export class WizardComponent
     }
   }
 
+  addOwners(event) {
+    // event = this.removeDuplicates(event);
+    this.owners = event;
+  }
+
+  removeOwners(owner) {
+    const index = this.owners.indexOf(owner);
+    if (index >= 0) {
+      this.owners.splice(index, 1);
+    }
+    console.log(this.owners, "removed from wizard");
+    if (this.problem["id"]) {
+      this.apollo
+        .mutate<any>({
+          mutation: gql`
+            mutation DeleteMutation($where: problem_owners_bool_exp!) {
+              delete_problem_owners(where: $where) {
+                affected_rows
+                returning {
+                  user_id
+                }
+              }
+            }
+          `,
+          variables: {
+            where: {
+              user_id: {
+                _eq: owner.id
+              },
+              problem_id: {
+                _eq: this.problem["id"]
+              }
+            }
+          }
+        })
+        .subscribe(
+          ({ data }) => {
+            console.log("worked", data);
+            // location.reload();
+            // location.reload();
+            // this.router.navigateByUrl("/problems");
+
+            return;
+          },
+          error => {
+            console.log("Could not delete due to " + error);
+          }
+        );
+    }
+  }
+
   selected(event: MatAutocompleteSelectedEvent): void {
     this.sectors.push(event.option.viewValue);
     this.sectorInput.nativeElement.value = "";
@@ -261,6 +313,14 @@ export class WizardComponent
                             organization
                             featured_url
                             featured_type
+                            problem_owners{
+                              user{
+                                id
+                                name
+
+                              }
+                             
+                            }
                            
                           
                             problem_tags{
@@ -272,10 +332,11 @@ export class WizardComponent
                             }
                         }
                         `,
-            // pollInterval: 500
-            fetchPolicy: "no-cache"
+            // pollInterval: 500,
+            fetchPolicy: "network-only"
           })
           .valueChanges.subscribe(result => {
+            // console.log(result, "pppp>>>>>>>>");
             if (
               result.data.problems.length >= 1 &&
               result.data.problems[0].id
@@ -299,7 +360,17 @@ export class WizardComponent
                     return tagArray.tag.name;
                   }
                 );
-                console.log(this.sectors, "sectors from db");
+                // console.log(this.sectors, "sectors from db");
+              }
+              if (result.data.problems[0].problem_owners) {
+                // this.owners = result.data.problems[0].problem_owners;
+                this.owners = result.data.problems[0].problem_owners.map(
+                  ownerArray => {
+                    return ownerArray.user;
+                  }
+                );
+
+                // console.log(this.sectors, "sectors from db");
               }
 
               this.is_edit = true;
@@ -819,6 +890,7 @@ export class WizardComponent
                             name
                         }
                     }
+                   
                     problem_validations{
                       comment
                       agree
@@ -981,15 +1053,6 @@ export class WizardComponent
         }
       }
     `;
-    // this.problem.owners = JSON.stringify(this.owners)
-    //   .replace("[", "{")
-    //   .replace("]", "}");
-    // this.problem.voted_by = JSON.stringify(this.voted_by)
-    //   .replace("[", "{")
-    //   .replace("]", "}");
-    // this.problem.watched_by = JSON.stringify(this.watched_by)
-    //   .replace("[", "{")
-    //   .replace("]", "}");
 
     console.log(this.sectors, "sectors before removing duplicates");
 
@@ -1021,6 +1084,8 @@ export class WizardComponent
                 }
               }
             `;
+
+            this.saveOwnersInDB(this.problem["id"], this.owners);
 
             const tags = [];
 
@@ -1110,6 +1175,47 @@ export class WizardComponent
       );
   }
 
+  saveOwnersInDB(problemId, ownersArray) {
+    let owners = [];
+    owners = ownersArray.map(owner => {
+      return {
+        user_id: owner.id,
+        problem_id: problemId
+      };
+    });
+    const upsert_problem_owners = gql`
+      mutation upsert_problem_owners(
+        $problem_owners: [problem_owners_insert_input!]!
+      ) {
+        insert_problem_owners(
+          objects: $problem_owners
+          on_conflict: { constraint: problem_owners_pkey, update_columns: [] }
+        ) {
+          affected_rows
+          returning {
+            user_id
+            problem_id
+          }
+        }
+      }
+    `;
+    console.log(owners, "owners added");
+    this.apollo
+      .mutate({
+        mutation: upsert_problem_owners,
+        variables: {
+          problem_owners: owners
+        }
+      })
+      .subscribe(
+        data => {
+          console.log("owner adddition worked");
+        },
+        error => {
+          console.error(JSON.stringify(error));
+        }
+      );
+  }
   confirmSubmission() {
     // if (this.is_edit && !this.problem.is_draft) {
     //   console.log(this.is_edit, this.problem.is_draft, "alert");

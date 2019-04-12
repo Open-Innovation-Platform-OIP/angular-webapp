@@ -26,6 +26,7 @@ export class CommentDisplayComponent implements OnInit {
   @Output() fileClicked = new EventEmitter();
   @Output() commentToDelete = new EventEmitter();
   @Output() shareCommentId = new EventEmitter();
+
   userId: Number;
   voters = new Set();
 

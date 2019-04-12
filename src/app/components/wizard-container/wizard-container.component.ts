@@ -79,6 +79,7 @@ export class WizardContainerComponent
 
   @Input() sectors: string[] = [];
   @Input() contentType: any;
+  @Input() owners: any[] = [];
   // @Input() canProceed: any = true;
   @Output() fieldsPopulated = new EventEmitter();
   @Output() smartSearchInput = new EventEmitter();
@@ -86,6 +87,8 @@ export class WizardContainerComponent
   @Output() tagRemoved = new EventEmitter();
   @Output() contentSubmitted = new EventEmitter();
   @Output() deleteDraft = new EventEmitter();
+  @Output() addedOwners = new EventEmitter();
+  @Output() removedOwners = new EventEmitter();
 
   file_types = [
     "application/msword",
@@ -115,7 +118,8 @@ export class WizardContainerComponent
   ownersCtrl = new FormControl();
   locationCtrl = new FormControl();
   filteredSectors: Observable<string[]>;
-  filteredOwners:Observable<string[]>;
+  filteredOwners: Observable<any[]>;
+  // owners: any[] = [];
   // sectors: string[] = [];
   tags = [];
   removable = true;
@@ -130,6 +134,7 @@ export class WizardContainerComponent
 
   @ViewChild("sectorInput") sectorInput: ElementRef<HTMLInputElement>;
   @ViewChild("locationInput") locationInput: ElementRef<HTMLInputElement>;
+  @ViewChild("ownerInput") ownerInput: ElementRef<HTMLInputElement>;
 
   @ViewChild("auto") matAutocomplete: MatAutocomplete;
   constructor(
@@ -155,8 +160,8 @@ export class WizardContainerComponent
       startWith(null),
       map((owner: string | null) =>
         owner
-          ? this._filter(owner)
-          : Object.keys(this.tagService.allTags).slice()
+          ? this.filterOwners(owner)
+          : Object.keys(this.usersService.allUsers).slice()
       )
     );
 
@@ -200,7 +205,6 @@ export class WizardContainerComponent
 
     this.locationInput.nativeElement.value = "";
     this.locationCtrl.setValue(null);
-    // this.tagAdded.emit(this.sectors);
   }
 
   addLocation(event) {
@@ -280,11 +284,56 @@ export class WizardContainerComponent
   private _filter(value: string): string[] {
     const filterValue = value.toLowerCase();
 
-    return Object.keys(this.usersService.allUsers).filter(
-      owner => owner.name.toLowerCase()
+    return Object.keys(this.tagService.allTags).filter(
+      sector => sector.toLowerCase().indexOf(filterValue) === 0
     );
   }
-  // private ownerFilter(value:string):string)
+
+  private filterOwners(value: String): any[] {
+    if (value) {
+      console.log(value, "value in filtered owners");
+      const filterValue = value.toLowerCase();
+      console.log(filterValue, "value from filter");
+
+      return Object.values(this.usersService.allUsers).filter(owner => {
+        // console.log(owner, "owner");
+        if (owner["value"].toLowerCase().indexOf(filterValue) === 0) {
+          console.log(owner, "owner", filterValue);
+          return owner;
+        }
+        // owner.name.indexOf(filterValue) === 0
+      });
+    }
+  }
+
+  selectedOwner(event: MatAutocompleteSelectedEvent): void {
+    console.log(event.option, "event value");
+    this.owners.push(event.option.value);
+    this.ownerInput.nativeElement.value = "";
+    this.ownersCtrl.setValue(null);
+    this.addedOwners.emit(this.owners);
+  }
+
+  removeOwner(owner) {
+    console.log(owner, "remove");
+    const index = this.owners.indexOf(owner);
+    if (index >= 0) {
+      this.owners.splice(index, 1);
+      this.removedOwners.emit(owner);
+    }
+    console.log(this.owners, "removed in container");
+  }
+  // private ownerFilter(value: string): string[] {
+  //   const filterValue = value.toLowerCase();
+
+  //   return Object.keys(this.usersService.allUsers).map(owner =>
+  //     this.usersService.allUsers[owner].name.toLowerCase()
+  //   );
+  // }
+
+  addOwner(event) {
+    console.log(event, "event");
+  }
 
   displayFieldCss(form: FormGroup, field: string) {
     return {
@@ -688,6 +737,7 @@ export class WizardContainerComponent
         buttonsStyling: false
       }).then(result => {
         if (result.value) {
+          // this.submitOwners.emit(this.owners);
           this.contentSubmitted.emit(this.content);
 
           // swal({

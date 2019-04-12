@@ -310,6 +310,59 @@
             </div>
 
 
+            <!--new change-->
+
+
+            <div class="row justify-content-center" *ngIf="contentType==='problem'">
+              <!-- <div class="col-sm-12">
+                      <div class="input-group form-control-lg">
+                        <div class="input-group-prepend">
+                          <span class="input-group-text">
+                            <i class="material-icons">label</i>
+                          </span>
+                        </div> -->
+              <div class="col-sm-12">
+                <div class="input-group form-control-lg">
+                  <div class="input-group-prepend">
+                    <span class="input-group-text">
+                      <i class="material-icons" [ngStyle]="{
+                                  color: !localSectors.length
+                                    ? 'red'
+                                    : '#AAAAAA'
+                                }">label</i>
+                    </span>
+                  </div>
+
+                  <mat-form-field class="example-chip-list">
+                    <input placeholder="Owners" #ownerInput [formControl]="ownersCtrl" [matAutocomplete]="owner"
+                      [matChipInputFor]="chipList" [matChipInputSeparatorKeyCodes]="separatorKeysCodes"
+                      [matChipInputAddOnBlur]="addOnBlur" (matChipInputTokenEnd)="addOwner($event)">
+                    <mat-chip-list #chipList>
+                    </mat-chip-list>
+                    <mat-autocomplete #owner="matAutocomplete" (optionSelected)="selectedOwner($event)">
+                      <mat-option *ngFor="let owner of filteredOwners | async" [value]="owner">
+                        {{owner.value}}
+                      </mat-option>
+                    </mat-autocomplete>
+                  </mat-form-field>
+
+                </div>
+              </div>
+            </div>
+            <div class="row justify-content-center">
+              <div class="col-sm-10">
+
+                <mat-chip *ngFor="let owner of owners" [selectable]="selectable" [removable]="removable"
+                  (removed)="removeOwner(owner)" style="margin-right:0.3em; margin-bottom: 0.4em;">
+                  {{owner.value||owner.name}}
+                  <mat-icon matChipRemove *ngIf="removable">cancel</mat-icon>
+                </mat-chip>
+
+              </div>
+            </div>
+
+
+
 
 
 
