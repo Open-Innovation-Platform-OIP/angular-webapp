@@ -69,21 +69,19 @@
         </i>
       </p>
 
-      <!-- <button class="btn btn-link btn-sm" matTooltip="upvote"
-        [ngStyle]="{'color':enrichmentVoted? '#ff9800' : 'black' }">
-        <i class="material-icons">
-          thumb_up
-        </i>
-        <span>&nbsp;&nbsp;{{2}}</span>
-      </button> -->
-      <i class="material-icons actions" (click)="toggleVoteDiscussions()"
-        [ngStyle]="{'color':voters.has(userId) ? '#1E90FF' : 'black' }">
-        thumb_up
-      </i>
-      <span>{{voters.size}}</span>
+      <span>
+        <button class="btn btn-warning btn-link" matTooltip="upvote" (click)="toggleVoteDiscussions()"
+          [ngStyle]="{'color':voters.has(userId) ? '#1E90FF' : 'black' }" style="padding: 0 7px;">
+          <i class="material-icons actions">
+            thumb_up
+          </i>
+          <span>&nbsp;{{voters.size}}</span>
+        </button>
+      </span>
+
       <span class="dropdown">
-        <button class="btn btn-warning btn-link" type="button" id="discussion_share_btn" data-toggle="dropdown"
-          aria-haspopup="true" aria-expanded="false">
+        <button class="btn btn-warning btn-link" matTooltip="share" type="button" id="discussion_share_btn"
+          data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" style="padding: 0 5px;">
           <i class="material-icons actions">
             share
           </i>
