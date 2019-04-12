@@ -38,8 +38,9 @@ import { FilesService } from "src/app/services/files.service";
 import { CollaborationService } from "src/app/services/collaboration.service";
 import { ValidationService } from "src/app/services/validation.service";
 import { EnrichmentService } from "src/app/services/enrichment.service";
-
 import { sharing } from "../../globalconfig";
+import { reject } from "q";
+var Buffer = require('buffer/').Buffer
 
 const misc: any = {
   navbar_menu_visible: 0,
@@ -1200,7 +1201,19 @@ export class ProblemDetailComponent implements OnInit, OnDestroy {
     let _links = []; //local array
 
     let all_promise = await attachments.map(file => {
-      return this.fileService.uploadFile(file, file.name).promise();
+      return new Promise((resolve, reject) => {
+        if (typeof FileReader !== "undefined") {
+          const reader = new FileReader();
+
+          reader.onload = (e: any) => {
+            let buffer = Buffer.from(e.target.result);
+            resolve(this.fileService
+              .multiPartUpload(buffer, file.name));
+          };
+          reader.readAsArrayBuffer(file);
+        }
+      })
+      // return this.fileService.uploadFile(file, file.name).promise();
     });
 
     try {
@@ -1213,6 +1226,11 @@ export class ProblemDetailComponent implements OnInit, OnDestroy {
       file_links = [];
 
       _links.forEach((link, i) => {
+        // additional check
+        if (!link['Location'].startsWith('https')) {
+          link['Location'] = `https://${link['Location']}`
+        }
+
         file_links.push({
           key: link["key"],
           url: link["Location"],
