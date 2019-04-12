@@ -135,7 +135,7 @@ export class DashboardComponent implements OnInit, OnDestroy {
           data[key].map(p => {
             // console.log(p, "p");
             if (p.problem || p.problemsByproblemId) {
-              // console.log(p, "p");
+              console.log(p, "p");
               const problem = p.problem || p.problemsByproblemId;
               // console.log(problem, "problem");
               if (problem["id"]) {

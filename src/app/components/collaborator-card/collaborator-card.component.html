@@ -16,8 +16,7 @@
     <h4 class="card-title actions" *ngIf="collaboratorData.user && collaboratorData.user.name"
       [routerLink]="currentUser && '/users/' + collaboratorData.user_id">
       <a>
-        {{ collaboratorData.user.name }}
-
+        {{ (currentUser == collaboratorData.user_id) ? 'You' : collaboratorData.user.name }}
       </a>
     </h4>
     <p class="card-description" style="white-space: pre-wrap;">

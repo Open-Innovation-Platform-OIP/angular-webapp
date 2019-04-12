@@ -1,4 +1,5 @@
 import { Component, OnInit, Input, Output, EventEmitter } from "@angular/core";
+import { AuthService } from "../../services/auth.service";
 
 @Component({
   selector: "app-enrichment-card",
@@ -10,7 +11,7 @@ export class EnrichmentCardComponent implements OnInit {
   @Output() clicked = new EventEmitter();
   numberOfVotes: any = 0;
 
-  constructor() { }
+  constructor(private auth: AuthService) {}
 
   ngOnInit() {
     if (this.enrichmentData && this.enrichmentData.voted_by) {

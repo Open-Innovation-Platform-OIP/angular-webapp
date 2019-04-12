@@ -1,4 +1,5 @@
 import { Component, OnInit, Input, Output, EventEmitter } from "@angular/core";
+import { AuthService } from "../../services/auth.service";
 
 @Component({
   selector: "app-validate-card",
@@ -9,7 +10,7 @@ export class ValidateCardComponent implements OnInit {
   @Input() validationData: any;
   @Output() clicked = new EventEmitter();
 
-  constructor() { }
+  constructor(private auth: AuthService) {}
 
   ngOnInit() {
     // console.log("validate-card: ", this.validationData);
