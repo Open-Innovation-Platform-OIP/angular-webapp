@@ -177,6 +177,7 @@ export class UserHandlerService {
         },
         error => {
           console.error("Could not update due to " + error);
+          console.error(JSON.stringify(error));
         }
       );
   }

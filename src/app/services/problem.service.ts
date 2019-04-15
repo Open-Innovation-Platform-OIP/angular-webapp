@@ -132,6 +132,7 @@ export class ProblemService {
         },
         error => {
           console.log("Could not update due to " + error);
+          console.error(JSON.stringify(error));
         }
       );
   }

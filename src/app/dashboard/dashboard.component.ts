@@ -94,12 +94,17 @@ export class DashboardComponent implements OnInit, OnDestroy {
       fetchPolicy: "network-only"
     });
     // this.draftsObs = this.draftsQueryRef.valueChanges;
-    this.draftsSub = this.draftsQueryRef.valueChanges.subscribe(({ data }) => {
-      // console.log(data);
-      if (data.problems.length > 0) {
-        this.drafts = data.problems;
+    this.draftsSub = this.draftsQueryRef.valueChanges.subscribe(
+      ({ data }) => {
+        // console.log(data);
+        if (data.problems.length > 0) {
+          this.drafts = data.problems;
+        }
+      },
+      error => {
+        console.error(JSON.stringify(error));
       }
-    });
+    );
   }
 
   getContributions() {
@@ -146,6 +151,9 @@ export class DashboardComponent implements OnInit, OnDestroy {
             // this.contributions.add(Object.values(problem)[0]);
           });
         });
+      },
+      error => {
+        console.error(JSON.stringify(error));
       }
     );
   }
@@ -182,6 +190,9 @@ export class DashboardComponent implements OnInit, OnDestroy {
             }
           });
         }
+      },
+      error => {
+        console.error(JSON.stringify(error));
       }
     );
   }
@@ -240,6 +251,9 @@ export class DashboardComponent implements OnInit, OnDestroy {
             }
           });
         }
+      },
+      error => {
+        console.error(JSON.stringify(error));
       }
     );
   }

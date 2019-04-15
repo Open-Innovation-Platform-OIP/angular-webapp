@@ -66,6 +66,9 @@ export class UsersService {
     this.getOrgsFromDB();
     this.getUsersFromDB();
     this.getCurrentUser();
+    // this.currentUser = {
+    //   id: 21
+    // };
   }
 
   public getCurrentUser() {

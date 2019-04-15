@@ -1,14 +1,17 @@
-<quill-editor [style]="{height: '100px'}" [(ngModel)]="content" [sanitize]="false" [modules]="modules"
-  (onEditorCreated)="setFocus($event)">
+<!-- <div ngIf="auth.currentUserValue.id"> -->
+
+<quill-editor *ngIf="auth.currentUserValue.id" [style]="{height: '100px'}" [(ngModel)]="content" [sanitize]="false"
+  [modules]="modules" (onEditorCreated)="setFocus($event)">
 </quill-editor>
 <div class="stats">
-  <button mat-raised-button class="btn btn-warning btn-sm btn-round" matTooltip="Click to add comment"
-    [matTooltipPosition]="'below'" [disabled]="!content" (click)="submitComment()">{{actionText}}</button>
-  <button mat-raised-button *ngIf="cancelShown" class="btn btn-danger btn-sm btn-round"
+  <button *ngIf="auth.currentUserValue.id" mat-raised-button class="btn btn-warning btn-sm btn-round"
+    matTooltip="Click to add comment" [matTooltipPosition]="'below'" [disabled]="!content"
+    (click)="submitComment()">{{actionText}}</button>
+  <button *ngIf="auth.currentUserValue.id && cancelShown" mat-raised-button class="btn btn-danger btn-sm btn-round"
     matTooltip="Click to close comment box" [matTooltipPosition]="'below'" (click)="cancel.emit()">Cancel</button>
 
-  <label for="fileInput-{{id}}" [ngStyle]="{ 'cursor' : (!content) ? 'default' : 'pointer' }"
-    class="btn btn-secondary btn-sm btn-round right">
+  <label for="fileInput-{{id}}" *ngIf="auth.currentUserValue.id"
+    [ngStyle]="{ 'cursor' : (!content) ? 'default' : 'pointer' }" class="btn btn-secondary btn-sm btn-round right">
     <i class="material-icons">
       attach_file
     </i>
@@ -26,3 +29,4 @@
     <i class="fa fa-close" style="cursor:pointer" (click)="removeFile(i)"></i>
   </div>
 </div>
+<!-- </div> -->

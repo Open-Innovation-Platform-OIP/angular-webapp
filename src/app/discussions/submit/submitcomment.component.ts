@@ -1,19 +1,23 @@
 import {
-  Component, ViewChild, OnInit, Input,
+  Component,
+  ViewChild,
+  OnInit,
+  Input,
   Output,
   EventEmitter
-} from '@angular/core';
-import * as Quill from 'quill/dist/quill.js';
-import ImageResize from 'quill-image-resize-module';
+} from "@angular/core";
+import * as Quill from "quill/dist/quill.js";
+import ImageResize from "quill-image-resize-module";
+import { AuthService } from "../../services/auth.service";
 // import {ImageDrop} from 'quill-image-drop-module';
-Quill.register('modules/imageResize', ImageResize);
+Quill.register("modules/imageResize", ImageResize);
 // Quill.register('modules/imageDrop', ImageDrop);
-import 'quill-mention';
-import { QuillEditorComponent } from 'ngx-quill';
+import "quill-mention";
+import { QuillEditorComponent } from "ngx-quill";
 @Component({
-  selector: 'app-submit-comment',
-  templateUrl: './submitcomment.component.html',
-  styleUrls: ['./submitcomment.component.css']
+  selector: "app-submit-comment",
+  templateUrl: "./submitcomment.component.html",
+  styleUrls: ["./submitcomment.component.css"]
 })
 export class CommentSubmitComponent implements OnInit {
   @ViewChild(QuillEditorComponent) editor: QuillEditorComponent;
@@ -23,15 +27,23 @@ export class CommentSubmitComponent implements OnInit {
   @Input() users;
   @Output() submit = new EventEmitter();
   @Output() cancel = new EventEmitter();
-  content = '';
+  content = "";
   mentions = [];
   attachments: Blob[] = [];
-  file_types = ["application/msword", " application/vnd.ms-excel", " application/vnd.ms-powerpoint", "text/plain", " application/pdf", " image/*", "video/*"];
+  file_types = [
+    "application/msword",
+    " application/vnd.ms-excel",
+    " application/vnd.ms-powerpoint",
+    "text/plain",
+    " application/pdf",
+    " image/*",
+    "video/*"
+  ];
   modules = {
     mention: {
-      listItemClass: 'ql-mention-list-item',
-      mentionListClass: 'ql-mention-list',
-      mentionContainerClass: 'ql-mention-list-container',
+      listItemClass: "ql-mention-list-item",
+      mentionListClass: "ql-mention-list",
+      mentionContainerClass: "ql-mention-list-container",
       allowedChars: /^[A-Za-z\sÅÄÖåäö]*$/,
       contenteditable: false,
       isolateCharacter: true,
@@ -40,15 +52,17 @@ export class CommentSubmitComponent implements OnInit {
         insertItem(item);
         this.mentions.push(Number(item.id));
         // necessary because quill-mention triggers changes as 'api' instead of 'user'
-        editor.insertText(editor.getLength() - 1, '', 'user');
+        editor.insertText(editor.getLength() - 1, "", "user");
       },
       source: (searchTerm, renderList) => {
         if (searchTerm.length === 0) {
           renderList(this.users, searchTerm);
         } else {
           const matches = [];
-          this.users.forEach((entry) => {
-            if (entry.value.toLowerCase().indexOf(searchTerm.toLowerCase()) !== -1) {
+          this.users.forEach(entry => {
+            if (
+              entry.value.toLowerCase().indexOf(searchTerm.toLowerCase()) !== -1
+            ) {
               matches.push(entry);
             }
           });
@@ -58,16 +72,18 @@ export class CommentSubmitComponent implements OnInit {
     },
     // imageDrop: true,
     imageResize: {
-      modules: ['Resize', 'DisplaySize', 'Toolbar'],
+      modules: ["Resize", "DisplaySize", "Toolbar"],
       handleStyles: {
-        backgroundColor: 'black',
-        border: 'none',
+        backgroundColor: "black",
+        border: "none",
         color: "white"
         // other camelCase styles for size display
       }
     },
-    toolbar: [['bold', 'italic', 'blockquote'], ['link']]
-  }
+    toolbar: [["bold", "italic", "blockquote"], ["link"]]
+  };
+
+  constructor(private auth: AuthService) {}
 
   setFocus(event) {
     // tslint:disable-next-line:no-console
@@ -78,13 +94,12 @@ export class CommentSubmitComponent implements OnInit {
   submitComment() {
     // console.log(this.mentions, this.content);
     this.submit.emit([this.content, this.mentions, this.attachments]);
-    this.content = '';
+    this.content = "";
     this.mentions = [];
     this.attachments = [];
   }
 
-  ngOnInit() {
-  }
+  ngOnInit() {}
 
   onFileSelected(attach_files) {
     if (attach_files && attach_files.target.files) {
@@ -93,7 +108,6 @@ export class CommentSubmitComponent implements OnInit {
         this.attachments.push(file);
       }
     }
-
   }
 
   removeFile(i) {
@@ -103,5 +117,4 @@ export class CommentSubmitComponent implements OnInit {
       this.attachments.splice(i, 1);
     }
   }
-
 }

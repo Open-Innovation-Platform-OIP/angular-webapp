@@ -7,13 +7,13 @@ export const AppRoutes: Routes = [
   {
     path: "",
     redirectTo: "dashboard",
-    pathMatch: "full",
-    canActivate: [AuthGuard]
+    pathMatch: "full"
+    // canActivate: [AuthGuard]
   },
   {
     path: "",
     component: AdminLayoutComponent,
-    canActivate: [AuthGuard],
+    // canActivate: [AuthGuard],
     children: [
       //       {
       //     path: '',
@@ -44,6 +44,10 @@ export const AppRoutes: Routes = [
         path: "search",
         loadChildren:
           "./global-search-view/global-search-view.module#GlobalSearchViewModule"
+      },
+      {
+        path: "landing-page",
+        loadChildren: "./landing-page/landing-page.module#LandingPageModule"
       },
       {
         path: "solutions",

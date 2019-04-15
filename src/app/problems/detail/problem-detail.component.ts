@@ -40,7 +40,7 @@ import { ValidationService } from "src/app/services/validation.service";
 import { EnrichmentService } from "src/app/services/enrichment.service";
 import { sharing } from "../../globalconfig";
 import { reject } from "q";
-var Buffer = require('buffer/').Buffer
+var Buffer = require("buffer/").Buffer;
 
 const misc: any = {
   navbar_menu_visible: 0,
@@ -285,19 +285,24 @@ export class ProblemDetailComponent implements OnInit, OnDestroy {
       pollInterval: 1000
     });
 
-    this.userDataQuery.valueChanges.subscribe(result => {
-      // console.log("PERSONAS", result);
-      if (result.data.users[0]) {
-        Object.keys(result.data.users[0]).map(persona => {
-          this.userPersonas[persona] = result.data.users[0][persona];
-        });
-        // console.log("persona assignment", result.data.users[0]);
-        result.data.users[0].user_tags.map(tag => {
-          this.userInterests[tag.tag.name] = tag.tag;
-        });
-        // console.log(this.userInterests, "user interests");
+    this.userDataQuery.valueChanges.subscribe(
+      result => {
+        // console.log("PERSONAS", result);
+        if (result.data.users[0]) {
+          Object.keys(result.data.users[0]).map(persona => {
+            this.userPersonas[persona] = result.data.users[0][persona];
+          });
+          // console.log("persona assignment", result.data.users[0]);
+          result.data.users[0].user_tags.map(tag => {
+            this.userInterests[tag.tag.name] = tag.tag;
+          });
+          // console.log(this.userInterests, "user interests");
+        }
+      },
+      error => {
+        console.error(JSON.stringify(error));
       }
-    });
+    );
   }
 
   loadCarousels() {
@@ -378,6 +383,7 @@ export class ProblemDetailComponent implements OnInit, OnDestroy {
       },
       error => {
         console.log("error", error);
+        console.error(JSON.stringify(error));
       }
     );
     // this.problem.subscribe(result => {
@@ -774,8 +780,11 @@ export class ProblemDetailComponent implements OnInit, OnDestroy {
       result => {
         console.log(result, "delete worked");
         // location.reload();
-        if (this.comments.hasOwnProperty(comment.id) && !this.comments[comment.id].linked_comment_id) {
-          delete (this.comments[comment.id]);
+        if (
+          this.comments.hasOwnProperty(comment.id) &&
+          !this.comments[comment.id].linked_comment_id
+        ) {
+          delete this.comments[comment.id];
         } else if (this.replies.hasOwnProperty(comment.linked_comment_id)) {
           this.replies[comment.linked_comment_id].forEach((reply, index) => {
             if (reply.linked_comment_id === comment.linked_comment_id) {
@@ -786,7 +795,7 @@ export class ProblemDetailComponent implements OnInit, OnDestroy {
               }
               return;
             }
-          })
+          });
         }
       },
       err => {
@@ -948,7 +957,10 @@ export class ProblemDetailComponent implements OnInit, OnDestroy {
   }
   toggleWatchProblem() {
     // console.log('toggling watch flag');
-    if (!(this.userId == this.problemData.created_by)) {
+    if (
+      !(this.userId == this.problemData.created_by) &&
+      this.auth.currentUserValue.id
+    ) {
       if (!this.watchers.has(this.userId)) {
         // user is not currently watching this problem
         // let's add them
@@ -1019,7 +1031,10 @@ export class ProblemDetailComponent implements OnInit, OnDestroy {
 
   toggleVoteProblem() {
     // console.log('toggling watch flag');
-    if (!(this.userId == this.problemData.created_by)) {
+    if (
+      !(this.userId == this.problemData.created_by) &&
+      this.auth.currentUserValue.id
+    ) {
       if (!this.voters.has(this.userId)) {
         // user is not currently watching this problem
         // let's add them
@@ -1216,12 +1231,11 @@ export class ProblemDetailComponent implements OnInit, OnDestroy {
 
           reader.onload = (e: any) => {
             let buffer = Buffer.from(e.target.result);
-            resolve(this.fileService
-              .multiPartUpload(buffer, file.name));
+            resolve(this.fileService.multiPartUpload(buffer, file.name));
           };
           reader.readAsArrayBuffer(file);
         }
-      })
+      });
       // return this.fileService.uploadFile(file, file.name).promise();
     });
 
@@ -1236,8 +1250,8 @@ export class ProblemDetailComponent implements OnInit, OnDestroy {
 
       _links.forEach((link, i) => {
         // additional check
-        if (!link['Location'].startsWith('https')) {
-          link['Location'] = `https://${link['Location']}`
+        if (!link["Location"].startsWith("https")) {
+          link["Location"] = `https://${link["Location"]}`;
         }
 
         file_links.push({

@@ -96,6 +96,9 @@ export class ProblemsViewComponent implements OnInit, OnDestroy {
           // console.log(this.userProblems, "problem card data");
         }
         // console.log("PROBLEMS", this.problems);
+      },
+      error => {
+        console.error(JSON.stringify(error));
       }
     );
 
@@ -174,6 +177,9 @@ export class ProblemsViewComponent implements OnInit, OnDestroy {
           // console.log(this.problems, "problem card data", result.data.problems);
         }
         // console.log("PROBLEMS", this.problems);
+      },
+      error => {
+        console.error(JSON.stringify(error));
       }
     );
   }

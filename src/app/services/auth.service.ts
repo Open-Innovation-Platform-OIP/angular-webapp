@@ -38,9 +38,8 @@ export class AuthService {
   constructor(
     private http: HttpClient,
     private apollo: Apollo,
-    private router: Router
-  ) // protected localStorage: LocalStorage
-  {
+    private router: Router // protected localStorage: LocalStorage
+  ) {
     this.jwtHelper = new JwtHelper();
     // this.getUser();
     this.currentUserSubject = new BehaviorSubject<any>(
@@ -50,7 +49,11 @@ export class AuthService {
   }
 
   public get currentUserValue(): User {
-    return this.currentUserSubject.value;
+    if (this.currentUserSubject.value) {
+      return this.currentUserSubject.value;
+    } else {
+      return { id: 0, email: "", token: "" };
+    }
   }
 
   isExpired(jwt) {

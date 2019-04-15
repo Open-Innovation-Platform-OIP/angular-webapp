@@ -101,7 +101,8 @@
               </button>
               <span>&nbsp;</span>
               <span>&nbsp;</span>
-              <button href="#" class="btn btn-sm btn-warning" data-toggle="dropdown" aria-expanded="true">
+              <button href="#" class="btn btn-sm btn-warning" data-toggle="dropdown" aria-expanded="true"
+                [disabled]="!auth.currentUserValue.id">
                 <i class="material-icons actions">
                   share
                 </i>
@@ -171,7 +172,7 @@
               </i>
             </a> -->
           <button mat-raised-button class="btn btn-warning btn-round" matTooltip="Click to add enrichment"
-            [matTooltipPosition]="'below'" [disabled]="disableEnrichButton"
+            [matTooltipPosition]="'below'" [disabled]="disableEnrichButton || !auth.currentUserValue.id"
             [routerLink]="['/enrichment/add',{problemId:problemData.id}]">Enrich</button>
           <!-- <a mat-button NguCarouselNext class="rightRs">
               <i class="material-icons">
@@ -309,7 +310,7 @@
             </a> -->
           <button mat-raised-button class="btn btn-warning btn-round" data-toggle="modal" data-target="#validatorModal"
             matTooltip="Click to validate problem" [matTooltipPosition]="'below'" *ngIf="problemData.id"
-            [disabled]="disableValidateButton || !userPersonas.is_expert || userId == problemData.created_by ||!sectorMatched">Validate</button>
+            [disabled]="disableValidateButton || !userPersonas.is_expert || userId == problemData.created_by ||!sectorMatched || !auth.currentUserValue.id ">Validate</button>
           <!-- <a mat-button>
               <i class="material-icons">
                 keyboard_arrow_right
@@ -463,7 +464,7 @@
             </a> -->
           <button mat-raised-button class="btn btn-warning btn-round" data-toggle="modal"
             data-target="#collaboratorModal" matTooltip="Click to collaborate" [matTooltipPosition]="'below'"
-            [disabled]="disableCollaborateButton || userId == problemData.created_by">Collaborate</button>
+            [disabled]="disableCollaborateButton || userId == problemData.created_by || !auth.currentUserValue.id">Collaborate</button>
           <!-- <a mat-button>
               <i class="material-icons">
                 keyboard_arrow_right
@@ -551,17 +552,17 @@
             <h4 class="card-title">Discussions</h4>
           </div>
           <div class="card-body">
-            <button mat-raised-button class="btn btn-warning btn-sm"
-              (click)="showPopularDiscussions('latest')">Latest</button>
-            <button mat-raised-button class="btn btn-warning btn-sm"
+            <button mat-raised-button class="btn btn-warning btn-sm" (click)="showPopularDiscussions('latest')"
+              *ngIf="objectValues(comments).length">Latest</button>
+            <button mat-raised-button class="btn btn-warning btn-sm" *ngIf="objectValues(comments).length"
               (click)="showPopularDiscussions('popular')">Popular</button>
 
             <div id="accordion" role="tablist">
               <div class="card-collapse">
                 <div class="card-header" role="tab" id="headingOne">
                   <h5 class="mb-0">
-                    <a data-toggle="collapse" href="#newComment" aria-expanded="true" aria-controls="newComment"
-                      class="collapsed">
+                    <a data-toggle="collapse" href="#newComment" *ngIf="auth.currentUserValue.id" aria-expanded=" true"
+                      aria-controls="newComment" class="collapsed">
                       Join Discussion
                       <i class="material-icons">keyboard_arrow_down</i>
                     </a>

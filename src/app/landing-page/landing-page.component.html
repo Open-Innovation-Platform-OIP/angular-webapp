@@ -1,0 +1,37 @@
+<div class="main-content">
+
+  <div class="container-fluid">
+    <!-- <button class="btn btn-warning btn-lg btn-fab btn-round" matTooltip="Add Problem" [matTooltipPosition]="'left'"
+          [routerLink]="['/problems/add']" [disabled]="!auth.currentUserValue.id">
+          <i class="material-icons">add</i>
+      </button> -->
+    <div class="row justify-content-center">
+      <div class="col-md-6">
+        <input type="text" value="" class="form-control" placeholder="Search..." name="searchInput" appAutofocus
+          data-toggle="dropdown" [(ngModel)]="searchInput" (input)="landingPageSearch($event.target.value)"
+          autocomplete="off" />
+      </div>
+    </div>
+    <h3 *ngIf="!landingPageSearchResults.length" class="card-title text-center">Problems worth solving</h3>
+    <h3 *ngIf="landingPageSearchResults.length" class="card-title text-center">Search Results</h3>
+
+    <br />
+    <div class="row" *ngIf="!landingPageSearchResults.length">
+      <div class="col-md-3" *ngFor="let problem of problems; let i=index;">
+        <app-problem-card *ngIf="i<4" [problemData]="problem"></app-problem-card>
+      </div>
+    </div>
+    <div class="row" *ngIf="landingPageSearchResults.length">
+      <div class="col-md-3" *ngFor="let problem of landingPageSearchResults">
+        <app-problem-card [problemData]="problem"></app-problem-card>
+      </div>
+    </div>
+    <!-- <h3 *ngIf="problems.length" class="card-title text-center">Problems added by other users</h3>
+      <br />
+      <div class="row">
+          <div class="col-md-3" *ngFor="let problem of problems">
+              <app-problem-card [problemData]="problem"></app-problem-card>
+          </div>
+      </div> -->
+  </div>
+</div>
