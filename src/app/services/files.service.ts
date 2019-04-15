@@ -67,15 +67,28 @@ export class FilesService {
       ACL: "public-read",
     }
 
+    function showSpinner() {
+      document.getElementById('loader').style.display = 'block';
+      (<HTMLInputElement>document.getElementById('file_input_btn')).disabled = true;
+      document.body.style.setProperty('cursor', 'wait', 'important');
+    }
+
+    function hideSpinner() {
+      document.getElementById('loader').style.display = 'none';
+      (<HTMLInputElement>document.getElementById('file_input_btn')).disabled = false;
+      document.body.style.cursor = 'default';
+    }
+
     console.log("Creating multipart upload for:", fileKey);
+    showSpinner();
     return new Promise((resolve, reject) => {
       spaces.createMultipartUpload(multiPartParams, async function (mpErr, multipart) {
         if (mpErr) {
+          hideSpinner();
           console.log('Error!', mpErr);
           reject(mpErr);
         }
-        console.log("Got upload ID", multipart.UploadId);
-
+        // console.log("Got upload ID", multipart.UploadId);
         // Grab each partSize chunk and upload it as a part
         for (var rangeStart = 0; rangeStart < file_blob.length; rangeStart += partSize) {
           partNum++;
@@ -89,7 +102,7 @@ export class FilesService {
             };
 
           // Send a single part
-          console.log('Uploading part: #', partParams.PartNumber, ', Range start:', rangeStart);
+          // console.log('Uploading part: #', partParams.PartNumber, ', Range start:', rangeStart);
           resolve(uploadPart(spaces, multipart, partParams));
         }
       });
@@ -98,10 +111,12 @@ export class FilesService {
 
     async function uploadPart(s3, multipart, partParams, tryNum?) {
       var tryNum = tryNum || 1;
+      showSpinner();
 
       return new Promise((resolve, reject) => {
         s3.uploadPart(partParams, async function (multiErr, mData) {
           if (multiErr) {
+            hideSpinner();
             console.log('multiErr, upload part error:', multiErr);
 
             if (tryNum < maxUploadTries) {
@@ -118,9 +133,10 @@ export class FilesService {
             ETag: mData.ETag,
             PartNumber: Number(this.request.params.PartNumber)
           };
+          showSpinner();
 
-          console.log("Completed part", this.request.params.PartNumber);
-          console.log('mData', mData);
+          // console.log("Completed part", this.request.params.PartNumber);
+          // console.log('mData', mData);
 
           if (--numPartsLeft > 0) return; // complete only when all parts uploaded
 
@@ -131,11 +147,9 @@ export class FilesService {
             UploadId: multipart.UploadId
           };
 
-          console.log("Completing upload...");
+          // console.log("Completing upload...");
           // let finishedUpload = await 
           resolve(completeMultipartUpload(s3, doneParams));
-          // complete = finishedUpload;
-          // return finishedUpload;
         });
       })
 
@@ -143,16 +157,19 @@ export class FilesService {
     }
 
     async function completeMultipartUpload(s3, doneParams) {
+      showSpinner();
       return new Promise((resolve, reject) => {
         s3.completeMultipartUpload(doneParams, function (err, data) {
           if (err) {
             console.log("An error occurred while completing the multipart upload");
             console.log(err);
+            hideSpinner();
             reject(err);
           } else {
             var delta: any = (new Date().getTime() - startTime) / 1000;
             console.log('Completed upload in', delta, 'seconds');
             console.log('Final upload data:', data);
+            hideSpinner();
             resolve(data);
           }
         });
