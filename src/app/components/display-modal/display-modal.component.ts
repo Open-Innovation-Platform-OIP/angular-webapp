@@ -30,7 +30,7 @@ export class DisplayModalComponent implements OnInit {
     }
   }
   checkUrlIsVideo(url) {
-    var arr = ["mp4", "avi", "webm", "wmv"];
+    var arr = ["mp4", "avi", "webm", "wmv", "quicktime"];
     var ext = url.substring(url.lastIndexOf(".") + 1);
     if (arr.indexOf(ext) > -1) {
       return true;
