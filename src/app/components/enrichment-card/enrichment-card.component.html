@@ -9,7 +9,7 @@
   <div class="card-body">
     <div class="description">
       <strong>Description</strong>
-      <p *ngIf="enrichmentData.description">{{enrichmentData.description}}</p>
+      <p *ngIf="enrichmentData.description" style="white-space: pre-wrap;">{{enrichmentData.description}}</p>
     </div>
     <strong>Location(s)</strong>
     <!-- <p class="description" *ngIf="enrichmentData.location">{{enrichmentData.location}}</p>
@@ -37,7 +37,9 @@
       </i>
       {{numberOfVotes}}
     </div>
-    <p>Added by : {{enrichmentData.usersBycreatedBy.name}}</p>
+    <p>Added by :
+      {{ (auth.currentUserValue.id == enrichmentData.created_by) ? 'You' : enrichmentData.usersBycreatedBy.name}}
+    </p>
 
   </div>
 </div>

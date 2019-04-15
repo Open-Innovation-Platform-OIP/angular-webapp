@@ -144,43 +144,30 @@ export class DiscussionsService {
   }
 
   deleteCommentsFromDB(commentId) {
-    this.apollo
-      .mutate<any>({
-        mutation: gql`
-          mutation updateMutation(
-            $where: discussions_bool_exp!
-            $set: discussions_set_input!
-          ) {
-            update_discussions(where: $where, _set: $set) {
-              affected_rows
-              returning {
-                id
-              }
+    return this.apollo.mutate<any>({
+      mutation: gql`
+        mutation updateMutation(
+          $where: discussions_bool_exp!
+          $set: discussions_set_input!
+        ) {
+          update_discussions(where: $where, _set: $set) {
+            affected_rows
+            returning {
+              id
             }
-          }
-        `,
-        variables: {
-          where: {
-            id: {
-              _eq: commentId
-            }
-          },
-          set: {
-            is_deleted: true
           }
         }
-      })
-      .subscribe(
-        result => {
-          console.log(result, "delete worked");
-          // location.reload();
-          // if (result.data.insert_discussions.returning.length > 0) {
-          //   console.log(result.data.insert_discussions);
-          // }
+      `,
+      variables: {
+        where: {
+          id: {
+            _eq: commentId
+          }
         },
-        err => {
-          console.error(JSON.stringify(err));
+        set: {
+          is_deleted: true
         }
-      );
+      }
+    });
   }
 }

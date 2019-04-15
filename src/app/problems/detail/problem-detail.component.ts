@@ -38,8 +38,9 @@ import { FilesService } from "src/app/services/files.service";
 import { CollaborationService } from "src/app/services/collaboration.service";
 import { ValidationService } from "src/app/services/validation.service";
 import { EnrichmentService } from "src/app/services/enrichment.service";
-
 import { sharing } from "../../globalconfig";
+import { reject } from "q";
+var Buffer = require('buffer/').Buffer
 
 const misc: any = {
   navbar_menu_visible: 0,
@@ -768,21 +769,30 @@ export class ProblemDetailComponent implements OnInit, OnDestroy {
   }
 
   deleteComment(comment) {
-    console.log(comment, "comment on delete comment");
-    // let allComments = [];
-    // if (!comment.linked_comment_id) {
-    //   allComments = this.replies[comment.id].map(comment => {
-    //     comment.is_deleted = true;
-    //     delete comment.__typename;
-    //     return comment;
-    //   });
-    // }
-    // delete comment.__typename;
-
-    // comment.is_deleted = true;
-    // allComments.push(comment);
-    // console.log("allComments>>>>>", allComments);
-    this.discussionsService.deleteCommentsFromDB(comment.id);
+    let deleteResp = this.discussionsService.deleteCommentsFromDB(comment.id);
+    deleteResp.subscribe(
+      result => {
+        console.log(result, "delete worked");
+        // location.reload();
+        if (this.comments.hasOwnProperty(comment.id) && !this.comments[comment.id].linked_comment_id) {
+          delete (this.comments[comment.id]);
+        } else if (this.replies.hasOwnProperty(comment.linked_comment_id)) {
+          this.replies[comment.linked_comment_id].forEach((reply, index) => {
+            if (reply.linked_comment_id === comment.linked_comment_id) {
+              if (index < 1) {
+                this.replies[comment.linked_comment_id] = [];
+              } else {
+                this.replies[comment.linked_comment_id].splice(0, index);
+              }
+              return;
+            }
+          })
+        }
+      },
+      err => {
+        console.error(JSON.stringify(err));
+      }
+    );
   }
 
   showMoreComments() {
@@ -1200,7 +1210,19 @@ export class ProblemDetailComponent implements OnInit, OnDestroy {
     let _links = []; //local array
 
     let all_promise = await attachments.map(file => {
-      return this.fileService.uploadFile(file, file.name).promise();
+      return new Promise((resolve, reject) => {
+        if (typeof FileReader !== "undefined") {
+          const reader = new FileReader();
+
+          reader.onload = (e: any) => {
+            let buffer = Buffer.from(e.target.result);
+            resolve(this.fileService
+              .multiPartUpload(buffer, file.name));
+          };
+          reader.readAsArrayBuffer(file);
+        }
+      })
+      // return this.fileService.uploadFile(file, file.name).promise();
     });
 
     try {
@@ -1213,6 +1235,11 @@ export class ProblemDetailComponent implements OnInit, OnDestroy {
       file_links = [];
 
       _links.forEach((link, i) => {
+        // additional check
+        if (!link['Location'].startsWith('https')) {
+          link['Location'] = `https://${link['Location']}`
+        }
+
         file_links.push({
           key: link["key"],
           url: link["Location"],

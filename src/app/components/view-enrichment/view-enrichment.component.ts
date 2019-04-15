@@ -7,7 +7,7 @@ import {
   EventEmitter
 } from "@angular/core";
 import { ProblemService } from "../../services/problem-handle.service";
-import { Router, ActivatedRoute } from "@angular/router";
+// import { Router, ActivatedRoute } from "@angular/router";
 
 import { AuthService } from "../../services/auth.service";
 import swal from "sweetalert2";
@@ -24,7 +24,6 @@ export class ViewEnrichmentComponent implements OnInit, OnChanges {
 
   @Input() enrichmentData: any;
   enrichmentVoted = false;
-  numberOfVotes: number;
   showModal = false;
   combinedImgAndVideo: any[] = [];
   index = 0;
@@ -72,8 +71,12 @@ export class ViewEnrichmentComponent implements OnInit, OnChanges {
 
     this.modalSrc = this.combinedImgAndVideo[this.index];
 
-    if (this.enrichmentData.voted_by) {
+    // remove the duplicates
+    this.enrichmentData.voted_by = Array.from(new Set(this.enrichmentData.voted_by));
+
+    if (this.enrichmentData.voted_by.length) {
       console.log(this.enrichmentData.voted_by, "enrich voted by");
+
       this.enrichmentData.voted_by.forEach(userId => {
         if (Number(userId) === Number(this.auth.currentUserValue.id)) {
           console.log(
@@ -84,7 +87,8 @@ export class ViewEnrichmentComponent implements OnInit, OnChanges {
           this.enrichmentVoted = true;
         }
       });
-      this.numberOfVotes = this.enrichmentData.voted_by.length;
+    } else {
+      this.enrichmentVoted = false;
     }
   }
 
@@ -94,14 +98,19 @@ export class ViewEnrichmentComponent implements OnInit, OnChanges {
         this.enrichmentData.created_by === Number(this.auth.currentUserValue.id)
       )
     ) {
+      let index = this.enrichmentData.voted_by.indexOf(
+        Number(this.auth.currentUserValue.id)
+      );
       this.enrichmentVoted = !this.enrichmentVoted;
       console.log("clicked");
-      if (this.enrichmentVoted) {
-        this.numberOfVotes++;
-
+      if (this.enrichmentVoted && index < 0) {
         this.enrichmentData.voted_by.push(
           Number(this.auth.currentUserValue.id)
         );
+
+        // remove the duplicates
+        this.enrichmentData.voted_by = Array.from(new Set(this.enrichmentData.voted_by));
+
         this.enrichmentData.voted_by = JSON.stringify(
           this.enrichmentData.voted_by
         )
@@ -113,10 +122,6 @@ export class ViewEnrichmentComponent implements OnInit, OnChanges {
           this.enrichmentData.voted_by.replace("{", "[").replace("}", "]")
         );
       } else {
-        this.numberOfVotes--;
-        let index = this.enrichmentData.voted_by.indexOf(
-          Number(this.auth.currentUserValue.id)
-        );
         this.enrichmentData.voted_by.splice(index, 1);
         this.enrichmentData.voted_by = JSON.stringify(
           this.enrichmentData.voted_by

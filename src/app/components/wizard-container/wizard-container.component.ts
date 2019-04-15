@@ -833,6 +833,18 @@ export class WizardContainerComponent
       });
   }
 
+  removeAttachment(index) {
+    this.filesService
+      .deleteFile(this.content['attachments'][index]["key"])
+      .promise()
+      .then(data => {
+        this.content.attachments.splice(index, 1);
+      })
+      .catch(e => {
+        console.log("Err: ", e);
+      });
+  }
+
   removeAll() {
     this.content.image_urls.forEach((imageObj, i) => {
       this.filesService
@@ -851,7 +863,7 @@ export class WizardContainerComponent
   }
 
   // function trigger the multipart upload for more than 5MB
-  onFileSelectedForBiggerFiles(event) {
+  onFileSelectForBiggerFiles(event) {
     for (let i = 0; i < event.target.files.length; i++) {
       const file = event.target.files[i];
       const type = event.target.files[i].type;
@@ -881,7 +893,11 @@ export class WizardContainerComponent
         this.filesService
           .multiPartUpload(file, name)
           .then(values => {
-            // console.log(">>>>>data: ", data);
+            // additional check
+            if (!values['Location'].startsWith('https')) {
+              values['Location'] = `https://${values['Location']}`
+            }
+
             this.content.image_urls.push({
               url: values["Location"],
               mimeType: type,
@@ -900,8 +916,12 @@ export class WizardContainerComponent
         this.filesService
           .multiPartUpload(file, name)
           .then(values => {
-            // console.log(">>>>>data: ", data);
-            this.content.image_urls.push({
+            // additional check
+            if (!values['Location'].startsWith('https')) {
+              values['Location'] = `https://${values['Location']}`
+            }
+
+            this.content.video_urls.push({
               url: values["Location"],
               mimeType: type,
               key: values["Key"]
@@ -915,8 +935,13 @@ export class WizardContainerComponent
         this.filesService
           .multiPartUpload(file, name)
           .then(values => {
-            // console.log(">>>>>data: ", data);
-            this.content.image_urls.push({
+
+            // additional check
+            if (!values['Location'].startsWith('https')) {
+              values['Location'] = `https://${values['Location']}`
+            }
+
+            this.content.attachments.push({
               url: values["Location"],
               mimeType: type,
               key: values["Key"]

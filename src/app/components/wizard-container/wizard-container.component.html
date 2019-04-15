@@ -374,7 +374,7 @@
                 <div class="picture-container">
                   <div class="picture">
                     <img src="./assets/img/plus.png" class="picture-src" id="wizardPicturePreview" title="" />
-                    <input type="file" (change)="onFileSelected($event)" name="..." multiple
+                    <input type="file" (change)="onFileSelectForBiggerFiles($event)" name="..." multiple
                       accept="{{file_types.join(',')}}">
                   </div>
                   <h6 class="description">Choose Media</h6>
@@ -415,8 +415,8 @@
                   <div class="card-footer">
                     <div class="price">
                       <button mat-raised-button type="button" class="btn btn-default btn-link"
-                        matTooltip="Click to make this as the featured image of your problem"
-                        [matTooltipPosition]="'below'" (click)="setFeatured('image',i)">
+                        matTooltip="Select icon to set as featured image" [matTooltipPosition]="'below'"
+                        (click)="setFeatured('image',i)">
                         <i *ngIf="imgSrc.url !== content.featured_url" class="material-icons">turned_in_not</i>
                         <i *ngIf="imgSrc.url === content.featured_url" class="material-icons">turned_in</i>
                       </button>
@@ -432,8 +432,8 @@
                 </div>
               </div>
             </div>
-            <div class="row" *ngFor="let video of content.video_urls;let i = index">
-              <div class="col-md-4">
+            <div class="row">
+              <div class="col-md-4" *ngFor="let video of content.video_urls;let i = index">
                 <div class="card card-product">
                   <div class="card-header card-header-image" data-header-animation="false">
                     <video controls width="100%">
@@ -460,8 +460,8 @@
                 </div>
               </div>
             </div>
-            <div class="row" *ngFor="let embed_url of content.embed_urls;let i = index">
-              <div class="col-md-4">
+            <div class="row">
+              <div class="col-md-4" *ngFor="let embed_url of content.embed_urls;let i = index">
                 <div class="card card-product">
                   <div class="card-body">{{embed_url}}</div>
                   <div class="card-footer">
@@ -482,8 +482,8 @@
                 </div>
               </div>
             </div>
-            <div class="row" *ngFor="let attachment of content.attachments;let i = index">
-              <div class="col-md-4">
+            <div class="row">
+              <div class="col-md-4" *ngFor="let attachment of content.attachments;let i = index">
                 <div class="card card-product">
                   <div class="card-body">
                     <i class="material-icons" style="zoom:2; color: grey;">
@@ -501,7 +501,7 @@
                     </div>
                     <div class="stats">
                       <button mat-raised-button type="button" class="btn btn-danger btn-link" matTooltip="Remove"
-                        [matTooltipPosition]="'below'" (click)="removeEmbed(i)">
+                        [matTooltipPosition]="'below'" (click)="removeAttachment(i)">
                         <i class="material-icons">close</i>
                       </button>
                     </div>

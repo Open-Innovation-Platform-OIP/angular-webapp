@@ -19,7 +19,8 @@
       {{validationData.files.length}} File(s)</p>
   </div>
   <div class="card-footer">
-    <p *ngIf="validationData&&validationData.user">Validated by : {{validationData.user.name}}</p>
+    <p *ngIf="validationData&&validationData.user">Validated by :
+      {{ (auth.currentUserValue.id == validationData.validated_by) ? 'You' : validationData.user.name}}</p>
   </div>
 </div>
 
