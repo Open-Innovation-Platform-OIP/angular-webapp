@@ -10,6 +10,7 @@ Quill.register('modules/imageResize', ImageResize);
 // Quill.register('modules/imageDrop', ImageDrop);
 import 'quill-mention';
 import { QuillEditorComponent } from 'ngx-quill';
+import { FilesService } from 'src/app/services/files.service';
 @Component({
   selector: 'app-submit-comment',
   templateUrl: './submitcomment.component.html',
@@ -69,6 +70,10 @@ export class CommentSubmitComponent implements OnInit {
     toolbar: [['bold', 'italic', 'blockquote'], ['link']]
   }
 
+  constructor(
+    public fileService: FilesService,
+  ) { }
+
   setFocus(event) {
     // tslint:disable-next-line:no-console
     console.log(event);
@@ -76,7 +81,7 @@ export class CommentSubmitComponent implements OnInit {
   }
 
   submitComment() {
-    // console.log(this.mentions, this.content);
+    this.fileService.fileinput_id = `fileInput-${this.id}`;
     this.submit.emit([this.content, this.mentions, this.attachments]);
     this.content = '';
     this.mentions = [];

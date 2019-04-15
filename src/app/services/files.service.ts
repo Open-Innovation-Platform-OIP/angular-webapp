@@ -17,6 +17,7 @@ var spacesEndpoint: any = new AWS.Endpoint(region + ".digitaloceanspaces.com");
 })
 export class FilesService {
   s3: any;
+  fileinput_id: string;
 
   constructor() {
     this.s3 = new AWS.S3({
@@ -66,16 +67,33 @@ export class FilesService {
       Key: key,
       ACL: "public-read",
     }
+    let btn_id = this.fileinput_id;
 
     function showSpinner() {
-      document.getElementById('loader').style.display = 'block';
-      (<HTMLInputElement>document.getElementById('file_input_btn')).disabled = true;
+      let comment_btn = (<HTMLInputElement>document.getElementById(btn_id));
+      let spinner = document.getElementById('loader');
+      let upoadBtn = (<HTMLInputElement>document.getElementById('file_input_btn'));
+      if (spinner && upoadBtn) {
+        spinner.style.display = 'block';
+        upoadBtn.disabled = true;
+      }
+      if (comment_btn) {
+        comment_btn.disabled = true;
+      }
       document.body.style.setProperty('cursor', 'wait', 'important');
     }
 
     function hideSpinner() {
-      document.getElementById('loader').style.display = 'none';
-      (<HTMLInputElement>document.getElementById('file_input_btn')).disabled = false;
+      let comment_btn = (<HTMLInputElement>document.getElementById(btn_id));
+      let spinner = document.getElementById('loader');
+      let uploadBtn = (<HTMLInputElement>document.getElementById('file_input_btn'));
+      if (spinner && uploadBtn) {
+        spinner.style.display = 'none';
+        uploadBtn.disabled = false;
+      }
+      if (comment_btn) {
+        comment_btn.disabled = false;
+      }
       document.body.style.cursor = 'default';
     }
 
