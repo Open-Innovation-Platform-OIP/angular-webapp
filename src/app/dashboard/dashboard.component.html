@@ -1,35 +1,47 @@
 <div class="main-content">
     <div class="container-fluid"
-        *ngIf="drafts.length || objectKeys(contributions).length || objectKeys(recommendedProblems).length || objectKeys(recommendedUsers).length; else new_user">
+        *ngIf="drafts.length || userProblems.length || objectKeys(contributions).length || objectKeys(recommendedProblems).length || objectKeys(recommendedUsers).length; else new_user">
         <h3 *ngIf="drafts.length" class="card-title text-center">You are working on these drafts</h3>
+        <!-- <button mat-raised-button class="btn btn-warning">View All</button> -->
         <br />
         <div class="row">
-            <div class="col-md-3" *ngFor="let problem of drafts">
-                <app-problem-card [problemData]="problem"></app-problem-card>
+            <div class="col-md-3" *ngFor="let problem of drafts; let i=index;">
+                <app-problem-card *ngIf="i < 4" [problemData]="problem"></app-problem-card>
             </div>
         </div>
+
+        <h3 *ngIf="userProblems.length" class="card-title text-center">Problems added by you
+        </h3>
+        <br />
+        <div class="row">
+            <div class="col-md-3" *ngFor="let problem of userProblems; let i=index;">
+                <app-problem-card *ngIf="i < 4" [problemData]="problem"></app-problem-card>
+            </div>
+
+        </div>
+
         <h3 *ngIf="objectKeys(contributions).length>0" class="card-title text-center">Problems you have contributed to
         </h3>
         <br />
         <div class="row">
-            <div class="col-md-3" *ngFor="let problem of objectValues(contributions)">
-                <app-problem-card [problemData]="problem"></app-problem-card>
+            <div class="col-md-3" *ngFor="let problem of objectValues(contributions); let i=index;">
+                <app-problem-card *ngIf="i < 4" [problemData]="problem"></app-problem-card>
             </div>
         </div>
         <h3 *ngIf="objectKeys(recommendedProblems).length>0" class="card-title text-center">Problems you may be
             interested in</h3>
         <br />
         <div class="row">
-            <div class="col-md-3" *ngFor="let problem of objectValues(recommendedProblems)">
-                <app-problem-card [problemData]="problem"></app-problem-card>
+            <div class="col-md-3" *ngFor="let problem of objectValues(recommendedProblems); let i=index;">
+                <app-problem-card *ngIf="i < 4" [problemData]="problem"></app-problem-card>
             </div>
         </div>
         <h3 *ngIf="objectKeys(recommendedUsers).length>0" class="card-title text-center">People with similar interests
         </h3>
         <br />
         <div class="row">
-            <div class="col-md-3" *ngFor="let user of objectValues(recommendedUsers)">
-                <app-profile-card [userData]="user"></app-profile-card>
+            <div class="col-md-3" *ngFor="let user of objectValues(recommendedUsers); let i=index;">
+                <app-profile-card *ngIf="i < 4" [userData]="user"></app-profile-card>
             </div>
         </div>
     </div>
