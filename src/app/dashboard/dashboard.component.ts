@@ -14,14 +14,17 @@ export class DashboardComponent implements OnInit, OnDestroy {
   objectValues = Object["values"];
   objectKeys = Object["keys"];
   drafts = [];
+  userProblems = [];
   contributions = {};
   recommendedProblems = {};
   recommendedUsers = {};
   draftsQueryRef: QueryRef<any>;
+  userProblemsQueryRef: QueryRef<any>;
   contributionsQueryRef: QueryRef<any>;
   recommendedProblemsQueryRef: QueryRef<any>;
   recommendedUsersQueryRef: QueryRef<any>;
   draftsSub: Subscription;
+  userProblemsQuerySub: Subscription;
   contributionsSub: Subscription;
   recommendedProblemsSub: Subscription;
   recommendedUsersSub: Subscription;
@@ -73,6 +76,7 @@ export class DashboardComponent implements OnInit, OnDestroy {
   ngOnInit() {
     // console.log('on init')
     this.getDrafts();
+    this.getUsersProblems();
     this.getContributions();
     this.getRecommendedProblems();
     this.getRecommendedUsers();
@@ -100,6 +104,31 @@ export class DashboardComponent implements OnInit, OnDestroy {
         this.drafts = data.problems;
       }
     });
+  }
+
+  getUsersProblems() {
+    const userProblemsQuery = gql`
+    {
+      problems( 
+        where:{ _and:[
+        { is_draft: {_eq: false}},
+        {created_by: {_eq: ${this.auth.currentUserValue.id} }}
+      ]
+    } order_by: {updated_at: desc}) ${this.problemQueryString}
+    }
+    `;
+    this.userProblemsQueryRef = this.apollo.watchQuery({
+      query: userProblemsQuery,
+      pollInterval: 1000,
+      fetchPolicy: "network-only"
+    });
+    this.userProblemsQuerySub = this.userProblemsQueryRef.valueChanges.subscribe(
+      ({ data }) => {
+        if (data.problems.length > 0) {
+          this.userProblems = data.problems;
+        }
+      }
+    );
   }
 
   getContributions() {

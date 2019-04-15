@@ -14,7 +14,8 @@
         <div class="card card-product">
           <div class="card-header card-header-warning">
             <h4 class="card-title">{{problemData.title}}</h4>
-            <p class="card-category"><b>Created By : {{problemOwner}}</b></p>
+            <p class="card-category"><b>Created By :
+                {{ (auth.currentUserValue.id == problemData.created_by) ? 'You' : problemOwner }}</b></p>
           </div>
           <div class="card-body">
             <div class="row">
