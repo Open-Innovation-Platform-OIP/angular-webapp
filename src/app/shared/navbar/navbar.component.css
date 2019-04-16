@@ -1,0 +1,5 @@
+.dropdown-menu a:hover {
+    background-color: var(--orange);
+    color: var(--light);
+    cursor: pointer;
+}
