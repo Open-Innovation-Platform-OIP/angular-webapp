@@ -24,9 +24,13 @@
 
     <div *ngFor="let file of validationData.files; let i=index;">
       <div *ngIf="file">
-        {{file.key}}
+        <span class="d-inline-block text-truncate" style="max-width: 90%;">
+          {{file.key}}
+        </span>
         &nbsp;
-        <i class="fa fa-close" style="cursor:pointer" (click)="removeAttachment(i)"></i>
+        <sup>
+          <i class="fa fa-close" style="cursor:pointer" (click)="removeAttachment(i)"></i>
+        </sup>
       </div>
     </div>
   </div>
