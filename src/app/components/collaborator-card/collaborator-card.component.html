@@ -2,9 +2,10 @@
 
 <!-- [routerLink]="currentUser&&!(collaboratorData.user_id===currentUser)&&'/profiles/'+collaboratorData.user_id" -->
 <div class="card card-profile collaborate-card" *ngIf="collaboratorData">
-  <div class="card-avatar actions" [routerLink]="currentUser && '/users/' + collaboratorData.user_id">
+  <div class="card-avatar actions photo_div" [routerLink]="currentUser && '/users/' + collaboratorData.user_id">
     <a *ngIf="collaboratorData.user && collaboratorData.user.photo_url">
-      <img class="img" style="object-fit: cover;" *ngIf="collaboratorData.user && collaboratorData.user.photo_url" src="{{
+      <img class="img profile_photo" style="object-fit: cover;"
+        *ngIf="collaboratorData.user && collaboratorData.user.photo_url" src="{{
         collaboratorData.user.photo_url && collaboratorData.user.photo_url.url
             ? collaboratorData.user.photo_url.url
             : './assets/img/default-avatar.png'
