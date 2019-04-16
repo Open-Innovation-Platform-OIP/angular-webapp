@@ -81,8 +81,9 @@
                   </label>
                   <div class="col-md-10 col-9">
                     <mat-form-field class="example-full-width">
-                      <input matInput type="number" name="phone_number" min="10" required
-                        [(ngModel)]="user.phone_number" #phone_number="ngModel" />
+                      <input matInput type="tel" name="phone_number" required [(ngModel)]="user.phone_number"
+                        #phone_number="ngModel"
+                        pattern="(?:(?:\+|0{0,2})91(\s*[\- ]\s*)?|[0 ]?)?[789]\d{9}|(\d[-]?){10}\d" />
                     </mat-form-field>
                     <div [hidden]="phone_number.valid || phone_number.pristine" class="text-danger error-msg">
                       Phone number is required
