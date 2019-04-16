@@ -2,6 +2,13 @@
 
 <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
   <div class="container">
+    <a [routerLink]="['/dashboard']">
+      <div class="logo-container">
+        <div class="logo">
+          <img src="/assets/img/social-alpha-logo-250.png" alt="Creative Tim Logo" style="height: 60px;width: 60px;">
+        </div>
+      </div>
+    </a>
     <a class="navbar-brand" href="#">Navbar</a>
     <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav"
       aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
@@ -10,13 +17,13 @@
     <div class="collapse navbar-collapse" id="navbarNav">
       <ul class="navbar-nav">
         <li class="nav-item active">
-          <a class="nav-link" href="#">Dashboard <span class="sr-only">(current)</span></a>
+          <a class="nav-link" [routerLink]="['/dashboard']">Dashboard <span class="sr-only">(current)</span></a>
         </li>
         <li class="nav-item">
-          <a class="nav-link" href="#">Problems</a>
+          <a class="nav-link" [routerLink]="['/problems']">Problems</a>
         </li>
         <li class="nav-item">
-          <a class="nav-link" href="#">Solutions</a>
+          <a class="nav-link" [routerLink]="['/abc']">Solutions</a>
         </li>
       </ul>
     </div>
