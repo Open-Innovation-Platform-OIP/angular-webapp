@@ -7,8 +7,8 @@ export const AppRoutes: Routes = [
   {
     path: "",
     redirectTo: "dashboard",
-    pathMatch: "full"
-    // canActivate: [AuthGuard]
+    pathMatch: "full",
+    canActivate: [AuthGuard]
   },
   {
     path: "",
@@ -26,7 +26,8 @@ export const AppRoutes: Routes = [
       },
       {
         path: "dashboard",
-        loadChildren: "./dashboard/dashboard.module#DashboardModule"
+        loadChildren: "./dashboard/dashboard.module#DashboardModule",
+        canActivateChild: [AuthGuard]
       },
       {
         path: "users",
@@ -72,6 +73,7 @@ export const AppRoutes: Routes = [
   },
   {
     path: "**",
-    redirectTo: "dashboard"
+    redirectTo: "dashboard",
+    canActivate: [AuthGuard]
   }
 ];

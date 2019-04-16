@@ -470,7 +470,7 @@ export class NavbarComponent implements OnInit {
 
   logout() {
     this.auth.logout();
-    this.router.navigate(["/auth/login"]);
+    this.router.navigate(["/landing-page"]);
   }
 
   // GlobalSearch() {

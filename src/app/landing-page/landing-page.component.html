@@ -15,6 +15,8 @@
     <h3 *ngIf="!landingPageSearchResults.length" class="card-title text-center">Problems worth solving</h3>
     <h3 *ngIf="landingPageSearchResults.length" class="card-title text-center">Search Results</h3>
 
+
+
     <br />
     <div class="row" *ngIf="!landingPageSearchResults.length">
       <div class="col-md-3" *ngFor="let problem of problems; let i=index;">
