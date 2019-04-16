@@ -813,7 +813,6 @@ export class WizardComponent
   }
 
   submitProblemToDB() {
-    console.log("hellooooooooooo");
     const upsert_problem = gql`
       mutation upsert_problem($problems: [problems_insert_input!]!) {
         insert_problems(
