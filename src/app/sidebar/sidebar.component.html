@@ -9,7 +9,7 @@
   </a>
 </div> -->
 
-<div class="sidebar-wrapper">
+<div class="sidebar-wrapper" *ngIf="isMobileMenu()">
   <!-- <div class="user"> -->
   <!-- <div class="photo">
       <img class="img"
@@ -41,7 +41,7 @@
     </div>-->
   <!-- </div> -->
 
-  <div *ngIf="isMobileMenu()">
+  <div>
     <form class="navbar-form">
       <span class="bmd-form-group">
         <div class="input-group no-border">
