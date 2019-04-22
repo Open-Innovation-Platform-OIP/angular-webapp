@@ -1,105 +1,129 @@
 <div class="main-content">
-    <div class="container-fluid"
-        *ngIf="drafts.length || userProblems.length || objectKeys(contributions).length || objectKeys(recommendedProblems).length || objectKeys(recommendedUsers).length; else new_user">
-        <div class="row">
-            <div class="col-md-10">
-                <h3 *ngIf="drafts.length" class="card-title">You are working on these drafts</h3>
-            </div>
-            <div class="col-md-2" style="padding-top: 1em;">
-                <button mat-raised-button class="btn btn-warning btn-sm" (click)="viewAll()">View All</button>
-            </div>
-        </div>
-        <br />
-        <div class="row">
-            <div class="col-md-3" *ngFor="let problem of drafts; let i=index;">
-                <app-problem-card *ngIf="i < 4" [problemData]="problem"></app-problem-card>
-            </div>
-        </div>
-
-        <div class="row">
-            <div class="col-md-10">
-                <h3 *ngIf="userProblems.length" class="card-title">Problems added by you
-                </h3>
-            </div>
-            <div class="col-md-2" style="padding-top: 1em;">
-                <button mat-raised-button class="btn btn-warning btn-sm" (click)="viewAll()">View All</button>
-            </div>
-        </div>
-        <br />
-        <div class="row">
-            <div class="col-md-3" *ngFor="let problem of userProblems; let i=index;">
-                <app-problem-card *ngIf="i < 4" [problemData]="problem"></app-problem-card>
-            </div>
-
-        </div>
-
-        <div class="row">
-            <div class="col-md-10">
-                <h3 *ngIf="objectKeys(contributions).length>0" class="card-title">Problems you have
-                    contributed to
-                </h3>
-            </div>
-            <div class="col-md-2" style="padding-top: 1em;">
-                <button mat-raised-button class="btn btn-warning btn-sm" (click)="viewAll()">View All</button>
-            </div>
-        </div>
-        <br />
-        <div class="row">
-            <div class="col-md-3" *ngFor="let problem of objectValues(contributions); let i=index;">
-                <app-problem-card *ngIf="i < 4" [problemData]="problem"></app-problem-card>
-            </div>
-        </div>
-
-        <div class="row">
-            <div class="col-md-10">
-                <h3 *ngIf="objectKeys(recommendedProblems).length>0" class="card-title">Problems you may be
-                    interested in</h3>
-            </div>
-            <div class="col-md-2" style="padding-top: 1em;">
-                <button mat-raised-button class="btn btn-warning btn-sm" (click)="viewAll()">View All</button>
-            </div>
-        </div>
-        <br />
-        <div class="row">
-            <div class="col-md-3" *ngFor="let problem of objectValues(recommendedProblems); let i=index;">
-                <app-problem-card *ngIf="i < 4" [problemData]="problem"></app-problem-card>
-            </div>
-        </div>
-
-        <div class="row">
-            <div class="col-md-10">
-                <h3 *ngIf="objectKeys(recommendedUsers).length>0" class="card-title">People with similar
-                    interests
-                </h3>
-            </div>
-            <div class="col-md-2" style="padding-top: 1em;">
-                <button mat-raised-button class="btn btn-warning btn-sm" (click)="viewAll()">View All</button>
-            </div>
-        </div>
-        <br />
-        <div class="row">
-            <div class="col-md-3" *ngFor="let user of objectValues(recommendedUsers); let i=index;">
-                <app-profile-card *ngIf="i < 4" [userData]="user"></app-profile-card>
-            </div>
-        </div>
+  <div class="container-fluid" *ngIf="
+      drafts.length ||
+        userProblems.length ||
+        objectKeys(contributions).length ||
+        objectKeys(recommendedProblems).length ||
+        objectKeys(recommendedUsers).length;
+      else new_user
+    ">
+    <div class="row">
+      <div class="col-md-10">
+        <h3 *ngIf="drafts.length" class="card-title">
+          You are working on these drafts
+        </h3>
+      </div>
+      <div class="col-md-2" style="padding-top: 1em;">
+        <button mat-raised-button class="btn btn-warning btn-sm" [routerLink]="['/dashboard/drafts',{ type: 'drafts'}]">
+          View All
+        </button>
+      </div>
     </div>
+    <br />
+    <div class="row">
+      <div class="col-md-3" *ngFor="let problem of drafts; let i = index">
+        <app-problem-card *ngIf="i < 4" [problemData]="problem"></app-problem-card>
+      </div>
+    </div>
+
+    <div class="row">
+      <div class="col-md-10">
+        <h3 *ngIf="userProblems.length" class="card-title">
+          Problems added by you
+        </h3>
+      </div>
+      <div class="col-md-2" style="padding-top: 1em;">
+        <button mat-raised-button class="btn btn-warning btn-sm"
+          [routerLink]="['/dashboard/problems',{ type: 'problems'}]">
+          View All
+        </button>
+      </div>
+    </div>
+    <br />
+    <div class="row">
+      <div class="col-md-3" *ngFor="let problem of userProblems; let i = index">
+        <app-problem-card *ngIf="i < 4" [problemData]="problem"></app-problem-card>
+      </div>
+    </div>
+
+    <div class="row">
+      <div class="col-md-10">
+        <h3 *ngIf="objectKeys(contributions).length > 0" class="card-title">
+          Problems you have contributed to
+        </h3>
+      </div>
+      <div class="col-md-2" style="padding-top: 1em;">
+        <button mat-raised-button class="btn btn-warning btn-sm"
+          [routerLink]="['/dashboard/contributions',{ type: 'contributions'}]">
+          View All
+        </button>
+      </div>
+    </div>
+    <br />
+    <div class="row">
+      <div class="col-md-3" *ngFor="let problem of objectValues(contributions); let i = index">
+        <app-problem-card *ngIf="i < 4" [problemData]="problem"></app-problem-card>
+      </div>
+    </div>
+
+    <div class="row">
+      <div class="col-md-10">
+        <h3 *ngIf="objectKeys(recommendedProblems).length > 0" class="card-title">
+          Problems you may be interested in
+        </h3>
+      </div>
+      <div class="col-md-2" style="padding-top: 1em;">
+        <button mat-raised-button class="btn btn-warning btn-sm"
+          [routerLink]="['/dashboard/interests',{ type: 'interests'}]">
+          View All
+        </button>
+      </div>
+    </div>
+    <br />
+    <div class="row">
+      <div class="col-md-3" *ngFor="let problem of objectValues(recommendedProblems); let i = index">
+        <app-problem-card *ngIf="i < 4" [problemData]="problem"></app-problem-card>
+      </div>
+    </div>
+
+    <div class="row">
+      <div class="col-md-10">
+        <h3 *ngIf="objectKeys(recommendedUsers).length > 0" class="card-title">
+          People with similar interests
+        </h3>
+      </div>
+      <div class="col-md-2" style="padding-top: 1em;">
+        <button mat-raised-button class="btn btn-warning btn-sm"
+          [routerLink]="['/dashboard/recommended-users',{ type: 'users'}]">
+          View All
+        </button>
+      </div>
+    </div>
+    <br />
+    <div class="row">
+      <div class="col-md-3" *ngFor="let user of objectValues(recommendedUsers); let i = index">
+        <app-profile-card *ngIf="i < 4" [userData]="user"></app-profile-card>
+      </div>
+    </div>
+  </div>
 </div>
 
 <ng-template #new_user>
-    <div class="main-content">
-        <div class="container-fluid">
-            <h3>New here?</h3>
-            <p>
-                Why not help enrich some of <a [routerLink]="'/problems'">the problems</a> on the platform? Or perhaps
-                add a new one?
-            </p>
-            <p>
-                Don't forget to <a [routerLink]="'/users/'+ auth.currentUserValue.id">update your profile</a> so that
-                other users can find you!
-            </p>
-        </div>
+  <div class="main-content">
+    <div class="container-fluid">
+      <h3>New here?</h3>
+      <p>
+        Why not help enrich some of
+        <a [routerLink]="'/problems'">the problems</a> on the platform? Or
+        perhaps add a new one?
+      </p>
+      <p>
+        Don't forget to
+        <a [routerLink]="'/users/' + auth.currentUserValue.id">update your profile</a>
+        so that other users can find you!
+      </p>
     </div>
+  </div>
 </ng-template>
-
 
 <!-- Hello -->
