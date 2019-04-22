@@ -728,13 +728,26 @@ export class ProblemDetailComponent implements OnInit, OnDestroy {
           }
         }
       });
+
       this.popularDiscussions = Object.keys(this.replies)
-        .sort((a, b) => {
+        .sort((a, b) => {                                   // sorting by date
+          var dateA = this.comments[a].modified_at;
+          var dateB = this.comments[b].modified_at;
+          if (dateA < dateB) {
+            return 1;
+          }
+          if (dateA > dateB) {
+            return -1;
+          }
+
+          return 0;
+        })
+        .sort((a, b) => {                                // sorting by no. of replies
           return this.replies[b].length - this.replies[a].length;
         })
-        .map(commentId => {
-          return this.comments[commentId];
-        });
+        .filter(commentId => this.comments[commentId])  // to avoid undefined 
+        .map(commentId => this.comments[commentId]);    //mapping the sorted array
+
       console.log("REPLIES", this.replies);
       console.log("COMMENTS", this.comments);
       console.log("POPULAR", this.popularDiscussions);
