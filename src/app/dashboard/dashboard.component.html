@@ -1,12 +1,14 @@
 <div class="main-content">
-  <div class="container-fluid" *ngIf="
-      drafts.length ||
-        userProblems.length ||
-        objectKeys(contributions).length ||
-        objectKeys(recommendedProblems).length ||
-        objectKeys(recommendedUsers).length;
-      else new_user
+  <div *ngIf="
+      isNewUser()
+      then new_user
+      else existing
     ">
+  </div>
+</div>
+
+<ng-template #existing>
+  <div class="container-fluid">
     <div class="row">
       <div class="col-md-10">
         <h3 *ngIf="drafts.length" class="card-title">
@@ -106,10 +108,20 @@
       </div>
     </div>
   </div>
-</div>
+</ng-template>
+
 
 <ng-template #new_user>
-  <div class="main-content">
+  <!-- Loader -->
+  <div *ngIf="showLoader">
+    <div class="loader">
+      <svg class="circular" viewBox="25 25 50 50">
+        <circle class="path" cx="50" cy="50" r="20" fill="none" stroke-width="2" stroke-miterlimit="10" />
+      </svg>
+    </div>
+  </div>
+
+  <div *ngIf="!showLoader" class="main-content">
     <div class="container-fluid">
       <h3>New here?</h3>
       <p>
@@ -125,5 +137,3 @@
     </div>
   </div>
 </ng-template>
-
-<!-- Hello -->

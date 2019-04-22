@@ -19,6 +19,7 @@ export class DashboardComponent implements OnInit, OnDestroy {
   contributions = {};
   recommendedProblems = {};
   recommendedUsers = {};
+  showLoader = true;
   draftsQueryRef: QueryRef<any>;
   userProblemsQueryRef: QueryRef<any>;
   contributionsQueryRef: QueryRef<any>;
@@ -86,6 +87,21 @@ export class DashboardComponent implements OnInit, OnDestroy {
     this.getRecommendedProblems();
     this.getRecommendedUsers();
     // this.problemQueryString = '{' + this.problemFields.join('\n') + '}';
+
+  }
+
+  isNewUser() {
+    if (this.drafts.length ||
+      this.userProblems.length ||
+      this.objectKeys(this.contributions).length ||
+      this.objectKeys(this.recommendedProblems).length ||
+      this.objectKeys(this.recommendedUsers).length) {
+      this.showLoader = false;
+      return false
+    } else {
+      this.showLoader = false;
+      return false
+    }
   }
 
   getDrafts() {
@@ -293,6 +309,7 @@ export class DashboardComponent implements OnInit, OnDestroy {
   }
 
   ngOnDestroy() {
+    this.showLoader = true;
     this.draftsQueryRef.stopPolling();
     this.contributionsQueryRef.stopPolling();
     this.recommendedProblemsQueryRef.stopPolling();
