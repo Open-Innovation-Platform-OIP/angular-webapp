@@ -3,6 +3,7 @@ import { Apollo, QueryRef } from "apollo-angular";
 import gql from "graphql-tag";
 import { Observable, Subscription } from "rxjs";
 import { AuthService } from "../services/auth.service";
+import { ProblemService } from "../services/problem.service";
 import { isArray } from "util";
 declare const $: any;
 
@@ -70,7 +71,11 @@ export class DashboardComponent implements OnInit, OnDestroy {
     }
   }`;
 
-  constructor(private apollo: Apollo, private auth: AuthService) {
+  constructor(
+    private apollo: Apollo,
+    private auth: AuthService,
+    private problemService: ProblemService
+  ) {
     // console.log('dashboard')
   }
   ngOnInit() {
@@ -102,6 +107,7 @@ export class DashboardComponent implements OnInit, OnDestroy {
       // console.log(data);
       if (data.problems.length > 0) {
         this.drafts = data.problems;
+        this.problemService.dashboardDrafts = data.problems;
       }
     });
   }
@@ -126,6 +132,7 @@ export class DashboardComponent implements OnInit, OnDestroy {
       ({ data }) => {
         if (data.problems.length > 0) {
           this.userProblems = data.problems;
+          this.problemService.dashboardUserProblems = data.problems;
         }
       }
     );
@@ -169,7 +176,15 @@ export class DashboardComponent implements OnInit, OnDestroy {
               // console.log(problem, "problem");
               if (problem["id"]) {
                 this.contributions[problem["id"]] = problem;
-                // console.log(this.contributions, "contributions");
+                console.log(this.contributions, "contributions");
+
+                this.problemService.dashboardContributions[
+                  problem["id"]
+                ] = problem;
+                console.log(
+                  "test contributions",
+                  this.problemService.dashboardContributions
+                );
               }
             }
             // this.contributions.add(Object.values(problem)[0]);
@@ -205,6 +220,9 @@ export class DashboardComponent implements OnInit, OnDestroy {
                 if (p && p.problem && p.problem.id) {
                   const problem = p.problem;
                   this.recommendedProblems[problem["id"]] = problem;
+                  this.problemService.dashboardRecommendations[
+                    problem["id"]
+                  ] = problem;
                 }
                 // this.recommendedProblems.add(problem.problem);
               });
@@ -263,6 +281,7 @@ export class DashboardComponent implements OnInit, OnDestroy {
               org.organizationByOrganizationId.users.map(user => {
                 if (user && user.id) {
                   this.recommendedUsers[user["id"]] = user;
+                  this.problemService.dashboardUsers[user["id"]] = user;
                 }
                 // this.recommendedUsers.add(user);
               });

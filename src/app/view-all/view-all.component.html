@@ -1,0 +1,22 @@
+<div class="main-content">
+  <div class="container-fluid">
+    <div class="row">
+      <div class="col-md-10">
+        <h3 *ngIf="dashboardData.length" class="card-title text-center">
+          {{ title }}
+        </h3>
+      </div>
+    </div>
+    <br />
+    <div class="row" *ngIf="!displayUsers">
+      <div class="col-md-3" *ngFor="let problem of dashboardData">
+        <app-problem-card [problemData]="problem"></app-problem-card>
+      </div>
+    </div>
+    <div class="row" *ngIf="displayUsers">
+      <div class="col-md-3" *ngFor="let user of dashboardData">
+        <app-profile-card [userData]="user"></app-profile-card>
+      </div>
+    </div>
+  </div>
+</div>
