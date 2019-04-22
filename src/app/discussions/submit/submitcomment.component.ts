@@ -78,7 +78,7 @@ export class CommentSubmitComponent implements OnInit {
 
   setFocus(event) {
     // tslint:disable-next-line:no-console
-    console.log(event);
+    // console.log(event);
     event.focus();
   }
 

@@ -1218,7 +1218,7 @@ export class ProblemDetailComponent implements OnInit, OnDestroy {
 
   async onCommentSubmit(event, comment_id?) {
     const [content, mentions, attachments] = event;
-    console.log(event);
+    // console.log(event);
     let file_links: attachment_object[];
     let _links = []; //local array
 
