@@ -88,8 +88,8 @@ export class DashboardComponent implements OnInit, OnDestroy {
     const draftsQuery = gql`
       {
         problems(where:{is_draft:{_eq:true},is_deleted:{_eq:false}, created_by:{_eq: ${
-          this.auth.currentUserValue.id
-        }}} order_by: {modified_at: desc}) ${this.problemQueryString}
+      this.auth.currentUserValue.id
+      }}} order_by: {modified_at: desc}) ${this.problemQueryString}
     }
     `;
     this.draftsQueryRef = this.apollo.watchQuery({
@@ -164,7 +164,7 @@ export class DashboardComponent implements OnInit, OnDestroy {
           data[key].map(p => {
             // console.log(p, "p");
             if (p.problem || p.problemsByproblemId) {
-              console.log(p, "p");
+              // console.log(p, "p");
               const problem = p.problem || p.problemsByproblemId;
               // console.log(problem, "problem");
               if (problem["id"]) {
@@ -229,7 +229,7 @@ export class DashboardComponent implements OnInit, OnDestroy {
         organizationByOrganizationId{
           users(where:{id:{_neq:${this.auth.currentUserValue.id}}}) ${
       this.userQueryString
-    }
+      }
         }
       }
     }

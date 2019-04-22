@@ -474,6 +474,14 @@ export class NavbarComponent implements OnInit {
     this.router.navigate(["/auth/login"]);
   }
 
+  openSearchComponent() {
+    this.router.navigate(["/search"]);
+    let searchBar = <HTMLBaseElement>document.querySelector('input[name=searchInput]');
+    if (searchBar) {
+      searchBar.focus();
+    }
+  }
+
   // GlobalSearch() {
   //   if (this.searchT === undefined) {
   //     window.alert("Enter Text to Search");
