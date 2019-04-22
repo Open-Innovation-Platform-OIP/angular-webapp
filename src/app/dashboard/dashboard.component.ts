@@ -192,15 +192,15 @@ export class DashboardComponent implements OnInit, OnDestroy {
               // console.log(problem, "problem");
               if (problem["id"]) {
                 this.contributions[problem["id"]] = problem;
-                console.log(this.contributions, "contributions");
+                // console.log(this.contributions, "contributions");
 
                 this.problemService.dashboardContributions[
                   problem["id"]
                 ] = problem;
-                console.log(
-                  "test contributions",
-                  this.problemService.dashboardContributions
-                );
+                // console.log(
+                //   "test contributions",
+                //   this.problemService.dashboardContributions
+                // );
               }
             }
             // this.contributions.add(Object.values(problem)[0]);
