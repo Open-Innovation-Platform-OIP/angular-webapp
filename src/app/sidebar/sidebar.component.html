@@ -1,4 +1,4 @@
-<!-- <div class="logo">
+<div class="logo">
   <a class="simple-text logo-mini">
     <div class="logo-img">
       <img src="/assets/img/social-alpha-logo-250.png" />
@@ -7,9 +7,12 @@
   <a href="" class="simple-text logo-normal">
     Solve Together
   </a>
-</div> -->
+</div>
 
-<div class="sidebar-wrapper" *ngIf="isMobileMenu()">
+<div class="sidebar-wrapper">
+
+
+
   <!-- <div class="user"> -->
   <!-- <div class="photo">
       <img class="img"
@@ -41,7 +44,7 @@
     </div>-->
   <!-- </div> -->
 
-  <div>
+  <div *ngIf="isMobileMenu()">
     <form class="navbar-form">
       <span class="bmd-form-group">
         <div class="input-group no-border">

@@ -70,8 +70,9 @@
       </p>
 
       <span>
-        <button class="btn btn-warning btn-link" matTooltip="upvote" (click)="toggleVoteDiscussions()"
-          [ngStyle]="{'color':voters.has(userId) ? '#1E90FF' : 'black' }" style="padding: 0 7px;">
+        <button class="btn btn-warning btn-link" *ngIf="auth.currentUserValue.id" matTooltip="upvote"
+          (click)="toggleVoteDiscussions()" [ngStyle]="{'color':voters.has(userId) ? '#1E90FF' : 'black' }"
+          style="padding: 0 7px;">
           <i class="material-icons actions">
             thumb_up
           </i>
@@ -80,8 +81,9 @@
       </span>
 
       <span class="dropdown">
-        <button class="btn btn-warning btn-link" matTooltip="share" type="button" id="discussion_share_btn"
-          data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" style="padding: 0 5px;">
+        <button class="btn btn-warning btn-link" *ngIf="auth.currentUserValue.id" matTooltip="share" type="button"
+          id="discussion_share_btn" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"
+          style="padding: 0 5px;">
           <i class="material-icons actions">
             share
           </i>
@@ -96,7 +98,7 @@
       </span>
 
       <button mat-raised-button class="btn btn-link btn-warning btn-sm" matTooltip="Click to reply"
-        [matTooltipPosition]="'below'" *ngIf="!(showReplyBox && replyingTo === comment.id)"
+        [matTooltipPosition]="'below'" *ngIf="!(showReplyBox && replyingTo === comment.id) && auth.currentUserValue.id"
         (click)="replyTo(comment.id)">Reply</button>
       <app-submit-comment *ngIf="showReplyBox && replyingTo === comment.id" [users]="users" [actionText]="'Reply'"
         [cancelShown]="true" [id]="comment.id" (cancel)="showReplyBox=false" (submit)="onCommentSubmit($event)">
