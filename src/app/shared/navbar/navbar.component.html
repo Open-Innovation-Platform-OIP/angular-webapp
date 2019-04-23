@@ -81,27 +81,19 @@
           <i class="material-icons">search</i>
           <div class="ripple-container"></div>
         </button>
-        <!-- <li class="nav-item">
-          <a class="nav-link" href="#pablo">
-            <i class="material-icons">dashboard</i>
-            <p>
-              <span class="d-lg-none d-md-block">Stats</span>
-            </p>
-          </a>
-        </li> -->
+
         <li class="nav-item dropdown">
           <a class="nav-link" href="#pablo" id="navbarDropdownMenuLink" data-toggle="dropdown" aria-haspopup="true"
             aria-expanded="false">
             <i class="material-icons">notifications</i>
-            <span class="notification">{{
+            <span *ngIf="objectValues(notifications).length" class="notification">{{
               objectValues(notifications).length
               }}</span>
             <p>
               <span class="d-lg-none d-md-block">Some Actions</span>
             </p>
           </a>
-          <div *ngIf="objectValues(notifications).length" class="dropdown-menu dropdown-menu-right"
-            aria-labelledby="navbarDropdownMenuLink">
+          <div class="dropdown-menu dropdown-menu-right" aria-labelledby="navbarDropdownMenuLink">
             <div *ngFor="let notification of objectValues(notifications)">
 
 
@@ -171,18 +163,6 @@
                 "{{ notification.problemsByproblemId.title }}"
 
               </a>
-
-
-              <!-- <a *ngIf="notification.validated_by" class="dropdown-item" name="{{ notification.id }}"
-            href="problems/{{ notification.id }}" (click)="onRead($event)">
-
-             {{ notification.problemsByproblemId.title }} is validated by an expert
-
-          </a> -->
-
-
-
-
             </div>
 
             <div class="text-center" *ngIf="objectValues(notifications).length > 0; else noNotification">
@@ -191,17 +171,10 @@
                 Mark all as Read
               </button>
             </div>
-            <ng-template #noNotification>&nbsp; No New Notifications</ng-template>
-            <!-- <a class="dropdown-item">No New Notifications</a> -->
 
-            <!-- <a class="dropdown-item" href="#">User1 validated your problem</a>
-            <a class="dropdown-item" href="#">3 new problems added to water</a>
-            <a class="dropdown-item" href="#"
-              >User2 proposed a solution to your problem</a
-            >
-            <a class="dropdown-item" href="#"
-              >2 new collaborators for problem 26</a
-            > -->
+            <ng-template #noNotification>
+              <a class="dropdown-item disabled" href="javascript.void(0)">No New Notifications</a>
+            </ng-template>
           </div>
         </li>
         <!-- <li class="nav-item">

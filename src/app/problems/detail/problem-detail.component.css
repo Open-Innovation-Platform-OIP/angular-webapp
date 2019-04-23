@@ -92,3 +92,9 @@ label {
     text-decoration: underline;
     color: orange;
 }
+
+.dropdown-menu a:hover {
+    background-color: var(--orange);
+    color: var(--light);
+    cursor: pointer;
+}
