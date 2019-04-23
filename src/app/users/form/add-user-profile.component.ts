@@ -60,7 +60,7 @@ export class AddUserProfileComponent implements OnInit, OnChanges {
   mode = "Add";
   userId: any;
   visible = true;
-
+  phone_pattern = /(?:(?:\+|0{0,2})91(\s*[\- ]\s*)?|[0 ]?)?[789]\d{9}|(\d[-]?){ 10 } \d/;
   selectable = true;
   removable = true;
   addOnBlur = true;
@@ -108,7 +108,7 @@ export class AddUserProfileComponent implements OnInit, OnChanges {
     notify_email: false,
     notify_sms: false,
     notify_app: true,
-    organization_id: 0
+    organization_id: null
   };
 
   @ViewChild("sectorInput") sectorInput: ElementRef<HTMLInputElement>;
@@ -132,11 +132,9 @@ export class AddUserProfileComponent implements OnInit, OnChanges {
           : Object.keys(this.tagService.allTags).slice()
       )
     );
-    // console.log("TEst is: ", this.test);
   }
 
   add(event: MatChipInputEvent): void {
-    console.log("test", event);
     // Add sector only when MatAutocomplete is not open
     // To make sure this does not conflict with OptionSelected Event
     if (!this.matAutocomplete.isOpen) {
@@ -158,8 +156,6 @@ export class AddUserProfileComponent implements OnInit, OnChanges {
     const index = this.sectors.indexOf(sector);
     if (index >= 0) {
       this.sectors.splice(index, 1);
-      console.log(this.tagService.allTags[sector], "sector delete check");
-
       if (this.tagService.allTags[sector] && this.user.id) {
         this.tagService.removeTagRelation(
           this.tagService.allTags[sector].id,
@@ -234,26 +230,14 @@ export class AddUserProfileComponent implements OnInit, OnChanges {
   }
 
   storeOrganization(event) {
-    console.log(event, "event on select");
-
-    // this.userService.allOrgs.map(org => {
-    //   if (org.name === this.organization) {
-    //     this.user.organization_id = org.id;
-    //   }
-    // });
     this.user.organization_id = this.userService.allOrgs[this.organization].id;
-    // this.user.organization = event.value.name;
-
-    console.log(this.organization, "on select organazation");
   }
 
   getLocation() {
-    console.log("get address");
     if (this.userLocation != "Unknown") {
       this.here.getAddress(this.userLocation).then(
         result => {
           this.locations = <Array<any>>result;
-          console.log(this.locations, "locations");
         },
         error => {
           console.error(error);
@@ -271,16 +255,10 @@ export class AddUserProfileComponent implements OnInit, OnChanges {
     // console.log(typeof JSON.parse("{" + filtered.toString() + "}"));
   }
   public storeLocation(location) {
-    console.log(location, "location");
     this.user.location = location.option.value;
     this.userLocation = location.option.value.Address.Label;
-
-    // console.log(this.user.location);
   }
   ngOnInit() {
-    // this.organizationTest = "jaaga";
-    console.log(this.userService.allOrgs, "org on ng on init");
-
     this.tagService.getTagsFromDB();
 
     Object.entries(this.user).map(persona => {
@@ -289,10 +267,7 @@ export class AddUserProfileComponent implements OnInit, OnChanges {
       }
     });
 
-    // this.tagService.getTagsFromDB();
-
     this.route.params.pipe(first()).subscribe(params => {
-      console.log(params.id, "params id");
       if (params.id) {
         this.mode = "Edit";
         this.apollo
@@ -342,7 +317,6 @@ export class AddUserProfileComponent implements OnInit, OnChanges {
           })
           .valueChanges.subscribe(
             ({ data }) => {
-              console.log(data, "user profile");
               if (data.users.length > 0) {
                 Object.keys(this.user).map(key => {
                   if (data.users[0][key]) {
@@ -363,16 +337,11 @@ export class AddUserProfileComponent implements OnInit, OnChanges {
                 if (data.users[0].organizationByOrganizationId) {
                   this.organization =
                     data.users[0].organizationByOrganizationId.name;
-                  // console.log(this.organizationTest, "org");
                 }
               }
               this.sectors = data.users[0].user_tags.map(tagArray => {
                 return tagArray.tag.name;
               });
-              // console.log(this.personas, "personas");
-              console.log(this.user, "user");
-
-              // });
             },
             error => {
               console.log("could not get user due to", error);
@@ -384,7 +353,6 @@ export class AddUserProfileComponent implements OnInit, OnChanges {
   }
 
   getBlob(event) {
-    console.log("Event: ", event);
     this.imageBlob = event.target.files[0];
   }
 
@@ -394,13 +362,11 @@ export class AddUserProfileComponent implements OnInit, OnChanges {
 
   updateProfileToDb() {
     this.sectors = this.removeDuplicates(this.sectors);
-    console.log(this.sectors, "sectors after removing duplicates");
     this.user.phone_number = this.user.phone_number.toString();
     if (Number(this.auth.currentUserValue.id)) {
       this.user.id = Number(this.auth.currentUserValue.id);
     }
 
-    // console.log(this.personas, "personas");
     if (this.personas) {
       this.personas.map(persona => {
         this.user[persona] = true;
@@ -412,6 +378,7 @@ export class AddUserProfileComponent implements OnInit, OnChanges {
         Number(this.auth.currentUserValue.id)
       ].organization = this.user.organization;
     }
+
     this.userService.submitUserToDB(this.user).subscribe(
       result => {
         this.userService.getCurrentUser();
@@ -424,11 +391,9 @@ export class AddUserProfileComponent implements OnInit, OnChanges {
         const tags = [];
 
         const user_tags = new Set();
-        console.log(this.sectors, "sectors");
 
         this.sectors.map(sector => {
           tags.push({ name: sector });
-          console.log(tags, "tags in array");
 
           if (
             this.tagService.allTags[sector] &&
@@ -470,7 +435,7 @@ export class AddUserProfileComponent implements OnInit, OnChanges {
                 users_tags: Array.from(user_tags)
               }
             })
-            .subscribe(data => {}, err => {});
+            .subscribe(data => { }, err => { });
         }
       },
       err => {
@@ -493,7 +458,6 @@ export class AddUserProfileComponent implements OnInit, OnChanges {
         .uploadFile(this.imageBlob, this.imageBlob["name"])
         .promise()
         .then(values => {
-          // console.log("val: ", values);
           this.user.photo_url = {};
           this.user.photo_url.url = values["Location"];
           this.user.photo_url.mimeType = this.imageBlob["type"];

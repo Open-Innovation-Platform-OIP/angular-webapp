@@ -20,7 +20,7 @@ export class GeocoderService {
     };
     this.geocoder = this.platform.getGeocodingService();
     // this.geocoder.geocode(this.geocodingParameters);
-    console.log(this.geocoder, "coder");
+    // console.log(this.geocoder, "coder");
   }
 
   public getAddress(query2: string) {

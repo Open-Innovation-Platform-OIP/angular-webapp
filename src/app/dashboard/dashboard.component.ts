@@ -3,6 +3,7 @@ import { Apollo, QueryRef } from "apollo-angular";
 import gql from "graphql-tag";
 import { Observable, Subscription } from "rxjs";
 import { AuthService } from "../services/auth.service";
+import { ProblemService } from "../services/problem.service";
 import { isArray } from "util";
 declare const $: any;
 
@@ -14,14 +15,18 @@ export class DashboardComponent implements OnInit, OnDestroy {
   objectValues = Object["values"];
   objectKeys = Object["keys"];
   drafts = [];
+  userProblems = [];
   contributions = {};
   recommendedProblems = {};
   recommendedUsers = {};
+  showLoader = true;
   draftsQueryRef: QueryRef<any>;
+  userProblemsQueryRef: QueryRef<any>;
   contributionsQueryRef: QueryRef<any>;
   recommendedProblemsQueryRef: QueryRef<any>;
   recommendedUsersQueryRef: QueryRef<any>;
   draftsSub: Subscription;
+  userProblemsQuerySub: Subscription;
   contributionsSub: Subscription;
   recommendedProblemsSub: Subscription;
   recommendedUsersSub: Subscription;
@@ -67,16 +72,36 @@ export class DashboardComponent implements OnInit, OnDestroy {
     }
   }`;
 
-  constructor(private apollo: Apollo, private auth: AuthService) {
+  constructor(
+    private apollo: Apollo,
+    private auth: AuthService,
+    private problemService: ProblemService
+  ) {
     // console.log('dashboard')
   }
   ngOnInit() {
     // console.log('on init')
     this.getDrafts();
+    this.getUsersProblems();
     this.getContributions();
     this.getRecommendedProblems();
     this.getRecommendedUsers();
     // this.problemQueryString = '{' + this.problemFields.join('\n') + '}';
+
+  }
+
+  isNewUser() {
+    if (this.drafts.length ||
+      this.userProblems.length ||
+      this.objectKeys(this.contributions).length ||
+      this.objectKeys(this.recommendedProblems).length ||
+      this.objectKeys(this.recommendedUsers).length) {
+      this.showLoader = false;
+      return false
+    } else {
+      this.showLoader = false;
+      return false
+    }
   }
 
   getDrafts() {
@@ -84,8 +109,8 @@ export class DashboardComponent implements OnInit, OnDestroy {
     const draftsQuery = gql`
       {
         problems(where:{is_draft:{_eq:true},is_deleted:{_eq:false}, created_by:{_eq: ${
-          this.auth.currentUserValue.id
-        }}} order_by: {modified_at: desc}) ${this.problemQueryString}
+      this.auth.currentUserValue.id
+      }}} order_by: {modified_at: desc}) ${this.problemQueryString}
     }
     `;
     this.draftsQueryRef = this.apollo.watchQuery({
@@ -94,15 +119,37 @@ export class DashboardComponent implements OnInit, OnDestroy {
       fetchPolicy: "network-only"
     });
     // this.draftsObs = this.draftsQueryRef.valueChanges;
-    this.draftsSub = this.draftsQueryRef.valueChanges.subscribe(
+    this.draftsSub = this.draftsQueryRef.valueChanges.subscribe(({ data }) => {
+      // console.log(data);
+      if (data.problems.length > 0) {
+        this.drafts = data.problems;
+        this.problemService.dashboardDrafts = data.problems;
+      }
+    );
+  }
+
+  getUsersProblems() {
+    const userProblemsQuery = gql`
+    {
+      problems( 
+        where:{ _and:[
+        { is_draft: {_eq: false}},
+        {created_by: {_eq: ${this.auth.currentUserValue.id} }}
+      ]
+    } order_by: {updated_at: desc}) ${this.problemQueryString}
+    }
+    `;
+    this.userProblemsQueryRef = this.apollo.watchQuery({
+      query: userProblemsQuery,
+      pollInterval: 1000,
+      fetchPolicy: "network-only"
+    });
+    this.userProblemsQuerySub = this.userProblemsQueryRef.valueChanges.subscribe(
       ({ data }) => {
-        // console.log(data);
         if (data.problems.length > 0) {
-          this.drafts = data.problems;
+          this.userProblems = data.problems;
+          this.problemService.dashboardUserProblems = data.problems;
         }
-      },
-      error => {
-        console.error(JSON.stringify(error));
       }
     );
   }
@@ -140,12 +187,20 @@ export class DashboardComponent implements OnInit, OnDestroy {
           data[key].map(p => {
             // console.log(p, "p");
             if (p.problem || p.problemsByproblemId) {
-              console.log(p, "p");
+              // console.log(p, "p");
               const problem = p.problem || p.problemsByproblemId;
               // console.log(problem, "problem");
               if (problem["id"]) {
                 this.contributions[problem["id"]] = problem;
                 // console.log(this.contributions, "contributions");
+
+                this.problemService.dashboardContributions[
+                  problem["id"]
+                ] = problem;
+                // console.log(
+                //   "test contributions",
+                //   this.problemService.dashboardContributions
+                // );
               }
             }
             // this.contributions.add(Object.values(problem)[0]);
@@ -184,6 +239,9 @@ export class DashboardComponent implements OnInit, OnDestroy {
                 if (p && p.problem && p.problem.id) {
                   const problem = p.problem;
                   this.recommendedProblems[problem["id"]] = problem;
+                  this.problemService.dashboardRecommendations[
+                    problem["id"]
+                  ] = problem;
                 }
                 // this.recommendedProblems.add(problem.problem);
               });
@@ -211,7 +269,7 @@ export class DashboardComponent implements OnInit, OnDestroy {
         organizationByOrganizationId{
           users(where:{id:{_neq:${this.auth.currentUserValue.id}}}) ${
       this.userQueryString
-    }
+      }
         }
       }
     }
@@ -245,6 +303,7 @@ export class DashboardComponent implements OnInit, OnDestroy {
               org.organizationByOrganizationId.users.map(user => {
                 if (user && user.id) {
                   this.recommendedUsers[user["id"]] = user;
+                  this.problemService.dashboardUsers[user["id"]] = user;
                 }
                 // this.recommendedUsers.add(user);
               });
@@ -259,6 +318,7 @@ export class DashboardComponent implements OnInit, OnDestroy {
   }
 
   ngOnDestroy() {
+    this.showLoader = true;
     this.draftsQueryRef.stopPolling();
     this.contributionsQueryRef.stopPolling();
     this.recommendedProblemsQueryRef.stopPolling();

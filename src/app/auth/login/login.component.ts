@@ -39,7 +39,7 @@ export class LoginComponent implements OnInit, OnDestroy {
     body.classList.add("login-page");
     body.classList.add("off-canvas-sidebar");
     const card = document.getElementsByClassName("card")[0];
-    setTimeout(function() {
+    setTimeout(function () {
       // after 1000 ms we add the class animated to the login/register card
       card.classList.remove("card-hidden");
     }, 700);
@@ -78,7 +78,7 @@ export class LoginComponent implements OnInit, OnDestroy {
     var body = document.getElementsByTagName("body")[0];
     var sidebar = document.getElementsByClassName("navbar-collapse")[0];
     if (this.sidebarVisible == false) {
-      setTimeout(function() {
+      setTimeout(function () {
         toggleButton.classList.add("toggled");
       }, 500);
       body.classList.add("nav-open");
@@ -163,7 +163,7 @@ export class LoginComponent implements OnInit, OnDestroy {
     // send reset request to server
     // console.log("sending reset email to your inbox");
     // this.router.navigate(["/auth/forgot",]);
-    console.log(this.loginDetails);
+    // console.log(this.loginDetails);
     this.router.navigateByUrl(`/auth/forgot?email=${this.loginDetails.email}`);
   }
 

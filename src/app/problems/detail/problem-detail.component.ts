@@ -245,7 +245,7 @@ export class ProblemDetailComponent implements OnInit, OnDestroy {
     const subject = encodeURI("Can you help solve this problem?");
     const body = encodeURI(
       `Hello,\n\nCheck out this link on Social Alpha's Open Innovation platform - ${
-        this.pageUrl
+      this.pageUrl
       }\n\nRegards,`
     );
     this.mailToLink = `mailto:?subject=${subject}&body=${body}`;
@@ -567,7 +567,7 @@ export class ProblemDetailComponent implements OnInit, OnDestroy {
     const subject = encodeURI("Can you help solve this problem?");
     const body = encodeURI(
       `Hello,\n\nCheck out this link on Social Alpha's Open Innovation platform - ${
-        this.pageUrl
+      this.pageUrl
       }\n\nRegards,`
     );
     const href = `mailto:?subject=${subject}&body=${body}`;
@@ -734,13 +734,26 @@ export class ProblemDetailComponent implements OnInit, OnDestroy {
           }
         }
       });
+
       this.popularDiscussions = Object.keys(this.replies)
-        .sort((a, b) => {
+        .sort((a, b) => {                                   // sorting by date
+          var dateA = this.comments[a].modified_at;
+          var dateB = this.comments[b].modified_at;
+          if (dateA < dateB) {
+            return 1;
+          }
+          if (dateA > dateB) {
+            return -1;
+          }
+
+          return 0;
+        })
+        .sort((a, b) => {                                // sorting by no. of replies
           return this.replies[b].length - this.replies[a].length;
         })
-        .map(commentId => {
-          return this.comments[commentId];
-        });
+        .filter(commentId => this.comments[commentId])  // to avoid undefined 
+        .map(commentId => this.comments[commentId]);    //mapping the sorted array
+
       console.log("REPLIES", this.replies);
       console.log("COMMENTS", this.comments);
       console.log("POPULAR", this.popularDiscussions);
@@ -870,7 +883,7 @@ export class ProblemDetailComponent implements OnInit, OnDestroy {
         cancelButtonClass: "btn btn-danger",
         buttonsStyling: false
       })
-        .then(function(result) {
+        .then(function (result) {
           swal({
             type: "success",
             html:
@@ -907,7 +920,7 @@ export class ProblemDetailComponent implements OnInit, OnDestroy {
       body.classList.remove("sidebar-mini");
       misc.sidebar_mini_active = false;
     } else {
-      setTimeout(function() {
+      setTimeout(function () {
         body.classList.add("sidebar-mini");
 
         misc.sidebar_mini_active = true;
@@ -915,12 +928,12 @@ export class ProblemDetailComponent implements OnInit, OnDestroy {
     }
 
     // we simulate the window Resize so the charts will get updated in realtime.
-    const simulateWindowResize = setInterval(function() {
+    const simulateWindowResize = setInterval(function () {
       window.dispatchEvent(new Event("resize"));
     }, 180);
 
     // we stop the simulation of Window Resize after the animations are completed
-    setTimeout(function() {
+    setTimeout(function () {
       clearInterval(simulateWindowResize);
     }, 1000);
   }
@@ -949,7 +962,7 @@ export class ProblemDetailComponent implements OnInit, OnDestroy {
       $layer.remove();
     }
 
-    setTimeout(function() {
+    setTimeout(function () {
       $toggle.classList.remove("toggled");
     }, 400);
 
@@ -1004,8 +1017,8 @@ export class ProblemDetailComponent implements OnInit, OnDestroy {
         mutation delete_problem_watcher {
           delete_problem_watchers(
             where: {user_id: {_eq: ${Number(
-              this.userId
-            )}}, problem_id: {_eq: ${Number(this.problemData.id)}}}
+          this.userId
+        )}}, problem_id: {_eq: ${Number(this.problemData.id)}}}
           ) {
             affected_rows
           }
@@ -1078,8 +1091,8 @@ export class ProblemDetailComponent implements OnInit, OnDestroy {
         mutation delete_problem_voter {
           delete_problem_voters(
             where: {user_id: {_eq: ${Number(
-              this.userId
-            )}}, problem_id: {_eq: ${Number(this.problemData.id)}}}
+          this.userId
+        )}}, problem_id: {_eq: ${Number(this.problemData.id)}}}
           ) {
             affected_rows
           }
@@ -1220,7 +1233,7 @@ export class ProblemDetailComponent implements OnInit, OnDestroy {
 
   async onCommentSubmit(event, comment_id?) {
     const [content, mentions, attachments] = event;
-    console.log(event);
+    // console.log(event);
     let file_links: attachment_object[];
     let _links = []; //local array
 
@@ -1242,7 +1255,7 @@ export class ProblemDetailComponent implements OnInit, OnDestroy {
     try {
       _links = await Promise.all(all_promise);
     } catch (error) {
-      console.log("Err while uploading reply files");
+      console.log("Err while uploading reply files", error);
     }
 
     if (_links.length) {

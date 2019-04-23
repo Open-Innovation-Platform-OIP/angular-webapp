@@ -14,6 +14,8 @@ Quill.register("modules/imageResize", ImageResize);
 // Quill.register('modules/imageDrop', ImageDrop);
 import "quill-mention";
 import { QuillEditorComponent } from "ngx-quill";
+import { FilesService } from "src/app/services/files.service";
+import { NgxUiLoaderService } from "ngx-ui-loader";
 @Component({
   selector: "app-submit-comment",
   templateUrl: "./submitcomment.component.html",
@@ -85,15 +87,21 @@ export class CommentSubmitComponent implements OnInit {
 
   constructor(private auth: AuthService) {}
 
+  constructor(
+    public fileService: FilesService,
+    private ngxService: NgxUiLoaderService
+  ) {}
+
   setFocus(event) {
     // tslint:disable-next-line:no-console
-    console.log(event);
+    // console.log(event);
     event.focus();
   }
 
   submitComment() {
-    // console.log(this.mentions, this.content);
+    this.fileService.fileinput_id = `fileInput-${this.id}`;
     this.submit.emit([this.content, this.mentions, this.attachments]);
+    this.showLoader();
     this.content = "";
     this.mentions = [];
     this.attachments = [];
@@ -116,5 +124,14 @@ export class CommentSubmitComponent implements OnInit {
     } else {
       this.attachments.splice(i, 1);
     }
+  }
+
+  showLoader() {
+    this.ngxService.start();
+
+    // Stop the foreground loading after 5s
+    setTimeout(() => {
+      this.ngxService.stop();
+    }, 3000);
   }
 }

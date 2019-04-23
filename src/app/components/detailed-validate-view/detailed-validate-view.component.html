@@ -3,13 +3,13 @@
   <div class="card-body">
     <div class="row">
       <label class="col-sm-3">Comment</label>
-      <div style="white-space: pre-wrap;">
+      <div class="col-sm-9" style="white-space: pre-wrap;">
         {{validationData.comment}}
       </div>
     </div>
     <div class="row">
       <label class="col-sm-3">Approval Status</label>
-      <div [ngStyle]="{color: validationData.agree ? 'green' : 'orangered'}">
+      <div class="col-sm-9" [ngStyle]="{color: validationData.agree ? 'green' : 'orangered'}">
         {{validationData.agree?'Agreed':'Disagreed'}}
       </div>
     </div>
@@ -17,13 +17,17 @@
       <label class="col-sm-3">Download</label>
       <div class="col-sm-9">
         <div *ngFor="let file of validationData.files">
-          {{file.key}}
+          <span class="d-inline-block text-truncate" style="max-width: 88%;">
+            {{file.key}}
+          </span>
           &nbsp;
-          &nbsp;
-          <a href="{{file.url}}">
-            <i class="material-icons" title="Download all the Attachments">cloud_download
-            </i>
-          </a>
+          <sup>
+            <a href="{{file.url}}">
+              <i class="material-icons" title="Download all the Attachments">cloud_download
+              </i>
+            </a>
+          </sup>
+
         </div>
       </div>
     </div>
