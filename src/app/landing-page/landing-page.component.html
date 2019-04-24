@@ -1,16 +1,22 @@
+<img src="../../assets/img/register.jpg" height="25%" width="100%" style="margin-top: -1%;" />
+<div class="centered">Solve together</div>
 <div class="main-content">
-
   <div class="container-fluid">
     <!-- <button class="btn btn-warning btn-lg btn-fab btn-round" matTooltip="Add Problem" [matTooltipPosition]="'left'"
           [routerLink]="['/problems/add']" [disabled]="!auth.currentUserValue.id">
           <i class="material-icons">add</i>
       </button> -->
+    <br />
     <div class="row justify-content-center">
       <div class="col-md-6">
         <input type="text" value="" class="form-control" placeholder="Search..." name="searchInput" appAutofocus
           data-toggle="dropdown" [(ngModel)]="searchInput" (input)="landingPageSearch($event.target.value)"
           autocomplete="off" />
       </div>
+      <button mat-raised-button class="btn btn-white btn-round btn-just-icon" [routerLink]="'/search'">
+        <i class="material-icons">search</i>
+        <div class="ripple-container"></div>
+      </button>
     </div>
     <h3 *ngIf="!landingPageSearchResults.length" class="card-title text-center">Problems worth solving</h3>
     <h3 *ngIf="landingPageSearchResults.length" class="card-title text-center">Search Results</h3>

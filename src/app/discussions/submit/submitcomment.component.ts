@@ -85,9 +85,8 @@ export class CommentSubmitComponent implements OnInit {
     toolbar: [["bold", "italic", "blockquote"], ["link"]]
   };
 
-  constructor(private auth: AuthService) {}
-
   constructor(
+    private auth: AuthService,
     public fileService: FilesService,
     private ngxService: NgxUiLoaderService
   ) {}

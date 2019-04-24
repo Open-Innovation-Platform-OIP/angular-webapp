@@ -73,9 +73,11 @@ export class AdminLayoutComponent implements OnInit, AfterViewInit {
       });
     const html = document.getElementsByTagName("html")[0];
     if (window.matchMedia(`(min-width: 960px)`).matches && !this.isMac()) {
-      let ps = new PerfectScrollbar(elemMainPanel);
-      ps = new PerfectScrollbar(elemSidebar);
-      html.classList.add("perfect-scrollbar-on");
+      if (elemMainPanel) {
+        let ps = new PerfectScrollbar(elemMainPanel);
+        ps = new PerfectScrollbar(elemSidebar);
+        html.classList.add("perfect-scrollbar-on");
+      }
     } else {
       html.classList.add("perfect-scrollbar-off");
     }
@@ -161,9 +163,11 @@ export class AdminLayoutComponent implements OnInit, AfterViewInit {
         document.querySelector(".sidebar .sidebar-wrapper")
       );
       const elemMainPanel = <HTMLElement>document.querySelector(".main-panel");
-      let ps = new PerfectScrollbar(elemMainPanel);
-      ps = new PerfectScrollbar(elemSidebar);
-      ps.update();
+      if (elemMainPanel) {
+        let ps = new PerfectScrollbar(elemMainPanel);
+        ps = new PerfectScrollbar(elemSidebar);
+        ps.update();
+      }
     }
   }
   isMac(): boolean {

@@ -87,20 +87,21 @@ export class DashboardComponent implements OnInit, OnDestroy {
     this.getRecommendedProblems();
     this.getRecommendedUsers();
     // this.problemQueryString = '{' + this.problemFields.join('\n') + '}';
-
   }
 
   isNewUser() {
-    if (this.drafts.length ||
+    if (
+      this.drafts.length ||
       this.userProblems.length ||
       this.objectKeys(this.contributions).length ||
       this.objectKeys(this.recommendedProblems).length ||
-      this.objectKeys(this.recommendedUsers).length) {
+      this.objectKeys(this.recommendedUsers).length
+    ) {
       this.showLoader = false;
-      return false
+      return false;
     } else {
       this.showLoader = false;
-      return false
+      return false;
     }
   }
 
@@ -109,8 +110,8 @@ export class DashboardComponent implements OnInit, OnDestroy {
     const draftsQuery = gql`
       {
         problems(where:{is_draft:{_eq:true},is_deleted:{_eq:false}, created_by:{_eq: ${
-      this.auth.currentUserValue.id
-      }}} order_by: {modified_at: desc}) ${this.problemQueryString}
+          this.auth.currentUserValue.id
+        }}} order_by: {modified_at: desc}) ${this.problemQueryString}
     }
     `;
     this.draftsQueryRef = this.apollo.watchQuery({
@@ -125,7 +126,7 @@ export class DashboardComponent implements OnInit, OnDestroy {
         this.drafts = data.problems;
         this.problemService.dashboardDrafts = data.problems;
       }
-    );
+    });
   }
 
   getUsersProblems() {
@@ -269,7 +270,7 @@ export class DashboardComponent implements OnInit, OnDestroy {
         organizationByOrganizationId{
           users(where:{id:{_neq:${this.auth.currentUserValue.id}}}) ${
       this.userQueryString
-      }
+    }
         }
       }
     }
