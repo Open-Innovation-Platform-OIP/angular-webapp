@@ -1,4 +1,4 @@
-import { Component, OnInit } from "@angular/core";
+import { Component, OnInit, ElementRef } from "@angular/core";
 import PerfectScrollbar from "perfect-scrollbar";
 import { Router } from "@angular/router";
 import { AuthService } from "src/app/services/auth.service";
@@ -51,12 +51,18 @@ export const ROUTES: RouteInfo[] = [
 })
 export class SidebarComponent implements OnInit {
   public menuItems: any[];
+  private toggleButton: any;
+  private sidebarVisible: boolean;
+  mobile_menu_visible: any = 0;
 
   constructor(
     public auth: AuthService,
     private router: Router,
+    private element: ElementRef,
     private usersService: UsersService
-  ) {}
+  ) {
+    this.sidebarVisible = false;
+  }
 
   isMobileMenu() {
     if ($(window).width() > 991) {
@@ -67,7 +73,10 @@ export class SidebarComponent implements OnInit {
 
   ngOnInit() {
     this.menuItems = ROUTES.filter(menuItem => menuItem);
+    const navbar: HTMLElement = this.element.nativeElement;
+    this.toggleButton = navbar.getElementsByClassName("navbar-toggler")[0];
   }
+
   updatePS(): void {
     if (window.matchMedia(`(min-width: 960px)`).matches && !this.isMac()) {
       const elemSidebar = <HTMLElement>(
@@ -93,4 +102,26 @@ export class SidebarComponent implements OnInit {
   //   this.auth.logout();
   //   this.router.navigate(["/auth/login"]);
   // }
+
+  sidebarClose() {
+    var $toggle = document.getElementsByClassName("navbar-toggler")[0];
+    const body = document.getElementsByTagName("body")[0];
+    // this.toggleButton.classList.remove("toggled");
+    var $layer = document.createElement("div");
+    $layer.setAttribute("class", "close-layer");
+
+    this.sidebarVisible = false;
+    body.classList.remove("nav-open");
+    // $('html').removeClass('nav-open');
+    body.classList.remove("nav-open");
+    if ($layer) {
+      $layer.remove();
+    }
+
+    setTimeout(function() {
+      $toggle.classList.remove("toggled");
+    }, 400);
+
+    this.mobile_menu_visible = 0;
+  }
 }

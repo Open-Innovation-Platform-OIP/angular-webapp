@@ -1,16 +1,17 @@
-<!-- <div class="logo">
-  <a class="simple-text logo-mini">
-    <div class="logo-img">
-      <img src="/assets/img/social-alpha-logo-250.png" />
-    </div>
-  </a>
-  <a href="" class="simple-text logo-normal">
-    Solve Together
-  </a>
-</div> -->
-
-<div class="sidebar-wrapper">
-
+<div class="sidebar-wrapper" *ngIf="isMobileMenu()">
+  <div class="logo">
+    <a class="simple-text logo-mini">
+      <div class="logo-img">
+        <img src="/assets/img/social-alpha-logo-250.png" />
+      </div>
+    </a>
+    <!-- <a href="" class="simple-text logo-normal" style="font-size: 0.8em;">
+        Solve Together
+      </a> -->
+    <i class="material-icons" (click)="sidebarClose()" style="cursor: pointer; margin-top: 0.1em;margin-left: 9em;">
+      clear
+    </i>
+  </div>
 
 
   <!-- <div class="user"> -->
@@ -44,7 +45,7 @@
     </div>-->
   <!-- </div> -->
 
-  <div *ngIf="isMobileMenu()">
+  <div>
     <form class="navbar-form">
       <span class="bmd-form-group">
         <!-- <div class="input-group no-border"> -->
