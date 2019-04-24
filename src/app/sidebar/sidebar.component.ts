@@ -58,14 +58,15 @@ export class SidebarComponent implements OnInit {
         type: "link",
         icontype: "dashboard"
       });
-    } else {
-      ROUTES.unshift({
-        path: "/landing-page",
-        title: "Landing Page",
-        type: "link",
-        icontype: "dashboard"
-      });
     }
+    // else {
+    //   ROUTES.unshift({
+    //     path: "/landing-page",
+    //     title: "Landing Page",
+    //     type: "link",
+    //     icontype: "dashboard"
+    //   });
+    // }
   }
 
   isMobileMenu() {

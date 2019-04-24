@@ -83,7 +83,6 @@ export class NavbarComponent implements OnInit {
     this.location = location;
     this.nativeElement = element.nativeElement;
     this.sidebarVisible = false;
-    this.user_id = this.auth.currentUserValue.id;
     // console.log(this.user_id);
   }
 
@@ -145,6 +144,9 @@ export class NavbarComponent implements OnInit {
   }
 
   ngOnInit() {
+    this.user_id = this.auth.currentUserValue.id;
+    console.log("USER ID", this.user_id);
+
     this.listTitles = ROUTES.filter(listTitle => listTitle);
 
     const navbar: HTMLElement = this.element.nativeElement;
@@ -252,7 +254,9 @@ export class NavbarComponent implements OnInit {
     $layer.setAttribute("class", "close-layer");
 
     if (body.querySelectorAll(".main-panel")) {
-      document.getElementsByClassName("main-panel")[0].appendChild($layer);
+      if (document.getElementsByClassName("main-panel")[0]) {
+        document.getElementsByClassName("main-panel")[0].appendChild($layer);
+      }
     } else if (body.classList.contains("off-canvas-sidebar")) {
       document
         .getElementsByClassName("wrapper-full-page")[0]
@@ -466,6 +470,16 @@ export class NavbarComponent implements OnInit {
 
   focus() {
     document.getElementById("search").focus();
+  }
+
+  openSearchComponent() {
+    this.router.navigate(["/search"]);
+    let searchBar = <HTMLBaseElement>(
+      document.querySelector("input[name=searchInput]")
+    );
+    if (searchBar) {
+      searchBar.focus();
+    }
   }
 
   logout() {

@@ -1,6 +1,7 @@
 import { Component, OnInit } from "@angular/core";
 import { Apollo } from "apollo-angular";
 import gql from "graphql-tag";
+import { Router, ActivatedRoute } from "@angular/router";
 
 @Component({
   selector: "app-landing-page",
@@ -11,7 +12,11 @@ export class LandingPageComponent implements OnInit {
   landingPageSearchResults = [];
   searchInput: any;
   problems: any;
-  constructor(private apollo: Apollo) {}
+  constructor(
+    private apollo: Apollo,
+    private route: ActivatedRoute,
+    private router: Router
+  ) {}
 
   ngOnInit() {
     this.apollo
