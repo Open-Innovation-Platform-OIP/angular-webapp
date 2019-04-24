@@ -5,6 +5,8 @@ import { Observable, Subscription } from "rxjs";
 import { AuthService } from "../services/auth.service";
 import { ProblemService } from "../services/problem.service";
 import { isArray } from "util";
+import { NgxUiLoaderService } from "ngx-ui-loader";
+
 declare const $: any;
 
 @Component({
@@ -75,11 +77,14 @@ export class DashboardComponent implements OnInit, OnDestroy {
   constructor(
     private apollo: Apollo,
     private auth: AuthService,
-    private problemService: ProblemService
+    private problemService: ProblemService,
+    private ngxService: NgxUiLoaderService
   ) {
     // console.log('dashboard')
   }
   ngOnInit() {
+    // start loader
+    this.ngxService.start();
     // console.log('on init')
     this.getDrafts();
     this.getUsersProblems();
@@ -98,9 +103,11 @@ export class DashboardComponent implements OnInit, OnDestroy {
       this.objectKeys(this.recommendedUsers).length
     ) {
       this.showLoader = false;
+      this.ngxService.stop();
       return false;
     } else {
       this.showLoader = false;
+      this.ngxService.stop();
       return false;
     }
   }

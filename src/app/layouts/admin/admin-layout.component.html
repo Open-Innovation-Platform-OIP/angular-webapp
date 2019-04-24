@@ -1,7 +1,10 @@
 <div class="wrapper">
-    <div class="sidebar" data-color="white" data-background-color="black" data-image="./assets/img/sidebar-1.jpg">
-        <app-sidebar-cmp></app-sidebar-cmp>
-        <div class="sidebar-background" style="background-image: url(assets/img/sidebar-1.jpg)"></div>
+    <div class="main-panel" *ngIf="!isMobileMenu()">
+        <div class="sidebar" data-color="white" *ngIf="!isMobileMenu()" data-background-color="black"
+            data-image="./assets/img/sidebar-1.jpg">
+            <app-sidebar-cmp></app-sidebar-cmp>
+            <div class="sidebar-background" style="background-image: url(assets/img/sidebar-1.jpg)"></div>
+        </div>
     </div>
 
     <!-- <app-sidebar-cmp *ngIf="!isMobileMenu()"></app-sidebar-cmp> -->
@@ -13,7 +16,7 @@
     <app-navbar-cmp></app-navbar-cmp>
     <router-outlet></router-outlet>
 
-    <div class="main-panel"></div>
+
 
     <!-- <div *ngIf="!isMap()">
             <app-footer-cmp></app-footer-cmp>

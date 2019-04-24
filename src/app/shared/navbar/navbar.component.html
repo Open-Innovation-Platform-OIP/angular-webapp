@@ -114,7 +114,7 @@
           <a class="nav-link" href="#pablo" id="navbarDropdownMenuLink" data-toggle="dropdown" aria-haspopup="true"
             aria-expanded="false">
             <i class="material-icons">notifications</i>
-            <span class="notification">{{
+            <span *ngIf="objectValues(notifications).length" class="notification">{{
               objectValues(notifications).length
               }}</span>
             <p>
@@ -192,18 +192,6 @@
                 "{{ notification.problemsByproblemId.title }}"
 
               </a>
-
-
-              <!-- <a *ngIf="notification.validated_by" class="dropdown-item" name="{{ notification.id }}"
-            href="problems/{{ notification.id }}" (click)="onRead($event)">
-
-             {{ notification.problemsByproblemId.title }} is validated by an expert
-
-          </a> -->
-
-
-
-
             </div>
 
             <div class="text-center" *ngIf="objectValues(notifications).length > 0; else noNotification">
@@ -212,17 +200,10 @@
                 Mark all as Read
               </button>
             </div>
-            <ng-template #noNotification>&nbsp; No New Notifications</ng-template>
-            <!-- <a class="dropdown-item">No New Notifications</a> -->
 
-            <!-- <a class="dropdown-item" href="#">User1 validated your problem</a>
-            <a class="dropdown-item" href="#">3 new problems added to water</a>
-            <a class="dropdown-item" href="#"
-              >User2 proposed a solution to your problem</a
-            >
-            <a class="dropdown-item" href="#"
-              >2 new collaborators for problem 26</a
-            > -->
+            <ng-template #noNotification>
+              <a class="dropdown-item disabled" href="javascript.void(0)">No New Notifications</a>
+            </ng-template>
           </div>
         </li>
         <!-- <li class="nav-item">

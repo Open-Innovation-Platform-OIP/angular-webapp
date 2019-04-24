@@ -123,7 +123,11 @@ export class LoginComponent implements OnInit, OnDestroy {
       .subscribe(
         data => {
           this.router.navigate([this.returnUrl]);
-          this.showNotification("bottom", "left");
+          let message = "Update your profile information to make the most out of the platform."
+
+          setTimeout(() => {
+            this.showNotification(["bottom", "left", '', 'notifications', 3000, message]);
+          }, 1000);
         },
         error => {
           console.error(error);
@@ -133,16 +137,14 @@ export class LoginComponent implements OnInit, OnDestroy {
             typeof msg === "string" &&
             msg.toLowerCase().search("already verified") !== -1
           ) {
-            alert(
-              "Your email is already verified. You can login or request a password reset"
-            );
+            let message = "Your email is already verified. You can login or request a password reset";
+            this.showNotification(["top", "center", 4, 'warning', 3000, message]);
           } else if (
             typeof msg === "string" &&
             msg.toLowerCase().search("not been verified") !== -1
           ) {
-            alert(
-              "Your email has not been verified. Click OK to proceed to the email verification page."
-            );
+            let message = "Your email has not been verified. Click OK to proceed to the email verification page.";
+            this.showNotification(["top", "center", 4, 'warning', 3000, message]);
             this.router.navigateByUrl(
               `/auth/verify?email=${this.loginDetails.email}`
             );
@@ -150,9 +152,10 @@ export class LoginComponent implements OnInit, OnDestroy {
             typeof msg === "string" &&
             msg.toLowerCase().search("unknown") !== -1
           ) {
-            alert("Unknown email address. Perhaps you have not signed up yet?");
+            let message = "Unknown email address. Perhaps you have not signed up yet?";
+            this.showNotification(["top", "center", 4, 'warning', 3000, message]);
           } else {
-            alert(msg);
+            this.showNotification(["top", "center", 4, 'warning', 3000, msg]);
           }
           this.loading = false;
           // alert(error.error.errors[0].msg);
@@ -161,13 +164,11 @@ export class LoginComponent implements OnInit, OnDestroy {
   }
   forgotPassword() {
     // send reset request to server
-    // console.log("sending reset email to your inbox");
-    // this.router.navigate(["/auth/forgot",]);
-    // console.log(this.loginDetails);
     this.router.navigateByUrl(`/auth/forgot?email=${this.loginDetails.email}`);
   }
 
-  showNotification(from: any, align: any) {
+  showNotification(values) {
+    let [from, align, color, icon, time, message] = [...values]
     const type = [
       "",
       "info",
@@ -178,17 +179,19 @@ export class LoginComponent implements OnInit, OnDestroy {
       "primary"
     ];
 
-    const color = Math.floor(Math.random() * 6 + 1);
+    if (!color) {
+      color = Math.floor(Math.random() * 6 + 1);
+    }
 
     $.notify(
       {
-        icon: "notifications",
+        icon: icon,
         message:
-          "Update your profile information to make the most out of the platform."
+          message
       },
       {
         type: type[color],
-        timer: 5000,
+        timer: time,
         placement: {
           from: from,
           align: align
@@ -196,7 +199,7 @@ export class LoginComponent implements OnInit, OnDestroy {
         template:
           '<div data-notify="container" class="col-xs-11 col-sm-3 alert alert-{0} alert-with-icon" role="alert">' +
           '<button mat-raised-button type="button" aria-hidden="true" class="close" data-notify="dismiss">  <i class="material-icons">close</i></button>' +
-          '<i class="material-icons" data-notify="icon">notifications</i> ' +
+          `<i class="material-icons" data-notify="icon">${icon}</i>` +
           '<span data-notify="title">{1}</span> ' +
           '<span data-notify="message">{2}</span>' +
           '<div class="progress" data-notify="progressbar">' +
