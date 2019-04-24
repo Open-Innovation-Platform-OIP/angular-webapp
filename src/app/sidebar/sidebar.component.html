@@ -102,8 +102,14 @@
   </div>
   <ul class="nav">
     <li routerLinkActive="active" *ngFor="let menuitem of menuItems" class="nav-item">
+      <a [routerLink]="[menuitem.path]"
+        *ngIf="menuitem.type === 'link' && menuitem.title=='Dashboard' && auth.currentUserValue.id" class="nav-link">
+        <i class="material-icons">{{ menuitem.icontype }}</i>
+        <p>{{ menuitem.title }}</p>
+      </a>
       <!--If is a single link-->
-      <a [routerLink]="[menuitem.path]" *ngIf="menuitem.type === 'link'" class="nav-link">
+      <a [routerLink]="[menuitem.path]" *ngIf="menuitem.type === 'link' && menuitem.title!='Dashboard'"
+        class="nav-link">
         <i class="material-icons">{{ menuitem.icontype }}</i>
         <p>{{ menuitem.title }}</p>
       </a>

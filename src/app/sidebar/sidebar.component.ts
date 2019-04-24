@@ -27,6 +27,12 @@ export interface ChildrenItems {
 //Menu Items
 export const ROUTES: RouteInfo[] = [
   {
+    path: "/dashboard",
+    title: "Dashboard",
+    type: "link",
+    icontype: "dashboard"
+  },
+  {
     path: "/problems",
     title: "Problems",
     type: "link",
@@ -50,16 +56,7 @@ export class SidebarComponent implements OnInit {
     public auth: AuthService,
     private router: Router,
     private usersService: UsersService
-  ) {
-    if (this.auth.currentUserValue.id) {
-      ROUTES.unshift({
-        path: "/dashboard",
-        title: "Dashboard",
-        type: "link",
-        icontype: "dashboard"
-      });
-    }
-  }
+  ) {}
 
   isMobileMenu() {
     if ($(window).width() > 991) {
