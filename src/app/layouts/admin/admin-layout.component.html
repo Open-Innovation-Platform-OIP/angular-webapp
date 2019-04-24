@@ -5,7 +5,7 @@
         <div class="sidebar-background" style="background-image: url(assets/img/sidebar-1.jpg)"></div>
     </div>
 
-    <div class="main-panel" *ngIf="isMobileMenu()"></div>
+    <!-- <div class="main-panel" *ngIf="isMobileMenu()"></div> -->
 
     <!-- <app-sidebar-cmp *ngIf="!isMobileMenu()"></app-sidebar-cmp> -->
 
@@ -14,7 +14,10 @@
     <!-- <div class="main-panel"> -->
     <!-- <app-test></app-test> -->
     <app-navbar-cmp></app-navbar-cmp>
-    <router-outlet></router-outlet>
+    <!--  -->
+    <div class="main-panel">
+        <router-outlet></router-outlet>
+    </div>
 
     <!-- <div *ngIf="!isMap()">
             <app-footer-cmp></app-footer-cmp>
