@@ -125,8 +125,11 @@ export class LoginComponent implements OnInit, OnDestroy {
       .pipe(first())
       .subscribe(
         data => {
+          // this.router.navigate([this.returnUrl]);
+          console.log(this.returnUrl, "return url");
+          window.location.href = `/dashboard`;
           // location.reload();
-          this.router.navigate([this.returnUrl]);
+
           this.userService.getCurrentUser();
 
           let message =
