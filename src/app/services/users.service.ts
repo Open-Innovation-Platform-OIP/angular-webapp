@@ -72,9 +72,10 @@ export class UsersService {
   }
 
   public getCurrentUser() {
-    this.apollo
-      .watchQuery<any>({
-        query: gql`
+    if (this.auth.currentUserValue) {
+      this.apollo
+        .watchQuery<any>({
+          query: gql`
         {
           users(where: { id: { _eq: ${this.auth.currentUserValue.id} } }) {
             id
@@ -88,24 +89,25 @@ export class UsersService {
           }
         }
       `,
-        fetchPolicy: "no-cache"
-        // pollInterval: 500
-      })
-      .valueChanges.subscribe(({ data }) => {
-        // console.log("<<<curr user data", data);
-        if (data.users.length > 0) {
-          Object.keys(this.currentUser).map(key => {
-            if (data.users[0][key]) {
-              this.currentUser[key] = data.users[0][key];
-            }
-          });
+          fetchPolicy: "no-cache"
+          // pollInterval: 500
+        })
+        .valueChanges.subscribe(({ data }) => {
+          // console.log("<<<curr user data", data);
+          if (data.users.length > 0) {
+            Object.keys(this.currentUser).map(key => {
+              if (data.users[0][key]) {
+                this.currentUser[key] = data.users[0][key];
+              }
+            });
 
-          if (data.users[0].organizationByOrganizationId) {
-            this.currentUser.organization =
-              data.users[0].organizationByOrganizationId.name;
+            if (data.users[0].organizationByOrganizationId) {
+              this.currentUser.organization =
+                data.users[0].organizationByOrganizationId.name;
+            }
           }
-        }
-      });
+        });
+    }
     // console.log(this.currentUser, "current user on user service");
   }
   public getOrgsFromDB() {

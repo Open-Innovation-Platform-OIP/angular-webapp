@@ -126,8 +126,8 @@ export class LoginComponent implements OnInit, OnDestroy {
       .subscribe(
         data => {
           // this.router.navigate([this.returnUrl]);
-          console.log(this.returnUrl, "return url");
-          window.location.href = `/dashboard`;
+          // console.log(this.returnUrl, "return url");
+          window.location.href = `${this.returnUrl}`;
           // location.reload();
 
           this.userService.getCurrentUser();
