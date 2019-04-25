@@ -69,7 +69,7 @@ export class AuthService {
     localStorage.removeItem("currentUser");
     this.currentUserSubject.next(null);
     this.apollo.getClient().resetStore();
-    this.router.navigateByUrl("/auth/login");
+    this.router.navigateByUrl("/landing-page");
     // location.replace('https://app.socialalpha.jaagalabs.com')
     location.reload();
   }

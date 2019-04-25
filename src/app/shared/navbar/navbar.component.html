@@ -14,7 +14,7 @@
           </div>
         </div>
       </a>
-      <a class="navbar-brand" href="{{ getPath() }}"> {{ getTitle() }}</a>
+      <a class="navbar-brand" *ngIf="auth.currentUserValue.id" href="{{ getPath() }}"> {{ getTitle() }}</a>
       <!-- <a class="navbar-brand" > {{ problemData.title }}</a> -->
     </div>
     <button mat-button class="navbar-toggler btn-no-ripple" type="button" (click)="sidebarToggle()">

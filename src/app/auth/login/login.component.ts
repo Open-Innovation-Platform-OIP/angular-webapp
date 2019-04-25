@@ -3,6 +3,8 @@ import { isEmail } from "validator";
 import { AuthService } from "src/app/services/auth.service";
 import { Router, ActivatedRoute } from "@angular/router";
 import { first } from "rxjs/operators";
+import { UsersService } from "../../services/users.service";
+
 declare var $: any;
 
 @Component({
@@ -26,7 +28,8 @@ export class LoginComponent implements OnInit, OnDestroy {
     private element: ElementRef,
     private auth: AuthService,
     private route: ActivatedRoute,
-    private router: Router
+    private router: Router,
+    private userService: UsersService
   ) {
     this.nativeElement = element.nativeElement;
     this.sidebarVisible = false;
@@ -39,7 +42,7 @@ export class LoginComponent implements OnInit, OnDestroy {
     body.classList.add("login-page");
     body.classList.add("off-canvas-sidebar");
     const card = document.getElementsByClassName("card")[0];
-    setTimeout(function () {
+    setTimeout(function() {
       // after 1000 ms we add the class animated to the login/register card
       card.classList.remove("card-hidden");
     }, 700);
@@ -78,7 +81,7 @@ export class LoginComponent implements OnInit, OnDestroy {
     var body = document.getElementsByTagName("body")[0];
     var sidebar = document.getElementsByClassName("navbar-collapse")[0];
     if (this.sidebarVisible == false) {
-      setTimeout(function () {
+      setTimeout(function() {
         toggleButton.classList.add("toggled");
       }, 500);
       body.classList.add("nav-open");
@@ -122,11 +125,22 @@ export class LoginComponent implements OnInit, OnDestroy {
       .pipe(first())
       .subscribe(
         data => {
+          // location.reload();
           this.router.navigate([this.returnUrl]);
-          let message = "Update your profile information to make the most out of the platform."
+          this.userService.getCurrentUser();
+
+          let message =
+            "Update your profile information to make the most out of the platform.";
 
           setTimeout(() => {
-            this.showNotification(["bottom", "left", '', 'notifications', 3000, message]);
+            this.showNotification([
+              "bottom",
+              "left",
+              "",
+              "notifications",
+              3000,
+              message
+            ]);
           }, 1000);
         },
         error => {
@@ -137,14 +151,30 @@ export class LoginComponent implements OnInit, OnDestroy {
             typeof msg === "string" &&
             msg.toLowerCase().search("already verified") !== -1
           ) {
-            let message = "Your email is already verified. You can login or request a password reset";
-            this.showNotification(["top", "center", 4, 'warning', 3000, message]);
+            let message =
+              "Your email is already verified. You can login or request a password reset";
+            this.showNotification([
+              "top",
+              "center",
+              4,
+              "warning",
+              3000,
+              message
+            ]);
           } else if (
             typeof msg === "string" &&
             msg.toLowerCase().search("not been verified") !== -1
           ) {
-            let message = "Your email has not been verified. Click OK to proceed to the email verification page.";
-            this.showNotification(["top", "center", 4, 'warning', 3000, message]);
+            let message =
+              "Your email has not been verified. Click OK to proceed to the email verification page.";
+            this.showNotification([
+              "top",
+              "center",
+              4,
+              "warning",
+              3000,
+              message
+            ]);
             this.router.navigateByUrl(
               `/auth/verify?email=${this.loginDetails.email}`
             );
@@ -152,10 +182,18 @@ export class LoginComponent implements OnInit, OnDestroy {
             typeof msg === "string" &&
             msg.toLowerCase().search("unknown") !== -1
           ) {
-            let message = "Unknown email address. Perhaps you have not signed up yet?";
-            this.showNotification(["top", "center", 4, 'warning', 3000, message]);
+            let message =
+              "Unknown email address. Perhaps you have not signed up yet?";
+            this.showNotification([
+              "top",
+              "center",
+              4,
+              "warning",
+              3000,
+              message
+            ]);
           } else {
-            this.showNotification(["top", "center", 4, 'warning', 3000, msg]);
+            this.showNotification(["top", "center", 4, "warning", 3000, msg]);
           }
           this.loading = false;
           // alert(error.error.errors[0].msg);
@@ -168,7 +206,7 @@ export class LoginComponent implements OnInit, OnDestroy {
   }
 
   showNotification(values) {
-    let [from, align, color, icon, time, message] = [...values]
+    let [from, align, color, icon, time, message] = [...values];
     const type = [
       "",
       "info",
@@ -186,8 +224,7 @@ export class LoginComponent implements OnInit, OnDestroy {
     $.notify(
       {
         icon: icon,
-        message:
-          message
+        message: message
       },
       {
         type: type[color],

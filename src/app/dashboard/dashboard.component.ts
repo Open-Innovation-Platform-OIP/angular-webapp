@@ -6,6 +6,7 @@ import { AuthService } from "../services/auth.service";
 import { ProblemService } from "../services/problem.service";
 import { isArray } from "util";
 import { NgxUiLoaderService } from "ngx-ui-loader";
+import { UsersService } from "../services/users.service";
 
 declare const $: any;
 
@@ -78,7 +79,8 @@ export class DashboardComponent implements OnInit, OnDestroy {
     private apollo: Apollo,
     private auth: AuthService,
     private problemService: ProblemService,
-    private ngxService: NgxUiLoaderService
+    private ngxService: NgxUiLoaderService,
+    private userService: UsersService
   ) {
     // console.log('dashboard')
   }
