@@ -51,10 +51,10 @@ export class AuthService {
   public get currentUserValue(): User {
     if (this.currentUserSubject.value) {
       return this.currentUserSubject.value;
+      // }
+    } else {
+      return { id: 0, email: "", token: "" };
     }
-    // } else {
-    //   return { id: 0, email: "", token: "" };
-    // }
   }
 
   isExpired(jwt) {
