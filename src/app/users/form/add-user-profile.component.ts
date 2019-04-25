@@ -60,7 +60,7 @@ export class AddUserProfileComponent implements OnInit, OnChanges {
   mode = "Add";
   userId: any;
   visible = true;
-  phone_pattern = /(?:(?:\+|0{0,2})91(\s*[\- ]\s*)?|[0 ]?)?[789]\d{9}|(\d[-]?){ 10 } \d/;
+  phone_pattern = new RegExp("(?:(?:\\+|0{0,2})91(\\s*[\\- ]\\s*)?|[0 ]?)?[789]\\d{9}|(\\d[ -]?){10}\\d", "g");
   selectable = true;
   removable = true;
   addOnBlur = true;
@@ -73,6 +73,7 @@ export class AddUserProfileComponent implements OnInit, OnChanges {
   tags = [];
   preTags: any = [];
   imageBlob: Blob;
+  isPhoneValid = false;
   personas: any = [];
   public query: string;
   public query2: string;
@@ -132,6 +133,12 @@ export class AddUserProfileComponent implements OnInit, OnChanges {
           : Object.keys(this.tagService.allTags).slice()
       )
     );
+  }
+
+  checkPhoneNumber(phone) {
+    console.log("pn>>>> ", phone);
+
+    this.isPhoneValid = this.phone_pattern.test(phone);
   }
 
   add(event: MatChipInputEvent): void {
@@ -339,6 +346,8 @@ export class AddUserProfileComponent implements OnInit, OnChanges {
                     data.users[0].organizationByOrganizationId.name;
                 }
               }
+
+              this.isPhoneValid = this.phone_pattern.test(this.user.phone_number);
               this.sectors = data.users[0].user_tags.map(tagArray => {
                 return tagArray.tag.name;
               });
