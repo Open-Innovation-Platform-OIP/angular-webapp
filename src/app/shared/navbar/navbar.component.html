@@ -111,7 +111,7 @@
             </p>
           </a>
         </li> -->
-        <li class="nav-item dropdown" *ngIf="auth.currentUserValue.id" style="margin-top: 1.2em;">
+        <li class="nav-item dropdown" *ngIf="auth.currentUserValue.id" style="margin-top: 1.2em; cursor: pointer;">
           <a class="nav-link" href="#pablo" id="navbarDropdownMenuLink" data-toggle="dropdown" aria-haspopup="true"
             aria-expanded="false">
             <i class="material-icons">notifications</i>
@@ -122,8 +122,8 @@
               <span class="d-lg-none d-md-block">Some Actions</span>
             </p>
           </a>
-          <div *ngIf="objectValues(notifications).length" class="dropdown-menu dropdown-menu-right"
-            aria-labelledby="navbarDropdownMenuLink" style="max-height: 500px; overflow-y: auto;">
+          <div class="dropdown-menu dropdown-menu-right" aria-labelledby="navbarDropdownMenuLink"
+            style="max-height: 500px; overflow-y: auto;">
             <div *ngFor="let notification of objectValues(notifications)">
 
 
