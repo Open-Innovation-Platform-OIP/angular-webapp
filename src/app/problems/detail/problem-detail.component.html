@@ -102,8 +102,7 @@
               </button>
               <span>&nbsp;</span>
               <span>&nbsp;</span>
-              <button href="#" class="btn btn-sm btn-warning" data-toggle="dropdown" aria-expanded="true"
-                [disabled]="!auth.currentUserValue.id">
+              <button href="#" class="btn btn-sm btn-warning" data-toggle="dropdown" aria-expanded="true">
                 <i class="material-icons actions">
                   share
                 </i>
@@ -172,9 +171,11 @@
                 keyboard_arrow_left
               </i>
             </a> -->
-          <button mat-raised-button class="btn btn-warning btn-round" matTooltip="Click to add enrichment"
-            [matTooltipPosition]="'below'" [disabled]="disableEnrichButton || !auth.currentUserValue.id"
+          <button mat-raised-button *ngIf="auth.currentUserValue.id" class="btn btn-warning btn-round"
+            matTooltip="Click to add enrichment" [matTooltipPosition]="'below'"
+            [disabled]="disableEnrichButton || !auth.currentUserValue.id"
             [routerLink]="['/enrichment/add',{problemId:problemData.id}]">Enrich</button>
+          <p *ngIf="!auth.currentUserValue.id">Login to enrich the problem</p>
           <!-- <a mat-button NguCarouselNext class="rightRs">
               <i class="material-icons">
                 keyboard_arrow_right
@@ -310,7 +311,8 @@
               </i>
             </a> -->
           <button mat-raised-button class="btn btn-warning btn-round" data-toggle="modal" data-target="#validatorModal"
-            matTooltip="Click to validate problem" [matTooltipPosition]="'below'" *ngIf="problemData.id"
+            matTooltip="Click to validate problem" [matTooltipPosition]="'below'"
+            *ngIf="problemData.id && auth.currentUserValue.id"
             [disabled]="disableValidateButton || !userPersonas.is_expert || userId == problemData.created_by ||!sectorMatched || !auth.currentUserValue.id ">Validate</button>
           <!-- <a mat-button>
               <i class="material-icons">
@@ -463,9 +465,11 @@
                 keyboard_arrow_left
               </i>
             </a> -->
-          <button mat-raised-button class="btn btn-warning btn-round" data-toggle="modal"
-            data-target="#collaboratorModal" matTooltip="Click to collaborate" [matTooltipPosition]="'below'"
+          <button mat-raised-button *ngIf="auth.currentUserValue.id" class="btn btn-warning btn-round"
+            data-toggle="modal" data-target="#collaboratorModal" matTooltip="Click to collaborate"
+            [matTooltipPosition]="'below'"
             [disabled]="disableCollaborateButton || userId == problemData.created_by || !auth.currentUserValue.id">Collaborate</button>
+          <p *ngIf="!auth.currentUserValue.id">Login to collaborate on this problem</p>
           <!-- <a mat-button>
               <i class="material-icons">
                 keyboard_arrow_right
@@ -552,7 +556,10 @@
             </div>
             <h4 class="card-title">Discussions</h4>
           </div>
-          <div class="card-body">
+          <div class="card-body" *ngIf="!auth.currentUserValue.id">
+            <p>Login to join discussion for this problem</p>
+          </div>
+          <div class="card-body" *ngIf="auth.currentUserValue.id">
             <button mat-raised-button class="btn btn-warning btn-sm" (click)="showPopularDiscussions('latest')"
               *ngIf="objectValues(comments).length">Latest</button>
             <button mat-raised-button class="btn btn-warning btn-sm" *ngIf="objectValues(comments).length"

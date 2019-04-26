@@ -21,7 +21,7 @@ import { map, startWith } from "rxjs/operators";
 import { Observable } from "rxjs";
 import { GeocoderService } from "../../services/geocoder.service";
 import swal from "sweetalert2";
-var Buffer = require('buffer/').Buffer
+var Buffer = require("buffer/").Buffer;
 
 import {
   FormControl,
@@ -52,8 +52,6 @@ interface FileReaderEvent extends Event {
   target: EventTarget;
   getMessage(): string;
 }
-
-// import { Content } from '@angular/compiler/src/render3/r3_ast';
 
 export class MyErrorStateMatcher implements ErrorStateMatcher {
   isErrorState(
@@ -120,8 +118,7 @@ export class WizardContainerComponent
   locationCtrl = new FormControl();
   filteredSectors: Observable<string[]>;
   filteredOwners: Observable<any[]>;
-  // owners: any[] = [];
-  // sectors: string[] = [];
+
   tags = [];
   removable = true;
   sizes = [
@@ -178,8 +175,6 @@ export class WizardContainerComponent
   }
 
   add(event: MatChipInputEvent): void {
-    // Add sector only when MatAutocomplete is not open
-    // To make sure this does not conflict with OptionSelected Event
     if (!this.matAutocomplete.isOpen) {
       const input = event.input;
       const value = event.value;
@@ -198,7 +193,6 @@ export class WizardContainerComponent
 
   selectedLocation(event) {
     this.content.location.push(event.option.value);
-    // console.log(this.content.location, "selected location content 2");
 
     this.locationInput.nativeElement.value = "";
     this.locationCtrl.setValue(null);
@@ -206,7 +200,6 @@ export class WizardContainerComponent
 
   addLocation(event) {
     if (!this.matAutocomplete.isOpen) {
-      // console.log(event, "event for add ");
       const input = event.input;
       const value = event.value;
 
@@ -234,10 +227,6 @@ export class WizardContainerComponent
     this.deleteDraft.emit(this.content.id);
   }
 
-  // sendTagsToParent(tags) {
-  //   this.tagsChanged.emit(this.sectors);
-  // }
-
   remove(sector: string): void {
     const index = this.localSectors.indexOf(sector);
     if (index >= 0) {
@@ -245,29 +234,19 @@ export class WizardContainerComponent
     }
 
     this.tagRemoved.emit(sector);
-
-    // this.tagsChanged.emit(this.sectors);
   }
 
   getLocation(input) {
-    // console.log("get address", input);
     if (this.locationInputValue != "Unknown") {
       this.here.getAddress(this.locationInputValue).then(
         result => {
-          // console.log(result, "result");
           this.locations = <Array<any>>result;
-          // console.log(this.locations, "locations");
         },
         error => {
           console.error(error);
         }
       );
     }
-  }
-  public storeLocation(loc) {
-    // this.content.location = loc.srcElement.innerText;
-    // console.log(loc, "location");
-    // console.log(this..location);
   }
 
   selected(event: MatAutocompleteSelectedEvent): void {
@@ -293,12 +272,10 @@ export class WizardContainerComponent
       console.log(filterValue, "value from filter");
 
       return Object.values(this.usersService.allUsers).filter(owner => {
-        // console.log(owner, "owner");
         if (owner["value"].toLowerCase().indexOf(filterValue) === 0) {
           console.log(owner, "owner", filterValue);
           return owner;
         }
-        // owner.name.indexOf(filterValue) === 0
       });
     }
   }
@@ -320,13 +297,6 @@ export class WizardContainerComponent
     }
     console.log(this.owners, "removed in container");
   }
-  // private ownerFilter(value: string): string[] {
-  //   const filterValue = value.toLowerCase();
-
-  //   return Object.keys(this.usersService.allUsers).map(owner =>
-  //     this.usersService.allUsers[owner].name.toLowerCase()
-  //   );
-  // }
 
   addOwner(event) {
     console.log(event, "event");
@@ -344,7 +314,6 @@ export class WizardContainerComponent
   }
 
   populationValueChanged(event) {
-    // console.log(event, "event");
     if (event.value <= 100000) {
       this.content.min_population = 0;
       this.content.max_population = event.value;
@@ -356,7 +325,7 @@ export class WizardContainerComponent
 
   ngOnInit() {
     console.log(this.usersService.currentUser, "current user");
-    // console.log(this.localSectors, "wizard ngoninit sectors");
+
     if (
       this.usersService.currentUser &&
       this.usersService.currentUser.organization
@@ -367,21 +336,11 @@ export class WizardContainerComponent
       this.content.organization = "None";
     }
 
-    // if(this.content.problem_tags)
-    // if (this.content.max_population > 0) {
-
-    // console.log(this.content, "content");
     clearInterval(this.autosaveInterval);
-    this.autosaveInterval = setInterval(() => {
-      // this.autoSave();
-    }, 10000);
-
-    // console.log(this.usersService.allOrgs, "orgs");
+    this.autosaveInterval = setInterval(() => {}, 10000);
 
     canProceed = true;
-    // console.log("wizard ngoninit");
 
-    // console.log(this.content, "test for cont");
     this.usersService.getOrgsFromDB();
     this.type = this.formBuilder.group({
       // To add a validator, we must first convert the string value into an array.
@@ -421,19 +380,19 @@ export class WizardContainerComponent
         }
       },
 
-      highlight: function (element) {
+      highlight: function(element) {
         $(element)
           .closest(".form-group")
           .removeClass("has-success")
           .addClass("has-danger");
       },
-      success: function (element) {
+      success: function(element) {
         $(element)
           .closest(".form-group")
           .removeClass("has-danger")
           .addClass("has-success");
       },
-      errorPlacement: function (error, element) {
+      errorPlacement: function(error, element) {
         $(element).append(error);
       }
     });
@@ -444,7 +403,7 @@ export class WizardContainerComponent
       nextSelector: ".btn-next",
       previousSelector: ".btn-previous",
 
-      onNext: function (tab, navigation, index) {
+      onNext: function(tab, navigation, index) {
         const $valid = $(".card-wizard form").valid();
         if (!$valid) {
           $validator.focusInvalid();
@@ -463,11 +422,7 @@ export class WizardContainerComponent
         }
       },
 
-      onInit: function (tab: any, navigation: any, index: any) {
-        // this.populationValue = this.content.max_population;
-        // console.log("wizard oninit");
-
-        // check number of tabs and fill the entire row
+      onInit: function(tab: any, navigation: any, index: any) {
         let $total = navigation.find("li").length;
         const $wizard = navigation.closest(".card-wizard");
 
@@ -524,7 +479,7 @@ export class WizardContainerComponent
         $(".moving-tab").css("transition", "transform 0s");
       },
 
-      onTabClick: function (tab: any, navigation: any, index: any) {
+      onTabClick: function(tab: any, navigation: any, index: any) {
         return true;
         const $valid = $(".card-wizard form").valid();
 
@@ -535,8 +490,7 @@ export class WizardContainerComponent
         }
       },
 
-      onTabShow: function (tab: any, navigation: any, index: any) {
-        // console.log("on tab show");
+      onTabShow: function(tab: any, navigation: any, index: any) {
         let $total = navigation.find("li").length;
         let $current = index + 1;
 
@@ -569,7 +523,7 @@ export class WizardContainerComponent
           .find("li:nth-child(" + $current + ") a")
           .html();
 
-        setTimeout(function () {
+        setTimeout(function() {
           $(".moving-tab").text(button_text);
         }, 150);
 
@@ -635,13 +589,13 @@ export class WizardContainerComponent
     });
 
     // Prepare the preview for profile picture
-    $("#wizard-picture").change(function () {
+    $("#wizard-picture").change(function() {
       const input = $(this);
 
       if (input[0].files && input[0].files[0]) {
         const reader = new FileReader();
 
-        reader.onload = function (e: any) {
+        reader.onload = function(e: any) {
           $("#wizardPicturePreview")
             .attr("src", e.target.result)
             .fadeIn("slow");
@@ -650,7 +604,7 @@ export class WizardContainerComponent
       }
     });
 
-    $('[data-toggle="wizard-radio"]').click(function () {
+    $('[data-toggle="wizard-radio"]').click(function() {
       const wizard = $(this).closest(".card-wizard");
       wizard.find('[data-toggle="wizard-radio"]').removeClass("active");
       $(this).addClass("active");
@@ -662,7 +616,7 @@ export class WizardContainerComponent
         .attr("checked", "true");
     });
 
-    $('[data-toggle="wizard-checkbox"]').click(function () {
+    $('[data-toggle="wizard-checkbox"]').click(function() {
       if ($(this).hasClass("active")) {
         $(this).removeClass("active");
         $(this)
@@ -679,7 +633,6 @@ export class WizardContainerComponent
   }
 
   ngOnChanges(changes: SimpleChanges) {
-    // console.log(this.content, "content on ng on changes");
     if (this.localSectors.length <= this.sectors.length) {
       console.log(this.localSectors, ">>>>> local sectors ");
       this.localSectors = this.sectors;
@@ -702,7 +655,7 @@ export class WizardContainerComponent
     const input = $(this);
     if (input[0].files && input[0].files[0]) {
       const reader: any = new FileReader();
-      reader.onload = function (e: any) {
+      reader.onload = function(e: any) {
         $("#wizardPicturePreview")
           .attr("src", e.target.result)
           .fadeIn("slow");
@@ -734,22 +687,10 @@ export class WizardContainerComponent
         buttonsStyling: false
       }).then(result => {
         if (result.value) {
-          // this.submitOwners.emit(this.owners);
           this.contentSubmitted.emit(this.content);
-
-          // swal({
-          //   title: "Deleted!",
-          //   // text: "Your file has been deleted.",
-          //   type: "success",
-          //   confirmButtonClass: "btn btn-success",
-          //   buttonsStyling: false
-          // });
         }
       });
-    }
-    // console.log(Number.MAX_VALUE, "max value");
-    // console.log(this.content.location, "content location");
-    else {
+    } else {
       this.contentSubmitted.emit(this.content);
     }
   }
@@ -759,10 +700,8 @@ export class WizardContainerComponent
   }
 
   ngAfterViewInit() {
-    // console.log("wizard after view in it");
-
     $(window).resize(() => {
-      $(".card-wizard").each(function () {
+      $(".card-wizard").each(function() {
         const $wizard = $(this);
         const index = $wizard.bootstrapWizard("currentIndex");
         const $total = $wizard.find(".nav li").length;
@@ -835,7 +774,7 @@ export class WizardContainerComponent
 
   removeAttachment(index) {
     this.filesService
-      .deleteFile(this.content['attachments'][index]["key"])
+      .deleteFile(this.content["attachments"][index]["key"])
       .promise()
       .then(data => {
         this.content.attachments.splice(index, 1);
@@ -851,7 +790,6 @@ export class WizardContainerComponent
         .deleteFile(imageObj["key"])
         .promise()
         .then(data => {
-          // console.log("Deleted file: ", data);
           if (this.content.image_urls.length === i + 1) {
             this.content.image_urls = [];
           }
@@ -863,14 +801,13 @@ export class WizardContainerComponent
   }
 
   checkIfExist(data: string) {
-    // combining the video_urls and image_urls
     let problem_attachments = [
       ...this.content["image_urls"],
       ...this.content["video_urls"],
       ...this.content["attachments"]
     ];
 
-    let checked = problem_attachments.filter((attachmentObj) => {
+    let checked = problem_attachments.filter(attachmentObj => {
       return attachmentObj.key === data;
     });
 
@@ -896,12 +833,6 @@ export class WizardContainerComponent
         reader.onload = (e: any) => {
           let buffer = Buffer.from(e.target.result);
           this.manageUploads(type, file.name, buffer);
-
-          /* this.filesService
-            .multiPartUpload(buffer, file.name)
-            .then(data => {
-              console.log(">>>>>data: ", data);
-            }); */
         };
         reader.readAsArrayBuffer(file);
       }
@@ -911,13 +842,12 @@ export class WizardContainerComponent
   manageUploads(type, name, file) {
     let startWith = type.split("/")[0];
     switch (startWith) {
-      case 'image':
+      case "image":
         this.filesService
           .multiPartUpload(file, name)
           .then(values => {
-            // additional check
-            if (!values['Location'].startsWith('https')) {
-              values['Location'] = `https://${values['Location']}`
+            if (!values["Location"].startsWith("https")) {
+              values["Location"] = `https://${values["Location"]}`;
             }
 
             this.content.image_urls.push({
@@ -930,17 +860,16 @@ export class WizardContainerComponent
               this.content.featured_type = "image";
             }
           })
-          .catch(err => console.log("Image Err: ", err))
+          .catch(err => console.log("Image Err: ", err));
 
         break;
 
-      case 'video':
+      case "video":
         this.filesService
           .multiPartUpload(file, name)
           .then(values => {
-            // additional check
-            if (!values['Location'].startsWith('https')) {
-              values['Location'] = `https://${values['Location']}`
+            if (!values["Location"].startsWith("https")) {
+              values["Location"] = `https://${values["Location"]}`;
             }
 
             this.content.video_urls.push({
@@ -949,18 +878,16 @@ export class WizardContainerComponent
               key: values["Key"]
             });
           })
-          .catch(err => console.log("Video Err: ", err))
+          .catch(err => console.log("Video Err: ", err));
         break;
 
-      case 'application':
-      case 'text':
+      case "application":
+      case "text":
         this.filesService
           .multiPartUpload(file, name)
           .then(values => {
-
-            // additional check
-            if (!values['Location'].startsWith('https')) {
-              values['Location'] = `https://${values['Location']}`
+            if (!values["Location"].startsWith("https")) {
+              values["Location"] = `https://${values["Location"]}`;
             }
 
             this.content.attachments.push({
@@ -969,7 +896,7 @@ export class WizardContainerComponent
               key: values["Key"]
             });
           })
-          .catch(err => console.log("Docs Err: ", err))
+          .catch(err => console.log("Docs Err: ", err));
         break;
 
       default:
@@ -1028,10 +955,6 @@ export class WizardContainerComponent
                 mimeType: event.target.files[i].type,
                 url: data["Location"]
               });
-              // if (!this.content.featured_url) {
-              //   this.content.featured_url = this.content.video_urls[0].url;
-              //   this.content.featured_type = "video";
-              // }
             })
             .catch(e => console.log("Err:: ", e));
           break;
@@ -1132,7 +1055,7 @@ export class WizardContainerComponent
       }
     }
     if (duplicate) {
-      alert("Link already exist.")
+      alert("Link already exist.");
     }
   }
 

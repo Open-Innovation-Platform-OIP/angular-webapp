@@ -70,9 +70,11 @@ export class AuthService {
     localStorage.removeItem("currentUser");
     this.currentUserSubject.next(null);
     this.apollo.getClient().resetStore();
-    this.router.navigateByUrl("/landing-page");
+    // this.router.navigateByUrl("/landing-page");
+    window.location.href = `/landing-page`;
+
     // location.replace('https://app.socialalpha.jaagalabs.com')
-    location.reload();
+    // location.reload();
   }
 
   login(loginDetails) {

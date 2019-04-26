@@ -9,7 +9,7 @@ import { APP_BASE_HREF } from "@angular/common";
 import { FormsModule } from "@angular/forms";
 import { QuillModule } from "ngx-quill";
 import { CommonModule } from "@angular/common";
-import { NgxUiLoaderModule } from 'ngx-ui-loader';
+// import { NgxUiLoaderModule } from 'ngx-ui-loader';
 
 import {
   MatAutocompleteModule,
@@ -99,7 +99,7 @@ import { EmbedVideo } from "ngx-embed-video";
   imports: [GraphQLModule, HttpClientModule, QuillModule, EmbedVideo.forRoot()],
   declarations: []
 })
-export class MaterialModule { }
+export class MaterialModule {}
 
 // Sentry.init({
 //   dsn: "https://aa3877830cee4ba6b6999be089316f57@sentry.io/1408858"
@@ -107,7 +107,7 @@ export class MaterialModule { }
 
 @Injectable()
 export class SentryErrorHandler implements ErrorHandler {
-  constructor() { }
+  constructor() {}
   handleError(error) {
     Sentry.captureException(error.originalError || error);
     throw error;
@@ -126,8 +126,8 @@ export class SentryErrorHandler implements ErrorHandler {
     SidebarModule,
     NavbarModule,
     FooterModule,
-    FixedpluginModule,
-    NgxUiLoaderModule,
+    FixedpluginModule
+    // NgxUiLoaderModule,
     // GlobalSearchViewModule
   ],
   declarations: [AppComponent, AdminLayoutComponent, AuthLayoutComponent],
@@ -136,4 +136,4 @@ export class SentryErrorHandler implements ErrorHandler {
   ],
   bootstrap: [AppComponent]
 })
-export class AppModule { }
+export class AppModule {}
