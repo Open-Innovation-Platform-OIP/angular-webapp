@@ -24,11 +24,13 @@
                   <img
                     src="{{(problemData.featured_url && checkUrlIsImg(problemData.featured_url)) ? problemData.featured_url : './assets/img/image_placeholder.jpg'}}"
                     alt="Thumbnail Image" class="rounded img-fluid">
-
-                  <button mat-raised-button *ngIf="problem_attachments.length > 0"
-                    class="btn btn-raised btn-info btn-sm" data-toggle="modal" (click)="openModal('#viewMoreImgModal')">
-                    view media ({{problem_attachments.length}})
-                  </button>
+                  <div>
+                    <button mat-raised-button *ngIf="problem_attachments.length > 0"
+                      class="btn btn-raised btn-info btn-sm" data-toggle="modal"
+                      (click)="openModal('#viewMoreImgModal')">
+                      view media ({{problem_attachments.length}})
+                    </button>
+                  </div>
                 </div>
               </div>
               <div class="col-md-8">

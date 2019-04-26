@@ -70,7 +70,7 @@ export class AdminLayoutComponent implements OnInit, AfterViewInit {
       .subscribe((event: NavigationEnd) => {
         if (elemMainPanel) {
           elemMainPanel.scrollTop = 0;
-          elemSidebar.scrollTop = 0;
+          // elemSidebar.scrollTop = 0;
         }
       });
     const html = document.getElementsByTagName("html")[0];

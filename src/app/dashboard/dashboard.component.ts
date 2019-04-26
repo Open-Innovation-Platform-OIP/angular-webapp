@@ -110,7 +110,7 @@ export class DashboardComponent implements OnInit, OnDestroy {
     } else {
       this.showLoader = false;
       this.ngxService.stop();
-      return false;
+      return true;
     }
   }
 
@@ -119,8 +119,8 @@ export class DashboardComponent implements OnInit, OnDestroy {
     const draftsQuery = gql`
       {
         problems(where:{is_draft:{_eq:true},is_deleted:{_eq:false}, created_by:{_eq: ${
-          this.auth.currentUserValue.id
-        }}} order_by: {modified_at: desc}) ${this.problemQueryString}
+      this.auth.currentUserValue.id
+      }}} order_by: {modified_at: desc}) ${this.problemQueryString}
     }
     `;
     this.draftsQueryRef = this.apollo.watchQuery({
@@ -279,7 +279,7 @@ export class DashboardComponent implements OnInit, OnDestroy {
         organizationByOrganizationId{
           users(where:{id:{_neq:${this.auth.currentUserValue.id}}}) ${
       this.userQueryString
-    }
+      }
         }
       }
     }
