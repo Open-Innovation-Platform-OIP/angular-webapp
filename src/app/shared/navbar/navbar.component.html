@@ -14,7 +14,7 @@
           </div>
         </div>
       </a>
-      <a class="navbar-brand" href="{{ getPath() }}"> {{ getTitle() }}</a>
+      <a class="navbar-brand" *ngIf="auth.currentUserValue.id" href="{{ getPath() }}"> {{ getTitle() }}</a>
       <!-- <a class="navbar-brand" > {{ problemData.title }}</a> -->
     </div>
     <button mat-button class="navbar-toggler btn-no-ripple" type="button" (click)="sidebarToggle()">
@@ -234,7 +234,7 @@
             <hr>
             <a class="dropdown-item" [routerLink]="'/users/'+auth.currentUserValue.id">My Profile</a>
             <a class="dropdown-item" (click)="logout()" style="cursor: pointer;object-fit: cover;"
-              *ngIf="auth.currentUserValue">Logout</a>
+              *ngIf="auth.currentUserValue.id">Logout</a>
           </div>
         </li>
         <li class="nav-item" routerLinkActive="active" *ngIf="!auth.currentUserValue.id">

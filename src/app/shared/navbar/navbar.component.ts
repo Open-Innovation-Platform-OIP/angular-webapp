@@ -147,6 +147,7 @@ export class NavbarComponent implements OnInit {
   ngOnInit() {
     this.user_id = this.auth.currentUserValue.id;
     console.log("USER ID", this.user_id);
+    console.log("USER data", this.usersService.currentUser);
 
     this.listTitles = ROUTES.filter(listTitle => listTitle);
 
@@ -211,7 +212,7 @@ export class NavbarComponent implements OnInit {
       })
       .valueChanges.subscribe(
         ({ data }) => {
-          // console.log(data, "from notifications");
+          console.log(data, "from notifications");
           data.notifications.map(notification => {
             if (notification.discussion) {
               notification.discussion.text = notification.discussion.text.replace(
@@ -485,7 +486,7 @@ export class NavbarComponent implements OnInit {
 
   logout() {
     this.auth.logout();
-    this.router.navigate(["/landing-page"]);
+    // this.router.navigate(["/landing-page"]);
   }
 
   // GlobalSearch() {
