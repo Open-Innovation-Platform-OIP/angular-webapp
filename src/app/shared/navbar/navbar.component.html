@@ -196,7 +196,7 @@
             </div>
 
             <div class="text-center" *ngIf="objectValues(notifications).length > 0; else noNotification">
-              <button mat-raised-button class="btn btn-success" (click)="allRead()"
+              <button mat-raised-button class="btn btn-success my-2" (click)="allRead()"
                 *ngIf="objectValues(notifications).length > 1">
                 Mark all as Read
               </button>
@@ -225,13 +225,11 @@
             </div>
           </a>
           <div class="dropdown-menu dropdown-menu-right" aria-labelledby="navbarDropdownMenuLink">
-            <div class="row justify-content-center">
-              <h6 style="text-transform: capitalize"><b>{{usersService.currentUser.name}}</b></h6>
-            </div>
-            <div class="row justify-content-center">
-              <h6 style="color: #999">{{usersService.currentUser.organization}}</h6>
-            </div>
-            <hr>
+            <h6 class="text-center text-uppercase font-weight-bold">
+              {{usersService.currentUser.name}}
+            </h6>
+            <h6 class="dropdown-header text-center">{{usersService.currentUser.organization}}</h6>
+            <div class="dropdown-divider"></div>
             <a class="dropdown-item" [routerLink]="'/users/'+auth.currentUserValue.id">My Profile</a>
             <a class="dropdown-item" (click)="logout()" style="cursor: pointer;object-fit: cover;"
               *ngIf="auth.currentUserValue.id">Logout</a>
