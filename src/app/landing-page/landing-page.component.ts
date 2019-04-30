@@ -2,6 +2,7 @@ import { Component, OnInit } from "@angular/core";
 import { Apollo } from "apollo-angular";
 import gql from "graphql-tag";
 import { Router, ActivatedRoute } from "@angular/router";
+import { NgxUiLoaderService } from "ngx-ui-loader";
 
 @Component({
   selector: "app-landing-page",
@@ -13,10 +14,12 @@ export class LandingPageComponent implements OnInit {
   searchInput: any;
   problems: any;
   numberToBeShown: Number;
+
   constructor(
     private apollo: Apollo,
     private route: ActivatedRoute,
-    private router: Router
+    private router: Router,
+    private ngxService: NgxUiLoaderService
   ) {}
 
   ngOnInit() {
@@ -97,6 +100,13 @@ export class LandingPageComponent implements OnInit {
   }
 
   showAll() {
+    this.ngxService.start();
+
+    // Stop the foreground loading after 5s
+    setTimeout(() => {
+      this.ngxService.stop();
+    }, 2000);
+
     this.numberToBeShown = Number.MAX_SAFE_INTEGER;
   }
 

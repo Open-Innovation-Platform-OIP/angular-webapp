@@ -1,3 +1,6 @@
+<ngx-ui-loader fgsColor="#ff9800" fgsType="rectangle-bounce">
+</ngx-ui-loader>
+
 <img src="../../assets/img/register.jpg" height="300px" width="100%" style="margin-top: -1%;" />
 <div class="centered">Solve together</div>
 <div class="main-content" style="margin-top: -2%">
@@ -21,14 +24,14 @@
       </button>
     </div>
     <div class="row">
-      <div class="col-md-10">
+      <div class="col-md-11">
         <h3 *ngIf="!searchInput" class="card-title text-center">Problems worth solving</h3>
         <h3 *ngIf="landingPageSearchResults.length" class="card-title text-center">Search Results</h3>
 
 
 
       </div>
-      <div class="col-md-2" style="padding-top: 1em;">
+      <div class="col-md-1" style="padding-top: 1em;">
         <button mat-raised-button class="btn btn-warning btn-sm" (click)="showAll()">
           View All
         </button>
