@@ -12,6 +12,7 @@ export class LandingPageComponent implements OnInit {
   landingPageSearchResults = [];
   searchInput: any;
   problems: any;
+  numberToBeShown: Number;
   constructor(
     private apollo: Apollo,
     private route: ActivatedRoute,
@@ -19,6 +20,7 @@ export class LandingPageComponent implements OnInit {
   ) {}
 
   ngOnInit() {
+    this.numberToBeShown = 8;
     this.apollo
       .watchQuery<any>({
         query: gql`
@@ -92,6 +94,10 @@ export class LandingPageComponent implements OnInit {
           console.error(JSON.stringify(error));
         }
       );
+  }
+
+  showAll() {
+    this.numberToBeShown = Number.MAX_SAFE_INTEGER;
   }
 
   landingPageSearch(searchInput: string) {
@@ -178,6 +184,7 @@ export class LandingPageComponent implements OnInit {
         });
     } else {
       this.landingPageSearchResults = [];
+      this.numberToBeShown = 8;
     }
   }
 }
