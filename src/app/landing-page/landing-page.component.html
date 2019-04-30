@@ -22,7 +22,7 @@
     </div>
     <div class="row">
       <div class="col-md-10">
-        <h3 *ngIf="!landingPageSearchResults.length" class="card-title text-center">Problems worth solving</h3>
+        <h3 *ngIf="!searchInput" class="card-title text-center">Problems worth solving</h3>
         <h3 *ngIf="landingPageSearchResults.length" class="card-title text-center">Search Results</h3>
 
 
@@ -39,10 +39,15 @@
 
 
     <br />
-    <div class="row" *ngIf="!landingPageSearchResults.length">
+    <div class="row" *ngIf="!searchInput">
       <div class="col-md-3" *ngFor="let problem of problems; let i=index;">
         <app-problem-card *ngIf="i<numberToBeShown" [problemData]="problem"></app-problem-card>
       </div>
+    </div>
+    <div class="card" *ngIf="searchInput && !landingPageSearchResults.length">
+      <h5 class="card-body text-center">No search results
+
+      </h5>
     </div>
     <div class="row" *ngIf="landingPageSearchResults.length">
       <div class="col-md-3" *ngFor="let problem of landingPageSearchResults;let i=index;">
