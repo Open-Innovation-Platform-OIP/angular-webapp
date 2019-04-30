@@ -6,6 +6,7 @@ import { ComponentsModule } from "../components/components.module";
 import { FormsModule } from "@angular/forms";
 import { LandingPageRoutes } from "./landing-page.routing";
 import { ShareAutofocusModule } from "../share-autofocus/share-autofocus.module";
+import { NgxUiLoaderModule } from "ngx-ui-loader";
 
 @NgModule({
   imports: [
@@ -13,7 +14,8 @@ import { ShareAutofocusModule } from "../share-autofocus/share-autofocus.module"
     CommonModule,
     FormsModule,
     ComponentsModule,
-    ShareAutofocusModule
+    ShareAutofocusModule,
+    NgxUiLoaderModule
   ],
   declarations: [LandingPageComponent],
   exports: [LandingPageComponent]
