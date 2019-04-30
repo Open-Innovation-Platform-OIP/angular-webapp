@@ -14,3 +14,8 @@
 .validate-card {
     height: 20em;
 }
+
+.lines-wrap {
+    white-space: nowrap;
+    text-overflow: ellipsis;
+}

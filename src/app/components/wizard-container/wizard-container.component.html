@@ -86,9 +86,10 @@
                     [ngClass]="displayFieldCss(type, 'organization')">
                     <mat-select name="organization" placeholder="Select Organization *" matInput id="organization"
                       formControlName="organization" [(ngModel)]="content.organization">
-                      <mat-option>None</mat-option>
+                      <mat-option value="None">None</mat-option>
                       <mat-option *ngFor="let org of objectKeys(usersService.allOrgs)" value="{{org}}">{{org}}
                       </mat-option>
+
                     </mat-select>
 
                     <!-- <input placeholder="Organization" [matAutocomplete]="auto" matInput [(ngModel)]="content.organization"
@@ -183,7 +184,7 @@
                             {{location.Location.Address.Label}}
                           </mat-option>
                         </mat-autocomplete> -->
-                    <input placeholder="Locations" [(ngModel)]="locationInputValue" rows="2" #locationInput
+                    <input placeholder="Locations*" [(ngModel)]="locationInputValue" rows="2" #locationInput
                       [formControl]="locationCtrl" [matAutocomplete]="auto" [matChipInputFor]="chipList"
                       [matChipInputSeparatorKeyCodes]="separatorKeysCodes" (keyup)="getLocation()"
                       [matChipInputAddOnBlur]="addOnBlur" (matChipInputTokenEnd)="addLocation($event)">
@@ -281,7 +282,7 @@
                   </div>
 
                   <mat-form-field class="example-chip-list">
-                    <input placeholder="Sectors" #sectorInput [formControl]="sectorCtrl" [matAutocomplete]="auto"
+                    <input placeholder="Sectors*" #sectorInput [formControl]="sectorCtrl" [matAutocomplete]="auto"
                       [matChipInputFor]="chipList" [matChipInputSeparatorKeyCodes]="separatorKeysCodes"
                       [matChipInputAddOnBlur]="addOnBlur" (matChipInputTokenEnd)="add($event)">
                     <mat-chip-list #chipList>

@@ -6,6 +6,7 @@ import { AuthService } from "../services/auth.service";
 import { ProblemService } from "../services/problem.service";
 import { isArray } from "util";
 import { NgxUiLoaderService } from "ngx-ui-loader";
+import { UsersService } from "../services/users.service";
 
 declare const $: any;
 
@@ -78,7 +79,8 @@ export class DashboardComponent implements OnInit, OnDestroy {
     private apollo: Apollo,
     private auth: AuthService,
     private problemService: ProblemService,
-    private ngxService: NgxUiLoaderService
+    private ngxService: NgxUiLoaderService,
+    private userService: UsersService
   ) {
     // console.log('dashboard')
   }
@@ -108,7 +110,7 @@ export class DashboardComponent implements OnInit, OnDestroy {
     } else {
       this.showLoader = false;
       this.ngxService.stop();
-      return false;
+      return true;
     }
   }
 
@@ -117,8 +119,8 @@ export class DashboardComponent implements OnInit, OnDestroy {
     const draftsQuery = gql`
       {
         problems(where:{is_draft:{_eq:true},is_deleted:{_eq:false}, created_by:{_eq: ${
-          this.auth.currentUserValue.id
-        }}} order_by: {modified_at: desc}) ${this.problemQueryString}
+      this.auth.currentUserValue.id
+      }}} order_by: {modified_at: desc}) ${this.problemQueryString}
     }
     `;
     this.draftsQueryRef = this.apollo.watchQuery({
@@ -277,7 +279,7 @@ export class DashboardComponent implements OnInit, OnDestroy {
         organizationByOrganizationId{
           users(where:{id:{_neq:${this.auth.currentUserValue.id}}}) ${
       this.userQueryString
-    }
+      }
         }
       }
     }

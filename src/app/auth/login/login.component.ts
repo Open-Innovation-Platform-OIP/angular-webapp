@@ -4,6 +4,8 @@ import { AuthService } from "src/app/services/auth.service";
 import { Router, ActivatedRoute } from "@angular/router";
 import { first } from "rxjs/operators";
 import { link } from "fs";
+import { UsersService } from "../../services/users.service";
+
 declare var $: any;
 
 @Component({
@@ -28,7 +30,8 @@ export class LoginComponent implements OnInit, OnDestroy {
     private element: ElementRef,
     private auth: AuthService,
     private route: ActivatedRoute,
-    private router: Router
+    private router: Router,
+    private userService: UsersService
   ) {
     this.nativeElement = element.nativeElement;
     this.sidebarVisible = false;
@@ -124,11 +127,15 @@ export class LoginComponent implements OnInit, OnDestroy {
       .pipe(first())
       .subscribe(
         data => {
-          this.router.navigate([this.returnUrl]);
+          // this.router.navigate([this.returnUrl]);
+          // console.log(this.returnUrl, "return url");
+          window.location.href = `${this.returnUrl}`;
+          // location.reload();
+
+          this.userService.getCurrentUser();
+
           let message =
             "Update your profile information to make the most out of the platform.";
-
-          this.link = `/users/${this.auth.currentUserValue.id}/edit`;
 
           setTimeout(() => {
             this.showNotification([
@@ -241,7 +248,7 @@ export class LoginComponent implements OnInit, OnDestroy {
           '<div class="progress-bar progress-bar-{0}" role="progressbar" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100" style="width: 0%;"></div>' +
           "</div>" +
           '<a href="{3}" target="{4}" data-notify="url"></a>' +
-          "</div>" 
+          "</div>"
       }
     );
   }

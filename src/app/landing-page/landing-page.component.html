@@ -2,6 +2,8 @@
 <div class="centered">Solve together</div>
 <div class="main-content" style="margin-top: -2%">
   <div class="container-fluid">
+    <div class="centered">Solve together</div>
+
     <!-- <button class="btn btn-warning btn-lg btn-fab btn-round" matTooltip="Add Problem" [matTooltipPosition]="'left'"
           [routerLink]="['/problems/add']" [disabled]="!auth.currentUserValue.id">
           <i class="material-icons">add</i>
@@ -18,20 +20,33 @@
         <div class="ripple-container"></div>
       </button>
     </div>
-    <h3 *ngIf="!landingPageSearchResults.length" class="card-title text-center">Problems worth solving</h3>
-    <h3 *ngIf="landingPageSearchResults.length" class="card-title text-center">Search Results</h3>
+    <div class="row">
+      <div class="col-md-10">
+        <h3 *ngIf="!landingPageSearchResults.length" class="card-title text-center">Problems worth solving</h3>
+        <h3 *ngIf="landingPageSearchResults.length" class="card-title text-center">Search Results</h3>
+
+
+
+      </div>
+      <div class="col-md-2" style="padding-top: 1em;">
+        <button mat-raised-button class="btn btn-warning btn-sm" (click)="showAll()">
+          View All
+        </button>
+
+      </div>
+    </div>
 
 
 
     <br />
     <div class="row" *ngIf="!landingPageSearchResults.length">
       <div class="col-md-3" *ngFor="let problem of problems; let i=index;">
-        <app-problem-card *ngIf="i<4" [problemData]="problem"></app-problem-card>
+        <app-problem-card *ngIf="i<numberToBeShown" [problemData]="problem"></app-problem-card>
       </div>
     </div>
     <div class="row" *ngIf="landingPageSearchResults.length">
-      <div class="col-md-3" *ngFor="let problem of landingPageSearchResults">
-        <app-problem-card [problemData]="problem"></app-problem-card>
+      <div class="col-md-3" *ngFor="let problem of landingPageSearchResults;let i=index;">
+        <app-problem-card *ngIf="i<numberToBeShown" [problemData]="problem"></app-problem-card>
       </div>
     </div>
     <!-- <h3 *ngIf="problems.length" class="card-title text-center">Problems added by other users</h3>

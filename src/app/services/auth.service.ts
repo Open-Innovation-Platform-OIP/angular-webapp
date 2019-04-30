@@ -51,6 +51,7 @@ export class AuthService {
   public get currentUserValue(): User {
     if (this.currentUserSubject.value) {
       return this.currentUserSubject.value;
+      // }
     } else {
       return { id: 0, email: "", token: "" };
     }
@@ -69,9 +70,11 @@ export class AuthService {
     localStorage.removeItem("currentUser");
     this.currentUserSubject.next(null);
     this.apollo.getClient().resetStore();
-    this.router.navigateByUrl("/auth/login");
+    // this.router.navigateByUrl("/landing-page");
+    window.location.href = `/landing-page`;
+
     // location.replace('https://app.socialalpha.jaagalabs.com')
-    location.reload();
+    // location.reload();
   }
 
   login(loginDetails) {

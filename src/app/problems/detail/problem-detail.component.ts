@@ -14,6 +14,8 @@ import {
 } from "@angular/common";
 import { Router, ActivatedRoute, ParamMap } from "@angular/router";
 import { Observable, Subscription, interval } from "rxjs";
+import { NgxUiLoaderService } from "ngx-ui-loader";
+
 import {
   first,
   finalize,
@@ -238,7 +240,8 @@ export class ProblemDetailComponent implements OnInit, OnDestroy {
     private collaborationService: CollaborationService,
     private validationService: ValidationService,
     private enrichmentService: EnrichmentService,
-    public ngLocation: Location
+    public ngLocation: Location,
+    private ngxService: NgxUiLoaderService
   ) {
     this.startInterval();
     this.pageUrl = domain + ngLocation.path();
@@ -630,6 +633,8 @@ export class ProblemDetailComponent implements OnInit, OnDestroy {
     this.pageUrl = domain + this.ngLocation.path();
   }
 
+  //
+
   parseProblem(problem) {
     // map core keys
     Object.keys(this.problemData).map(key => {
@@ -738,8 +743,12 @@ export class ProblemDetailComponent implements OnInit, OnDestroy {
       this.popularDiscussions = Object.keys(this.replies)
         .sort((a, b) => {
           // sorting by date
-          var dateA = this.comments[a].modified_at;
-          var dateB = this.comments[b].modified_at;
+          if (this.comments[a]) {
+            var dateA = this.comments[a].modified_at;
+          }
+          if (this.comments[b]) {
+            var dateB = this.comments[b].modified_at;
+          }
           if (dateA < dateB) {
             return 1;
           }

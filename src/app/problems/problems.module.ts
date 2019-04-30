@@ -8,6 +8,8 @@ import { SelectModule } from "ng2-select";
 import { MaterialModule } from "../app.module";
 import { ProblemsRoutes } from "./problems.routing";
 import { WizardComponent } from "./form/wizard.component";
+// import { NgxUiLoaderModule } from "ngx-ui-loader";
+
 import {
   MatChipsModule,
   MAT_CHIPS_DEFAULT_OPTIONS
@@ -18,6 +20,7 @@ import { ProblemsViewComponent } from "./grid/problems-view.component";
 import { NguCarouselModule } from "@ngu/carousel";
 import { ComponentsModule } from "../components/components.module";
 import { DiscussionsModule } from "../discussions/discussions.module";
+// import { NgxUiLoaderModule, NgxUiLoaderRouterModule } from "ngx-ui-loader";
 // import { WizardContainerComponent } from './wizard-container/wizard-container.component';
 
 @NgModule({
@@ -32,6 +35,10 @@ import { DiscussionsModule } from "../discussions/discussions.module";
     NguCarouselModule,
     ComponentsModule,
     DiscussionsModule
+    // NgxUiLoaderModule,
+    // NgxUiLoaderRouterModule
+
+    // NgxUiLoaderModule
   ],
   declarations: [
     WizardComponent,

@@ -21,151 +21,144 @@ export class ProblemsViewComponent implements OnInit, OnDestroy {
 
   ngOnInit() {
     // console.log(Number(this.auth.currentUserValue.id), "id");
-    this.userProblemViewQuery = this.apollo.watchQuery<any>({
-      query: gql`
-          query PostsGetQuery {
-            problems (
-              
-              where:{ _and: [
-                { created_by: {_eq: ${Number(this.auth.currentUserValue.id)}}},
-                { is_draft: {_eq: false}}
-              ] 
-            
-              }
-              order_by: {updated_at: desc}
-              
-            ) {
-              id
-              title
-              description
-              location
-              resources_needed
-              image_urls
-              modified_at
-              updated_at
-            
-              featured_url
-              
-              is_deleted
-              problem_voters{
-                problem_id
-                user_id
-              }
-              problem_watchers{
-                problem_id
-                user_id
+    // this.userProblemViewQuery = this.apollo.watchQuery<any>({
+    //   query: gql`
+    //       query PostsGetQuery {
+    //         problems (
 
-              }
-              problem_validations {
-                validated_by
-                comment
-                agree
-                created_at
-                files
-                validated_by
-                edited_at
-                is_deleted
-                problem_id
-              }
-              problem_collaborators {
-                user_id
-                problem_id
-                edited_at
-              }
-              discussionssByproblemId {
-                id
-                problem_id
-                modified_at
-              }
-              enrichmentsByproblemId {
-                id
-                problem_id
-                edited_at
-              }
-            }
-          }
-        `,
-      pollInterval: 500,
-      fetchPolicy: "network-only"
-    });
+    //           where:{ _and: [
+    //             { created_by: {_eq: ${Number(this.auth.currentUserValue.id)}}},
+    //             { is_draft: {_eq: false}}
+    //           ]
 
-    this.userProblemViewSubscription = this.userProblemViewQuery.valueChanges.subscribe(
-      result => {
-        if (result.data.problems.length > 0) {
-          this.userProblems = result.data.problems;
-          // console.log(this.userProblems, "problem card data");
-        }
-        // console.log("PROBLEMS", this.problems);
-      },
-      error => {
-        console.error(JSON.stringify(error));
-      }
-    );
+    //           }
+    //           order_by: {updated_at: desc}
+
+    //         ) {
+    //           id
+    //           title
+    //           description
+    //           location
+    //           resources_needed
+    //           image_urls
+    //           modified_at
+    //           updated_at
+
+    //           featured_url
+
+    //           is_deleted
+    //           problem_voters{
+    //             problem_id
+    //             user_id
+    //           }
+    //           problem_watchers{
+    //             problem_id
+    //             user_id
+
+    //           }
+    //           problem_validations {
+    //             validated_by
+    //             comment
+    //             agree
+    //             created_at
+    //             files
+    //             validated_by
+    //             edited_at
+    //             is_deleted
+    //             problem_id
+    //           }
+    //           problem_collaborators {
+    //             user_id
+    //             problem_id
+    //             edited_at
+    //           }
+    //           discussionssByproblemId {
+    //             id
+    //             problem_id
+    //             modified_at
+    //           }
+    //           enrichmentsByproblemId {
+    //             id
+    //             problem_id
+    //             edited_at
+    //           }
+    //         }
+    //       }
+    //     `,
+    //   pollInterval: 500,
+    //   fetchPolicy: "network-only"
+    // });
+
+    // this.userProblemViewSubscription = this.userProblemViewQuery.valueChanges.subscribe(
+    //   result => {
+    //     if (result.data.problems.length > 0) {
+    //       this.userProblems = result.data.problems;
+    //       // console.log(this.userProblems, "problem card data");
+    //     }
+    //     // console.log("PROBLEMS", this.problems);
+    //   },
+    //   error => {
+    //     console.error(JSON.stringify(error));
+    //   }
+    // );
 
     // console.log(Number(this.auth.currentUserValue.id), "id");
     this.problemViewQuery = this.apollo.watchQuery<any>({
       query: gql`
-          query PostsGetQuery {
-            problems (
-              where:{ _and: [
-                { created_by: {_neq: ${Number(this.auth.currentUserValue.id)}}},
-                { is_draft: {_eq: false}}
-              ] 
-            
-              }
-              order_by: {updated_at: desc}
-              
-            ) {
-              id
-              title
-              description
-              location
-              resources_needed
-              image_urls
-              modified_at
-              updated_at
-             
-              featured_url
-             
-              is_deleted
-              problem_voters{
-                problem_id
-                user_id
-              }
-              problem_watchers{
-                problem_id
-                user_id
+        query PostsGetQuery {
+          problems(
+            where: { is_draft: { _eq: false } }
+            order_by: { updated_at: desc }
+          ) {
+            id
+            title
+            description
+            location
+            resources_needed
+            image_urls
+            modified_at
+            updated_at
 
-              }
-              problem_validations {
-                validated_by
-                comment
-                agree
-                created_at
-                files
-                validated_by
-                edited_at
-                is_deleted
-                problem_id
-              }
-              problem_collaborators {
-                user_id
-                problem_id
-                edited_at
-              }
-              discussionssByproblemId {
-                id
-                problem_id
-                modified_at
-              }
-              enrichmentsByproblemId {
-                id
-                problem_id
-                edited_at
-              }
+            featured_url
+
+            is_deleted
+            problem_voters {
+              problem_id
+              user_id
+            }
+            problem_watchers {
+              problem_id
+              user_id
+            }
+            problem_validations {
+              validated_by
+              comment
+              agree
+              created_at
+              files
+              validated_by
+              edited_at
+              is_deleted
+              problem_id
+            }
+            problem_collaborators {
+              user_id
+              problem_id
+              edited_at
+            }
+            discussionssByproblemId {
+              id
+              problem_id
+              modified_at
+            }
+            enrichmentsByproblemId {
+              id
+              problem_id
+              edited_at
             }
           }
-        `,
+        }
+      `,
       pollInterval: 500,
       fetchPolicy: "network-only"
     });
@@ -185,8 +178,8 @@ export class ProblemsViewComponent implements OnInit, OnDestroy {
   }
 
   ngOnDestroy() {
-    this.userProblemViewQuery.stopPolling();
-    this.userProblemViewSubscription.unsubscribe();
+    // this.userProblemViewQuery.stopPolling();
+    // this.userProblemViewSubscription.unsubscribe();
     this.problemViewQuery.stopPolling();
     this.problemViewSubscription.unsubscribe();
   }

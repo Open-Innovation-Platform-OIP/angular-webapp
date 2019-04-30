@@ -1,4 +1,8 @@
 <!-- <div ngIf="auth.currentUserValue.id"> -->
+<ngx-ui-loader id="submitComment" fgsColor="#ff9800" fgsPosition="bottom-right" overlayColor=rgba(40,40,40,.1)
+  fgsType="rectangle-bounce">
+</ngx-ui-loader>
+
 
 <quill-editor [style]="{height: '100px'}" *ngIf="auth.currentUserValue.id" [(ngModel)]="content" [sanitize]="false"
   [modules]="modules" (onEditorCreated)="setFocus($event)">

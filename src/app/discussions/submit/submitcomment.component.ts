@@ -126,11 +126,11 @@ export class CommentSubmitComponent implements OnInit {
   }
 
   showLoader() {
-    this.ngxService.start();
+    this.ngxService.start("submitComment");
 
     // Stop the foreground loading after 5s
     setTimeout(() => {
-      this.ngxService.stop();
-    }, 3000);
+      this.ngxService.stop("submitComment");
+    }, 2000);
   }
 }

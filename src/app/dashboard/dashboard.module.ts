@@ -8,6 +8,7 @@ import { ComponentsModule } from "../components/components.module";
 import { DashboardComponent } from "./dashboard.component";
 import { DashboardRoutes } from "./dashboard.routing";
 import { ViewAllComponent } from "../view-all/view-all.component";
+import { NgxUiLoaderModule } from "ngx-ui-loader";
 
 @NgModule({
   imports: [
@@ -16,7 +17,8 @@ import { ViewAllComponent } from "../view-all/view-all.component";
     FormsModule,
     MdModule,
     MaterialModule,
-    ComponentsModule
+    ComponentsModule,
+    NgxUiLoaderModule
   ],
   declarations: [DashboardComponent, ViewAllComponent]
 })

@@ -42,7 +42,7 @@
                         </button>
                         <!-- <br /> -->
                         <a href="#pablo" class="btn btn-sm btn-danger btn-round fileinput-exists"
-                          data-dismiss="fileinput"><i class="fa fa-times"></i> cancel</a>
+                          data-dismiss="fileinput" (click)="imageBlob = null"><i class="fa fa-times"></i> cancel</a>
                       </div>
                     </div>
                   </div>
@@ -82,12 +82,14 @@
                   <div class="col-md-10 col-9">
                     <mat-form-field class="example-full-width">
                       <input matInput type="tel" name="phone_number" required [(ngModel)]="user.phone_number"
-                        #phone_number="ngModel"
-                        pattern="(?:(?:\+|0{0,2})91(\s*[\- ]\s*)?|[0 ]?)?[789]\d{9}|(\d[-]?){10}\d" />
+                        #phone_number="ngModel" (change)="checkPhoneNumber(phone_number.model)" />
                     </mat-form-field>
-                    <div [hidden]="phone_number.valid || phone_number.pristine" class="text-danger error-msg">
+                    <mat-error [hidden]="phone_number.valid || phone_number.pristine" class="text-danger error-msg">
                       Phone number is required
-                    </div>
+                    </mat-error>
+                    <mat-error *ngIf="user.phone_number && !isPhoneValid" class="text-danger error-msg">
+                      Please enter a valid phone number
+                    </mat-error>
                   </div>
                 </div>
 
@@ -288,15 +290,15 @@
             </form>
           </div>
           <div class="card-footer row justify-content-center" *ngIf="mode === 'Add'">
-            <button mat-raised-button class="btn btn-warning" type="submit" [disabled]="!userForm.form.valid"
-              (click)="onSubmit()">
+            <button mat-raised-button class="btn btn-warning" type="submit"
+              [disabled]="!userForm.form.valid || !isPhoneValid" (click)="onSubmit()">
               Save Details
             </button>
           </div>
 
           <div class="card-footer row justify-content-center" *ngIf="mode === 'Edit'">
-            <button mat-raised-button class="btn btn-warning" type="submit" [disabled]="!userForm.form.valid"
-              (click)="onSubmit()">
+            <button mat-raised-button class="btn btn-warning" type="submit"
+              [disabled]="!isPhoneValid || !userForm.form.valid" (click)="onSubmit()">
               Update
             </button>
           </div>
