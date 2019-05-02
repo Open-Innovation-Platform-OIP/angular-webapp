@@ -1,5 +1,11 @@
 <div class="main-content">
   <div class="container-fluid">
+    <div class="row actions" *ngIf="dashboardData.length" [routerLink]="['/dashboard']" style="padding-top: 1%;">
+      <i class="material-icons">
+        keyboard_arrow_left
+      </i>
+      <span><b>Back to Dashboard</b></span>
+    </div>
     <div class="row">
       <div class="col-md-12">
         <h3 *ngIf="dashboardData.length" class="card-title text-center">
