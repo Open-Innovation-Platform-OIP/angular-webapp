@@ -23,7 +23,7 @@ export class LandingPageComponent implements OnInit {
   ) {}
 
   ngOnInit() {
-    this.numberToBeShown = 8;
+    this.numberToBeShown = 4;
     this.apollo
       .watchQuery<any>({
         query: gql`
@@ -111,6 +111,10 @@ export class LandingPageComponent implements OnInit {
   }
 
   landingPageSearch(searchInput: string) {
+    this.numberToBeShown = 8;
+    if (this.searchInput.length < 2) {
+      this.numberToBeShown = 4;
+    }
     if (searchInput.length >= 3) {
       this.landingPageSearchResults = [];
 

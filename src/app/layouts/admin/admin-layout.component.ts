@@ -40,7 +40,7 @@ export class AdminLayoutComponent implements OnInit, AfterViewInit {
   }
 
   isMobileMenu() {
-    if ($(window).width() > 991) {
+    if ($(window).width() >= 991) {
       return false;
     }
     return true;
