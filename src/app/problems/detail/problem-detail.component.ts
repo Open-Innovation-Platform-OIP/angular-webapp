@@ -1133,6 +1133,13 @@ export class ProblemDetailComponent implements OnInit, OnDestroy {
             },
             err => {
               console.error(JSON.stringify(err));
+              swal({
+                title: "Error",
+                text: "Try Again",
+                type: "error",
+                confirmButtonClass: "btn btn-info",
+                buttonsStyling: false
+              }).catch(swal.noop);
             }
           );
       }
@@ -1171,6 +1178,13 @@ export class ProblemDetailComponent implements OnInit, OnDestroy {
       },
       error => {
         console.log("Could delete due to " + error);
+        swal({
+          title: "Error",
+          text: "Try Again",
+          type: "error",
+          confirmButtonClass: "btn btn-info",
+          buttonsStyling: false
+        }).catch(swal.noop);
       }
     );
   }
@@ -1210,6 +1224,13 @@ export class ProblemDetailComponent implements OnInit, OnDestroy {
       },
       error => {
         console.log("Could delete due to " + error);
+        swal({
+          title: "Error",
+          text: "Try Again",
+          type: "error",
+          confirmButtonClass: "btn btn-info",
+          buttonsStyling: false
+        }).catch(swal.noop);
       }
     );
   }
@@ -1222,6 +1243,13 @@ export class ProblemDetailComponent implements OnInit, OnDestroy {
       },
       error => {
         console.log("Could delete due to " + error);
+        swal({
+          title: "Error",
+          text: "Try Again",
+          type: "error",
+          confirmButtonClass: "btn btn-info",
+          buttonsStyling: false
+        }).catch(swal.noop);
       }
     );
   }

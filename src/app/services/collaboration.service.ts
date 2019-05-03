@@ -81,6 +81,14 @@ export class CollaborationService {
         error => {
           console.log("error", error);
           console.error(JSON.stringify(error));
+
+          swal({
+            title: "Error",
+            text: "Try Again",
+            type: "error",
+            confirmButtonClass: "btn btn-info",
+            buttonsStyling: false
+          }).catch(swal.noop);
         }
       );
   }

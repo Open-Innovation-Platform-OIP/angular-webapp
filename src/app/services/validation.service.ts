@@ -2,6 +2,7 @@ import { Injectable } from "@angular/core";
 import { Apollo } from "apollo-angular";
 import gql from "graphql-tag";
 import { Timestamp } from "aws-sdk/clients/workspaces";
+import swal from "sweetalert2";
 
 export interface validation {
   comment: String;
@@ -56,6 +57,13 @@ export class ValidationService {
         },
         err => {
           console.log(err, "error");
+          swal({
+            title: "Error",
+            text: "Try Again",
+            type: "error",
+            confirmButtonClass: "btn btn-info",
+            buttonsStyling: false
+          }).catch(swal.noop);
         }
       );
   }
