@@ -646,7 +646,7 @@ export class ProblemDetailComponent implements OnInit, OnDestroy {
       console.log("Message", problem.title);
       this.message = problem.title;
     }
-    this.showNotification("top", "right", problem.title);
+    // this.showNotification("top", "right", problem.title);
 
     // map core keys
     Object.keys(this.problemData).map(key => {
