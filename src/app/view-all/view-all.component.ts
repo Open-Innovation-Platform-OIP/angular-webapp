@@ -33,7 +33,7 @@ export class ViewAllComponent implements OnInit {
         this.dashboardData = this.problemService.dashboardUserProblems;
       }
       if (params.type == "contributions") {
-        this.title = "Problems you have contributed to";
+        this.title = "Your contributions";
         this.dashboardData = Object.values(
           this.problemService.dashboardContributions
         );

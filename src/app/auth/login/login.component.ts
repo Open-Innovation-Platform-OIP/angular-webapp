@@ -3,6 +3,7 @@ import { isEmail } from "validator";
 import { AuthService } from "src/app/services/auth.service";
 import { Router, ActivatedRoute } from "@angular/router";
 import { first } from "rxjs/operators";
+import { link } from "fs";
 import { UsersService } from "../../services/users.service";
 
 declare var $: any;
@@ -20,6 +21,7 @@ export class LoginComponent implements OnInit, OnDestroy {
   submitted = false;
   returnUrl: string = "/";
   error = "";
+  link = "";
   private toggleButton: any;
   private sidebarVisible: boolean;
   private nativeElement: Node;
