@@ -1,6 +1,6 @@
 .description {
     max-lines: 2;
-    max-height: 5.5em;
+    max-height: 3em;
     overflow: hidden;
 }
 
@@ -12,7 +12,7 @@
 }
 
 .validate-card {
-    height: 20em;
+    height: 21em;
 }
 
 .lines-wrap {

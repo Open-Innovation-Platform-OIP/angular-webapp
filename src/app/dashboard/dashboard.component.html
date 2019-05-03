@@ -21,7 +21,7 @@
       </div>
       <div *ngIf="drafts.length" class="col-md-2" style="padding-top: 1em;">
         <button mat-raised-button class="btn btn-warning btn-sm" [routerLink]="['/dashboard/drafts',{ type: 'drafts'}]">
-          View All
+          View All ({{drafts.length}}) <i class="material-icons">keyboard_arrow_right</i>
         </button>
       </div>
     </div>
@@ -41,7 +41,7 @@
       <div *ngIf="userProblems.length" class="col-md-2" style="padding-top: 1em;">
         <button mat-raised-button class="btn btn-warning btn-sm"
           [routerLink]="['/dashboard/problems',{ type: 'problems'}]">
-          View All
+          View All ({{userProblems.length}}) <i class="material-icons">keyboard_arrow_right</i>
         </button>
       </div>
     </div>
@@ -61,7 +61,7 @@
       <div *ngIf="objectKeys(contributions).length > 0" class="col-md-2" style="padding-top: 1em;">
         <button mat-raised-button class="btn btn-warning btn-sm"
           [routerLink]="['/dashboard/contributions',{ type: 'contributions'}]">
-          View All
+          View All ({{objectKeys(contributions).length}}) <i class="material-icons">keyboard_arrow_right</i>
         </button>
       </div>
     </div>
@@ -81,7 +81,7 @@
       <div *ngIf="objectKeys(recommendedProblems).length > 0" class="col-md-2" style="padding-top: 1em;">
         <button mat-raised-button class="btn btn-warning btn-sm"
           [routerLink]="['/dashboard/interests',{ type: 'interests'}]">
-          View All
+          View All ({{objectKeys(recommendedProblems).length}}) <i class="material-icons">keyboard_arrow_right</i>
         </button>
       </div>
     </div>
@@ -101,7 +101,7 @@
       <div *ngIf="objectKeys(recommendedUsers).length > 0" class="col-md-2" style="padding-top: 1em;">
         <button mat-raised-button class="btn btn-warning btn-sm"
           [routerLink]="['/dashboard/recommended-users',{ type: 'users'}]">
-          View All
+          View All ({{objectKeys(recommendedUsers).length}}) <i class="material-icons">keyboard_arrow_right</i>
         </button>
       </div>
     </div>
