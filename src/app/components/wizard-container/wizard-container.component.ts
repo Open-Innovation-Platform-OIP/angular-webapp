@@ -670,14 +670,9 @@ export class WizardContainerComponent
   }
 
   publishContent() {
-    if (
-      !this.content.image_urls.length &&
-      !this.content.video_urls.length &&
-      !this.content.embed_urls.length &&
-      !this.content.attachments
-    ) {
+    if (this.content.is_draft) {
       swal({
-        title: "Are you sure you want to publish without adding media content",
+        title: "Are you sure you want to publish the problem",
         // text: "You won't be able to revert this!",
         type: "warning",
         showCancelButton: true,
