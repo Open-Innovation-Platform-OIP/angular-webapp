@@ -198,10 +198,11 @@
 <div class="card-footer" *ngIf="!showModal">
   <!-- <div> -->
   <i class="
-    material-icons actions" (click)="voteEnrichment()" [ngStyle]="{'color':enrichmentVoted? '#1E90FF' : 'black' }">
+    material-icons actions" (click)="voteEnrichment()"
+    [ngStyle]="{'color':voters.has(auth.currentUserValue.id) ? '#1E90FF' : 'black' }">
     thumb_up
   </i>
-  <span>{{enrichmentData.voted_by.length}}</span>
+  <span>{{voters.size}}</span>
   <!-- </div> -->
   <!-- <div class="text-center"> -->
   <button mat-button type="button" (click)="editEnrichment()" class="btn btn-warning pull-right" aria-hidden="true"

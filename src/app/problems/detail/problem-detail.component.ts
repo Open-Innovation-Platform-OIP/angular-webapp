@@ -515,6 +515,9 @@ export class ProblemDetailComponent implements OnInit, OnDestroy {
           impact
           min_population
           max_population
+          enrichment_voters {
+            user_id
+          }
           organization
           beneficiary_attributes
           location
@@ -529,6 +532,7 @@ export class ProblemDetailComponent implements OnInit, OnDestroy {
           featured_url
           embed_urls
           featured_type
+         
           usersBycreatedBy{
             id
             name

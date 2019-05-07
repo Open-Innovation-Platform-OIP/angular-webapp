@@ -15,8 +15,12 @@
     <!-- <p class="description" *ngIf="enrichmentData.location">{{enrichmentData.location}}</p>
      -->
     <div *ngFor="let location of enrichmentData.location; let i=index;">
-      <span *ngIf="location.Address.Label && i < 2">{{location.Address.Label}}</span>
-      <span *ngIf="i<2">&nbsp;</span>
+      <div *ngIf="location && location.address &&  location.address.Label ">
+        <span *ngIf="location.Address.Label && i < 2">{{location.Address.Label}}</span>
+        <span *ngIf="i<2">&nbsp;</span>
+
+      </div>
+
     </div>
 
     <!-- <h4 class="card-title">Description :</h4> -->
@@ -35,7 +39,7 @@
       <i class="material-icons">
         thumb_up
       </i>
-      {{numberOfVotes}}
+      {{voters.size}}
     </div>
     <p>Added by :
       {{ (auth.currentUserValue.id == enrichmentData.created_by) ? 'You' : enrichmentData.usersBycreatedBy.name}}
