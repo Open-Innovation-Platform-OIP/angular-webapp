@@ -123,7 +123,8 @@
 
       <strong>Location(s) :</strong>
       <div *ngFor="let location of enrichmentData.location">
-        <span class="badge badge-warning" *ngIf="location.Address.Label">{{location.Address.Label}}</span>
+        <span class="badge badge-warning"
+          *ngIf="location.Address&&location.Address.Label">{{location.Address.Label}}</span>
         <span>&nbsp;</span>
       </div>
       <!-- <p class="description">{{enrichmentData.location}}</p> -->

@@ -1,6 +1,7 @@
 import { Component, OnInit, Input, OnChanges } from "@angular/core";
 import { Router, ActivatedRoute, NavigationEnd } from "@angular/router";
 import { first, finalize, startWith, take, map } from "rxjs/operators";
+import { SearchService } from "../services/search.service";
 
 import * as Query from "../services/queries";
 import { Apollo } from "apollo-angular";
@@ -27,7 +28,8 @@ export class GlobalSearchViewComponent implements OnInit, OnChanges {
     private route: ActivatedRoute,
     private apollo: Apollo,
     private auth: AuthService,
-    private router: Router
+    private router: Router,
+    private searchService: SearchService
   ) {}
 
   ngOnInit() {
@@ -54,91 +56,24 @@ export class GlobalSearchViewComponent implements OnInit, OnChanges {
       this.globalProblemSearchResults = [];
       this.userSearchResults = [];
       // this.searchResults = [];
-      this.apollo
-        .watchQuery<any>({
-          query: gql`query {
-              search_problems(args: {search: "${searchInput}"},where: { is_draft: { _eq: false } }) {
-                id
-                title
-                description
-                modified_at
-                updated_at
-                image_urls
-                featured_url
-               
-                problem_voters{
-                  problem_id
-                  user_id
-                }
-                problem_watchers{
-                  problem_id
-                  user_id
-  
-                }
-                problem_validations {
-                  comment
-                  agree
-                  created_at
-                  files
-                  validated_by
-                  edited_at
-                  is_deleted
-          
-                  problem_id
-                  user {
-                    id
-                    name
-                  } 
-                  
-                }
-                }
-                , search_users(args:{search:"${searchInput}"}) {
+      this.searchService.problemSearch(searchInput).subscribe(
+        value => {
+          this.globalProblemSearchResults =
+            value.data.search_problems_multiword;
+        },
+        error => {
+          console.error(JSON.stringify(error));
+        }
+      );
 
-
-
-
-
-                id
-                name
-                email
-                photo_url
-                organization
-                location
-                user_tags{
-                  tag {
-                      id
-                      name
-                  }
-              }
-              problemsByUser(where: { is_draft: { _eq: false } }){
-                id
-
-              }
-              user_collaborators{
-                intent
-              }
-              user_validations{
-                comment
-              }
-              enrichmentssBycreatedBy(where: { is_deleted: { _eq: false } }){
-                id
-              }
-               
-              }
-              
-              }`
-          // pollInterval: 500
-        })
-        .valueChanges.subscribe(value => {
-          this.globalProblemSearchResults = value.data.search_problems;
-          console.log(value.data.search_users, "user results on global search");
+      this.searchService.userSearch(searchInput).subscribe(
+        value => {
           this.userSearchResults = value.data.search_users;
-          console.log("Problem results = ", this.globalProblemSearchResults);
-          console.log("User results = ", this.userSearchResults);
-          // console.log('searchValue : ', searchT);
-          // console.log('SearchText : ', this.searchText);
-          // console.log('SearchUser : ', this.searchUser);
-        });
+        },
+        error => {
+          console.error(JSON.stringify(error));
+        }
+      );
     } else {
       this.globalProblemSearchResults = [];
       this.userSearchResults = [];
