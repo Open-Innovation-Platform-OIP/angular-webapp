@@ -59,14 +59,15 @@ export class ViewEnrichmentComponent implements OnInit, OnChanges, OnDestroy {
     ];
 
     this.modalSrc = this.combinedImgAndVideo[this.index];
-    this.enrichmentData.enrichment_voters.map(voter => {
-      this.voters.add(voter.user_id);
-    });
 
     // adding embedded links
   }
   ngOnChanges() {
-    // this.voters = new Set();
+    this.voters = new Set();
+
+    this.enrichmentData.enrichment_voters.map(voter => {
+      this.voters.add(voter.user_id);
+    });
 
     console.log("ng on change", this.enrichmentVoted);
     let embedded_url_arr = this.enrichmentData.embed_urls.map(url => {
@@ -229,7 +230,7 @@ export class ViewEnrichmentComponent implements OnInit, OnChanges, OnDestroy {
   }
 
   ngOnDestroy() {
-    console.log("destroy");
+    // console.log("destroy");
     this.voters = new Set();
   }
 
