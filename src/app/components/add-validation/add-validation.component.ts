@@ -1,15 +1,22 @@
-import { Component, Input, Output, EventEmitter, OnInit, DoCheck } from "@angular/core";
+import {
+  Component,
+  Input,
+  Output,
+  EventEmitter,
+  OnInit,
+  DoCheck
+} from "@angular/core";
 import { FilesService } from "../../services/files.service";
 import { ProblemService } from "../../services/problem-handle.service";
 import swal from "sweetalert2";
 import { ValidationService } from "../../services/validation.service";
 
 @Component({
-  selector: "app-validate-problem",
-  templateUrl: "./validate-problem.component.html",
-  styleUrls: ["./validate-problem.component.css"]
+  selector: "app-add-validation",
+  templateUrl: "./add-validation.component.html",
+  styleUrls: ["./add-validation.component.css"]
 })
-export class ValidateProblemComponent implements OnInit {
+export class AddValidationComponent implements OnInit {
   @Input() validationData: any = {
     comment: "",
     agree: false,
@@ -22,10 +29,8 @@ export class ValidateProblemComponent implements OnInit {
   blankSpace: boolean;
 
   constructor(
-    private space: FilesService
-  ) // private problemService: ProblemService,
-  // private validationService: ValidationService
-  { }
+    private space: FilesService // private problemService: ProblemService, // private validationService: ValidationService
+  ) {}
 
   ngOnInit() {
     // console.log(this.validationData, "validation data check");

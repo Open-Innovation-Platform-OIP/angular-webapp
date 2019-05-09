@@ -978,13 +978,20 @@ export class WizardComponent
   //   this.autoSave();
   //   alert("Problem draft has been saved. You can continue editing anytime");
   // }
+  showSuccessSwal(title) {
+    swal({
+      type: "success",
+      title: title,
+      timer: 3000,
+      showConfirmButton: false
+    }).catch(swal.noop);
+  }
 
   publishProblem(problem) {
     if (this.is_edit && !problem.is_draft) {
-      // console.log(this.is_edit, this.problem.is_draft, "alert");
-      alert("Your problem has been updated!");
+      this.showSuccessSwal("Problem Updated");
     } else {
-      alert("Your problem has been submitted!");
+      this.showSuccessSwal("Problem Added");
     }
 
     problem.is_draft = false;
@@ -1180,6 +1187,13 @@ export class WizardComponent
         },
         err => {
           console.error(JSON.stringify(err));
+          swal({
+            title: "Error",
+            text: "Try Again",
+            type: "error",
+            confirmButtonClass: "btn btn-info",
+            buttonsStyling: false
+          }).catch(swal.noop);
         }
       );
   }
@@ -1226,6 +1240,14 @@ export class WizardComponent
       );
   }
   confirmSubmission() {
+    // if (this.is_edit) {
+    //   this.showSuccessSwal("Problem Updated");
+    //   // console.log(this.is_edit, this.problem.is_draft, "alert");
+    //   // alert("Your problem has been updated!");
+    // } else {
+    //   // alert("Your problem has been submitted!");
+    //   this.showSuccessSwal("Problem Added");
+    // }
     // if (this.is_edit && !this.problem.is_draft) {
     //   console.log(this.is_edit, this.problem.is_draft, "alert");
     //   alert("Your problem has been updated!");

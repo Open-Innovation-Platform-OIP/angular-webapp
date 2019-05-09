@@ -3,21 +3,25 @@ import {
   OnInit,
   Input,
   OnChanges,
+  OnDestroy,
   Output,
   EventEmitter
 } from "@angular/core";
 import { ProblemService } from "../../services/problem-handle.service";
+import gql from "graphql-tag";
+
 // import { Router, ActivatedRoute } from "@angular/router";
 
 import { AuthService } from "../../services/auth.service";
 import swal from "sweetalert2";
+import { Apollo, QueryRef } from "apollo-angular";
 
 @Component({
   selector: "app-view-enrichment",
   templateUrl: "./view-enrichment.component.html",
   styleUrls: ["./view-enrichment.component.css"]
 })
-export class ViewEnrichmentComponent implements OnInit, OnChanges {
+export class ViewEnrichmentComponent implements OnInit, OnChanges, OnDestroy {
   @Output() editClicked = new EventEmitter();
   @Output() voteClicked = new EventEmitter();
   @Output() deleteClicked = new EventEmitter();
@@ -30,17 +34,19 @@ export class ViewEnrichmentComponent implements OnInit, OnChanges {
   videoStatus = false;
   modalSrc: String;
   userId: any;
-  voters: any;
+  voters: any = new Set();
 
   constructor(
     private problemService: ProblemService,
-    private auth: AuthService
+    private auth: AuthService,
+    private apollo: Apollo
   ) {
     console.log("aswewrwe");
     this.enrichmentVoted = false;
   }
 
   ngOnInit() {
+    console.log("on in it");
     let embedded_url_arr = this.enrichmentData.embed_urls.map(url => {
       return { url: url };
     });
@@ -57,6 +63,12 @@ export class ViewEnrichmentComponent implements OnInit, OnChanges {
     // adding embedded links
   }
   ngOnChanges() {
+    this.voters = new Set();
+
+    this.enrichmentData.enrichment_voters.map(voter => {
+      this.voters.add(voter.user_id);
+    });
+
     console.log("ng on change", this.enrichmentVoted);
     let embedded_url_arr = this.enrichmentData.embed_urls.map(url => {
       return { url: url };
@@ -72,141 +84,155 @@ export class ViewEnrichmentComponent implements OnInit, OnChanges {
     this.modalSrc = this.combinedImgAndVideo[this.index];
 
     // remove the duplicates
-    this.enrichmentData.voted_by = Array.from(new Set(this.enrichmentData.voted_by));
+    // this.enrichmentData.voted_by = Array.from(
+    //   new Set(this.enrichmentData.voted_by)
+    // );
 
-    if (this.enrichmentData.voted_by.length) {
-      console.log(this.enrichmentData.voted_by, "enrich voted by");
+    // if (this.enrichmentData.voted_by.length) {
+    //   console.log(this.enrichmentData.voted_by, "enrich voted by");
 
-      this.enrichmentData.voted_by.forEach(userId => {
-        if (Number(userId) === Number(this.auth.currentUserValue.id)) {
-          console.log(
-            Number(userId),
-            "voted by array",
-            Number(this.auth.currentUserValue.id)
-          );
-          this.enrichmentVoted = true;
-        }
-      });
-    } else {
-      this.enrichmentVoted = false;
-    }
+    //   this.enrichmentData.voted_by.forEach(userId => {
+    //     if (Number(userId) === Number(this.auth.currentUserValue.id)) {
+    //       console.log(
+    //         Number(userId),
+    //         "voted by array",
+    //         Number(this.auth.currentUserValue.id)
+    //       );
+    //       this.enrichmentVoted = true;
+    //     }
+    //   });
+    // } else {
+    //   this.enrichmentVoted = false;
+    // }
+    // this.enrichmentData.enrichment_voters.map(voter => {
+    //   this.voters.add(voter.user_id);
+    // });
   }
 
   voteEnrichment() {
-    if (
-      !(
-        this.enrichmentData.created_by === Number(this.auth.currentUserValue.id)
-      )
-    ) {
-      let index = this.enrichmentData.voted_by.indexOf(
-        Number(this.auth.currentUserValue.id)
-      );
-      this.enrichmentVoted = !this.enrichmentVoted;
-      console.log("clicked");
-      if (this.enrichmentVoted && index < 0) {
-        this.enrichmentData.voted_by.push(
+    if (this.auth.currentUserValue.id) {
+      if (
+        !(
+          this.enrichmentData.created_by ===
           Number(this.auth.currentUserValue.id)
-        );
-
-        // remove the duplicates
-        this.enrichmentData.voted_by = Array.from(new Set(this.enrichmentData.voted_by));
-
-        this.enrichmentData.voted_by = JSON.stringify(
-          this.enrichmentData.voted_by
         )
-          .replace("[", "{")
-          .replace("]", "}");
+      ) {
+        // console.log(this.comment, "comment", this.userId, "user id");
+        // console.log('toggling watch flag');
+        // if (!(this.userId == this.comment.created_by)) {
+        if (!this.voters.has(this.auth.currentUserValue.id)) {
+          // user is not currently watching this problem
+          // let's add them
+          this.voters.add(this.auth.currentUserValue.id);
+          const add_voter = gql`
+            mutation insert_enrichment_voters {
+              insert_enrichment_voters(
+                objects: [
+                  {
+                    user_id: ${Number(this.auth.currentUserValue.id)},
+                    enrichment_id: ${Number(this.enrichmentData.id)}
+                  }
+                ]
+              ) {
+                returning {
+                 
+                  user_id
+    
+                }
+              }
+            }
+          `;
+          this.apollo
+            .mutate({
+              mutation: add_voter
+            })
+            .subscribe(
+              result => {
+                if (result.data) {
+                  // console.log(result.data);
+                }
+              },
+              err => {
+                console.error(JSON.stringify(err));
+              }
+            );
+        } else {
+          // user is currently not watching this problem
+          // let's remove them
+          this.voters.delete(this.auth.currentUserValue.id);
+          const delete_voter = gql`
+            mutation delete_enrichment_voter {
+              delete_enrichment_voters(
+                where: {user_id: {_eq: ${Number(
+                  this.auth.currentUserValue.id
+                )}}, enrichment_id: {_eq: ${Number(this.enrichmentData.id)}}}
+              ) {
+                affected_rows
+              }
+            }
+          `;
+          this.apollo
+            .mutate({
+              mutation: delete_voter
+            })
+            .subscribe(
+              result => {
+                if (result.data) {
+                  // console.log(result.data);
+                }
+              },
+              err => {
+                console.error(JSON.stringify(err));
+              }
+            );
+        }
 
-        this.voteClicked.emit(this.enrichmentData);
-        this.enrichmentData.voted_by = JSON.parse(
-          this.enrichmentData.voted_by.replace("{", "[").replace("}", "]")
-        );
-      } else {
-        this.enrichmentData.voted_by.splice(index, 1);
-        this.enrichmentData.voted_by = JSON.stringify(
-          this.enrichmentData.voted_by
-        )
-          .replace("[", "{")
-          .replace("]", "}");
+        // let index = this.enrichmentData.voted_by.indexOf(
+        //   Number(this.auth.currentUserValue.id)
+        // );
+        // this.enrichmentVoted = !this.enrichmentVoted;
+        // console.log("clicked");
+        // if (this.enrichmentVoted && index < 0) {
+        //   this.enrichmentData.voted_by.push(
+        //     Number(this.auth.currentUserValue.id)
+        //   );
 
-        this.voteClicked.emit(this.enrichmentData);
-        this.enrichmentData.voted_by = JSON.parse(
-          this.enrichmentData.voted_by.replace("{", "[").replace("}", "]")
-        );
+        //   // remove the duplicates
+        //   this.enrichmentData.voted_by = Array.from(
+        //     new Set(this.enrichmentData.voted_by)
+        //   );
+
+        //   this.enrichmentData.voted_by = JSON.stringify(
+        //     this.enrichmentData.voted_by
+        //   )
+        //     .replace("[", "{")
+        //     .replace("]", "}");
+
+        //   this.voteClicked.emit(this.enrichmentData);
+        //   this.enrichmentData.voted_by = JSON.parse(
+        //     this.enrichmentData.voted_by.replace("{", "[").replace("}", "]")
+        //   );
+        // } else {
+        //   this.enrichmentData.voted_by.splice(index, 1);
+        //   this.enrichmentData.voted_by = JSON.stringify(
+        //     this.enrichmentData.voted_by
+        //   )
+        //     .replace("[", "{")
+        //     .replace("]", "}");
+
+        //   this.voteClicked.emit(this.enrichmentData);
+        //   this.enrichmentData.voted_by = JSON.parse(
+        //     this.enrichmentData.voted_by.replace("{", "[").replace("}", "]")
+        //   );
+        // }
       }
     }
   }
 
-  // toggleVoteProblem() {
-  //   // console.log('toggling watch flag');
-  //   if (!(this.userId == this.enrichmentData.created_by)) {
-  //     if (!this.voters.has(this.userId)) {
-  //       // user is not currently watching this problem
-  //       // let's add them
-  //       this.voters.add(this.userId);
-  //       const add_voter = gql`
-  //       mutation insert_problem_voter {
-  //         insert_problem_voters(
-  //           objects: [
-  //             {
-  //               user_id: ${Number(this.userId)},
-  //               problem_id: ${Number(this.problemData.id)},
-  //             }
-  //           ]
-  //         ) {
-  //           returning {
-  //             user_id
-  //             problem_id
-  //           }
-  //         }
-  //       }
-  //     `;
-  //       this.apollo
-  //         .mutate({
-  //           mutation: add_voter
-  //         })
-  //         .subscribe(
-  //           result => {
-  //             if (result.data) {
-  //               // console.log(result.data);
-  //             }
-  //           },
-  //           err => {
-  //             console.error(JSON.stringify(err));
-  //           }
-  //         );
-  //     } else {
-  //       // user is currently not watching this problem
-  //       // let's remove them
-  //       this.voters.delete(this.userId);
-  //       const delete_voter = gql`
-  //       mutation delete_problem_voter {
-  //         delete_problem_voters(
-  //           where: {user_id: {_eq: ${Number(
-  //             this.userId
-  //           )}}, problem_id: {_eq: ${Number(this.problemData.id)}}}
-  //         ) {
-  //           affected_rows
-  //         }
-  //       }
-  //     `;
-  //       this.apollo
-  //         .mutate({
-  //           mutation: delete_voter
-  //         })
-  //         .subscribe(
-  //           result => {
-  //             if (result.data) {
-  //               // console.log(result.data);
-  //             }
-  //           },
-  //           err => {
-  //             console.error(JSON.stringify(err));
-  //           }
-  //         );
-  //     }
-  //   }
-  // }
+  ngOnDestroy() {
+    // console.log("destroy");
+    this.voters = new Set();
+  }
 
   toggleViewForImgNView() {
     this.showModal = true;

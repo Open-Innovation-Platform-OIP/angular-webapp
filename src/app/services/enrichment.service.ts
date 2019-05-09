@@ -100,6 +100,14 @@ export class EnrichmentService {
         err => {
           console.log(err, "error");
           console.error(JSON.stringify(err));
+
+          swal({
+            title: "Error",
+            text: "Try Again",
+            type: "error",
+            confirmButtonClass: "btn btn-info",
+            buttonsStyling: false
+          }).catch(swal.noop);
         }
       );
   }

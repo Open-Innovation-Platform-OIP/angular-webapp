@@ -383,7 +383,7 @@
                 </button>
               </div>
               <div class="modal-body">
-                <app-validate-problem (submitted)="onValidationSubmit($event)"></app-validate-problem>
+                <app-add-validation (submitted)="onValidationSubmit($event)"></app-add-validation>
               </div>
             </div>
           </div>
@@ -426,8 +426,8 @@
                 </button>
               </div>
               <div class="modal-body">
-                <app-validate-problem *ngIf="validationDataToEdit" [validationData]="validationDataToEdit"
-                  (submitted)="onValidationSubmit($event)"></app-validate-problem>
+                <app-add-validation *ngIf="validationDataToEdit" [validationData]="validationDataToEdit"
+                  (submitted)="onValidationSubmit($event)"></app-add-validation>
               </div>
             </div>
           </div>

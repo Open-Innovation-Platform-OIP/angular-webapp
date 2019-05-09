@@ -10,13 +10,17 @@ export class EnrichmentCardComponent implements OnInit {
   @Input() enrichmentData: any;
   @Output() clicked = new EventEmitter();
   numberOfVotes: any = 0;
+  voters = new Set();
 
   constructor(private auth: AuthService) {}
 
   ngOnInit() {
-    if (this.enrichmentData && this.enrichmentData.voted_by) {
-      this.numberOfVotes = this.enrichmentData.voted_by.length;
-    }
+    // if (this.enrichmentData && this.enrichmentData.voted_by) {
+    //   this.numberOfVotes = this.enrichmentData.voted_by.length;
+    // }
+    this.enrichmentData.enrichment_voters.map(voter => {
+      this.voters.add(voter.user_id);
+    });
     // console.log(this.enrichmentData, "enrichment app card");
   }
   cardClicked() {

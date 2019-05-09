@@ -14,7 +14,7 @@ import { COMMA, ENTER } from "@angular/cdk/keycodes";
 import { AddEnrichmentComponent } from "./add-enrichment/add-enrichment.component";
 import { ViewEnrichmentComponent } from "./view-enrichment/view-enrichment.component";
 import { ViewCollaboratorsComponent } from "./view-collaborators/view-collaborators.component";
-import { ValidateProblemComponent } from "./validate-problem/validate-problem.component";
+import { AddValidationComponent } from "./add-validation/add-validation.component";
 import { ValidateCardComponent } from "./validate-card/validate-card.component";
 import { ProfileCardComponent } from "./profile-card/profile-card.component";
 import { EnrichmentCardComponent } from "./enrichment-card/enrichment-card.component";
@@ -42,11 +42,11 @@ import { SolutionCardComponent } from "./solution-card/solution-card.component";
     AddEnrichmentComponent,
     ViewEnrichmentComponent,
     ViewCollaboratorsComponent,
-    ValidateProblemComponent,
+    AddValidationComponent,
     AddEnrichmentComponent,
     ViewEnrichmentComponent,
     ViewCollaboratorsComponent,
-    ValidateProblemComponent,
+
     ValidateCardComponent,
     ProfileCardComponent,
     EnrichmentCardComponent,
@@ -62,11 +62,11 @@ import { SolutionCardComponent } from "./solution-card/solution-card.component";
     AddEnrichmentComponent,
     ViewEnrichmentComponent,
     ViewCollaboratorsComponent,
-    ValidateProblemComponent,
+
     AddEnrichmentComponent,
     ViewEnrichmentComponent,
     ViewCollaboratorsComponent,
-    ValidateProblemComponent,
+    AddValidationComponent,
     ValidateCardComponent,
     ProfileCardComponent,
     EnrichmentCardComponent,
