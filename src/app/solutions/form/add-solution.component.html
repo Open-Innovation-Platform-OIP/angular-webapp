@@ -1,0 +1,518 @@
+<div class="main-content">
+  <div class="container-fluid">
+    <div class="wizard-container">
+      <div class="card card-wizard" data-color="rose" id="wizardProfile">
+        <form [formGroup]="type" action="" method="">
+          <div class="card-header text-center">
+            <h3 class="card-title">
+              Solution Title
+            </h3>
+          </div>
+          <div class="wizard-navigation">
+            <ul class="nav nav-pills">
+              <li class="nav-item">
+                <a class="nav-link active" href="#text" data-toggle="tab" role="tab">
+                  Text
+                </a>
+              </li>
+              <li class="nav-item">
+                <a class="nav-link" href="#media" data-toggle="tab" role="tab">
+                  Media:
+                  image(s) and video(s)
+                </a>
+              </li>
+            </ul>
+          </div>
+          <div class="card-body">
+            <div class="tab-content">
+              <div class="tab-pane active" id="text">
+                <a href="#media" data-toggle="tab" role="tab" class="nav-link">
+                  image(s) and video(s) attached</a>
+                <div class="row justify-content-center">
+                  <div class="col-sm-12">
+                    <div class="input-group form-control-lg">
+                      <div class="input-group-prepend">
+                        <span class="input-group-text">
+                          <i class="material-icons">title</i>
+                        </span>
+                      </div>
+                      <mat-form-field class="example-full-width has-label" [ngClass]="displayFieldCss(type, 'title')">
+                        <input type="text" name="title" matInput id="title" appAutofocus placeholder="Title *"
+                          formControlName="title">
+                      </mat-form-field>
+                    </div>
+                  </div>
+                </div>
+                <div class="row justify-content-center">
+                  <div class="col-sm-12">
+                    <div class="input-group form-control-lg">
+                      <div class="input-group-prepend">
+                        <span class="input-group-text">
+                          <i class="material-icons">description</i>
+                        </span>
+                      </div>
+                      <mat-form-field class="example-full-width has-label"
+                        [ngClass]="displayFieldCss(type, 'description')">
+                        <textarea type="text" name="description" matInput id="description" placeholder="Description *"
+                          formControlName="description" rows="4" wrap="hard"></textarea>
+                      </mat-form-field>
+                    </div>
+                  </div>
+                </div>
+                <br />
+                <br />
+                <br />
+                <div class="row justify-content-center">
+                  <div class="col-sm-12">
+                    <div class="input-group form-control-lg">
+                      <div class="input-group-prepend">
+                        <span class="input-group-text">
+                          <i class="material-icons">business_center</i>
+                        </span>
+                      </div>
+                      <mat-form-field class="example-full-width has-label"
+                        [ngClass]="displayFieldCss(type, 'organization')">
+                        <mat-select name="organization" placeholder="Select Organization *" matInput id="organization"
+                          formControlName="organization">
+                          <mat-option value="None">None</mat-option>
+                          <mat-option>Organization
+                          </mat-option>
+
+                        </mat-select>
+
+                        <!-- <input placeholder="Organization" [matAutocomplete]="auto" matInput [(ngModel)]="content.organization"
+                              id="organization" formControlName="organization">
+        
+                            <mat-autocomplete #auto="matAutocomplete" (optionSelected)="organizationSelected($event)">
+                              <mat-option *ngFor="let org of usersService.allOrgs" [value]="org">
+                                {{org}}
+                              </mat-option>
+                            </mat-autocomplete> -->
+                      </mat-form-field>
+                    </div>
+                  </div>
+                </div>
+                <div class="row justify-content-center">
+                  <div class="col-sm-12">
+                    <div class="input-group form-control-lg">
+                      <div class="input-group-prepend">
+                        <span class="input-group-text">
+                          <i class="material-icons">group_add</i>
+                        </span>
+                      </div>
+                      <mat-form-field class="example-full-width has-label"
+                        [ngClass]="displayFieldCss(type, 'population')">
+
+                        <mat-select matInput formControlName="population"
+                          placeholder="Select size of affected population *" id="population" name="population">
+                          <mat-option>
+                            Population
+                          </mat-option>
+                        </mat-select>
+                      </mat-form-field>
+                    </div>
+                  </div>
+                </div>
+
+
+                <div class="row justify-content-center">
+                  <div class="col-sm-12">
+                    <div class="input-group form-control-lg">
+                      <div class="input-group-prepend">
+                        <span class="input-group-text">
+                          <i class="material-icons">nature_people</i>
+                        </span>
+                      </div>
+                      <mat-form-field class="example-full-width has-label"
+                        [ngClass]="displayFieldCss(type, 'location')">
+                        <textarea type="text" name="beneficiary" matInput id="beneficiary"
+                          placeholder="Beneficiary attributes" formControlName="beneficiary"></textarea>
+                      </mat-form-field>
+                    </div>
+                  </div>
+                </div>
+
+                <br />
+
+                <div class="row justify-content-center">
+                  <div class="col-sm-12">
+                    <div class="input-group form-control-lg">
+                      <div class="input-group-prepend">
+                        <span class="input-group-text">
+                          <i class="material-icons">trending_up</i>
+                        </span>
+                      </div>
+                      <mat-form-field class="example-full-width has-label"
+                        [ngClass]="displayFieldCss(type, 'resources')">
+                        <textarea type="text" name="resources" matInput id="resources" placeholder="Resources Needed"
+                          formControlName="resources"></textarea>
+                      </mat-form-field>
+                    </div>
+                  </div>
+                </div>
+
+                <br />
+
+                <div class="row justify-content-center">
+                  <div class="col-sm-12">
+                    <div class="input-group form-control-lg">
+                      <div class="input-group-prepend">
+                        <span class="input-group-text">
+                          <i class="material-icons">place</i>
+                        </span>
+                      </div>
+                      <mat-form-field class="example-full-width has-label"
+                        [ngClass]="displayFieldCss(type, 'location')">
+                        <!-- <input type="text" name="location" matInput id="location" [matAutocomplete]="auto" placeholder="Location *"
+                                  (keyup)="getLocation()" formControlName="location" [(ngModel)]="content.location">
+                                <mat-autocomplete #auto="matAutocomplete" (optionSelected)="storeLocation($event)">
+                                  <mat-option *ngFor="let location of locations" [value]="location.Location.Address.Label">
+                                    {{location.Location.Address.Label}}
+                                  </mat-option>
+                                </mat-autocomplete> -->
+                        <input placeholder="Locations*" rows="2" #locationInput [formControl]="locationCtrl"
+                          [matAutocomplete]="auto" [matChipInputFor]="chipList"
+                          [matChipInputSeparatorKeyCodes]="separatorKeysCodes" [matChipInputAddOnBlur]="addOnBlur"
+                          (matChipInputTokenEnd)="addLocation($event)">
+
+                        <mat-chip-list #chipList>
+
+
+
+                        </mat-chip-list>
+                        <mat-autocomplete #auto="matAutocomplete">
+                          <mat-option>
+                            Location
+                          </mat-option>
+                        </mat-autocomplete>
+                      </mat-form-field>
+                    </div>
+                  </div>
+                </div>
+                <div class="row justify-content-center">
+                  <div class="col-sm-10">
+                    <mat-chip *ngFor="let location of content.location" [selectable]="selectable"
+                      [removable]="removable" style="margin-right:0.3em; margin-bottom: 0.4em;">
+                      Address
+                      <mat-icon matChipRemove *ngIf="removable">cancel</mat-icon>
+                    </mat-chip>
+                  </div>
+                </div>
+                <div class="row justify-content-center">
+                  <div class="col-sm-12">
+                    <div class="input-group form-control-lg">
+                      <div class="input-group-prepend">
+                        <span class="input-group-text">
+                          <i class="material-icons">trending_up</i>
+                        </span>
+                      </div>
+                      <mat-form-field class="example-full-width has-label" [ngClass]="displayFieldCss(type, 'impact')">
+                        <textarea type="text" name="impact" matInput id="impact" placeholder="Impact"
+                          formControlName="impact"></textarea>
+                      </mat-form-field>
+                    </div>
+                  </div>
+                </div>
+
+                <br />
+
+                <div class="row justify-content-center">
+                  <div class="col-sm-12">
+                    <div class="input-group form-control-lg">
+                      <div class="input-group-prepend">
+                        <span class="input-group-text">
+                          <i class="material-icons">public</i>
+                        </span>
+                      </div>
+                      <mat-form-field class="example-full-width has-label" [ngClass]="displayFieldCss(type, 'extent')">
+                        <textarea type="text" name="extent" matInput id="extent" placeholder="Extent"
+                          formControlName="extent"></textarea>
+                      </mat-form-field>
+                    </div>
+                  </div>
+                </div>
+
+                <br />
+
+                <div class="row justify-content-center">
+                  <!-- <div class="col-sm-12">
+                            <div class="input-group form-control-lg">
+                              <div class="input-group-prepend">
+                                <span class="input-group-text">
+                                  <i class="material-icons">label</i>
+                                </span>
+                              </div> -->
+                  <div class="col-sm-12">
+                    <div class="input-group form-control-lg">
+                      <div class="input-group-prepend">
+                        <span class="input-group-text">
+                          <i class="material-icons">label</i>
+                        </span>
+                      </div>
+
+                      <mat-form-field class="example-chip-list">
+                        <input placeholder="Sectors*" #sectorInput [formControl]="sectorCtrl" [matAutocomplete]="auto"
+                          [matChipInputFor]="chipList" [matChipInputSeparatorKeyCodes]="separatorKeysCodes"
+                          [matChipInputAddOnBlur]="addOnBlur">
+                        <mat-chip-list #chipList>
+                        </mat-chip-list>
+                        <mat-autocomplete #auto="matAutocomplete">
+                          <mat-option>
+                            Sector
+                          </mat-option>
+                        </mat-autocomplete>
+                      </mat-form-field>
+
+                    </div>
+                  </div>
+                </div>
+
+                <div class="row justify-content-center">
+                  <div class="col-sm-10">
+
+                    <mat-chip *ngFor="let sector of localSectors" [selectable]="selectable" [removable]="removable"
+                      style="margin-right:0.3em; margin-bottom: 0.4em;">
+                      Sector
+                      <mat-icon matChipRemove>cancel</mat-icon>
+                    </mat-chip>
+
+                  </div>
+                </div>
+
+
+                <!--new change-->
+
+
+                <div class="row justify-content-center">
+                  <!-- <div class="col-sm-12">
+                              <div class="input-group form-control-lg">
+                                <div class="input-group-prepend">
+                                  <span class="input-group-text">
+                                    <i class="material-icons">label</i>
+                                  </span>
+                                </div> -->
+                  <div class="col-sm-12">
+                    <div class="input-group form-control-lg">
+                      <div class="input-group-prepend">
+                        <span class="input-group-text">
+                          <i class="material-icons">supervisor_account</i>
+                        </span>
+                      </div>
+
+                      <mat-form-field class="example-chip-list">
+                        <input placeholder="Co-Owners" #ownerInput [formControl]="ownersCtrl" [matAutocomplete]="owner"
+                          [matChipInputFor]="chipList" [matChipInputSeparatorKeyCodes]="separatorKeysCodes"
+                          [matChipInputAddOnBlur]="addOnBlur" (matChipInputTokenEnd)="addOwner($event)">
+                        <mat-chip-list #chipList>
+                        </mat-chip-list>
+                        <mat-autocomplete #owner="matAutocomplete">
+                          <mat-option>
+                            Owner
+                          </mat-option>
+                        </mat-autocomplete>
+                      </mat-form-field>
+
+                    </div>
+                  </div>
+                </div>
+                <div class="row justify-content-center">
+                  <div class="col-sm-10">
+
+                    <mat-chip *ngFor="let owner of owners" [selectable]="selectable" [removable]="removable"
+                      style="margin-right:0.3em; margin-bottom: 0.4em;">
+                      <!-- {{owner.value||owner.name}} -->
+                      <mat-icon matChipRemove *ngIf="removable">cancel</mat-icon>
+                    </mat-chip>
+
+                  </div>
+                </div>
+              </div>
+
+              <div class="tab-pane" id="media">
+                <div class="row justify-content-center">
+                  <a href="#media" data-toggle="tab" role="tab" class="nav-link">
+                    image(s) and video(s) attached
+                  </a>
+                </div>
+                <div class="row justify-content-center">
+                  <div class="col-sm-6">
+                    <div class="picture-container">
+                      <div class="picture">
+                        <img src="./assets/img/plus.png" class="picture-src" id="wizardPicturePreview" title="" />
+                        <input type="file" id="file_input_btn" name="..." multiple>
+                      </div>
+                      <h6 class="description">Choose Media</h6>
+                    </div>
+                  </div>
+                  <div class="col-sm-6">
+                    <div class="input-group">
+                      <div class="input-group-prepend">
+                        <span class="input-group-text">
+                          <i class="material-icons">link</i>
+                        </span>
+                      </div>
+                      <mat-form-field class="example-full-width has-label">
+                        <input type="text" name="media_url" matInput id="media_url" formControlName="media_url"
+                          placeholder="Video URL (youtube,vimeo and dailymotion)">
+                      </mat-form-field>
+                      <button class="btn btn-success">
+                        Add Video By URL
+                      </button>
+                      <!-- <input type="button" class="btn btn-finish btn-fill btn-success btn-wd" (click)="addMediaUrl()"
+                            name="add_media_url" [disabled]="!media_url.startsWith('http')" value="Add Video By URL"
+                            style="display: none;"> -->
+                    </div>
+                  </div>
+                </div>
+
+                <div class="row" id="loader" style="display:none;">
+                  <div class="col">
+                    <div class="d-flex align-items-center">
+                      <i class="fa fa-spinner fa-spin" style="font-size:32px;color: grey;"></i>
+                      <strong>&nbsp;&nbsp; Uploading...</strong>
+                    </div>
+                  </div>
+                </div>
+
+                <div class="row">
+                  <div class="alert col-md-6">
+                    <em>Select <i class="material-icons orange600">turned_in</i> to set as featured image</em>
+                  </div>
+                </div>
+
+                <div class="row">
+                  <div class="col-md-4" *ngFor="let imgSrc of content.image_urls;let i = index">
+                    <div class="card card-product">
+                      <div class="card-header card-header-image" data-header-animation="false">
+                        <img class="img" src="">
+                      </div>
+                      <div class="card-body"></div>
+                      <div class="card-footer">
+                        <div class="price">
+                          <button mat-raised-button type="button" class="btn btn-default btn-link"
+                            matTooltip="Select icon to set as featured image" [matTooltipPosition]="'below'"
+                            (click)="setFeatured('image',i)">
+                            <i class="material-icons">turned_in_not</i>
+                            <i class="material-icons orange600">turned_in</i>
+                          </button>
+                        </div>
+                        <div class="stats">
+                          <button mat-raised-button type="button" class="btn btn-danger btn-link" matTooltip="Remove"
+                            [matTooltipPosition]="'below'">
+                            <i class="material-icons">close</i>
+                          </button>
+                        </div>
+
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                <div class="row">
+                  <div class="col-md-4">
+                    <div class="card card-product">
+                      <div class="card-header card-header-image" data-header-animation="false">
+                        <video controls width="100%">
+                          <source src="">
+                          Your browser does not support the video tag.
+                        </video>
+                      </div>
+                      <div class="card-body">Video</div>
+                      <div class="card-footer">
+                        <div class="price">
+                          <!-- <button mat-raised-button type="button" class="btn btn-default btn-link" matTooltip="Feature"
+                                [matTooltipPosition]="'below'" (click)="setFeatured('video',i)">
+                                <i *ngIf="video.url !== content.featured_url" class="material-icons">turned_in_not</i>
+                                <i *ngIf="video.url === content.featured_url" class="material-icons">turned_in</i>
+                              </button> -->
+                        </div>
+                        <div class="stats">
+                          <button mat-raised-button type="button" class="btn btn-danger btn-link" matTooltip="Remove"
+                            [matTooltipPosition]="'below'">
+                            <i class="material-icons">close</i>
+                          </button>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                <div class="row">
+                  <div class="col-md-4">
+                    <div class="card card-product">
+                      <div class="card-body">Embed Url</div>
+                      <div class="card-footer">
+                        <div class="price">
+                          <!-- <button mat-raised-button type="button" class="btn btn-default btn-link" matTooltip="Feature"
+                                [matTooltipPosition]="'below'" (click)="setFeatured('embed',i)">
+                                <i *ngIf="embed_url !== content.featured_url" class="material-icons">turned_in_not</i>
+                                <i *ngIf="embed_url === content.featured_url" class="material-icons">turned_in</i>
+                              </button> -->
+                        </div>
+                        <div class="stats">
+                          <button mat-raised-button type="button" class="btn btn-danger btn-link" matTooltip="Remove"
+                            [matTooltipPosition]="'below'">
+                            <i class="material-icons">close</i>
+                          </button>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                <div class="row">
+                  <div class="col-md-4">
+                    <div class="card card-product">
+                      <div class="card-body">
+                        <i class="material-icons" style="zoom:2; color: grey;">
+                          description
+                        </i>
+                        <!-- {{attachment.key}} -->
+                      </div>
+                      <div class="card-footer">
+                        <div class="price">
+                          <!-- <button mat-raised-button type="button" class="btn btn-default btn-link" matTooltip="Feature"
+                                [matTooltipPosition]="'below'" (click)="setFeatured('embed',i)">
+                                <i *ngIf="embed_url !== content.featured_url" class="material-icons">turned_in_not</i>
+                                <i *ngIf="embed_url === content.featured_url" class="material-icons">turned_in</i>
+                              </button> -->
+                        </div>
+                        <div class="stats">
+                          <button mat-raised-button type="button" class="btn btn-danger btn-link" matTooltip="Remove"
+                            [matTooltipPosition]="'below'">
+                            <i class="material-icons">close</i>
+                          </button>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="card-footer">
+            <div class="mr-auto">
+              <input type="button" *ngIf="!content.is_draft && !content.title" class="btn"
+                onclick="window.history.back()" name="cancel" value="Cancel">
+              <!-- <input type="button" class="btn btn-previous btn-fill btn-default btn-wd disabled" name="previous"
+                    value="Previous"> -->
+            </div>
+            <div class="ml-auto">
+              <button *ngIf="content.is_draft && content.title" class="btn btn-danger" (click)="deleteClicked()">
+                Delete
+              </button>
+              <input type="button" class="btn btn-previous btn-fill btn-default btn-wd disabled" name="previous"
+                value="Previous">
+              <input type="button" class="publish btn btn-fill btn-warning btn-wd" [disabled]="!isComplete()"
+                (click)="publishContent()" value="Publish">
+              <input type="button" class="btn btn-next btn-fill btn-warning btn-wd" [disabled]="!isComplete()"
+                name="next" value="Next">
+
+              <input type="button" class="btn btn-finish btn-fill btn-warning btn-wd" [disabled]="!isComplete()"
+                (click)="publishContent()" name="finish" value="Publish" style="display: none;">
+            </div>
+            <div class="clearfix"></div>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>

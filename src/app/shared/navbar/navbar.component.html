@@ -26,13 +26,22 @@
     <div class="collapse navbar-collapse justify-content-center" id="navbarNav">
       <ul class="navbar-nav">
         <li class="nav-item" routerLinkActive="active">
-          <a class="nav-link" *ngIf="auth.currentUserValue.id" [routerLink]="['/dashboard']">Dashboard </a>
+          <a class="nav-link" *ngIf="auth.currentUserValue.id" [routerLink]="['/dashboard']">
+            <i class="material-icons">
+              dashboard
+            </i>Dashboard </a>
         </li>
         <li class="nav-item" routerLinkActive="active">
-          <a class="nav-link" [routerLink]="['/problems']">Problems</a>
+          <a class="nav-link" [routerLink]="['/problems']">
+            <i class="material-icons">
+              help
+            </i>Problems</a>
         </li>
         <li class="nav-item" routerLinkActive="active">
-          <a class="nav-link" [routerLink]="['/abc']">Solutions</a>
+          <a class="nav-link" [routerLink]="['/solutions']">
+            <i class="material-icons">
+              highlight
+            </i>Solutions</a>
         </li>
       </ul>
     </div>

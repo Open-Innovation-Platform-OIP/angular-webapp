@@ -110,6 +110,7 @@ export class WizardContainerComponent
   autosaveInterval: any;
   locations: any = [];
   locationInputValue: any;
+  input_pattern = new RegExp("^\s*");
 
   readonly separatorKeysCodes: number[] = [ENTER, COMMA];
   searchResults = {};
@@ -667,6 +668,10 @@ export class WizardContainerComponent
   sendInputToParent(input) {
     // console.log(event, "test for event");
     this.smartSearchInput.emit(input);
+  }
+
+  checkForSpaces($event) {
+
   }
 
   publishContent() {

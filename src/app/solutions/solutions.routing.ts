@@ -1,8 +1,8 @@
 import { Routes } from "@angular/router";
 
-import { WizardComponent } from "./form/wizard.component";
-import { ProblemDetailComponent } from "./detail/problem-detail.component";
-import { ProblemsViewComponent } from "./grid/problems-view.component";
+import { SolutionDetailComponent } from "./detail/solution-detail.component";
+import { AddSolutionComponent } from "./form/add-solution.component";
+import { SolutionsViewComponent } from "./grid/solutions-view.component";
 
 export const SolutionsRoutes: Routes = [
   {
@@ -10,19 +10,19 @@ export const SolutionsRoutes: Routes = [
     children: [
       {
         path: "",
-        component: ProblemsViewComponent
+        component: SolutionsViewComponent
       },
       {
         path: "add",
-        component: WizardComponent
+        component: AddSolutionComponent
       },
       {
         path: ":id",
-        component: ProblemDetailComponent
+        component: SolutionDetailComponent
       },
       {
         path: ":id/edit",
-        component: WizardComponent
+        component: AddSolutionComponent
       }
     ]
   }

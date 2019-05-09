@@ -57,6 +57,7 @@ import { AuthLayoutComponent } from "./layouts/auth/auth-layout.component";
 import { AppRoutes } from "./app.routing";
 import { GraphQLModule } from "./services/graphql.module";
 import { EmbedVideo } from "ngx-embed-video";
+// import { WizardComponent } from './solution/form/wizard/wizard.component';
 // import { LandingPageComponent } from './landing-page/landing-page.component';
 // import { AutofocusDirective } from './autofocus.directive';
 // import { EnrichmentFormComponent } from './enrichment/enrichment-form/enrichment-form.component';
@@ -97,7 +98,9 @@ import { EmbedVideo } from "ngx-embed-video";
     MatTooltipModule
   ],
   imports: [GraphQLModule, HttpClientModule, QuillModule, EmbedVideo.forRoot()],
-  declarations: []
+  declarations: [
+    // WizardComponent
+  ]
 })
 export class MaterialModule {}
 

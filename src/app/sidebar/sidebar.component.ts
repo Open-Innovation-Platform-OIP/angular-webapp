@@ -39,7 +39,7 @@ export const ROUTES: RouteInfo[] = [
     icontype: "help"
   },
   {
-    path: "/abc",
+    path: "/solutions",
     title: "Solutions",
     type: "link",
     icontype: "highlight"

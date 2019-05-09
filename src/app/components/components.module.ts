@@ -26,6 +26,7 @@ import { DisplayModalComponent } from "./display-modal/display-modal.component";
 import { WizardContainerComponent } from "./wizard-container/wizard-container.component";
 // import { GlobalSearchCardsComponent } from "./global-search-cards/global-search-cards.component";
 import { ShareAutofocusModule } from "../share-autofocus/share-autofocus.module";
+import { SolutionCardComponent } from "./solution-card/solution-card.component";
 
 @NgModule({
   imports: [
@@ -54,7 +55,8 @@ import { ShareAutofocusModule } from "../share-autofocus/share-autofocus.module"
     CollaboratorCardComponent,
     ProblemCardComponent,
     DisplayModalComponent,
-    WizardContainerComponent
+    WizardContainerComponent,
+    SolutionCardComponent
   ],
   exports: [
     AddEnrichmentComponent,
@@ -72,6 +74,7 @@ import { ShareAutofocusModule } from "../share-autofocus/share-autofocus.module"
     AddCollaboratorComponent,
     CollaboratorCardComponent,
     ProblemCardComponent,
+    SolutionCardComponent,
     DisplayModalComponent,
     WizardContainerComponent
   ],

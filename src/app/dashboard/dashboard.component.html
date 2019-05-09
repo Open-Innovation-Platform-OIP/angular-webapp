@@ -19,6 +19,7 @@
           You are working on these drafts
         </h3>
       </div>
+      <hr />
       <div *ngIf="drafts.length" class="col-md-2" style="padding-top: 1em;">
         <button mat-raised-button class="btn btn-warning btn-sm" [routerLink]="['/dashboard/drafts',{ type: 'drafts'}]">
           View All ({{drafts.length}}) <i class="material-icons">keyboard_arrow_right</i>
