@@ -1,21 +1,16 @@
-<div class="card card-product actions solution-card" [routerLink]="link">
+<div class="card card-product actions problem-card" [routerLink]="link">
   <div class="card-header card-header-image">
     <img
-      src="{{ (problemData.featured_url && checkUrlIsImg(problemData.featured_url)) ? problemData.featured_url : './assets/img/image_placeholder.jpg' }}"
+      src="{{ (solutionData.featured_url && checkUrlIsImg(solutionData.featured_url)) ? solutionData.featured_url : './assets/img/image_placeholder.jpg' }}"
       width="200px" height="180px" style="object-fit: cover;" />
   </div>
   <div class="card-body">
     <p class="card-title title">
-      {{ problemData.title }}
+      {{ solutionData.title }}
     </p>
     <div class="description">
       <strong>Description</strong>
-      <p>{{ problemData.description }}</p>
-    </div>
-    <span> <b> Location(s) </b></span>
-    <div *ngFor="let location of problemData.location; let i=index;">
-      <span *ngIf="location.Address.Label && i < 2">{{location.Address.Label}}</span>
-      <span *ngIf="i<2">&nbsp;</span>
+      <p>{{ solutionData.description }}</p>
     </div>
   </div>
   <div class="card-footer">
@@ -23,14 +18,14 @@
       <i class="material-icons">
         thumb_up
       </i>
-      {{ problemData.problem_voters.length }}
+      {{ solutionData.problem_voters.length }}
       <span>&nbsp;</span>
       <span>&nbsp;</span>
       <span>&nbsp;</span>
       <i class="material-icons">
         visibility
       </i>
-      {{ problemData.problem_watchers.length }}
+      {{ solutionData.problem_watchers.length }}
       <span>&nbsp;</span>
       <span>&nbsp;</span>
       <span>&nbsp;</span>
@@ -38,10 +33,10 @@
         matTooltip="Expert validations" [matTooltipPosition]="'below'">
         how_to_reg
       </i>
-      {{ problemData.problem_validations.length }}
+      {{ solutionData.problem_validations.length }}
     </div>
     <div class="stats">
-      <i class="material-icons">access_time</i> {{ problemData.updated_at | date:short }}
+      <i class="material-icons">access_time</i> {{ solutionData.updated_at | date:short }}
     </div>
   </div>
 </div>

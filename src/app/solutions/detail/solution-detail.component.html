@@ -6,7 +6,7 @@
       <div class="col-md-8">
         <div class="card card-product">
           <div class="card-header card-header-rose">
-            <h4 class="card-title">{{solutionData.title}}</h4>
+            <h4 class="card-title">{{solutionData.title}} </h4>
             <p class="card-category"><b>Created By :
                 {{ (auth.currentUserValue.id == solutionData.created_by) ? 'You' : solutionOwner }}</b></p>
           </div>
@@ -109,7 +109,7 @@
               keyboard_arrow_left
             </i>
           </a> -->
-      <button mat-raised-button class="btn btn-warning btn-round" data-toggle="modal" data-target="#validatorModal"
+      <button mat-raised-button class="btn btn-rose btn-round" data-toggle="modal" data-target="#validatorModal"
         matTooltip="Click to validate problem" [matTooltipPosition]="'below'"
         *ngIf="auth.currentUserValue.id">Validate</button>
       <!-- <a mat-button>
@@ -262,7 +262,7 @@
               keyboard_arrow_left
             </i>
           </a> -->
-      <button mat-raised-button *ngIf="auth.currentUserValue.id" class="btn btn-warning btn-round" data-toggle="modal"
+      <button mat-raised-button *ngIf="auth.currentUserValue.id" class="btn btn-rose btn-round" data-toggle="modal"
         data-target="#collaboratorModal" matTooltip="Click to collaborate"
         [matTooltipPosition]="'below'">Collaborate</button>
       <p *ngIf="!auth.currentUserValue.id">Login to collaborate on this problem</p>

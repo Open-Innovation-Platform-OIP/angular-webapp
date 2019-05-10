@@ -80,56 +80,18 @@ export class SolutionDetailComponent implements OnInit, OnDestroy {
   popup: any;
   watchers = new Set();
   voters = new Set();
-  problemDataQuery: QueryRef<any>;
+  solutionDataQuery: QueryRef<any>;
   userDataQuery: QueryRef<any>;
 
-  problemDataSubcription: any;
+  solutionDataSubcription: any;
   objectValues = Object["values"];
   discussions = [];
   replyingTo = 0;
   showReplyBox = false;
   showCommentBox = false;
   numOfComments = 5;
-  enrichmentData: any = {
-    description: "",
-    location: [],
-    organization: "",
-    resources_needed: "",
-    image_urls: [],
-    attachments: [],
-    video_urls: [],
-    impact: "",
-    min_population: 0,
-    max_population: 0,
-    extent: "",
-    beneficiary_attributes: "",
-    voted_by: "{}",
-    featured_url: "",
-    embed_urls: [],
-    featured_type: ""
-  };
 
-  solutionData: any = {
-    id: "",
-    title: "",
-    description: "",
-    organization: "",
-    impact: "",
-    technology: "",
-    website_url: "",
-    deployment: "",
-    budget: "",
-
-    image_urls: [],
-    video_urls: [],
-    featured_url: "",
-    embed_urls: [],
-    featured_type: "",
-
-    created_by: "",
-    is_draft: "",
-    attachments: []
-  };
+  solutionData: any = {};
 
   problemData: any = {
     id: "",
@@ -226,8 +188,7 @@ export class SolutionDetailComponent implements OnInit, OnDestroy {
   // Carousel
   @Input() name: string;
   userId: Number;
-  enrichment: any = [];
-  enrichmentDataToView: any;
+
   validationDataToView: any;
   validationDataToEdit: any;
   validation: any = [];
@@ -333,21 +294,6 @@ export class SolutionDetailComponent implements OnInit, OnDestroy {
   }
 
   loadCarousels() {
-    this.carouselTileItems$ = interval(500).pipe(
-      startWith(-1),
-      take(2),
-      map(val => {
-        let data;
-
-        if (this.enrichment.length < 1) {
-          this.enrichment = [false];
-        } else {
-          data = this.enrichment;
-          return data;
-        }
-      })
-    );
-
     this.carouselTileItemsValid$ = interval(500).pipe(
       startWith(-1),
       take(2),
@@ -396,18 +342,20 @@ export class SolutionDetailComponent implements OnInit, OnDestroy {
       }
     });
 
-    this.problemDataSubcription = this.route.paramMap.pipe(
+    this.solutionDataSubcription = this.route.paramMap.pipe(
       switchMap((params: ParamMap) => {
-        return this.getProblemData(params.get("id"));
+        return this.getSolutionData(params.get("id"));
       })
     );
-    this.problemDataSubcription.subscribe(
+    this.solutionDataSubcription.subscribe(
       result => {
-        if (result.data.problems.length >= 1 && result.data.problems[0].id) {
-          let problem = result.data.problems[0];
-          this.parseProblem(problem);
+        if (result.data.solutions.length >= 1 && result.data.solutions[0].id) {
+          let solutionData = result.data.solutions[0];
+          console.log(solutionData, "solution data");
+          this.parseSolution(solutionData);
         }
       },
+
       error => {
         console.log("error", error);
         console.error(JSON.stringify(error));
@@ -417,146 +365,43 @@ export class SolutionDetailComponent implements OnInit, OnDestroy {
     console.log("check title", this.problemData.title);
   }
 
-  getProblemData(id) {
-    this.problemDataQuery = this.apollo.watchQuery<any>({
+  getSolutionData(id) {
+    this.solutionDataQuery = this.apollo.watchQuery<any>({
       query: gql`
       {
-        problems(where: { id: { _eq: ${id} } }) {
+        solutions(where: { id: { _eq: ${id} } }) {
           id
-          title
-          description
-          organization
-          location
-          resources_needed
-          is_draft
-          created_by
-          modified_at
-          updated_at
-          image_urls
-         
-          featured_url
-          featured_type
-          video_urls
-          impact
-          extent
-          min_population
-          max_population
-          beneficiary_attributes
-          featured_url
-          embed_urls
-          featured_type
-          attachments
-          usersBycreatedBy {
-            id
-            name
-          } 
-          problem_tags{
-            tag {
-                id
-                name
-            }
-        }
-
-        problem_validations(order_by:{edited_at: desc}){
-          validated_by
-          comment
-          agree
-          created_at
-          files
-          validated_by
-          edited_at
-          is_deleted
+          
+    title
+    description
+    created_by
   
-          problem_id
-          user {
-            id
-            name
-          } 
-          
-        }
-        problem_watchers {
-          user_id
-        }
-        problem_voters {
-          user_id
-        }
-        discussionssByproblemId(where: { is_deleted: { _eq: false} },order_by: {created_at: desc}) {
-          id
-          created_by
-          created_at
-          modified_at
-          text
-          is_deleted
-          linked_comment_id
-          attachments
-          usersBycreatedBy {
-            name
-            photo_url
-          }
-          discussion_voters{
-            user_id
-            discussion_id
-          }
-        }
-        problem_collaborators(order_by:{edited_at: desc}){
-          intent
-          is_ngo
-          is_innovator
-          is_expert
-          is_government
-          is_funder
-          is_beneficiary
-          is_incubator
-          is_entrepreneur
-          user_id
-          user {
-            id
-            name
-            photo_url
-          } 
-          
-        }
+    impact
+    technology
+    website_url
+    deployment
+    budget
 
-        enrichmentsByproblemId(where: { is_deleted: { _eq: false } },order_by:{edited_at: desc}){
-          id
-          description
-          extent
-          impact
-          min_population
-          max_population
-          enrichment_voters {
-            user_id
-          }
-          organization
-          beneficiary_attributes
-          location
-          resources_needed
-          image_urls
-          attachments
-          video_urls
-          created_by
-          edited_at
-          voted_by
-          is_deleted
-          featured_url
-          embed_urls
-          featured_type
-         
-          usersBycreatedBy{
-            id
-            name
-            photo_url
-          }   
-        }
-        }
+    image_urls
+    video_urls
+    featured_url
+    embed_urls
+    featured_type
+
+    
+    
+    attachments
+
+       
     }
-        
+  }
+
     `,
       pollInterval: 1000,
       fetchPolicy: "network-only"
     });
     // this.chartQuery.valueChanges.subscribe
-    return this.problemDataQuery.valueChanges;
+    return this.solutionDataQuery.valueChanges;
     // return problemDataSubcription;
   }
 
@@ -654,10 +499,10 @@ export class SolutionDetailComponent implements OnInit, OnDestroy {
 
   //
 
-  parseProblem(problem) {
-    if (problem.title) {
-      console.log("Message", problem.title);
-      this.message = problem.title;
+  parseSolution(solution) {
+    if (solution.title) {
+      console.log("Message", solution.title);
+      this.message = solution.title;
     }
 
     this.showNotification("bottom", "right", this.message);
@@ -665,219 +510,213 @@ export class SolutionDetailComponent implements OnInit, OnDestroy {
     // map core keys
     Object.keys(this.problemData).map(key => {
       // console.log(key, result.data.problems[0][key]);
-      if (problem[key]) {
-        this.problemData[key] = problem[key];
+      if (this.solutionData[key]) {
+        this.solutionData[key] = solution[key];
       }
     });
 
-    problem.enrichmentsByproblemId.map(enrichment => {
-      if (enrichment.created_by === Number(this.auth.currentUserValue.id)) {
-        this.disableEnrichButton = true;
-      }
-    });
-    this.enrichment = problem.enrichmentsByproblemId;
+    // problem.problem_validations.map(validation => {
+    //   // console.log(validation.validated_by, "test55");
+    //   if (validation.validated_by === Number(this.auth.currentUserValue.id)) {
+    //     this.disableValidateButton = true;
+    //   }
+    // });
+    // this.validation = problem.problem_validations;
 
-    problem.problem_validations.map(validation => {
-      // console.log(validation.validated_by, "test55");
-      if (validation.validated_by === Number(this.auth.currentUserValue.id)) {
-        this.disableValidateButton = true;
-      }
-    });
-    this.validation = problem.problem_validations;
-
-    problem.problem_collaborators.map(collaborator => {
-      if (collaborator.user_id === Number(this.auth.currentUserValue.id)) {
-        this.disableCollaborateButton = true;
-      }
-    });
-    this.collaborators = problem.problem_collaborators;
+    // problem.problem_collaborators.map(collaborator => {
+    //   if (collaborator.user_id === Number(this.auth.currentUserValue.id)) {
+    //     this.disableCollaborateButton = true;
+    //   }
+    // });
+    // this.collaborators = problem.problem_collaborators;
     console.log(this.collaborators, "collaborators refresh");
 
     this.loadCarousels();
 
     // console.log(this.problemData, "result from nested queries");
     // console.log(problem.is_draft, "is draft");
-    if (problem.usersBycreatedBy) {
-      this.problemOwner = problem.usersBycreatedBy.name;
-      problem.problem_tags.map(tags => {
-        if (this.userInterests[tags.tag.name]) {
-          this.sectorMatched = true;
-          // console.log(this.sectorMatched, "sector matched");
-        }
-      });
-      if (problem.problem_tags) {
-        this.tags = problem.problem_tags.map(tagArray => {
-          // console.log(tagArray, "work");
-          return tagArray.tag.name;
-        });
-      }
-      Object.keys(this.problemData).map(key => {
-        if (problem[key] && key !== "problem_tags") {
-          this.problemData[key] = problem[key];
-        }
-      });
-      problem.problem_watchers.map(watcher => {
-        this.watchers.add(watcher.user_id);
-      });
+    // if (problem.usersBycreatedBy) {
+    //   this.problemOwner = problem.usersBycreatedBy.name;
+    //   problem.problem_tags.map(tags => {
+    //     if (this.userInterests[tags.tag.name]) {
+    //       this.sectorMatched = true;
+    //       // console.log(this.sectorMatched, "sector matched");
+    //     }
+    //   });
+    // if (problem.problem_tags) {
+    //   this.tags = problem.problem_tags.map(tagArray => {
+    //     // console.log(tagArray, "work");
+    //     return tagArray.tag.name;
+    //   });
+    // }
+    // Object.keys(this.problemData).map(key => {
+    //   if (problem[key] && key !== "problem_tags") {
+    //     this.problemData[key] = problem[key];
+    //   }
+    // });
+    // problem.problem_watchers.map(watcher => {
+    //   this.watchers.add(watcher.user_id);
+    // });
 
-      problem.problem_voters.map(voter => {
-        this.voters.add(voter.user_id);
-      });
-      // adding embed urls
-      let embedded_urls_arr = this.problemData.embed_urls.map(url => {
-        return { url: url };
-      });
-
-      // combining the video_urls and image_urls
-      this.problem_attachments = [
-        ...this.problemData["image_urls"],
-        ...this.problemData["video_urls"],
-        ...this.problemData["attachments"],
-        ...embedded_urls_arr
-      ];
-
-      this.problem_attachments_src = this.problem_attachments[
-        this.problem_attachments_index
-      ];
-
-      // console.log(problem.discussionssByproblemId);
-      problem.discussionssByproblemId.map(comment => {
-        if (comment.linked_comment_id) {
-          // console.log(comment);
-          // this comment is a reply - add it to the replies object
-          if (!this.replies[comment.linked_comment_id]) {
-            // create reply object so we can add reply
-            this.replies[comment.linked_comment_id] = [comment];
-          } else {
-            // comment reply already exists so push reply into the array
-            this.replies[comment.linked_comment_id].push(comment);
-          }
-          this.replies[comment.linked_comment_id] = this.removeDuplicateReplies(
-            this.replies[comment.linked_comment_id]
-          );
-        } else {
-          // this comment is a parent comment - add it to the comments object
-          // comment object does not exist
-          // console.log("COMMENT ID", comment.id);
-          this.comments[comment.id] = comment;
-          if (!this.replies[comment.id]) {
-            this.replies[comment.id] = []; // create an empty array for replies to this comment
-          }
-        }
-      });
-
-      this.popularDiscussions = Object.keys(this.replies)
-        .sort((a, b) => {
-          // sorting by date
-          if (this.comments[a]) {
-            var dateA = this.comments[a].modified_at;
-          }
-          if (this.comments[b]) {
-            var dateB = this.comments[b].modified_at;
-          }
-          if (dateA < dateB) {
-            return 1;
-          }
-          if (dateA > dateB) {
-            return -1;
-          }
-
-          return 0;
-        })
-        .sort((a, b) => {
-          // sorting by no. of replies
-          return this.replies[b].length - this.replies[a].length;
-        })
-        .filter(commentId => this.comments[commentId]) // to avoid undefined
-        .map(commentId => this.comments[commentId]); //mapping the sorted array
-
-      console.log("REPLIES", this.replies);
-      console.log("COMMENTS", this.comments);
-      console.log("POPULAR", this.popularDiscussions);
-    }
-  }
-
-  removeDuplicateReplies(_replies: any[]) {
-    return _replies.filter(
-      (item, index, self) => index === self.findIndex(t => t.id === item.id)
-    );
-  }
-
-  sortComments(comments) {
-    // console.log("comments>>>>> ", comments);
-    let sortByDate = comments.sort(this.compareDateForSort);
-    let sharedComment = comments.filter(comment => {
-      if (this.qs.commentId) {
-        return comment.id === Number(this.qs.commentId);
-      }
+    // problem.problem_voters.map(voter => {
+    //   this.voters.add(voter.user_id);
+    // });
+    // adding embed urls
+    let embedded_urls_arr = this.problemData.embed_urls.map(url => {
+      return { url: url };
     });
 
-    let sortedComments = this.removeDuplicateReplies([
-      ...sharedComment,
-      ...sortByDate
-    ]);
+    // combining the video_urls and image_urls
+    this.problem_attachments = [
+      ...this.problemData["image_urls"],
+      ...this.problemData["video_urls"],
+      ...this.problemData["attachments"],
+      ...embedded_urls_arr
+    ];
 
-    if (comments.length < 4) {
-      return sortedComments;
-    } else {
-      return sortedComments.splice(0, this.numOfComments);
-    }
-  }
+    this.problem_attachments_src = this.problem_attachments[
+      this.problem_attachments_index
+    ];
 
-  deleteComment(comment) {
-    let deleteResp = this.discussionsService.deleteCommentsFromDB(comment.id);
-    deleteResp.subscribe(
-      result => {
-        console.log(result, "delete worked");
-        // location.reload();
-        if (
-          this.comments.hasOwnProperty(comment.id) &&
-          !this.comments[comment.id].linked_comment_id
-        ) {
-          delete this.comments[comment.id];
-        } else if (this.replies.hasOwnProperty(comment.linked_comment_id)) {
-          this.replies[comment.linked_comment_id].forEach((reply, index) => {
-            if (reply.linked_comment_id === comment.linked_comment_id) {
-              if (index < 1) {
-                this.replies[comment.linked_comment_id] = [];
-              } else {
-                this.replies[comment.linked_comment_id].splice(0, index);
-              }
-              return;
-            }
-          });
-        }
-      },
-      err => {
-        console.error(JSON.stringify(err));
-      }
-    );
-  }
+    // console.log(problem.discussionssByproblemId);
+    // problem.discussionssByproblemId.map(comment => {
+    //   if (comment.linked_comment_id) {
+    //     // console.log(comment);
+    //     // this comment is a reply - add it to the replies object
+    //     if (!this.replies[comment.linked_comment_id]) {
+    //       // create reply object so we can add reply
+    //       this.replies[comment.linked_comment_id] = [comment];
+    //     } else {
+    //       // comment reply already exists so push reply into the array
+    //       this.replies[comment.linked_comment_id].push(comment);
+    //     }
+    //     this.replies[comment.linked_comment_id] = this.removeDuplicateReplies(
+    //       this.replies[comment.linked_comment_id]
+    //     );
+    //   } else {
+    //     // this comment is a parent comment - add it to the comments object
+    //     // comment object does not exist
+    //     // console.log("COMMENT ID", comment.id);
+    //     this.comments[comment.id] = comment;
+    //     if (!this.replies[comment.id]) {
+    //       this.replies[comment.id] = []; // create an empty array for replies to this comment
+    //     }
+    //   }
+    // });
 
-  showMoreComments() {
-    if (this.numOfComments < this.objectValues(this.comments).length) {
-      this.numOfComments += 10;
-      this.sortComments(this.objectValues(this.comments));
-    }
-  }
+    // this.popularDiscussions = Object.keys(this.replies)
+    //   .sort((a, b) => {
+    //     // sorting by date
+    //     if (this.comments[a]) {
+    //       var dateA = this.comments[a].modified_at;
+    //     }
+    //     if (this.comments[b]) {
+    //       var dateB = this.comments[b].modified_at;
+    //     }
+    //     if (dateA < dateB) {
+    //       return 1;
+    //     }
+    //     if (dateA > dateB) {
+    //       return -1;
+    //     }
 
-  compareDateForSort(a, b) {
-    var dateA = a.modified_at;
-    var dateB = b.modified_at;
-    if (dateA < dateB) {
-      return 1;
-    }
-    if (dateA > dateB) {
-      return -1;
-    }
+    //     return 0;
+    //   })
+    //   .sort((a, b) => {
+    //     // sorting by no. of replies
+    //     return this.replies[b].length - this.replies[a].length;
+    //   })
+    //   .filter(commentId => this.comments[commentId]) // to avoid undefined
+    //   .map(commentId => this.comments[commentId]); //mapping the sorted array
 
-    return 0;
-  }
+    console.log("REPLIES", this.replies);
+    console.log("COMMENTS", this.comments);
+    console.log("POPULAR", this.popularDiscussions);
+    // }
+    // }
 
-  replyTo(discussionId) {
-    this.showReplyBox = true;
-    this.replyingTo = discussionId;
-    console.log(discussionId);
+    // removeDuplicateReplies(_replies: any[]) {
+    //   return _replies.filter(
+    //     (item, index, self) => index === self.findIndex(t => t.id === item.id)
+    //   );
+    // }
+
+    // sortComments(comments) {
+    //   // console.log("comments>>>>> ", comments);
+    //   let sortByDate = comments.sort(this.compareDateForSort);
+    //   let sharedComment = comments.filter(comment => {
+    //     if (this.qs.commentId) {
+    //       return comment.id === Number(this.qs.commentId);
+    //     }
+    //   });
+
+    //   let sortedComments = this.removeDuplicateReplies([
+    //     ...sharedComment,
+    //     ...sortByDate
+    //   ]);
+
+    //   if (comments.length < 4) {
+    //     return sortedComments;
+    //   } else {
+    //     return sortedComments.splice(0, this.numOfComments);
+    //   }
+    // }
+
+    // deleteComment(comment) {
+    //   let deleteResp = this.discussionsService.deleteCommentsFromDB(comment.id);
+    //   deleteResp.subscribe(
+    //     result => {
+    //       console.log(result, "delete worked");
+    //       // location.reload();
+    //       if (
+    //         this.comments.hasOwnProperty(comment.id) &&
+    //         !this.comments[comment.id].linked_comment_id
+    //       ) {
+    //         delete this.comments[comment.id];
+    //       } else if (this.replies.hasOwnProperty(comment.linked_comment_id)) {
+    //         this.replies[comment.linked_comment_id].forEach((reply, index) => {
+    //           if (reply.linked_comment_id === comment.linked_comment_id) {
+    //             if (index < 1) {
+    //               this.replies[comment.linked_comment_id] = [];
+    //             } else {
+    //               this.replies[comment.linked_comment_id].splice(0, index);
+    //             }
+    //             return;
+    //           }
+    //         });
+
+    //     },
+    //     err => {
+    //       console.error(JSON.stringify(err));
+    //     }
+    //   );
+    // }
+
+    // showMoreComments() {
+    //   if (this.numOfComments < this.objectValues(this.comments).length) {
+    //     this.numOfComments += 10;
+    //     this.sortComments(this.objectValues(this.comments));
+    //   }
+    // }
+
+    // compareDateForSort(a, b) {
+    //   var dateA = a.modified_at;
+    //   var dateB = b.modified_at;
+    //   if (dateA < dateB) {
+    //     return 1;
+    //   }
+    //   if (dateA > dateB) {
+    //     return -1;
+    //   }
+
+    // return 0;
+    // }
+
+    // replyTo(discussionId) {
+    //   this.showReplyBox = true;
+    //   this.replyingTo = discussionId;
+    //   console.log(discussionId);
+    // }
   }
 
   checkUrlIsImg(url) {
@@ -1160,53 +999,6 @@ export class SolutionDetailComponent implements OnInit, OnDestroy {
     }
   }
 
-  onEnrichmentSubmit(enrichmentData) {
-    if (enrichmentData.__typename) {
-      delete enrichmentData.__typename;
-      // delete enrichmentData.usersBycreatedBy;
-    }
-    enrichmentData.created_by = Number(this.auth.currentUserValue.id);
-
-    enrichmentData.problem_id = this.problemData.id;
-
-    if (typeof enrichmentData.voted_by === "string") {
-      // this.submitted.emit(this.enrichmentData);
-      this.enrichmentService.submitEnrichmentToDB(enrichmentData);
-    } else {
-      enrichmentData.voted_by = enrichmentData.voted_by = JSON.stringify(
-        enrichmentData.voted_by
-      )
-        .replace("[", "{")
-        .replace("]", "}");
-
-      this.enrichmentService.submitEnrichmentToDB(enrichmentData);
-    }
-  }
-
-  deleteEnrichment(id) {
-    this.enrichmentService.deleteEnrichment(id).subscribe(
-      ({ data }) => {
-        $("#enrichModal").modal("hide");
-        this.disableEnrichButton = false;
-        location.reload();
-      },
-      error => {
-        console.log("Could delete due to " + error);
-        swal({
-          title: "Error",
-          text: "Try Again",
-          type: "error",
-          confirmButtonClass: "btn btn-info",
-          buttonsStyling: false
-        }).catch(swal.noop);
-      }
-    );
-  }
-
-  voteEnrichment(enrichmentData) {
-    this.enrichmentService.voteEnrichment(enrichmentData);
-  }
-
   onCollaborationSubmit(collaborationData) {
     console.log(collaborationData, "collaboration data");
     collaborationData.user_id = Number(this.auth.currentUserValue.id);
@@ -1266,14 +1058,6 @@ export class SolutionDetailComponent implements OnInit, OnDestroy {
         }).catch(swal.noop);
       }
     );
-  }
-
-  handleEnrichCardClicked(enrichmentData) {
-    this.enrichmentDataToView = enrichmentData;
-  }
-  handleEnrichEditMode(enrichData) {
-    this.enrichmentData = enrichData;
-    console.log(enrichData, "event on edit");
   }
 
   handleValidationCardClicked(validationData) {
@@ -1538,8 +1322,8 @@ export class SolutionDetailComponent implements OnInit, OnDestroy {
   }
 
   ngOnDestroy() {
-    this.problemDataQuery.stopPolling();
-    this.problemDataSubcription.unsubscribe();
+    this.solutionDataQuery.stopPolling();
+    this.solutionDataSubcription.unsubscribe();
     // this.cdr.detach();
     this.userDataQuery.stopPolling();
   }

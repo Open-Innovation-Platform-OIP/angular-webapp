@@ -1,15 +1,29 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, Input } from "@angular/core";
 
 @Component({
-  selector: 'app-solution-card',
-  templateUrl: './solution-card.component.html',
-  styleUrls: ['./solution-card.component.css']
+  selector: "app-solution-card",
+  templateUrl: "./solution-card.component.html",
+  styleUrls: ["./solution-card.component.css"]
 })
 export class SolutionCardComponent implements OnInit {
+  @Input() solutionData: any;
+  numOfVotes: Number = 0;
+  numOfWatchers: Number = 0;
+  numOfValidations: Number = 0;
+  validated: Boolean = false;
+  link = "";
 
-  constructor() { }
+  constructor() {}
 
-  ngOnInit() {
+  ngOnInit() {}
+
+  checkUrlIsImg(url) {
+    var arr = ["jpeg", "jpg", "gif", "png"];
+    var ext = url.substring(url.lastIndexOf(".") + 1);
+    if (arr.indexOf(ext) > -1) {
+      return true;
+    } else {
+      return false;
+    }
   }
-
 }
