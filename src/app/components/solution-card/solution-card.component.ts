@@ -15,7 +15,10 @@ export class SolutionCardComponent implements OnInit {
 
   constructor() {}
 
-  ngOnInit() {}
+  ngOnInit() {
+    console.log("Solution Data", this.solutionData);
+    this.link += `/solutions/${this.solutionData.id}`;
+  }
 
   checkUrlIsImg(url) {
     var arr = ["jpeg", "jpg", "gif", "png"];
