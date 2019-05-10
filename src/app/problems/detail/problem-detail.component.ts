@@ -82,6 +82,7 @@ export class ProblemDetailComponent implements OnInit, OnDestroy {
   voters = new Set();
   problemDataQuery: QueryRef<any>;
   userDataQuery: QueryRef<any>;
+  count: any = 0;
 
   problemDataSubcription: any;
   objectValues = Object["values"];
@@ -108,6 +109,7 @@ export class ProblemDetailComponent implements OnInit, OnDestroy {
     embed_urls: [],
     featured_type: ""
   };
+
   problemData: any = {
     id: "",
     title: "",
@@ -392,20 +394,6 @@ export class ProblemDetailComponent implements OnInit, OnDestroy {
     );
 
     console.log("check title", this.problemData.title);
-
-    // this.showNotification("top", "right", this.problemData.title);
-
-    // this.problem.subscribe(result => {
-
-    //   }
-    //   // console.log(this.problemService.problem, "problem");
-    // });
-
-    // this.route.params.pipe(first()).subscribe(params => {
-    //   if (params.id) {
-    //     this.getProblemData(params.id);
-    //   }
-    // });
   }
 
   getProblemData(id) {
@@ -646,12 +634,12 @@ export class ProblemDetailComponent implements OnInit, OnDestroy {
   //
 
   parseProblem(problem) {
-    if (problem.title) {
+    this.count++;
+    if (problem.title && this.count < 2) {
       console.log("Message", problem.title);
       this.message = problem.title;
+      this.showNotification("bottom", "right", this.message);
     }
-
-    this.showNotification("bottom", "right", this.message);
 
     // map core keys
     Object.keys(this.problemData).map(key => {
@@ -1503,18 +1491,19 @@ export class ProblemDetailComponent implements OnInit, OnDestroy {
 
     $.notify(
       {
-        icon: "notifications",
+        icon: "picture_in_picture_alt",
         message: title
       },
       {
+        timer: 100000,
         type: type[color],
-        timer: 30000,
+
         placement: {
           from: from,
           align: align
         },
         template:
-          '<div data-notify="container" class="col-xs-11 col-sm-3 alert alert-{0} alert-with-icon" role="alert">' +
+          '<div data-notify="container" id="alert" class="col-xs-11 col-sm-3 alert alert-{0}" role="alert">' +
           '<button mat-raised-button type="button" aria-hidden="true" class="close" data-notify="dismiss">  <i class="material-icons">close</i></button>' +
           '<i class="material-icons" data-notify="icon">notifications</i> ' +
           '<span data-notify="title">{1}</span> ' +
@@ -1531,7 +1520,7 @@ export class ProblemDetailComponent implements OnInit, OnDestroy {
   ngOnDestroy() {
     this.problemDataQuery.stopPolling();
     this.problemDataSubcription.unsubscribe();
-    // this.cdr.detach();
+    $(".alert").remove();
     this.userDataQuery.stopPolling();
   }
 }
