@@ -1,9 +1,34 @@
+// import {
+//   Component,
+//   OnInit
+// } from "@angular/core";
+
+// @Component({
+//   selector: "app-add-solution",
+//   templateUrl: "./add-solution.component.html",
+//   styleUrls: ["./add-solution.component.css"]
+// })
+// export class AddSolutionComponent implements OnInit {
+//
+//   constructor() {}
+
+//   ngOnInit() {}
+// }
+
+// IMPORTANT: this is a plugin which requires jQuery for initialisation and data manipulation
+
 import {
   Component,
   OnInit,
+  Input,
   OnChanges,
+  OnDestroy,
   AfterViewInit,
-  SimpleChanges
+  SimpleChanges,
+  Output,
+  EventEmitter,
+  ElementRef,
+  ViewChild
 } from "@angular/core";
 import {
   FormControl,
@@ -13,9 +38,37 @@ import {
   FormGroup
 } from "@angular/forms";
 import { ErrorStateMatcher } from "@angular/material/core";
+import { TagsService } from "../../services/tags.service";
+import { FilesService } from "../../services/files.service";
+import { UsersService } from "../../services/users.service";
+import { AuthService } from "../../services/auth.service";
+import { Router, ActivatedRoute } from "@angular/router";
+import { map, startWith } from "rxjs/operators";
+import { Observable } from "rxjs";
+import { GeocoderService } from "../../services/geocoder.service";
+import swal from "sweetalert2";
+var Buffer = require("buffer/").Buffer;
 import { FormBuilder } from "@angular/forms";
 
+import { Content } from "@angular/compiler/src/render3/r3_ast";
+
+import { COMMA, ENTER } from "@angular/cdk/keycodes";
+import {
+  MatAutocompleteSelectedEvent,
+  MatChipInputEvent,
+  MatAutocomplete
+} from "@angular/material";
+
+import { Apollo } from "apollo-angular";
+import gql from "graphql-tag";
+import { first } from "rxjs/operators";
+
+declare var H: any;
 declare const $: any;
+
+let canProceed: boolean;
+const re = /(youtube|youtu|vimeo|dailymotion)\.(com|be)\/((watch\?v=([-\w]+))|(video\/([-\w]+))|(projects\/([-\w]+)\/([-\w]+))|([-\w]+))/;
+
 interface FileReaderEventTarget extends EventTarget {
   result: string;
 }
@@ -44,25 +97,130 @@ export class MyErrorStateMatcher implements ErrorStateMatcher {
   templateUrl: "./add-solution.component.html",
   styleUrls: ["./add-solution.component.css"]
 })
-export class AddSolutionComponent implements OnInit, OnChanges, AfterViewInit {
-  cities = [
-    { value: "paris-0", viewValue: "Paris" },
-    { value: "miami-1", viewValue: "Miami" },
-    { value: "bucharest-2", viewValue: "Bucharest" },
-    { value: "new-york-3", viewValue: "New York" },
-    { value: "london-4", viewValue: "London" },
-    { value: "barcelona-5", viewValue: "Barcelona" },
-    { value: "moscow-6", viewValue: "Moscow" }
+export class AddSolutionComponent
+  implements OnInit, OnChanges, OnDestroy, AfterViewInit {
+  @Input() sectors: string[] = [];
+
+  @Input() owners: any[] = [];
+  // @Input() canProceed: any = true;
+  @Output() fieldsPopulated = new EventEmitter();
+  @Output() smartSearchInput = new EventEmitter();
+  @Output() tagAdded = new EventEmitter();
+  @Output() tagRemoved = new EventEmitter();
+
+  @Output() deleteDraft = new EventEmitter();
+  @Output() addedOwners = new EventEmitter();
+  @Output() removedOwners = new EventEmitter();
+
+  file_types = [
+    "application/msword",
+    " application/vnd.ms-excel",
+    " application/vnd.ms-powerpoint",
+    "text/plain",
+    " application/pdf",
+    " image/*",
+    "video/*"
   ];
-  emailFormControl = new FormControl("", [
-    Validators.required,
-    Validators.email
-  ]);
+
+  objectKeys = Object.keys;
 
   matcher = new MyErrorStateMatcher();
 
   type: FormGroup;
-  constructor(private formBuilder: FormBuilder) {}
+
+  localSectors: any[] = [];
+
+  is_edit = false;
+  populationValue: Number;
+  media_url = "";
+  autosaveInterval: any;
+  locations: any = [];
+  locationInputValue: any;
+  input_pattern = new RegExp("^s*");
+
+  readonly separatorKeysCodes: number[] = [ENTER, COMMA];
+  searchResults = {};
+  sectorCtrl = new FormControl();
+  ownersCtrl = new FormControl();
+  locationCtrl = new FormControl();
+  filteredSectors: Observable<string[]>;
+  filteredOwners: Observable<any[]>;
+
+  tags = [];
+  removable = true;
+  sizes = [
+    { value: 100, viewValue: "<100" },
+    { value: 1000, viewValue: "<1000" },
+    { value: 10000, viewValue: "<10000" },
+    { value: 100000, viewValue: "<100,000" },
+    { value: Number.MAX_VALUE, viewValue: ">100,000" }
+  ];
+  touch: boolean;
+
+  @ViewChild("sectorInput") sectorInput: ElementRef<HTMLInputElement>;
+  @ViewChild("locationInput") locationInput: ElementRef<HTMLInputElement>;
+  @ViewChild("ownerInput") ownerInput: ElementRef<HTMLInputElement>;
+
+  @ViewChild("auto") matAutocomplete: MatAutocomplete;
+
+  objectValues = Object["values"];
+  visible = true;
+  selectable = true;
+  addOnBlur = true;
+  options: string[] = ["One", "Two", "Three"];
+  filteredOptions: Observable<string[]>;
+
+  // canProceed: Boolean;
+  // owners = [];
+  voted_by = [];
+  watched_by = [];
+  solution = {
+    title: "",
+    description: "",
+    technology: "",
+    impact: "",
+    website_url: "",
+    deployment: 0,
+    budget: {
+      title: "",
+      cost: 0
+    },
+    image_urls: [],
+    video_urls: [],
+    featured_url: "",
+    embed_urls: [],
+    featured_type: "",
+    created_by: Number(this.auth.currentUserValue.id),
+    is_draft: true,
+    attachments: []
+  };
+
+  // autoCompleteTags: any[] = [];
+
+  constructor(
+    private router: Router,
+    private route: ActivatedRoute,
+    private formBuilder: FormBuilder,
+    private filesService: FilesService,
+    private tagService: TagsService,
+    private usersService: UsersService,
+    private auth: AuthService,
+    private here: GeocoderService,
+    private apollo: Apollo
+  ) {
+    this.type = this.formBuilder.group({
+      // To add a validator, we must first convert the string value into an array. The first item in the array is the default value if any, then the next item in the array is the validator. Here we are adding a required validator meaning that the firstName attribute must have a value in it.
+      title: [null, Validators.required],
+      description: [null, Validators.required],
+      technology: [null, Validators.required],
+      impact: [null, null],
+      deployment: [null, Validators.required],
+      website_url: [null, null],
+      assessment_metrics: [null, Validators.required],
+      media_url: [null, null],
+      budget: [null, null]
+    });
+  }
 
   isFieldValid(form: FormGroup, field: string) {
     return !form.get(field).valid && form.get(field).touched;
@@ -74,33 +232,103 @@ export class AddSolutionComponent implements OnInit, OnChanges, AfterViewInit {
       "has-feedback": this.isFieldValid(form, field)
     };
   }
+
+  selectedOwner(event: MatAutocompleteSelectedEvent): void {
+    console.log(event.option, "event value");
+    this.owners.push(event.option.value);
+    this.ownerInput.nativeElement.value = "";
+    this.ownersCtrl.setValue(null);
+    this.addedOwners.emit(this.owners);
+  }
+
+  removeOwner(owner) {
+    console.log(owner, "remove");
+    const index = this.owners.indexOf(owner);
+    if (index >= 0) {
+      this.owners.splice(index, 1);
+      this.removedOwners.emit(owner);
+    }
+    console.log(this.owners, "removed in container");
+  }
+
+  addOwner(event) {
+    console.log(event, "event");
+  }
+
   ngOnInit() {
+    console.log("solution wizard ng on in it");
+
+    this.route.params.pipe(first()).subscribe(params => {
+      if (params.id) {
+        this.apollo
+          .watchQuery<any>({
+            query: gql`
+                        {
+                            solutions(where: { id: { _eq: ${params.id} } }) {
+                            id
+                            title
+                            created_by
+                            updated_at
+                            description
+                            website_url
+                            deployment
+                            budget
+                            is_draft
+                            image_urls
+                            video_urls
+                            attachments
+                            impact
+                            embed_urls
+                            featured_url
+                            featured_type
+                            solution_owners{
+                              user{
+                                id
+                                name
+                              }
+                            }
+                            }
+                        }
+                        `,
+            // pollInterval: 500,
+            fetchPolicy: "network-only"
+          })
+          .valueChanges.subscribe(result => {
+            console.log(result, "SOLUTIONS");
+          });
+      }
+    });
+
     this.type = this.formBuilder.group({
       // To add a validator, we must first convert the string value into an array. The first item in the array is the default value if any, then the next item in the array is the validator. Here we are adding a required validator meaning that the firstName attribute must have a value in it.
-      firstName: [null, Validators.required],
-      lastName: [null, Validators.required],
-      email: [
-        null,
-        [
-          Validators.required,
-          Validators.pattern("^[a-z0-9._%+-]+@[a-z0-9.-]+.[a-z]{2,4}$")
-        ]
-      ]
+      title: [null, Validators.required],
+      description: [null, Validators.required],
+      technology: [null, Validators.required],
+      impact: [null, null],
+      deployment: [null, Validators.required],
+      website_url: [null, null],
+      assessment_metrics: [null, Validators.required],
+      media_url: [null, null],
+      budget: [null, null]
     });
     // Code for the Validator
     const $validator = $(".card-wizard form").validate({
       rules: {
-        firstname: {
+        title: {
           required: true,
           minlength: 3
         },
-        lastname: {
-          required: true,
-          minlength: 3
+        description: {
+          required: true
         },
-        email: {
-          required: true,
-          minlength: 3
+        technology: {
+          required: true
+        },
+        deployment: {
+          required: true
+        },
+        assessment_metrics: {
+          required: true
         }
       },
 
@@ -352,6 +580,197 @@ export class AddSolutionComponent implements OnInit, OnChanges, AfterViewInit {
       reader.readAsDataURL(input[0].files[0]);
     }
   }
+
+  addOwners(event) {
+    // event = this.removeDuplicates(event);
+    this.owners = event;
+  }
+
+  removeOwners(owner) {
+    const index = this.owners.indexOf(owner);
+    if (index >= 0) {
+      this.owners.splice(index, 1);
+    }
+    console.log(this.owners, "removed from wizard");
+    if (this.solution["id"]) {
+      this.apollo
+        .mutate<any>({
+          mutation: gql`
+            mutation DeleteMutation($where: solution_owners_bool_exp!) {
+              delete_solution_owners(where: $where) {
+                affected_rows
+                returning {
+                  user_id
+                }
+              }
+            }
+          `,
+          variables: {
+            where: {
+              user_id: {
+                _eq: owner.id
+              },
+              solution_id: {
+                _eq: this.solution["id"]
+              }
+            }
+          }
+        })
+        .subscribe(
+          ({ data }) => {
+            console.log("worked", data);
+            // location.reload();
+            // location.reload();
+            // this.router.navigateByUrl("/problems");
+
+            return;
+          },
+          error => {
+            console.log("Could not delete due to " + error);
+          }
+        );
+    }
+  }
+
+  submitSolutionToDB() {
+    // console.log(problem, "submitted");
+    const upsert_solution = gql`
+      mutation upsert_solutions($solutions: [solutions_insert_input!]!) {
+        insert_solutions(
+          objects: $solutions
+          on_conflict: {
+            constraint: solutions_pkey
+            update_columns: [
+              title
+              description
+              technology
+              website_url
+              impact
+              deployment
+              is_draft
+            ]
+          }
+        ) {
+          affected_rows
+          returning {
+            id
+          }
+        }
+      }
+    `;
+    console.log("SOLUTION", this.solution);
+    this.apollo
+      .mutate({
+        mutation: upsert_solution,
+        variables: {
+          solutions: [this.solution]
+        }
+      })
+      .subscribe(
+        result => {
+          if (result.data.insert_solutions.returning.length > 0) {
+            this.solution["id"] = result.data.insert_solutions.returning[0].id;
+            // const upsert_tags = gql`
+            //   mutation upsert_tags($tags: [tags_insert_input!]!) {
+            //     insert_tags(
+            //       objects: $tags
+            //       on_conflict: { constraint: tags_pkey, update_columns: [name] }
+            //     ) {
+            //       affected_rows
+            //       returning {
+            //         id
+            //         name
+            //       }
+            //     }
+            //   }
+            // `;
+
+            // this.saveOwnersInDB(this.solution["id"], this.owners);
+
+            // const tags = [];
+
+            // const problem_tags = new Set();
+            // console.log(this.sectors, "sectors");
+
+            // this.tagService.addTagsInDb(tags, "problems", this.problem["id"]);
+
+            // if (problem_tags.size > 0) {
+            //   const upsert_problem_tags = gql`
+            //     mutation upsert_problem_tags(
+            //       $problems_tags: [problems_tags_insert_input!]!
+            //     ) {
+            //       insert_problems_tags(
+            //         objects: $problems_tags
+            //         on_conflict: {
+            //           constraint: problems_tags_pkey
+            //           update_columns: [tag_id, problem_id]
+            //         }
+            //       ) {
+            //         affected_rows
+            //         returning {
+            //           tag_id
+            //           problem_id
+            //         }
+            //       }
+            //     }
+            //   `;
+            //   this.apollo
+            //     .mutate({
+            //       mutation: upsert_problem_tags,
+            //       variables: {
+            //         problems_tags: Array.from(problem_tags)
+            //       }
+            //     })
+            //     .subscribe(
+            //       data => {
+            //         if (!this.problem.is_draft) {
+            //           this.confirmSubmission();
+            //         } else if (!this.is_edit) {
+            //           this.router.navigate([
+            //             "problems",
+            //             this.problem["id"],
+            //             "edit"
+            //           ]);
+            //         }
+            //       },
+            //       err => {
+            //         console.error("Error uploading tags", err);
+            //         if (!this.problem.is_draft) {
+            //           this.confirmSubmission();
+            //         } else if (!this.is_edit) {
+            //           this.router.navigate([
+            //             "problems",
+            //             this.problem["id"],
+            //             "edit"
+            //           ]);
+            //         }
+            //       }
+            //     );
+            // }
+            // else {
+            //   if (!this.problem.is_draft) {
+            //     this.confirmSubmission();
+            //   } else if (!this.is_edit) {
+            //     this.router.navigate(["problems", this.problem["id"], "edit"]);
+            //   }
+            // }
+          }
+        },
+        err => {
+          console.error(JSON.stringify(err));
+        }
+      );
+  }
+
+  sendInputToParent(input) {
+    // console.log(event, "test for event");
+    this.smartSearchInput.emit(input);
+  }
+
+  sendDataBack() {
+    this.fieldsPopulated.emit(this.solution);
+  }
+
   ngAfterViewInit() {
     $(window).resize(() => {
       $(".card-wizard").each(function() {
@@ -408,7 +827,327 @@ export class AddSolutionComponent implements OnInit, OnChanges, AfterViewInit {
       });
     });
   }
-  // constructor() {}
 
-  // ngOnInit() {}
+  removePhoto(index) {
+    this.filesService
+      .deleteFile(this.solution["image_urls"][index]["key"])
+      .promise()
+      .then(data => {
+        if (
+          this.solution.image_urls[index].url === this.solution.featured_url
+        ) {
+          this.solution.featured_url = "";
+          this.solution.featured_type = "";
+        }
+        this.solution.image_urls.splice(index, 1);
+      })
+      .catch(e => {
+        console.log("Err: ", e);
+      });
+  }
+
+  removeAttachment(index) {
+    this.filesService
+      .deleteFile(this.solution["attachments"][index]["key"])
+      .promise()
+      .then(data => {
+        this.solution.attachments.splice(index, 1);
+      })
+      .catch(e => {
+        console.log("Err: ", e);
+      });
+  }
+
+  removeAll() {
+    this.solution.image_urls.forEach((imageObj, i) => {
+      this.filesService
+        .deleteFile(imageObj["key"])
+        .promise()
+        .then(data => {
+          if (this.solution.image_urls.length === i + 1) {
+            this.solution.image_urls = [];
+          }
+        })
+        .catch(e => {
+          console.log("Err: ", e);
+        });
+    });
+  }
+
+  checkIfExist(data: string) {
+    let problem_attachments = [
+      ...this.solution["image_urls"],
+      ...this.solution["video_urls"],
+      ...this.solution["attachments"]
+    ];
+
+    let checked = problem_attachments.filter(attachmentObj => {
+      return attachmentObj.key === data;
+    });
+
+    if (checked.length > 0) {
+      return true;
+    } else if (this.solution.embed_urls.includes(data)) {
+      return true;
+    } else {
+      return false;
+    }
+  }
+
+  // function trigger the multipart upload for more than 5MB
+  onFileSelectForBiggerFiles(event) {
+    for (let i = 0; i < event.target.files.length; i++) {
+      const file = event.target.files[i];
+      const type = event.target.files[i].type;
+      let duplicate = this.checkIfExist(file.name);
+
+      if (typeof FileReader !== "undefined" && !duplicate) {
+        const reader = new FileReader();
+
+        reader.onload = (e: any) => {
+          let buffer = Buffer.from(e.target.result);
+          this.manageUploads(type, file.name, buffer);
+        };
+        reader.readAsArrayBuffer(file);
+      }
+    }
+  }
+
+  manageUploads(type, name, file) {
+    let startWith = type.split("/")[0];
+    switch (startWith) {
+      case "image":
+        this.filesService
+          .multiPartUpload(file, name)
+          .then(values => {
+            if (!values["Location"].startsWith("https")) {
+              values["Location"] = `https://${values["Location"]}`;
+            }
+
+            this.solution.image_urls.push({
+              url: values["Location"],
+              mimeType: type,
+              key: values["Key"]
+            });
+            if (!this.solution.featured_url) {
+              this.solution.featured_url = this.solution.image_urls[0].url;
+              this.solution.featured_type = "image";
+            }
+          })
+          .catch(err => console.log("Image Err: ", err));
+
+        break;
+
+      case "video":
+        this.filesService
+          .multiPartUpload(file, name)
+          .then(values => {
+            if (!values["Location"].startsWith("https")) {
+              values["Location"] = `https://${values["Location"]}`;
+            }
+
+            this.solution.video_urls.push({
+              url: values["Location"],
+              mimeType: type,
+              key: values["Key"]
+            });
+          })
+          .catch(err => console.log("Video Err: ", err));
+        break;
+
+      case "application":
+      case "text":
+        this.filesService
+          .multiPartUpload(file, name)
+          .then(values => {
+            if (!values["Location"].startsWith("https")) {
+              values["Location"] = `https://${values["Location"]}`;
+            }
+
+            this.solution.attachments.push({
+              url: values["Location"],
+              mimeType: type,
+              key: values["Key"]
+            });
+          })
+          .catch(err => console.log("Docs Err: ", err));
+        break;
+
+      default:
+        console.log("unknown file type");
+        alert("Unknown file type.");
+        break;
+    }
+  }
+
+  onFileSelected(event) {
+    for (let i = 0; i < event.target.files.length; i++) {
+      const file = event.target.files[i];
+      const type = event.target.files[i].type.split("/")[0];
+      const size = file.size;
+
+      if (size > 5e6) {
+        alert("File size exceeds the 5MB limit");
+        return;
+      }
+
+      switch (type) {
+        case "image": {
+          if (typeof FileReader !== "undefined") {
+            const reader = new FileReader();
+
+            reader.onload = (e: any) => {
+              const img_id = file.name;
+              this.filesService
+                .uploadFile(e.target.result, img_id)
+                .promise()
+                .then(values => {
+                  this.solution.image_urls.push({
+                    url: values["Location"],
+                    mimeType: event.target.files[i].type,
+                    key: values["Key"]
+                  });
+                  if (!this.solution.featured_url) {
+                    this.solution.featured_url = this.solution.image_urls[0].url;
+                    this.solution.featured_type = "image";
+                  }
+                })
+                .catch(e => console.log("Err:: ", e));
+            };
+            reader.readAsArrayBuffer(file);
+          }
+          break;
+        }
+        case "video": {
+          const video = event.target.files[i];
+          this.filesService
+            .uploadFile(video, video.name)
+            .promise()
+            .then(data => {
+              this.solution.video_urls.push({
+                key: data["Key"],
+                mimeType: event.target.files[i].type,
+                url: data["Location"]
+              });
+            })
+            .catch(e => console.log("Err:: ", e));
+          break;
+        }
+        case "application":
+        case "text": {
+          const doc = event.target.files[i];
+          this.filesService
+            .uploadFile(doc, doc.name)
+            .promise()
+            .then(data => {
+              this.solution.attachments.push({
+                key: data["Key"],
+                mimeType: event.target.files[i].type,
+                url: data["Location"]
+              });
+            })
+            .catch(e => console.log("Err:: ", e));
+          break;
+        }
+        default: {
+          console.log("unknown file type");
+          alert("Unknown file type.");
+          break;
+        }
+      }
+    }
+  }
+
+  removeVideo(index: number) {
+    this.filesService
+      .deleteFile(this.solution["video_urls"][index]["key"])
+      .promise()
+      .then(data => {
+        if (
+          this.solution.video_urls[index].url === this.solution.featured_url
+        ) {
+          this.solution.featured_url = "";
+          this.solution.featured_type = "";
+        }
+        this.solution.video_urls.splice(index, 1);
+      })
+      .catch(e => {
+        console.log("Err: ", e);
+      });
+  }
+
+  removeEmbed(index: number) {
+    this.solution.embed_urls.splice(index, 1);
+    if (this.solution.embed_urls[index] === this.solution.featured_url) {
+      this.solution.featured_url = "";
+      this.solution.featured_type = "";
+    }
+  }
+
+  // isComplete() {
+  //   if (this.solutionType === "problem") {
+  //     return (
+  //       this.solution.title &&
+  //       this.solution.description &&
+  //       this.solution.organization &&
+  //       this.localSectors.length &&
+  //       // this.solution.min_population &&
+  //       this.solution.max_population &&
+  //       this.solution.location.length
+  //     );
+  //   } else {
+  //     return (
+  //       this.solution.description &&
+  //       this.solution.organization &&
+  //       this.solution.max_population &&
+  //       this.solution.location.length
+  //     );
+  //   }
+  // }
+
+  setFeatured(type, index) {
+    // console.log(type, index);
+    if (type === "image") {
+      this.solution.featured_type = "image";
+      this.solution.featured_url = this.solution.image_urls[index].url;
+    } else if (type === "video") {
+      this.solution.featured_type = "video";
+      this.solution.featured_url = this.solution.video_urls[index].url;
+    } else if (type === "embed") {
+      this.solution.featured_type = "embed";
+      this.solution.featured_url = this.solution.embed_urls[index];
+    }
+  }
+
+  addMediaUrl() {
+    let duplicate = this.checkIfExist(this.media_url);
+
+    if (this.media_url && !duplicate) {
+      this.solution.embed_urls.push(this.media_url);
+      this.media_url = "";
+      if (!this.solution.featured_url) {
+        this.solution.featured_url = this.media_url;
+        this.solution.featured_type = "embed";
+      }
+    }
+    if (duplicate) {
+      alert("Link already exist.");
+    }
+  }
+
+  checkMedialUrl(url: string) {
+    if (!url.startsWith("http")) {
+      return false;
+    }
+
+    if (url.match(re)) {
+      return true;
+    } else {
+      return false;
+    }
+  }
+
+  ngOnDestroy() {
+    clearInterval(this.autosaveInterval);
+  }
 }
