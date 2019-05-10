@@ -1,0 +1,21 @@
+.description {
+    max-lines: 2;
+    max-height: 5.5em;
+    overflow: hidden;
+    color: #333333;
+}
+
+.actions {
+    cursor: pointer;
+}
+
+.title {
+    font-weight: 400;
+    max-lines: 2;
+    max-height: 5.5em;
+    overflow: hidden;
+}
+
+.solution-card {
+    height: 29em;
+}

@@ -648,6 +648,12 @@ export class AddSolutionComponent
               impact
               deployment
               is_draft
+              image_urls
+              video_urls
+              featured_url
+              featured_type
+              embed_urls
+              attachments
             ]
           }
         ) {
@@ -1084,26 +1090,17 @@ export class AddSolutionComponent
     }
   }
 
-  // isComplete() {
-  //   if (this.solutionType === "problem") {
-  //     return (
-  //       this.solution.title &&
-  //       this.solution.description &&
-  //       this.solution.organization &&
-  //       this.localSectors.length &&
-  //       // this.solution.min_population &&
-  //       this.solution.max_population &&
-  //       this.solution.location.length
-  //     );
-  //   } else {
-  //     return (
-  //       this.solution.description &&
-  //       this.solution.organization &&
-  //       this.solution.max_population &&
-  //       this.solution.location.length
-  //     );
-  //   }
-  // }
+  isComplete() {
+    return (
+      this.solution.title &&
+      this.solution.description &&
+      this.solution.technology &&
+      this.solution.impact &&
+      this.solution.deployment &&
+      this.solution.budget.title &&
+      this.solution.budget.cost
+    );
+  }
 
   setFeatured(type, index) {
     // console.log(type, index);
