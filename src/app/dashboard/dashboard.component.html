@@ -20,7 +20,7 @@
         </h3>
       </div>
       <hr />
-      <div *ngIf="drafts.length" class="col-md-2" style="padding-top: 1em;">
+      <div *ngIf="drafts.length >= 4" class="col-md-2" style="padding-top: 1em;">
         <button mat-raised-button class="btn btn-warning btn-sm" [routerLink]="['/dashboard/drafts',{ type: 'drafts'}]">
           View All ({{drafts.length}}) <i class="material-icons">keyboard_arrow_right</i>
         </button>
@@ -39,7 +39,7 @@
           Problems added by you
         </h3>
       </div>
-      <div *ngIf="userProblems.length" class="col-md-2" style="padding-top: 1em;">
+      <div *ngIf="userProblems.length >= 4" class="col-md-2" style="padding-top: 1em;">
         <button mat-raised-button class="btn btn-warning btn-sm"
           [routerLink]="['/dashboard/problems',{ type: 'problems'}]">
           View All ({{userProblems.length}}) <i class="material-icons">keyboard_arrow_right</i>
@@ -59,7 +59,7 @@
           Your contributions
         </h3>
       </div>
-      <div *ngIf="objectKeys(contributions).length > 0" class="col-md-2" style="padding-top: 1em;">
+      <div *ngIf="objectKeys(contributions).length >= 4" class="col-md-2" style="padding-top: 1em;">
         <button mat-raised-button class="btn btn-warning btn-sm"
           [routerLink]="['/dashboard/contributions',{ type: 'contributions'}]">
           View All ({{objectKeys(contributions).length}}) <i class="material-icons">keyboard_arrow_right</i>
@@ -79,7 +79,7 @@
           Problems you may be interested in
         </h3>
       </div>
-      <div *ngIf="objectKeys(recommendedProblems).length > 0" class="col-md-2" style="padding-top: 1em;">
+      <div *ngIf="objectKeys(recommendedProblems).length >= 4" class="col-md-2" style="padding-top: 1em;">
         <button mat-raised-button class="btn btn-warning btn-sm"
           [routerLink]="['/dashboard/interests',{ type: 'interests'}]">
           View All ({{objectKeys(recommendedProblems).length}}) <i class="material-icons">keyboard_arrow_right</i>
@@ -99,7 +99,7 @@
           People with similar interests
         </h3>
       </div>
-      <div *ngIf="objectKeys(recommendedUsers).length > 0" class="col-md-2" style="padding-top: 1em;">
+      <div *ngIf="objectKeys(recommendedUsers).length >= 4" class="col-md-2" style="padding-top: 1em;">
         <button mat-raised-button class="btn btn-warning btn-sm"
           [routerLink]="['/dashboard/recommended-users',{ type: 'users'}]">
           View All ({{objectKeys(recommendedUsers).length}}) <i class="material-icons">keyboard_arrow_right</i>
