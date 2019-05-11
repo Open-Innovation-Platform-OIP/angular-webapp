@@ -2,12 +2,14 @@
   <form method="get" action="/" class="form-horizontal" (ngSubmit)="onSubmit()" #enrichmentForm="ngForm">
     <div class="form-group">
       <div class="row">
-        <label class="col-sm-3 col-form-label" [ngStyle]="{ 'color' : (!enrichmentData.description) ? 'red' : 'grey' }">Description
+        <label class="col-sm-3 col-form-label"
+          [ngStyle]="{ 'color' : (!enrichmentData.description) ? 'red' : 'grey' }">Description
         </label>
         <div class="col-sm-9">
           <mat-form-field class="example-full-width">
-            <textarea matInput placeholder="Leave a comment" name="description" required placeholder="Describe the problem in detail"
-              rows="5" [(ngModel)]="enrichmentData.description" #description="ngModel"></textarea>
+            <textarea matInput placeholder="Leave a comment" name="description" required
+              placeholder="Describe the problem in detail" rows="5" [(ngModel)]="enrichmentData.description"
+              #description="ngModel"></textarea>
           </mat-form-field>
           <div [hidden]="description.valid || description.pristine" class="text-danger error-msg">
             Description is required
@@ -16,17 +18,18 @@
       </div>
 
       <div class="row">
-        <label class="col-sm-3 col-form-label" [ngStyle]="{ 'color' : (!enrichmentData.location) ? 'red' : 'grey' }">Location
+        <label class="col-sm-3 col-form-label"
+          [ngStyle]="{ 'color' : (!enrichmentData.location) ? 'red' : 'grey' }">Location
         </label>
         <div class="col-sm-9">
           <mat-form-field class="example-full-width">
-            <input matInput type="text" name="location" required [(ngModel)]="enrichmentData.location" (keyup)="getAddress()"
-              #location="ngModel">
+            <input matInput type="text" name="location" required [(ngModel)]="enrichmentData.location"
+              (keyup)="getAddress()" #location="ngModel">
             <table style="width: 100%" id="table">
               <tbody>
                 <tr *ngFor="let location of locations">
                   <td (click)="storeLocation($event)">
-                    <button style="width: 50%; background-color: #FFFF">
+                    <button *ngIf="location.Location" style="width: 50%; background-color: #FFFF">
                       {{ location.Location.Address.Label }}
                     </button>
                   </td>
@@ -40,7 +43,8 @@
         </div>
       </div>
       <div class="row">
-        <label class="col-sm-3 col-form-label" [ngStyle]="{ 'color' : (!enrichmentData.organization) ? 'red' : 'grey' }">Organization
+        <label class="col-sm-3 col-form-label"
+          [ngStyle]="{ 'color' : (!enrichmentData.organization) ? 'red' : 'grey' }">Organization
         </label>
         <div class="col-sm-9">
           <mat-form-field class="example-full-width">
@@ -92,8 +96,8 @@
 
         <div class="col-sm-9">
           <mat-form-field class="example-full-width has-label">
-            <mat-select matInput [(ngModel)]="enrichmentData.min_population" placeholder="Select size of affected population"
-              id="population" name="population">
+            <mat-select matInput [(ngModel)]="enrichmentData.min_population"
+              placeholder="Select size of affected population" id="population" name="population">
               <mat-option *ngFor="let size of sizes" [value]="size.value">
                 {{ size.viewValue }}
               </mat-option>
@@ -122,7 +126,8 @@
         <label class="col-sm-3 col-form-label">Beneficiary Attributes</label>
         <div class="col-sm-9">
           <mat-form-field class="example-full-width">
-            <input matInput type="text" name="beneficiary_attributes" [(ngModel)]="enrichmentData.beneficiary_attributes">
+            <input matInput type="text" name="beneficiary_attributes"
+              [(ngModel)]="enrichmentData.beneficiary_attributes">
           </mat-form-field>
         </div>
       </div>
@@ -265,7 +270,8 @@
           <span class="btn-danger closeBtn" (click)="removeEnrichPhoto(i)"><i class="fa fa-times"></i></span>
           <img src="{{imgSrc.url}}" alt="">
         </div>
-        <div class="fileinput-preview fileinput-exists thumbnail" *ngFor="let imgSrc of  enrichmentData.image_urls; let i=index">
+        <div class="fileinput-preview fileinput-exists thumbnail"
+          *ngFor="let imgSrc of  enrichmentData.image_urls; let i=index">
           <span class="btn-danger closeBtn" (click)="removeEnrichPhoto(i)"><i class="fa fa-times"></i></span>
           <img src="{{imgSrc.url}}" alt="">
         </div>
@@ -295,14 +301,14 @@
 
 <div class="card-footer justify-content-center">
   <div class="row justify-content-center" *ngIf="mode==='Add'">
-    <button mat-raised-button class="btn btn-warning" (click)="sendEnrichDataToDB()" [disabled]="!enrichmentForm.form.valid"
-      data-dismiss="modal">
+    <button mat-raised-button class="btn btn-warning" (click)="sendEnrichDataToDB()"
+      [disabled]="!enrichmentForm.form.valid" data-dismiss="modal">
       Enrich</button>
   </div>
 
   <div class="row justify-content-center" *ngIf="mode==='Edit'">
-    <button mat-raised-button class="btn btn-warning" (click)="sendEnrichDataToDB()" [disabled]="!enrichmentForm.form.valid"
-      data-dismiss="modal">
+    <button mat-raised-button class="btn btn-warning" (click)="sendEnrichDataToDB()"
+      [disabled]="!enrichmentForm.form.valid" data-dismiss="modal">
       Update</button>
   </div>
 </div>

@@ -14,7 +14,7 @@
     </div>
     <span> <b> Location(s) </b></span>
     <div *ngFor="let location of problemData.location; let i=index;">
-      <span *ngIf="location.Address.Label && i < 2">{{location.Address.Label}}</span>
+      <span *ngIf="location.Address && location.Address.Label && i < 2">{{location.Address.Label}}</span>
       <span *ngIf="i<2">&nbsp;</span>
     </div>
   </div>
