@@ -3,6 +3,7 @@ import {
   OnInit,
   ChangeDetectionStrategy,
   Input,
+  OnChanges,
   ChangeDetectorRef,
   OnDestroy,
   Inject
@@ -73,7 +74,7 @@ const domain = "https://social-alpha-open-innovation.firebaseapp.com";
   animations: [slider],
   changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class SolutionDetailComponent implements OnInit, OnDestroy {
+export class SolutionDetailComponent implements OnInit {
   channels = sharing;
   // chartData: any;
   message: any;
@@ -91,7 +92,25 @@ export class SolutionDetailComponent implements OnInit, OnDestroy {
   showCommentBox = false;
   numOfComments = 5;
 
-  solutionData: any = {};
+  solutionData = {
+    id: "",
+    title: "",
+    description: "",
+    technology: "",
+    impact: "",
+    website_url: "",
+    deployment: 0,
+    budget: {},
+    image_urls: [],
+    video_urls: [],
+    featured_url: "",
+    embed_urls: [],
+    featured_type: "",
+    created_by: 0,
+
+    is_draft: true,
+    attachments: []
+  };
 
   problemData: any = {
     id: "",
@@ -116,7 +135,7 @@ export class SolutionDetailComponent implements OnInit, OnDestroy {
     attachments: []
   };
 
-  public problemOwner: string;
+  public solutionOwner: string;
 
   enrichDataToEdit: any;
   tags: any = [];
@@ -139,9 +158,9 @@ export class SolutionDetailComponent implements OnInit, OnDestroy {
   // enrich: number[] = [1, 2, 3, 4, 5];
   modalImgSrc: String;
   modalVideoSrc: String;
-  problem_attachments: any[] = [];
-  problem_attachments_index: number = 0;
-  problem_attachments_src: any;
+  solution_attachments: any[] = [];
+  solution_attachments_index: number = 0;
+  solution_attachments_src: any;
   modalSrc: any;
   sources: any;
   singleImg: boolean = false;
@@ -387,10 +406,57 @@ export class SolutionDetailComponent implements OnInit, OnDestroy {
     featured_url
     embed_urls
     featured_type
+    solution_watchers{
+      user_id
+    }
+    solution_voters{
+      user_id
+    }
+
+    solution_validations(order_by:{edited_at: desc}){
+      validated_by
+      comment
+      agree
+      created_at
+      files
+      
+      edited_at
+      is_deleted
+
+      solution_id
+      user {
+        id
+        name
+      } 
+      
+    }
+
+    solution_collaborators(order_by:{edited_at: desc}){
+      intent
+      is_ngo
+      is_innovator
+      is_expert
+      is_government
+      is_funder
+      is_beneficiary
+      is_incubator
+      is_entrepreneur
+      user_id
+      user {
+        id
+        name
+        photo_url
+      } 
+      
+    }
+
 
     
     
     attachments
+    usersBycreatedBy{
+      name
+    }
 
        
     }
@@ -505,15 +571,15 @@ export class SolutionDetailComponent implements OnInit, OnDestroy {
       this.message = solution.title;
     }
 
-    this.showNotification("bottom", "right", this.message);
+    // this.showNotification("bottom", "right", this.message);
 
     // map core keys
-    Object.keys(this.problemData).map(key => {
+    Object.keys(this.solutionData).map(key => {
       // console.log(key, result.data.problems[0][key]);
-      if (this.solutionData[key]) {
-        this.solutionData[key] = solution[key];
-      }
+
+      this.solutionData[key] = solution[key];
     });
+    this.solutionOwner = solution.usersBycreatedBy.name;
 
     // problem.problem_validations.map(validation => {
     //   // console.log(validation.validated_by, "test55");
@@ -528,6 +594,28 @@ export class SolutionDetailComponent implements OnInit, OnDestroy {
     //     this.disableCollaborateButton = true;
     //   }
     // });
+    solution.solution_watchers.map(watcher => {
+      this.watchers.add(watcher.user_id);
+    });
+    solution.solution_voters.map(voter => {
+      this.voters.add(voter.user_id);
+    });
+
+    solution.solution_validations.map(validation => {
+      // console.log(validation.validated_by, "test55");
+      if (validation.validated_by === Number(this.auth.currentUserValue.id)) {
+        this.disableValidateButton = true;
+      }
+    });
+    this.validation = solution.solution_validations;
+
+    solution.solution_collaborators.map(collaborator => {
+      if (collaborator.user_id === Number(this.auth.currentUserValue.id)) {
+        this.disableCollaborateButton = true;
+      }
+    });
+    this.collaborators = solution.solution_collaborators;
+
     // this.collaborators = problem.problem_collaborators;
     console.log(this.collaborators, "collaborators refresh");
 
@@ -562,20 +650,21 @@ export class SolutionDetailComponent implements OnInit, OnDestroy {
     //   this.voters.add(voter.user_id);
     // });
     // adding embed urls
-    let embedded_urls_arr = this.problemData.embed_urls.map(url => {
+
+    let embedded_urls_arr = this.solutionData.embed_urls.map(url => {
       return { url: url };
     });
 
     // combining the video_urls and image_urls
-    this.problem_attachments = [
-      ...this.problemData["image_urls"],
-      ...this.problemData["video_urls"],
-      ...this.problemData["attachments"],
+    this.solution_attachments = [
+      ...this.solutionData["image_urls"],
+      ...this.solutionData["video_urls"],
+      ...this.solutionData["attachments"],
       ...embedded_urls_arr
     ];
 
-    this.problem_attachments_src = this.problem_attachments[
-      this.problem_attachments_index
+    this.solution_attachments_src = this.solution_attachments[
+      this.solution_attachments_index
     ];
 
     // console.log(problem.discussionssByproblemId);
@@ -732,16 +821,16 @@ export class SolutionDetailComponent implements OnInit, OnDestroy {
   toggleProblemAttachmentsIndex(dir: boolean) {
     if (
       dir &&
-      this.problem_attachments_index < this.problem_attachments.length - 1
+      this.solution_attachments_index < this.solution_attachments.length - 1
     ) {
-      this.problem_attachments_index++;
-      this.problem_attachments_src = this.problem_attachments[
-        this.problem_attachments_index
+      this.solution_attachments_index++;
+      this.solution_attachments_src = this.solution_attachments[
+        this.solution_attachments_index
       ];
-    } else if (!dir && this.problem_attachments_index > 0) {
-      this.problem_attachments_index--;
-      this.problem_attachments_src = this.problem_attachments[
-        this.problem_attachments_index
+    } else if (!dir && this.solution_attachments_index > 0) {
+      this.solution_attachments_index--;
+      this.solution_attachments_src = this.solution_attachments[
+        this.solution_attachments_index
       ];
     }
   }
@@ -847,7 +936,7 @@ export class SolutionDetailComponent implements OnInit, OnDestroy {
   toggleWatchProblem() {
     // console.log('toggling watch flag');
     if (
-      !(this.userId == this.problemData.created_by) &&
+      !(this.userId == this.solutionData.created_by) &&
       this.auth.currentUserValue.id
     ) {
       if (!this.watchers.has(this.userId)) {
@@ -855,18 +944,18 @@ export class SolutionDetailComponent implements OnInit, OnDestroy {
         // let's add them
         this.watchers.add(this.userId);
         const add_watcher = gql`
-        mutation insert_problem_watcher {
-          insert_problem_watchers(
+        mutation insert_solution_watcher {
+          insert_solution_watchers(
             objects: [
               {
                 user_id: ${Number(this.userId)},
-                problem_id: ${Number(this.problemData.id)},
+                solution_id: ${Number(this.solutionData.id)},
               }
             ]
           ) {
             returning {
               user_id
-              problem_id
+              
             }
           }
         }
@@ -890,11 +979,11 @@ export class SolutionDetailComponent implements OnInit, OnDestroy {
         // let's remove them
         this.watchers.delete(this.userId);
         const delete_watcher = gql`
-        mutation delete_problem_watcher {
-          delete_problem_watchers(
+        mutation delete_solution_watcher {
+          delete_solution_watchers(
             where: {user_id: {_eq: ${Number(
               this.userId
-            )}}, problem_id: {_eq: ${Number(this.problemData.id)}}}
+            )}}, solution_id: {_eq: ${Number(this.solutionData.id)}}}
           ) {
             affected_rows
           }
@@ -921,7 +1010,7 @@ export class SolutionDetailComponent implements OnInit, OnDestroy {
   toggleVoteProblem() {
     // console.log('toggling watch flag');
     if (
-      !(this.userId == this.problemData.created_by) &&
+      !(this.userId == this.solutionData.created_by) &&
       this.auth.currentUserValue.id
     ) {
       if (!this.voters.has(this.userId)) {
@@ -929,18 +1018,18 @@ export class SolutionDetailComponent implements OnInit, OnDestroy {
         // let's add them
         this.voters.add(this.userId);
         const add_voter = gql`
-        mutation insert_problem_voter {
-          insert_problem_voters(
+        mutation insert_solution_voter {
+          insert_solution_voters(
             objects: [
               {
                 user_id: ${Number(this.userId)},
-                problem_id: ${Number(this.problemData.id)},
+                solution_id: ${Number(this.solutionData.id)},
               }
             ]
           ) {
             returning {
               user_id
-              problem_id    
+              solution_id    
             }
           }
         }
@@ -964,11 +1053,11 @@ export class SolutionDetailComponent implements OnInit, OnDestroy {
         // let's remove them
         this.voters.delete(this.userId);
         const delete_voter = gql`
-        mutation delete_problem_voter {
-          delete_problem_voters(
+        mutation delete_solution_voter {
+          delete_solution_voters(
             where: {user_id: {_eq: ${Number(
               this.userId
-            )}}, problem_id: {_eq: ${Number(this.problemData.id)}}}
+            )}}, solution_id: {_eq: ${Number(this.solutionData.id)}}}
           ) {
             affected_rows
           }
@@ -1003,9 +1092,9 @@ export class SolutionDetailComponent implements OnInit, OnDestroy {
     console.log(collaborationData, "collaboration data");
     collaborationData.user_id = Number(this.auth.currentUserValue.id);
 
-    collaborationData.problem_id = this.problemData.id;
+    collaborationData.solution_id = this.solutionData.id;
 
-    this.collaborationService.submitCollaboratorToDB(collaborationData);
+    this.collaborationService.submitSolutionCollaboratorToDB(collaborationData);
     console.log(event, "from problem details collab");
     // close modal
     // send to db
@@ -1014,14 +1103,14 @@ export class SolutionDetailComponent implements OnInit, OnDestroy {
   onValidationSubmit(validationData) {
     validationData.validated_by = Number(this.auth.currentUserValue.id);
 
-    validationData.problem_id = this.problemData.id;
+    validationData.solution_id = this.solutionData.id;
 
-    this.validationService.submitValidationToDB(validationData);
+    this.validationService.submitSolutionValidationToDB(validationData);
     this.startInterval();
   }
 
   deleteValidation(validationData) {
-    this.validationService.deleteValidation(validationData).subscribe(
+    this.validationService.deleteSolutionValidation(validationData).subscribe(
       ({ data }) => {
         $("#validModal").modal("hide");
         this.disableValidateButton = false;
@@ -1042,22 +1131,27 @@ export class SolutionDetailComponent implements OnInit, OnDestroy {
   }
 
   deleteCollaboration(collaborationData) {
-    this.collaborationService.deleteCollaboration(collaborationData).subscribe(
-      ({ data }) => {
-        $("#collaboratorModal").modal("hide");
-        this.disableCollaborateButton = false;
-      },
-      error => {
-        console.log("Could delete due to " + error);
-        swal({
-          title: "Error",
-          text: "Try Again",
-          type: "error",
-          confirmButtonClass: "btn btn-info",
-          buttonsStyling: false
-        }).catch(swal.noop);
-      }
-    );
+    console.log("asas");
+    this.collaborationService
+      .deleteSolutionCollaboration(collaborationData)
+      .subscribe(
+        ({ data }) => {
+          $("#collaboratorModal").modal("hide");
+          this.disableCollaborateButton = false;
+        },
+        error => {
+          // console.log("Could delete due to " + error);
+          console.error(JSON.stringify(error));
+
+          swal({
+            title: "Error",
+            text: "Try Again",
+            type: "error",
+            confirmButtonClass: "btn btn-info",
+            buttonsStyling: false
+          }).catch(swal.noop);
+        }
+      );
   }
 
   handleValidationCardClicked(validationData) {

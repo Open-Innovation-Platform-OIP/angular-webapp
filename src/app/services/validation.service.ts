@@ -56,7 +56,9 @@ export class ValidationService {
           // location.reload();
         },
         err => {
-          console.log(err, "error");
+          // console.log(err, "error");
+          console.error(JSON.stringify(err));
+
           swal({
             title: "Error",
             text: "Try Again",
@@ -89,6 +91,78 @@ export class ValidationService {
           },
           problem_id: {
             _eq: validationData.problem_id
+          }
+        }
+      }
+    });
+  }
+
+  submitSolutionValidationToDB(validationData) {
+    console.log(validationData, "validation data on submit");
+
+    this.apollo
+      .mutate({
+        mutation: gql`
+          mutation upsert_solution_validations(
+            $solution_validations: [solution_validations_insert_input!]!
+          ) {
+            insert_solution_validations(
+              objects: $solution_validations
+              on_conflict: {
+                constraint: solution_validations_pkey
+                update_columns: [comment, files, agree]
+              }
+            ) {
+              affected_rows
+              returning {
+                agree
+              }
+            }
+          }
+        `,
+        variables: {
+          solution_validations: [validationData]
+        }
+      })
+      .subscribe(
+        data => {
+          console.log(data);
+          // location.reload();
+        },
+        err => {
+          console.log(err, "error");
+          swal({
+            title: "Error",
+            text: "Try Again",
+            type: "error",
+            confirmButtonClass: "btn btn-info",
+            buttonsStyling: false
+          }).catch(swal.noop);
+        }
+      );
+  }
+
+  deleteSolutionValidation(validationData) {
+    console.log(validationData, "delete validation");
+    // console.log(id, "ID");
+    return this.apollo.mutate<any>({
+      mutation: gql`
+        mutation DeleteMutation($where: solution_validations_bool_exp!) {
+          delete_solution_validations(where: $where) {
+            affected_rows
+            returning {
+              solution_id
+            }
+          }
+        }
+      `,
+      variables: {
+        where: {
+          validated_by: {
+            _eq: validationData.validated_by
+          },
+          solution_id: {
+            _eq: validationData.solution_id
           }
         }
       }

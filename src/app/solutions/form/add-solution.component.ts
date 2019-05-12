@@ -260,7 +260,10 @@ export class AddSolutionComponent
     console.log("solution wizard ng on in it");
 
     this.route.params.pipe(first()).subscribe(params => {
+      console.log(params, "params id");
+
       if (params.id) {
+        console.log(params.id, "id");
         this.apollo
           .watchQuery<any>({
             query: gql`
@@ -269,7 +272,8 @@ export class AddSolutionComponent
                             id
                             title
                             created_by
-                            updated_at
+                            technology
+                            
                             description
                             website_url
                             deployment
@@ -282,12 +286,7 @@ export class AddSolutionComponent
                             embed_urls
                             featured_url
                             featured_type
-                            solution_owners{
-                              user{
-                                id
-                                name
-                              }
-                            }
+                            
                             }
                         }
                         `,
@@ -295,6 +294,14 @@ export class AddSolutionComponent
             fetchPolicy: "network-only"
           })
           .valueChanges.subscribe(result => {
+            this.solution["id"] = result.data.solutions[0].id;
+            Object.keys(this.solution).map(key => {
+              // console.log(key, result.data.problems[0][key]);
+              if (result.data.solutions[0][key]) {
+                this.solution[key] = result.data.solutions[0][key];
+              }
+              // this.solution.is_draft = result.data.problems[0].is_draft;
+            });
             console.log(result, "SOLUTIONS");
           });
       }
@@ -762,6 +769,7 @@ export class AddSolutionComponent
             //     this.router.navigate(["problems", this.problem["id"], "edit"]);
             //   }
             // }
+            this.router.navigate(["solutions", this.solution["id"]]);
           }
         },
         err => {

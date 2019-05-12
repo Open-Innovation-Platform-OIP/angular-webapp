@@ -117,4 +117,95 @@ export class CollaborationService {
       }
     });
   }
+
+  submitSolutionCollaboratorToDB(collaborationData: collaborator) {
+    // console.log(collaborationData, "collab data");
+    console.log(collaborationData, "collab data in submit");
+    const upsert_collaborators = gql`
+      mutation upsert_solution_collaborators(
+        $solution_collaborators: [solution_collaborators_insert_input!]!
+      ) {
+        insert_solution_collaborators(
+          objects: $solution_collaborators
+          on_conflict: {
+            constraint: solution_collaborators_pkey
+            update_columns: [
+              intent
+              is_ngo
+              is_entrepreneur
+              is_funder
+              is_incubator
+              is_government
+              is_expert
+              is_beneficiary
+              is_innovator
+            ]
+          }
+        ) {
+          affected_rows
+          returning {
+            user_id
+          }
+        }
+      }
+    `;
+
+    this.apollo
+      .mutate({
+        mutation: upsert_collaborators,
+
+        variables: {
+          solution_collaborators: [collaborationData]
+        }
+      })
+      .subscribe(
+        result => {
+          console.log(result, "result");
+          // location.reload();
+          swal({
+            type: "success",
+            title: "Thank you for collaborating!",
+            timer: 4000,
+            showConfirmButton: false
+          }).catch(swal.noop);
+        },
+        error => {
+          console.log("error", error);
+          console.error(JSON.stringify(error));
+
+          swal({
+            title: "Error",
+            text: "Try Again",
+            type: "error",
+            confirmButtonClass: "btn btn-info",
+            buttonsStyling: false
+          }).catch(swal.noop);
+        }
+      );
+  }
+
+  deleteSolutionCollaboration(collaboratorData) {
+    return this.apollo.mutate<any>({
+      mutation: gql`
+        mutation DeleteMutation($where: solution_collaborators_bool_exp!) {
+          delete_solution_collaborators(where: $where) {
+            affected_rows
+            returning {
+              user_id
+            }
+          }
+        }
+      `,
+      variables: {
+        where: {
+          user_id: {
+            _eq: collaboratorData.user_id
+          },
+          solution_id: {
+            _eq: collaboratorData.solution_id
+          }
+        }
+      }
+    });
+  }
 }

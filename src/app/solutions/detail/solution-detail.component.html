@@ -6,7 +6,7 @@
       <div class="col-md-8">
         <div class="card card-product">
           <div class="card-header card-header-rose">
-            <h4 class="card-title">{{solutionData.title}} </h4>
+            <h4 class="card-title">{{solutionData.title}}</h4>
             <p class="card-category"><b>Created By :
                 {{ (auth.currentUserValue.id == solutionData.created_by) ? 'You' : solutionOwner }}</b></p>
           </div>
@@ -34,19 +34,23 @@
                 <p class="description">{{solutionData.organization}}</p>
 
 
-                <strong *ngIf="solutionData.beneficiary_attributes">Technology</strong>
+                <strong *ngIf="solutionData.technology">Technology</strong>
                 <p class="description" style="white-space: pre-wrap;">{{solutionData.technology}}</p>
 
-                <strong *ngIf="solutionData.resources_needed">Website</strong>
+                <strong *ngIf="solutionData.website_url">Website</strong>
                 <p class="description" style="white-space: pre-wrap;">{{solutionData.website_url}}</p>
 
 
 
                 <strong *ngIf="solutionData.impact">Impact</strong>
                 <p class="description" style="white-space: pre-wrap;">{{solutionData.impact}}</p>
+                <strong *ngIf="solutionData.deployment">Deployments</strong>
+                <p class="description" style="white-space: pre-wrap;">{{solutionData.deployment}}</p>
 
-                <strong *ngIf="solutionData.extent">Budget</strong>
-                <p class="description" style="white-space: pre-wrap;">{{solutionData.budget}}</p>
+                <strong *ngIf="solutionData.budget">Budget</strong>
+                <p class="description" style="white-space: pre-wrap;">{{solutionData.budget.title}}</p>
+                <p class="description" style="white-space: pre-wrap;">{{solutionData.budget.cost}}</p>
+
 
 
 
@@ -65,16 +69,16 @@
                 visibility
               </i>
               <span> {{watchers.size}}</span>
-              <i *ngIf="userId===solutionData.created_by" [routerLink]="
+              <!-- <i *ngIf="userId===solutionData.created_by" [routerLink]="
                 '/problems/'+ solutionData.id+'/edit'" class="material-icons actions">
                 create
-              </i>
+              </i> -->
             </div>
 
             <!--  -->
             <div class="dropdown">
               <button *ngIf="userId===solutionData.created_by" [routerLink]="
-                '/problems/'+ solutionData.id+'/edit'" class="btn btn-sm btn-rose" aria-expanded="true">
+                '/solutions/'+ solutionData.id+'/edit'" class="btn btn-sm btn-rose" aria-expanded="true">
                 <i class="material-icons actions">
                   create
                 </i>
@@ -101,6 +105,43 @@
       </div>
 
     </div>
+
+    <!--Show more images and videos-->
+
+    <!-- ----------------------------- problem attachments modal start----------------------------- -->
+    <div class="modal fade" id="viewMoreImgModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel"
+      aria-hidden="true">
+      <div class="modal-dialog modal-dialog-centered modal-lg">
+        <div class="modal-content">
+          <div class="modal-header">
+            <button type="button" class="close" data-dismiss="modal" aria-hidden="true"
+              (click)="closeModal($event)">close</button>
+          </div>
+          <div class="modal-body">
+            <app-display-modal *ngIf="solution_attachments_src && solution_attachments_src.url"
+              [source]="solution_attachments[solution_attachments_index]">
+            </app-display-modal>
+          </div>
+          <div class="modal-footer justify-content-center" *ngIf="this.solution_attachments.length > 1">
+            <button mat-raised-button type="button" [disabled]="solution_attachments_index < 1"
+              (click)="toggleProblemAttachmentsIndex(false)" class="btn btn-link btn-round btn-twitter"><i
+                class="material-icons" style="zoom:2;">
+                keyboard_arrow_left
+              </i>
+            </button>
+            <div class="col-3 text-center"><strong>{{solution_attachments_index + 1}}</strong></div>
+            <button mat-raised-button type="button"
+              [disabled]="solution_attachments_index === solution_attachments.length - 1"
+              class="btn btn-link btn-round btn-twitter" (click)="toggleProblemAttachmentsIndex(true)"><i
+                class="material-icons" style="zoom:2;">
+                keyboard_arrow_right
+              </i>
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+    <!-- ----------------------------- problem attachments modal ends----------------------------- -->
 
 
     <div class="row justify-content-center">
