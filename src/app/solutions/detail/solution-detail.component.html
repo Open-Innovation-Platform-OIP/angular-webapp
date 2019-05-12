@@ -102,274 +102,279 @@
           </div>
         </div>
 
-      </div>
 
-    </div>
 
-    <!--Show more images and videos-->
+        <!--Show more images and videos-->
 
-    <!-- ----------------------------- problem attachments modal start----------------------------- -->
-    <div class="modal fade" id="viewMoreImgModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel"
-      aria-hidden="true">
-      <div class="modal-dialog modal-dialog-centered modal-lg">
-        <div class="modal-content">
-          <div class="modal-header">
-            <button type="button" class="close" data-dismiss="modal" aria-hidden="true"
-              (click)="closeModal($event)">close</button>
-          </div>
-          <div class="modal-body">
-            <app-display-modal *ngIf="solution_attachments_src && solution_attachments_src.url"
-              [source]="solution_attachments[solution_attachments_index]">
-            </app-display-modal>
-          </div>
-          <div class="modal-footer justify-content-center" *ngIf="this.solution_attachments.length > 1">
-            <button mat-raised-button type="button" [disabled]="solution_attachments_index < 1"
-              (click)="toggleProblemAttachmentsIndex(false)" class="btn btn-link btn-round btn-twitter"><i
-                class="material-icons" style="zoom:2;">
-                keyboard_arrow_left
-              </i>
-            </button>
-            <div class="col-3 text-center"><strong>{{solution_attachments_index + 1}}</strong></div>
-            <button mat-raised-button type="button"
-              [disabled]="solution_attachments_index === solution_attachments.length - 1"
-              class="btn btn-link btn-round btn-twitter" (click)="toggleProblemAttachmentsIndex(true)"><i
-                class="material-icons" style="zoom:2;">
-                keyboard_arrow_right
-              </i>
-            </button>
+        <!-- ----------------------------- problem attachments modal start----------------------------- -->
+        <div class="modal fade" id="viewMoreImgModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel"
+          aria-hidden="true">
+          <div class="modal-dialog modal-dialog-centered modal-lg">
+            <div class="modal-content">
+              <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true"
+                  (click)="closeModal($event)">close</button>
+              </div>
+              <div class="modal-body">
+                <app-display-modal *ngIf="solution_attachments_src && solution_attachments_src.url"
+                  [source]="solution_attachments[solution_attachments_index]">
+                </app-display-modal>
+              </div>
+              <div class="modal-footer justify-content-center" *ngIf="this.solution_attachments.length > 1">
+                <button mat-raised-button type="button" [disabled]="solution_attachments_index < 1"
+                  (click)="toggleProblemAttachmentsIndex(false)" class="btn btn-link btn-round btn-twitter"><i
+                    class="material-icons" style="zoom:2;">
+                    keyboard_arrow_left
+                  </i>
+                </button>
+                <div class="col-3 text-center"><strong>{{solution_attachments_index + 1}}</strong></div>
+                <button mat-raised-button type="button"
+                  [disabled]="solution_attachments_index === solution_attachments.length - 1"
+                  class="btn btn-link btn-round btn-twitter" (click)="toggleProblemAttachmentsIndex(true)"><i
+                    class="material-icons" style="zoom:2;">
+                    keyboard_arrow_right
+                  </i>
+                </button>
+              </div>
+            </div>
           </div>
         </div>
-      </div>
-    </div>
-    <!-- ----------------------------- problem attachments modal ends----------------------------- -->
+        <!-- ----------------------------- problem attachments modal ends----------------------------- -->
 
 
-    <div class="row justify-content-center">
-      <!-- <a mat-button>
+        <div class="row justify-content-center">
+          <!-- <a mat-button>
             <i class="material-icons">
               keyboard_arrow_left
             </i>
           </a> -->
-      <button mat-raised-button class="btn btn-rose btn-round" data-toggle="modal" data-target="#validatorModal"
-        matTooltip="Click to validate problem" [matTooltipPosition]="'below'"
-        *ngIf="auth.currentUserValue.id">Validate</button>
-      <!-- <a mat-button>
+          <button mat-raised-button class="btn btn-rose btn-round" data-toggle="modal" data-target="#validatorModal"
+            matTooltip="Click to validate problem" [matTooltipPosition]="'below'"
+            [disabled]="disableValidateButton || userId == solutionData.created_by || !auth.currentUserValue.id "
+            *ngIf="auth.currentUserValue.id">Validate</button>
+          <!-- <a mat-button>
             <i class="material-icons">
               keyboard_arrow_right
             </i>
           </a> -->
-    </div>
-    <!--Validate divider-->
+        </div>
+        <!--Validate divider-->
 
-    <ngu-carousel #ValidCarousel [inputs]="carouselTileConfig" [dataSource]="carouselTileItemsValid$ | async"
-      *ngIf="validation[0] ">
-      <ngu-tile *nguCarouselDef="let validation; let i = index; let ani = animate" data-toggle="modal"
-        data-target="#validModal">
-        <app-validate-card *ngIf="!validation.is_deleted" [validationData]="validation"
-          (clicked)="handleValidationCardClicked($event)"></app-validate-card>
-      </ngu-tile>
+        <ngu-carousel #ValidCarousel [inputs]="carouselTileConfig" [dataSource]="carouselTileItemsValid$ | async"
+          *ngIf="validation[0] ">
+          <ngu-tile *nguCarouselDef="let validation; let i = index; let ani = animate" data-toggle="modal"
+            data-target="#validModal">
+            <app-validate-card *ngIf="!validation.is_deleted" [validationData]="validation"
+              (clicked)="handleValidationCardClicked($event)"></app-validate-card>
+          </ngu-tile>
 
-      <!-- <button NguCarouselPrev class="btn btn-default leftRs" [style.opacity]="ValidCarousel.isFirst ? 0.5:1">&lt;</button> -->
-      <!-- <button NguCarouselNext class="btn btn-default rightRs" [style.opacity]="ValidCarousel.isLast ? 0.5:1">&gt;</button> -->
+          <!-- <button NguCarouselPrev class="btn btn-default leftRs" [style.opacity]="ValidCarousel.isFirst ? 0.5:1">&lt;</button> -->
+          <!-- <button NguCarouselNext class="btn btn-default rightRs" [style.opacity]="ValidCarousel.isLast ? 0.5:1">&gt;</button> -->
 
 
-      <a mat-button NguCarouselPrev class="btn btn-white btn-just-icon btn-round leftRs"
-        *ngIf="validation[0]&&validation.length>2">
-        <i class="material-icons">
-          keyboard_arrow_left
-        </i>
-      </a>
-      <!-- <button mat-raised-button class="btn btn-warning btn-round" data-toggle="modal" data-target="#validatorModal" -->
-      <!-- matTooltip="Click to validate problem" [matTooltipPosition]="'below'">Validate</button> -->
-      <a mat-button NguCarouselNext class="btn btn-white btn-just-icon btn-round rightRs"
-        *ngIf="validation[0]&&validation.length>2">
-        <i class="material-icons">
-          keyboard_arrow_right
-        </i>
-      </a>
+          <a mat-button NguCarouselPrev class="btn btn-white btn-just-icon btn-round leftRs"
+            *ngIf="validation[0]&&validation.length>2">
+            <i class="material-icons">
+              keyboard_arrow_left
+            </i>
+          </a>
+          <!-- <button mat-raised-button class="btn btn-warning btn-round" data-toggle="modal" data-target="#validatorModal" -->
+          <!-- matTooltip="Click to validate problem" [matTooltipPosition]="'below'">Validate</button> -->
+          <a mat-button NguCarouselNext class="btn btn-white btn-just-icon btn-round rightRs"
+            *ngIf="validation[0]&&validation.length>2">
+            <i class="material-icons">
+              keyboard_arrow_right
+            </i>
+          </a>
 
-    </ngu-carousel>
-    <div class="row justify-content-center" *ngIf="!validation[0]">
-      <!-- <p *ngIf="userPersonas.is_expert">No validations yet. Be the first to validate.</p> -->
-      <p>No validations yet.</p>
+        </ngu-carousel>
+        <div class="row justify-content-center" *ngIf="!validation[0]">
+          <!-- <p *ngIf="userPersonas.is_expert">No validations yet. Be the first to validate.</p> -->
+          <p>No validations yet.</p>
 
-    </div>
+        </div>
 
-    <div class="row justify-content-center">
-      <!-- 
+        <div class="row justify-content-center">
+          <!-- 
         <p
           *ngIf="!(userId == solutionData.created_by) && userPersonas.is_expert && !sectorMatched && !disableValidateButton">
           Please ensure that
           your interests match with the problem
           sectors in order to validate</p> -->
 
-    </div>
+        </div>
 
 
-    <!--Validate Modal-->
-    <div class="modal fade" id="validatorModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel"
-      aria-hidden="true">
-      <div class="modal-dialog modal-notice">
-        <div class="modal-content">
-          <div class="modal-header">
-            <h5 class="modal-title" id="myModalLabel">Validate Problem</h5>
-            <button mat-button type="button" class="close" data-dismiss="modal" aria-hidden="true">
-              <i class="material-icons">close</i>
-            </button>
-          </div>
-          <div class="modal-body">
-            <app-add-validation (submitted)="onValidationSubmit($event)"></app-add-validation>
+        <!--Validate Modal-->
+        <div class="modal fade" id="validatorModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel"
+          aria-hidden="true">
+          <div class="modal-dialog modal-notice">
+            <div class="modal-content">
+              <div class="modal-header">
+                <h5 class="modal-title" id="myModalLabel">Validate Problem</h5>
+                <button mat-button type="button" class="close" data-dismiss="modal" aria-hidden="true">
+                  <i class="material-icons">close</i>
+                </button>
+              </div>
+              <div class="modal-body">
+                <app-add-validation (submitted)="onValidationSubmit($event)"></app-add-validation>
+              </div>
+            </div>
           </div>
         </div>
-      </div>
-    </div>
-    <!--Validate Modal-->
+        <!--Validate Modal-->
 
-    <!--View Validation Modal-->
+        <!--View Validation Modal-->
 
-    <div class="modal fade" id="validModal" tabindex="-1" role="dialog" aria-labelledby="ModalLabel" aria-hidden="true">
-      <div class="modal-dialog modal-notice">
-        <div class="modal-content">
-          <div class="modal-header">
-            <h5 class="modal-title" id="myModalLabel">Validation Details</h5>
-            <button mat-button type="button" class="close" data-dismiss="modal" aria-hidden="true">
-              <i class="material-icons">close</i>
-            </button>
-          </div>
-          <div class="modal-body">
-            <app-detailed-validate-view [validationData]="validationDataToView"
-              (deleteClicked)="deleteValidation($event)" (editClicked)="handleValidationEditMode($event)">
-            </app-detailed-validate-view>
-          </div>
-        </div>
-      </div>
-    </div>
-
-    <!--View Validation Modal-->
-
-    <!--Edit Validation Modal-->
-    <div class="modal fade editModal" id="EditValidationModal" tabindex="-1" role="dialog"
-      aria-labelledby="myModalLabel" aria-hidden="true">
-      <div class="modal-dialog modal-notice">
-        <div class="modal-content">
-          <div class="modal-header">
-            <h5 class="modal-title" id="myModalLabel">Edit Validation</h5>
-            <button mat-button type="button" class="close" data-dismiss="modal" aria-hidden="true"
-              (click)="closeModal($event)">
-              <i class="material-icons">close</i>
-            </button>
-          </div>
-          <div class="modal-body">
-            <app-add-validation *ngIf="validationDataToEdit" [validationData]="validationDataToEdit"
-              (submitted)="onValidationSubmit($event)"></app-add-validation>
+        <div class="modal fade" id="validModal" tabindex="-1" role="dialog" aria-labelledby="ModalLabel"
+          aria-hidden="true">
+          <div class="modal-dialog modal-notice">
+            <div class="modal-content">
+              <div class="modal-header">
+                <h5 class="modal-title" id="myModalLabel">Validation Details</h5>
+                <button mat-button type="button" class="close" data-dismiss="modal" aria-hidden="true">
+                  <i class="material-icons">close</i>
+                </button>
+              </div>
+              <div class="modal-body">
+                <app-detailed-validate-view [validationData]="validationDataToView"
+                  (deleteClicked)="deleteValidation($event)" (editClicked)="handleValidationEditMode($event)">
+                </app-detailed-validate-view>
+              </div>
+            </div>
           </div>
         </div>
-      </div>
-    </div>
-    <!--Edit Validation Modal-->
 
-    <!--Validate-->
+        <!--View Validation Modal-->
 
-    <hr>
-
-    <!--Collaborate-->
-
-    <div class="modal fade editModal" id="EditCollaborateModal" tabindex="-1" role="dialog"
-      aria-labelledby="myModalLabel" aria-hidden="true">
-      <div class="modal-dialog modal-notice modal-lg">
-        <div class="modal-content">
-          <div class="modal-header">
-            <h5 class="modal-title" id="myModalLabel">Edit collaboration</h5>
-            <button mat-button type="button" class="close" data-dismiss="modal" aria-hidden="true">
-              <i class="material-icons">close</i>
-            </button>
-          </div>
-          <div class="modal-body">
-
-
-            <app-add-collaborator *ngIf="collaboratorDataToEdit" [collaborator]="collaboratorDataToEdit"
-              (submitted)="onCollaborationSubmit($event)">
-
-            </app-add-collaborator>
+        <!--Edit Validation Modal-->
+        <div class="modal fade editModal" id="EditValidationModal" tabindex="-1" role="dialog"
+          aria-labelledby="myModalLabel" aria-hidden="true">
+          <div class="modal-dialog modal-notice">
+            <div class="modal-content">
+              <div class="modal-header">
+                <h5 class="modal-title" id="myModalLabel">Edit Validation</h5>
+                <button mat-button type="button" class="close" data-dismiss="modal" aria-hidden="true"
+                  (click)="closeModal($event)">
+                  <i class="material-icons">close</i>
+                </button>
+              </div>
+              <div class="modal-body">
+                <app-add-validation *ngIf="validationDataToEdit" [validationData]="validationDataToEdit"
+                  (submitted)="onValidationSubmit($event)"></app-add-validation>
+              </div>
+            </div>
           </div>
         </div>
-      </div>
-    </div>
+        <!--Edit Validation Modal-->
 
-    <!--Collaborate divider-->
-    <div class="row justify-content-center">
-      <!-- <a mat-button>
+        <!--Validate-->
+
+        <hr>
+
+        <!--Collaborate-->
+
+        <div class="modal fade editModal" id="EditCollaborateModal" tabindex="-1" role="dialog"
+          aria-labelledby="myModalLabel" aria-hidden="true">
+          <div class="modal-dialog modal-notice modal-lg">
+            <div class="modal-content">
+              <div class="modal-header">
+                <h5 class="modal-title" id="myModalLabel">Edit collaboration</h5>
+                <button mat-button type="button" class="close" data-dismiss="modal" aria-hidden="true">
+                  <i class="material-icons">close</i>
+                </button>
+              </div>
+              <div class="modal-body">
+
+
+                <app-add-collaborator *ngIf="collaboratorDataToEdit" [collaborator]="collaboratorDataToEdit"
+                  (submitted)="onCollaborationSubmit($event)">
+
+                </app-add-collaborator>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!--Collaborate divider-->
+        <div class="row justify-content-center">
+          <!-- <a mat-button>
             <i class="material-icons">
               keyboard_arrow_left
             </i>
           </a> -->
-      <button mat-raised-button *ngIf="auth.currentUserValue.id" class="btn btn-rose btn-round" data-toggle="modal"
-        data-target="#collaboratorModal" matTooltip="Click to collaborate"
-        [matTooltipPosition]="'below'">Collaborate</button>
-      <p *ngIf="!auth.currentUserValue.id">Login to collaborate on this problem</p>
-      <!-- <a mat-button>
+          <button mat-raised-button *ngIf="auth.currentUserValue.id" class="btn btn-rose btn-round" data-toggle="modal"
+            data-target="#collaboratorModal" matTooltip="Click to collaborate"
+            [disabled]="disableCollaborateButton || userId == solutionData.created_by || !auth.currentUserValue.id "
+            [matTooltipPosition]="'below'">Collaborate</button>
+          <p *ngIf="!auth.currentUserValue.id">Login to collaborate on this problem</p>
+          <!-- <a mat-button>
             <i class="material-icons">
               keyboard_arrow_right
             </i>
           </a> -->
-    </div>
-    <!--Collaborate divider-->
+        </div>
+        <!--Collaborate divider-->
 
-    <ngu-carousel #CollabCarousel [inputs]="carouselTileConfig" [dataSource]="carouselTileItemCollab$ | async"
-      *ngIf="collaborators[0]">
-      <ngu-tile *nguCarouselDef="let collaborator; let i = index; let ani = animate">
-        <app-collaborator-card *ngIf="collaborator" [collaboratorData]="collaborator"
-          (editClicked)="handleCollaborationEditMode($event)" (deleteClicked)="deleteCollaboration($event)">
-        </app-collaborator-card>
-      </ngu-tile>
+        <ngu-carousel #CollabCarousel [inputs]="carouselTileConfig" [dataSource]="carouselTileItemCollab$ | async"
+          *ngIf="collaborators[0]">
+          <ngu-tile *nguCarouselDef="let collaborator; let i = index; let ani = animate">
+            <app-collaborator-card *ngIf="collaborator" [collaboratorData]="collaborator"
+              (editClicked)="handleCollaborationEditMode($event)" (deleteClicked)="deleteCollaboration($event)">
+            </app-collaborator-card>
+          </ngu-tile>
 
 
 
-      <a mat-button NguCarouselPrev class="btn btn-white btn-just-icon btn-round leftRs"
-        *ngIf="collaborators[0]&&collaborators.length>2">
-        <i class="material-icons">
-          keyboard_arrow_left
-        </i>
-      </a>
+          <a mat-button NguCarouselPrev class="btn btn-white btn-just-icon btn-round leftRs"
+            *ngIf="collaborators[0]&&collaborators.length>2">
+            <i class="material-icons">
+              keyboard_arrow_left
+            </i>
+          </a>
 
-      <a mat-button NguCarouselNext class="btn btn-white btn-just-icon btn-round rightRs"
-        *ngIf="collaborators[0]&&collaborators.length>2">
-        <i class="material-icons">
-          keyboard_arrow_right
-        </i>
-      </a>
-    </ngu-carousel>
-    <div class="row justify-content-center">
-      <!-- <p *ngIf="!collaborators[0]">No collaborators yet.</p> -->
+          <a mat-button NguCarouselNext class="btn btn-white btn-just-icon btn-round rightRs"
+            *ngIf="collaborators[0]&&collaborators.length>2">
+            <i class="material-icons">
+              keyboard_arrow_right
+            </i>
+          </a>
+        </ngu-carousel>
+        <div class="row justify-content-center">
+          <!-- <p *ngIf="!collaborators[0]">No collaborators yet.</p> -->
 
-      <p *ngIf="!collaborators[0]">No collaborators yet.</p>
-      <!-- <ng-template #notUser>&nbsp; No collaborators yet.</ng-template> -->
+          <p *ngIf="!collaborators[0]">No collaborators yet.</p>
+          <!-- <ng-template #notUser>&nbsp; No collaborators yet.</ng-template> -->
 
-    </div>
+        </div>
 
-    <!--Add Collaborator Modal-->
-    <div class="modal fade" id="collaboratorModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel"
-      aria-hidden="true">
-      <div class="modal-dialog modal-notice modal-lg">
-        <div class="modal-content">
-          <div class="modal-header">
-            <h5 class="modal-title" id="myModalLabel">How do I collaborate</h5>
-            <button mat-button type="button" class="close" aria-hidden="true" (click)="dismiss()">
-              <i class="material-icons">close</i>
-            </button>
-          </div>
-          <div class="modal-body">
-            <app-add-collaborator (submitted)="onCollaborationSubmit($event)" (intentValue)="checkIntent($event)"
-              (edit)=onCollaorationUpdate($event)>
-            </app-add-collaborator>
+        <!--Add Collaborator Modal-->
+        <div class="modal fade" id="collaboratorModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel"
+          aria-hidden="true">
+          <div class="modal-dialog modal-notice modal-lg">
+            <div class="modal-content">
+              <div class="modal-header">
+                <h5 class="modal-title" id="myModalLabel">How do I collaborate</h5>
+                <button mat-button type="button" class="close" aria-hidden="true" (click)="dismiss()">
+                  <i class="material-icons">close</i>
+                </button>
+              </div>
+              <div class="modal-body">
+                <app-add-collaborator (submitted)="onCollaborationSubmit($event)" (intentValue)="checkIntent($event)"
+                  (edit)=onCollaorationUpdate($event)>
+                </app-add-collaborator>
+              </div>
+            </div>
           </div>
         </div>
+        <!--Add Collaborator Modal-->
+
+        <!--Collaborate-->
+
+        <!-- </div> -->
+
       </div>
+
     </div>
-    <!--Add Collaborator Modal-->
-
-    <!--Collaborate-->
-
-    <!-- </div> -->
   </div>
 </div>
