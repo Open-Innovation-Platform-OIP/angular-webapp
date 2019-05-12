@@ -130,7 +130,6 @@ export class AddSolutionComponent
 
   localSectors: any[] = [];
 
-  is_edit = false;
   populationValue: Number;
   media_url = "";
   autosaveInterval: any;
@@ -145,7 +144,7 @@ export class AddSolutionComponent
   locationCtrl = new FormControl();
   filteredSectors: Observable<string[]>;
   filteredOwners: Observable<any[]>;
-
+  is_edit: Boolean = false;
   tags = [];
   removable = true;
   sizes = [
@@ -227,6 +226,15 @@ export class AddSolutionComponent
     return !form.get(field).valid && form.get(field).touched;
   }
 
+  showSuccessSwal(title) {
+    swal({
+      type: "success",
+      title: title,
+      timer: 3000,
+      showConfirmButton: false
+    }).catch(swal.noop);
+  }
+
   displayFieldCss(form: FormGroup, field: string) {
     return {
       "has-error": this.isFieldValid(form, field),
@@ -295,6 +303,7 @@ export class AddSolutionComponent
           })
           .valueChanges.subscribe(result => {
             this.solution["id"] = result.data.solutions[0].id;
+            this.is_edit = true;
             Object.keys(this.solution).map(key => {
               // console.log(key, result.data.problems[0][key]);
               if (result.data.solutions[0][key]) {
@@ -641,6 +650,25 @@ export class AddSolutionComponent
     }
   }
 
+  publishSolution() {
+    if (!this.is_edit) {
+      swal({
+        title: "Are you sure you want to publish the Solution",
+        // text: "You won't be able to revert this!",
+        type: "warning",
+        showCancelButton: true,
+        confirmButtonClass: "btn btn-success",
+        cancelButtonClass: "btn btn-warning",
+        confirmButtonText: "Yes",
+        buttonsStyling: false
+      }).then(result => {
+        this.submitSolutionToDB();
+      });
+    } else {
+      this.submitSolutionToDB();
+    }
+  }
+
   submitSolutionToDB() {
     // console.log(problem, "submitted");
     const upsert_solution = gql`
@@ -674,6 +702,7 @@ export class AddSolutionComponent
       }
     `;
     console.log("SOLUTION", this.solution);
+
     this.apollo
       .mutate({
         mutation: upsert_solution,
@@ -684,91 +713,13 @@ export class AddSolutionComponent
       .subscribe(
         result => {
           if (result.data.insert_solutions.returning.length > 0) {
+            if (this.is_edit) {
+              this.showSuccessSwal("Solution Updated");
+            } else {
+              this.showSuccessSwal("Solution Added");
+            }
             this.solution["id"] = result.data.insert_solutions.returning[0].id;
-            // const upsert_tags = gql`
-            //   mutation upsert_tags($tags: [tags_insert_input!]!) {
-            //     insert_tags(
-            //       objects: $tags
-            //       on_conflict: { constraint: tags_pkey, update_columns: [name] }
-            //     ) {
-            //       affected_rows
-            //       returning {
-            //         id
-            //         name
-            //       }
-            //     }
-            //   }
-            // `;
 
-            // this.saveOwnersInDB(this.solution["id"], this.owners);
-
-            // const tags = [];
-
-            // const problem_tags = new Set();
-            // console.log(this.sectors, "sectors");
-
-            // this.tagService.addTagsInDb(tags, "problems", this.problem["id"]);
-
-            // if (problem_tags.size > 0) {
-            //   const upsert_problem_tags = gql`
-            //     mutation upsert_problem_tags(
-            //       $problems_tags: [problems_tags_insert_input!]!
-            //     ) {
-            //       insert_problems_tags(
-            //         objects: $problems_tags
-            //         on_conflict: {
-            //           constraint: problems_tags_pkey
-            //           update_columns: [tag_id, problem_id]
-            //         }
-            //       ) {
-            //         affected_rows
-            //         returning {
-            //           tag_id
-            //           problem_id
-            //         }
-            //       }
-            //     }
-            //   `;
-            //   this.apollo
-            //     .mutate({
-            //       mutation: upsert_problem_tags,
-            //       variables: {
-            //         problems_tags: Array.from(problem_tags)
-            //       }
-            //     })
-            //     .subscribe(
-            //       data => {
-            //         if (!this.problem.is_draft) {
-            //           this.confirmSubmission();
-            //         } else if (!this.is_edit) {
-            //           this.router.navigate([
-            //             "problems",
-            //             this.problem["id"],
-            //             "edit"
-            //           ]);
-            //         }
-            //       },
-            //       err => {
-            //         console.error("Error uploading tags", err);
-            //         if (!this.problem.is_draft) {
-            //           this.confirmSubmission();
-            //         } else if (!this.is_edit) {
-            //           this.router.navigate([
-            //             "problems",
-            //             this.problem["id"],
-            //             "edit"
-            //           ]);
-            //         }
-            //       }
-            //     );
-            // }
-            // else {
-            //   if (!this.problem.is_draft) {
-            //     this.confirmSubmission();
-            //   } else if (!this.is_edit) {
-            //     this.router.navigate(["problems", this.problem["id"], "edit"]);
-            //   }
-            // }
             this.router.navigate(["solutions", this.solution["id"]]);
           }
         },

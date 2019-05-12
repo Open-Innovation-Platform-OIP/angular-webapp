@@ -7,9 +7,7 @@ import { Component, OnInit, Input } from "@angular/core";
 })
 export class SolutionCardComponent implements OnInit {
   @Input() solutionData: any;
-  numOfVotes: Number = 0;
-  numOfWatchers: Number = 0;
-  numOfValidations: Number = 0;
+
   validated: Boolean = false;
   link = "";
 

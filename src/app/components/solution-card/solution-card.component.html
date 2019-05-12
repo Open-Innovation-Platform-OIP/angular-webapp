@@ -18,18 +18,18 @@
       <i class="material-icons">
         thumb_up
       </i>
-      <!-- {{ solutionData.problem_voters.length }} -->
+      {{ solutionData.solution_voters.length }}
       <span>&nbsp;</span>
       <span>&nbsp;</span>
       <span>&nbsp;</span>
       <i class="material-icons">
         visibility
       </i>
-      <!-- {{ solutionData.problem_watchers.length }} -->
+      {{ solutionData.solution_watchers.length }}
       <span>&nbsp;</span>
       <span>&nbsp;</span>
       <span>&nbsp;</span>
-      <i class="material-icons" [ngStyle]="{'color': validated ? '#38e038' : '#878787' }"
+      <i class="material-icons" [ngStyle]="{'color': solutionData.solution_validations.length ? '#38e038' : '#878787' }"
         matTooltip="Expert validations" [matTooltipPosition]="'below'">
         how_to_reg
       </i>

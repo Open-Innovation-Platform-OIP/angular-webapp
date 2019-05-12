@@ -39,6 +39,16 @@ export class SolutionsViewComponent implements OnInit {
             updated_at
             featured_url
             is_deleted
+            solution_watchers {
+              user_id
+            }
+            solution_voters {
+              user_id
+            }
+
+            solution_validations(order_by: { edited_at: desc }) {
+              validated_by
+            }
           }
         }
       `,
