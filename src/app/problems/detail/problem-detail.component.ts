@@ -206,6 +206,7 @@ export class ProblemDetailComponent implements OnInit, OnDestroy {
   @Input() name: string;
   userId: Number;
   enrichment: any = [];
+  solutions: any = [];
   enrichmentDataToView: any;
   validationDataToView: any;
   validationDataToEdit: any;
@@ -218,6 +219,8 @@ export class ProblemDetailComponent implements OnInit, OnDestroy {
   public carouselTileItems$: Observable<any>;
   public carouselTileItemsValid$: Observable<number[]>;
   public carouselTileItemCollab$: Observable<number[]>;
+  public carouselTileItemSolution$: Observable<number[]>;
+
   public carouselTileConfig: NguCarouselConfig = {
     grid: { xs: 2, sm: 2, md: 2, lg: 2, all: 0 },
 
@@ -357,6 +360,21 @@ export class ProblemDetailComponent implements OnInit, OnDestroy {
         }
       })
     );
+
+    this.carouselTileItemSolution$ = interval(500).pipe(
+      startWith(-1),
+      take(2),
+      map(val => {
+        let data;
+
+        if (this.solutions && this.solutions.length < 1) {
+          this.solutions = [false];
+        } else {
+          data = this.solutions;
+          return data;
+        }
+      })
+    );
   }
 
   ngOnInit() {
@@ -458,6 +476,36 @@ export class ProblemDetailComponent implements OnInit, OnDestroy {
         }
         problem_voters {
           user_id
+        }
+
+        problems_solutions{
+          solution{
+
+            id
+            title
+            description
+            technology
+            impact
+            website_url
+            deployment
+            budget
+            image_urls
+            modified_at
+            updated_at
+            featured_url
+            is_deleted
+            solution_watchers {
+              user_id
+            }
+            solution_voters {
+              user_id
+            }
+
+            solution_validations(order_by: { edited_at: desc }) {
+              validated_by
+            }
+
+          }
         }
         discussionssByproblemId(where: { is_deleted: { _eq: false} },order_by: {created_at: desc}) {
           id
@@ -641,6 +689,8 @@ export class ProblemDetailComponent implements OnInit, OnDestroy {
       this.showNotification("bottom", "right", this.message);
     }
 
+    console.log(problem, "problem");
+
     // map core keys
     Object.keys(this.problemData).map(key => {
       // console.log(key, result.data.problems[0][key]);
@@ -670,7 +720,11 @@ export class ProblemDetailComponent implements OnInit, OnDestroy {
       }
     });
     this.collaborators = problem.problem_collaborators;
-    console.log(this.collaborators, "collaborators refresh");
+    this.solutions = problem.problems_solutions.map(problemData => {
+      return problemData.solution;
+    });
+
+    console.log(this.solutions, "solutions refresh");
 
     this.loadCarousels();
 
