@@ -168,6 +168,7 @@ export class AddSolutionComponent
   addOnBlur = true;
   options: string[] = ["One", "Two", "Three"];
   filteredOptions: Observable<string[]>;
+  problemId: Number;
 
   // canProceed: Boolean;
   // owners = [];
@@ -266,6 +267,9 @@ export class AddSolutionComponent
 
   ngOnInit() {
     console.log("solution wizard ng on in it");
+
+    this.problemId = Number(this.route.snapshot.paramMap.get("problemId"));
+    console.log(this.problemId, "problem id");
 
     this.route.params.pipe(first()).subscribe(params => {
       console.log(params, "params id");
@@ -669,6 +673,39 @@ export class AddSolutionComponent
     }
   }
 
+  linkSolutionToProblem() {
+    const upsert_solutions_problems = gql`
+      mutation upsert_problems_solutions(
+        $problems_solutions: [problems_solutions_insert_input!]!
+      ) {
+        insert_problems_solutions(
+          objects: $problems_solutions
+          on_conflict: {
+            constraint: problems_solutions_pkey
+            update_columns: []
+          }
+        ) {
+          affected_rows
+          returning {
+            problem_id
+          }
+        }
+      }
+    `;
+    const solution_problem_object = {
+      solution_id: this.solution["id"],
+      problem_id: this.problemId
+    };
+    console.log(solution_problem_object, "solution_problem");
+
+    return this.apollo.mutate({
+      mutation: upsert_solutions_problems,
+      variables: {
+        problems_solutions: [solution_problem_object]
+      }
+    });
+  }
+
   submitSolutionToDB() {
     // console.log(problem, "submitted");
     const upsert_solution = gql`
@@ -713,14 +750,22 @@ export class AddSolutionComponent
       .subscribe(
         result => {
           if (result.data.insert_solutions.returning.length > 0) {
-            if (this.is_edit) {
-              this.showSuccessSwal("Solution Updated");
-            } else {
-              this.showSuccessSwal("Solution Added");
-            }
             this.solution["id"] = result.data.insert_solutions.returning[0].id;
 
-            this.router.navigate(["solutions", this.solution["id"]]);
+            if (this.is_edit) {
+              this.showSuccessSwal("Solution Updated");
+              this.router.navigate(["solutions", this.solution["id"]]);
+            } else {
+              this.showSuccessSwal("Solution Added");
+              this.linkSolutionToProblem().subscribe(
+                result => {
+                  this.router.navigate(["solutions", this.solution["id"]]);
+                },
+                err => {
+                  console.error(JSON.stringify(err));
+                }
+              );
+            }
           }
         },
         err => {
