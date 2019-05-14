@@ -541,8 +541,7 @@
 
       <div class="card-footer">
         <div class="mr-auto">
-          <input type="button" *ngIf="!content.is_draft && !content.title" class="btn" onclick="window.history.back()"
-            name="cancel" value="Cancel">
+          <input type="button" class="btn" onclick="window.history.back()" name="cancel" value="Cancel">
           <!-- <input type="button" class="btn btn-previous btn-fill btn-default btn-wd disabled" name="previous"
             value="Previous"> -->
         </div>
@@ -560,8 +559,8 @@
 
 
 
-          <input type="button" class="btn btn-finish btn-fill btn-warning btn-wd" [disabled]="!isComplete()"
-            (click)="publishContent()" name="finish" value="Publish" style="display: none;">
+          <!-- <input type="button" class="btn btn-finish btn-fill btn-warning btn-wd" [disabled]="!isComplete()"
+            (click)="publishContent()" value="Publish" style="display: none;"> -->
         </div>
         <div class="clearfix"></div>
       </div>

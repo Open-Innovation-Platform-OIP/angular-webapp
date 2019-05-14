@@ -87,6 +87,7 @@ export class DashboardComponent implements OnInit, OnDestroy {
   ngOnInit() {
     // start loader
     this.ngxService.start();
+    console.log(this.auth.currentUserValue, "current user value");
     // console.log('on init')
     this.getDrafts();
     this.getUsersProblems();
@@ -119,8 +120,8 @@ export class DashboardComponent implements OnInit, OnDestroy {
     const draftsQuery = gql`
       {
         problems(where:{is_draft:{_eq:true},is_deleted:{_eq:false}, created_by:{_eq: ${
-      this.auth.currentUserValue.id
-      }}} order_by: {modified_at: desc}) ${this.problemQueryString}
+          this.auth.currentUserValue.id
+        }}} order_by: {modified_at: desc}) ${this.problemQueryString}
     }
     `;
     this.draftsQueryRef = this.apollo.watchQuery({
@@ -279,7 +280,7 @@ export class DashboardComponent implements OnInit, OnDestroy {
         organizationByOrganizationId{
           users(where:{id:{_neq:${this.auth.currentUserValue.id}}}) ${
       this.userQueryString
-      }
+    }
         }
       }
     }

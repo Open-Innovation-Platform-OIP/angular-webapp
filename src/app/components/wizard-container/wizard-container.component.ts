@@ -517,7 +517,7 @@ export class WizardContainerComponent
             .show();
           $($wizard)
             .find(".btn-finish")
-            .hide();
+            .show();
         }
 
         const button_text = navigation

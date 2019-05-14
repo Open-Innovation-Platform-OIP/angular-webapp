@@ -112,7 +112,11 @@ export class AuthService {
       !this.isExpired(user["token"])
     ) {
       localStorage.setItem("currentUser", JSON.stringify(user));
-      this.currentUserSubject.next(<User>user);
+      // this.currentUserSubject.next(<User>user);
+      this.currentUserSubject = new BehaviorSubject<any>(
+        JSON.parse(localStorage.getItem("currentUser"))
+      );
+      this.currentUser = this.currentUserSubject.asObservable();
       return user;
     }
     return false;
