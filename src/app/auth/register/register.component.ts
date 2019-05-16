@@ -38,9 +38,10 @@ export class RegisterComponent implements OnInit, OnDestroy {
       this.user.name &&
       isEmail(this.user.email) &&
       this.user.password.length >= 4 &&
-      this.user.password === this.user.confirmPassword &&
-      this.passwordRegex.test(this.user.password)
+      this.user.password === this.user.confirmPassword
     ) {
+      // &&
+      // this.passwordRegex.test(this.user.password)
       return true;
     }
     return false;
@@ -58,14 +59,19 @@ export class RegisterComponent implements OnInit, OnDestroy {
       res => {
         console.log(res);
         // this.router.navigateByUrl('/auth/verify');
-        this.router.navigateByUrl(`/auth/verify?email=${this.user.email}&step=1`);
+        this.router.navigateByUrl(
+          `/auth/verify?email=${this.user.email}&step=1`
+        );
       },
       err => {
         console.error(err.error);
         this.loading = false;
         const msg = err.error.message;
-        if (typeof(msg)==='string' && msg.toLowerCase().search('duplicate') != -1) {
-          alert('Email already registered. Please try logging in instead.');
+        if (
+          typeof msg === "string" &&
+          msg.toLowerCase().search("duplicate") != -1
+        ) {
+          alert("Email already registered. Please try logging in instead.");
         } else {
           alert(msg);
         }

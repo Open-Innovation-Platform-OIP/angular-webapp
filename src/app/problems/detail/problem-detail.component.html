@@ -73,6 +73,13 @@
                   <span>&nbsp;</span>
                 </div>
 
+                <strong *ngIf="ownerNames.length">Owners</strong>
+                <div>
+                  <span *ngFor="let owner of ownerNames" class="badge badge-warning"
+                    style="margin-right: 0.3em;">{{owner}}</span>
+                  <span>&nbsp;</span>
+                </div>
+
               </div>
             </div>
           </div>
@@ -96,7 +103,7 @@
 
             <!--  -->
             <div class="dropdown">
-              <button *ngIf="userId===problemData.created_by" [routerLink]="
+              <button *ngIf="(userId===problemData.created_by) || owners.has(userId)" [routerLink]="
                 '/problems/'+ problemData.id+'/edit'"
                 [disabled]="this.collaborators.length || this.enrichment.length || this.validation.length"
                 class="btn btn-sm btn-warning" aria-expanded="true">

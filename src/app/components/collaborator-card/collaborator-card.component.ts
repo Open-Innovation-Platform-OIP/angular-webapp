@@ -48,7 +48,11 @@ export class CollaboratorCardComponent implements OnInit, OnChanges {
   ngOnInit() {
     console.log("works ngoninit");
     this.currentUser = Number(this.auth.currentUserValue.id);
-    console.log(this.currentUser, "curr", this.collaboratorData.user_id);
+    console.log(
+      this.auth.currentUserValue.id,
+      "curr",
+      this.collaboratorData.user_id
+    );
   }
 
   ngOnChanges() {

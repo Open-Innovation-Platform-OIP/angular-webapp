@@ -62,13 +62,14 @@ export class LoginComponent implements OnInit, OnDestroy {
         token: params["token"]
       };
       this.returnUrl = params["returnUrl"] || "/";
-      // console.log(user, this.returnUrl);
+      console.log(user, "user on enter");
       if (user && user["token"] && user["id"] && user["email"]) {
         const res = this.auth.storeUser(user);
         if (res) {
           // this.
           console.log("valid token for", this.auth.currentUserValue.email);
-          this.router.navigate([this.returnUrl]);
+          // this.router.navigate([this.returnUrl]);
+          window.location.href = `${this.returnUrl}`;
         } else {
           // console.log('invalid token');
           alert("Invalid login. Please try again");

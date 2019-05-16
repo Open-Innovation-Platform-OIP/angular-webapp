@@ -80,6 +80,8 @@ export class ProblemDetailComponent implements OnInit, OnDestroy {
   popup: any;
   watchers = new Set();
   voters = new Set();
+  owners = new Set();
+  ownerNames: any = [];
   problemDataQuery: QueryRef<any>;
   userDataQuery: QueryRef<any>;
   count: any = 0;
@@ -379,6 +381,7 @@ export class ProblemDetailComponent implements OnInit, OnDestroy {
 
   ngOnInit() {
     this.userId = Number(this.auth.currentUserValue.id);
+    console.log(this.auth.currentUserValue, "current user value");
 
     this.getUserData(Number(this.auth.currentUserValue.id));
 
@@ -477,6 +480,8 @@ export class ProblemDetailComponent implements OnInit, OnDestroy {
         problem_voters {
           user_id
         }
+       
+       
 
         problems_solutions{
           solution{
@@ -507,6 +512,15 @@ export class ProblemDetailComponent implements OnInit, OnDestroy {
 
           }
         }
+
+        problem_owners {
+          user_id
+          user{
+            id
+            name
+          }
+        }
+
         discussionssByproblemId(where: { is_deleted: { _eq: false} },order_by: {created_at: desc}) {
           id
           created_by
@@ -755,6 +769,10 @@ export class ProblemDetailComponent implements OnInit, OnDestroy {
 
       problem.problem_voters.map(voter => {
         this.voters.add(voter.user_id);
+      });
+      problem.problem_owners.map(owner => {
+        this.owners.add(owner.user_id);
+        this.ownerNames.push(owner.user.name);
       });
       // adding embed urls
       let embedded_urls_arr = this.problemData.embed_urls.map(url => {

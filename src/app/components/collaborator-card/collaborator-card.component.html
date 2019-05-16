@@ -35,19 +35,19 @@
     </div>
   </div>
 
-  <hr *ngIf="collaboratorData.user_id === auth.currentUserValue.id">
+  <hr *ngIf="collaboratorData.user_id == auth.currentUserValue.id">
 
 
   <div class="stats">
     <button mat-button type="button" class="btn btn-sm btn-danger"
-      *ngIf="collaboratorData.user_id === auth.currentUserValue.id" (click)="deleteCollaboration()">
+      *ngIf="collaboratorData.user_id == auth.currentUserValue.id" (click)="deleteCollaboration()">
       <i class="material-icons">
         delete
       </i>
     </button>
     <span>&nbsp;</span>
     <button mat-button type="button" class="btn btn-sm btn-warning"
-      *ngIf="collaboratorData.user_id === auth.currentUserValue.id" (click)="editCollaboration()" data-toggle="modal"
+      *ngIf="collaboratorData.user_id == auth.currentUserValue.id" (click)="editCollaboration()" data-toggle="modal"
       data-target="#EditCollaborateModal">
       <i class="material-icons">
         create
