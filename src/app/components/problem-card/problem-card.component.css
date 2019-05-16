@@ -11,8 +11,8 @@
 
 .title {
     font-weight: 400;
-    max-lines: 2;
-    max-height: 5.5em;
+    max-lines: 1;
+    max-height: 1.2em;
     overflow: hidden;
 }
 

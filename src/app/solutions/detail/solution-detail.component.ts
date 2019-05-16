@@ -450,6 +450,25 @@ export class SolutionDetailComponent implements OnInit {
       
     }
 
+    discussions(where: { is_deleted: { _eq: false} },order_by: {created_at: desc}) {
+      id
+      created_by
+      created_at
+      modified_at
+      text
+      is_deleted
+      linked_comment_id
+      attachments
+      usersBycreatedBy {
+        name
+        photo_url
+      }
+      discussion_voters{
+        user_id
+        discussion_id
+      }
+    }
+
 
     
     
@@ -668,144 +687,142 @@ export class SolutionDetailComponent implements OnInit {
     ];
 
     // console.log(problem.discussionssByproblemId);
-    // problem.discussionssByproblemId.map(comment => {
-    //   if (comment.linked_comment_id) {
-    //     // console.log(comment);
-    //     // this comment is a reply - add it to the replies object
-    //     if (!this.replies[comment.linked_comment_id]) {
-    //       // create reply object so we can add reply
-    //       this.replies[comment.linked_comment_id] = [comment];
-    //     } else {
-    //       // comment reply already exists so push reply into the array
-    //       this.replies[comment.linked_comment_id].push(comment);
-    //     }
-    //     this.replies[comment.linked_comment_id] = this.removeDuplicateReplies(
-    //       this.replies[comment.linked_comment_id]
-    //     );
-    //   } else {
-    //     // this comment is a parent comment - add it to the comments object
-    //     // comment object does not exist
-    //     // console.log("COMMENT ID", comment.id);
-    //     this.comments[comment.id] = comment;
-    //     if (!this.replies[comment.id]) {
-    //       this.replies[comment.id] = []; // create an empty array for replies to this comment
-    //     }
-    //   }
-    // });
+    solution.discussions.map(comment => {
+      if (comment.linked_comment_id) {
+        // console.log(comment);
+        // this comment is a reply - add it to the replies object
+        if (!this.replies[comment.linked_comment_id]) {
+          // create reply object so we can add reply
+          this.replies[comment.linked_comment_id] = [comment];
+        } else {
+          // comment reply already exists so push reply into the array
+          this.replies[comment.linked_comment_id].push(comment);
+        }
+        this.replies[comment.linked_comment_id] = this.removeDuplicateReplies(
+          this.replies[comment.linked_comment_id]
+        );
+      } else {
+        // this comment is a parent comment - add it to the comments object
+        // comment object does not exist
+        // console.log("COMMENT ID", comment.id);
+        this.comments[comment.id] = comment;
+        if (!this.replies[comment.id]) {
+          this.replies[comment.id] = []; // create an empty array for replies to this comment
+        }
+      }
+    });
 
-    // this.popularDiscussions = Object.keys(this.replies)
-    //   .sort((a, b) => {
-    //     // sorting by date
-    //     if (this.comments[a]) {
-    //       var dateA = this.comments[a].modified_at;
-    //     }
-    //     if (this.comments[b]) {
-    //       var dateB = this.comments[b].modified_at;
-    //     }
-    //     if (dateA < dateB) {
-    //       return 1;
-    //     }
-    //     if (dateA > dateB) {
-    //       return -1;
-    //     }
+    this.popularDiscussions = Object.keys(this.replies)
+      .sort((a, b) => {
+        // sorting by date
+        if (this.comments[a]) {
+          var dateA = this.comments[a].modified_at;
+        }
+        if (this.comments[b]) {
+          var dateB = this.comments[b].modified_at;
+        }
+        if (dateA < dateB) {
+          return 1;
+        }
+        if (dateA > dateB) {
+          return -1;
+        }
 
-    //     return 0;
-    //   })
-    //   .sort((a, b) => {
-    //     // sorting by no. of replies
-    //     return this.replies[b].length - this.replies[a].length;
-    //   })
-    //   .filter(commentId => this.comments[commentId]) // to avoid undefined
-    //   .map(commentId => this.comments[commentId]); //mapping the sorted array
+        return 0;
+      })
+      .sort((a, b) => {
+        // sorting by no. of replies
+        return this.replies[b].length - this.replies[a].length;
+      })
+      .filter(commentId => this.comments[commentId]) // to avoid undefined
+      .map(commentId => this.comments[commentId]); //mapping the sorted array
 
     console.log("REPLIES", this.replies);
     console.log("COMMENTS", this.comments);
     console.log("POPULAR", this.popularDiscussions);
-    // }
-    // }
+  }
 
-    // removeDuplicateReplies(_replies: any[]) {
-    //   return _replies.filter(
-    //     (item, index, self) => index === self.findIndex(t => t.id === item.id)
-    //   );
-    // }
+  removeDuplicateReplies(_replies: any[]) {
+    return _replies.filter(
+      (item, index, self) => index === self.findIndex(t => t.id === item.id)
+    );
+  }
 
-    // sortComments(comments) {
-    //   // console.log("comments>>>>> ", comments);
-    //   let sortByDate = comments.sort(this.compareDateForSort);
-    //   let sharedComment = comments.filter(comment => {
-    //     if (this.qs.commentId) {
-    //       return comment.id === Number(this.qs.commentId);
-    //     }
-    //   });
+  sortComments(comments) {
+    // console.log("comments>>>>> ", comments);
+    let sortByDate = comments.sort(this.compareDateForSort);
+    let sharedComment = comments.filter(comment => {
+      if (this.qs.commentId) {
+        return comment.id === Number(this.qs.commentId);
+      }
+    });
 
-    //   let sortedComments = this.removeDuplicateReplies([
-    //     ...sharedComment,
-    //     ...sortByDate
-    //   ]);
+    let sortedComments = this.removeDuplicateReplies([
+      ...sharedComment,
+      ...sortByDate
+    ]);
 
-    //   if (comments.length < 4) {
-    //     return sortedComments;
-    //   } else {
-    //     return sortedComments.splice(0, this.numOfComments);
-    //   }
-    // }
+    if (comments.length < 4) {
+      return sortedComments;
+    } else {
+      return sortedComments.splice(0, this.numOfComments);
+    }
+  }
 
-    // deleteComment(comment) {
-    //   let deleteResp = this.discussionsService.deleteCommentsFromDB(comment.id);
-    //   deleteResp.subscribe(
-    //     result => {
-    //       console.log(result, "delete worked");
-    //       // location.reload();
-    //       if (
-    //         this.comments.hasOwnProperty(comment.id) &&
-    //         !this.comments[comment.id].linked_comment_id
-    //       ) {
-    //         delete this.comments[comment.id];
-    //       } else if (this.replies.hasOwnProperty(comment.linked_comment_id)) {
-    //         this.replies[comment.linked_comment_id].forEach((reply, index) => {
-    //           if (reply.linked_comment_id === comment.linked_comment_id) {
-    //             if (index < 1) {
-    //               this.replies[comment.linked_comment_id] = [];
-    //             } else {
-    //               this.replies[comment.linked_comment_id].splice(0, index);
-    //             }
-    //             return;
-    //           }
-    //         });
+  deleteComment(comment) {
+    let deleteResp = this.discussionsService.deleteCommentsFromDB(comment.id);
+    deleteResp.subscribe(
+      result => {
+        console.log(result, "delete worked");
+        // location.reload();
+        if (
+          this.comments.hasOwnProperty(comment.id) &&
+          !this.comments[comment.id].linked_comment_id
+        ) {
+          delete this.comments[comment.id];
+        } else if (this.replies.hasOwnProperty(comment.linked_comment_id)) {
+          this.replies[comment.linked_comment_id].forEach((reply, index) => {
+            if (reply.linked_comment_id === comment.linked_comment_id) {
+              if (index < 1) {
+                this.replies[comment.linked_comment_id] = [];
+              } else {
+                this.replies[comment.linked_comment_id].splice(0, index);
+              }
+              return;
+            }
+          });
+        }
+      },
+      err => {
+        console.error(JSON.stringify(err));
+      }
+    );
+  }
 
-    //     },
-    //     err => {
-    //       console.error(JSON.stringify(err));
-    //     }
-    //   );
-    // }
+  showMoreComments() {
+    if (this.numOfComments < this.objectValues(this.comments).length) {
+      this.numOfComments += 10;
+      this.sortComments(this.objectValues(this.comments));
+    }
+  }
 
-    // showMoreComments() {
-    //   if (this.numOfComments < this.objectValues(this.comments).length) {
-    //     this.numOfComments += 10;
-    //     this.sortComments(this.objectValues(this.comments));
-    //   }
-    // }
+  compareDateForSort(a, b) {
+    var dateA = a.modified_at;
+    var dateB = b.modified_at;
+    if (dateA < dateB) {
+      return 1;
+    }
+    if (dateA > dateB) {
+      return -1;
+    }
 
-    // compareDateForSort(a, b) {
-    //   var dateA = a.modified_at;
-    //   var dateB = b.modified_at;
-    //   if (dateA < dateB) {
-    //     return 1;
-    //   }
-    //   if (dateA > dateB) {
-    //     return -1;
-    //   }
+    return 0;
+  }
 
-    // return 0;
-    // }
-
-    // replyTo(discussionId) {
-    //   this.showReplyBox = true;
-    //   this.replyingTo = discussionId;
-    //   console.log(discussionId);
-    // }
+  replyTo(discussionId) {
+    this.showReplyBox = true;
+    this.replyingTo = discussionId;
+    console.log(discussionId);
   }
 
   checkUrlIsImg(url) {
@@ -818,7 +835,7 @@ export class SolutionDetailComponent implements OnInit {
     }
   }
 
-  toggleProblemAttachmentsIndex(dir: boolean) {
+  toggleSolutionAttachmentsIndex(dir: boolean) {
     if (
       dir &&
       this.solution_attachments_index < this.solution_attachments.length - 1
@@ -933,7 +950,7 @@ export class SolutionDetailComponent implements OnInit {
 
     this.mobile_menu_visible = 0;
   }
-  toggleWatchProblem() {
+  toggleWatchSolution() {
     // console.log('toggling watch flag');
     if (
       !(this.userId == this.solutionData.created_by) &&
@@ -1007,7 +1024,7 @@ export class SolutionDetailComponent implements OnInit {
     }
   }
 
-  toggleVoteProblem() {
+  toggleVoteSolution() {
     // console.log('toggling watch flag');
     if (
       !(this.userId == this.solutionData.created_by) &&
@@ -1240,7 +1257,7 @@ export class SolutionDetailComponent implements OnInit {
   submitComment(content, mentions, attachments?, comment_id?) {
     let comment = {
       created_by: this.auth.currentUserValue.id,
-      problem_id: this.problemData["id"],
+      solution_id: this.solutionData["id"],
       text: content,
       attachments: attachments // overwriting the incoming blobs
     };
@@ -1331,13 +1348,13 @@ export class SolutionDetailComponent implements OnInit {
   closeModal(e) {
     // console.log(e, "e");
     if (e.type === "click") {
-      let problemVideoTag: HTMLMediaElement = document.querySelector(
+      let solutionVideoTag: HTMLMediaElement = document.querySelector(
         "#modalVideo"
       );
 
       this.startInterval();
-      if (problemVideoTag) {
-        problemVideoTag.pause();
+      if (solutionVideoTag) {
+        solutionVideoTag.pause();
       }
     }
   }

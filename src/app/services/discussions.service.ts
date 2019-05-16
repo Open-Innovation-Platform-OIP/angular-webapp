@@ -7,7 +7,7 @@ export interface Comment {
   id?: number; // new comments will automatically get ids from PostgreSQL. Edits will have an id.
   created_by: number; // user_id
   problem_id?: number; // linked problem
-  solution_id?: number; // linked solution
+  solution_id?: any; // linked solution
   text: String; // text/html for comment
   linked_comment_id?: number; // include parent comment id if this is a reply
   attachments?: String[];

@@ -59,12 +59,12 @@
           </div>
           <div class="card-footer">
             <div class="stats">
-              <i class="material-icons actions" (click)="toggleVoteProblem()"
+              <i class="material-icons actions" (click)="toggleVoteSolution()"
                 [ngStyle]="{'color':voters.has(userId) ? '#1E90FF' : 'black' }">
                 thumb_up
               </i>
               <span>{{voters.size}}</span>
-              <i class="material-icons actions col-md-3" (click)="toggleWatchProblem()"
+              <i class="material-icons actions col-md-3" (click)="toggleWatchSolution()"
                 [ngStyle]="{'color':watchers.has(userId) ? '#1E90FF' : 'black' }">
                 visibility
               </i>
@@ -106,7 +106,7 @@
 
         <!--Show more images and videos-->
 
-        <!-- ----------------------------- problem attachments modal start----------------------------- -->
+        <!-- ----------------------------- solution attachments modal start----------------------------- -->
         <div class="modal fade" id="viewMoreImgModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel"
           aria-hidden="true">
           <div class="modal-dialog modal-dialog-centered modal-lg">
@@ -122,7 +122,7 @@
               </div>
               <div class="modal-footer justify-content-center" *ngIf="this.solution_attachments.length > 1">
                 <button mat-raised-button type="button" [disabled]="solution_attachments_index < 1"
-                  (click)="toggleProblemAttachmentsIndex(false)" class="btn btn-link btn-round btn-twitter"><i
+                  (click)="toggleSolutionAttachmentsIndex(false)" class="btn btn-link btn-round btn-twitter"><i
                     class="material-icons" style="zoom:2;">
                     keyboard_arrow_left
                   </i>
@@ -130,7 +130,7 @@
                 <div class="col-3 text-center"><strong>{{solution_attachments_index + 1}}</strong></div>
                 <button mat-raised-button type="button"
                   [disabled]="solution_attachments_index === solution_attachments.length - 1"
-                  class="btn btn-link btn-round btn-twitter" (click)="toggleProblemAttachmentsIndex(true)"><i
+                  class="btn btn-link btn-round btn-twitter" (click)="toggleSolutionAttachmentsIndex(true)"><i
                     class="material-icons" style="zoom:2;">
                     keyboard_arrow_right
                   </i>
@@ -139,7 +139,7 @@
             </div>
           </div>
         </div>
-        <!-- ----------------------------- problem attachments modal ends----------------------------- -->
+        <!-- ----------------------------- solution attachments modal ends----------------------------- -->
 
 
         <div class="row justify-content-center">
@@ -149,7 +149,7 @@
             </i>
           </a> -->
           <button mat-raised-button class="btn btn-rose btn-round" data-toggle="modal" data-target="#validatorModal"
-            matTooltip="Click to validate problem" [matTooltipPosition]="'below'"
+            matTooltip="Click to validate solution" [matTooltipPosition]="'below'"
             [disabled]="disableValidateButton || userId == solutionData.created_by || !auth.currentUserValue.id "
             *ngIf="auth.currentUserValue.id">Validate</button>
           <!-- <a mat-button>
@@ -211,7 +211,7 @@
           <div class="modal-dialog modal-notice">
             <div class="modal-content">
               <div class="modal-header">
-                <h5 class="modal-title" id="myModalLabel">Validate Problem</h5>
+                <h5 class="modal-title" id="myModalLabel">Validate Solution</h5>
                 <button mat-button type="button" class="close" data-dismiss="modal" aria-hidden="true">
                   <i class="material-icons">close</i>
                 </button>
@@ -307,7 +307,7 @@
             data-target="#collaboratorModal" matTooltip="Click to collaborate"
             [disabled]="disableCollaborateButton || userId == solutionData.created_by || !auth.currentUserValue.id "
             [matTooltipPosition]="'below'">Collaborate</button>
-          <p *ngIf="!auth.currentUserValue.id">Login to collaborate on this problem</p>
+          <p *ngIf="!auth.currentUserValue.id">Login to collaborate on this solution</p>
           <!-- <a mat-button>
             <i class="material-icons">
               keyboard_arrow_right
@@ -375,6 +375,113 @@
 
       </div>
 
+      <div class="col-md-4">
+        <div class="card" *ngIf="auth.currentUserValue.id">
+          <div class="card-header">
+            <div class="row justify-content-center">
+              <i class="material-icons">
+                highlight
+              </i>
+              <span>&nbsp;</span>
+              <span>&nbsp;</span>
+              <span>&nbsp;</span>
+              <span>&nbsp;</span>
+              <h5>Do you have a solution? <a [routerLink]="['/solutions/add',{problemId:problemData.id}]">click here</a>
+              </h5>
+            </div>
+          </div>
+        </div>
+        <div class="card">
+          <div class="card-header card-header-icon card-header-warning">
+            <div class="card-icon">
+              <i class="material-icons">forum</i>
+            </div>
+            <h4 class="card-title">Discussions</h4>
+          </div>
+          <div class="card-body" *ngIf="!auth.currentUserValue.id">
+            <p>Login to join discussion for this solution</p>
+          </div>
+          <div class="card-body" *ngIf="auth.currentUserValue.id">
+            <button mat-raised-button class="btn btn-warning btn-sm" (click)="showPopularDiscussions('latest')"
+              *ngIf="objectValues(comments).length">Latest</button>
+            <button mat-raised-button class="btn btn-warning btn-sm" *ngIf="objectValues(comments).length"
+              (click)="showPopularDiscussions('popular')">Popular</button>
+
+            <div id="accordion" role="tablist">
+              <div class="card-collapse">
+                <div class="card-header" role="tab" id="headingOne">
+                  <h5 class="mb-0">
+                    <a data-toggle="collapse" href="#newComment" *ngIf="auth.currentUserValue.id" aria-expanded=" true"
+                      aria-controls="newComment" class="collapsed">
+                      Join Discussion
+                      <i class="material-icons">keyboard_arrow_down</i>
+                    </a>
+                  </h5>
+                </div>
+                <div id="newComment" class="collapse show" role="tabpanel" aria-labelledby="headingOne"
+                  data-target="#newComment">
+                  <app-submit-comment [users]="objectValues(usersService.allUsers)" [actionText]="'Comment'"
+                    (submit)="onCommentSubmit($event)"></app-submit-comment>
+                </div>
+              </div>
+
+
+              <div *ngIf="!popular">
+                <app-display-comment [users]="objectValues(usersService.allUsers)" [comment]="comment"
+                  [replies]="replies[comment.id]" (reply)="onCommentSubmit($event, comment.id)"
+                  (commentToDelete)="deleteComment($event)" (shareCommentId)="shareComment($event)"
+                  (fileClicked)="displayModal($event)" *ngFor="let comment of sortComments(objectValues(comments))">
+                </app-display-comment>
+              </div>
+
+              <!--Popular-->
+
+              <div *ngIf="popular">
+                <app-display-comment [users]="objectValues(usersService.allUsers)" [comment]="popularDiscussion"
+                  [replies]="replies[popularDiscussion.id]" (reply)="onCommentSubmit($event, popularDiscussion.id)"
+                  (fileClicked)="displayModal($event)" *ngFor="let popularDiscussion of popularDiscussions">
+                </app-display-comment>
+              </div>
+
+              <!--Popular-->
+
+            </div>
+            <hr>
+            <a class="viewMoreComments" href="javascript:void(0)"
+              *ngIf="objectValues(comments).length > 5 && numOfComments < objectValues(comments).length"
+              (click)="showMoreComments()">
+              View more comments
+            </a>
+          </div>
+        </div>
+      </div>
+
+
+    </div>
+  </div>
+</div>
+
+<!-- discuss image and video modal starts -->
+
+<div class="modal fade" id="enlargeView" style="display: none;">
+  <div class="modal-dialog modal-lg">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-hidden="true"
+          (click)="closeModal($event)">close</button>
+      </div>
+      <div class="modal-body">
+        <app-display-modal *ngIf="modalSrc && modalSrc['url']" [source]="modalSrc">
+        </app-display-modal>
+      </div>
+      <div class="modal-footer justify-content-center" *ngIf="sources && sources['attachmentObj'].length > 1">
+        <button mat-raised-button type="button" [disabled]="sources['index'] < 1" (click)="toggleFileSrc(false)"
+          class="btn btn-info btn-round"><span class="carousel-control-prev-icon" aria-hidden="true"></span></button>
+        <div class="col-3"></div>
+        <button mat-raised-button type="button" [disabled]="sources['index'] == sources['attachmentObj'].length-1"
+          class="btn btn-info btn-round" (click)="toggleFileSrc(true)"><span class="carousel-control-next-icon"
+            aria-hidden="true"></span></button>
+      </div>
     </div>
   </div>
 </div>
