@@ -403,6 +403,8 @@ export class AddSolutionComponent
           console.log(result, "result from search");
           if (result.data.search_problems_v2.length > 0) {
             // console.log(result.data.search_problems_v2.length, "search");
+            this.smartSearchResults = [];
+            this.searchResults = [];
 
             result.data.search_problems_v2.map(sector => {
               this.smartSearchResults.push(sector);
