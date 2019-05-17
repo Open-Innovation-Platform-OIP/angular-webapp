@@ -25,6 +25,8 @@ import {
   switchMap
 } from "rxjs/operators";
 
+import { domain } from "../../../environments/environment";
+
 import { ProblemService } from "../../services/problem.service";
 import { AuthService } from "../../services/auth.service";
 import { UsersService } from "../../services/users.service";
@@ -60,7 +62,7 @@ interface queryString {
   commentId: number;
 }
 
-const domain = "https://social-alpha-open-innovation.firebaseapp.com";
+// const domain = "https://app.socialalpha.jaagalabs.com";
 
 @Component({
   selector: "app-problem-detail",

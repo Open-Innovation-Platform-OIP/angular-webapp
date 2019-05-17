@@ -138,11 +138,14 @@ export class AddSolutionComponent
   input_pattern = new RegExp("^s*");
 
   readonly separatorKeysCodes: number[] = [ENTER, COMMA];
-  searchResults = {};
+  // searchResults = {};
+  searchResults = [];
+  smartSearchResults = [];
   sectorCtrl = new FormControl();
   ownersCtrl = new FormControl();
   locationCtrl = new FormControl();
-  filteredSectors: Observable<string[]>;
+  filteredSectors: Observable<any>;
+  // filteredSectors = [];
   filteredOwners: Observable<any[]>;
   is_edit: Boolean = false;
   tags = [];
@@ -174,11 +177,36 @@ export class AddSolutionComponent
   // owners = [];
   voted_by = [];
   watched_by = [];
+  problem = {
+    title: "",
+    description: "",
+    organization: "",
+    impact: "",
+    extent: "",
+    location: [],
+    min_population: 0,
+    max_population: 0,
+    beneficiary_attributes: "",
+    resources_needed: "",
+    image_urls: [],
+    video_urls: [],
+    featured_url: "",
+    embed_urls: [],
+    featured_type: "",
+
+    created_by: Number(this.auth.currentUserValue.id),
+    is_draft: true,
+
+    attachments: []
+  };
   solution = {
     title: "",
     description: "",
     technology: "",
+    resources: "",
     impact: "",
+    timeline: "",
+    pilots: "",
     website_url: "",
     deployment: 0,
     budget: {
@@ -213,7 +241,10 @@ export class AddSolutionComponent
       title: [null, Validators.required],
       description: [null, Validators.required],
       technology: [null, Validators.required],
+      resources: [null, null],
       impact: [null, null],
+      timeline: [null, null],
+      pilots: [null, null],
       deployment: [null, Validators.required],
       website_url: [null, null],
       assessment_metrics: [null, Validators.required],
@@ -221,6 +252,16 @@ export class AddSolutionComponent
       budget: [null, null],
       budgetTest: [null, null]
     });
+
+    canProceed = true;
+
+    this.problem.organization = "Social Alpha";
+    this.filteredSectors = this.sectorCtrl.valueChanges.pipe(
+      startWith(null),
+      map((sector: string | null) => (sector ? this._filter(sector) : []))
+    );
+
+    console.log("", this.filteredSectors);
   }
 
   isFieldValid(form: FormGroup, field: string) {
@@ -241,6 +282,212 @@ export class AddSolutionComponent
       "has-error": this.isFieldValid(form, field),
       "has-feedback": this.isFieldValid(form, field)
     };
+  }
+
+  add(event: MatChipInputEvent): void {
+    if (!this.matAutocomplete.isOpen) {
+      const input = event.input;
+      const value = event.value;
+      // Add our sector
+      if ((value || "").trim()) {
+        this.localSectors.push(value.trim().toUpperCase());
+      }
+      // Reset the input value
+      if (input) {
+        input.value = "";
+      }
+      this.sectorCtrl.setValue(null);
+      // this.tagAdded.emit(this.sectors);
+    }
+  }
+
+  selected(event: MatAutocompleteSelectedEvent): void {
+    // console.log(this.sectors, "test for sector");
+    // console.log("SELECTED", event);
+    this.localSectors.push(event.option.value);
+    this.sectorInput.nativeElement.value = "";
+    this.sectorCtrl.setValue(null);
+    this.tagAdded.emit(this.localSectors);
+  }
+
+  async _filter(value: string) {
+    const filterValue = value.toLowerCase();
+    // return Object.keys(this.tagService.allTags).filter(
+    //   sector => sector.toLowerCase().indexOf(filterValue) === 0
+    // );
+    console.log(this.smartSearch(filterValue), "smart search");
+    this.smartSearch(filterValue).subscribe(
+      result => {
+        console.log(result, "result from search");
+        if (result.data.search_problems_v2.length > 0) {
+          // console.log(result.data.search_problems_v2.length, "search");
+          // return result.data.search_problems_v2.map(sector => {
+          //   console.log(sector.title, "result");
+          //   this.searchResults.push(sector.title);
+          //   console.log("search results", this.searchResults);
+          //   return this.searchResults;
+          // });
+          // console.log(this.searchResults, ">>>>>searchresults");
+          // if (!this.is_edit) {
+          //   canProceed = false;
+          // }
+        }
+      },
+      err => {
+        // console.log(err, "error from smart search");
+        console.error(JSON.stringify(err));
+      }
+    );
+    // return [];
+  }
+
+  remove(sector: string): void {
+    const index = this.localSectors.indexOf(sector);
+    if (index >= 0) {
+      this.localSectors.splice(index, 1);
+    }
+
+    this.tagRemoved.emit(sector);
+  }
+
+  saveProblemsInDB(solutionId, problemsArray) {
+    let problems = [];
+    problems = problemsArray.map(problem => {
+      return {
+        problem_id: problem.id,
+        solution_id: solutionId
+      };
+    });
+    const upsert_problems_solutions = gql`
+      mutation upsert_problems_solutions(
+        $problems_solutions: [problems_solutions_insert_input!]!
+      ) {
+        insert_problems_solutions(
+          objects: $problems_solutions
+          on_conflict: {
+            constraint: problems_solutions_pkey
+            update_columns: []
+          }
+        ) {
+          affected_rows
+          returning {
+            problem_id
+            solution_id
+          }
+        }
+      }
+    `;
+    console.log(problems, "problem added");
+    this.apollo
+      .mutate({
+        mutation: upsert_problems_solutions,
+        variables: {
+          problems_solutions: problems
+        }
+      })
+      .subscribe(
+        data => {
+          console.log("problem adddition worked");
+        },
+        error => {
+          console.error(JSON.stringify(error));
+        }
+      );
+  }
+
+  searchProblem(event) {
+    console.log("Search Event", event.target.value);
+    if (event.target.value.length) {
+      this.smartSearch(event.target.value).subscribe(
+        result => {
+          console.log(result, "result from search");
+          if (result.data.search_problems_v2.length > 0) {
+            // console.log(result.data.search_problems_v2.length, "search");
+
+            result.data.search_problems_v2.map(sector => {
+              this.smartSearchResults.push(sector);
+              console.log("SMART", this.smartSearchResults);
+              console.log(sector.title, "result");
+              this.searchResults.push({ id: sector.id, title: sector.title });
+              console.log("search results", this.searchResults);
+              // return this.searchResults;
+            });
+            // console.log(this.searchResults, ">>>>>searchresults");
+            // if (!this.is_edit) {
+            //   canProceed = false;
+            // }
+          }
+        },
+        err => {
+          // console.log(err, "error from smart search");
+          console.error(JSON.stringify(err));
+        }
+      );
+    }
+  }
+
+  smartSearch(searchKey) {
+    // let searchKey = this.problem.title + " " + this.problem.description;
+    // searchKey = searchKey.replace(/[^a-zA-Z ]/g, "");
+    // console.log(searchKey, "searchkey");
+
+    if (searchKey.length) {
+      // this.searchResults = {};
+      this.searchResults = [];
+      return this.apollo.watchQuery<any>({
+        query: gql`query {
+                    search_problems_v2(
+                    args: {search: "${searchKey.toLowerCase()}"},where: { is_draft: { _eq: false } }
+                    ){
+                    id
+                    title
+                    description
+                    modified_at
+                    updated_at
+                    image_urls
+                    featured_url
+                   
+                    
+                    problem_voters{
+                      problem_id
+                      user_id
+                    }
+                    problem_watchers{
+                      problem_id
+                      user_id
+      
+                    }
+                    problem_tags {
+                        tag {
+                            name
+                        }
+                    }
+                   
+                    problem_validations{
+                      comment
+                      agree
+                      created_at
+                      files
+                      validated_by
+                      edited_at
+                      is_deleted
+              
+                      problem_id
+                      user {
+                        id
+                        name
+                      } 
+                      
+                    }
+                    }
+                    }`,
+        fetchPolicy: "no-cache"
+        // pollInterval: 200
+      }).valueChanges;
+    } else {
+      // this.searchResults = {};
+      this.searchResults = [];
+    }
   }
 
   selectedOwner(event: MatAutocompleteSelectedEvent): void {
@@ -269,7 +516,10 @@ export class AddSolutionComponent
     console.log("solution wizard ng on in it");
 
     this.problemId = Number(this.route.snapshot.paramMap.get("problemId"));
-    console.log(this.problemId, "problem id");
+    console.log(this.route.snapshot.paramMap, "problem param");
+    if (this.problemId) {
+      this.localSectors.push({ id: this.problemId });
+    }
 
     this.route.params.pipe(first()).subscribe(params => {
       console.log(params, "params id");
@@ -285,7 +535,7 @@ export class AddSolutionComponent
                             title
                             created_by
                             technology
-                            
+                            resources                            
                             description
                             website_url
                             deployment
@@ -295,9 +545,17 @@ export class AddSolutionComponent
                             video_urls
                             attachments
                             impact
+                            timeline
+                            pilots
                             embed_urls
                             featured_url
                             featured_type
+                            problems_solutions{
+                              problem{
+                                id
+                                title
+                              }
+                            }
                             
                             }
                         }
@@ -315,6 +573,9 @@ export class AddSolutionComponent
               }
               // this.solution.is_draft = result.data.problems[0].is_draft;
             });
+            result.data.solutions[0].problems_solutions.map(problem => {
+              this.localSectors.push(problem.problem);
+            });
             console.log(result, "SOLUTIONS");
           });
       }
@@ -325,7 +586,10 @@ export class AddSolutionComponent
       title: [null, Validators.required],
       description: [null, Validators.required],
       technology: [null, Validators.required],
+      resources: [null, null],
       impact: [null, null],
+      timeline: [null, null],
+      pilots: [null, null],
       deployment: [null, Validators.required],
       website_url: [null, null],
       assessment_metrics: [null, Validators.required],
@@ -718,8 +982,11 @@ export class AddSolutionComponent
               title
               description
               technology
+              resources
               website_url
               impact
+              timeline
+              pilots
               deployment
               is_draft
               image_urls
@@ -752,19 +1019,21 @@ export class AddSolutionComponent
           if (result.data.insert_solutions.returning.length > 0) {
             this.solution["id"] = result.data.insert_solutions.returning[0].id;
 
+            this.saveProblemsInDB(this.solution["id"], this.localSectors);
+
             if (this.is_edit) {
               this.showSuccessSwal("Solution Updated");
               this.router.navigate(["solutions", this.solution["id"]]);
             } else {
               this.showSuccessSwal("Solution Added");
-              this.linkSolutionToProblem().subscribe(
-                result => {
-                  this.router.navigate(["solutions", this.solution["id"]]);
-                },
-                err => {
-                  console.error(JSON.stringify(err));
-                }
-              );
+              // this.linkSolutionToProblem().subscribe(
+              //   result => {
+              this.router.navigate(["solutions", this.solution["id"]]);
+              //   },
+              //   err => {
+              //     console.error(JSON.stringify(err));
+              //   }
+              // );
             }
           }
         },

@@ -12,3 +12,5 @@ export const digitalocean = {
   secretAccessKey: "j93g467IKFw7xHPeLa1QjPflfMHT30/OtwJghVA6qRA",
   region: "sgp1" // Singapore region
 };
+
+export const domain = "https://app.socialalpha.jaagalabs.com";
