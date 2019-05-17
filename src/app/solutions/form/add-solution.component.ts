@@ -494,6 +494,7 @@ export class AddSolutionComponent
                     updated_at
                     image_urls
                     featured_url
+                    location
                    
                     
                     problem_voters{

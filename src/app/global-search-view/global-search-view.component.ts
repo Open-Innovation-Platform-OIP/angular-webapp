@@ -18,10 +18,12 @@ declare var $: any;
 export class GlobalSearchViewComponent implements OnInit, OnChanges {
   @Input() problemData: any;
   @Input() userData: any;
+  @Input() solutionData: any;
 
   noResult: string = "No Search Results";
   problemSearchResults: any = [];
   userSearchResults: any = [];
+  solutionSearchResults: any = [];
   globalProblemSearchResults: any = [];
 
   constructor(
@@ -55,6 +57,7 @@ export class GlobalSearchViewComponent implements OnInit, OnChanges {
     if (searchInput.length >= 3) {
       this.globalProblemSearchResults = [];
       this.userSearchResults = [];
+      this.solutionSearchResults = [];
       // this.searchResults = [];
       this.searchService.problemSearch(searchInput).subscribe(
         value => {
@@ -74,9 +77,19 @@ export class GlobalSearchViewComponent implements OnInit, OnChanges {
           console.error(JSON.stringify(error));
         }
       );
+
+      this.searchService.solutionSearch(searchInput).subscribe(
+        value => {
+          this.solutionSearchResults = value.data.search_solutions_v2;
+        },
+        error => {
+          console.log(JSON.stringify(error));
+        }
+      );
     } else {
       this.globalProblemSearchResults = [];
       this.userSearchResults = [];
+      this.solutionSearchResults = [];
     }
   }
 }

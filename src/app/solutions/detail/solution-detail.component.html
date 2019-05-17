@@ -1,11 +1,10 @@
 <div class="main-content">
   <div class="container-fluid">
     <div class="row">
-
-      <!--Problem Details-->
+      <!--Solution Details-->
       <div class="col-md-8">
         <div class="card card-product">
-          <div class="card-header card-header-rose">
+          <div class="card-header card-header-rose fixed-top">
             <h4 class="card-title">{{solutionData.title}}</h4>
             <p class="card-category"><b>Created By :
                 {{ (auth.currentUserValue.id == solutionData.created_by) ? 'You' : solutionOwner }}</b></p>

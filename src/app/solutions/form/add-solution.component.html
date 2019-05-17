@@ -93,7 +93,8 @@
                           <mat-form-field class="example-full-width has-label"
                             [ngClass]="displayFieldCss(type, 'title')">
                             <input type="text" matInput id="title" appAutofocus placeholder="Title *"
-                              formControlName="title" [(ngModel)]="solution.title">
+                              formControlName="title" [(ngModel)]="solution.title"
+                              (input)="smartSearch($event.target.value)">
                           </mat-form-field>
                         </div>
                       </div>
@@ -509,7 +510,7 @@
                   <input type="button" class="btn btn-previous btn-fill btn-default btn-wd disabled" name="previous"
                     value="Previous">
                   <input type="button" class="publish btn btn-fill btn-rose btn-wd" (click)="publishSolution()"
-                    value="Publish">
+                    value="Publish" [disabled]="!isComplete()">
                   <input type="button" class="btn btn-next btn-fill btn-rose btn-wd" [disabled]="!isComplete()"
                     name="next" value="Next">
                   <!-- <input type="button" class="btn btn-finish btn-fill btn-warning btn-wd" [disabled]="!isComplete()"

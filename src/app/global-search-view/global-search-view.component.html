@@ -2,17 +2,8 @@
   <div class="container-fluid">
     <div class="row justify-content-center" style="margin-top: 2%;">
       <div class="col-md-6 input-group">
-        <input
-          type="search"
-          value=""
-          class="form-control"
-          placeholder="Search..."
-          name="searchInput"
-          appAutofocus
-          [(ngModel)]="searchInput"
-          (input)="globalSearch($event.target.value)"
-          autocomplete="off"
-        />
+        <input type="search" value="" class="form-control" placeholder="Search..." name="searchInput" appAutofocus
+          [(ngModel)]="searchInput" (input)="globalSearch($event.target.value)" autocomplete="off" />
       </div>
     </div>
     <hr />
@@ -25,14 +16,11 @@
           </app-problem-card>
           <br />
         </div>
-        <div
-          class="card"
-          *ngIf="
+        <div class="card" *ngIf="
             searchInput &&
             globalProblemSearchResults &&
             globalProblemSearchResults.length === 0
-          "
-        >
+          ">
           <h5 class="card-body text-center">
             No search results for
             <b>Problems</b>
@@ -42,7 +30,14 @@
       <div class="col-md-4">
         <h4 class="card-title text-center">Solutions</h4>
         <br />
-        <div class="card" *ngIf="searchInput">
+        <div *ngFor="let solution of solutionSearchResults">
+          <app-solution-card *ngIf="solution" [solutionData]="solution">
+          </app-solution-card>
+          <br />
+        </div>
+        <div class="card" *ngIf="searchInput &&
+        solutionSearchResults &&
+        solutionSearchResults.length === 0">
           <h5 class="card-body text-center">
             No search results for <b>Solutions</b>
           </h5>
@@ -55,12 +50,9 @@
           <app-profile-card *ngIf="user" [userData]="user"></app-profile-card>
           <br />
         </div>
-        <div
-          class="card"
-          *ngIf="
+        <div class="card" *ngIf="
             searchInput && userSearchResults && userSearchResults.length === 0
-          "
-        >
+          ">
           <h5 class="card-body text-center">
             No search results for <b>Contributors</b>
           </h5>
