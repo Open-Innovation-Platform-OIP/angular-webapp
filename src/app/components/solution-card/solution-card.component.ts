@@ -8,6 +8,9 @@ import { Component, OnInit, Input } from "@angular/core";
 export class SolutionCardComponent implements OnInit {
   @Input() solutionData: any;
 
+  numOfVotes: Number = 0;
+  numOfWatchers: Number = 0;
+  numOfValidations: Number = 0;
   validated: Boolean = false;
   link = "";
 
@@ -16,6 +19,26 @@ export class SolutionCardComponent implements OnInit {
   ngOnInit() {
     console.log("Solution Data", this.solutionData);
     this.link += `/solutions/${this.solutionData.id}`;
+
+    if (
+      this.solutionData.solution_voters &&
+      this.solutionData.solution_voters.length
+    ) {
+      this.numOfVotes = this.solutionData.solution_voters.length;
+    }
+    if (
+      this.solutionData.solution_watchers &&
+      this.solutionData.solution_watchers.length
+    ) {
+      this.numOfWatchers = this.solutionData.solution_watchers.length;
+    }
+    if (
+      this.solutionData.solution_validations &&
+      this.solutionData.solution_validations.length
+    ) {
+      this.numOfValidations = this.solutionData.solution_validations.length;
+      this.validated = true;
+    }
   }
 
   checkUrlIsImg(url) {

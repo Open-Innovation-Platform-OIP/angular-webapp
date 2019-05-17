@@ -105,4 +105,48 @@ export class SearchService {
       // pollInterval: 500
     }).valueChanges;
   }
+
+  solutionSearch(searchInput) {
+    return this.apollo.watchQuery<any>({
+      query: gql`query {
+          search_solutions_v2(args: {search: "${searchInput}"}) {
+            id
+            title
+            description
+            modified_at
+            updated_at
+            image_urls
+            featured_url
+
+            solution_voters{
+              solution_id
+              user_id
+            }
+            solution_watchers{
+              solution_id
+              user_id
+
+            }
+            solution_validations {
+              comment
+              agree
+              created_at
+              files
+              validated_by
+              edited_at
+              is_deleted
+      
+              solution_id
+              user {
+                id
+                name
+              } 
+              
+            }
+        }    
+    }
+        `
+      // pollInterval: 500
+    }).valueChanges;
+  }
 }

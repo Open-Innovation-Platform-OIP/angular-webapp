@@ -260,8 +260,12 @@ export class AddSolutionComponent
       startWith(null),
       map((sector: string | null) => (sector ? this._filter(sector) : []))
     );
-
     console.log("", this.filteredSectors);
+
+    this.filteredOwners = this.ownersCtrl.valueChanges.pipe(
+      startWith(null),
+      map((owner: string | null) => (owner ? this.filterOwners(owner) : []))
+    );
   }
 
   isFieldValid(form: FormGroup, field: string) {
@@ -395,6 +399,48 @@ export class AddSolutionComponent
       );
   }
 
+  saveOwnersInDB(solutionId, ownersArray) {
+    let owners = [];
+    owners = ownersArray.map(owner => {
+      return {
+        user_id: owner.id,
+        solution_id: solutionId
+      };
+    });
+    const upsert_solution_owners = gql`
+      mutation upsert_solution_owners(
+        $solution_owners: [solution_owners_insert_input!]!
+      ) {
+        insert_solution_owners(
+          objects: $solution_owners
+          on_conflict: { constraint: solution_owners_pkey, update_columns: [] }
+        ) {
+          affected_rows
+          returning {
+            user_id
+            solution_id
+          }
+        }
+      }
+    `;
+    console.log(owners, "owners added");
+    this.apollo
+      .mutate({
+        mutation: upsert_solution_owners,
+        variables: {
+          solution_owners: owners
+        }
+      })
+      .subscribe(
+        data => {
+          console.log("owner adddition worked");
+        },
+        error => {
+          console.error(JSON.stringify(error));
+        }
+      );
+  }
+
   searchProblem(event) {
     console.log("Search Event", event.target.value);
     if (event.target.value.length) {
@@ -448,6 +494,7 @@ export class AddSolutionComponent
                     updated_at
                     image_urls
                     featured_url
+                    location
                    
                     
                     problem_voters{
@@ -489,6 +536,21 @@ export class AddSolutionComponent
     } else {
       // this.searchResults = {};
       this.searchResults = [];
+    }
+  }
+
+  private filterOwners(value: String): any[] {
+    if (typeof value === "string") {
+      console.log(value, "value in filtered owners");
+      const filterValue = value.toLowerCase();
+      console.log(filterValue, "value from filter");
+
+      return Object.values(this.usersService.allUsers).filter(owner => {
+        if (owner["value"].toLowerCase().indexOf(filterValue) === 0) {
+          console.log(owner, "owner", filterValue);
+          return owner;
+        }
+      });
     }
   }
 
@@ -558,6 +620,12 @@ export class AddSolutionComponent
                                 title
                               }
                             }
+                            solution_owners {
+                              user {
+                                id
+                                name
+                              }
+                            }
                             
                             }
                         }
@@ -579,6 +647,15 @@ export class AddSolutionComponent
               this.localSectors.push(problem.problem);
             });
             console.log(result, "SOLUTIONS");
+            if (result.data.solutions[0].solution_owners) {
+              result.data.solutions[0].solution_owners.forEach(ownerArray => {
+                if (
+                  ownerArray.user.id != Number(this.auth.currentUserValue.id)
+                ) {
+                  this.owners.push(ownerArray.user);
+                }
+              });
+            }
           });
       }
     });
@@ -1022,6 +1099,7 @@ export class AddSolutionComponent
             this.solution["id"] = result.data.insert_solutions.returning[0].id;
 
             this.saveProblemsInDB(this.solution["id"], this.localSectors);
+            this.saveOwnersInDB(this.solution["id"], this.owners);
 
             if (this.is_edit) {
               this.showSuccessSwal("Solution Updated");
@@ -1375,7 +1453,8 @@ export class AddSolutionComponent
       this.solution.impact &&
       this.solution.deployment &&
       this.solution.budget.title &&
-      this.solution.budget.cost
+      this.solution.budget.cost &&
+      this.owners.length
     );
   }
 
