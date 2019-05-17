@@ -48,10 +48,10 @@
                           </div>
 
                           <mat-form-field class="example-chip-list">
-                            <input placeholder="Select Problem *" #sectorInput [formControl]="sectorCtrl" autofocus
+                            <input placeholder='Select Problem *' #sectorInput [formControl]="sectorCtrl" autofocus
                               [matAutocomplete]="auto" [matChipInputFor]="chipList"
                               [matChipInputSeparatorKeyCodes]="separatorKeysCodes" [matChipInputAddOnBlur]="addOnBlur"
-                              (keyup)="searchProblem($event)" (input)="smartSearch($event.target.value)">
+                              (keyup)="searchProblem($event)">
                             <mat-chip-list #chipList>
                             </mat-chip-list>
                             <mat-autocomplete #auto="matAutocomplete" (optionSelected)="selected($event)">

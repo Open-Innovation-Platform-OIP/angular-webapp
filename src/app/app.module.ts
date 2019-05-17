@@ -108,14 +108,14 @@ export class MaterialModule {}
 //   dsn: "https://aa3877830cee4ba6b6999be089316f57@sentry.io/1408858"
 // });
 
-@Injectable()
-export class SentryErrorHandler implements ErrorHandler {
-  constructor() {}
-  handleError(error) {
-    Sentry.captureException(error.originalError || error);
-    throw error;
-  }
-}
+// @Injectable()
+// export class SentryErrorHandler implements ErrorHandler {
+//   constructor() {}
+//   handleError(error) {
+//     Sentry.captureException(error.originalError || error);
+//     throw error;
+//   }
+// }
 
 @NgModule({
   imports: [
