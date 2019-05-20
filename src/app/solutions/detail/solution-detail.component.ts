@@ -91,6 +91,7 @@ export class SolutionDetailComponent implements OnInit {
   showReplyBox = false;
   showCommentBox = false;
   numOfComments = 5;
+  problems = [];
 
   solutionData = {
     id: "",
@@ -219,6 +220,7 @@ export class SolutionDetailComponent implements OnInit {
   public carouselTileItems$: Observable<any>;
   public carouselTileItemsValid$: Observable<number[]>;
   public carouselTileItemCollab$: Observable<number[]>;
+  public carouselTileItemProblems$: Observable<number[]>;
   public carouselTileConfig: NguCarouselConfig = {
     grid: { xs: 2, sm: 2, md: 2, lg: 2, all: 0 },
 
@@ -339,6 +341,21 @@ export class SolutionDetailComponent implements OnInit {
           this.collaborators = [false];
         } else {
           data = this.collaborators;
+          return data;
+        }
+      })
+    );
+
+    this.carouselTileItemProblems$ = interval(500).pipe(
+      startWith(-1),
+      take(2),
+      map(val => {
+        let data;
+
+        if (this.problems && this.problems.length < 1) {
+          this.problems = [false];
+        } else {
+          data = this.problems;
           return data;
         }
       })
@@ -466,6 +483,35 @@ export class SolutionDetailComponent implements OnInit {
       discussion_voters{
         user_id
         discussion_id
+      }
+    }
+
+    problems_solutions{
+      problem{
+        id
+            title
+            description
+            location
+            resources_needed
+            image_urls
+            modified_at
+            updated_at
+
+            featured_url
+
+            is_deleted
+            problem_voters {
+              problem_id
+              user_id
+            }
+            problem_watchers {
+              problem_id
+              user_id
+            }
+            problem_validations {
+              validated_by
+            }
+          
       }
     }
 
@@ -633,6 +679,11 @@ export class SolutionDetailComponent implements OnInit {
         this.disableCollaborateButton = true;
       }
     });
+
+    this.problems = solution.problems_solutions.map(problemData => {
+      return problemData.problem;
+    });
+
     this.collaborators = solution.solution_collaborators;
 
     // this.collaborators = problem.problem_collaborators;

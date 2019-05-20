@@ -520,6 +520,7 @@
           <!-- <ng-template #notUser>&nbsp; No collaborators yet.</ng-template> -->
 
         </div>
+        <hr>
 
 
 
@@ -530,6 +531,7 @@
                 keyboard_arrow_left
               </i>
             </a> -->
+          <h4 *ngIf="solutions[0]">Solutions</h4>
           <!-- <button mat-raised-button *ngIf="auth.currentUserValue.id" class="btn btn-warning btn-round"
             matTooltip="Click to add enrichment" [matTooltipPosition]="'below'"
             [disabled]="disableEnrichButton || !auth.currentUserValue.id"
