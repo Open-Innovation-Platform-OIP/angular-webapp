@@ -16,6 +16,7 @@ import "quill-mention";
 import { QuillEditorComponent } from "ngx-quill";
 import { FilesService } from "src/app/services/files.service";
 import { NgxUiLoaderService } from "ngx-ui-loader";
+import { type } from "os";
 @Component({
   selector: "app-submit-comment",
   templateUrl: "./submitcomment.component.html",
@@ -27,6 +28,7 @@ export class CommentSubmitComponent implements OnInit {
   @Input() cancelShown = false;
   @Input() id;
   @Input() users;
+  @Input() pageType;
   @Output() submit = new EventEmitter();
   @Output() cancel = new EventEmitter();
   content = "";
@@ -106,7 +108,9 @@ export class CommentSubmitComponent implements OnInit {
     this.attachments = [];
   }
 
-  ngOnInit() {}
+  ngOnInit() {
+    console.log("discussion type", this.pageType);
+  }
 
   onFileSelected(attach_files) {
     if (attach_files && attach_files.target.files) {

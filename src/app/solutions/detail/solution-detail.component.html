@@ -32,17 +32,24 @@
                 <strong *ngIf="solutionData.organization">Organization</strong>
                 <p class="description">{{solutionData.organization}}</p>
 
-
                 <strong *ngIf="solutionData.technology">Technology</strong>
                 <p class="description" style="white-space: pre-wrap;">{{solutionData.technology}}</p>
+
+                <strong *ngIf="solutionData.resources">Resources Needed</strong>
+                <p class="description" style="white-space: pre-wrap;">{{solutionData.resources}}</p>
+
+                <strong *ngIf="solutionData.impact">Impact</strong>
+                <p class="description" style="white-space: pre-wrap;">{{solutionData.impact}}</p>
+
+                <strong *ngIf="solutionData.timeline">Timeline</strong>
+                <p class="description" style="white-space: pre-wrap;">{{solutionData.timeline}}</p>
+
+                <strong *ngIf="solutionData.pilots">Pilots</strong>
+                <p class="description" style="white-space: pre-wrap;">{{solutionData.pilots}}</p>
 
                 <strong *ngIf="solutionData.website_url">Website</strong>
                 <p class="description" style="white-space: pre-wrap;">{{solutionData.website_url}}</p>
 
-
-
-                <strong *ngIf="solutionData.impact">Impact</strong>
-                <p class="description" style="white-space: pre-wrap;">{{solutionData.impact}}</p>
                 <strong *ngIf="solutionData.deployment">Deployments</strong>
                 <p class="description" style="white-space: pre-wrap;">{{solutionData.deployment}}</p>
 
@@ -50,9 +57,12 @@
                 <p class="description" style="white-space: pre-wrap;">{{solutionData.budget.title}}</p>
                 <p class="description" style="white-space: pre-wrap;">{{solutionData.budget.cost}}</p>
 
-
-
-
+                <strong *ngIf="ownerNames.length">Owners</strong>
+                <div>
+                  <span *ngFor="let owner of ownerNames" class="badge badge-rose"
+                    style="margin-right: 0.3em;">{{owner}}</span>
+                  <span>&nbsp;</span>
+                </div>
               </div>
             </div>
           </div>
@@ -450,7 +460,7 @@
           </div> -->
           </div>
           <div class="card">
-            <div class="card-header card-header-icon card-header-warning">
+            <div class="card-header card-header-icon card-header-rose">
               <div class="card-icon">
                 <i class="material-icons">forum</i>
               </div>
@@ -479,16 +489,17 @@
                   <div id="newComment" class="collapse show" role="tabpanel" aria-labelledby="headingOne"
                     data-target="#newComment">
                     <app-submit-comment [users]="objectValues(usersService.allUsers)" [actionText]="'Comment'"
-                      (submit)="onCommentSubmit($event)"></app-submit-comment>
+                      (submit)="onCommentSubmit($event)" [pageType]="'solution'"></app-submit-comment>
                   </div>
                 </div>
 
 
                 <div *ngIf="!popular">
                   <app-display-comment [users]="objectValues(usersService.allUsers)" [comment]="comment"
-                    [replies]="replies[comment.id]" (reply)="onCommentSubmit($event, comment.id)"
-                    (commentToDelete)="deleteComment($event)" (shareCommentId)="shareComment($event)"
-                    (fileClicked)="displayModal($event)" *ngFor="let comment of sortComments(objectValues(comments))">
+                    [replies]="replies[comment.id]" [pageType]="'solution'"
+                    (reply)="onCommentSubmit($event, comment.id)" (commentToDelete)="deleteComment($event)"
+                    (shareCommentId)="shareComment($event)" (fileClicked)="displayModal($event)"
+                    *ngFor="let comment of sortComments(objectValues(comments))">
                   </app-display-comment>
                 </div>
 
@@ -496,8 +507,9 @@
 
                 <div *ngIf="popular">
                   <app-display-comment [users]="objectValues(usersService.allUsers)" [comment]="popularDiscussion"
-                    [replies]="replies[popularDiscussion.id]" (reply)="onCommentSubmit($event, popularDiscussion.id)"
-                    (fileClicked)="displayModal($event)" *ngFor="let popularDiscussion of popularDiscussions">
+                    [replies]="replies[popularDiscussion.id]" [pageType]="'solution'"
+                    (reply)="onCommentSubmit($event, popularDiscussion.id)" (fileClicked)="displayModal($event)"
+                    *ngFor="let popularDiscussion of popularDiscussions">
                   </app-display-comment>
                 </div>
 

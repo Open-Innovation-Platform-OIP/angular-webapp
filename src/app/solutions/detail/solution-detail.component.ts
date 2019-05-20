@@ -93,6 +93,9 @@ export class SolutionDetailComponent implements OnInit {
   numOfComments = 5;
   problems = [];
 
+  owners = new Set();
+  ownerNames: any = [];
+
   solutionData = {
     id: "",
     title: "",
@@ -467,6 +470,14 @@ export class SolutionDetailComponent implements OnInit {
       
     }
 
+    solution_owners {
+      user_id
+      user{
+        id
+        name
+      }
+    }
+
     discussions(where: { is_deleted: { _eq: false} },order_by: {created_at: desc}) {
       id
       created_by
@@ -719,6 +730,12 @@ export class SolutionDetailComponent implements OnInit {
     // problem.problem_voters.map(voter => {
     //   this.voters.add(voter.user_id);
     // });
+
+    solution.solution_owners.map(owner => {
+      this.owners.add(owner.user_id);
+      this.ownerNames.push(owner.user.name);
+    });
+
     // adding embed urls
 
     let embedded_urls_arr = this.solutionData.embed_urls.map(url => {
