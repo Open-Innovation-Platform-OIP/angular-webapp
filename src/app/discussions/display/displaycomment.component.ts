@@ -22,6 +22,7 @@ export class CommentDisplayComponent implements OnInit {
   @Input() comment;
   @Input() replies;
   @Input() users;
+  @Input() pageType;
   @Output() reply = new EventEmitter();
   @Output() fileClicked = new EventEmitter();
   @Output() commentToDelete = new EventEmitter();

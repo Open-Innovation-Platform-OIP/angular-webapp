@@ -81,9 +81,9 @@
       </span>
 
       <span class="dropdown">
-        <button class="btn btn-warning btn-link" *ngIf="auth.currentUserValue.id" matTooltip="share" type="button"
-          id="discussion_share_btn" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"
-          style="padding: 0 5px;">
+        <button class="btn btn-link" [ngClass]="{'btn-warning': !pageType, 'btn-rose': pageType == 'solution'}"
+          *ngIf="auth.currentUserValue.id" matTooltip="share" type="button" id="discussion_share_btn"
+          data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" style="padding: 0 5px;">
           <i class="material-icons actions">
             share
           </i>
@@ -97,7 +97,8 @@
         </ul>
       </span>
 
-      <button mat-raised-button class="btn btn-link btn-warning btn-sm" matTooltip="Click to reply"
+      <button mat-raised-button class="btn btn-link btn-sm"
+        [ngClass]="{'btn-warning': !pageType, 'btn-rose': pageType == 'solution'}" matTooltip="Click to reply"
         [matTooltipPosition]="'below'" *ngIf="!(showReplyBox && replyingTo === comment.id) && auth.currentUserValue.id"
         (click)="replyTo(comment.id)">Reply</button>
       <app-submit-comment *ngIf="showReplyBox && replyingTo === comment.id" [users]="users" [actionText]="'Reply'"

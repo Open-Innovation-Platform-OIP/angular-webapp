@@ -32,17 +32,24 @@
                 <strong *ngIf="solutionData.organization">Organization</strong>
                 <p class="description">{{solutionData.organization}}</p>
 
-
                 <strong *ngIf="solutionData.technology">Technology</strong>
                 <p class="description" style="white-space: pre-wrap;">{{solutionData.technology}}</p>
+
+                <strong *ngIf="solutionData.resources">Resources Needed</strong>
+                <p class="description" style="white-space: pre-wrap;">{{solutionData.resources}}</p>
+
+                <strong *ngIf="solutionData.impact">Impact</strong>
+                <p class="description" style="white-space: pre-wrap;">{{solutionData.impact}}</p>
+
+                <strong *ngIf="solutionData.timeline">Timeline</strong>
+                <p class="description" style="white-space: pre-wrap;">{{solutionData.timeline}}</p>
+
+                <strong *ngIf="solutionData.pilots">Pilots</strong>
+                <p class="description" style="white-space: pre-wrap;">{{solutionData.pilots}}</p>
 
                 <strong *ngIf="solutionData.website_url">Website</strong>
                 <p class="description" style="white-space: pre-wrap;">{{solutionData.website_url}}</p>
 
-
-
-                <strong *ngIf="solutionData.impact">Impact</strong>
-                <p class="description" style="white-space: pre-wrap;">{{solutionData.impact}}</p>
                 <strong *ngIf="solutionData.deployment">Deployments</strong>
                 <p class="description" style="white-space: pre-wrap;">{{solutionData.deployment}}</p>
 
@@ -50,9 +57,12 @@
                 <p class="description" style="white-space: pre-wrap;">{{solutionData.budget.title}}</p>
                 <p class="description" style="white-space: pre-wrap;">{{solutionData.budget.cost}}</p>
 
-
-
-
+                <strong *ngIf="ownerNames.length">Owners</strong>
+                <div>
+                  <span *ngFor="let owner of ownerNames" class="badge badge-rose"
+                    style="margin-right: 0.3em;">{{owner}}</span>
+                  <span>&nbsp;</span>
+                </div>
               </div>
             </div>
           </div>
@@ -434,23 +444,8 @@
       </div>
 
       <div class="col-md-4">
-        <div class="card" *ngIf="auth.currentUserValue.id">
-          <div class="card-header">
-            <div class="row justify-content-center">
-              <i class="material-icons">
-                highlight
-              </i>
-              <span>&nbsp;</span>
-              <span>&nbsp;</span>
-              <span>&nbsp;</span>
-              <span>&nbsp;</span>
-              <h5>Do you have a solution? <a [routerLink]="['/solutions/add',{problemId:problemData.id}]">click here</a>
-              </h5>
-            </div>
-          </div>
-        </div>
         <div class="card">
-          <div class="card-header card-header-icon card-header-warning">
+          <div class="card-header card-header-icon card-header-rose">
             <div class="card-icon">
               <i class="material-icons">forum</i>
             </div>
@@ -460,9 +455,9 @@
             <p>Login to join discussion for this solution</p>
           </div>
           <div class="card-body" *ngIf="auth.currentUserValue.id">
-            <button mat-raised-button class="btn btn-warning btn-sm" (click)="showPopularDiscussions('latest')"
+            <button mat-raised-button class="btn btn-rose btn-sm" (click)="showPopularDiscussions('latest')"
               *ngIf="objectValues(comments).length">Latest</button>
-            <button mat-raised-button class="btn btn-warning btn-sm" *ngIf="objectValues(comments).length"
+            <button mat-raised-button class="btn btn-rose btn-sm" *ngIf="objectValues(comments).length"
               (click)="showPopularDiscussions('popular')">Popular</button>
 
             <div id="accordion" role="tablist">
@@ -479,14 +474,14 @@
                 <div id="newComment" class="collapse show" role="tabpanel" aria-labelledby="headingOne"
                   data-target="#newComment">
                   <app-submit-comment [users]="objectValues(usersService.allUsers)" [actionText]="'Comment'"
-                    (submit)="onCommentSubmit($event)"></app-submit-comment>
+                    [pageType]="'solution'" (submit)="onCommentSubmit($event)"></app-submit-comment>
                 </div>
               </div>
 
 
               <div *ngIf="!popular">
                 <app-display-comment [users]="objectValues(usersService.allUsers)" [comment]="comment"
-                  [replies]="replies[comment.id]" (reply)="onCommentSubmit($event, comment.id)"
+                  [replies]="replies[comment.id]" [pageType]="'solution'" (reply)="onCommentSubmit($event, comment.id)"
                   (commentToDelete)="deleteComment($event)" (shareCommentId)="shareComment($event)"
                   (fileClicked)="displayModal($event)" *ngFor="let comment of sortComments(objectValues(comments))">
                 </app-display-comment>
@@ -496,8 +491,9 @@
 
               <div *ngIf="popular">
                 <app-display-comment [users]="objectValues(usersService.allUsers)" [comment]="popularDiscussion"
-                  [replies]="replies[popularDiscussion.id]" (reply)="onCommentSubmit($event, popularDiscussion.id)"
-                  (fileClicked)="displayModal($event)" *ngFor="let popularDiscussion of popularDiscussions">
+                  [replies]="replies[popularDiscussion.id]" [pageType]="'solution'"
+                  (reply)="onCommentSubmit($event, popularDiscussion.id)" (fileClicked)="displayModal($event)"
+                  *ngFor="let popularDiscussion of popularDiscussions">
                 </app-display-comment>
               </div>
 

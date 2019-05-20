@@ -1067,6 +1067,7 @@ export class AddSolutionComponent
               timeline
               pilots
               deployment
+              budget
               is_draft
               image_urls
               video_urls
@@ -1454,7 +1455,8 @@ export class AddSolutionComponent
       this.solution.deployment &&
       this.solution.budget.title &&
       this.solution.budget.cost &&
-      this.owners.length
+      this.owners.length &&
+      this.localSectors.length
     );
   }
 
