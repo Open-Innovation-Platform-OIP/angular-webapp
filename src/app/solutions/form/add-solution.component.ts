@@ -1454,7 +1454,8 @@ export class AddSolutionComponent
       this.solution.deployment &&
       this.solution.budget.title &&
       this.solution.budget.cost &&
-      this.owners.length
+      
+      this.localSectors.length
     );
   }
 

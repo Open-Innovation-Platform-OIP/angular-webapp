@@ -43,7 +43,12 @@
                         <div class="input-group form-control-lg">
                           <div class="input-group-prepend">
                             <span class="input-group-text">
-                              <i class="material-icons">help</i>
+
+                              <i class="material-icons" [ngStyle]="{
+                                color: !localSectors.length
+                                  ? 'red'
+                                  : '#495057'
+                              }">help</i>
                             </span>
                           </div>
 
@@ -298,11 +303,7 @@
                         <div class="input-group form-control-lg">
                           <div class="input-group-prepend">
                             <span class="input-group-text">
-                              <i class="material-icons" [ngStyle]="{
-                                color: !owners.length
-                                  ? 'red'
-                                  : '#495057'
-                              }">supervisor_account</i>
+                              <i class="material-icons">supervisor_account</i>
                             </span>
                           </div>
                           <mat-form-field class="example-chip-list">

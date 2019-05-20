@@ -436,7 +436,7 @@
       <div class="col-md-4">
         <div class="card" *ngIf="auth.currentUserValue.id">
           <div class="card-header">
-            <div class="row justify-content-center">
+            <!-- <div class="row justify-content-center">
               <i class="material-icons">
                 highlight
               </i>
@@ -447,99 +447,99 @@
               <h5>Do you have a solution? <a [routerLink]="['/solutions/add',{problemId:problemData.id}]">click here</a>
               </h5>
             </div>
+          </div> -->
+          </div>
+          <div class="card">
+            <div class="card-header card-header-icon card-header-warning">
+              <div class="card-icon">
+                <i class="material-icons">forum</i>
+              </div>
+              <h4 class="card-title">Discussions</h4>
+            </div>
+            <div class="card-body" *ngIf="!auth.currentUserValue.id">
+              <p>Login to join discussion for this solution</p>
+            </div>
+            <div class="card-body" *ngIf="auth.currentUserValue.id">
+              <button mat-raised-button class="btn btn-warning btn-sm" (click)="showPopularDiscussions('latest')"
+                *ngIf="objectValues(comments).length">Latest</button>
+              <button mat-raised-button class="btn btn-warning btn-sm" *ngIf="objectValues(comments).length"
+                (click)="showPopularDiscussions('popular')">Popular</button>
+
+              <div id="accordion" role="tablist">
+                <div class="card-collapse">
+                  <div class="card-header" role="tab" id="headingOne">
+                    <h5 class="mb-0">
+                      <a data-toggle="collapse" href="#newComment" *ngIf="auth.currentUserValue.id"
+                        aria-expanded=" true" aria-controls="newComment" class="collapsed">
+                        Join Discussion
+                        <i class="material-icons">keyboard_arrow_down</i>
+                      </a>
+                    </h5>
+                  </div>
+                  <div id="newComment" class="collapse show" role="tabpanel" aria-labelledby="headingOne"
+                    data-target="#newComment">
+                    <app-submit-comment [users]="objectValues(usersService.allUsers)" [actionText]="'Comment'"
+                      (submit)="onCommentSubmit($event)"></app-submit-comment>
+                  </div>
+                </div>
+
+
+                <div *ngIf="!popular">
+                  <app-display-comment [users]="objectValues(usersService.allUsers)" [comment]="comment"
+                    [replies]="replies[comment.id]" (reply)="onCommentSubmit($event, comment.id)"
+                    (commentToDelete)="deleteComment($event)" (shareCommentId)="shareComment($event)"
+                    (fileClicked)="displayModal($event)" *ngFor="let comment of sortComments(objectValues(comments))">
+                  </app-display-comment>
+                </div>
+
+                <!--Popular-->
+
+                <div *ngIf="popular">
+                  <app-display-comment [users]="objectValues(usersService.allUsers)" [comment]="popularDiscussion"
+                    [replies]="replies[popularDiscussion.id]" (reply)="onCommentSubmit($event, popularDiscussion.id)"
+                    (fileClicked)="displayModal($event)" *ngFor="let popularDiscussion of popularDiscussions">
+                  </app-display-comment>
+                </div>
+
+                <!--Popular-->
+
+              </div>
+              <hr>
+              <a class="viewMoreComments" href="javascript:void(0)"
+                *ngIf="objectValues(comments).length > 5 && numOfComments < objectValues(comments).length"
+                (click)="showMoreComments()">
+                View more comments
+              </a>
+            </div>
           </div>
         </div>
-        <div class="card">
-          <div class="card-header card-header-icon card-header-warning">
-            <div class="card-icon">
-              <i class="material-icons">forum</i>
-            </div>
-            <h4 class="card-title">Discussions</h4>
-          </div>
-          <div class="card-body" *ngIf="!auth.currentUserValue.id">
-            <p>Login to join discussion for this solution</p>
-          </div>
-          <div class="card-body" *ngIf="auth.currentUserValue.id">
-            <button mat-raised-button class="btn btn-warning btn-sm" (click)="showPopularDiscussions('latest')"
-              *ngIf="objectValues(comments).length">Latest</button>
-            <button mat-raised-button class="btn btn-warning btn-sm" *ngIf="objectValues(comments).length"
-              (click)="showPopularDiscussions('popular')">Popular</button>
-
-            <div id="accordion" role="tablist">
-              <div class="card-collapse">
-                <div class="card-header" role="tab" id="headingOne">
-                  <h5 class="mb-0">
-                    <a data-toggle="collapse" href="#newComment" *ngIf="auth.currentUserValue.id" aria-expanded=" true"
-                      aria-controls="newComment" class="collapsed">
-                      Join Discussion
-                      <i class="material-icons">keyboard_arrow_down</i>
-                    </a>
-                  </h5>
-                </div>
-                <div id="newComment" class="collapse show" role="tabpanel" aria-labelledby="headingOne"
-                  data-target="#newComment">
-                  <app-submit-comment [users]="objectValues(usersService.allUsers)" [actionText]="'Comment'"
-                    (submit)="onCommentSubmit($event)"></app-submit-comment>
-                </div>
-              </div>
 
 
-              <div *ngIf="!popular">
-                <app-display-comment [users]="objectValues(usersService.allUsers)" [comment]="comment"
-                  [replies]="replies[comment.id]" (reply)="onCommentSubmit($event, comment.id)"
-                  (commentToDelete)="deleteComment($event)" (shareCommentId)="shareComment($event)"
-                  (fileClicked)="displayModal($event)" *ngFor="let comment of sortComments(objectValues(comments))">
-                </app-display-comment>
-              </div>
-
-              <!--Popular-->
-
-              <div *ngIf="popular">
-                <app-display-comment [users]="objectValues(usersService.allUsers)" [comment]="popularDiscussion"
-                  [replies]="replies[popularDiscussion.id]" (reply)="onCommentSubmit($event, popularDiscussion.id)"
-                  (fileClicked)="displayModal($event)" *ngFor="let popularDiscussion of popularDiscussions">
-                </app-display-comment>
-              </div>
-
-              <!--Popular-->
-
-            </div>
-            <hr>
-            <a class="viewMoreComments" href="javascript:void(0)"
-              *ngIf="objectValues(comments).length > 5 && numOfComments < objectValues(comments).length"
-              (click)="showMoreComments()">
-              View more comments
-            </a>
-          </div>
-        </div>
-      </div>
-
-
-    </div>
-  </div>
-</div>
-
-<!-- discuss image and video modal starts -->
-
-<div class="modal fade" id="enlargeView" style="display: none;">
-  <div class="modal-dialog modal-lg">
-    <div class="modal-content">
-      <div class="modal-header">
-        <button type="button" class="close" data-dismiss="modal" aria-hidden="true"
-          (click)="closeModal($event)">close</button>
-      </div>
-      <div class="modal-body">
-        <app-display-modal *ngIf="modalSrc && modalSrc['url']" [source]="modalSrc">
-        </app-display-modal>
-      </div>
-      <div class="modal-footer justify-content-center" *ngIf="sources && sources['attachmentObj'].length > 1">
-        <button mat-raised-button type="button" [disabled]="sources['index'] < 1" (click)="toggleFileSrc(false)"
-          class="btn btn-info btn-round"><span class="carousel-control-prev-icon" aria-hidden="true"></span></button>
-        <div class="col-3"></div>
-        <button mat-raised-button type="button" [disabled]="sources['index'] == sources['attachmentObj'].length-1"
-          class="btn btn-info btn-round" (click)="toggleFileSrc(true)"><span class="carousel-control-next-icon"
-            aria-hidden="true"></span></button>
       </div>
     </div>
   </div>
-</div>
+
+  <!-- discuss image and video modal starts -->
+
+  <div class="modal fade" id="enlargeView" style="display: none;">
+    <div class="modal-dialog modal-lg">
+      <div class="modal-content">
+        <div class="modal-header">
+          <button type="button" class="close" data-dismiss="modal" aria-hidden="true"
+            (click)="closeModal($event)">close</button>
+        </div>
+        <div class="modal-body">
+          <app-display-modal *ngIf="modalSrc && modalSrc['url']" [source]="modalSrc">
+          </app-display-modal>
+        </div>
+        <div class="modal-footer justify-content-center" *ngIf="sources && sources['attachmentObj'].length > 1">
+          <button mat-raised-button type="button" [disabled]="sources['index'] < 1" (click)="toggleFileSrc(false)"
+            class="btn btn-info btn-round"><span class="carousel-control-prev-icon" aria-hidden="true"></span></button>
+          <div class="col-3"></div>
+          <button mat-raised-button type="button" [disabled]="sources['index'] == sources['attachmentObj'].length-1"
+            class="btn btn-info btn-round" (click)="toggleFileSrc(true)"><span class="carousel-control-next-icon"
+              aria-hidden="true"></span></button>
+        </div>
+      </div>
+    </div>
+  </div>
