@@ -240,7 +240,7 @@ export class AddSolutionComponent
       // To add a validator, we must first convert the string value into an array. The first item in the array is the default value if any, then the next item in the array is the validator. Here we are adding a required validator meaning that the firstName attribute must have a value in it.
       title: [null, Validators.required],
       description: [null, Validators.required],
-      technology: [null, Validators.required],
+      technology: [null, null],
       resources: [null, null],
       impact: [null, null],
       timeline: [null, null],
@@ -664,7 +664,7 @@ export class AddSolutionComponent
       // To add a validator, we must first convert the string value into an array. The first item in the array is the default value if any, then the next item in the array is the validator. Here we are adding a required validator meaning that the firstName attribute must have a value in it.
       title: [null, Validators.required],
       description: [null, Validators.required],
-      technology: [null, Validators.required],
+      technology: [null, null],
       resources: [null, null],
       impact: [null, null],
       timeline: [null, null],
@@ -684,9 +684,6 @@ export class AddSolutionComponent
           minlength: 3
         },
         description: {
-          required: true
-        },
-        technology: {
           required: true
         },
         deployment: {
@@ -1450,7 +1447,6 @@ export class AddSolutionComponent
     return (
       this.solution.title &&
       this.solution.description &&
-      this.solution.technology &&
       this.solution.impact &&
       this.solution.deployment &&
       this.solution.budget.title &&
