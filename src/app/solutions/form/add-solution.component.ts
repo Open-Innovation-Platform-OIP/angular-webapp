@@ -128,7 +128,11 @@ export class AddSolutionComponent
 
   type: FormGroup;
 
-  localSectors: any[] = [];
+  selectedProblems: any[] = [];
+
+  showProblemImpacts: Boolean = false;
+  showProblemResourcesNeeded: Boolean = false;
+  showProblemExtent: Boolean = false;
 
   populationValue: Number;
   media_url = "";
@@ -141,11 +145,25 @@ export class AddSolutionComponent
   // searchResults = {};
   searchResults = [];
   smartSearchResults = [];
-  sectorCtrl = new FormControl();
+  problemCtrl = new FormControl();
   ownersCtrl = new FormControl();
   locationCtrl = new FormControl();
-  filteredSectors: Observable<any>;
-  // filteredSectors = [];
+  filteredProblems: Observable<any>;
+
+  testObject: any = {
+    1: {
+      id: 1,
+      title: "title one",
+      impact: "impact one"
+    },
+    2: {
+      id: 2,
+      title: "title  two",
+      impact: "impact two"
+    }
+  };
+  selectedProblemsData: any = {};
+  // filteredProblems = [];
   filteredOwners: Observable<any[]>;
   is_edit: Boolean = false;
   tags = [];
@@ -159,7 +177,7 @@ export class AddSolutionComponent
   ];
   touch: boolean;
 
-  @ViewChild("sectorInput") sectorInput: ElementRef<HTMLInputElement>;
+  @ViewChild("problemInput") problemInput: ElementRef<HTMLInputElement>;
   @ViewChild("locationInput") locationInput: ElementRef<HTMLInputElement>;
   @ViewChild("ownerInput") ownerInput: ElementRef<HTMLInputElement>;
 
@@ -213,6 +231,7 @@ export class AddSolutionComponent
       title: "",
       cost: 0
     },
+    extent: "",
     image_urls: [],
     video_urls: [],
     featured_url: "",
@@ -243,6 +262,7 @@ export class AddSolutionComponent
       technology: [null, Validators.required],
       resources: [null, null],
       impact: [null, null],
+      extent: [null, null],
       timeline: [null, null],
       pilots: [null, null],
       deployment: [null, Validators.required],
@@ -256,11 +276,11 @@ export class AddSolutionComponent
     canProceed = true;
 
     this.problem.organization = "Social Alpha";
-    this.filteredSectors = this.sectorCtrl.valueChanges.pipe(
+    this.filteredProblems = this.problemCtrl.valueChanges.pipe(
       startWith(null),
-      map((sector: string | null) => (sector ? this._filter(sector) : []))
+      map((problem: string | null) => (problem ? this._filter(problem) : []))
     );
-    console.log("", this.filteredSectors);
+    console.log("", this.filteredProblems);
 
     this.filteredOwners = this.ownersCtrl.valueChanges.pipe(
       startWith(null),
@@ -294,24 +314,81 @@ export class AddSolutionComponent
       const value = event.value;
       // Add our sector
       if ((value || "").trim()) {
-        this.localSectors.push(value.trim().toUpperCase());
+        this.selectedProblems.push(value.trim().toUpperCase());
       }
       // Reset the input value
       if (input) {
         input.value = "";
       }
-      this.sectorCtrl.setValue(null);
+      this.problemCtrl.setValue(null);
       // this.tagAdded.emit(this.sectors);
     }
   }
 
   selected(event: MatAutocompleteSelectedEvent): void {
-    // console.log(this.sectors, "test for sector");
-    // console.log("SELECTED", event);
-    this.localSectors.push(event.option.value);
-    this.sectorInput.nativeElement.value = "";
-    this.sectorCtrl.setValue(null);
-    this.tagAdded.emit(this.localSectors);
+    let selectedProblem = event.option.value;
+
+    this.selectedProblems.push(selectedProblem);
+
+    this.problemInput.nativeElement.value = "";
+    this.problemCtrl.setValue(null);
+    this.getProblemData(selectedProblem.id);
+  }
+
+  getProblemData(id) {
+    this.apollo
+      .watchQuery<any>({
+        query: gql`
+                  {
+                      problems(where: { id: { _eq: ${id} } }) {
+                      id
+                      title
+                     
+                      impact
+                      extent
+                      min_population
+                      
+                      max_population
+                      beneficiary_attributes
+                      resources_needed
+                     
+                    
+                     
+                      }
+                  }
+                  `,
+        // pollInterval: 500,
+        fetchPolicy: "network-only"
+      })
+      .valueChanges.subscribe(
+        result => {
+          let problemData = result.data.problems[0];
+          this.selectedProblemsData[problemData.id] = problemData;
+          console.log(this.selectedProblemsData, "problem data from db");
+        },
+        error => {
+          console.log(error);
+        }
+      );
+  }
+
+  focusOnField(event) {
+    if (event.target.id === "impact") {
+      this.showProblemImpacts = true;
+      // this.showProblemResourcesNeeded = ;
+    }
+    if (event.target.id === "resources_needed") {
+      this.showProblemResourcesNeeded = true;
+    }
+    if (event.target.id === "extent") {
+      this.showProblemExtent = true;
+    }
+  }
+
+  blurOnField(event) {
+    this.showProblemImpacts = false;
+    this.showProblemResourcesNeeded = false;
+    this.showProblemExtent = false;
   }
 
   async _filter(value: string) {
@@ -345,13 +422,16 @@ export class AddSolutionComponent
     // return [];
   }
 
-  remove(sector: string): void {
-    const index = this.localSectors.indexOf(sector);
+  remove(problem): void {
+    console.log(problem, "remove");
+    const index = this.selectedProblems.indexOf(problem);
     if (index >= 0) {
-      this.localSectors.splice(index, 1);
+      this.selectedProblems.splice(index, 1);
     }
 
-    this.tagRemoved.emit(sector);
+    delete this.selectedProblemsData[problem.id];
+
+    // this.tagRemoved.emit(sector);
   }
 
   saveProblemsInDB(solutionId, problemsArray) {
@@ -452,11 +532,11 @@ export class AddSolutionComponent
             this.smartSearchResults = [];
             this.searchResults = [];
 
-            result.data.search_problems_v2.map(sector => {
-              this.smartSearchResults.push(sector);
+            result.data.search_problems_v2.map(problem => {
+              this.smartSearchResults.push(problem);
               console.log("SMART", this.smartSearchResults);
-              console.log(sector.title, "result");
-              this.searchResults.push({ id: sector.id, title: sector.title });
+              console.log(problem.title, "result");
+              this.searchResults.push({ id: problem.id, title: problem.title });
               console.log("search results", this.searchResults);
               // return this.searchResults;
             });
@@ -582,7 +662,13 @@ export class AddSolutionComponent
     this.problemId = Number(this.route.snapshot.paramMap.get("problemId"));
     console.log(this.route.snapshot.paramMap, "problem param");
     if (this.problemId) {
-      this.localSectors.push({ id: this.problemId });
+      this.selectedProblems.push({ id: this.problemId });
+    }
+
+    if (this.selectedProblems.length) {
+      this.selectedProblems.forEach(problem => {
+        this.getProblemData(problem.id);
+      });
     }
 
     this.route.params.pipe(first()).subscribe(params => {
@@ -610,6 +696,7 @@ export class AddSolutionComponent
                             attachments
                             impact
                             timeline
+                            extent
                             pilots
                             embed_urls
                             featured_url
@@ -644,7 +731,7 @@ export class AddSolutionComponent
               // this.solution.is_draft = result.data.problems[0].is_draft;
             });
             result.data.solutions[0].problems_solutions.map(problem => {
-              this.localSectors.push(problem.problem);
+              this.selectedProblems.push(problem.problem);
             });
             console.log(result, "SOLUTIONS");
             if (result.data.solutions[0].solution_owners) {
@@ -667,6 +754,7 @@ export class AddSolutionComponent
       technology: [null, Validators.required],
       resources: [null, null],
       impact: [null, null],
+      extent: [null, null],
       timeline: [null, null],
       pilots: [null, null],
       deployment: [null, Validators.required],
@@ -1099,7 +1187,7 @@ export class AddSolutionComponent
           if (result.data.insert_solutions.returning.length > 0) {
             this.solution["id"] = result.data.insert_solutions.returning[0].id;
 
-            this.saveProblemsInDB(this.solution["id"], this.localSectors);
+            this.saveProblemsInDB(this.solution["id"], this.selectedProblems);
             this.saveOwnersInDB(this.solution["id"], this.owners);
 
             if (this.is_edit) {
@@ -1455,7 +1543,7 @@ export class AddSolutionComponent
       this.solution.deployment &&
       this.solution.budget.title &&
       this.solution.budget.cost &&
-      this.localSectors.length
+      this.selectedProblems.length
     );
   }
 
