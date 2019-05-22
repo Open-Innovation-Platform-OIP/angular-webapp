@@ -479,7 +479,7 @@ export class AddSolutionComponent
     // searchKey = searchKey.replace(/[^a-zA-Z ]/g, "");
     // console.log(searchKey, "searchkey");
 
-    if (searchKey.length) {
+    if (searchKey.length >= 3) {
       // this.searchResults = {};
       this.searchResults = [];
       return this.apollo.watchQuery<any>({
@@ -536,6 +536,7 @@ export class AddSolutionComponent
     } else {
       // this.searchResults = {};
       this.searchResults = [];
+      this.smartSearchResults = [];
     }
   }
 
