@@ -53,11 +53,11 @@
                           </div>
 
                           <mat-form-field class="example-chip-list">
-                            <input placeholder='Select Problem *' #problemInput [formControl]="problemCtrl" autofocus
-                              [matAutocomplete]="auto" [matChipInputFor]="chipList"
-                              [matChipInputSeparatorKeyCodes]="separatorKeysCodes" [matChipInputAddOnBlur]="addOnBlur"
-                              (keyup)="searchProblem($event)">
                             <mat-chip-list #chipList>
+                              <input placeholder='Select Problem *' #problemInput [formControl]="problemCtrl" autofocus
+                                [matAutocomplete]="auto" [matChipInputFor]="chipList"
+                                [matChipInputSeparatorKeyCodes]="separatorKeysCodes" [matChipInputAddOnBlur]="addOnBlur"
+                                (keyup)="searchProblem($event)">
                             </mat-chip-list>
                             <mat-autocomplete #auto="matAutocomplete" (optionSelected)="selected($event)">
                               <mat-option *ngFor="let problem of searchResults" [value]="problem">
@@ -136,14 +136,13 @@
                         <div class="input-group form-control-lg">
                           <div class="input-group-prepend">
                             <span class="input-group-text">
-                              <i class="material-icons"
-                                [ngStyle]="{color: !solution.technology ? 'red' : '#495057'}">build</i>
+                              <i class="material-icons">build</i>
                             </span>
                           </div>
                           <mat-form-field class="example-full-width has-label"
                             [ngClass]="displayFieldCss(type, 'technology')">
                             <input type="text" name="technology" matInput id="technology" appAutofocus
-                              placeholder="Technology *" formControlName="technology" [(ngModel)]="solution.technology">
+                              placeholder="Innovation *" formControlName="technology" [(ngModel)]="solution.technology">
                           </mat-form-field>
                         </div>
                       </div>

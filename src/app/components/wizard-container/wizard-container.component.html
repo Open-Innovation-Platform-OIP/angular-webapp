@@ -290,10 +290,10 @@
                   </div>
 
                   <mat-form-field class="example-chip-list">
-                    <input placeholder="Sectors*" #sectorInput [formControl]="sectorCtrl" [matAutocomplete]="auto"
-                      [matChipInputFor]="chipList" [matChipInputSeparatorKeyCodes]="separatorKeysCodes"
-                      [matChipInputAddOnBlur]="addOnBlur" (matChipInputTokenEnd)="add($event)">
                     <mat-chip-list #chipList>
+                      <input placeholder="Sectors*" #sectorInput [formControl]="sectorCtrl" [matAutocomplete]="auto"
+                        [matChipInputFor]="chipList" [matChipInputSeparatorKeyCodes]="separatorKeysCodes"
+                        [matChipInputAddOnBlur]="addOnBlur" (matChipInputTokenEnd)="add($event)">
                     </mat-chip-list>
                     <mat-autocomplete #auto="matAutocomplete" (optionSelected)="selected($event)">
                       <mat-option *ngFor="let sector of filteredSectors | async" [value]="sector">
@@ -339,10 +339,10 @@
                   </div>
 
                   <mat-form-field class="example-chip-list">
-                    <input placeholder="Co-Owners" #ownerInput [formControl]="ownersCtrl" [matAutocomplete]="owner"
-                      [matChipInputFor]="chipList" [matChipInputSeparatorKeyCodes]="separatorKeysCodes"
-                      [matChipInputAddOnBlur]="addOnBlur" (matChipInputTokenEnd)="addOwner($event)">
                     <mat-chip-list #chipList>
+                      <input placeholder="Co-Owners" #ownerInput [formControl]="ownersCtrl" [matAutocomplete]="owner"
+                        [matChipInputFor]="chipList" [matChipInputSeparatorKeyCodes]="separatorKeysCodes"
+                        [matChipInputAddOnBlur]="addOnBlur" (matChipInputTokenEnd)="addOwner($event)">
                     </mat-chip-list>
                     <mat-autocomplete #owner="matAutocomplete" (optionSelected)="selectedOwner($event)">
                       <mat-option *ngFor="let owner of filteredOwners | async" [value]="owner">

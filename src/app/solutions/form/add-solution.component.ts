@@ -259,7 +259,7 @@ export class AddSolutionComponent
       // To add a validator, we must first convert the string value into an array. The first item in the array is the default value if any, then the next item in the array is the validator. Here we are adding a required validator meaning that the firstName attribute must have a value in it.
       title: [null, Validators.required],
       description: [null, Validators.required],
-      technology: [null, Validators.required],
+      technology: [null, null],
       resources: [null, null],
       impact: [null, null],
       extent: [null, null],
@@ -559,7 +559,7 @@ export class AddSolutionComponent
     // searchKey = searchKey.replace(/[^a-zA-Z ]/g, "");
     // console.log(searchKey, "searchkey");
 
-    if (searchKey.length) {
+    if (searchKey.length >= 3) {
       // this.searchResults = {};
       this.searchResults = [];
       return this.apollo.watchQuery<any>({
@@ -616,6 +616,7 @@ export class AddSolutionComponent
     } else {
       // this.searchResults = {};
       this.searchResults = [];
+      this.smartSearchResults = [];
     }
   }
 
@@ -751,7 +752,7 @@ export class AddSolutionComponent
       // To add a validator, we must first convert the string value into an array. The first item in the array is the default value if any, then the next item in the array is the validator. Here we are adding a required validator meaning that the firstName attribute must have a value in it.
       title: [null, Validators.required],
       description: [null, Validators.required],
-      technology: [null, Validators.required],
+      technology: [null, null],
       resources: [null, null],
       impact: [null, null],
       extent: [null, null],
@@ -772,9 +773,6 @@ export class AddSolutionComponent
           minlength: 3
         },
         description: {
-          required: true
-        },
-        technology: {
           required: true
         },
         deployment: {
@@ -1538,7 +1536,6 @@ export class AddSolutionComponent
     return (
       this.solution.title &&
       this.solution.description &&
-      this.solution.technology &&
       this.solution.impact &&
       this.solution.deployment &&
       this.solution.budget.title &&

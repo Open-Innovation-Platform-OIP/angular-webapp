@@ -868,7 +868,7 @@ export class WizardComponent
     searchKey = searchKey.replace(/[^a-zA-Z ]/g, "");
     // console.log(searchKey, "searchkey");
 
-    if (searchKey.length > 3) {
+    if (searchKey.length >= 3) {
       this.searchResults = {};
       this.apollo
         .watchQuery<any>({
