@@ -57,10 +57,10 @@
                               <input placeholder='Select Problem *' #problemInput [formControl]="problemCtrl" autofocus
                                 [matAutocomplete]="auto" [matChipInputFor]="chipList"
                                 [matChipInputSeparatorKeyCodes]="separatorKeysCodes" [matChipInputAddOnBlur]="addOnBlur"
-                                (keyup)="searchProblem($event)">
+                                (input)="searchProblem($event)" (focus)="hideProblems('problem')">
                             </mat-chip-list>
                             <mat-autocomplete #auto="matAutocomplete" (optionSelected)="selected($event)">
-                              <mat-option *ngFor="let problem of searchResults" [value]="problem">
+                              <mat-option *ngFor="let problem of objectValues(searchResults)" [value]="problem">
                                 {{problem.title}}
                               </mat-option>
                             </mat-autocomplete>
@@ -99,7 +99,7 @@
                             [ngClass]="displayFieldCss(type, 'title')">
                             <input type="text" matInput id="title" appAutofocus placeholder="Title *"
                               formControlName="title" [(ngModel)]="solution.title"
-                              (input)="smartSearch($event.target.value)">
+                              (input)="solutionSearch($event.target.value)" (focus)="hideProblems('solution')">
                           </mat-form-field>
                         </div>
                       </div>
@@ -193,14 +193,8 @@
                                       <li>
                                         <h4>Resources Needed for {{problem.title}}</h4>
                                         <p>{{problem.resources_needed}}</p>
-
-
                                       </li>
-
-
                                     </ul>
-
-
                                   </div>
                                 </div>
                               </div>
@@ -253,13 +247,8 @@
                                       <li>
                                         <h4>Impact for {{problem.title}}</h4>
                                         <p>{{problem.impact}}</p>
-
-
                                       </li>
-
-
                                     </ul>
-
                                   </div>
                                 </div>
                               </div>
@@ -312,13 +301,8 @@
                                       <li>
                                         <h4>Extent for {{problem.title}}</h4>
                                         <p>{{problem.extent}}</p>
-
-
                                       </li>
-
-
                                     </ul>
-
                                   </div>
                                 </div>
                               </div>
@@ -668,32 +652,41 @@
         </div>
       </div>
 
-      <div class="col-md-4">
-        <ng-container *ngIf="smartSearchResults.length > 0">
+      <!--Problem search results-->
+      <div class="col-md-4" *ngIf="hide">
+        <ng-container *ngIf="objectValues(searchResults).length > 0">
           <div class="row justify-content-center">
             <div class="col-sm-10">
-              <h4>Found {{smartSearchResults.length}} similar problems</h4>
+              <h4>Found {{objectValues(searchResults).length}} similar problems</h4>
             </div>
           </div>
           <div class="row">
-            <div class="col-sm-12" *ngFor="let result of smartSearchResults">
+            <div class="col-sm-12" *ngFor="let result of objectValues(searchResults)">
               <app-problem-card *ngIf="problem" [problemData]="result">
               </app-problem-card>
             </div>
           </div>
         </ng-container>
-
-
-
-
-
       </div>
+      <!--Problem search results-->
 
-
-
-
-
-
+      <!--Solution smart search results-->
+      <div class="col-md-4" *ngIf="!hide">
+        <ng-container *ngIf="solutionSearchResults.length > 0">
+          <div class="row justify-content-center">
+            <div class="col-sm-10">
+              <h4>Found {{solutionSearchResults.length}} similar solutions</h4>
+            </div>
+          </div>
+          <div class="row">
+            <div class="col-sm-12" *ngFor="let solution of solutionSearchResults">
+              <app-solution-card *ngIf="solution" [solutionData]="solution">
+              </app-solution-card>
+            </div>
+          </div>
+        </ng-container>
+      </div>
+      <!--Solution smart search results-->
 
     </div>
   </div>
