@@ -1,4 +1,6 @@
-import { Component, OnInit, Input } from "@angular/core";
+import { Component, OnInit, Input, Output, EventEmitter } from "@angular/core";
+import { Router, ActivatedRoute } from "@angular/router";
+
 const misc: any = {
   navbar_menu_visible: 0,
   active_collapse: true,
@@ -12,18 +14,22 @@ const misc: any = {
 })
 export class ProblemCardComponent implements OnInit {
   @Input() problemData: any;
+  @Input() usedIn: String;
+  @Output() selected = new EventEmitter();
+
   numOfVotes: Number = 0;
   numOfWatchers: Number = 0;
   numOfValidations: Number = 0;
   validated: Boolean = false;
-  link = '';
+  link = "";
   // modifiedAt: any;
   // sectors: any[] = [];
 
-  constructor() {}
+  constructor(private router: Router) {}
 
   ngOnInit() {
     // console.log("problem card", this.problemData);
+    console.log(this.usedIn, "used");
     if (this.problemData.is_draft) {
       this.link += `/problems/${this.problemData.id}/edit`;
     } else {
@@ -54,6 +60,19 @@ export class ProblemCardComponent implements OnInit {
     //     return sector;
     //   };
     // })
+  }
+  navigation() {
+    if (this.usedIn !== "smartSearch") {
+      this.router.navigate([this.link]);
+    } else {
+      window.open(this.link, "_blank");
+    }
+  }
+  selectProblem() {
+    this.selected.emit({
+      id: this.problemData.id,
+      title: this.problemData.title
+    });
   }
 
   checkUrlIsImg(url) {

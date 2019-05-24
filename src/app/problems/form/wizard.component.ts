@@ -988,12 +988,6 @@ export class WizardComponent
   }
 
   publishProblem(problem) {
-    if (this.is_edit && !problem.is_draft) {
-      this.showSuccessSwal("Problem Updated");
-    } else {
-      this.showSuccessSwal("Problem Added");
-    }
-
     problem.is_draft = false;
     // console.log(problem, "problem before publishing");
     clearInterval(this.autosaveInterval);
@@ -1155,32 +1149,18 @@ export class WizardComponent
                   data => {
                     if (!this.problem.is_draft) {
                       this.confirmSubmission();
-                    } else if (!this.is_edit) {
-                      this.router.navigate([
-                        "problems",
-                        this.problem["id"],
-                        "edit"
-                      ]);
                     }
                   },
                   err => {
                     console.error("Error uploading tags", err);
                     if (!this.problem.is_draft) {
                       this.confirmSubmission();
-                    } else if (!this.is_edit) {
-                      this.router.navigate([
-                        "problems",
-                        this.problem["id"],
-                        "edit"
-                      ]);
                     }
                   }
                 );
             } else {
               if (!this.problem.is_draft) {
                 this.confirmSubmission();
-              } else if (!this.is_edit) {
-                this.router.navigate(["problems", this.problem["id"], "edit"]);
               }
             }
           }
@@ -1240,20 +1220,12 @@ export class WizardComponent
       );
   }
   confirmSubmission() {
-    // if (this.is_edit) {
-    //   this.showSuccessSwal("Problem Updated");
-    //   // console.log(this.is_edit, this.problem.is_draft, "alert");
-    //   // alert("Your problem has been updated!");
-    // } else {
-    //   // alert("Your problem has been submitted!");
-    //   this.showSuccessSwal("Problem Added");
-    // }
-    // if (this.is_edit && !this.problem.is_draft) {
-    //   console.log(this.is_edit, this.problem.is_draft, "alert");
-    //   alert("Your problem has been updated!");
-    // } else {
-    //   alert("Your problem has been submitted!");
-    // }
+    if (this.is_edit) {
+      this.showSuccessSwal("Problem Updated");
+    } else {
+      this.showSuccessSwal("Problem Added");
+    }
+
     this.router.navigate(["problems", this.problem["id"]]);
   }
 

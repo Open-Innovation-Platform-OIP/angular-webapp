@@ -405,6 +405,8 @@ export class WizardContainerComponent
       previousSelector: ".btn-previous",
 
       onNext: function(tab, navigation, index) {
+        window.scroll(0, 0);
+
         const $valid = $(".card-wizard form").valid();
         if (!$valid) {
           $validator.focusInvalid();
@@ -416,6 +418,7 @@ export class WizardContainerComponent
             )
           ) {
             canProceed = true;
+
             return true;
           } else {
             return false;

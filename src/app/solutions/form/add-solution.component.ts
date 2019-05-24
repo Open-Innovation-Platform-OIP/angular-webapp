@@ -1,22 +1,3 @@
-// import {
-//   Component,
-//   OnInit
-// } from "@angular/core";
-
-// @Component({
-//   selector: "app-add-solution",
-//   templateUrl: "./add-solution.component.html",
-//   styleUrls: ["./add-solution.component.css"]
-// })
-// export class AddSolutionComponent implements OnInit {
-//
-//   constructor() {}
-
-//   ngOnInit() {}
-// }
-
-// IMPORTANT: this is a plugin which requires jQuery for initialisation and data manipulation
-
 import {
   Component,
   OnInit,
@@ -333,6 +314,10 @@ export class AddSolutionComponent
     this.problemInput.nativeElement.value = "";
     this.problemCtrl.setValue(null);
     this.getProblemData(selectedProblem.id);
+  }
+  selectProblem(problem) {
+    this.selectedProblems.push(problem);
+    this.getProblemData(problem.id);
   }
 
   getProblemData(id) {
@@ -665,6 +650,9 @@ export class AddSolutionComponent
     if (this.problemId) {
       this.selectedProblems.push({ id: this.problemId });
     }
+    this.autosaveInterval = setInterval(() => {
+      this.autoSave();
+    }, 10000);
 
     if (this.selectedProblems.length) {
       this.selectedProblems.forEach(problem => {
@@ -807,6 +795,8 @@ export class AddSolutionComponent
       previousSelector: ".btn-previous",
 
       onNext: function(tab, navigation, index) {
+        window.scroll(0, 0);
+
         var $valid = $(".card-wizard form").valid();
         if (!$valid) {
           $validator.focusInvalid();
@@ -1084,22 +1074,19 @@ export class AddSolutionComponent
   }
 
   publishSolution() {
-    if (!this.is_edit) {
-      swal({
-        title: "Are you sure you want to publish the Solution",
-        // text: "You won't be able to revert this!",
-        type: "warning",
-        showCancelButton: true,
-        confirmButtonClass: "btn btn-success",
-        cancelButtonClass: "btn btn-warning",
-        confirmButtonText: "Yes",
-        buttonsStyling: false
-      }).then(result => {
-        this.submitSolutionToDB();
-      });
-    } else {
+    swal({
+      title: "Are you sure you want to publish the Solution",
+      // text: "You won't be able to revert this!",
+      type: "warning",
+      showCancelButton: true,
+      confirmButtonClass: "btn btn-success",
+      cancelButtonClass: "btn btn-warning",
+      confirmButtonText: "Yes",
+      buttonsStyling: false
+    }).then(result => {
+      this.solution.is_draft = false;
       this.submitSolutionToDB();
-    }
+    });
   }
 
   linkSolutionToProblem() {
@@ -1135,6 +1122,16 @@ export class AddSolutionComponent
     });
   }
 
+  autoSave() {
+    // console.log(this.problem, "problem data");
+    // console.log("trying to auto save");
+    if (this.solution.is_draft) {
+      if (this.solution.title) {
+        this.submitSolutionToDB();
+      }
+    }
+  }
+
   submitSolutionToDB() {
     // console.log(problem, "submitted");
     const upsert_solution = gql`
@@ -1150,6 +1147,7 @@ export class AddSolutionComponent
               resources
               website_url
               impact
+              extent
               timeline
               pilots
               deployment
@@ -1188,19 +1186,12 @@ export class AddSolutionComponent
             this.saveProblemsInDB(this.solution["id"], this.selectedProblems);
             this.saveOwnersInDB(this.solution["id"], this.owners);
 
-            if (this.is_edit) {
+            if (this.is_edit && !this.solution.is_draft) {
               this.showSuccessSwal("Solution Updated");
               this.router.navigate(["solutions", this.solution["id"]]);
-            } else {
+            } else if (!this.is_edit && !this.solution.is_draft) {
               this.showSuccessSwal("Solution Added");
-              // this.linkSolutionToProblem().subscribe(
-              //   result => {
               this.router.navigate(["solutions", this.solution["id"]]);
-              //   },
-              //   err => {
-              //     console.error(JSON.stringify(err));
-              //   }
-              // );
             }
           }
         },

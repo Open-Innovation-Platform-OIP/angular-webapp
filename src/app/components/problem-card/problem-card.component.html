@@ -1,10 +1,13 @@
-<div class="card card-product actions problem-card" [routerLink]="link">
-  <div class="card-header card-header-image">
+<div class="card card-product actions problem-card">
+
+
+  <div class="card-header card-header-image" (click)="navigation()">
     <img
       src="{{ (problemData.featured_url && checkUrlIsImg(problemData.featured_url)) ? problemData.featured_url : './assets/img/image_placeholder.jpg' }}"
       width="200px" height="180px" style="object-fit:inherit;" />
   </div>
-  <div class="card-body">
+
+  <div class="card-body" (click)="navigation()">
     <p class="card-title title">
       {{ problemData.title }}
     </p>
@@ -17,8 +20,16 @@
       <span *ngIf="location.Address && location.Address.Label && i < 2">{{location.Address.Label}}</span>
       <span *ngIf="i<2">&nbsp;</span>
     </div>
+
   </div>
+  <div>
+    <button *ngIf="usedIn==='smartSearch'" class="btn btn-rose btn-sm" style="margin-top: 2px;">
+      <a (click)="selectProblem()">Add </a>
+    </button>
+  </div>
+
   <div class="card-footer">
+
     <div class="stats">
       <i class="material-icons">
         thumb_up
