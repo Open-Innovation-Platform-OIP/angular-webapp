@@ -43,6 +43,7 @@ import {
 import { Apollo } from "apollo-angular";
 import gql from "graphql-tag";
 import { first } from "rxjs/operators";
+import { SearchService } from "../../services/search.service";
 
 declare var H: any;
 declare const $: any;
@@ -124,13 +125,15 @@ export class AddSolutionComponent
   input_pattern = new RegExp("^s*");
 
   readonly separatorKeysCodes: number[] = [ENTER, COMMA];
-  // searchResults = {};
-  searchResults = [];
-  smartSearchResults = [];
+  searchResults = {};
+  solutionSearchResults: any = [];
+  // searchResults = [];
+  // smartSearchResults = [];
   problemCtrl = new FormControl();
   ownersCtrl = new FormControl();
   locationCtrl = new FormControl();
   filteredProblems: Observable<any>;
+  searchResultsObservable: any;
 
   testObject: any = {
     1: {
@@ -158,6 +161,7 @@ export class AddSolutionComponent
     { value: Number.MAX_VALUE, viewValue: ">100,000" }
   ];
   touch: boolean;
+  hide: boolean = false;
 
   @ViewChild("problemInput") problemInput: ElementRef<HTMLInputElement>;
   @ViewChild("locationInput") locationInput: ElementRef<HTMLInputElement>;
@@ -214,6 +218,7 @@ export class AddSolutionComponent
     private filesService: FilesService,
     private tagService: TagsService,
     private usersService: UsersService,
+    private searchService: SearchService,
     private auth: AuthService,
     private here: GeocoderService,
     private apollo: Apollo
@@ -240,11 +245,7 @@ export class AddSolutionComponent
 
     canProceed = true;
 
-    this.filteredProblems = this.problemCtrl.valueChanges.pipe(
-      startWith(null),
-      map((problem: string | null) => (problem ? this._filter(problem) : []))
-    );
-    console.log("", this.filteredProblems);
+    // this.problem.organization = "Social Alpha";
 
     this.filteredOwners = this.ownersCtrl.valueChanges.pipe(
       startWith(null),
@@ -263,6 +264,14 @@ export class AddSolutionComponent
       timer: 3000,
       showConfirmButton: false
     }).catch(swal.noop);
+  }
+
+  hideProblems(id) {
+    if (id == "problem") {
+      this.hide = true;
+    } else if (id == "solution") {
+      this.hide = false;
+    }
   }
 
   displayFieldCss(form: FormGroup, field: string) {
@@ -298,6 +307,9 @@ export class AddSolutionComponent
     this.problemInput.nativeElement.value = "";
     this.problemCtrl.setValue(null);
     this.getProblemData(selectedProblem.id);
+    console.log("selected title", selectedProblem.title);
+    this.searchProblem(selectedProblem.title);
+    delete this.searchResults[selectedProblem.id];
   }
   selectProblem(problem) {
     this.selectedProblems.add(problem);
@@ -320,9 +332,7 @@ export class AddSolutionComponent
                       max_population
                       beneficiary_attributes
                       resources_needed
-                     
-                    
-                     
+                                  
                       }
                   }
                   `,
@@ -339,6 +349,22 @@ export class AddSolutionComponent
           console.log(error);
         }
       );
+  }
+
+  solutionSearch(solutionSearchInput: string) {
+    if (solutionSearchInput.length >= 3) {
+      this.searchService.solutionSearch(solutionSearchInput).subscribe(
+        value => {
+          this.solutionSearchResults = value.data.search_solutions_v2;
+          console.log("Solution title search", this.solutionSearchResults);
+        },
+        error => {
+          console.log(JSON.stringify(error));
+        }
+      );
+    } else {
+      this.solutionSearchResults = [];
+    }
   }
 
   focusOnField(event) {
@@ -362,37 +388,6 @@ export class AddSolutionComponent
     this.showProblemResourcesNeeded = false;
     this.showProblemExtent = false;
     this.showProblemBeneficiaryAttributes = false;
-  }
-
-  async _filter(value: string) {
-    const filterValue = value.toLowerCase();
-    // return Object.keys(this.tagService.allTags).filter(
-    //   sector => sector.toLowerCase().indexOf(filterValue) === 0
-    // );
-    console.log(this.smartSearch(filterValue), "smart search");
-    this.smartSearch(filterValue).subscribe(
-      result => {
-        console.log(result, "result from search");
-        if (result.data.search_problems_v2.length > 0) {
-          // console.log(result.data.search_problems_v2.length, "search");
-          // return result.data.search_problems_v2.map(sector => {
-          //   console.log(sector.title, "result");
-          //   this.searchResults.push(sector.title);
-          //   console.log("search results", this.searchResults);
-          //   return this.searchResults;
-          // });
-          // console.log(this.searchResults, ">>>>>searchresults");
-          // if (!this.is_edit) {
-          //   canProceed = false;
-          // }
-        }
-      },
-      err => {
-        // console.log(err, "error from smart search");
-        console.error(JSON.stringify(err));
-      }
-    );
-    // return [];
   }
 
   remove(problem): void {
@@ -498,21 +493,17 @@ export class AddSolutionComponent
   searchProblem(event) {
     console.log("Search Event", event.target.value);
     if (event.target.value.length) {
-      this.smartSearch(event.target.value).subscribe(
+      this.searchResultsObservable = this.smartSearch(event.target.value);
+      this.searchResultsObservable.subscribe(
         result => {
           // console.log(result, "result from search");
           if (result.data.search_problems_v2.length > 0) {
-            // console.log(result.data.search_problems_v2.length, "search");
-            this.smartSearchResults = [];
-            this.searchResults = [];
+            // this.smartSearchResults = [];
+            // this.searchResults = [];
+            this.searchResults = {};
 
             result.data.search_problems_v2.map(problem => {
-              this.smartSearchResults.push(problem);
-              // console.log("SMART", this.smartSearchResults);
-              // console.log(problem.title, "result");
-              this.searchResults.push({ id: problem.id, title: problem.title });
-              // console.log("search results", this.searchResults);
-              // return this.searchResults;
+              this.searchResults[problem["id"]] = problem;
             });
             // console.log(this.searchResults, ">>>>>searchresults");
             // if (!this.is_edit) {
@@ -533,11 +524,9 @@ export class AddSolutionComponent
     // searchKey = searchKey.replace(/[^a-zA-Z ]/g, "");
     // console.log(searchKey, "searchkey");
 
-    if (searchKey.length >= 3) {
-      // this.searchResults = {};
-      this.searchResults = [];
-      return this.apollo.watchQuery<any>({
-        query: gql`query {
+    // this.searchResults = [];
+    return this.apollo.watchQuery<any>({
+      query: gql`query {
                     search_problems_v2(
                     args: {search: "${searchKey.toLowerCase()}"},where: { is_draft: { _eq: false } }
                     ){
@@ -584,14 +573,9 @@ export class AddSolutionComponent
                     }
                     }
                     }`,
-        fetchPolicy: "no-cache"
-        // pollInterval: 200
-      }).valueChanges;
-    } else {
-      // this.searchResults = {};
-      this.searchResults = [];
-      this.smartSearchResults = [];
-    }
+      fetchPolicy: "no-cache"
+      // pollInterval: 200
+    }).valueChanges;
   }
 
   private filterOwners(value: String): any[] {
