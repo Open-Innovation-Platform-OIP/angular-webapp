@@ -109,11 +109,12 @@ export class AddSolutionComponent
 
   type: FormGroup;
 
-  selectedProblems: any[] = [];
+  selectedProblems: any = new Set();
 
   showProblemImpacts: Boolean = false;
   showProblemResourcesNeeded: Boolean = false;
   showProblemExtent: Boolean = false;
+  showProblemBeneficiaryAttributes: Boolean = false;
 
   populationValue: Number;
   media_url = "";
@@ -176,28 +177,7 @@ export class AddSolutionComponent
   // owners = [];
   voted_by = [];
   watched_by = [];
-  problem = {
-    title: "",
-    description: "",
-    organization: "",
-    impact: "",
-    extent: "",
-    location: [],
-    min_population: 0,
-    max_population: 0,
-    beneficiary_attributes: "",
-    resources_needed: "",
-    image_urls: [],
-    video_urls: [],
-    featured_url: "",
-    embed_urls: [],
-    featured_type: "",
 
-    created_by: Number(this.auth.currentUserValue.id),
-    is_draft: true,
-
-    attachments: []
-  };
   solution = {
     title: "",
     description: "",
@@ -213,6 +193,8 @@ export class AddSolutionComponent
       cost: 0
     },
     extent: "",
+
+    beneficiary_attributes: "",
     image_urls: [],
     video_urls: [],
     featured_url: "",
@@ -244,6 +226,8 @@ export class AddSolutionComponent
       resources: [null, null],
       impact: [null, null],
       extent: [null, null],
+      beneficiary_attributes: [null, null],
+
       timeline: [null, null],
       pilots: [null, null],
       deployment: [null, Validators.required],
@@ -256,7 +240,6 @@ export class AddSolutionComponent
 
     canProceed = true;
 
-    this.problem.organization = "Social Alpha";
     this.filteredProblems = this.problemCtrl.valueChanges.pipe(
       startWith(null),
       map((problem: string | null) => (problem ? this._filter(problem) : []))
@@ -295,7 +278,7 @@ export class AddSolutionComponent
       const value = event.value;
       // Add our sector
       if ((value || "").trim()) {
-        this.selectedProblems.push(value.trim().toUpperCase());
+        this.selectedProblems.add(value.trim().toUpperCase());
       }
       // Reset the input value
       if (input) {
@@ -309,14 +292,15 @@ export class AddSolutionComponent
   selected(event: MatAutocompleteSelectedEvent): void {
     let selectedProblem = event.option.value;
 
-    this.selectedProblems.push(selectedProblem);
+    this.selectedProblems.add(selectedProblem);
+    console.log(this.selectedProblems, "problem set");
 
     this.problemInput.nativeElement.value = "";
     this.problemCtrl.setValue(null);
     this.getProblemData(selectedProblem.id);
   }
   selectProblem(problem) {
-    this.selectedProblems.push(problem);
+    this.selectedProblems.add(problem);
     this.getProblemData(problem.id);
   }
 
@@ -368,12 +352,16 @@ export class AddSolutionComponent
     if (event.target.id === "extent") {
       this.showProblemExtent = true;
     }
+    if (event.target.id === "beneficiary_attributes") {
+      this.showProblemBeneficiaryAttributes = true;
+    }
   }
 
   blurOnField(event) {
     this.showProblemImpacts = false;
     this.showProblemResourcesNeeded = false;
     this.showProblemExtent = false;
+    this.showProblemBeneficiaryAttributes = false;
   }
 
   async _filter(value: string) {
@@ -409,11 +397,11 @@ export class AddSolutionComponent
 
   remove(problem): void {
     console.log(problem, "remove");
-    const index = this.selectedProblems.indexOf(problem);
-    if (index >= 0) {
-      this.selectedProblems.splice(index, 1);
-    }
-
+    // const index = this.selectedProblems.indexOf(problem);
+    // if (index >= 0) {
+    //   this.selectedProblems.splice(index, 1);
+    // }
+    this.selectedProblems.delete(problem);
     delete this.selectedProblemsData[problem.id];
 
     // this.tagRemoved.emit(sector);
@@ -421,6 +409,7 @@ export class AddSolutionComponent
 
   saveProblemsInDB(solutionId, problemsArray) {
     let problems = [];
+    problemsArray = Array.from(problemsArray);
     problems = problemsArray.map(problem => {
       return {
         problem_id: problem.id,
@@ -511,7 +500,7 @@ export class AddSolutionComponent
     if (event.target.value.length) {
       this.smartSearch(event.target.value).subscribe(
         result => {
-          console.log(result, "result from search");
+          // console.log(result, "result from search");
           if (result.data.search_problems_v2.length > 0) {
             // console.log(result.data.search_problems_v2.length, "search");
             this.smartSearchResults = [];
@@ -519,10 +508,10 @@ export class AddSolutionComponent
 
             result.data.search_problems_v2.map(problem => {
               this.smartSearchResults.push(problem);
-              console.log("SMART", this.smartSearchResults);
-              console.log(problem.title, "result");
+              // console.log("SMART", this.smartSearchResults);
+              // console.log(problem.title, "result");
               this.searchResults.push({ id: problem.id, title: problem.title });
-              console.log("search results", this.searchResults);
+              // console.log("search results", this.searchResults);
               // return this.searchResults;
             });
             // console.log(this.searchResults, ">>>>>searchresults");
@@ -648,14 +637,16 @@ export class AddSolutionComponent
     this.problemId = Number(this.route.snapshot.paramMap.get("problemId"));
     console.log(this.route.snapshot.paramMap, "problem param");
     if (this.problemId) {
-      this.selectedProblems.push({ id: this.problemId });
+      this.selectedProblems.add({ id: this.problemId });
     }
     this.autosaveInterval = setInterval(() => {
       this.autoSave();
     }, 10000);
+    console.log(this.selectedProblems, "selected problems set ");
 
-    if (this.selectedProblems.length) {
+    if (this.selectedProblems.size) {
       this.selectedProblems.forEach(problem => {
+        console.log("selected problems on ngoninit");
         this.getProblemData(problem.id);
       });
     }
@@ -686,6 +677,7 @@ export class AddSolutionComponent
                             impact
                             timeline
                             extent
+                            beneficiary_attributes
                             pilots
                             embed_urls
                             featured_url
@@ -720,9 +712,10 @@ export class AddSolutionComponent
               // this.solution.is_draft = result.data.problems[0].is_draft;
             });
             result.data.solutions[0].problems_solutions.map(problem => {
-              this.selectedProblems.push(problem.problem);
+              this.selectedProblems.add(problem.problem);
+              this.getProblemData(problem.problem.id);
             });
-            console.log(result, "SOLUTIONS");
+            console.log(this.selectedProblems, "SOLUTIONS");
             if (result.data.solutions[0].solution_owners) {
               result.data.solutions[0].solution_owners.forEach(ownerArray => {
                 if (
@@ -744,6 +737,7 @@ export class AddSolutionComponent
       resources: [null, null],
       impact: [null, null],
       extent: [null, null],
+      beneficiary_attributes: [null, null],
       timeline: [null, null],
       pilots: [null, null],
       deployment: [null, Validators.required],
@@ -1125,7 +1119,7 @@ export class AddSolutionComponent
   autoSave() {
     // console.log(this.problem, "problem data");
     // console.log("trying to auto save");
-    if (this.solution.is_draft) {
+    if (this.solution.is_draft && !this.is_edit) {
       if (this.solution.title) {
         this.submitSolutionToDB();
       }
@@ -1148,6 +1142,7 @@ export class AddSolutionComponent
               website_url
               impact
               extent
+              beneficiary_attributes
               timeline
               pilots
               deployment
@@ -1531,7 +1526,7 @@ export class AddSolutionComponent
       this.solution.deployment &&
       this.solution.budget.title &&
       this.solution.budget.cost &&
-      this.selectedProblems.length
+      this.selectedProblems.size
     );
   }
 
