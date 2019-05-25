@@ -29,7 +29,7 @@ export class ProblemCardComponent implements OnInit {
 
   ngOnInit() {
     // console.log("problem card", this.problemData);
-    console.log(this.usedIn, "used");
+    // console.log(this.usedIn, "used");
     if (this.problemData.is_draft) {
       this.link += `/problems/${this.problemData.id}/edit`;
     } else {
