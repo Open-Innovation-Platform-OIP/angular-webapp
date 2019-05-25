@@ -21,7 +21,7 @@
 
     <!-- <div *ngIf="!isMap()">
             <app-footer-cmp></app-footer-cmp>
-         </div>
-   
-     <app-fixedplugin></app-fixedplugin> -->
+         </div> -->
+
+    <app-fixedplugin *ngIf="showButton()" (click)="backToTop()"></app-fixedplugin>
 </div>
