@@ -211,8 +211,8 @@ export class FixedpluginComponent implements OnInit {
     });
   }
 
-  // backToTop() {
-  //   document.body.scrollTop = 0;
-  //   document.documentElement.scrollTop = 0;
-  // }
+  backToTop() {
+    document.body.scrollTop = 0;
+    document.documentElement.scrollTop = 0;
+  }
 }

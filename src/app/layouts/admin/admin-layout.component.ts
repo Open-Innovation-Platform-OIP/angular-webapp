@@ -192,9 +192,4 @@ export class AdminLayoutComponent implements OnInit, AfterViewInit {
     }
     return false;
   }
-
-  backToTop() {
-    document.body.scrollTop = 0;
-    document.documentElement.scrollTop = 0;
-  }
 }
