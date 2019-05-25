@@ -501,6 +501,7 @@ export class ProblemDetailComponent implements OnInit, OnDestroy {
             updated_at
             featured_url
             is_deleted
+            is_draft
             solution_watchers {
               user_id
             }
@@ -736,8 +737,11 @@ export class ProblemDetailComponent implements OnInit, OnDestroy {
       }
     });
     this.collaborators = problem.problem_collaborators;
-    this.solutions = problem.problems_solutions.map(problemData => {
-      return problemData.solution;
+    this.solutions = [];
+    problem.problems_solutions.forEach(solutions => {
+      if (!solutions.solution.is_draft) {
+        this.solutions.push(solutions.solution);
+      }
     });
 
     console.log(this.solutions, "solutions refresh");

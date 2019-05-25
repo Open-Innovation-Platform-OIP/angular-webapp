@@ -524,6 +524,7 @@ export class SolutionDetailComponent implements OnInit {
             }
           
       }
+     
     }
 
 
@@ -642,6 +643,7 @@ export class SolutionDetailComponent implements OnInit {
   //
 
   parseSolution(solution) {
+    // console.log(solution, "solution parsed");
     if (solution.title) {
       console.log("Message", solution.title);
       this.message = solution.title;
