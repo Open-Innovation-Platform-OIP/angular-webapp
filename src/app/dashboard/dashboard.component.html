@@ -22,7 +22,8 @@
       <hr />
       <div *ngIf="drafts.length > 4" class="col-md-2" style="padding-top: 1em;">
         <button mat-raised-button class="btn btn-warning btn-sm" [routerLink]="['/dashboard/drafts',{ type: 'drafts'}]">
-          View All ({{drafts.length}}) <i class="material-icons">keyboard_arrow_right</i>
+          View All ({{this.userService.dashboardDrafts.length+this.userService.solutionDrafts.length}}) <i
+            class="material-icons">keyboard_arrow_right</i>
         </button>
       </div>
     </div>
@@ -52,6 +53,28 @@
         <app-problem-card *ngIf="i < 4" [problemData]="problem"></app-problem-card>
       </div>
     </div>
+
+
+    <div class="row">
+      <div class="col-md-10">
+        <h3 *ngIf="userSolutions.length" class="card-title">
+          Solutions added by you
+        </h3>
+      </div>
+      <div *ngIf="userSolutions.length > 4" class="col-md-2" style="padding-top: 1em;">
+        <button mat-raised-button class="btn btn-warning btn-sm"
+          [routerLink]="['/dashboard/solutions',{ type: 'solutions'}]">
+          View All ({{userSolutions.length}}) <i class="material-icons">keyboard_arrow_right</i>
+        </button>
+      </div>
+    </div>
+    <br />
+    <div class="row">
+      <div class="col-md-3" *ngFor="let solution of userSolutions; let i = index">
+        <app-solution-card *ngIf="i < 4" [solutionData]="solution"></app-solution-card>
+      </div>
+    </div>
+
 
     <div class="row">
       <div class="col-md-10">

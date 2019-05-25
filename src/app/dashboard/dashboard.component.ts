@@ -19,18 +19,23 @@ export class DashboardComponent implements OnInit, OnDestroy {
   objectKeys = Object["keys"];
   drafts = [];
   userProblems = [];
+  userSolutions = [];
   contributions = {};
   recommendedProblems = {};
   recommendedUsers = {};
   showLoader = true;
   draftsQueryRef: QueryRef<any>;
+  solutionDraftsQueryRef: QueryRef<any>;
   userProblemsQueryRef: QueryRef<any>;
   contributionsQueryRef: QueryRef<any>;
+  userSolutionsQueryRef: QueryRef<any>;
   recommendedProblemsQueryRef: QueryRef<any>;
   recommendedUsersQueryRef: QueryRef<any>;
   draftsSub: Subscription;
   userProblemsQuerySub: Subscription;
+  solutionDraftsSub: Subscription;
   contributionsSub: Subscription;
+  userSolutionsQuerySub: Subscription;
   recommendedProblemsSub: Subscription;
   recommendedUsersSub: Subscription;
   // problemFields = ['id', 'featured_url','title','description','location','problem_voters{user_id}','problem_watchers{user_id}','problem_validations{validated_by}'];
@@ -44,6 +49,19 @@ export class DashboardComponent implements OnInit, OnDestroy {
     problem_voters{user_id}
     problem_watchers{user_id}
     problem_validations{validated_by}
+    updated_at
+  }`;
+
+  solutionQueryString = `{
+    id
+    is_draft
+    featured_url
+    title
+    description
+    
+    solution_voters{user_id}
+    solution_watchers{user_id}
+    solution_validations{validated_by}
     updated_at
   }`;
   userQueryString = `{
@@ -94,6 +112,8 @@ export class DashboardComponent implements OnInit, OnDestroy {
     this.getContributions();
     this.getRecommendedProblems();
     this.getRecommendedUsers();
+    this.getSolutionDrafts();
+    this.getUsersSolutions();
     // this.problemQueryString = '{' + this.problemFields.join('\n') + '}';
   }
 
@@ -134,9 +154,39 @@ export class DashboardComponent implements OnInit, OnDestroy {
       // console.log(data);
       if (data.problems.length > 0) {
         this.drafts = data.problems;
-        this.problemService.dashboardDrafts = data.problems;
+        this.userService.dashboardDrafts = data.problems;
       }
     });
+  }
+
+  getSolutionDrafts() {
+    const solutionDraftsQuery = gql`
+      {
+        solutions(where:{is_draft:{_eq:true},is_deleted:{_eq:false}, created_by:{_eq: ${
+          this.auth.currentUserValue.id
+        }}} order_by: {modified_at: desc}) ${this.solutionQueryString}
+    }
+    `;
+
+    this.solutionDraftsQueryRef = this.apollo.watchQuery({
+      query: solutionDraftsQuery,
+      pollInterval: 1000,
+      fetchPolicy: "network-only"
+    });
+    // this.draftsObs = this.draftsQueryRef.valueChanges;
+    this.solutionDraftsSub = this.solutionDraftsQueryRef.valueChanges.subscribe(
+      ({ data }) => {
+        // console.log(data);
+        if (data.solutions.length > 0) {
+          // this.drafts = data.solutions;
+          this.userService.solutionDrafts = data.solutions;
+          console.log(this.userService.solutionDrafts, "user solution drafts");
+        }
+      },
+      error => {
+        console.error(JSON.stringify(error));
+      }
+    );
   }
 
   getUsersProblems() {
@@ -159,7 +209,33 @@ export class DashboardComponent implements OnInit, OnDestroy {
       ({ data }) => {
         if (data.problems.length > 0) {
           this.userProblems = data.problems;
-          this.problemService.dashboardUserProblems = data.problems;
+          this.userService.dashboardUserProblems = data.problems;
+        }
+      }
+    );
+  }
+
+  getUsersSolutions() {
+    const userSolutionQuery = gql`
+    {
+      solutions( 
+        where:{ _and:[
+        { is_draft: {_eq: false}},
+        {created_by: {_eq: ${this.auth.currentUserValue.id} }}
+      ]
+    } order_by: {updated_at: desc}) ${this.solutionQueryString}
+    }
+    `;
+    this.userSolutionsQueryRef = this.apollo.watchQuery({
+      query: userSolutionQuery,
+      pollInterval: 1000,
+      fetchPolicy: "network-only"
+    });
+    this.userSolutionsQuerySub = this.userSolutionsQueryRef.valueChanges.subscribe(
+      ({ data }) => {
+        if (data.solutions.length > 0) {
+          this.userSolutions = data.solutions;
+          this.userService.dashboardUserSolutions = data.solutions;
         }
       }
     );
@@ -205,7 +281,7 @@ export class DashboardComponent implements OnInit, OnDestroy {
                 this.contributions[problem["id"]] = problem;
                 // console.log(this.contributions, "contributions");
 
-                this.problemService.dashboardContributions[
+                this.userService.dashboardContributions[
                   problem["id"]
                 ] = problem;
                 // console.log(
@@ -250,7 +326,7 @@ export class DashboardComponent implements OnInit, OnDestroy {
                 if (p && p.problem && p.problem.id) {
                   const problem = p.problem;
                   this.recommendedProblems[problem["id"]] = problem;
-                  this.problemService.dashboardRecommendations[
+                  this.userService.dashboardRecommendations[
                     problem["id"]
                   ] = problem;
                 }
@@ -314,7 +390,7 @@ export class DashboardComponent implements OnInit, OnDestroy {
               org.organizationByOrganizationId.users.map(user => {
                 if (user && user.id) {
                   this.recommendedUsers[user["id"]] = user;
-                  this.problemService.dashboardUsers[user["id"]] = user;
+                  this.userService.dashboardUsers[user["id"]] = user;
                 }
                 // this.recommendedUsers.add(user);
               });
@@ -334,9 +410,13 @@ export class DashboardComponent implements OnInit, OnDestroy {
     this.contributionsQueryRef.stopPolling();
     this.recommendedProblemsQueryRef.stopPolling();
     this.recommendedUsersQueryRef.stopPolling();
+    this.userSolutionsQueryRef.stopPolling();
     this.draftsSub.unsubscribe();
     this.contributionsSub.unsubscribe();
     this.recommendedProblemsSub.unsubscribe();
     this.recommendedUsersSub.unsubscribe();
+    this.solutionDraftsQueryRef.stopPolling();
+    this.solutionDraftsSub.unsubscribe();
+    this.userSolutionsQuerySub.unsubscribe();
   }
 }

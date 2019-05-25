@@ -62,6 +62,14 @@ export class UsersService {
     organization: ""
   };
 
+  dashboardDrafts: any[] = [];
+  solutionDrafts: any[] = [];
+  dashboardUserProblems: any[] = [];
+  dashboardContributions = {};
+  dashboardRecommendations = {};
+  dashboardUsers = {};
+  dashboardUserSolutions = [];
+
   constructor(private apollo: Apollo, private auth: AuthService) {
     this.getOrgsFromDB();
     this.getUsersFromDB();

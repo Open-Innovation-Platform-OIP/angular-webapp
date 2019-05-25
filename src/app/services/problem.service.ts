@@ -15,11 +15,6 @@ export class ProblemService {
   enrichImgs: any[] = [];
   enrichVideos: any[] = [];
   imgSrcArr: any[] = [];
-  dashboardDrafts: any[] = [];
-  dashboardUserProblems: any[] = [];
-  dashboardContributions = {};
-  dashboardRecommendations = {};
-  dashboardUsers = {};
 
   constructor(
     private apollo: Apollo,

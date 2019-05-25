@@ -4,7 +4,7 @@ import { first, finalize } from "rxjs/operators";
 import { Observable } from "rxjs";
 import { map, startWith } from "rxjs/operators";
 import { TestBed } from "@angular/core/testing";
-import { ProblemService } from "../services/problem.service";
+import { UsersService } from "../services/users.service";
 
 @Component({
   selector: "app-view-all",
@@ -12,43 +12,58 @@ import { ProblemService } from "../services/problem.service";
   styleUrls: ["./view-all.component.css"]
 })
 export class ViewAllComponent implements OnInit {
+  viewProblemsAndSolutions: Boolean = false;
   dashboardData: any;
   title: string;
   displayUsers: boolean = false;
+  solutionDrafts: any[] = [];
+
+  viewProblems = true;
+  viewSolutions = false;
 
   constructor(
     private router: Router,
     private route: ActivatedRoute,
-    private problemService: ProblemService
+    private userService: UsersService
   ) {}
 
   ngOnInit() {
     this.route.params.pipe(first()).subscribe(params => {
       if (params.type == "drafts") {
+        this.viewProblemsAndSolutions = true;
         this.title = "You are working on these drafts";
-        this.dashboardData = this.problemService.dashboardDrafts;
+        this.dashboardData = this.userService.dashboardDrafts;
+        this.solutionDrafts = this.userService.solutionDrafts;
       }
       if (params.type == "problems") {
         this.title = "Problems added by you";
-        this.dashboardData = this.problemService.dashboardUserProblems;
+        this.dashboardData = this.userService.dashboardUserProblems;
+      }
+      if (params.type == "solutions") {
+        this.title = "Solutions added by you";
+        this.viewSolutions=true;
+        this.dashboardData = this.userService.dashboardUserSolutions;
       }
       if (params.type == "contributions") {
         this.title = "Your contributions";
         this.dashboardData = Object.values(
-          this.problemService.dashboardContributions
+          this.userService.dashboardContributions
         );
       }
       if (params.type == "interests") {
         this.title = "Problems you may be interested in";
         this.dashboardData = Object.values(
-          this.problemService.dashboardRecommendations
+          this.userService.dashboardRecommendations
         );
       }
       if (params.type == "users") {
         this.title = "People with similar interests";
         this.displayUsers = true;
-        this.dashboardData = Object.values(this.problemService.dashboardUsers);
+        this.dashboardData = Object.values(this.userService.dashboardUsers);
       }
     });
+  }
+  showProblems(event) {
+    this.viewProblems = event;
   }
 }

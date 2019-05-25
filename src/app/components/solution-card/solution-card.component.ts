@@ -17,8 +17,13 @@ export class SolutionCardComponent implements OnInit {
   constructor() {}
 
   ngOnInit() {
-    console.log("Solution Data", this.solutionData);
-    this.link += `/solutions/${this.solutionData.id}`;
+    if (this.solutionData.is_draft) {
+      this.link += `/solutions/${this.solutionData.id}/edit`;
+    } else {
+      this.link += `/solutions/${this.solutionData.id}`;
+    }
+    // console.log("Solution Data", this.solutionData);
+    // this.link += `/solutions/${this.solutionData.id}`;
 
     if (
       this.solutionData.solution_voters &&

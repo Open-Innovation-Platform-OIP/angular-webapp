@@ -14,9 +14,28 @@
       </div>
     </div>
     <br />
-    <div class="row" *ngIf="!displayUsers">
+    <div class="row  " *ngIf="!displayUsers && viewProblemsAndSolutions">
+      <div class="col text-right">
+        <button mat-raised-button class="btn btn-warning btn-sm" (click)="showProblems(true)">Problems</button>
+        <button mat-raised-button class="btn btn-warning btn-sm" (click)="showProblems(false)">Solutions</button>
+
+
+      </div>
+    </div>
+    <br />
+    <div class="row" *ngIf="!displayUsers && viewProblems && !viewSolutions ">
       <div class="col-md-3" *ngFor="let problem of dashboardData">
         <app-problem-card [problemData]="problem"></app-problem-card>
+      </div>
+    </div>
+    <div class="row" *ngIf="!displayUsers && !viewProblems">
+      <div class="col-md-3" *ngFor="let solution of solutionDrafts">
+        <app-solution-card [solutionData]="solution"></app-solution-card>
+      </div>
+    </div>
+    <div class="row" *ngIf="!displayUsers && viewSolutions">
+      <div class="col-md-3" *ngFor="let solution of dashboardData">
+        <app-solution-card [solutionData]="solution"></app-solution-card>
       </div>
     </div>
     <div class="row" *ngIf="displayUsers">

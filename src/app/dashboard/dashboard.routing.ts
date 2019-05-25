@@ -16,6 +16,10 @@ export const DashboardRoutes: Routes = [
         component: ViewAllComponent
       },
       {
+        path: "solutions",
+        component: ViewAllComponent
+      },
+      {
         path: "problems",
         component: ViewAllComponent
       },
