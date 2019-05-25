@@ -398,6 +398,44 @@ export class AddSolutionComponent
     // }
     this.selectedProblems.delete(problem);
     delete this.selectedProblemsData[problem.id];
+    if (this.solution["id"]) {
+      this.apollo
+        .mutate<any>({
+          mutation: gql`
+            mutation DeleteMutation($where: problems_solutions_bool_exp!) {
+              delete_problems_solutions(where: $where) {
+                affected_rows
+                returning {
+                  problem_id
+                }
+              }
+            }
+          `,
+          variables: {
+            where: {
+              problem_id: {
+                _eq: problem.id
+              },
+              solution_id: {
+                _eq: this.solution["id"]
+              }
+            }
+          }
+        })
+        .subscribe(
+          ({ data }) => {
+            console.log("worked", data);
+            // location.reload();
+            // location.reload();
+            // this.router.navigateByUrl("/problems");
+
+            return;
+          },
+          error => {
+            console.log("Could not delete due to " + error);
+          }
+        );
+    }
 
     // this.tagRemoved.emit(sector);
   }
@@ -608,6 +646,44 @@ export class AddSolutionComponent
       this.owners.splice(index, 1);
       this.removedOwners.emit(owner);
     }
+    if (this.solution["id"]) {
+      this.apollo
+        .mutate<any>({
+          mutation: gql`
+            mutation DeleteMutation($where: solution_owners_bool_exp!) {
+              delete_solution_owners(where: $where) {
+                affected_rows
+                returning {
+                  user_id
+                }
+              }
+            }
+          `,
+          variables: {
+            where: {
+              user_id: {
+                _eq: owner.id
+              },
+              solution_id: {
+                _eq: this.solution["id"]
+              }
+            }
+          }
+        })
+        .subscribe(
+          ({ data }) => {
+            console.log("worked", data);
+            // location.reload();
+            // location.reload();
+            // this.router.navigateByUrl("/problems");
+
+            return;
+          },
+          error => {
+            console.log("Could not delete due to " + error);
+          }
+        );
+    }
     console.log(this.owners, "removed in container");
   }
 
@@ -690,9 +766,9 @@ export class AddSolutionComponent
             this.is_edit = true;
             Object.keys(this.solution).map(key => {
               // console.log(key, result.data.problems[0][key]);
-              if (result.data.solutions[0][key]) {
-                this.solution[key] = result.data.solutions[0][key];
-              }
+
+              this.solution[key] = result.data.solutions[0][key];
+
               // this.solution.is_draft = result.data.problems[0].is_draft;
             });
             result.data.solutions[0].problems_solutions.map(problem => {
@@ -1052,18 +1128,83 @@ export class AddSolutionComponent
   }
 
   publishSolution() {
+    this.solution.is_draft = false;
+
+    if (!this.is_edit) {
+      swal({
+        title: "Are you sure you want to publish the Solution",
+        // text: "You won't be able to revert this!",
+        type: "warning",
+        showCancelButton: true,
+        confirmButtonClass: "btn btn-success",
+        cancelButtonClass: "btn btn-warning",
+        confirmButtonText: "Yes",
+        buttonsStyling: false
+      }).then(result => {
+        this.submitSolutionToDB();
+      });
+    } else {
+      this.submitSolutionToDB();
+    }
+  }
+
+  deleteSolution(id) {
+    return this.apollo.mutate<any>({
+      mutation: gql`
+        mutation updateMutation(
+          $where: solutions_bool_exp!
+          $set: solutions_set_input!
+        ) {
+          update_solutions(where: $where, _set: $set) {
+            affected_rows
+            returning {
+              id
+            }
+          }
+        }
+      `,
+      variables: {
+        where: {
+          id: {
+            _eq: id
+          }
+        },
+        set: {
+          is_deleted: true
+        }
+      }
+    });
+  }
+
+  delete() {
     swal({
-      title: "Are you sure you want to publish the Solution",
+      title: "Are you sure you want to delete this draft?",
       // text: "You won't be able to revert this!",
       type: "warning",
       showCancelButton: true,
       confirmButtonClass: "btn btn-success",
-      cancelButtonClass: "btn btn-warning",
-      confirmButtonText: "Yes",
+      cancelButtonClass: "btn btn-danger",
+      confirmButtonText: "Yes, delete it!",
       buttonsStyling: false
     }).then(result => {
-      this.solution.is_draft = false;
-      this.submitSolutionToDB();
+      if (result.value) {
+        this.deleteSolution(this.solution["id"]).subscribe(
+          ({ data }) => {
+            swal({
+              title: "Deleted!",
+              // text: "Your file has been deleted.",
+              type: "success",
+              confirmButtonClass: "btn btn-success",
+              buttonsStyling: false
+            });
+            this.router.navigateByUrl("/dashboard");
+          },
+          error => {
+            console.log("Could delete due to " + error);
+            console.error(JSON.stringify(error));
+          }
+        );
+      }
     });
   }
 

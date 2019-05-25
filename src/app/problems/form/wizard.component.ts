@@ -989,9 +989,27 @@ export class WizardComponent
 
   publishProblem(problem) {
     problem.is_draft = false;
-    // console.log(problem, "problem before publishing");
     clearInterval(this.autosaveInterval);
-    this.submitProblemToDB(problem);
+
+    if (!this.is_edit) {
+      swal({
+        title: "Are you sure you want to publish the problem",
+        // text: "You won't be able to revert this!",
+        type: "warning",
+        showCancelButton: true,
+        confirmButtonClass: "btn btn-success",
+        cancelButtonClass: "btn btn-warning",
+        confirmButtonText: "Yes",
+        buttonsStyling: false
+      }).then(result => {
+        if (result.value) {
+          this.submitProblemToDB(problem);
+        }
+      });
+    } else {
+      this.submitProblemToDB(problem);
+    }
+    // console.log(problem, "problem before publishing");
   }
 
   deleteDraft(id) {

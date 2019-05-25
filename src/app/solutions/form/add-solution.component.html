@@ -698,6 +698,9 @@
                   <!-- <button class="btn btn-danger" (click)="deleteClicked()">
                 Delete
               </button> -->
+                  <button *ngIf="solution.id  && solution.is_draft" class="btn btn-danger" (click)="delete()">
+                    Delete
+                  </button>
                   <input type="button" class="btn btn-previous btn-fill btn-default btn-wd disabled" name="previous"
                     value="Previous">
                   <input type="button" class="publish btn btn-fill btn-rose btn-wd" (click)="publishSolution()"

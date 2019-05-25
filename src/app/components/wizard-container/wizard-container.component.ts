@@ -676,24 +676,7 @@ export class WizardContainerComponent
   checkForSpaces($event) {}
 
   publishContent() {
-    if (this.content.is_draft) {
-      swal({
-        title: "Are you sure you want to publish the problem",
-        // text: "You won't be able to revert this!",
-        type: "warning",
-        showCancelButton: true,
-        confirmButtonClass: "btn btn-success",
-        cancelButtonClass: "btn btn-warning",
-        confirmButtonText: "Yes",
-        buttonsStyling: false
-      }).then(result => {
-        if (result.value) {
-          this.contentSubmitted.emit(this.content);
-        }
-      });
-    } else {
-      this.contentSubmitted.emit(this.content);
-    }
+    this.contentSubmitted.emit(this.content);
   }
 
   sendDataBack() {
