@@ -29,8 +29,22 @@
     </div>
     <br />
     <div class="row">
-      <div class="col-md-3" *ngFor="let problem of drafts; let i = index">
-        <app-problem-card *ngIf="i < 4" [problemData]="problem"></app-problem-card>
+      <div class="col-md-3" *ngFor="let draft of drafts; let i = index">
+        <ng-container *ngIf="draft.location">
+
+          <app-problem-card *ngIf="i < 4" [problemData]="draft"></app-problem-card>
+
+
+        </ng-container>
+
+        <ng-container *ngIf="!draft.location">
+
+          <app-solution-card *ngIf="i < 4" [solutionData]="draft"></app-solution-card>
+
+
+        </ng-container>
+
+
       </div>
     </div>
 
