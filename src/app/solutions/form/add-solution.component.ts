@@ -81,9 +81,9 @@ export class MyErrorStateMatcher implements ErrorStateMatcher {
 })
 export class AddSolutionComponent
   implements OnInit, OnChanges, OnDestroy, AfterViewInit {
-  @Input() sectors: string[] = [];
+  // @Input() sectors: string[] = [];
 
-  @Input() owners: any[] = [];
+  owners: any[] = [];
   // @Input() canProceed: any = true;
   @Output() fieldsPopulated = new EventEmitter();
   @Output() smartSearchInput = new EventEmitter();
@@ -93,6 +93,7 @@ export class AddSolutionComponent
   @Output() deleteDraft = new EventEmitter();
   @Output() addedOwners = new EventEmitter();
   @Output() removedOwners = new EventEmitter();
+  sectorCtrl = new FormControl();
 
   file_types = [
     "application/msword",
@@ -124,6 +125,9 @@ export class AddSolutionComponent
   locations: any = [];
   locationInputValue: any;
   input_pattern = new RegExp("^s*");
+
+  filteredSectors: Observable<string[]>;
+  sectors: any = [];
 
   readonly separatorKeysCodes: number[] = [ENTER, COMMA];
   searchResults = {};
@@ -210,6 +214,8 @@ export class AddSolutionComponent
     attachments: []
   };
 
+  @ViewChild("sectorInput") sectorInput: ElementRef<HTMLInputElement>;
+
   // autoCompleteTags: any[] = [];
 
   constructor(
@@ -246,6 +252,15 @@ export class AddSolutionComponent
 
     canProceed = true;
 
+    this.filteredSectors = this.sectorCtrl.valueChanges.pipe(
+      startWith(null),
+      map((sector: string | null) =>
+        sector
+          ? this._filter(sector)
+          : Object.keys(this.tagService.allTags).slice()
+      )
+    );
+
     // this.problem.organization = "Social Alpha";
 
     this.filteredOwners = this.ownersCtrl.valueChanges.pipe(
@@ -272,6 +287,50 @@ export class AddSolutionComponent
       this.hide = true;
     } else if (id == "solution") {
       this.hide = false;
+    }
+  }
+
+  private _filter(value: string): string[] {
+    const filterValue = value.toLowerCase();
+
+    return Object.keys(this.tagService.allTags).filter(
+      sector => sector.toLowerCase().indexOf(filterValue) === 0
+    );
+  }
+
+  sectorSelected(event: MatAutocompleteSelectedEvent): void {
+    this.sectors.push(event.option.viewValue);
+    this.sectorInput.nativeElement.value = "";
+    this.sectorCtrl.setValue(null);
+  }
+
+  addSector(event: MatChipInputEvent): void {
+    if (!this.matAutocomplete.isOpen) {
+      const input = event.input;
+      const value = event.value;
+
+      if ((value || "").trim()) {
+        this.sectors.push(value.trim());
+      }
+
+      if (input) {
+        input.value = "";
+      }
+      this.sectorCtrl.setValue(null);
+    }
+  }
+
+  removeSector(sector: string): void {
+    const index = this.sectors.indexOf(sector);
+    if (index >= 0) {
+      this.sectors.splice(index, 1);
+    }
+    if (this.tagService.allTags[sector] && this.solution["id"]) {
+      this.tagService.removeTagRelation(
+        this.tagService.allTags[sector].id,
+        this.solution["id"],
+        "solutions"
+      );
     }
   }
 
