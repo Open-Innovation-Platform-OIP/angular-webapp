@@ -25,7 +25,7 @@ import { UsersService } from "../../services/users.service";
 import { AuthService } from "../../services/auth.service";
 import { Router, ActivatedRoute } from "@angular/router";
 import { map, startWith } from "rxjs/operators";
-import { Observable } from "rxjs";
+import { Observable, Subscription } from "rxjs";
 import { GeocoderService } from "../../services/geocoder.service";
 import swal from "sweetalert2";
 var Buffer = require("buffer/").Buffer;
@@ -133,7 +133,7 @@ export class AddSolutionComponent
   ownersCtrl = new FormControl();
   locationCtrl = new FormControl();
   filteredProblems: Observable<any>;
-  searchResultsObservable: any;
+  searchResultsObservable: Subscription;
 
   testObject: any = {
     1: {
@@ -281,42 +281,27 @@ export class AddSolutionComponent
     };
   }
 
-  add(event: MatChipInputEvent): void {
-    if (!this.matAutocomplete.isOpen) {
-      const input = event.input;
-      const value = event.value;
-      // Add our sector
-      if ((value || "").trim()) {
-        this.selectedProblems.add(value.trim().toUpperCase());
-      }
-      // Reset the input value
-      if (input) {
-        input.value = "";
-      }
-      this.problemCtrl.setValue(null);
-      // this.tagAdded.emit(this.sectors);
-    }
-  }
-
   selected(event: MatAutocompleteSelectedEvent): void {
     let selectedProblem = event.option.value;
+    this.getProblemData(selectedProblem.id);
 
-    this.selectedProblems.add(selectedProblem);
+    this.selectedProblems.add(event.option.value);
     console.log(this.selectedProblems, "problem set");
 
     this.problemInput.nativeElement.value = "";
     this.problemCtrl.setValue(null);
-    this.getProblemData(selectedProblem.id);
-    console.log("selected title", selectedProblem.title);
-    this.searchProblem(selectedProblem.title);
+    // this.getProblemData(selectedProblem.id);
     delete this.searchResults[selectedProblem.id];
   }
   selectProblem(problem) {
     this.selectedProblems.add(problem);
     this.getProblemData(problem.id);
+    // console.log(this.selectedProblems, "selected problem set");
+    delete this.searchResults[problem.id];
   }
 
   getProblemData(id) {
+    this.searchResultsObservable.unsubscribe();
     this.apollo
       .watchQuery<any>({
         query: gql`
@@ -529,12 +514,16 @@ export class AddSolutionComponent
   }
 
   searchProblem(event) {
-    console.log("Search Event", event.target.value);
-    if (event.target.value.length) {
-      this.searchResultsObservable = this.smartSearch(event.target.value);
-      this.searchResultsObservable.subscribe(
+    console.log("Search Event", event);
+    if (event && event.target && event.target.value) {
+      // this.searchResultsObservable = this.smartSearch(event.target.value);
+      console.log("Search Event ==", event);
+
+      this.searchResultsObservable = this.smartSearch(
+        event.target.value
+      ).subscribe(
         result => {
-          // console.log(result, "result from search");
+          console.log(result, "result from search");
           if (result.data.search_problems_v2.length > 0) {
             // this.smartSearchResults = [];
             // this.searchResults = [];
@@ -543,14 +532,9 @@ export class AddSolutionComponent
             result.data.search_problems_v2.map(problem => {
               this.searchResults[problem["id"]] = problem;
             });
-            // console.log(this.searchResults, ">>>>>searchresults");
-            // if (!this.is_edit) {
-            //   canProceed = false;
-            // }
           }
         },
         err => {
-          // console.log(err, "error from smart search");
           console.error(JSON.stringify(err));
         }
       );
@@ -558,11 +542,6 @@ export class AddSolutionComponent
   }
 
   smartSearch(searchKey) {
-    // let searchKey = this.problem.title + " " + this.problem.description;
-    // searchKey = searchKey.replace(/[^a-zA-Z ]/g, "");
-    // console.log(searchKey, "searchkey");
-
-    // this.searchResults = [];
     return this.apollo.watchQuery<any>({
       query: gql`query {
                     search_problems_v2(
@@ -748,7 +727,9 @@ export class AddSolutionComponent
                                 title
                               }
                             }
-                            solution_owners {
+                            solution_owners(where: { user_id: { _neq: ${
+                              this.auth.currentUserValue.id
+                            } } }) {
                               user {
                                 id
                                 name
@@ -778,11 +759,7 @@ export class AddSolutionComponent
             console.log(this.selectedProblems, "SOLUTIONS");
             if (result.data.solutions[0].solution_owners) {
               result.data.solutions[0].solution_owners.forEach(ownerArray => {
-                if (
-                  ownerArray.user.id != Number(this.auth.currentUserValue.id)
-                ) {
-                  this.owners.push(ownerArray.user);
-                }
+                this.owners.push(ownerArray.user);
               });
             }
           });

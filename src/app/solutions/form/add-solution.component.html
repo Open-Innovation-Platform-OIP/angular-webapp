@@ -728,7 +728,7 @@
           <div class="row">
             <div class="col-sm-12" *ngFor="let result of objectValues(searchResults)">
               <app-problem-card *ngIf="result" [problemData]="result" (selected)="selectProblem($event)"
-                [usedIn]="'smartSearch'">
+                [usedIn]="'smartSearch'" [showAddButton]="true">
 
               </app-problem-card>
             </div>

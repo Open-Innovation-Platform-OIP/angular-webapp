@@ -15,6 +15,8 @@ const misc: any = {
 export class ProblemCardComponent implements OnInit {
   @Input() problemData: any;
   @Input() usedIn: String;
+  @Input() showAddButton: Boolean = false;
+
   @Output() selected = new EventEmitter();
 
   numOfVotes: Number = 0;

@@ -313,7 +313,9 @@ export class WizardComponent
                             organization
                             featured_url
                             featured_type
-                            problem_owners{
+                            problem_owners(where: { user_id: { _neq: ${
+                              this.auth.currentUserValue.id
+                            } } }){
                               user{
                                 id
                                 name
@@ -365,18 +367,7 @@ export class WizardComponent
               if (result.data.problems[0].problem_owners) {
                 // this.owners = result.data.problems[0].problem_owners;
                 result.data.problems[0].problem_owners.forEach(ownerArray => {
-                  if (
-                    ownerArray.user.id != Number(this.auth.currentUserValue.id)
-                  ) {
-                    this.owners.push(ownerArray.user);
-                    // console.log(
-                    //   ownerArray.user.id,
-                    //   "owner array",
-                    //   Number(this.auth.currentUserValue.id)
-                    // );
-
-                    // return ownerArray.user;
-                  }
+                  this.owners.push(ownerArray.user);
                 });
 
                 // console.log(this.owners, "owners from db");
