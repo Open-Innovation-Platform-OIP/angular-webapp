@@ -105,12 +105,13 @@ export class AddSolutionComponent
   ];
 
   objectKeys = Object.keys;
+  // objectValues = Object.values;
 
   matcher = new MyErrorStateMatcher();
 
   type: FormGroup;
 
-  selectedProblems: any = new Set();
+  selectedProblems: any = {};
 
   showProblemImpacts: Boolean = false;
   showProblemResourcesNeeded: Boolean = false;
@@ -285,7 +286,7 @@ export class AddSolutionComponent
     let selectedProblem = event.option.value;
     this.getProblemData(selectedProblem.id);
 
-    this.selectedProblems.add(event.option.value);
+    this.selectedProblems[selectedProblem.id] = selectedProblem;
     console.log(this.selectedProblems, "problem set");
 
     this.problemInput.nativeElement.value = "";
@@ -294,14 +295,14 @@ export class AddSolutionComponent
     delete this.searchResults[selectedProblem.id];
   }
   selectProblem(problem) {
-    this.selectedProblems.add(problem);
+    this.selectedProblems[problem.id] = problem;
     this.getProblemData(problem.id);
     // console.log(this.selectedProblems, "selected problem set");
     delete this.searchResults[problem.id];
   }
 
   getProblemData(id) {
-    this.searchResultsObservable.unsubscribe();
+    // this.searchResultsObservable.unsubscribe();
     this.apollo
       .watchQuery<any>({
         query: gql`
@@ -381,7 +382,7 @@ export class AddSolutionComponent
     // if (index >= 0) {
     //   this.selectedProblems.splice(index, 1);
     // }
-    this.selectedProblems.delete(problem);
+    delete this.selectedProblems[problem.id];
     delete this.selectedProblemsData[problem.id];
     if (this.solution["id"]) {
       this.apollo
@@ -427,7 +428,7 @@ export class AddSolutionComponent
 
   saveProblemsInDB(solutionId, problemsArray) {
     let problems = [];
-    problemsArray = Array.from(problemsArray);
+    problemsArray = Object.values(problemsArray);
     problems = problemsArray.map(problem => {
       return {
         problem_id: problem.id,
@@ -676,17 +677,18 @@ export class AddSolutionComponent
     this.problemId = Number(this.route.snapshot.paramMap.get("problemId"));
     console.log(this.route.snapshot.paramMap, "problem param");
     if (this.problemId) {
-      this.selectedProblems.add({ id: this.problemId });
+      // this.selectedProblems.add({ id: this.problemId });
+      this.selectedProblems[Number(this.problemId)] = this.problemId;
     }
     this.autosaveInterval = setInterval(() => {
       this.autoSave();
     }, 10000);
     console.log(this.selectedProblems, "selected problems set ");
 
-    if (this.selectedProblems.size) {
-      this.selectedProblems.forEach(problem => {
+    if (Object.values(this.selectedProblems).length) {
+      Object.values(this.selectedProblems).forEach(problem => {
         console.log("selected problems on ngoninit");
-        this.getProblemData(problem.id);
+        this.getProblemData(problem["id"]);
       });
     }
 
@@ -753,7 +755,9 @@ export class AddSolutionComponent
               // this.solution.is_draft = result.data.problems[0].is_draft;
             });
             result.data.solutions[0].problems_solutions.map(problem => {
-              this.selectedProblems.add(problem.problem);
+              // this.selectedProblems.add(problem.problem);
+              this.selectedProblems[problem.problem.id] = problem.problem;
+
               this.getProblemData(problem.problem.id);
             });
             console.log(this.selectedProblems, "SOLUTIONS");
@@ -1628,7 +1632,7 @@ export class AddSolutionComponent
       this.solution.deployment &&
       this.solution.budget.title &&
       this.solution.budget.cost &&
-      this.selectedProblems.size
+      Object.values(this.selectedProblems).length
     );
   }
 

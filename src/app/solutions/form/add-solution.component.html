@@ -45,7 +45,7 @@
                             <span class="input-group-text">
 
                               <i class="material-icons" [ngStyle]="{
-                                color: !selectedProblems.size
+                                color: !objectKeys(selectedProblems).length
                                   ? 'red'
                                   : '#495057'
                               }">help</i>
@@ -71,7 +71,7 @@
                     </div>
 
                     <div class="row justify-content-center">
-                      <div class="col-sm-10" *ngFor="let problem of selectedProblems">
+                      <div class="col-sm-10" *ngFor="let problem of objectValues(selectedProblems)">
 
                         <mat-chip *ngIf="problem.title" [selectable]="selectable" [removable]="removable"
                           (removed)="remove(problem)" style="margin-right:0.3em; margin-bottom: 0.4em;">
