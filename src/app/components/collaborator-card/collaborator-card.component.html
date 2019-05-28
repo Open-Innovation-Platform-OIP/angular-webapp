@@ -24,6 +24,12 @@
     <p class="card-description description" style="white-space: pre-wrap;">
       {{ collaboratorData.intent }}
     </p>
+    <!-- <span><i class="material-icons">
+        more_horiz
+      </i></span> -->
+    <span style="cursor:pointer;" (click)="seeMore()"><small><b>see more...</b></small></span>
+
+    <br />
 
     <!-- <div *ngFor="let role of roles">
       <span class="badge badge-warning">{{ role.slice(3) }}</span>

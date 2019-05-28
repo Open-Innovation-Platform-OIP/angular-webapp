@@ -5,3 +5,13 @@
 .profile-card {
     height: 22em;
 }
+
+.photo_div {
+    height: 9em;
+    width: 9em;
+}
+
+.profile_photo {
+    height: 9em !important;
+    object-fit: cover;
+}

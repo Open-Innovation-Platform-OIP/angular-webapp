@@ -290,6 +290,9 @@
             </form>
           </div>
           <div class="card-footer row justify-content-center" *ngIf="mode === 'Add'">
+            <div class="mr-auto">
+              <input type="button" class="btn" onclick="window.history.back()" name="cancel" value="Cancel">
+            </div>
             <button mat-raised-button class="btn btn-warning" type="submit"
               [disabled]="!userForm.form.valid || !isPhoneValid" (click)="onSubmit()">
               Save Details
@@ -297,6 +300,9 @@
           </div>
 
           <div class="card-footer row justify-content-center" *ngIf="mode === 'Edit'">
+            <div class="mr-auto">
+              <input type="button" class="btn" onclick="window.history.back()" name="cancel" value="Cancel">
+            </div>
             <button mat-raised-button class="btn btn-warning" type="submit"
               [disabled]="!isPhoneValid || !userForm.form.valid" (click)="onSubmit()">
               Update

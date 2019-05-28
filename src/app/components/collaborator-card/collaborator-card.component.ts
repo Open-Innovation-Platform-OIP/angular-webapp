@@ -124,4 +124,16 @@ export class CollaboratorCardComponent implements OnInit, OnChanges {
       }
     });
   }
+
+  seeMore() {
+    swal({
+      title: "Intent",
+      // text: `${this.collaboratorData.intent}`,
+      html: `<div style="white-space: pre-wrap;">${
+        this.collaboratorData.intent
+      }</div>`,
+      timer: 20000,
+      showConfirmButton: false
+    }).catch(swal.noop);
+  }
 }

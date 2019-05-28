@@ -14,13 +14,15 @@
     <strong>Location(s)</strong>
     <!-- <p class="description" *ngIf="enrichmentData.location">{{enrichmentData.location}}</p>
      -->
-    <div *ngFor="let location of enrichmentData.location; let i=index;">
+    <!-- <div *ngFor="let location of enrichmentData.location; let i=index;">
       <div *ngIf="location && location.address &&  location.address.Label ">
         <span *ngIf="location.Address.Label && i < 2">{{location.Address.Label}}</span>
         <span *ngIf="i<2">&nbsp;</span>
-
       </div>
+    </div> -->
 
+    <div *ngFor="let location of enrichmentData.location; let i=index;">
+      <p *ngIf="location.Address && location.Address.Label && i<1">{{location.Address.Label}}</p>
     </div>
 
     <!-- <h4 class="card-title">Description :</h4> -->

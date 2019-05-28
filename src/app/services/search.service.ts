@@ -109,7 +109,7 @@ export class SearchService {
   solutionSearch(searchInput) {
     return this.apollo.watchQuery<any>({
       query: gql`query {
-          search_solutions_v2(args: {search: "${searchInput}"}) {
+          search_solutions_v2(args: {search: "${searchInput}"},where: { is_draft: { _eq: false } }) {
             id
             title
             description
