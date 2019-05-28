@@ -25,7 +25,7 @@ export class DashboardComponent implements OnInit, OnDestroy {
   recommendedUsers = {};
   showLoader = true;
   draftsQueryRef: QueryRef<any>;
-  solutionDraftsQueryRef: QueryRef<any>;
+  // solutionDraftsQueryRef: QueryRef<any>;
   userProblemsQueryRef: QueryRef<any>;
   contributionsQueryRef: QueryRef<any>;
   userSolutionsQueryRef: QueryRef<any>;
@@ -33,7 +33,7 @@ export class DashboardComponent implements OnInit, OnDestroy {
   recommendedUsersQueryRef: QueryRef<any>;
   draftsSub: Subscription;
   userProblemsQuerySub: Subscription;
-  solutionDraftsSub: Subscription;
+  // solutionDraftsSub: Subscription;
   contributionsSub: Subscription;
   userSolutionsQuerySub: Subscription;
   recommendedProblemsSub: Subscription;
@@ -50,6 +50,7 @@ export class DashboardComponent implements OnInit, OnDestroy {
     problem_watchers{user_id}
     problem_validations{validated_by}
     updated_at
+    modified_at
   }`;
 
   solutionQueryString = `{
@@ -63,6 +64,7 @@ export class DashboardComponent implements OnInit, OnDestroy {
     solution_watchers{user_id}
     solution_validations{validated_by}
     updated_at
+    modified_at
   }`;
   userQueryString = `{
     id
@@ -112,7 +114,7 @@ export class DashboardComponent implements OnInit, OnDestroy {
     this.getContributions();
     this.getRecommendedProblems();
     this.getRecommendedUsers();
-    this.getSolutionDrafts();
+    // this.getSolutionDrafts();
     this.getUsersSolutions();
     // this.problemQueryString = '{' + this.problemFields.join('\n') + '}';
   }
@@ -142,6 +144,14 @@ export class DashboardComponent implements OnInit, OnDestroy {
         problems(where:{is_draft:{_eq:true},is_deleted:{_eq:false}, created_by:{_eq: ${
           this.auth.currentUserValue.id
         }}} order_by: {modified_at: desc}) ${this.problemQueryString}
+        ,
+        
+          solutions(where:{is_draft:{_eq:true},is_deleted:{_eq:false}, created_by:{_eq: ${
+            this.auth.currentUserValue.id
+          }}} order_by: {modified_at: desc}) ${this.solutionQueryString}
+      
+
+
     }
     `;
     this.draftsQueryRef = this.apollo.watchQuery({
@@ -149,45 +159,57 @@ export class DashboardComponent implements OnInit, OnDestroy {
       pollInterval: 1000,
       fetchPolicy: "network-only"
     });
+
     // this.draftsObs = this.draftsQueryRef.valueChanges;
     this.draftsSub = this.draftsQueryRef.valueChanges.subscribe(({ data }) => {
-      // console.log(data);
+      console.log(data, "drafts");
       if (data.problems.length > 0) {
-        this.drafts = data.problems;
+        let problems_solutions = data.problems.concat(data.solutions);
+        problems_solutions.sort((a, b) => {
+          if (a.modified_at < b.modified_at) {
+            return 1;
+          }
+          if (a.modified_at > b.modified_at) {
+            return -1;
+          }
+        });
+        console.log(problems_solutions, "solutions and problems");
+        this.drafts = problems_solutions;
         this.userService.dashboardDrafts = data.problems;
+        this.userService.solutionDrafts = data.solutions;
       }
     });
   }
 
-  getSolutionDrafts() {
-    const solutionDraftsQuery = gql`
-      {
-        solutions(where:{is_draft:{_eq:true},is_deleted:{_eq:false}, created_by:{_eq: ${
-          this.auth.currentUserValue.id
-        }}} order_by: {modified_at: desc}) ${this.solutionQueryString}
-    }
-    `;
+  // getSolutionDrafts() {
+  //   const solutionDraftsQuery = gql`
+  //     {
+  //       solutions(where:{is_draft:{_eq:true},is_deleted:{_eq:false}, created_by:{_eq: ${
+  //         this.auth.currentUserValue.id
+  //       }}} order_by: {modified_at: desc}) ${this.solutionQueryString}
+  //   }
+  //   `;
 
-    this.solutionDraftsQueryRef = this.apollo.watchQuery({
-      query: solutionDraftsQuery,
-      pollInterval: 1000,
-      fetchPolicy: "network-only"
-    });
-    // this.draftsObs = this.draftsQueryRef.valueChanges;
-    this.solutionDraftsSub = this.solutionDraftsQueryRef.valueChanges.subscribe(
-      ({ data }) => {
-        // console.log(data);
-        if (data.solutions.length > 0) {
-          // this.drafts = data.solutions;
-          this.userService.solutionDrafts = data.solutions;
-          console.log(this.userService.solutionDrafts, "user solution drafts");
-        }
-      },
-      error => {
-        console.error(JSON.stringify(error));
-      }
-    );
-  }
+  //   this.solutionDraftsQueryRef = this.apollo.watchQuery({
+  //     query: solutionDraftsQuery,
+  //     pollInterval: 1000,
+  //     fetchPolicy: "network-only"
+  //   });
+  //   // this.draftsObs = this.draftsQueryRef.valueChanges;
+  //   this.solutionDraftsSub = this.solutionDraftsQueryRef.valueChanges.subscribe(
+  //     ({ data }) => {
+  //       // console.log(data);
+  //       if (data.solutions.length > 0) {
+  //         // this.drafts = data.solutions;
+  //         this.userService.solutionDrafts = data.solutions;
+  //         console.log(this.userService.solutionDrafts, "user solution drafts");
+  //       }
+  //     },
+  //     error => {
+  //       console.error(JSON.stringify(error));
+  //     }
+  //   );
+  // }
 
   getUsersProblems() {
     const userProblemsQuery = gql`
@@ -415,8 +437,8 @@ export class DashboardComponent implements OnInit, OnDestroy {
     this.contributionsSub.unsubscribe();
     this.recommendedProblemsSub.unsubscribe();
     this.recommendedUsersSub.unsubscribe();
-    this.solutionDraftsQueryRef.stopPolling();
-    this.solutionDraftsSub.unsubscribe();
+    // this.solutionDraftsQueryRef.stopPolling();
+    // this.solutionDraftsSub.unsubscribe();
     this.userSolutionsQuerySub.unsubscribe();
   }
 }

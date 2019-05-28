@@ -17,6 +17,7 @@ export class SolutionCardComponent implements OnInit {
   constructor() {}
 
   ngOnInit() {
+    // console.log(this.solutionData.is_draft, "solution card");
     if (this.solutionData.is_draft) {
       this.link += `/solutions/${this.solutionData.id}/edit`;
     } else {

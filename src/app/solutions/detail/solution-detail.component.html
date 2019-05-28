@@ -93,7 +93,7 @@
 
             <!--  -->
             <div class="dropdown">
-              <button *ngIf="userId===solutionData.created_by" [routerLink]="
+              <button *ngIf="userId===solutionData.created_by || owners.has(userId)" [routerLink]="
                 '/solutions/'+ solutionData.id+'/edit'" class="btn btn-sm btn-rose" aria-expanded="true">
                 <i class="material-icons actions">
                   create

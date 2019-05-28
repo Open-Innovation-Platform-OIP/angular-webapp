@@ -25,7 +25,7 @@ import { UsersService } from "../../services/users.service";
 import { AuthService } from "../../services/auth.service";
 import { Router, ActivatedRoute } from "@angular/router";
 import { map, startWith } from "rxjs/operators";
-import { Observable } from "rxjs";
+import { Observable, Subscription } from "rxjs";
 import { GeocoderService } from "../../services/geocoder.service";
 import swal from "sweetalert2";
 var Buffer = require("buffer/").Buffer;
@@ -81,9 +81,9 @@ export class MyErrorStateMatcher implements ErrorStateMatcher {
 })
 export class AddSolutionComponent
   implements OnInit, OnChanges, OnDestroy, AfterViewInit {
-  @Input() sectors: string[] = [];
+  // @Input() sectors: string[] = [];
 
-  @Input() owners: any[] = [];
+  owners: any[] = [];
   // @Input() canProceed: any = true;
   @Output() fieldsPopulated = new EventEmitter();
   @Output() smartSearchInput = new EventEmitter();
@@ -93,6 +93,7 @@ export class AddSolutionComponent
   @Output() deleteDraft = new EventEmitter();
   @Output() addedOwners = new EventEmitter();
   @Output() removedOwners = new EventEmitter();
+  sectorCtrl = new FormControl();
 
   file_types = [
     "application/msword",
@@ -105,12 +106,13 @@ export class AddSolutionComponent
   ];
 
   objectKeys = Object.keys;
+  // objectValues = Object.values;
 
   matcher = new MyErrorStateMatcher();
 
   type: FormGroup;
 
-  selectedProblems: any = new Set();
+  selectedProblems: any = {};
 
   showProblemImpacts: Boolean = false;
   showProblemResourcesNeeded: Boolean = false;
@@ -124,6 +126,9 @@ export class AddSolutionComponent
   locationInputValue: any;
   input_pattern = new RegExp("^s*");
 
+  filteredSectors: Observable<string[]>;
+  sectors: any = [];
+
   readonly separatorKeysCodes: number[] = [ENTER, COMMA];
   searchResults = {};
   solutionSearchResults: any = [];
@@ -133,7 +138,7 @@ export class AddSolutionComponent
   ownersCtrl = new FormControl();
   locationCtrl = new FormControl();
   filteredProblems: Observable<any>;
-  searchResultsObservable: any;
+  searchResultsObservable: Subscription;
 
   testObject: any = {
     1: {
@@ -209,6 +214,8 @@ export class AddSolutionComponent
     attachments: []
   };
 
+  @ViewChild("sectorInput") sectorInput: ElementRef<HTMLInputElement>;
+
   // autoCompleteTags: any[] = [];
 
   constructor(
@@ -245,6 +252,15 @@ export class AddSolutionComponent
 
     canProceed = true;
 
+    this.filteredSectors = this.sectorCtrl.valueChanges.pipe(
+      startWith(null),
+      map((sector: string | null) =>
+        sector
+          ? this._filter(sector)
+          : Object.keys(this.tagService.allTags).slice()
+      )
+    );
+
     // this.problem.organization = "Social Alpha";
 
     this.filteredOwners = this.ownersCtrl.valueChanges.pipe(
@@ -274,6 +290,50 @@ export class AddSolutionComponent
     }
   }
 
+  private _filter(value: string): string[] {
+    const filterValue = value.toLowerCase();
+
+    return Object.keys(this.tagService.allTags).filter(
+      sector => sector.toLowerCase().indexOf(filterValue) === 0
+    );
+  }
+
+  sectorSelected(event: MatAutocompleteSelectedEvent): void {
+    this.sectors.push(event.option.viewValue);
+    this.sectorInput.nativeElement.value = "";
+    this.sectorCtrl.setValue(null);
+  }
+
+  addSector(event: MatChipInputEvent): void {
+    if (!this.matAutocomplete.isOpen) {
+      const input = event.input;
+      const value = event.value;
+
+      if ((value || "").trim()) {
+        this.sectors.push(value.trim());
+      }
+
+      if (input) {
+        input.value = "";
+      }
+      this.sectorCtrl.setValue(null);
+    }
+  }
+
+  removeSector(sector: string): void {
+    const index = this.sectors.indexOf(sector);
+    if (index >= 0) {
+      this.sectors.splice(index, 1);
+    }
+    if (this.tagService.allTags[sector] && this.solution["id"]) {
+      this.tagService.removeTagRelation(
+        this.tagService.allTags[sector].id,
+        this.solution["id"],
+        "solutions"
+      );
+    }
+  }
+
   displayFieldCss(form: FormGroup, field: string) {
     return {
       "has-error": this.isFieldValid(form, field),
@@ -281,42 +341,27 @@ export class AddSolutionComponent
     };
   }
 
-  add(event: MatChipInputEvent): void {
-    if (!this.matAutocomplete.isOpen) {
-      const input = event.input;
-      const value = event.value;
-      // Add our sector
-      if ((value || "").trim()) {
-        this.selectedProblems.add(value.trim().toUpperCase());
-      }
-      // Reset the input value
-      if (input) {
-        input.value = "";
-      }
-      this.problemCtrl.setValue(null);
-      // this.tagAdded.emit(this.sectors);
-    }
-  }
-
   selected(event: MatAutocompleteSelectedEvent): void {
     let selectedProblem = event.option.value;
+    this.getProblemData(selectedProblem.id);
 
-    this.selectedProblems.add(selectedProblem);
+    this.selectedProblems[selectedProblem.id] = selectedProblem;
     console.log(this.selectedProblems, "problem set");
 
     this.problemInput.nativeElement.value = "";
     this.problemCtrl.setValue(null);
-    this.getProblemData(selectedProblem.id);
-    console.log("selected title", selectedProblem.title);
-    this.searchProblem(selectedProblem.title);
+    // this.getProblemData(selectedProblem.id);
     delete this.searchResults[selectedProblem.id];
   }
   selectProblem(problem) {
-    this.selectedProblems.add(problem);
+    this.selectedProblems[problem.id] = problem;
     this.getProblemData(problem.id);
+    // console.log(this.selectedProblems, "selected problem set");
+    delete this.searchResults[problem.id];
   }
 
   getProblemData(id) {
+    // this.searchResultsObservable.unsubscribe();
     this.apollo
       .watchQuery<any>({
         query: gql`
@@ -396,7 +441,7 @@ export class AddSolutionComponent
     // if (index >= 0) {
     //   this.selectedProblems.splice(index, 1);
     // }
-    this.selectedProblems.delete(problem);
+    delete this.selectedProblems[problem.id];
     delete this.selectedProblemsData[problem.id];
     if (this.solution["id"]) {
       this.apollo
@@ -442,7 +487,7 @@ export class AddSolutionComponent
 
   saveProblemsInDB(solutionId, problemsArray) {
     let problems = [];
-    problemsArray = Array.from(problemsArray);
+    problemsArray = Object.values(problemsArray);
     problems = problemsArray.map(problem => {
       return {
         problem_id: problem.id,
@@ -529,12 +574,16 @@ export class AddSolutionComponent
   }
 
   searchProblem(event) {
-    console.log("Search Event", event.target.value);
-    if (event.target.value.length) {
-      this.searchResultsObservable = this.smartSearch(event.target.value);
-      this.searchResultsObservable.subscribe(
+    console.log("Search Event", event);
+    if (event && event.target && event.target.value) {
+      // this.searchResultsObservable = this.smartSearch(event.target.value);
+      console.log("Search Event ==", event);
+
+      this.searchResultsObservable = this.smartSearch(
+        event.target.value
+      ).subscribe(
         result => {
-          // console.log(result, "result from search");
+          console.log(result, "result from search");
           if (result.data.search_problems_v2.length > 0) {
             // this.smartSearchResults = [];
             // this.searchResults = [];
@@ -543,14 +592,9 @@ export class AddSolutionComponent
             result.data.search_problems_v2.map(problem => {
               this.searchResults[problem["id"]] = problem;
             });
-            // console.log(this.searchResults, ">>>>>searchresults");
-            // if (!this.is_edit) {
-            //   canProceed = false;
-            // }
           }
         },
         err => {
-          // console.log(err, "error from smart search");
           console.error(JSON.stringify(err));
         }
       );
@@ -558,11 +602,6 @@ export class AddSolutionComponent
   }
 
   smartSearch(searchKey) {
-    // let searchKey = this.problem.title + " " + this.problem.description;
-    // searchKey = searchKey.replace(/[^a-zA-Z ]/g, "");
-    // console.log(searchKey, "searchkey");
-
-    // this.searchResults = [];
     return this.apollo.watchQuery<any>({
       query: gql`query {
                     search_problems_v2(
@@ -697,17 +736,18 @@ export class AddSolutionComponent
     this.problemId = Number(this.route.snapshot.paramMap.get("problemId"));
     console.log(this.route.snapshot.paramMap, "problem param");
     if (this.problemId) {
-      this.selectedProblems.add({ id: this.problemId });
+      // this.selectedProblems.add({ id: this.problemId });
+      this.selectedProblems[Number(this.problemId)] = this.problemId;
     }
     this.autosaveInterval = setInterval(() => {
       this.autoSave();
     }, 10000);
     console.log(this.selectedProblems, "selected problems set ");
 
-    if (this.selectedProblems.size) {
-      this.selectedProblems.forEach(problem => {
+    if (Object.values(this.selectedProblems).length) {
+      Object.values(this.selectedProblems).forEach(problem => {
         console.log("selected problems on ngoninit");
-        this.getProblemData(problem.id);
+        this.getProblemData(problem["id"]);
       });
     }
 
@@ -748,7 +788,9 @@ export class AddSolutionComponent
                                 title
                               }
                             }
-                            solution_owners {
+                            solution_owners(where: { user_id: { _neq: ${
+                              this.auth.currentUserValue.id
+                            } } }) {
                               user {
                                 id
                                 name
@@ -772,17 +814,15 @@ export class AddSolutionComponent
               // this.solution.is_draft = result.data.problems[0].is_draft;
             });
             result.data.solutions[0].problems_solutions.map(problem => {
-              this.selectedProblems.add(problem.problem);
+              // this.selectedProblems.add(problem.problem);
+              this.selectedProblems[problem.problem.id] = problem.problem;
+
               this.getProblemData(problem.problem.id);
             });
             console.log(this.selectedProblems, "SOLUTIONS");
             if (result.data.solutions[0].solution_owners) {
               result.data.solutions[0].solution_owners.forEach(ownerArray => {
-                if (
-                  ownerArray.user.id != Number(this.auth.currentUserValue.id)
-                ) {
-                  this.owners.push(ownerArray.user);
-                }
+                this.owners.push(ownerArray.user);
               });
             }
           });
@@ -1651,7 +1691,7 @@ export class AddSolutionComponent
       this.solution.deployment &&
       this.solution.budget.title &&
       this.solution.budget.cost &&
-      this.selectedProblems.size
+      Object.values(this.selectedProblems).length
     );
   }
 

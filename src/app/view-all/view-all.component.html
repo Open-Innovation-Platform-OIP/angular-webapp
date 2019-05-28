@@ -23,6 +23,11 @@
       </div>
     </div>
     <br />
+    <div class="row justify-content-center" *ngIf="!displayUsers && viewProblemsAndSolutions">
+      <h4>{{viewProblems?"Problems":"Solutions"}}</h4>
+
+    </div>
+    <br />
     <div class="row" *ngIf="!displayUsers && viewProblems && !viewSolutions ">
       <div class="col-md-3" *ngFor="let problem of dashboardData">
         <app-problem-card [problemData]="problem"></app-problem-card>
