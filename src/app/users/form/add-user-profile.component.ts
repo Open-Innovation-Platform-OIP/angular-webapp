@@ -60,7 +60,10 @@ export class AddUserProfileComponent implements OnInit, OnChanges {
   mode = "Add";
   userId: any;
   visible = true;
-  phone_pattern = new RegExp("(?:(?:\\+|0{0,2})91(\\s*[\\- ]\\s*)?|[0 ]?)?[789]\\d{9}|(\\d[ -]?){10}\\d", "g");
+  phone_pattern = new RegExp(
+    "(?:(?:\\+|0{0,2})91(\\s*[\\- ]\\s*)?|[0 ]?)?[789]\\d{9}|(\\d[ -]?){10}\\d",
+    "g"
+  );
   selectable = true;
   removable = true;
   addOnBlur = true;
@@ -347,7 +350,9 @@ export class AddUserProfileComponent implements OnInit, OnChanges {
                 }
               }
 
-              this.isPhoneValid = this.phone_pattern.test(this.user.phone_number);
+              this.isPhoneValid = this.phone_pattern.test(
+                this.user.phone_number
+              );
               this.sectors = data.users[0].user_tags.map(tagArray => {
                 return tagArray.tag.name;
               });
@@ -444,7 +449,7 @@ export class AddUserProfileComponent implements OnInit, OnChanges {
                 users_tags: Array.from(user_tags)
               }
             })
-            .subscribe(data => { }, err => { });
+            .subscribe(data => {}, err => {});
         }
       },
       err => {

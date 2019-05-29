@@ -9,11 +9,15 @@
     cursor: pointer;
 }
 
-.title {
+/* .title {
     font-weight: 400;
     max-lines: 1;
     max-height: 1.2em;
     overflow: hidden;
+} */
+
+.title {
+    font-weight: 400;
 }
 
 .problem-card {

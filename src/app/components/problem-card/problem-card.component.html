@@ -8,9 +8,14 @@
   </div>
 
   <div class="card-body" (click)="navigation()">
-    <p class="card-title title">
+    <p class="card-title title" *ngIf="problemData.title.length < 30; else longTitle">
       {{ problemData.title }}
     </p>
+    <ng-template #longTitle>
+      <p class="card-title title">
+        {{ problemData.title.substring(0,30) + '...' }}
+      </p>
+    </ng-template>
     <div class="description">
       <strong>Description</strong>
       <p>{{ problemData.description }}</p>

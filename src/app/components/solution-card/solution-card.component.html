@@ -5,9 +5,14 @@
       width="200px" height="180px" style="object-fit:inherit;" />
   </div>
   <div class="card-body">
-    <p class="card-title title">
+    <p class="card-title title" *ngIf="solutionData.title.length < 30; else longTitle">
       {{ solutionData.title }}
     </p>
+    <ng-template #longTitle>
+      <p class="card-title title">
+        {{ solutionData.title.substring(0,30) + '...' }}
+      </p>
+    </ng-template>
     <div class="description">
       <strong *ngIf="solutionData.description">Description</strong>
       <p *ngIf="solutionData.description">{{ solutionData.description }}</p>
