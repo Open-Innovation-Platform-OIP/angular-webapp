@@ -1168,9 +1168,10 @@ export class AddSolutionComponent
   }
 
   publishSolution() {
-    this.solution.is_draft = false;
-
-    if (!this.is_edit) {
+    if (
+      (!this.is_edit && this.solution.is_draft) ||
+      (this.is_edit && this.solution.is_draft)
+    ) {
       swal({
         title: "Are you sure you want to publish the Solution",
         // text: "You won't be able to revert this!",
@@ -1181,9 +1182,13 @@ export class AddSolutionComponent
         confirmButtonText: "Yes",
         buttonsStyling: false
       }).then(result => {
+        this.solution.is_draft = false;
+
         this.submitSolutionToDB();
       });
     } else {
+      this.solution.is_draft = false;
+
       this.submitSolutionToDB();
     }
   }
@@ -1345,6 +1350,7 @@ export class AddSolutionComponent
 
             this.saveProblemsInDB(this.solution["id"], this.selectedProblems);
             this.saveOwnersInDB(this.solution["id"], this.owners);
+            console.log(this.solution.is_draft, "draft", this.is_edit);
 
             if (this.is_edit && !this.solution.is_draft) {
               this.showSuccessSwal("Solution Updated");
@@ -1352,7 +1358,11 @@ export class AddSolutionComponent
             } else if (!this.is_edit && !this.solution.is_draft) {
               this.showSuccessSwal("Solution Added");
               this.router.navigate(["solutions", this.solution["id"]]);
+            } else if (this.is_edit && this.solution.is_draft) {
+              this.showSuccessSwal("Solution Added");
+              this.router.navigate(["solutions", this.solution["id"]]);
             }
+            // this.router.navigate(["solutions", this.solution["id"]]);
           }
         },
         err => {
