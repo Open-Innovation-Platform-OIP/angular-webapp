@@ -479,9 +479,9 @@
               <p>Login to join discussion for this solution</p>
             </div>
             <div class="card-body" *ngIf="auth.currentUserValue.id">
-              <button mat-raised-button class="btn btn-warning btn-sm" (click)="showPopularDiscussions('latest')"
+              <button mat-raised-button class="btn btn-rose btn-sm" (click)="showPopularDiscussions('latest')"
                 *ngIf="objectValues(comments).length">Latest</button>
-              <button mat-raised-button class="btn btn-warning btn-sm" *ngIf="objectValues(comments).length"
+              <button mat-raised-button class="btn btn-rose btn-sm" *ngIf="objectValues(comments).length"
                 (click)="showPopularDiscussions('popular')">Popular</button>
 
               <div id="accordion" role="tablist">
