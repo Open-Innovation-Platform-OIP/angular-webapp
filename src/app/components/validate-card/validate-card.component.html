@@ -3,9 +3,7 @@
 <div class="card card-product validate-card" (click)="cardClicked()" *ngIf="validationData">
   <div class="card-body">
     <strong>Comment</strong>
-    <p class="description lines-wrap" *ngIf="validationData.comment" style="white-space: pre-wrap;">
-      {{validationData.comment}}
-    </p>
+    <p class="description" *ngIf="validationData.comment" style="white-space: pre-wrap;">{{validationData.comment}}</p>
 
     <strong>Status</strong>
     <div class="row">

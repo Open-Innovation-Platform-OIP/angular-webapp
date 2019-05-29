@@ -73,7 +73,7 @@ export class AddValidationComponent implements OnInit {
     });
   }
 
-  checkForSpaces($event) {
+  checkForSpaces(event) {
     let value = this.validationData.comment.trim();
     if (value) {
       this.blankSpace = false;
