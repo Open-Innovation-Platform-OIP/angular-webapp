@@ -432,6 +432,12 @@ export class SolutionDetailComponent implements OnInit {
     solution_voters{
       user_id
     }
+    solutions_tags{
+      tag {
+          id
+          name
+      }
+  }
 
     solution_validations(order_by:{edited_at: desc}){
       validated_by
@@ -574,7 +580,7 @@ export class SolutionDetailComponent implements OnInit {
 
   mailShare() {
     // not a great approach as the popup doesn't autoclose. Better to use href on button click.
-    const subject = encodeURI("Can you help solve this problem?");
+    const subject = encodeURI("Check out this solution");
     const body = encodeURI(
       `Hello,\n\nCheck out this link on Social Alpha's Open Innovation platform - ${
         this.pageUrl
@@ -587,7 +593,7 @@ export class SolutionDetailComponent implements OnInit {
   smsShare() {
     const url = "https://sms.socialalpha.jaagalabs.com/send";
     const data = {
-      text: `Can you help solve this problem? ${this.pageUrl}`,
+      text: `Check out this solution? ${this.pageUrl}`,
       numbers: prompt("Enter phone numbers separated by commas.").split(",")
     };
     // Default options are marked with *
@@ -672,6 +678,12 @@ export class SolutionDetailComponent implements OnInit {
     //     this.disableCollaborateButton = true;
     //   }
     // });
+    if (solution.solutions_tags) {
+      this.tags = solution.solutions_tags.map(tagArray => {
+        // console.log(tagArray, "work");
+        return tagArray.tag.name;
+      });
+    }
     solution.solution_watchers.map(watcher => {
       this.watchers.add(watcher.user_id);
     });

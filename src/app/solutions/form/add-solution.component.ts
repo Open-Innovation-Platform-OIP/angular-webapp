@@ -92,8 +92,8 @@ export class AddSolutionComponent
 
   @Output() deleteDraft = new EventEmitter();
   @Output() addedOwners = new EventEmitter();
+  @Output() addedSectors = new EventEmitter();
   @Output() removedOwners = new EventEmitter();
-  sectorCtrl = new FormControl();
 
   file_types = [
     "application/msword",
@@ -126,7 +126,7 @@ export class AddSolutionComponent
   locationInputValue: any;
   input_pattern = new RegExp("^s*");
 
-  filteredSectors: Observable<string[]>;
+  filteredSectors: Observable<any[]>;
   sectors: any = [];
 
   readonly separatorKeysCodes: number[] = [ENTER, COMMA];
@@ -137,6 +137,7 @@ export class AddSolutionComponent
   problemCtrl = new FormControl();
   ownersCtrl = new FormControl();
   locationCtrl = new FormControl();
+  sectorCtrl = new FormControl();
   filteredProblems: Observable<any>;
   searchResultsObservable: Subscription;
 
@@ -173,6 +174,7 @@ export class AddSolutionComponent
   @ViewChild("ownerInput") ownerInput: ElementRef<HTMLInputElement>;
 
   @ViewChild("auto") matAutocomplete: MatAutocomplete;
+  @ViewChild("autoSector") matAutocompleteSector: MatAutocomplete;
 
   objectValues = Object["values"];
   visible = true;
@@ -254,11 +256,7 @@ export class AddSolutionComponent
 
     this.filteredSectors = this.sectorCtrl.valueChanges.pipe(
       startWith(null),
-      map((sector: string | null) =>
-        sector
-          ? this._filter(sector)
-          : Object.keys(this.tagService.allTags).slice()
-      )
+      map((sector: string | null) => (sector ? this._filter(sector) : []))
     );
 
     // this.problem.organization = "Social Alpha";
@@ -299,18 +297,20 @@ export class AddSolutionComponent
   }
 
   sectorSelected(event: MatAutocompleteSelectedEvent): void {
-    this.sectors.push(event.option.viewValue);
+    console.log("event.option.viewValue", event);
+    this.sectors.push(event.option.value);
     this.sectorInput.nativeElement.value = "";
     this.sectorCtrl.setValue(null);
+    this.addedSectors.emit(this.sectors);
   }
 
   addSector(event: MatChipInputEvent): void {
-    if (!this.matAutocomplete.isOpen) {
+    if (!this.matAutocompleteSector.isOpen) {
       const input = event.input;
       const value = event.value;
 
       if ((value || "").trim()) {
-        this.sectors.push(value.trim());
+        this.sectors.push(value.trim().toUpperCase());
       }
 
       if (input) {
@@ -346,7 +346,7 @@ export class AddSolutionComponent
     this.getProblemData(selectedProblem.id);
 
     this.selectedProblems[selectedProblem.id] = selectedProblem;
-    console.log(this.selectedProblems, "problem set");
+    // console.log(this.selectedProblems, "problem set");
 
     this.problemInput.nativeElement.value = "";
     this.problemCtrl.setValue(null);
@@ -377,6 +377,11 @@ export class AddSolutionComponent
                       max_population
                       beneficiary_attributes
                       resources_needed
+                      problem_tags{
+                        tag{
+                          name
+                        }
+                      }
                                   
                       }
                   }
@@ -387,8 +392,16 @@ export class AddSolutionComponent
       .valueChanges.subscribe(
         result => {
           let problemData = result.data.problems[0];
+          // console.log(problemData, "problem data from db");
+          if (problemData.problem_tags.length && this.solution.is_draft) {
+            problemData.problem_tags.map(tags => {
+              this.sectors.push(tags.tag.name);
+            });
+            this.sectors = this.removeDuplicates(this.sectors);
+          }
+
           this.selectedProblemsData[problemData.id] = problemData;
-          console.log(this.selectedProblemsData, "problem data from db");
+          // console.log(this.selectedProblemsData, "problem data from db");
         },
         error => {
           console.log(error);
@@ -401,7 +414,7 @@ export class AddSolutionComponent
       this.searchService.solutionSearch(solutionSearchInput).subscribe(
         value => {
           this.solutionSearchResults = value.data.search_solutions_v2;
-          console.log("Solution title search", this.solutionSearchResults);
+          // console.log("Solution title search", this.solutionSearchResults);
         },
         error => {
           console.log(JSON.stringify(error));
@@ -574,16 +587,16 @@ export class AddSolutionComponent
   }
 
   searchProblem(event) {
-    console.log("Search Event", event);
+    // console.log("Search Event", event);
     if (event && event.target && event.target.value) {
       // this.searchResultsObservable = this.smartSearch(event.target.value);
-      console.log("Search Event ==", event);
+      // console.log("Search Event ==", event);
 
       this.searchResultsObservable = this.smartSearch(
         event.target.value
       ).subscribe(
         result => {
-          console.log(result, "result from search");
+          // console.log(result, "result from search");
           if (result.data.search_problems_v2.length > 0) {
             // this.smartSearchResults = [];
             // this.searchResults = [];
@@ -671,7 +684,7 @@ export class AddSolutionComponent
   }
 
   selectedOwner(event: MatAutocompleteSelectedEvent): void {
-    console.log(event.option, "event value");
+    // console.log(event.option, "event value");
     this.owners.push(event.option.value);
     this.ownerInput.nativeElement.value = "";
     this.ownersCtrl.setValue(null);
@@ -732,6 +745,7 @@ export class AddSolutionComponent
 
   ngOnInit() {
     console.log("solution wizard ng on in it");
+    this.tagService.getTagsFromDB();
 
     this.problemId = Number(this.route.snapshot.paramMap.get("problemId"));
     console.log(this.route.snapshot.paramMap, "problem param");
@@ -788,6 +802,12 @@ export class AddSolutionComponent
                                 title
                               }
                             }
+                            solutions_tags{
+                              tag {
+                                  id
+                                  name
+                              }
+                          }
                             solution_owners(where: { user_id: { _neq: ${
                               this.auth.currentUserValue.id
                             } } }) {
@@ -803,29 +823,44 @@ export class AddSolutionComponent
             // pollInterval: 500,
             fetchPolicy: "network-only"
           })
-          .valueChanges.subscribe(result => {
-            this.solution["id"] = result.data.solutions[0].id;
-            this.is_edit = true;
-            Object.keys(this.solution).map(key => {
-              // console.log(key, result.data.problems[0][key]);
+          .valueChanges.subscribe(
+            result => {
+              this.solution["id"] = result.data.solutions[0].id;
+              this.is_edit = true;
+              Object.keys(this.solution).map(key => {
+                // console.log(key, result.data.problems[0][key]);
 
-              this.solution[key] = result.data.solutions[0][key];
+                this.solution[key] = result.data.solutions[0][key];
 
-              // this.solution.is_draft = result.data.problems[0].is_draft;
-            });
-            result.data.solutions[0].problems_solutions.map(problem => {
-              // this.selectedProblems.add(problem.problem);
-              this.selectedProblems[problem.problem.id] = problem.problem;
-
-              this.getProblemData(problem.problem.id);
-            });
-            console.log(this.selectedProblems, "SOLUTIONS");
-            if (result.data.solutions[0].solution_owners) {
-              result.data.solutions[0].solution_owners.forEach(ownerArray => {
-                this.owners.push(ownerArray.user);
+                // this.solution.is_draft = result.data.problems[0].is_draft;
               });
+
+              if (result.data.solutions[0].solutions_tags) {
+                this.sectors = result.data.solutions[0].solutions_tags.map(
+                  tagArray => {
+                    return tagArray.tag.name;
+                  }
+                );
+              }
+
+              result.data.solutions[0].problems_solutions.map(problem => {
+                // this.selectedProblems.add(problem.problem);
+                this.selectedProblems[problem.problem.id] = problem.problem;
+
+                this.getProblemData(problem.problem.id);
+              });
+              console.log(this.selectedProblems, "SOLUTIONS");
+              if (result.data.solutions[0].solution_owners) {
+                this.owners = this.removeDuplicates(this.owners);
+                result.data.solutions[0].solution_owners.forEach(ownerArray => {
+                  this.owners.push(ownerArray.user);
+                });
+              }
+            },
+            error => {
+              console.error(JSON.stringify(error));
             }
-          });
+          );
       }
     });
 
@@ -1295,6 +1330,9 @@ export class AddSolutionComponent
       }
     }
   }
+  removeDuplicates(array) {
+    return Array.from(new Set(array));
+  }
 
   submitSolutionToDB() {
     // console.log(problem, "submitted");
@@ -1335,6 +1373,7 @@ export class AddSolutionComponent
       }
     `;
     console.log("SOLUTION", this.solution);
+    this.sectors = this.removeDuplicates(this.sectors);
 
     this.apollo
       .mutate({
@@ -1350,6 +1389,8 @@ export class AddSolutionComponent
 
             this.saveProblemsInDB(this.solution["id"], this.selectedProblems);
             this.saveOwnersInDB(this.solution["id"], this.owners);
+            this.saveSectorsInDB();
+
             console.log(this.solution.is_draft, "draft", this.is_edit);
 
             if (this.is_edit && !this.solution.is_draft) {
@@ -1369,6 +1410,64 @@ export class AddSolutionComponent
           console.error(JSON.stringify(err));
         }
       );
+  }
+
+  saveSectorsInDB() {
+    const tags = [];
+
+    const solution_tags = new Set();
+    // console.log(this.sectors, "sectors");
+
+    this.sectors.map(sector => {
+      tags.push({ name: sector });
+
+      if (
+        this.tagService.allTags[sector] &&
+        this.tagService.allTags[sector].id
+      ) {
+        solution_tags.add({
+          tag_id: this.tagService.allTags[sector].id,
+          solution_id: this.solution["id"]
+        });
+      }
+    });
+
+    this.tagService.addTagsInDb(tags, "solutions", this.solution["id"]);
+
+    if (solution_tags.size > 0) {
+      const upsert_solution_tags = gql`
+        mutation upsert_solutions_tags(
+          $solutions_tags: [solutions_tags_insert_input!]!
+        ) {
+          insert_solutions_tags(
+            objects: $solutions_tags
+            on_conflict: {
+              constraint: solutions_tags_pkey
+              update_columns: [tag_id, solution_id]
+            }
+          ) {
+            affected_rows
+            returning {
+              tag_id
+              solution_id
+            }
+          }
+        }
+      `;
+      this.apollo
+        .mutate({
+          mutation: upsert_solution_tags,
+          variables: {
+            solutions_tags: Array.from(solution_tags)
+          }
+        })
+        .subscribe(
+          data => {},
+          err => {
+            console.error("Error uploading tags", err);
+          }
+        );
+    }
   }
 
   sendInputToParent(input) {

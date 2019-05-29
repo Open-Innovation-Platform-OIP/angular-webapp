@@ -414,19 +414,29 @@
 
                     <br />
 
-                    <!-- <div class="row justify-content-center">
-                      <label class="col-md-2 col-2 col-form-label">
-                        Sectors</label>
-                      <div class="col-md-10 col-9">
-                        <div class="input-group ">
+                    <div class="row justify-content-center">
+                      <div class="col-sm-12">
+                        <div class="input-group form-control-lg">
+                          <div class="input-group-prepend">
+                            <span class="input-group-text">
+
+                              <i class="material-icons" [ngStyle]="{
+                                      color: !sectors.length
+                                        ? 'red'
+                                        : '#495057'
+                                    }">label</i>
+                            </span>
+                          </div>
+
                           <mat-form-field class="example-chip-list">
-                            <input placeholder="Sectors" #sectorInput [formControl]="sectorCtrl"
-                              [matAutocomplete]="autoSector" [matChipInputFor]="chipList"
-                              [matChipInputSeparatorKeyCodes]="separatorKeysCodes" [matChipInputAddOnBlur]="addOnBlur"
-                              (matChipInputTokenEnd)="addSector($event)" />
-                            <mat-chip-list #chipList> </mat-chip-list>
+                            <mat-chip-list #chipList>
+                              <input placeholder="Sectors *" #sectorInput [formControl]="sectorCtrl"
+                                [matAutocomplete]="autoSector" [matChipInputFor]="chipList"
+                                [matChipInputSeparatorKeyCodes]="separatorKeysCodes" [matChipInputAddOnBlur]="addOnBlur"
+                                (matChipInputTokenEnd)="addSector($event)" />
+                            </mat-chip-list>
                             <mat-autocomplete #autoSector="matAutocomplete" (optionSelected)="sectorSelected($event)">
-                              <mat-option *ngFor="let sector of (filteredSectors | async)" [value]="sector">
+                              <mat-option *ngFor="let sector of filteredSectors | async" [value]="sector">
                                 {{ sector }}
                               </mat-option>
                             </mat-autocomplete>
@@ -436,15 +446,14 @@
                     </div>
 
                     <div class="row justify-content-center">
-                      <label class="col-md-2 col-2 col-form-label"> </label>
-                      <div class="col-md-10 col-9">
+                      <div class="col-sm-10">
                         <mat-chip *ngFor="let sector of sectors" [selectable]="selectable" [removable]="removable"
                           (removed)="removeSector(sector)" style="margin-right:0.3em; margin-bottom: 0.4em;">
                           {{ sector }}
                           <mat-icon matChipRemove *ngIf="removable">cancel</mat-icon>
                         </mat-chip>
                       </div>
-                    </div> -->
+                    </div>
 
 
                     <div class="row justify-content-center">

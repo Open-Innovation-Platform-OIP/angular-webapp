@@ -25,7 +25,10 @@ export class SolutionsViewComponent implements OnInit {
     this.solutionViewQuery = this.apollo.watchQuery<any>({
       query: gql`
         query PostsGetQuery {
-          solutions(where: { is_draft: { _eq: false } }) {
+          solutions(
+            where: { is_draft: { _eq: false } }
+            order_by: { updated_at: desc }
+          ) {
             id
             title
             description
