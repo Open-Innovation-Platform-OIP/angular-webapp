@@ -83,7 +83,7 @@ export class ProblemDetailComponent implements OnInit, OnDestroy {
   watchers = new Set();
   voters = new Set();
   owners = new Set();
-  ownerNames: any = [];
+  ownerData: any = [];
   problemDataQuery: QueryRef<any>;
   userDataQuery: QueryRef<any>;
   count: any = 0;
@@ -738,11 +738,13 @@ export class ProblemDetailComponent implements OnInit, OnDestroy {
     });
     this.collaborators = problem.problem_collaborators;
     this.solutions = [];
-    problem.problems_solutions.forEach(solutions => {
-      if (!solutions.solution.is_draft) {
-        this.solutions.push(solutions.solution);
-      }
-    });
+    if (problem.problems_solutions.length) {
+      problem.problems_solutions.forEach(solutions => {
+        if (!solutions.solution.is_draft) {
+          this.solutions.push(solutions.solution);
+        }
+      });
+    }
 
     console.log(this.solutions, "solutions refresh");
 
@@ -776,10 +778,13 @@ export class ProblemDetailComponent implements OnInit, OnDestroy {
       problem.problem_voters.map(voter => {
         this.voters.add(voter.user_id);
       });
-      problem.problem_owners.map(owner => {
-        this.owners.add(owner.user_id);
-        this.ownerNames.push(owner.user.name);
-      });
+      if (problem.problem_owners.length) {
+        problem.problem_owners.map(owner => {
+          this.owners.add(owner.user_id);
+          this.ownerData.push(owner.user);
+        });
+      }
+
       // adding embed urls
       let embedded_urls_arr = this.problemData.embed_urls.map(url => {
         return { url: url };

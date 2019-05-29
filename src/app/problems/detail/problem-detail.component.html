@@ -70,17 +70,17 @@
 
                 <strong>Location(s)</strong>
                 <div *ngIf="problemData.location.length">
-                  <span class="badge badge-warning" *ngFor="let location of problemData.location"
-                    style="margin-right: 0.3em;">{{location.Address.Label}}</span>
-                  <span>&nbsp;</span>
+                  <div *ngFor="let location of problemData.location" style="margin-right: 0.3em;">
+                    {{location.Address.Label}}</div>
+                  <!-- <span>&nbsp;</span> -->
                 </div>
 
                 <br />
 
-                <strong *ngIf="ownerNames.length">Owner(s)</strong>
+                <strong *ngIf="ownerData.length">Owner(s)</strong>
                 <div>
-                  <span *ngFor="let owner of ownerNames" class="badge badge-warning"
-                    style="margin-right: 0.3em;">{{owner}}</span>
+                  <a [routerLink]="'/profiles/'+owner.id" *ngFor="let owner of ownerData"
+                    style="margin-right: 0.6em;">{{owner.name}}</a>
                   <span>&nbsp;</span>
                 </div>
 
