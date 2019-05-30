@@ -94,7 +94,7 @@ label {
 }
 
 .dropdown-menu a:hover {
-    background-color: var(--orange);
+    background-color: #E82C6C;
     color: var(--light);
     cursor: pointer;
 }

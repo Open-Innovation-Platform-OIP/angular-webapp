@@ -16,6 +16,7 @@ import {
 import { Router, ActivatedRoute, ParamMap } from "@angular/router";
 import { Observable, Subscription, interval } from "rxjs";
 import { NgxUiLoaderService } from "ngx-ui-loader";
+import { domain } from "../../../environments/environment";
 
 import {
   first,
@@ -61,7 +62,7 @@ interface queryString {
   commentId: number;
 }
 
-const domain = "https://social-alpha-open-innovation.firebaseapp.com";
+// const domain = "https://social-alpha-open-innovation.firebaseapp.com";
 
 @Component({
   selector: "app-solution-detail",
@@ -94,7 +95,7 @@ export class SolutionDetailComponent implements OnInit {
   problems = [];
 
   owners = new Set();
-  ownerNames: any = [];
+  ownerData: any = [];
 
   solutionData = {
     id: "",
@@ -223,7 +224,7 @@ export class SolutionDetailComponent implements OnInit {
   public carouselTileItems$: Observable<any>;
   public carouselTileItemsValid$: Observable<number[]>;
   public carouselTileItemCollab$: Observable<number[]>;
-  public carouselTileItemProblems$: Observable<number[]>;
+  // public carouselTileItemProblems$: Observable<number[]>;
   public carouselTileConfig: NguCarouselConfig = {
     grid: { xs: 2, sm: 2, md: 2, lg: 2, all: 0 },
 
@@ -349,20 +350,20 @@ export class SolutionDetailComponent implements OnInit {
       })
     );
 
-    this.carouselTileItemProblems$ = interval(500).pipe(
-      startWith(-1),
-      take(2),
-      map(val => {
-        let data;
+    // this.carouselTileItemProblems$ = interval(500).pipe(
+    //   startWith(-1),
+    //   take(2),
+    //   map(val => {
+    //     let data;
 
-        if (this.problems && this.problems.length < 1) {
-          this.problems = [false];
-        } else {
-          data = this.problems;
-          return data;
-        }
-      })
-    );
+    //     if (this.problems && this.problems.length < 1) {
+    //       this.problems = [false];
+    //     } else {
+    //       data = this.problems;
+    //       return data;
+    //     }
+    //   })
+    // );
   }
 
   ngOnInit() {
@@ -745,10 +746,12 @@ export class SolutionDetailComponent implements OnInit {
     //   this.voters.add(voter.user_id);
     // });
 
-    solution.solution_owners.map(owner => {
+    this.ownerData = solution.solution_owners.map(owner => {
       this.owners.add(owner.user_id);
-      this.ownerNames.push(owner.user.name);
+      // this.ownerNames.push(owner.user.name);
+      return owner.user;
     });
+    console.log(this.ownerData, "ownerData");
 
     // adding embed urls
 

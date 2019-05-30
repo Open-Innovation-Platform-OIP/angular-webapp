@@ -779,9 +779,9 @@ export class ProblemDetailComponent implements OnInit, OnDestroy {
         this.voters.add(voter.user_id);
       });
       if (problem.problem_owners.length) {
-        problem.problem_owners.map(owner => {
+        this.ownerData = problem.problem_owners.map(owner => {
           this.owners.add(owner.user_id);
-          this.ownerData.push(owner.user);
+          return owner.user;
         });
       }
 

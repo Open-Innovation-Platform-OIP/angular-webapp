@@ -84,6 +84,8 @@
                   <span>&nbsp;</span>
                 </div>
 
+                <br />
+
                 <strong *ngIf="solutions.length">Solutions tackling this problem</strong>
                 <div>
                   <span [routerLink]="'/solutions/'+solution.id" *ngFor="let solution of solutions"
