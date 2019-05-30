@@ -203,8 +203,10 @@ export class AddSolutionComponent
       title: "",
       cost: 0
     },
+    budget_title: "",
+    min_budget: 0,
+    max_budget: "",
     extent: "",
-
     beneficiary_attributes: "",
     image_urls: [],
     video_urls: [],
@@ -241,7 +243,6 @@ export class AddSolutionComponent
       impact: [null, null],
       extent: [null, null],
       beneficiary_attributes: [null, null],
-
       timeline: [null, null],
       pilots: [null, null],
       deployment: [null, Validators.required],

@@ -243,12 +243,26 @@
                                 <div id="collapseOne" class="collapse show" role="tabpanel" aria-labelledby="headingOne"
                                   data-parent="#accordion" style="">
                                   <div class="card-body">
-                                    <ul *ngFor="let problem of objectValues(selectedProblemsData)">
-                                      <li *ngIf="problem.impact">
-                                        <h5>Problem - "{{problem.title}}"</h5>
-                                        <h4>{{problem.impact}}</h4>
+                                    <!-- <ul class="list-group list-group-flush"
+                                      *ngFor="let problem of objectValues(selectedProblemsData); let i=index;">
+                                      <li class="list-group-item" *ngIf="problem.impact">
+                                        <p><u>Problem {{ i+1 }} - {{problem.title}}</u></p>
+                                        <p><b>{{problem.impact}}</b></p>
+                                        <hr>
                                       </li>
-                                    </ul>
+                                    </ul> -->
+                                    <div class="table-responsive">
+                                      <table class="table">
+                                        <tbody>
+                                          <tr *ngFor="let problem of objectValues(selectedProblemsData); let i=index;">
+                                            <td>
+                                              <p *ngIf="problem.impact"><u>Problem {{ i+1 }} - {{problem.title}}</u></p>
+                                              <p *ngIf="problem.impact"><b>{{problem.impact}}</b></p>
+                                            </td>
+                                          </tr>
+                                        </tbody>
+                                      </table>
+                                    </div>
                                   </div>
                                 </div>
                               </div>
@@ -297,12 +311,24 @@
                                 <div id="collapseOne" class="collapse show" role="tabpanel" aria-labelledby="headingOne"
                                   data-parent="#accordion" style="">
                                   <div class="card-body">
-                                    <ul *ngFor="let problem of objectValues(selectedProblemsData)">
+                                    <!-- <ul *ngFor="let problem of objectValues(selectedProblemsData)">
                                       <li *ngIf="problem.extent">
                                         <h5>Problem - "{{problem.title}}"</h5>
                                         <h4>{{problem.extent}}</h4>
                                       </li>
-                                    </ul>
+                                    </ul> -->
+                                    <div class="table-responsive">
+                                      <table class="table">
+                                        <tbody>
+                                          <tr *ngFor="let problem of objectValues(selectedProblemsData); let i=index;">
+                                            <td>
+                                              <p *ngIf="problem.impact"><u>Problem {{ i+1 }} - {{problem.title}}</u></p>
+                                              <p *ngIf="problem.impact"><b>{{problem.extent}}</b></p>
+                                            </td>
+                                          </tr>
+                                        </tbody>
+                                      </table>
+                                    </div>
                                   </div>
                                 </div>
                               </div>
@@ -353,16 +379,25 @@
                                 <div id="collapseOne" class="collapse show" role="tabpanel" aria-labelledby="headingOne"
                                   data-parent="#accordion" style="">
                                   <div class="card-body">
-                                    <ul *ngFor="let problem of objectValues(selectedProblemsData)">
+                                    <!-- <ul *ngFor="let problem of objectValues(selectedProblemsData)">
                                       <li *ngIf="problem.beneficiary_attributes">
                                         <h5>Problem - "{{problem.title}}"</h5>
                                         <h4>{{problem.beneficiary_attributes}}</h4>
-
-
                                       </li>
+                                    </ul> -->
 
-
-                                    </ul>
+                                    <div class="table-responsive">
+                                      <table class="table">
+                                        <tbody>
+                                          <tr *ngFor="let problem of objectValues(selectedProblemsData); let i=index;">
+                                            <td>
+                                              <p *ngIf="problem.impact"><u>Problem {{ i+1 }} - {{problem.title}}</u></p>
+                                              <p *ngIf="problem.impact"><b>{{problem.beneficiary_attributes}}</b></p>
+                                            </td>
+                                          </tr>
+                                        </tbody>
+                                      </table>
+                                    </div>
 
                                   </div>
                                 </div>
