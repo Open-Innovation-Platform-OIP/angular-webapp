@@ -223,7 +223,7 @@ export class ProblemDetailComponent implements OnInit, OnDestroy {
   public carouselTileItems$: Observable<any>;
   public carouselTileItemsValid$: Observable<number[]>;
   public carouselTileItemCollab$: Observable<number[]>;
-  public carouselTileItemSolution$: Observable<number[]>;
+  // public carouselTileItemSolution$: Observable<number[]>;
 
   public carouselTileConfig: NguCarouselConfig = {
     grid: { xs: 2, sm: 2, md: 2, lg: 2, all: 0 },
@@ -365,20 +365,20 @@ export class ProblemDetailComponent implements OnInit, OnDestroy {
       })
     );
 
-    this.carouselTileItemSolution$ = interval(500).pipe(
-      startWith(-1),
-      take(2),
-      map(val => {
-        let data;
+    // this.carouselTileItemSolution$ = interval(500).pipe(
+    //   startWith(-1),
+    //   take(2),
+    //   map(val => {
+    //     let data;
 
-        if (this.solutions && this.solutions.length < 1) {
-          this.solutions = [false];
-        } else {
-          data = this.solutions;
-          return data;
-        }
-      })
-    );
+    //     if (this.solutions && this.solutions.length < 1) {
+    //       this.solutions = [false];
+    //     } else {
+    //       data = this.solutions;
+    //       return data;
+    //     }
+    //   })
+    // );
   }
 
   ngOnInit() {
