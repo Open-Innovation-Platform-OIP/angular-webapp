@@ -82,10 +82,10 @@
                 <br />
 
                 <strong *ngIf="problems.length">Problems linked to this solution</strong>
-                <div>
-                  <span [routerLink]="'/problems/'+problem.id" *ngFor="let problem of problems"
-                    class="badge badge-warning" style="margin-right: 0.3em;">{{problem.title}}</span>
-                  <span>&nbsp;</span>
+                <div *ngFor="let problem of problems">
+                  <a [routerLink]="'/problems/'+problem.id"
+                    style="margin-right: 0.3em;cursor: pointer;">{{problem.title}}</a>
+                  <!-- <span>&nbsp;</span> -->
                 </div>
 
                 <br />

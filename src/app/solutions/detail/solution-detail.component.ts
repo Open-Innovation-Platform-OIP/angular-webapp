@@ -349,21 +349,6 @@ export class SolutionDetailComponent implements OnInit {
         }
       })
     );
-
-    // this.carouselTileItemProblems$ = interval(500).pipe(
-    //   startWith(-1),
-    //   take(2),
-    //   map(val => {
-    //     let data;
-
-    //     if (this.problems && this.problems.length < 1) {
-    //       this.problems = [false];
-    //     } else {
-    //       data = this.problems;
-    //       return data;
-    //     }
-    //   })
-    // );
   }
 
   ngOnInit() {

@@ -87,10 +87,9 @@
                 <br />
 
                 <strong *ngIf="solutions.length">Solutions tackling this problem</strong>
-                <div>
-                  <span [routerLink]="'/solutions/'+solution.id" *ngFor="let solution of solutions"
-                    class="badge badge-warning" style="margin-right: 0.3em;">{{solution.title}}</span>
-                  <span>&nbsp;</span>
+                <div *ngFor="let solution of solutions">
+                  <a [routerLink]="'/solutions/'+solution.id" style="margin-right: 0.3em;">{{solution.title}}</a>
+                  <!-- <span>&nbsp;</span> -->
                 </div>
 
                 <br />
@@ -99,6 +98,8 @@
             </div>
           </div>
           <div class="card-footer">
+
+
             <div class="stats">
               <i class="material-icons actions" (click)="toggleVoteProblem()"
                 [ngStyle]="{'color':voters.has(userId) ? '#1E90FF' : 'black' }">
