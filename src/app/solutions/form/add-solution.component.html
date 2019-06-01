@@ -531,7 +531,7 @@
                       </div>
                     </div>
 
-                    <div class="row justify-content-center">
+                    <!-- <div class="row justify-content-center">
                       <div class="col-sm-12">
                         <div class="input-group form-control-lg">
                           <div class="row">
@@ -565,6 +565,43 @@
                             </div>
                           </div>
                         </div>
+                      </div>
+                    </div> -->
+
+                    <div class="row justify-content-center">
+                      <div class="col-sm-12">
+                        <div class="input-group form-control-lg">
+                          <div class="input-group-prepend">
+                            <span class="input-group-text">
+                              <i class="material-icons"
+                                [ngStyle]="{color: (!solution.budget.title && !solution.budget.cost) ? 'red' : '#495057'}">monetization_on</i>
+                            </span>
+                          </div>
+                          <mat-form-field class="example-full-width has-label"
+                            [ngClass]="displayFieldCss(type, 'deployment')">
+                            <input type="text" name="budget" matInput id="budget" appAutofocus
+                              placeholder="Budget title *" formControlName="budget" [(ngModel)]="solution.budget_title">
+                          </mat-form-field>
+                        </div>
+                      </div>
+                    </div>
+
+                    <div class="row justify-content-center">
+                      <div class="col-sm-5">
+                        <mat-form-field class="example-full-width has-label"
+                          [ngClass]="displayFieldCss(type, 'assessment_metrics')">
+                          <input type="number" name="budget" matInput id="budget" appAutofocus
+                            placeholder="Minimum Budget (in Rupees) *" formControlName="min_budget"
+                            [(ngModel)]="solution.min_budget">
+                        </mat-form-field>
+                      </div>
+                      <div class="col-sm-5">
+                        <mat-form-field class="example-full-width has-label"
+                          [ngClass]="displayFieldCss(type, 'assessment_metrics')">
+                          <input type="number" name="budget" matInput id="budget" appAutofocus
+                            placeholder="Maximum Budget (in Rupees) *" formControlName="max_budget"
+                            [(ngModel)]="solution.max_budget">
+                        </mat-form-field>
                       </div>
                     </div>
 

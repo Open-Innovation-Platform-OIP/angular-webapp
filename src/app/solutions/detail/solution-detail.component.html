@@ -64,12 +64,13 @@
                 <strong *ngIf="solutionData.budget">Budget</strong>
                 <div class="row">
                   <div class="col-md-5">
-                    <p class="description" style="white-space: pre-wrap;">{{solutionData.budget.title}}</p>
+                    <p class="description" style="white-space: pre-wrap;">{{solutionData.budget_title}}
+                      (Rs.{{solutionData.min_budget}} - Rs.{{solutionData.max_budget}})</p>
                   </div>
-                  <span>-</span>
+                  <!-- <span>-</span>
                   <div class="col-md-5">
                     <p class="description" style="white-space: pre-wrap;">{{solutionData.budget.cost}}</p>
-                  </div>
+                  </div> -->
                 </div>
 
                 <strong *ngIf="ownerData.length">Solver Team</strong>
