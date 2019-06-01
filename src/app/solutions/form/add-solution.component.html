@@ -53,11 +53,13 @@
                           </div>
 
                           <mat-form-field class="example-chip-list">
+
+                            <input placeholder='Select Problem *' matInput style="width: 700px;" #problemInput
+                              [formControl]="problemCtrl" autofocus [matAutocomplete]="auto"
+                              [matChipInputFor]="chipList" [matChipInputSeparatorKeyCodes]="separatorKeysCodes"
+                              [matChipInputAddOnBlur]="addOnBlur" (input)="searchProblem($event)"
+                              (focus)="hideProblems('problem')">
                             <mat-chip-list #chipList>
-                              <input placeholder='Select Problem *' #problemInput [formControl]="problemCtrl" autofocus
-                                [matAutocomplete]="auto" [matChipInputFor]="chipList"
-                                [matChipInputSeparatorKeyCodes]="separatorKeysCodes" [matChipInputAddOnBlur]="addOnBlur"
-                                (input)="searchProblem($event)" (focus)="hideProblems('problem')">
                             </mat-chip-list>
                             <mat-autocomplete #auto="matAutocomplete" (optionSelected)="selected($event)">
                               <mat-option *ngFor="let problem of objectValues(searchResults)" [value]="problem">
@@ -142,7 +144,7 @@
                           <mat-form-field class="example-full-width has-label"
                             [ngClass]="displayFieldCss(type, 'technology')">
                             <input type="text" name="technology" matInput id="technology" appAutofocus
-                              placeholder="Innovation *" formControlName="technology" [(ngModel)]="solution.technology">
+                              placeholder="Innovation " formControlName="technology" [(ngModel)]="solution.technology">
                           </mat-form-field>
                         </div>
                       </div>
@@ -464,11 +466,13 @@
                           </div>
 
                           <mat-form-field class="example-chip-list">
+
+
+                            <input placeholder="Sectors*" style="width: 700px;" matInput #sectorInput
+                              [formControl]="sectorCtrl" [matAutocomplete]="autoSector" [matChipInputFor]="chipList"
+                              [matChipInputSeparatorKeyCodes]="separatorKeysCodes" [matChipInputAddOnBlur]="addOnBlur"
+                              (matChipInputTokenEnd)="addSector($event)" />
                             <mat-chip-list #chipList>
-                              <input placeholder="Sectors *" #sectorInput [formControl]="sectorCtrl"
-                                [matAutocomplete]="autoSector" [matChipInputFor]="chipList"
-                                [matChipInputSeparatorKeyCodes]="separatorKeysCodes" [matChipInputAddOnBlur]="addOnBlur"
-                                (matChipInputTokenEnd)="addSector($event)" />
                             </mat-chip-list>
                             <mat-autocomplete #autoSector="matAutocomplete" (optionSelected)="sectorSelected($event)">
                               <mat-option *ngFor="let sector of filteredSectors | async" [value]="sector">

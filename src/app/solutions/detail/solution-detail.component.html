@@ -73,12 +73,23 @@
                   </div> -->
                 </div>
 
-                <strong *ngIf="ownerNames.length">Solver Team</strong>
+                <strong *ngIf="ownerData.length">Solver Team</strong>
                 <div>
-                  <span *ngFor="let owner of ownerNames" class="badge badge-rose"
-                    style="margin-right: 0.3em;">{{owner}}</span>
+                  <a [routerLink]="'/profiles/'+owner.id" *ngFor="let owner of ownerData"
+                    style="margin-right: 0.3em;">{{owner.name}}</a>
                   <span>&nbsp;</span>
                 </div>
+
+                <br />
+
+                <strong *ngIf="problems.length">Problems linked to this solution</strong>
+                <div *ngFor="let problem of problems">
+                  <a [routerLink]="'/problems/'+problem.id"
+                    style="margin-right: 0.3em;cursor: pointer;">{{problem.title}}</a>
+                  <!-- <span>&nbsp;</span> -->
+                </div>
+
+                <br />
               </div>
             </div>
           </div>
@@ -380,25 +391,12 @@
 
 
         <!--solution carousel start-->
-        <div class="row justify-content-center">
-          <!-- <a mat-button NguCarouselPrev class="leftRs">
-              <i class="material-icons">
-                keyboard_arrow_left
-              </i>
-            </a> -->
+        <!-- <div class="row justify-content-center">
+          
           <h4 *ngIf="problems[0]">Problems</h4>
-          <!-- <button mat-raised-button *ngIf="auth.currentUserValue.id" class="btn btn-warning btn-round"
-            matTooltip="Click to add enrichment" [matTooltipPosition]="'below'"
-            [disabled]="disableEnrichButton || !auth.currentUserValue.id"
-            [routerLink]="['/enrichment/add',{problemId:problemData.id}]">Enrich</button>
-          <p *ngIf="!auth.currentUserValue.id">Login to enrich the problem</p> -->
-          <!-- <a mat-button NguCarouselNext class="rightRs">
-              <i class="material-icons">
-                keyboard_arrow_right
-              </i>
-            </a> -->
+         
         </div>
-        <!--Enrichment divider-->
+
 
         <ngu-carousel #problemCarousel [inputs]="carouselTileConfig" [dataSource]="carouselTileItemProblems$ | async"
           *ngIf="problems[0]">
@@ -409,30 +407,25 @@
             </app-problem-card>
           </ngu-tile>
 
-          <!-- <button NguCarouselPrev class="btn btn-default leftRs" [style.opacity]="enrichCarousel.isFirst ? 0.5:1">&lt;</button> -->
-          <!-- <button NguCarouselNext class="btn btn-default rightRs" [style.opacity]="enrichCarousel.isLast ? 0.5:1">&gt;</button> -->
-
-          <!-- <div class="row justify-content-center"> -->
           <a mat-button NguCarouselPrev class="btn btn-white btn-just-icon btn-round leftRs"
             *ngIf="problems[0]&&problems.length>2">
             <i class="material-icons">
               keyboard_arrow_left
             </i>
           </a>
-          <!-- <button mat-raised-button class="btn btn-warning btn-round" data-toggle="modal" data-target="#enrichmentModal" -->
-          <!-- matTooltip="Click to add enrichment" [matTooltipPosition]="'below'">Enrich</button> -->
+         
           <a mat-button NguCarouselNext class="btn btn-white btn-just-icon btn-round rightRs"
             *ngIf="problems[0]&&problems.length>2">
             <i class="material-icons">
               keyboard_arrow_right
             </i>
           </a>
-          <!-- </div> -->
+
 
 
         </ngu-carousel>
 
-
+ -->
 
         <!--Add Collaborator Modal-->
         <div class="modal fade" id="collaboratorModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel"
