@@ -69,6 +69,7 @@ export class UsersService {
   dashboardRecommendations = {};
   dashboardUsers = {};
   dashboardUserSolutions = [];
+  dashboardSolutionContributions = {};
 
   constructor(private apollo: Apollo, private auth: AuthService) {
     this.getOrgsFromDB();

@@ -105,8 +105,22 @@
     </div>
     <br />
     <div class="row">
-      <div class="col-md-3" *ngFor="let problem of objectValues(contributions); let i = index">
-        <app-problem-card *ngIf="i < 4" [problemData]="problem"></app-problem-card>
+      <div class="col-md-3" *ngFor="let contribution of objectValues(contributions); let i = index">
+        <!-- <app-problem-card *ngIf="i < 4" [problemData]="problem"></app-problem-card> -->
+        <ng-container *ngIf="contribution.location">
+
+          <app-problem-card *ngIf="i < 4" [problemData]="contribution"></app-problem-card>
+
+
+        </ng-container>
+
+        <ng-container *ngIf="!contribution.location">
+
+          <app-solution-card *ngIf="i < 4" [solutionData]="contribution"></app-solution-card>
+
+
+        </ng-container>
+
       </div>
     </div>
 

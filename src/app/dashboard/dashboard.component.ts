@@ -21,6 +21,7 @@ export class DashboardComponent implements OnInit, OnDestroy {
   userProblems = [];
   userSolutions = [];
   contributions = {};
+  solutionContributions = {};
   recommendedProblems = {};
   recommendedUsers = {};
   showLoader = true;
@@ -162,7 +163,7 @@ export class DashboardComponent implements OnInit, OnDestroy {
 
     // this.draftsObs = this.draftsQueryRef.valueChanges;
     this.draftsSub = this.draftsQueryRef.valueChanges.subscribe(({ data }) => {
-      console.log(data, "drafts");
+      // console.log(data, "drafts");
       if (data.problems.length > 0) {
         let problems_solutions = data.problems.concat(data.solutions);
         problems_solutions.sort((a, b) => {
@@ -173,7 +174,7 @@ export class DashboardComponent implements OnInit, OnDestroy {
             return -1;
           }
         });
-        console.log(problems_solutions, "solutions and problems");
+        // console.log(problems_solutions, "solutions and problems");
         this.drafts = problems_solutions;
         this.userService.dashboardDrafts = data.problems;
         this.userService.solutionDrafts = data.solutions;
@@ -282,6 +283,21 @@ export class DashboardComponent implements OnInit, OnDestroy {
      discussions(where:{created_by:{_eq: ${this.auth.currentUserValue.id}}}) {
        problemsByproblemId ${this.problemQueryString}
      }
+
+
+     solution_validations(where:{validated_by:{_eq: ${
+       this.auth.currentUserValue.id
+     }}}) {
+      solution ${this.solutionQueryString}
+    }
+    solution_collaborators(where:{user_id:{_eq: ${
+      this.auth.currentUserValue.id
+    }}}) {
+      solution ${this.solutionQueryString}
+    }
+    discussions(where:{created_by:{_eq: ${this.auth.currentUserValue.id}}}) {
+      solution ${this.solutionQueryString}
+    }
     }
     `;
     this.contributionsQueryRef = this.apollo.watchQuery({
@@ -311,6 +327,21 @@ export class DashboardComponent implements OnInit, OnDestroy {
                 //   this.problemService.dashboardContributions
                 // );
               }
+            } else if (p.solution) {
+              const solution = p.solution;
+              // console.log(problem, "problem");
+              if (solution["id"]) {
+                this.contributions[solution["id"]] = solution;
+                // console.log(this.contributions, "contributions");
+
+                this.userService.dashboardSolutionContributions[
+                  solution["id"]
+                ] = solution;
+                // console.log(
+                //   "test contributions",
+                //   this.problemService.dashboardContributions
+                // );
+              }
             }
             // this.contributions.add(Object.values(problem)[0]);
           });
@@ -320,6 +351,63 @@ export class DashboardComponent implements OnInit, OnDestroy {
         console.error(JSON.stringify(error));
       }
     );
+  }
+
+  getContributionsOnSolutions() {
+    // const solutionContributionsQuery = gql`
+    // {
+    //   enrichments( where:{ _and: [
+    //     { created_by: {_eq: ${this.auth.currentUserValue.id}}},
+    //     { is_deleted: {_eq: false}}
+    //   ] }) {
+    //    problemsByproblemId ${this.problemQueryString}
+    //  }
+    //  validations(where:{validated_by:{_eq: ${this.auth.currentUserValue.id}}}) {
+    //    problem ${this.problemQueryString}
+    //  }
+    //  collaborators(where:{user_id:{_eq: ${this.auth.currentUserValue.id}}}) {
+    //    problem ${this.problemQueryString}
+    //  }
+    //  discussions(where:{created_by:{_eq: ${this.auth.currentUserValue.id}}}) {
+    //    problemsByproblemId ${this.problemQueryString}
+    //  }
+    // }
+    // `;
+    // this.contributionsQueryRef = this.apollo.watchQuery({
+    //   query: contributionsQuery,
+    //   pollInterval: 1000,
+    //   fetchPolicy: "network-only"
+    // });
+    // this.contributionsSub = this.contributionsQueryRef.valueChanges.subscribe(
+    //   ({ data }) => {
+    //     // console.log(data, "data from contributions");
+    //     Object.keys(data).map(key => {
+    //       data[key].map(p => {
+    //         // console.log(p, "p");
+    //         if (p.problem || p.problemsByproblemId) {
+    //           // console.log(p, "p");
+    //           const problem = p.problem || p.problemsByproblemId;
+    //           // console.log(problem, "problem");
+    //           if (problem["id"]) {
+    //             this.contributions[problem["id"]] = problem;
+    //             // console.log(this.contributions, "contributions");
+    //             this.userService.dashboardContributions[
+    //               problem["id"]
+    //             ] = problem;
+    //             // console.log(
+    //             //   "test contributions",
+    //             //   this.problemService.dashboardContributions
+    //             // );
+    //           }
+    //         }
+    //         // this.contributions.add(Object.values(problem)[0]);
+    //       });
+    //     });
+    //   },
+    //   error => {
+    //     console.error(JSON.stringify(error));
+    //   }
+    // );
   }
 
   getRecommendedProblems() {
