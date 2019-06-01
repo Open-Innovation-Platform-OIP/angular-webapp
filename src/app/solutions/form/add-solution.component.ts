@@ -44,6 +44,7 @@ import { Apollo } from "apollo-angular";
 import gql from "graphql-tag";
 import { first } from "rxjs/operators";
 import { SearchService } from "../../services/search.service";
+import { SolutionCardComponent } from "src/app/components/solution-card/solution-card.component";
 
 declare var H: any;
 declare const $: any;
@@ -205,7 +206,7 @@ export class AddSolutionComponent
     },
     budget_title: "",
     min_budget: 0,
-    max_budget: "",
+    max_budget: 0,
     extent: "",
     beneficiary_attributes: "",
     image_urls: [],
@@ -249,8 +250,10 @@ export class AddSolutionComponent
       website_url: [null, null],
       assessment_metrics: [null, Validators.required],
       media_url: [null, null],
-      budget: [null, null],
-      budgetTest: [null, null]
+      budget: [null, Validators.required],
+      budgetTest: [null, null],
+      min_budget: [null, Validators.required],
+      max_budget: [null, Validators.required]
     });
 
     canProceed = true;
@@ -785,6 +788,9 @@ export class AddSolutionComponent
                             website_url
                             deployment
                             budget
+                            budget_title
+                            min_budget
+                            max_budget
                             is_draft
                             image_urls
                             video_urls
@@ -880,8 +886,10 @@ export class AddSolutionComponent
       website_url: [null, null],
       assessment_metrics: [null, Validators.required],
       media_url: [null, null],
-      budget: [null, null],
-      budgetCost: [null, null]
+      budget: [null, Validators.required],
+      budgetCost: [null, null],
+      min_budget: [null, Validators.required],
+      max_budget: [null, Validators.required]
     });
     // Code for the Validator
     const $validator = $(".card-wizard form").validate({
@@ -1356,6 +1364,9 @@ export class AddSolutionComponent
               pilots
               deployment
               budget
+              budget_title
+              min_budget
+              max_budget
               is_draft
               image_urls
               video_urls
@@ -1799,8 +1810,9 @@ export class AddSolutionComponent
       this.solution.description &&
       this.solution.impact &&
       this.solution.deployment &&
-      this.solution.budget.title &&
-      this.solution.budget.cost &&
+      this.solution.budget_title &&
+      this.solution.min_budget &&
+      this.solution.max_budget &&
       Object.values(this.selectedProblems).length
     );
   }

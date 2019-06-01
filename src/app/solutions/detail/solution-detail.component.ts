@@ -105,13 +105,15 @@ export class SolutionDetailComponent implements OnInit {
     website_url: "",
     deployment: 0,
     budget: {},
+    budget_title: "",
+    min_budget: 0,
+    max_budget: 0,
     image_urls: [],
     video_urls: [],
     featured_url: "",
     embed_urls: [],
     featured_type: "",
     created_by: 0,
-
     is_draft: true,
     attachments: []
   };
@@ -420,6 +422,9 @@ export class SolutionDetailComponent implements OnInit {
     website_url
     deployment
     budget
+    budget_title
+    min_budget
+    max_budget
 
     image_urls
     video_urls
