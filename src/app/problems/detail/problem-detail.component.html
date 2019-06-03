@@ -86,7 +86,7 @@
 
                 <br />
 
-                <strong *ngIf="solutions.length">Solutions tackling this problem</strong>
+                <strong *ngIf="solutions.length">Solutions</strong>
                 <div *ngFor="let solution of solutions">
                   <a [routerLink]="'/solutions/'+solution.id" style="margin-right: 0.3em;">{{solution.title}}</a>
                   <!-- <span>&nbsp;</span> -->
