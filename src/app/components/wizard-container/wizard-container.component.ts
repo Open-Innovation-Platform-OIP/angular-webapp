@@ -740,21 +740,57 @@ export class WizardContainerComponent
     });
   }
 
-  removePhoto(index) {
-    this.filesService
-      .deleteFile(this.content["image_urls"][index]["key"])
-      .promise()
-      .then(data => {
-        if (this.content.image_urls[index].url === this.content.featured_url) {
+  removeSelectedItem(type: string, index: number) {
+    switch (type) {
+      case "image":
+        this.content.image_urls.splice(index, 1);
+        this.setDefaultFeaturedImage();
+        break;
+
+      case "video":
+        if (this.content.video_urls[index].url === this.content.featured_url) {
           this.content.featured_url = "";
           this.content.featured_type = "";
         }
-        this.content.image_urls.splice(index, 1);
-        this.setDefaultFeaturedImage();
-      })
-      .catch(e => {
-        console.log("Err: ", e);
-      });
+        this.content.video_urls.splice(index, 1);
+        break;
+
+      case "embed":
+        this.content.embed_urls.splice(index, 1);
+        if (this.content.embed_urls[index] === this.content.featured_url) {
+          this.content.featured_url = "";
+          this.content.featured_type = "";
+        }
+        break;
+
+      case "link":
+        this.content.attachments.splice(index, 1);
+        break;
+
+      default:
+        console.log("remove item default case");
+        break;
+    }
+  }
+
+  removePhoto(index) {
+    this.content.image_urls.splice(index, 1);
+    this.setDefaultFeaturedImage();
+
+    // this.filesService
+    //   .deleteFile(this.content["image_urls"][index]["key"])
+    //   .promise()
+    //   .then(data => {
+    //     if (this.content.image_urls[index].url === this.content.featured_url) {
+    //       this.content.featured_url = "";
+    //       this.content.featured_type = "";
+    //     }
+    //     this.content.image_urls.splice(index, 1);
+    //     this.setDefaultFeaturedImage();
+    //   })
+    //   .catch(e => {
+    //     console.log("Err: ", e);
+    //   });
   }
 
   setDefaultFeaturedImage() {
