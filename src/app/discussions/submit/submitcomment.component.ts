@@ -116,14 +116,17 @@ export class CommentSubmitComponent implements OnInit {
     if (attach_files && attach_files.target.files) {
       for (let i = 0; i < attach_files.target.files.length; i++) {
         const file = attach_files.target.files[i];
-        if (!this.removeDuplicateFile(file)) {
+        if (!this.isFileDuplicate(file)) {
           this.attachments.push(file);
+        } else {
+          alert(`File: ${file.name} already exist.`);
+          continue;
         }
       }
     }
   }
 
-  removeDuplicateFile(file) {
+  isFileDuplicate(file) {
     let found = this.attachments.find((attachment) => {
       return attachment["name"] === file.name;
     });
