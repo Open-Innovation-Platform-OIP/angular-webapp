@@ -750,10 +750,18 @@ export class WizardContainerComponent
           this.content.featured_type = "";
         }
         this.content.image_urls.splice(index, 1);
+        this.setDefaultFeaturedImage();
       })
       .catch(e => {
         console.log("Err: ", e);
       });
+  }
+
+  setDefaultFeaturedImage() {
+    if (!this.content.featured_url && this.content.image_urls.length) {
+      this.content.featured_url = this.content.image_urls[0].url;
+      this.content.featured_type = "image";
+    }
   }
 
   removeAttachment(index) {
