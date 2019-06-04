@@ -91,7 +91,7 @@ export class CommentSubmitComponent implements OnInit {
     private auth: AuthService,
     public fileService: FilesService,
     private ngxService: NgxUiLoaderService
-  ) {}
+  ) { }
 
   setFocus(event) {
     // tslint:disable-next-line:no-console
@@ -116,9 +116,19 @@ export class CommentSubmitComponent implements OnInit {
     if (attach_files && attach_files.target.files) {
       for (let i = 0; i < attach_files.target.files.length; i++) {
         const file = attach_files.target.files[i];
-        this.attachments.push(file);
+        if (!this.removeDuplicateFile(file)) {
+          this.attachments.push(file);
+        }
       }
     }
+  }
+
+  removeDuplicateFile(file) {
+    let found = this.attachments.find((attachment) => {
+      return attachment["name"] === file.name;
+    });
+
+    return this.attachments.includes(found);
   }
 
   removeFile(i) {
