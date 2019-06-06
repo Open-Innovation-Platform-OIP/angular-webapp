@@ -443,7 +443,7 @@
                     </div>
                     <div class="stats">
                       <button mat-raised-button type="button" class="btn btn-danger btn-link" matTooltip="Remove"
-                        [matTooltipPosition]="'below'" (click)="removePhoto(i)">
+                        [matTooltipPosition]="'below'" (click)="removeSelectedItem('image',i)">
                         <i class="material-icons">close</i>
                       </button>
                     </div>
@@ -472,7 +472,7 @@
                     </div>
                     <div class="stats">
                       <button mat-raised-button type="button" class="btn btn-danger btn-link" matTooltip="Remove"
-                        [matTooltipPosition]="'below'" (click)="removeVideo(i)">
+                        [matTooltipPosition]="'below'" (click)="removeSelectedItem('video',i)">
                         <i class="material-icons">close</i>
                       </button>
                     </div>
@@ -494,7 +494,7 @@
                     </div>
                     <div class="stats">
                       <button mat-raised-button type="button" class="btn btn-danger btn-link" matTooltip="Remove"
-                        [matTooltipPosition]="'below'" (click)="removeEmbed(i)">
+                        [matTooltipPosition]="'below'" (click)="removeSelectedItem('embed',i)">
                         <i class="material-icons">close</i>
                       </button>
                     </div>
@@ -521,7 +521,7 @@
                     </div>
                     <div class="stats">
                       <button mat-raised-button type="button" class="btn btn-danger btn-link" matTooltip="Remove"
-                        [matTooltipPosition]="'below'" (click)="removeAttachment(i)">
+                        [matTooltipPosition]="'below'" (click)="removeSelectedItem('link',i)">
                         <i class="material-icons">close</i>
                       </button>
                     </div>
@@ -551,7 +551,7 @@
           </button>
           <input type="button" class="btn btn-previous btn-fill btn-default btn-wd disabled" name="previous"
             value="Previous">
-          <input type="button" class="publish btn btn-fill btn-warning btn-wd" [disabled]="!isComplete()"
+          <input type="button" class=" btn btn-fill btn-warning btn-wd" [disabled]="!isComplete()"
             (click)="publishContent()" value="Publish">
           <input type="button" class="btn btn-next btn-fill btn-warning btn-wd" [disabled]="!isComplete()" name="next"
             value="Next">

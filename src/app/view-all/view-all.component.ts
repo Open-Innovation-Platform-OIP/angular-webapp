@@ -16,7 +16,8 @@ export class ViewAllComponent implements OnInit {
   dashboardData: any;
   title: string;
   displayUsers: boolean = false;
-  solutionDrafts: any[] = [];
+  solutions: any[] = [];
+  solutionContributions = [];
 
   viewProblems = true;
   viewSolutions = false;
@@ -33,7 +34,7 @@ export class ViewAllComponent implements OnInit {
         this.viewProblemsAndSolutions = true;
         this.title = "You are working on these drafts";
         this.dashboardData = this.userService.dashboardDrafts;
-        this.solutionDrafts = this.userService.solutionDrafts;
+        this.solutions = this.userService.solutionDrafts;
       }
       if (params.type == "problems") {
         this.title = "Problems added by you";
@@ -41,13 +42,18 @@ export class ViewAllComponent implements OnInit {
       }
       if (params.type == "solutions") {
         this.title = "Solutions added by you";
-        this.viewSolutions=true;
+        this.viewSolutions = true;
         this.dashboardData = this.userService.dashboardUserSolutions;
       }
       if (params.type == "contributions") {
         this.title = "Your contributions";
+        this.viewProblemsAndSolutions = true;
+
         this.dashboardData = Object.values(
           this.userService.dashboardContributions
+        );
+        this.solutions = Object.values(
+          this.userService.dashboardSolutionContributions
         );
       }
       if (params.type == "interests") {

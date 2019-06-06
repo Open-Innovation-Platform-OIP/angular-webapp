@@ -129,7 +129,7 @@ export class CollaboratorCardComponent implements OnInit, OnChanges {
     swal({
       title: "Intent",
       // text: `${this.collaboratorData.intent}`,
-      html: `<div style="white-space: pre-wrap;">${
+      html: `<div style="white-space: pre-wrap;text-align: left;">${
         this.collaboratorData.intent
       }</div>`,
       timer: 20000,

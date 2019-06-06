@@ -338,7 +338,7 @@ export class WizardContainerComponent
     }
 
     clearInterval(this.autosaveInterval);
-    this.autosaveInterval = setInterval(() => {}, 10000);
+    this.autosaveInterval = setInterval(() => { }, 10000);
 
     canProceed = true;
 
@@ -381,19 +381,19 @@ export class WizardContainerComponent
         }
       },
 
-      highlight: function(element) {
+      highlight: function (element) {
         $(element)
           .closest(".form-group")
           .removeClass("has-success")
           .addClass("has-danger");
       },
-      success: function(element) {
+      success: function (element) {
         $(element)
           .closest(".form-group")
           .removeClass("has-danger")
           .addClass("has-success");
       },
-      errorPlacement: function(error, element) {
+      errorPlacement: function (error, element) {
         $(element).append(error);
       }
     });
@@ -404,7 +404,7 @@ export class WizardContainerComponent
       nextSelector: ".btn-next",
       previousSelector: ".btn-previous",
 
-      onNext: function(tab, navigation, index) {
+      onNext: function (tab, navigation, index) {
         window.scroll(0, 0);
 
         const $valid = $(".card-wizard form").valid();
@@ -426,7 +426,7 @@ export class WizardContainerComponent
         }
       },
 
-      onInit: function(tab: any, navigation: any, index: any) {
+      onInit: function (tab: any, navigation: any, index: any) {
         let $total = navigation.find("li").length;
         const $wizard = navigation.closest(".card-wizard");
 
@@ -483,7 +483,7 @@ export class WizardContainerComponent
         $(".moving-tab").css("transition", "transform 0s");
       },
 
-      onTabClick: function(tab: any, navigation: any, index: any) {
+      onTabClick: function (tab: any, navigation: any, index: any) {
         return true;
         const $valid = $(".card-wizard form").valid();
 
@@ -494,7 +494,7 @@ export class WizardContainerComponent
         }
       },
 
-      onTabShow: function(tab: any, navigation: any, index: any) {
+      onTabShow: function (tab: any, navigation: any, index: any) {
         let $total = navigation.find("li").length;
         let $current = index + 1;
 
@@ -527,7 +527,7 @@ export class WizardContainerComponent
           .find("li:nth-child(" + $current + ") a")
           .html();
 
-        setTimeout(function() {
+        setTimeout(function () {
           $(".moving-tab").text(button_text);
         }, 150);
 
@@ -593,13 +593,13 @@ export class WizardContainerComponent
     });
 
     // Prepare the preview for profile picture
-    $("#wizard-picture").change(function() {
+    $("#wizard-picture").change(function () {
       const input = $(this);
 
       if (input[0].files && input[0].files[0]) {
         const reader = new FileReader();
 
-        reader.onload = function(e: any) {
+        reader.onload = function (e: any) {
           $("#wizardPicturePreview")
             .attr("src", e.target.result)
             .fadeIn("slow");
@@ -608,7 +608,7 @@ export class WizardContainerComponent
       }
     });
 
-    $('[data-toggle="wizard-radio"]').click(function() {
+    $('[data-toggle="wizard-radio"]').click(function () {
       const wizard = $(this).closest(".card-wizard");
       wizard.find('[data-toggle="wizard-radio"]').removeClass("active");
       $(this).addClass("active");
@@ -620,7 +620,7 @@ export class WizardContainerComponent
         .attr("checked", "true");
     });
 
-    $('[data-toggle="wizard-checkbox"]').click(function() {
+    $('[data-toggle="wizard-checkbox"]').click(function () {
       if ($(this).hasClass("active")) {
         $(this).removeClass("active");
         $(this)
@@ -659,7 +659,7 @@ export class WizardContainerComponent
     const input = $(this);
     if (input[0].files && input[0].files[0]) {
       const reader: any = new FileReader();
-      reader.onload = function(e: any) {
+      reader.onload = function (e: any) {
         $("#wizardPicturePreview")
           .attr("src", e.target.result)
           .fadeIn("slow");
@@ -673,7 +673,7 @@ export class WizardContainerComponent
     this.smartSearchInput.emit(input);
   }
 
-  checkForSpaces($event) {}
+  checkForSpaces($event) { }
 
   publishContent() {
     this.contentSubmitted.emit(this.content);
@@ -685,7 +685,7 @@ export class WizardContainerComponent
 
   ngAfterViewInit() {
     $(window).resize(() => {
-      $(".card-wizard").each(function() {
+      $(".card-wizard").each(function () {
         const $wizard = $(this);
         const index = $wizard.bootstrapWizard("currentIndex");
         const $total = $wizard.find(".nav li").length;
@@ -740,20 +740,64 @@ export class WizardContainerComponent
     });
   }
 
-  removePhoto(index) {
-    this.filesService
-      .deleteFile(this.content["image_urls"][index]["key"])
-      .promise()
-      .then(data => {
-        if (this.content.image_urls[index].url === this.content.featured_url) {
+  removeSelectedItem(type: string, index: number) {
+    switch (type) {
+      case "image":
+        this.content.image_urls.splice(index, 1);
+        this.setDefaultFeaturedImage();
+        break;
+
+      case "video":
+        if (this.content.video_urls[index].url === this.content.featured_url) {
           this.content.featured_url = "";
           this.content.featured_type = "";
         }
-        this.content.image_urls.splice(index, 1);
-      })
-      .catch(e => {
-        console.log("Err: ", e);
-      });
+        this.content.video_urls.splice(index, 1);
+        break;
+
+      case "embed":
+        this.content.embed_urls.splice(index, 1);
+        if (this.content.embed_urls[index] === this.content.featured_url) {
+          this.content.featured_url = "";
+          this.content.featured_type = "";
+        }
+        break;
+
+      case "link":
+        this.content.attachments.splice(index, 1);
+        break;
+
+      default:
+        console.log("remove item default case");
+        break;
+    }
+  }
+
+  removePhoto(index) {
+    this.content.image_urls.splice(index, 1);
+    this.setDefaultFeaturedImage();
+
+    // this.filesService
+    //   .deleteFile(this.content["image_urls"][index]["key"])
+    //   .promise()
+    //   .then(data => {
+    //     if (this.content.image_urls[index].url === this.content.featured_url) {
+    //       this.content.featured_url = "";
+    //       this.content.featured_type = "";
+    //     }
+    //     this.content.image_urls.splice(index, 1);
+    //     this.setDefaultFeaturedImage();
+    //   })
+    //   .catch(e => {
+    //     console.log("Err: ", e);
+    //   });
+  }
+
+  setDefaultFeaturedImage() {
+    if (!this.content.featured_url && this.content.image_urls.length) {
+      this.content.featured_url = this.content.image_urls[0].url;
+      this.content.featured_type = "image";
+    }
   }
 
   removeAttachment(index) {
@@ -811,14 +855,19 @@ export class WizardContainerComponent
       const type = event.target.files[i].type;
       let duplicate = this.checkIfExist(file.name);
 
-      if (typeof FileReader !== "undefined" && !duplicate) {
-        const reader = new FileReader();
+      if (duplicate) {
+        alert(`File: ${file.name} already exist.`);
+        continue;
+      } else {
+        if (typeof FileReader !== "undefined") {
+          const reader = new FileReader();
 
-        reader.onload = (e: any) => {
-          let buffer = Buffer.from(e.target.result);
-          this.manageUploads(type, file.name, buffer);
-        };
-        reader.readAsArrayBuffer(file);
+          reader.onload = (e: any) => {
+            let buffer = Buffer.from(e.target.result);
+            this.manageUploads(type, file.name, buffer);
+          };
+          reader.readAsArrayBuffer(file);
+        }
       }
     }
   }
