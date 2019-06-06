@@ -22,4 +22,12 @@
 
 .problem-card {
     height: 29em;
+    /* background-image: url("/assets/img/image002_problem.png"); */
 }
+
+/* .location {
+    max-lines: 2;
+    max-height: 5.5em;
+    overflow: hidden;
+    color: #333333;
+} */

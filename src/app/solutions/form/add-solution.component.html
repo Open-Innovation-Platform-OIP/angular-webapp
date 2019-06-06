@@ -1,7 +1,7 @@
 <div class="main-content">
   <div class="container-fluid">
     <div class="row">
-      <div class="col-md-8">
+      <div class="col-md-9">
         <div class="wizard-container">
           <div class="card card-wizard" data-color="rose" id="wizardProfile">
             <form [formGroup]="type" action="" method="">
@@ -574,7 +574,7 @@
                           <div class="input-group-prepend">
                             <span class="input-group-text">
                               <i class="material-icons"
-                                [ngStyle]="{color: (!solution.budget.title && !solution.budget.cost) ? 'red' : '#495057'}">monetization_on</i>
+                                [ngStyle]="{color: (!solution.budget_title && !solution.min_budget && !solution.max_budget) ? 'red' : '#495057'}">monetization_on</i>
                             </span>
                           </div>
                           <mat-form-field class="example-full-width has-label"
@@ -836,14 +836,14 @@
       </div>
 
       <!--Problem search results-->
-      <div class="col-md-4" *ngIf="hide">
+      <div class="col-md-3" *ngIf="hide">
         <ng-container *ngIf="objectValues(searchResults).length > 0">
           <div class="row justify-content-center">
             <div class="col-sm-10">
               <h4>Found {{objectValues(searchResults).length}} similar problems</h4>
             </div>
           </div>
-          <div class="row">
+          <div class="row justify-content-center">
             <div class="col-sm-12" *ngFor="let result of objectValues(searchResults)">
               <app-problem-card *ngIf="result" [problemData]="result" (selected)="selectProblem($event)"
                 [usedIn]="'smartSearch'" [showAddButton]="true">
@@ -856,14 +856,14 @@
       <!--Problem search results-->
 
       <!--Solution smart search results-->
-      <div class="col-md-4" *ngIf="!hide">
+      <div class="col-md-3" *ngIf="!hide">
         <ng-container *ngIf="solutionSearchResults.length > 0">
           <div class="row justify-content-center">
             <div class="col-sm-10">
               <h4>Found {{solutionSearchResults.length}} similar solutions</h4>
             </div>
           </div>
-          <div class="row">
+          <div class="row justify-content-center">
             <div class="col-sm-12" *ngFor="let solution of solutionSearchResults">
               <app-solution-card *ngIf="solution" [solutionData]="solution">
               </app-solution-card>
