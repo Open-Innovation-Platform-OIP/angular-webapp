@@ -978,11 +978,34 @@ export class WizardComponent
     }).catch(swal.noop);
   }
 
+  // showPromptSwal(title){
+  //   return swal({
+  //     title: "Are you sure you want to publish the problem",
+  //     // text: "You won't be able to revert this!",
+  //     type: "warning",
+  //     showCancelButton: true,
+  //     confirmButtonClass: "btn btn-success",
+  //     cancelButtonClass: "btn btn-warning",
+  //     confirmButtonText: "Yes",
+  //     buttonsStyling: false
+  //   })
+
+  // }
+
   publishProblem(problem) {
-    problem.is_draft = false;
     clearInterval(this.autosaveInterval);
 
-    if (!this.is_edit) {
+    if (
+      (!this.is_edit &&
+        (problem.image_urls.length ||
+          problem.video_urls.length ||
+          problem.embed_urls.length)) ||
+      (this.is_edit &&
+        problem.is_draft &&
+        (problem.image_urls.length ||
+          problem.video_urls.length ||
+          problem.embed_urls.length))
+    ) {
       swal({
         title: "Are you sure you want to publish the problem",
         // text: "You won't be able to revert this!",
@@ -994,10 +1017,39 @@ export class WizardComponent
         buttonsStyling: false
       }).then(result => {
         if (result.value) {
+          problem.is_draft = false;
+          this.submitProblemToDB(problem);
+        }
+      });
+    } else if (
+      (!this.is_edit &&
+        !problem.image_urls.length &&
+        !problem.video_urls.length &&
+        !problem.embed_urls.length) ||
+      (this.is_edit &&
+        problem.is_draft &&
+        !problem.image_urls.length &&
+        !problem.video_urls.length &&
+        !problem.embed_urls.length)
+    ) {
+      swal({
+        title:
+          "Are you sure you want to publish the problem without adding media content",
+        // text: "You won't be able to revert this!",
+        type: "warning",
+        showCancelButton: true,
+        confirmButtonClass: "btn btn-success",
+        cancelButtonClass: "btn btn-warning",
+        confirmButtonText: "Yes",
+        buttonsStyling: false
+      }).then(result => {
+        if (result.value) {
+          problem.is_draft = false;
           this.submitProblemToDB(problem);
         }
       });
     } else {
+      problem.is_draft = false;
       this.submitProblemToDB(problem);
     }
     // console.log(problem, "problem before publishing");

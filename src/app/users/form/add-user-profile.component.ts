@@ -226,9 +226,7 @@ export class AddUserProfileComponent implements OnInit, OnChanges {
       sector => sector.toLowerCase().indexOf(filterValue) === 0
     );
   }
-  // isFieldValid(form: FormGroup, field: string) {
-  //   return !form.get(field).valid && form.get(field).touched;
-  // }
+
   ngOnChanges() {
     // this.platform = new H.service.Platform({
     //   app_id: "sug0MiMpvxIW4BhoGjcf",

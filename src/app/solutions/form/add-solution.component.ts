@@ -85,16 +85,6 @@ export class AddSolutionComponent
   // @Input() sectors: string[] = [];
 
   owners: any[] = [];
-  // @Input() canProceed: any = true;
-  @Output() fieldsPopulated = new EventEmitter();
-  @Output() smartSearchInput = new EventEmitter();
-  @Output() tagAdded = new EventEmitter();
-  @Output() tagRemoved = new EventEmitter();
-
-  @Output() deleteDraft = new EventEmitter();
-  @Output() addedOwners = new EventEmitter();
-  @Output() addedSectors = new EventEmitter();
-  @Output() removedOwners = new EventEmitter();
 
   file_types = [
     "application/msword",
@@ -107,7 +97,6 @@ export class AddSolutionComponent
   ];
 
   objectKeys = Object.keys;
-  // objectValues = Object.values;
 
   matcher = new MyErrorStateMatcher();
 
@@ -142,18 +131,18 @@ export class AddSolutionComponent
   filteredProblems: Observable<any>;
   searchResultsObservable: Subscription;
 
-  testObject: any = {
-    1: {
-      id: 1,
-      title: "title one",
-      impact: "impact one"
-    },
-    2: {
-      id: 2,
-      title: "title  two",
-      impact: "impact two"
-    }
-  };
+  // testObject: any = {
+  //   1: {
+  //     id: 1,
+  //     title: "title one",
+  //     impact: "impact one"
+  //   },
+  //   2: {
+  //     id: 2,
+  //     title: "title  two",
+  //     impact: "impact two"
+  //   }
+  // };
   selectedProblemsData: any = {};
   // filteredProblems = [];
   filteredOwners: Observable<any[]>;
@@ -305,7 +294,7 @@ export class AddSolutionComponent
     this.sectors.push(event.option.value);
     this.sectorInput.nativeElement.value = "";
     this.sectorCtrl.setValue(null);
-    this.addedSectors.emit(this.sectors);
+    // this.addedSectors.emit(this.sectors);
   }
 
   addSector(event: MatChipInputEvent): void {
@@ -692,7 +681,7 @@ export class AddSolutionComponent
     this.owners.push(event.option.value);
     this.ownerInput.nativeElement.value = "";
     this.ownersCtrl.setValue(null);
-    this.addedOwners.emit(this.owners);
+    // this.addedOwners.emit(this.owners);
   }
 
   removeOwner(owner) {
@@ -700,7 +689,7 @@ export class AddSolutionComponent
     const index = this.owners.indexOf(owner);
     if (index >= 0) {
       this.owners.splice(index, 1);
-      this.removedOwners.emit(owner);
+      // this.removedOwners.emit(owner);
     }
     if (this.solution["id"]) {
       this.apollo
@@ -1480,15 +1469,6 @@ export class AddSolutionComponent
           }
         );
     }
-  }
-
-  sendInputToParent(input) {
-    // console.log(event, "test for event");
-    this.smartSearchInput.emit(input);
-  }
-
-  sendDataBack() {
-    this.fieldsPopulated.emit(this.solution);
   }
 
   ngAfterViewInit() {

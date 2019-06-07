@@ -186,6 +186,7 @@ export class NavbarComponent implements OnInit {
               user_id
               is_update
               is_read
+              solution_id
               enrichment_id
               collaborator
               discussion_id

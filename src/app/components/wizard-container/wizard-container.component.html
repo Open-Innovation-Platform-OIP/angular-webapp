@@ -41,9 +41,8 @@
                     </span>
                   </div>
                   <mat-form-field class="example-full-width has-label" [ngClass]="displayFieldCss(type, 'title')">
-                    <input type="text" name="title" matInput id="title" appAutofocus placeholder="Title *"
-                      formControlName="title" [(ngModel)]="content.title"
-                      (input)="sendInputToParent($event.target.value)">
+                    <input type="text" name="title" matInput id="title" placeholder="Title *" formControlName="title"
+                      [(ngModel)]="content.title" (input)="sendInputToParent($event.target.value)">
                   </mat-form-field>
                 </div>
               </div>

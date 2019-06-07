@@ -136,7 +136,7 @@
             <div *ngFor="let notification of objectValues(notifications)">
 
 
-              <a *ngIf="!notification.enrichment_id && !notification.collaborator && !notification.discussion_id && !notification.validated_by && notification.tag_id && !notification.is_update"
+              <a *ngIf=" notification.problemsByproblemId && !notification.enrichment_id && !notification.collaborator && !notification.discussion_id && !notification.validated_by && notification.tag_id && !notification.is_update"
                 class="dropdown-item" name="{{ notification.id }}" [routerLink]="
                 
                 '/problems/' + notification.problem_id
@@ -148,7 +148,7 @@
 
               </a>
 
-              <a *ngIf="!notification.enrichment_id && !notification.collaborator && !notification.discussion_id && !notification.validated_by && !notification.tag_id "
+              <a *ngIf="notification.problemsByproblemId && !notification.enrichment_id && !notification.collaborator && !notification.discussion_id && !notification.validated_by && !notification.tag_id "
                 class="dropdown-item" name="{{ notification.id }}" [routerLink]="
                 
                 '/problems/' + notification.problem_id
@@ -160,8 +160,8 @@
 
               </a>
 
-              <a *ngIf="notification.enrichment_id" class="dropdown-item" name="{{ notification.id }}"
-                (click)="onRead($event)" [routerLink]="
+              <a *ngIf="notification.problemsByproblemId &&  notification.enrichment_id" class="dropdown-item"
+                name="{{ notification.id }}" (click)="onRead($event)" [routerLink]="
                 
                 '/problems/' + notification.problem_id
               ">
@@ -170,8 +170,8 @@
 
               </a>
 
-              <a *ngIf="notification.collaborator" class="dropdown-item" name="{{ notification.id }}"
-                (click)="onRead($event)" [routerLink]="
+              <a *ngIf="notification.problemsByproblemId && notification.collaborator" class="dropdown-item"
+                name="{{ notification.id }}" (click)="onRead($event)" [routerLink]="
                 
                 '/problems/' + notification.problem_id
               ">
@@ -181,8 +181,8 @@
 
               </a>
 
-              <a *ngIf="notification.validated_by" class="dropdown-item" name="{{ notification.id }}"
-                (click)="onRead($event)" [routerLink]="
+              <a *ngIf="notification.problemsByproblemId && notification.validated_by" class="dropdown-item"
+                name="{{ notification.id }}" (click)="onRead($event)" [routerLink]="
                 
                 '/problems/' + notification.problem_id
               ">
@@ -191,8 +191,8 @@
 
               </a>
 
-              <a *ngIf="notification.discussion_id" class="dropdown-item" name="{{ notification.id }}"
-                (click)="onRead($event)" [routerLink]="
+              <a *ngIf="notification.problemsByproblemId && notification.discussion_id" class="dropdown-item"
+                name="{{ notification.id }}" (click)="onRead($event)" [routerLink]="
                 
                 '/problems/' + notification.problem_id
               ">
