@@ -14,9 +14,17 @@
       </p>
     </ng-template>
     <div class="description">
-      <strong *ngIf="solutionData.description">Description</strong>
-      <p *ngIf="solutionData.description">{{ solutionData.description }}</p>
+      <!-- <strong *ngIf="solutionData.description">Description</strong> -->
+      <!-- <p *ngIf="solutionData.description">{{ solutionData.description }}</p> -->
+      <p *ngIf="solutionData.description">Description</p>
+      <strong *ngIf="solutionData.description">{{ solutionData.description }}</strong>
     </div>
+  </div>
+
+  <div style="background-color: #56BF7B;width: 3em;width: 3em; box-shadow: 0 4px 6px rgba(25, 25, 25, 0.2);">
+    <i class="material-icons" style="color: #FFFFFF;margin-top: 0.2em; font-size: 1.2em;">
+      highlight
+    </i>
   </div>
   <div class="card-footer">
     <div class="stats">
@@ -39,6 +47,12 @@
         how_to_reg
       </i>
       <!-- {{ solutionData.problem_validations.length }} -->
+      <!-- <span>&nbsp;</span>
+      <span>&nbsp;</span>
+      <span>&nbsp;</span>
+      <i class="material-icons" style="color: #56BF7B">
+        highlight
+      </i> -->
     </div>
     <div class="stats">
       <i class="material-icons">access_time</i> {{ solutionData.updated_at | date:short }}

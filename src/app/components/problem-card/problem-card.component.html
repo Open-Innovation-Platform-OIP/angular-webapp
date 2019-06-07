@@ -1,10 +1,10 @@
 <div class="card card-product actions problem-card">
-
-
   <div class="card-header card-header-image" (click)="navigation()">
-    <img
-      src="{{ (problemData.featured_url && checkUrlIsImg(problemData.featured_url)) ? problemData.featured_url : './assets/img/image_placeholder.jpg' }}"
-      width="200px" height="180px" style="object-fit:inherit;" />
+    <img src="{{
+        problemData.featured_url && checkUrlIsImg(problemData.featured_url)
+          ? problemData.featured_url
+          : './assets/img/image_placeholder.jpg'
+      }}" width="200px" height="180px" style="object-fit:inherit;" />
   </div>
 
   <div class="card-body" (click)="navigation()">
@@ -13,7 +13,7 @@
     </p>
     <ng-template #longTitle>
       <p class="card-title title">
-        {{ problemData.title.substring(0,30) + '...' }}
+        {{ problemData.title.substring(0, 30) + "..." }}
       </p>
     </ng-template>
     <div class="description">
@@ -21,20 +21,26 @@
       <p>{{ problemData.description }}</p>
     </div>
     <span> <b> Location(s) </b></span>
-    <div *ngFor="let location of problemData.location; let i=index;">
-      <span *ngIf="location.Address && location.Address.Label && i < 2">{{location.Address.Label}}</span>
-      <span *ngIf="i<2">&nbsp;</span>
+    <div *ngFor="let location of problemData.location; let i = index" class="location">
+      <span *ngIf="location.Address && location.Address.Label && i < 1">{{
+        location.Address.Label
+      }}</span>
+      <span *ngIf="i < 1">&nbsp;</span>
     </div>
-
   </div>
   <div>
-    <button *ngIf="usedIn==='smartSearch' && showAddButton" class="btn btn-rose btn-sm" style="margin-top: 2px;">
+    <button *ngIf="usedIn === 'smartSearch' && showAddButton" class="btn btn-rose btn-sm" style="margin-top: 2px;">
       <a (click)="selectProblem()">Add </a>
     </button>
   </div>
 
-  <div class="card-footer">
+  <div style="background-color: #FF625E; width: 3em; box-shadow: 0 4px 6px rgba(25, 25, 25, 0.2);">
+    <i class="material-icons" style="color: #FFFFFF; margin-top: 0.2em; font-size: 1.2em;">
+      help
+    </i>
+  </div>
 
+  <div class="card-footer">
     <div class="stats">
       <i class="material-icons">
         thumb_up
@@ -50,14 +56,21 @@
       <span>&nbsp;</span>
       <span>&nbsp;</span>
       <span>&nbsp;</span>
-      <i class="material-icons" [ngStyle]="{'color': validated ? '#38e038' : '#878787' }"
-        matTooltip="Expert validations" [matTooltipPosition]="'below'">
+      <i class="material-icons" [ngStyle]="{ color: validated ? '#38e038' : '#878787' }" matTooltip="Expert validations"
+        [matTooltipPosition]="'below'">
         how_to_reg
       </i>
       {{ problemData.problem_validations.length }}
+      <!-- <span>&nbsp;</span>
+      <span>&nbsp;</span>
+      <span>&nbsp;</span>
+      <i class="material-icons" style="color: #FF625E">
+        help
+      </i> -->
     </div>
     <div class="stats">
-      <i class="material-icons">access_time</i> {{ problemData.updated_at | date:short }}
+      <i class="material-icons">access_time</i>
+      {{ problemData.updated_at | date: short }}
     </div>
   </div>
 </div>

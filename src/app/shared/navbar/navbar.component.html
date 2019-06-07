@@ -142,7 +142,7 @@
                 '/problems/' + notification.problem_id
               " (click)="onRead($event)">
 
-                New problem "{{ notification.problemsByproblemId.title }}"
+                New problem "{{ notification.problemsByproblemId?.title }}"
                 {{ (notification.is_update && "updated") || "added" }} in sector "{{notification.tag.name}}"
 
 

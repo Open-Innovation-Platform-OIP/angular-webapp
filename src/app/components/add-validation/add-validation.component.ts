@@ -30,7 +30,7 @@ export class AddValidationComponent implements OnInit {
 
   constructor(
     private space: FilesService // private problemService: ProblemService, // private validationService: ValidationService
-  ) {}
+  ) { }
 
   ngOnInit() {
     // console.log(this.validationData, "validation data check");
@@ -40,17 +40,29 @@ export class AddValidationComponent implements OnInit {
     // console.log("Event: ", event);
     for (let i = 0; i < event.target.files.length; i++) {
       const file = event.target.files[i];
+      if (!this.isFileDuplicate(file)) {
+        let attachment = await this.space
+          .uploadFile(file, file["name"])
+          .promise();
 
-      let attachment = await this.space
-        .uploadFile(file, file["name"])
-        .promise();
-
-      this.validationData.files.push({
-        key: attachment["key"],
-        url: attachment["Location"],
-        mimeType: file.type
-      });
+        this.validationData.files.push({
+          key: attachment["key"],
+          url: attachment["Location"],
+          mimeType: file.type
+        });
+      } else {
+        alert(`File: ${file.name} already exist.`);
+        continue;
+      }
     }
+  }
+
+  isFileDuplicate(file) {
+    let found = this.validationData.files.find((attachment) => {
+      return attachment["key"] === file.name;
+    });
+
+    return this.validationData.files.includes(found);
   }
 
   removeAttachment(index) {

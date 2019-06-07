@@ -442,7 +442,7 @@
                     </div>
                     <div class="stats">
                       <button mat-raised-button type="button" class="btn btn-danger btn-link" matTooltip="Remove"
-                        [matTooltipPosition]="'below'" (click)="removePhoto(i)">
+                        [matTooltipPosition]="'below'" (click)="removeSelectedItem('image',i)">
                         <i class="material-icons">close</i>
                       </button>
                     </div>
@@ -471,7 +471,7 @@
                     </div>
                     <div class="stats">
                       <button mat-raised-button type="button" class="btn btn-danger btn-link" matTooltip="Remove"
-                        [matTooltipPosition]="'below'" (click)="removeVideo(i)">
+                        [matTooltipPosition]="'below'" (click)="removeSelectedItem('video',i)">
                         <i class="material-icons">close</i>
                       </button>
                     </div>
@@ -493,7 +493,7 @@
                     </div>
                     <div class="stats">
                       <button mat-raised-button type="button" class="btn btn-danger btn-link" matTooltip="Remove"
-                        [matTooltipPosition]="'below'" (click)="removeEmbed(i)">
+                        [matTooltipPosition]="'below'" (click)="removeSelectedItem('embed',i)">
                         <i class="material-icons">close</i>
                       </button>
                     </div>
@@ -520,7 +520,7 @@
                     </div>
                     <div class="stats">
                       <button mat-raised-button type="button" class="btn btn-danger btn-link" matTooltip="Remove"
-                        [matTooltipPosition]="'below'" (click)="removeAttachment(i)">
+                        [matTooltipPosition]="'below'" (click)="removeSelectedItem('link',i)">
                         <i class="material-icons">close</i>
                       </button>
                     </div>
