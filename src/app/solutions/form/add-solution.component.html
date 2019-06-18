@@ -846,7 +846,7 @@
           <div class="row justify-content-center">
             <div class="col-sm-12" *ngFor="let result of objectValues(searchResults)">
               <app-problem-card *ngIf="result" [problemData]="result" (selected)="selectProblem($event)"
-                [usedIn]="'smartSearch'" [showAddButton]="true">
+                [usedInSmartSearch]="true" [showAddButton]="true">
 
               </app-problem-card>
             </div>

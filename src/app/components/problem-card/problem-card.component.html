@@ -29,12 +29,13 @@
     </div>
   </div>
   <div>
-    <button *ngIf="usedIn === 'smartSearch' && showAddButton" class="btn btn-rose btn-sm" style="margin-top: 2px;">
+    <button *ngIf="usedInSmartSearch && showAddButton" class="btn btn-rose btn-sm" style="margin-top: 2px;">
       <a (click)="selectProblem()">Add </a>
     </button>
   </div>
 
-  <div style="background-color: #FF625E; width: 3em; box-shadow: 0 4px 6px rgba(25, 25, 25, 0.2);">
+  <div *ngIf="!usedInSmartSearch"
+    style="background-color: #FF625E; width: 3em; box-shadow: 0 4px 6px rgba(25, 25, 25, 0.2);">
     <i class="material-icons" style="color: #FFFFFF; margin-top: 0.2em; font-size: 1.2em;">
       help
     </i>

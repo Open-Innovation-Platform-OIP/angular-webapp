@@ -131,18 +131,6 @@ export class AddSolutionComponent
   filteredProblems: Observable<any>;
   searchResultsObservable: Subscription;
 
-  // testObject: any = {
-  //   1: {
-  //     id: 1,
-  //     title: "title one",
-  //     impact: "impact one"
-  //   },
-  //   2: {
-  //     id: 2,
-  //     title: "title  two",
-  //     impact: "impact two"
-  //   }
-  // };
   selectedProblemsData: any = {};
   // filteredProblems = [];
   filteredOwners: Observable<any[]>;

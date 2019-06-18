@@ -14,7 +14,7 @@ const misc: any = {
 })
 export class ProblemCardComponent implements OnInit {
   @Input() problemData: any;
-  @Input() usedIn: String;
+  @Input() usedInSmartSearch: Boolean = false;
   @Input() showAddButton: Boolean = false;
 
   @Output() selected = new EventEmitter();
@@ -64,7 +64,7 @@ export class ProblemCardComponent implements OnInit {
     // })
   }
   navigation() {
-    if (this.usedIn !== "smartSearch") {
+    if (!this.usedInSmartSearch) {
       this.router.navigate([this.link]);
     } else {
       window.open(this.link, "_blank");
