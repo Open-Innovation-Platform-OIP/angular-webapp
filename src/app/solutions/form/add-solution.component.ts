@@ -976,6 +976,8 @@ export class AddSolutionComponent
       },
 
       onTabClick: function(tab: any, navigation: any, index: any) {
+        return true;
+
         const $valid = $(".card-wizard form").valid();
 
         if (!$valid) {
@@ -1263,7 +1265,8 @@ export class AddSolutionComponent
               confirmButtonClass: "btn btn-success",
               buttonsStyling: false
             });
-            this.router.navigateByUrl("/dashboard");
+            window.history.back();
+            // this.router.navigateByUrl("/dashboard");
           },
           error => {
             console.log("Could delete due to " + error);
@@ -1779,7 +1782,7 @@ export class AddSolutionComponent
       this.solution.impact &&
       this.solution.deployment &&
       this.solution.budget_title &&
-      this.solution.min_budget &&
+      this.solution.min_budget >= 0 &&
       this.solution.max_budget &&
       Object.values(this.selectedProblems).length
     );
