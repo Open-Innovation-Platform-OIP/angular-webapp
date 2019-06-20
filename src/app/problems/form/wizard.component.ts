@@ -1076,7 +1076,8 @@ export class WizardComponent
               confirmButtonClass: "btn btn-success",
               buttonsStyling: false
             });
-            this.router.navigateByUrl("/dashboard");
+            window.history.back();
+            // this.router.navigateByUrl("/dashboard");
           },
           error => {
             console.log("Could delete due to " + error);

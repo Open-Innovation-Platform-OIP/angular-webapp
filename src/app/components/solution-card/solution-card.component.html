@@ -16,8 +16,11 @@
     <div class="description">
       <!-- <strong *ngIf="solutionData.description">Description</strong> -->
       <!-- <p *ngIf="solutionData.description">{{ solutionData.description }}</p> -->
-      <p *ngIf="solutionData.description">Description</p>
-      <strong *ngIf="solutionData.description">{{ solutionData.description }}</strong>
+      <strong *ngIf="solutionData.description">Description</strong>
+      <p *ngIf="solutionData.description.length < 75; else longDescription">{{ solutionData.description }}</p>
+      <ng-template #longDescription>
+        <p>{{ solutionData.description.substring(0,75) + '...' }}</p>
+      </ng-template>
     </div>
   </div>
 

@@ -18,7 +18,10 @@
     </ng-template>
     <div class="description">
       <strong>Description</strong>
-      <p>{{ problemData.description }}</p>
+      <p *ngIf="problemData.description.length < 75; else longDescription">{{ problemData.description }}</p>
+      <ng-template #longDescription>
+        <p>{{ problemData.description.substring(0,75) + '...' }}</p>
+      </ng-template>
     </div>
     <span> <b> Location(s) </b></span>
     <div *ngFor="let location of problemData.location; let i = index" class="location">
