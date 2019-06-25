@@ -332,13 +332,13 @@ export class AddSolutionComponent
     this.problemInput.nativeElement.value = "";
     this.problemCtrl.setValue(null);
     // this.getProblemData(selectedProblem.id);
-    delete this.searchResults[selectedProblem.id];
+    // delete this.searchResults[selectedProblem.id];
   }
   selectProblem(problem) {
     this.selectedProblems[problem.id] = problem;
     this.getProblemData(problem.id);
     // console.log(this.selectedProblems, "selected problem set");
-    delete this.searchResults[problem.id];
+    // delete this.searchResults[problem.id];
   }
 
   getProblemData(id) {
@@ -1205,11 +1205,15 @@ export class AddSolutionComponent
         confirmButtonText: "Yes",
         buttonsStyling: false
       }).then(result => {
+        this.showSuccessSwal("Solution Added");
+
         this.solution.is_draft = false;
 
         this.submitSolutionToDB();
       });
     } else {
+      this.showSuccessSwal("Solution Updated");
+
       this.solution.is_draft = false;
 
       this.submitSolutionToDB();
@@ -1313,7 +1317,8 @@ export class AddSolutionComponent
   autoSave() {
     // console.log(this.problem, "problem data");
     // console.log("trying to auto save");
-    if (this.solution.is_draft && !this.is_edit) {
+    console.log("solution draft status==", this.solution.is_draft);
+    if (this.solution.is_draft) {
       if (this.solution.title) {
         this.submitSolutionToDB();
       }
@@ -1360,6 +1365,7 @@ export class AddSolutionComponent
           affected_rows
           returning {
             id
+            is_draft
           }
         }
       }
@@ -1377,6 +1383,7 @@ export class AddSolutionComponent
       .subscribe(
         result => {
           if (result.data.insert_solutions.returning.length > 0) {
+            let updatedSolutionData = result.data.insert_solutions.returning[0];
             this.solution["id"] = result.data.insert_solutions.returning[0].id;
 
             this.saveProblemsInDB(this.solution["id"], this.selectedProblems);
@@ -1386,15 +1393,18 @@ export class AddSolutionComponent
             console.log(this.solution.is_draft, "draft", this.is_edit);
 
             if (this.is_edit && !this.solution.is_draft) {
-              this.showSuccessSwal("Solution Updated");
               this.router.navigate(["solutions", this.solution["id"]]);
             } else if (!this.is_edit && !this.solution.is_draft) {
               this.showSuccessSwal("Solution Added");
               this.router.navigate(["solutions", this.solution["id"]]);
-            } else if (this.is_edit && this.solution.is_draft) {
+            } else if (this.is_edit && !updatedSolutionData.is_draft) {
               this.showSuccessSwal("Solution Added");
               this.router.navigate(["solutions", this.solution["id"]]);
             }
+            // else if (this.is_edit && this.solution.is_draft) {
+            //   this.router.navigate(["solutions", this.solution["id"]]);
+            // }
+
             // this.router.navigate(["solutions", this.solution["id"]]);
           }
         },

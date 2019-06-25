@@ -1017,6 +1017,9 @@ export class WizardComponent
         buttonsStyling: false
       }).then(result => {
         if (result.value) {
+          problem.created_at = new Date();
+          this.showSuccessSwal("Problem Added");
+
           problem.is_draft = false;
           this.submitProblemToDB(problem);
         }
@@ -1044,11 +1047,16 @@ export class WizardComponent
         buttonsStyling: false
       }).then(result => {
         if (result.value) {
+          problem.created_at = new Date();
+          this.showSuccessSwal("Problem Added");
+
           problem.is_draft = false;
           this.submitProblemToDB(problem);
         }
       });
     } else {
+      this.showSuccessSwal("Problem Updated");
+
       problem.is_draft = false;
       this.submitProblemToDB(problem);
     }
@@ -1282,11 +1290,11 @@ export class WizardComponent
       );
   }
   confirmSubmission() {
-    if (this.is_edit) {
-      this.showSuccessSwal("Problem Updated");
-    } else {
-      this.showSuccessSwal("Problem Added");
-    }
+    // if (this.is_edit) {
+    //   this.showSuccessSwal("Problem Updated");
+    // } else {
+    //   this.showSuccessSwal("Problem Added");
+    // }
 
     this.router.navigate(["problems", this.problem["id"]]);
   }
