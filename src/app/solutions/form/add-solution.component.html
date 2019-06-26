@@ -28,8 +28,11 @@
               <div class="card-body">
                 <div class="tab-content">
                   <div class="tab-pane active" id="text">
-                    <a href="#media" data-toggle="tab" role="tab" class="nav-link">
-                      image(s) and video(s) attached</a>
+                    <div class="row justify-content-center">
+                      <a href="#media" data-toggle="tab" role="tab" class="nav-link"
+                        *ngIf="solution.image_urls.length+solution.video_urls.length>0">
+                        {{solution.image_urls.length}} image(s) and {{solution.video_urls.length}} video(s) attached</a>
+                    </div>
 
                     <div class="row justify-content-center">
                       <!-- <div class="col-sm-12">
@@ -821,7 +824,7 @@
                   </button>
                   <input type="button" class="btn btn-previous btn-fill btn-default btn-wd disabled" name="previous"
                     value="Previous">
-                  <input type="button" class="publish btn btn-fill btn-rose btn-wd" (click)="publishSolution()"
+                  <input type="button" class="publish btn btn-fill btn-rose btn-wd" (click)="publishSolution(solution)"
                     value="Publish" [disabled]="!isComplete()">
                   <input type="button" class="btn btn-next btn-fill btn-rose btn-wd" [disabled]="!isComplete()"
                     name="next" value="Next">

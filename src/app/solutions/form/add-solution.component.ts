@@ -1190,13 +1190,50 @@ export class AddSolutionComponent
     }
   }
 
-  publishSolution() {
+  // publishSolution() {
+  //   if (
+  //     (!this.is_edit && this.solution.is_draft) ||
+  //     (this.is_edit && this.solution.is_draft)
+  //   ) {
+  //     swal({
+  //       title: "Are you sure you want to publish the Solution",
+  //       // text: "You won't be able to revert this!",
+  //       type: "warning",
+  //       showCancelButton: true,
+  //       confirmButtonClass: "btn btn-success",
+  //       cancelButtonClass: "btn btn-warning",
+  //       confirmButtonText: "Yes",
+  //       buttonsStyling: false
+  //     }).then(result => {
+  //       this.showSuccessSwal("Solution Added");
+
+  //       this.solution.is_draft = false;
+
+  //       this.submitSolutionToDB();
+  //     });
+  //   } else {
+  //     this.showSuccessSwal("Solution Updated");
+
+  //     this.solution.is_draft = false;
+
+  //     this.submitSolutionToDB();
+  //   }
+  // }
+
+  publishSolution(solution) {
     if (
-      (!this.is_edit && this.solution.is_draft) ||
-      (this.is_edit && this.solution.is_draft)
+      (!this.is_edit &&
+        (solution.image_urls.length ||
+          solution.video_urls.length ||
+          solution.embed_urls.length)) ||
+      (this.is_edit &&
+        solution.is_draft &&
+        (solution.image_urls.length ||
+          solution.video_urls.length ||
+          solution.embed_urls.length))
     ) {
       swal({
-        title: "Are you sure you want to publish the Solution",
+        title: "Are you sure you want to publish the solution?",
         // text: "You won't be able to revert this!",
         type: "warning",
         showCancelButton: true,
@@ -1205,17 +1242,48 @@ export class AddSolutionComponent
         confirmButtonText: "Yes",
         buttonsStyling: false
       }).then(result => {
-        this.showSuccessSwal("Solution Added");
+        if (result.value) {
+          solution.created_at = new Date();
+          this.showSuccessSwal("Solution Added");
 
-        this.solution.is_draft = false;
+          this.solution.is_draft = false;
+          this.submitSolutionToDB();
+        }
+      });
+    } else if (
+      (!this.is_edit &&
+        !solution.image_urls.length &&
+        !solution.video_urls.length &&
+        !solution.embed_urls.length) ||
+      (this.is_edit &&
+        solution.is_draft &&
+        !solution.image_urls.length &&
+        !solution.video_urls.length &&
+        !solution.embed_urls.length)
+    ) {
+      swal({
+        title:
+          "Are you sure you want to publish the solution without adding media content?",
+        // text: "You won't be able to revert this!",
+        type: "warning",
+        showCancelButton: true,
+        confirmButtonClass: "btn btn-success",
+        cancelButtonClass: "btn btn-warning",
+        confirmButtonText: "Yes",
+        buttonsStyling: false
+      }).then(result => {
+        if (result.value) {
+          solution.created_at = new Date();
+          this.showSuccessSwal("Solution Added");
 
-        this.submitSolutionToDB();
+          solution.is_draft = false;
+          this.submitSolutionToDB();
+        }
       });
     } else {
       this.showSuccessSwal("Solution Updated");
 
-      this.solution.is_draft = false;
-
+      solution.is_draft = false;
       this.submitSolutionToDB();
     }
   }
