@@ -74,7 +74,7 @@
                 </div>
 
                 <strong *ngIf="ownerData.length">Solver Team</strong>
-                <div>
+                <div *ngIf="ownerData.length">
                   <a [routerLink]="'/profiles/'+owner.id" *ngFor="let owner of ownerData"
                     style="margin-right: 0.3em;">{{owner.name}}</a>
                   <span>&nbsp;</span>

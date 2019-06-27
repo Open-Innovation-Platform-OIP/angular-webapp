@@ -1007,7 +1007,7 @@ export class WizardComponent
           problem.embed_urls.length))
     ) {
       swal({
-        title: "Are you sure you want to publish the problem",
+        title: "Are you sure you want to publish the problem?",
         // text: "You won't be able to revert this!",
         type: "warning",
         showCancelButton: true,
@@ -1037,7 +1037,7 @@ export class WizardComponent
     ) {
       swal({
         title:
-          "Are you sure you want to publish the problem without adding media content",
+          "Are you sure you want to publish the problem without adding media content?",
         // text: "You won't be able to revert this!",
         type: "warning",
         showCancelButton: true,

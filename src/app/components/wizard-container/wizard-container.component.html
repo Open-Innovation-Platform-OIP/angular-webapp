@@ -25,9 +25,11 @@
       <div class="card-body">
         <div class="tab-content">
           <div class="tab-pane active" id="text">
-            <a href="#media" data-toggle="tab" role="tab" class="nav-link"
-              *ngIf="content.image_urls.length+content.video_urls.length>0">{{content.image_urls.length}}
-              image(s) and {{content.video_urls.length}} video(s) attached</a>
+            <div class="row justify-content-center">
+              <a href="#media" data-toggle="tab" role="tab" class="nav-link"
+                *ngIf="content.image_urls.length+content.video_urls.length>0">{{content.image_urls.length}}
+                image(s) and {{content.video_urls.length}} video(s) attached</a>
+            </div>
             <div class="row justify-content-center">
               <div class="col-sm-12">
                 <div class="input-group form-control-lg" *ngIf="contentType==='problem'">
