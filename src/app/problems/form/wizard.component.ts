@@ -1123,6 +1123,7 @@ export class WizardComponent
               embed_urls
               is_draft
               attachments
+              created_at
             ]
           }
         ) {

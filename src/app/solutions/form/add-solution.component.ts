@@ -45,6 +45,7 @@ import gql from "graphql-tag";
 import { first } from "rxjs/operators";
 import { SearchService } from "../../services/search.service";
 import { SolutionCardComponent } from "src/app/components/solution-card/solution-card.component";
+import { DataRowOutlet } from "@angular/cdk/table";
 
 declare var H: any;
 declare const $: any;
@@ -1206,6 +1207,7 @@ export class AddSolutionComponent
         buttonsStyling: false
       }).then(result => {
         this.showSuccessSwal("Solution Added");
+        this.solution["created_at"] = new Date();
 
         this.solution.is_draft = false;
 
@@ -1358,6 +1360,7 @@ export class AddSolutionComponent
               featured_url
               featured_type
               embed_urls
+              created_at
               attachments
             ]
           }
