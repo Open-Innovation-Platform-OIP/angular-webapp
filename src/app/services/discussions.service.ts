@@ -2,6 +2,8 @@ import { Injectable } from "@angular/core";
 import { Apollo } from "apollo-angular";
 import gql from "graphql-tag";
 import { AuthService } from "./auth.service";
+// import { Subscription } from "rxjs";
+import { take } from "rxjs/operators";
 
 export interface Comment {
   id?: number; // new comments will automatically get ids from PostgreSQL. Edits will have an id.
@@ -49,6 +51,7 @@ export class DiscussionsService {
           discussions: [comment]
         }
       })
+      .pipe(take(1))
       .subscribe(
         result => {
           if (result.data.insert_discussions.returning.length > 0) {
@@ -130,6 +133,7 @@ export class DiscussionsService {
           discussion_mentions: mentions
         }
       })
+      .pipe(take(1))
       .subscribe(
         result => {
           console.log(result, "mention worked");

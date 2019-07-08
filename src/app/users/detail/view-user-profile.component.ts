@@ -161,5 +161,6 @@ export class ViewUserProfileComponent implements OnInit, OnDestroy {
 
   ngOnDestroy() {
     this.userDataQuery.stopPolling();
+    // this.user.unsubscribe();
   }
 }

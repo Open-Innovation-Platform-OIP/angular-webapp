@@ -1,10 +1,16 @@
 import { Injectable } from "@angular/core";
 import { Apollo } from "apollo-angular";
 import gql from "graphql-tag";
+import { Subscription } from "rxjs";
+import { take } from "rxjs/operators";
 @Injectable({
   providedIn: "root"
 })
 export class TagsService {
+  // getTagsSub: Subscription;
+  // addTagsSub: Subscription;
+  // getTagsSub: Subscription;
+
   public allTags = {};
 
   // public upsert_tags = ;
@@ -24,7 +30,8 @@ export class TagsService {
         fetchPolicy: "network-only"
         // pollInterval: 500
       })
-      .valueChanges.subscribe(({ data }) => {
+      .valueChanges.pipe(take(1))
+      .subscribe(({ data }) => {
         if (data.tags.length > 0) {
           data.tags.map(tag => {
             this.allTags[tag.name] = tag;
@@ -55,6 +62,7 @@ export class TagsService {
           tags: tags
         }
       })
+      .pipe(take(1))
       .subscribe(
         data => {
           let tagsToBeLinked = [];
@@ -91,6 +99,7 @@ export class TagsService {
                   [`${tableName}_tags`]: tagsToBeLinked
                 }
               })
+              .pipe(take(1))
               .subscribe(
                 data => {
                   console.log("worked", data);
@@ -172,6 +181,7 @@ export class TagsService {
         }
       }`
       })
+      .pipe(take(1))
       .subscribe(
         data => {
           console.log(data, "tag addition");
@@ -207,6 +217,7 @@ export class TagsService {
           }
         }
       })
+      .pipe(take(1))
       .subscribe(
         ({ data }) => {
           console.log("worked", data);

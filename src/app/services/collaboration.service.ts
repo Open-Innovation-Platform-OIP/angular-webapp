@@ -2,7 +2,9 @@ import { Injectable } from "@angular/core";
 import { Apollo } from "apollo-angular";
 import gql from "graphql-tag";
 import { Timestamp } from "aws-sdk/clients/kinesisanalytics";
+import { Subscription } from "rxjs";
 import swal from "sweetalert2";
+import { take } from "rxjs/operators";
 declare var $: any;
 
 export interface collaborator {
@@ -67,6 +69,7 @@ export class CollaborationService {
           collaborators: [collaborationData]
         }
       })
+      .pipe(take(1))
       .subscribe(
         result => {
           console.log(result, "result");
@@ -158,9 +161,11 @@ export class CollaborationService {
           solution_collaborators: [collaborationData]
         }
       })
+      .pipe(take(1))
       .subscribe(
         result => {
           console.log(result, "result");
+
           // location.reload();
           swal({
             type: "success",

@@ -1,20 +1,23 @@
-import { Component, OnInit } from "@angular/core";
+import { Component, OnInit, OnDestroy } from "@angular/core";
 import { Apollo } from "apollo-angular";
 import gql from "graphql-tag";
 import { Router, ActivatedRoute } from "@angular/router";
 import { NgxUiLoaderService } from "ngx-ui-loader";
 import { SearchService } from "../services/search.service";
+import { take } from "rxjs/operators";
 
 @Component({
   selector: "app-landing-page",
   templateUrl: "./landing-page.component.html",
   styleUrls: ["./landing-page.component.css"]
 })
-export class LandingPageComponent implements OnInit {
+export class LandingPageComponent implements OnInit, OnDestroy {
   landingPageSearchResults = [];
   searchInput: any;
   problems: any;
   numberToBeShown: Number;
+
+  // getProblemsSub: Subscription;
 
   constructor(
     private apollo: Apollo,
@@ -87,7 +90,8 @@ export class LandingPageComponent implements OnInit {
 
         fetchPolicy: "network-only"
       })
-      .valueChanges.subscribe(
+      .valueChanges.pipe(take(1))
+      .subscribe(
         result => {
           if (result.data.problems.length > 0) {
             this.problems = result.data.problems;
@@ -135,5 +139,8 @@ export class LandingPageComponent implements OnInit {
       this.landingPageSearchResults = [];
       // this.numberToBeShown = 8;
     }
+  }
+  ngOnDestroy() {
+    // this.getProblemsSub.unsubscribe();
   }
 }

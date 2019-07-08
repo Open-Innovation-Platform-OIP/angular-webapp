@@ -220,9 +220,9 @@ export class ProblemDetailComponent implements OnInit, OnDestroy {
   interval = null;
   qs: queryString = { commentId: 0 };
 
-  public carouselTileItems$: Observable<any>;
+  public carouselTileItemsEnrichment$: Observable<number[]>;
   public carouselTileItemsValid$: Observable<number[]>;
-  public carouselTileItemCollab$: Observable<number[]>;
+  public carouselTileItemsCollab$: Observable<number[]>;
   // public carouselTileItemSolution$: Observable<number[]>;
 
   public carouselTileConfig: NguCarouselConfig = {
@@ -236,6 +236,11 @@ export class ProblemDetailComponent implements OnInit, OnDestroy {
 
     loop: true
   };
+
+  // voteProblemSub: Subscription;
+  // deleteProblemVoteSub: Subscription;
+  // watchProblemSub: Subscription;
+  // deleteProblemWatchSub: Subscription;
 
   constructor(
     private router: Router,
@@ -319,7 +324,8 @@ export class ProblemDetailComponent implements OnInit, OnDestroy {
   }
 
   loadCarousels() {
-    this.carouselTileItems$ = interval(500).pipe(
+    console.log("LOAD CAROUSELS", this.validation);
+    this.carouselTileItemsEnrichment$ = interval(500).pipe(
       startWith(-1),
       take(2),
       map(val => {
@@ -350,7 +356,7 @@ export class ProblemDetailComponent implements OnInit, OnDestroy {
       })
     );
 
-    this.carouselTileItemCollab$ = interval(500).pipe(
+    this.carouselTileItemsCollab$ = interval(500).pipe(
       startWith(-1),
       take(2),
       map(val => {
@@ -722,6 +728,7 @@ export class ProblemDetailComponent implements OnInit, OnDestroy {
       }
     });
     this.enrichment = problem.enrichmentsByproblemId;
+    console.log("enrichment", this.enrichment);
 
     problem.problem_validations.map(validation => {
       // console.log(validation.validated_by, "test55");
@@ -740,7 +747,7 @@ export class ProblemDetailComponent implements OnInit, OnDestroy {
     this.solutions = [];
     if (problem.problems_solutions.length) {
       problem.problems_solutions.forEach(solutions => {
-        if (!solutions.solution.is_draft) {
+        if (solutions.solution && !solutions.solution.is_draft) {
           this.solutions.push(solutions.solution);
         }
       });
@@ -1098,6 +1105,7 @@ export class ProblemDetailComponent implements OnInit, OnDestroy {
           .mutate({
             mutation: add_watcher
           })
+          .pipe(take(1))
           .subscribe(
             result => {
               if (result.data) {
@@ -1127,6 +1135,7 @@ export class ProblemDetailComponent implements OnInit, OnDestroy {
           .mutate({
             mutation: delete_watcher
           })
+          .pipe(take(1))
           .subscribe(
             result => {
               if (result.data) {
@@ -1172,6 +1181,7 @@ export class ProblemDetailComponent implements OnInit, OnDestroy {
           .mutate({
             mutation: add_voter
           })
+          .pipe(take(1))
           .subscribe(
             result => {
               if (result.data) {
@@ -1201,6 +1211,7 @@ export class ProblemDetailComponent implements OnInit, OnDestroy {
           .mutate({
             mutation: delete_voter
           })
+          .pipe(take(1))
           .subscribe(
             result => {
               if (result.data) {
@@ -1250,10 +1261,19 @@ export class ProblemDetailComponent implements OnInit, OnDestroy {
       ({ data }) => {
         $("#enrichModal").modal("hide");
         this.disableEnrichButton = false;
-        location.reload();
+        swal({
+          title: "Deleted!",
+          // text: "Your file has been deleted.",
+          type: "success",
+          confirmButtonClass: "btn btn-success",
+          buttonsStyling: false
+        });
+        // alert("deleted");
+        // this.loadCarousels();
+        // location.reload();
       },
       error => {
-        console.log("Could delete due to " + error);
+        console.log("Could not delete due to " + error);
         swal({
           title: "Error",
           text: "Try Again",
@@ -1295,11 +1315,18 @@ export class ProblemDetailComponent implements OnInit, OnDestroy {
       ({ data }) => {
         $("#validModal").modal("hide");
         this.disableValidateButton = false;
+        swal({
+          title: "Deleted!",
+          // text: "Your file has been deleted.",
+          type: "success",
+          confirmButtonClass: "btn btn-success",
+          buttonsStyling: false
+        });
 
         return;
       },
       error => {
-        console.log("Could delete due to " + error);
+        console.log("Could not delete due to " + error);
         swal({
           title: "Error",
           text: "Try Again",

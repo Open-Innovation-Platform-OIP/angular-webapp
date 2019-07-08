@@ -4,12 +4,15 @@ import {
   OnInit,
   Input,
   Output,
-  EventEmitter
+  EventEmitter,
+  OnDestroy
 } from "@angular/core";
 import swal from "sweetalert2";
 import { Comment } from "../../services/discussions.service";
 import { Apollo, QueryRef } from "apollo-angular";
 import { AuthService } from "../../services/auth.service";
+import { Subscription } from "rxjs";
+import { take } from "rxjs/operators";
 
 import gql from "graphql-tag";
 @Component({
@@ -17,7 +20,7 @@ import gql from "graphql-tag";
   templateUrl: "./displaycomment.component.html",
   styleUrls: ["./displaycomment.component.css"]
 })
-export class CommentDisplayComponent implements OnInit {
+export class CommentDisplayComponent implements OnInit, OnDestroy {
   objectValues = Object["values"];
   @Input() comment;
   @Input() replies;
@@ -167,6 +170,7 @@ export class CommentDisplayComponent implements OnInit {
         .mutate({
           mutation: add_voter
         })
+        .pipe(take(1))
         .subscribe(
           result => {
             if (result.data) {
@@ -196,6 +200,7 @@ export class CommentDisplayComponent implements OnInit {
         .mutate({
           mutation: delete_voter
         })
+        .pipe(take(1))
         .subscribe(
           result => {
             if (result.data) {
@@ -223,4 +228,5 @@ export class CommentDisplayComponent implements OnInit {
       return false;
     }
   }
+  ngOnDestroy() {}
 }

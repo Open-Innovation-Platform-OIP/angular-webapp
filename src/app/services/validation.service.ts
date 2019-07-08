@@ -3,6 +3,7 @@ import { Apollo } from "apollo-angular";
 import gql from "graphql-tag";
 import { Timestamp } from "aws-sdk/clients/workspaces";
 import swal from "sweetalert2";
+import { take } from "rxjs/operators";
 
 export interface validation {
   comment: String;
@@ -50,6 +51,7 @@ export class ValidationService {
           validations: [validationData]
         }
       })
+      .pipe(take(1))
       .subscribe(
         data => {
           console.log(data);
@@ -124,6 +126,7 @@ export class ValidationService {
           solution_validations: [validationData]
         }
       })
+      .pipe(take(1))
       .subscribe(
         data => {
           console.log(data);

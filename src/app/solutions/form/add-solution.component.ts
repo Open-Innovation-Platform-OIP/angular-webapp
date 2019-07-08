@@ -30,6 +30,7 @@ import { GeocoderService } from "../../services/geocoder.service";
 import swal from "sweetalert2";
 var Buffer = require("buffer/").Buffer;
 import { FormBuilder } from "@angular/forms";
+import {take} from "rxjs/operators";
 
 import { Content } from "@angular/compiler/src/render3/r3_ast";
 
@@ -371,7 +372,7 @@ export class AddSolutionComponent
         // pollInterval: 500,
         fetchPolicy: "network-only"
       })
-      .valueChanges.subscribe(
+      .valueChanges.pipe(take(1)).subscribe(
         result => {
           let problemData = result.data.problems[0];
           // console.log(problemData, "problem data from db");
@@ -461,7 +462,7 @@ export class AddSolutionComponent
               }
             }
           }
-        })
+        }).pipe(take(1))
         .subscribe(
           ({ data }) => {
             console.log("worked", data);
@@ -515,7 +516,7 @@ export class AddSolutionComponent
         variables: {
           problems_solutions: problems
         }
-      })
+      }).pipe(take(1))
       .subscribe(
         data => {
           console.log("problem adddition worked");
@@ -557,7 +558,7 @@ export class AddSolutionComponent
         variables: {
           solution_owners: owners
         }
-      })
+      }).pipe(take(1))
       .subscribe(
         data => {
           console.log("owner adddition worked");
@@ -703,7 +704,7 @@ export class AddSolutionComponent
               }
             }
           }
-        })
+        }).pipe(take(1))
         .subscribe(
           ({ data }) => {
             console.log("worked", data);
@@ -808,7 +809,7 @@ export class AddSolutionComponent
             // pollInterval: 500,
             fetchPolicy: "network-only"
           })
-          .valueChanges.subscribe(
+          .valueChanges.pipe(take(1)).subscribe(
             result => {
               this.solution["id"] = result.data.solutions[0].id;
               this.is_edit = true;
@@ -1174,7 +1175,7 @@ export class AddSolutionComponent
               }
             }
           }
-        })
+        }).pipe(take(1))
         .subscribe(
           ({ data }) => {
             console.log("worked", data);
@@ -1449,7 +1450,7 @@ export class AddSolutionComponent
         variables: {
           solutions: [this.solution]
         }
-      })
+      }).pipe(take(1))
       .subscribe(
         result => {
           if (result.data.insert_solutions.returning.length > 0) {
@@ -1532,7 +1533,7 @@ export class AddSolutionComponent
           variables: {
             solutions_tags: Array.from(solution_tags)
           }
-        })
+        }).pipe(take(1))
         .subscribe(
           data => {},
           err => {

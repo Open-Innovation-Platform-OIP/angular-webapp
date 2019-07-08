@@ -35,9 +35,9 @@ import { FilesService } from "../../services/files.service";
 import { UsersService } from "../../services/users.service";
 import { AuthService } from "../../services/auth.service";
 // import { GeocoderService } from '../../services/geocoder.service';
-import { Observable } from "rxjs";
+import { Observable, Subscription } from "rxjs";
 import { map, startWith } from "rxjs/operators";
-import { first } from "rxjs/operators";
+import { first, take } from "rxjs/operators";
 import { ProblemService } from "../../services/problem.service";
 declare var H: any;
 declare const $: any;
@@ -135,6 +135,15 @@ export class WizardComponent
     " image/*",
     "video/*"
   ];
+
+  // removeOwnerSub: Subscription;
+  // getProlemSub: Subscription;
+  // addProblemSub: Subscription;
+  // addOwnerSub: Subscription;
+  // getSearchResultsSub: Subscription;
+  // deleteProblemSub: Subscription;
+  // addTagsSub: Subscription;
+
   @ViewChild("sectorInput") sectorInput: ElementRef<HTMLInputElement>;
   @ViewChild("auto") matAutocomplete: MatAutocomplete;
   constructor(
@@ -234,6 +243,7 @@ export class WizardComponent
             }
           }
         })
+        .pipe(take(1))
         .subscribe(
           ({ data }) => {
             console.log("worked", data);
@@ -277,6 +287,13 @@ export class WizardComponent
 
   ngOnDestroy() {
     clearInterval(this.autosaveInterval);
+    // this.removeOwnerSub.unsubscribe();
+    // this.getProlemSub.unsubscribe();
+    // this.addProblemSub.unsubscribe();
+    // this.addOwnerSub.unsubscribe();
+    // this.getSearchResultsSub.unsubscribe();
+    // this.deleteProblemSub.unsubscribe();
+    // this.addTagsSub.unsubscribe();
   }
   ngOnInit() {
     // this.tagService.getTagsFromDB();
@@ -337,7 +354,8 @@ export class WizardComponent
             // pollInterval: 500,
             fetchPolicy: "network-only"
           })
-          .valueChanges.subscribe(result => {
+          .valueChanges.pipe(take(1))
+          .subscribe(result => {
             // console.log(result, "pppp>>>>>>>>");
             if (
               result.data.problems.length >= 1 &&
@@ -912,7 +930,8 @@ export class WizardComponent
           fetchPolicy: "no-cache"
           // pollInterval: 200
         })
-        .valueChanges.subscribe(
+        .valueChanges.pipe(take(1))
+        .subscribe(
           result => {
             console.log(result, "result from search");
             if (result.data.search_problems_v2.length > 0) {
@@ -1147,6 +1166,7 @@ export class WizardComponent
           problems: [problem]
         }
       })
+      .pipe(take(1))
       .subscribe(
         result => {
           if (result.data.insert_problems.returning.length > 0) {
@@ -1216,6 +1236,7 @@ export class WizardComponent
                     problems_tags: Array.from(problem_tags)
                   }
                 })
+                .pipe(take(1))
                 .subscribe(
                   data => {
                     if (!this.problem.is_draft) {
@@ -1281,6 +1302,7 @@ export class WizardComponent
           problem_owners: owners
         }
       })
+      .pipe(take(1))
       .subscribe(
         data => {
           console.log("owner adddition worked");
@@ -1322,6 +1344,7 @@ export class WizardComponent
         .mutate({
           mutation: delete_problem
         })
+        .pipe(take(1))
         .subscribe(
           data => {
             this.router.navigate(["problems"]);

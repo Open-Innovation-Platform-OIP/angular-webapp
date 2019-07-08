@@ -10,6 +10,8 @@ import {
 import { ProblemService } from "../../services/problem-handle.service";
 import gql from "graphql-tag";
 
+import { take } from "rxjs/operators";
+
 // import { Router, ActivatedRoute } from "@angular/router";
 
 import { AuthService } from "../../services/auth.service";
@@ -146,6 +148,7 @@ export class ViewEnrichmentComponent implements OnInit, OnChanges, OnDestroy {
             .mutate({
               mutation: add_voter
             })
+            .pipe(take(1))
             .subscribe(
               result => {
                 if (result.data) {
@@ -175,6 +178,7 @@ export class ViewEnrichmentComponent implements OnInit, OnChanges, OnDestroy {
             .mutate({
               mutation: delete_voter
             })
+            .pipe(take(1))
             .subscribe(
               result => {
                 if (result.data) {

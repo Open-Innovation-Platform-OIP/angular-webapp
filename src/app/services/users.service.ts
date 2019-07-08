@@ -3,6 +3,7 @@ import { Apollo } from "apollo-angular";
 import gql from "graphql-tag";
 import { AuthService } from "./auth.service";
 import { AnalysisScheme } from "aws-sdk/clients/cloudsearch";
+import { take } from "rxjs/operators";
 
 export interface User {
   id?: Number;
@@ -101,7 +102,8 @@ export class UsersService {
           fetchPolicy: "no-cache"
           // pollInterval: 500
         })
-        .valueChanges.subscribe(({ data }) => {
+        .valueChanges.pipe(take(1))
+        .subscribe(({ data }) => {
           // console.log("<<<curr user data", data);
           if (data.users.length > 0) {
             Object.keys(this.currentUser).map(key => {
@@ -134,7 +136,8 @@ export class UsersService {
 
         // pollInterval: 500
       })
-      .valueChanges.subscribe(({ data }) => {
+      .valueChanges.pipe(take(1))
+      .subscribe(({ data }) => {
         if (data.organizations.length > 0) {
           data.organizations.map(organization => {
             this.allOrgs[organization.name] = organization;
@@ -164,7 +167,8 @@ export class UsersService {
         // pollInterval: 500
         fetchPolicy: "network-only"
       })
-      .valueChanges.subscribe(({ data }) => {
+      .valueChanges.pipe(take(1))
+      .subscribe(({ data }) => {
         if (data.users.length > 0) {
           data.users.map(user => {
             if (user.id && user.name) {

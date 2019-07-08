@@ -213,7 +213,7 @@
         </div>
         <!--Enrichment divider-->
 
-        <ngu-carousel #enrichCarousel [inputs]="carouselTileConfig" [dataSource]="carouselTileItems$ | async"
+        <ngu-carousel #enrichCarousel [inputs]="carouselTileConfig" [dataSource]="carouselTileItemsEnrichment$ | async"
           *ngIf="enrichment[0]">
           <ngu-tile *nguCarouselDef="let enrichment; let i = index; let ani = animate" data-toggle="modal"
             (click)="openModal('#enrichModal')">
@@ -507,7 +507,7 @@
         </div>
         <!--Collaborate divider-->
 
-        <ngu-carousel #CollabCarousel [inputs]="carouselTileConfig" [dataSource]="carouselTileItemCollab$ | async"
+        <ngu-carousel #CollabCarousel [inputs]="carouselTileConfig" [dataSource]="carouselTileItemsCollab$ | async"
           *ngIf="collaborators[0]">
           <ngu-tile *nguCarouselDef="let collaborator; let i = index; let ani = animate">
             <app-collaborator-card *ngIf="collaborator" [collaboratorData]="collaborator"

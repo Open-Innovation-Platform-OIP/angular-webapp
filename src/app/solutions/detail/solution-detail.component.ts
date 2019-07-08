@@ -1056,6 +1056,7 @@ export class SolutionDetailComponent implements OnInit {
           .mutate({
             mutation: add_watcher
           })
+          .pipe(take(1))
           .subscribe(
             result => {
               if (result.data) {
@@ -1085,6 +1086,7 @@ export class SolutionDetailComponent implements OnInit {
           .mutate({
             mutation: delete_watcher
           })
+          .pipe(take(1))
           .subscribe(
             result => {
               if (result.data) {
@@ -1130,6 +1132,7 @@ export class SolutionDetailComponent implements OnInit {
           .mutate({
             mutation: add_voter
           })
+          .pipe(take(1))
           .subscribe(
             result => {
               if (result.data) {
@@ -1159,6 +1162,7 @@ export class SolutionDetailComponent implements OnInit {
           .mutate({
             mutation: delete_voter
           })
+          .pipe(take(1))
           .subscribe(
             result => {
               if (result.data) {

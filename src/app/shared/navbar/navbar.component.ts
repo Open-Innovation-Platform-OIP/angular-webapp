@@ -5,9 +5,11 @@ import {
   ViewChild,
   ElementRef,
   Input,
-  Directive
+  Directive,
+  OnDestroy
 } from "@angular/core";
 import { ROUTES } from "../.././sidebar/sidebar.component";
+import { take } from "rxjs/operators";
 
 import {
   Router,
@@ -58,6 +60,7 @@ export class NavbarComponent implements OnInit {
   url: any;
   id: any;
   update = [];
+  getNotificationsSub: Subscription;
   @ViewChild("app-navbar-cmp") button: any;
 
   // form = {
@@ -172,7 +175,7 @@ export class NavbarComponent implements OnInit {
       });
 
     if (this.user_id) {
-      this.apollo
+      this.getNotificationsSub = this.apollo
         .watchQuery<any>({
           query: gql`
           query {
@@ -335,6 +338,7 @@ export class NavbarComponent implements OnInit {
           }
         `
       })
+      .pipe(take(1))
       .subscribe(({ data }) => {
         console.log(data);
       });
@@ -376,6 +380,7 @@ export class NavbarComponent implements OnInit {
           objects: notifications
         }
       })
+      .pipe(take(1))
       .subscribe(
         data => {
           console.log(data);
@@ -558,4 +563,7 @@ export class NavbarComponent implements OnInit {
   //   this.userSearchResults = null;
   // }
   // }
+  ngOnDestroy() {
+    this.getNotificationsSub.unsubscribe();
+  }
 }

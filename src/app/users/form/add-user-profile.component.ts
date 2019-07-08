@@ -12,7 +12,7 @@ import { UsersService } from "../../services/users.service";
 import { Apollo } from "apollo-angular";
 import gql from "graphql-tag";
 import { Router, ActivatedRoute } from "@angular/router";
-import { first, finalize } from "rxjs/operators";
+import { first, finalize, take } from "rxjs/operators";
 import { AuthService } from "../../services/auth.service";
 import { FilesService } from "../../services/files.service";
 import { TagsService } from "../../services/tags.service";
@@ -323,7 +323,8 @@ export class AddUserProfileComponent implements OnInit, OnChanges {
             fetchPolicy: "network-only"
             // pollInterval: 500
           })
-          .valueChanges.subscribe(
+          .valueChanges.pipe(take(1))
+          .subscribe(
             ({ data }) => {
               if (data.users.length > 0) {
                 Object.keys(this.user).map(key => {
@@ -447,6 +448,7 @@ export class AddUserProfileComponent implements OnInit, OnChanges {
                 users_tags: Array.from(user_tags)
               }
             })
+            .pipe(take(1))
             .subscribe(data => {}, err => {});
         }
       },

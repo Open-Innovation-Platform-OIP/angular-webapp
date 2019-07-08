@@ -6,6 +6,7 @@ import { Timestamp } from "aws-sdk/clients/workspaces";
 import { stringType } from "aws-sdk/clients/iam";
 import { String } from "aws-sdk/clients/sns";
 import { Router, ActivatedRoute } from "@angular/router";
+import { Subscription } from "rxjs";
 
 import swal from "sweetalert2";
 declare var $: any;
@@ -36,12 +37,13 @@ export interface enrichment {
   providedIn: "root"
 })
 export class EnrichmentService {
+  submitEnrichmentSub: Subscription;
   constructor(private apollo: Apollo, private router: Router) {}
 
   submitEnrichmentToDB(enrichmentData: enrichment) {
     console.log(enrichmentData, "testing enrich on update");
     console.log("test");
-    this.apollo
+    this.submitEnrichmentSub = this.apollo
       .mutate({
         mutation: gql`
           mutation upsert_enrichments(
@@ -96,10 +98,12 @@ export class EnrichmentService {
             "problems",
             data.data.insert_enrichments.returning[0].problem_id
           ]);
+          this.submitEnrichmentSub.unsubscribe();
         },
         err => {
           console.log(err, "error");
           console.error(JSON.stringify(err));
+          this.submitEnrichmentSub.unsubscribe();
 
           swal({
             title: "Error",

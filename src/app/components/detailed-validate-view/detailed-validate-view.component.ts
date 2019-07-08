@@ -29,7 +29,7 @@ export class DetailedValidateViewComponent implements OnInit, OnChanges {
   constructor(
     private auth: AuthService,
     private problemService: ProblemService
-  ) { }
+  ) {}
 
   ngOnInit() {
     console.log(this.validationData, "in detailed validate");
@@ -39,10 +39,9 @@ export class DetailedValidateViewComponent implements OnInit, OnChanges {
   }
   editValidation() {
     Object.keys(this.validationDataToEdit).map(key => {
-      if (typeof (this.validationDataToEdit[key]) === 'object') {
-        this.validationDataToEdit[key] = [...this.validationData[key]]
-      }
-      else {
+      if (typeof this.validationDataToEdit[key] === "object") {
+        this.validationDataToEdit[key] = [...this.validationData[key]];
+      } else {
         this.validationDataToEdit[key] = this.validationData[key];
       }
     });
@@ -63,13 +62,6 @@ export class DetailedValidateViewComponent implements OnInit, OnChanges {
     }).then(result => {
       if (result.value) {
         this.deleteClicked.emit(this.validationData);
-        swal({
-          title: "Deleted!",
-          // text: "Your file has been deleted.",
-          type: "success",
-          confirmButtonClass: "btn btn-success",
-          buttonsStyling: false
-        });
       }
     });
     // this.ValidaService.deleteValidation(this.validationData);

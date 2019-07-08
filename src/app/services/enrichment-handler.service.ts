@@ -2,12 +2,13 @@ import { Injectable } from "@angular/core";
 import { Apollo } from "apollo-angular";
 import gql from "graphql-tag";
 import * as Query from "./queries";
-
+import { Subscription } from "rxjs";
 @Injectable({
   providedIn: "root"
 })
 export class EnrichmentHandlerService {
-  constructor(private apollo: Apollo) { }
+  deleteEnrichmentSub: Subscription;
+  constructor(private apollo: Apollo) {}
 
   addEnrichment(enrichmentData: any) {
     console.log(enrichmentData, "enrich data in service");
@@ -21,7 +22,7 @@ export class EnrichmentHandlerService {
 
   deleteEnrichment(id: number) {
     console.log(id, "ID");
-    this.apollo
+    this.deleteEnrichmentSub = this.apollo
       .mutate<any>({
         mutation: Query.DeleteEnrichmentMutation,
         variables: {
@@ -35,12 +36,16 @@ export class EnrichmentHandlerService {
       .subscribe(
         ({ data }) => {
           // location.reload();
+          this.deleteEnrichmentSub.unsubscribe();
+
           location.reload();
           // this.router.navigateByUrl("/problems");
 
           return;
         },
         error => {
+          this.deleteEnrichmentSub.unsubscribe();
+
           console.log("Could delete due to " + error);
         }
       );

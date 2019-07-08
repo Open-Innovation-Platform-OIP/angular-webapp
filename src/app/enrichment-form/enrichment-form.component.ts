@@ -1,4 +1,4 @@
-import { Component, OnInit } from "@angular/core";
+import { Component, OnInit, OnDestroy } from "@angular/core";
 import { Router, ActivatedRoute } from "@angular/router";
 import { AuthService } from "../services/auth.service";
 import { EnrichmentService } from "../services/enrichment.service";
@@ -6,13 +6,13 @@ import { map, startWith } from "rxjs/operators";
 import { first } from "rxjs/operators";
 import { Apollo } from "apollo-angular";
 import gql from "graphql-tag";
-
+import { take } from "rxjs/operators";
 @Component({
   selector: "app-enrichment-form",
   templateUrl: "./enrichment-form.component.html",
   styleUrls: ["./enrichment-form.component.css"]
 })
-export class EnrichmentFormComponent implements OnInit {
+export class EnrichmentFormComponent implements OnInit, OnDestroy {
   private problemId: Number;
   private problemData: any;
   private enrichmentData: any = {
@@ -41,7 +41,7 @@ export class EnrichmentFormComponent implements OnInit {
     private auth: AuthService,
     private enrichmentService: EnrichmentService,
     private apollo: Apollo
-  ) { }
+  ) {}
 
   ngOnInit() {
     // console.log(this.route.snapshot.paramMap.get("problemId"), "problemid");
@@ -92,7 +92,8 @@ export class EnrichmentFormComponent implements OnInit {
           fetchPolicy: "network-only"
           // pollInterval: 500,
         })
-        .valueChanges.subscribe(
+        .valueChanges.pipe(take(1))
+        .subscribe(
           result => {
             console.log(result, "result");
             if (
@@ -190,7 +191,8 @@ export class EnrichmentFormComponent implements OnInit {
             fetchPolicy: "network-only"
             // pollInterval: 500
           })
-          .valueChanges.subscribe(
+          .valueChanges.pipe(take(1))
+          .subscribe(
             result => {
               console.log(result, "result");
               if (
@@ -242,4 +244,6 @@ export class EnrichmentFormComponent implements OnInit {
       this.enrichmentService.submitEnrichmentToDB(enrichmentData);
     }
   }
+
+  ngOnDestroy() {}
 }
