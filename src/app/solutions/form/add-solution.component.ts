@@ -1464,13 +1464,13 @@ export class AddSolutionComponent
             console.log(this.solution.is_draft, "draft", this.is_edit);
 
             if (this.is_edit && !this.solution.is_draft) {
-              this.router.navigate(["solutions", this.solution["id"]]);
+              this.router.navigate(["solutions", this.solution["id"]], { queryParamsHandling: 'preserve' });
             } else if (!this.is_edit && !this.solution.is_draft) {
               this.showSuccessSwal("Solution Added");
-              this.router.navigate(["solutions", this.solution["id"]]);
+              this.router.navigate(["solutions", this.solution["id"]], { queryParamsHandling: 'preserve' });
             } else if (this.is_edit && !updatedSolutionData.is_draft) {
               this.showSuccessSwal("Solution Added");
-              this.router.navigate(["solutions", this.solution["id"]]);
+              this.router.navigate(["solutions", this.solution["id"]], { queryParamsHandling: 'preserve' });
             }
             // else if (this.is_edit && this.solution.is_draft) {
             //   this.router.navigate(["solutions", this.solution["id"]]);

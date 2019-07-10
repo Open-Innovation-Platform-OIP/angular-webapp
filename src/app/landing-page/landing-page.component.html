@@ -18,7 +18,8 @@
           data-toggle="dropdown" [(ngModel)]="searchInput" (input)="landingPageSearch($event.target.value)"
           autocomplete="off" />
       </div>
-      <button mat-raised-button class="btn btn-white btn-round btn-just-icon" [routerLink]="'/search'">
+      <button mat-raised-button class="btn btn-white btn-round btn-just-icon" [routerLink]="'/search'"
+        queryParamsHandling="merge">
         <i class="material-icons">search</i>
         <div class="ripple-container"></div>
       </button>

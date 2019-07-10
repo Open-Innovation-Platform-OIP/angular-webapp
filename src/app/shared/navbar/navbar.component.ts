@@ -484,7 +484,7 @@ export class NavbarComponent implements OnInit {
   }
 
   openSearchComponent() {
-    this.router.navigate(["/search"]);
+    this.router.navigate(["/search"], { queryParamsHandling: 'preserve' });
     let searchBar = <HTMLBaseElement>(
       document.querySelector("input[name=searchInput]")
     );

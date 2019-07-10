@@ -5,6 +5,7 @@ import gql from "graphql-tag";
 import { Observable, Subscription } from "rxjs";
 import { P } from "@angular/cdk/keycodes";
 import { AuthService } from "../../services/auth.service";
+import { Router } from "@angular/router";
 
 @Component({
   selector: "app-solutions-view",
@@ -19,7 +20,11 @@ export class SolutionsViewComponent implements OnInit {
   solutionViewQuery: QueryRef<any>;
   solutionViewSubscription: Subscription;
 
-  constructor(private apollo: Apollo, private auth: AuthService) {}
+  constructor(
+    private apollo: Apollo,
+    private auth: AuthService,
+    private router: Router
+  ) {}
 
   ngOnInit() {
     this.solutionViewQuery = this.apollo.watchQuery<any>({
@@ -70,6 +75,13 @@ export class SolutionsViewComponent implements OnInit {
         console.error(JSON.stringify(error));
       }
     );
+  }
+
+  test() {
+    this.router.navigate(["/problems"], {
+      queryParams: { sector: "water" },
+      queryParamsHandling: "merge"
+    });
   }
 
   ngOnDestroy() {

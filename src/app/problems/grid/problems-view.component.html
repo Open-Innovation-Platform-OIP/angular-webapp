@@ -2,7 +2,7 @@
 
     <div class="container-fluid">
         <button class="btn btn-warning btn-lg btn-fab btn-round" matTooltip="Add Problem" [matTooltipPosition]="'left'"
-            [routerLink]="['/problems/add']" *ngIf="auth.currentUserValue.id">
+            [routerLink]="['/problems/add']" queryParamsHandling="merge" *ngIf="auth.currentUserValue.id">
             <i class="material-icons">add</i>
         </button>
         <!-- <h3 *ngIf="userProblems.length" class="card-title text-center">Problems added by you</h3>

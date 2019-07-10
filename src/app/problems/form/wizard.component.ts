@@ -393,7 +393,7 @@ export class WizardComponent
 
               this.is_edit = true;
             } else {
-              this.router.navigate(["problems/add"]);
+              this.router.navigate(["problems/add"], { queryParamsHandling: 'preserve' });
             }
           });
       }
@@ -1319,7 +1319,7 @@ export class WizardComponent
     //   this.showSuccessSwal("Problem Added");
     // }
 
-    this.router.navigate(["problems", this.problem["id"]]);
+    this.router.navigate(["problems", this.problem["id"]], { queryParamsHandling: 'preserve' });
   }
 
   deleteProblem() {
@@ -1347,7 +1347,7 @@ export class WizardComponent
         .pipe(take(1))
         .subscribe(
           data => {
-            this.router.navigate(["problems"]);
+            this.router.navigate(["problems"], { queryParamsHandling: 'preserve' });
           },
           err => {
             console.error(JSON.stringify(err));

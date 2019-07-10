@@ -65,7 +65,7 @@ export class ProblemCardComponent implements OnInit {
   }
   navigation() {
     if (!this.usedInSmartSearch) {
-      this.router.navigate([this.link]);
+      this.router.navigate([this.link], { queryParamsHandling: "preserve" });
     } else {
       window.open(this.link, "_blank");
     }

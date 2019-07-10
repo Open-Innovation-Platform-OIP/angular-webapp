@@ -80,7 +80,7 @@
 
                         <mat-chip *ngIf="problem.title" [selectable]="selectable" [removable]="removable"
                           (removed)="remove(problem)" style="margin-right:0.3em; margin-bottom: 0.4em;">
-                          <a [routerLink]="'/problems/'+problem.id">
+                          <a [routerLink]="'/problems/'+problem.id" queryParamsHandling="merge">
                             {{problem.title}}
                           </a>
                           <mat-icon matChipRemove *ngIf="removable">cancel</mat-icon>

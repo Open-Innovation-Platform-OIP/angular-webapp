@@ -1,6 +1,7 @@
 <div class="main-content">
   <div class="container-fluid">
-    <div class="row actions" *ngIf="dashboardData.length" [routerLink]="['/dashboard']" style="padding-top: 1%;">
+    <div class="row actions" *ngIf="dashboardData.length" [routerLink]="['/dashboard']" queryParamsHandling="merge"
+      style="padding-top: 1%;">
       <i class="material-icons">
         keyboard_arrow_left
       </i>

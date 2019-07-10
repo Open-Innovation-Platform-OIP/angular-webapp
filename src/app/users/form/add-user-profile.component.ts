@@ -397,8 +397,9 @@ export class AddUserProfileComponent implements OnInit, OnChanges {
         this.userService.getCurrentUser();
 
         this.user["id"] = result.data.insert_users.returning[0].id;
-        this.router.navigateByUrl(
-          `/profiles/${result.data.insert_users.returning[0].id}`
+        this.router.navigate(
+          [`/profiles/${result.data.insert_users.returning[0].id}`],
+          { queryParamsHandling: "preserve" }
         );
 
         const tags = [];

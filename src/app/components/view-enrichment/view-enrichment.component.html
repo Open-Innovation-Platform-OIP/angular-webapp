@@ -211,7 +211,7 @@
   <!-- <div class="text-center"> -->
   <button mat-button type="button" (click)="editEnrichment()" class="btn btn-warning pull-right" aria-hidden="true"
     *ngIf="enrichmentData.created_by===auth.currentUserValue.id && !showModal"
-    [routerLink]="'/enrichment/'+ enrichmentData.id+'/edit'">
+    [routerLink]="'/enrichment/'+ enrichmentData.id+'/edit'" queryParamsHandling="merge">
     <i class="material-icons actions">
       create
     </i>

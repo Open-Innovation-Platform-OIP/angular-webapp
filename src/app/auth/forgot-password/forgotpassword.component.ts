@@ -64,7 +64,7 @@ export class ForgotPasswordComponent implements OnInit, OnDestroy {
     var body = document.getElementsByTagName("body")[0];
     var sidebar = document.getElementsByClassName("navbar-collapse")[0];
     if (this.sidebarVisible == false) {
-      setTimeout(function () {
+      setTimeout(function() {
         toggleButton.classList.add("toggled");
       }, 500);
       body.classList.add("nav-open");

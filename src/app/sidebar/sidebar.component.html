@@ -59,7 +59,7 @@
     </form>
     <ul class="nav navbar-nav nav-mobile-menu">
       <li class="nav-item">
-        <a class="nav-link" [routerLink]="'/search'">
+        <a class="nav-link" [routerLink]="'/search'" queryParamsHandling="merge">
           <i class="material-icons">search</i>
           <p>
             <span class="d-lg-none d-md-block">Search</span>
@@ -67,7 +67,7 @@
         </a>
       </li>
       <li class="nav-item">
-        <a class="nav-link" [routerLink]="'/users/'+auth.currentUserValue.id">
+        <a class="nav-link" [routerLink]="'/users/'+auth.currentUserValue.id" queryParamsHandling="merge">
           <i class="material-icons">notifications</i>
           <p>
             <span class="d-lg-none d-md-block">Notifications</span>
@@ -75,7 +75,7 @@
         </a>
       </li>
       <li class="nav-item">
-        <a class="nav-link" [routerLink]="'/users/'+auth.currentUserValue.id">
+        <a class="nav-link" [routerLink]="'/users/'+auth.currentUserValue.id" queryParamsHandling="merge">
           <i class="material-icons">person</i>
           <p>
             <span class="d-lg-none d-md-block">My Profile</span>
@@ -119,14 +119,14 @@
   </div>
   <ul class="nav">
     <li routerLinkActive="active" *ngFor="let menuitem of menuItems" class="nav-item">
-      <a [routerLink]="[menuitem.path]"
+      <a [routerLink]="[menuitem.path]" queryParamsHandling="merge"
         *ngIf="menuitem.type === 'link' && menuitem.title=='Dashboard' && auth.currentUserValue.id" class="nav-link">
         <i class="material-icons">{{ menuitem.icontype }}</i>
         <p>{{ menuitem.title }}</p>
       </a>
       <!--If is a single link-->
-      <a [routerLink]="[menuitem.path]" *ngIf="menuitem.type === 'link' && menuitem.title!='Dashboard'"
-        class="nav-link">
+      <a [routerLink]="[menuitem.path]" queryParamsHandling="merge"
+        *ngIf="menuitem.type === 'link' && menuitem.title!='Dashboard'" class="nav-link">
         <i class="material-icons">{{ menuitem.icontype }}</i>
         <p>{{ menuitem.title }}</p>
       </a>
@@ -141,7 +141,7 @@
       <div id="{{ menuitem.collapse }}" class="collapse" *ngIf="menuitem.type === 'sub'">
         <ul class="nav">
           <li routerLinkActive="active" *ngFor="let childitem of menuitem.children" class="nav-item">
-            <a [routerLink]="[menuitem.path, childitem.path]" class="nav-link">
+            <a [routerLink]="[menuitem.path, childitem.path]" queryParamsHandling="merge" class="nav-link">
               <span class="sidebar-mini">{{ childitem.ab }}</span>
               <span class="sidebar-normal">{{ childitem.title }}</span>
             </a>

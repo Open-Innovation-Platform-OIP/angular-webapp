@@ -94,10 +94,10 @@ export class EnrichmentService {
             showConfirmButton: false
           }).catch(swal.noop);
           // location.reload();
-          this.router.navigate([
-            "problems",
-            data.data.insert_enrichments.returning[0].problem_id
-          ]);
+          this.router.navigate(
+            ["problems", data.data.insert_enrichments.returning[0].problem_id],
+            { queryParamsHandling: "preserve" }
+          );
           this.submitEnrichmentSub.unsubscribe();
         },
         err => {

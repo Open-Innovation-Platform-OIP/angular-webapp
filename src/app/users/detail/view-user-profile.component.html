@@ -106,7 +106,8 @@
 
           </div>
           <div class="card-footer">
-            <div [routerLink]="'/users/'+ userData.id+'/edit'" *ngIf="userData.id==auth.currentUserValue.id">
+            <div [routerLink]="'/users/'+ userData.id+'/edit'" queryParamsHandling="merge"
+              *ngIf="userData.id==auth.currentUserValue.id">
               <button mat-raised-button class="btn btn-info pull-right">Edit</button>
             </div>
             <!-- <button mat-raised-button type="submit" class="btn btn-rose pull-right">Update Profile</button> -->

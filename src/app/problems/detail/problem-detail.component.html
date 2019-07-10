@@ -79,7 +79,7 @@
 
                 <strong *ngIf="ownerData.length">Owner(s)</strong>
                 <div>
-                  <a [routerLink]="'/profiles/'+owner.id" *ngFor="let owner of ownerData"
+                  <a [routerLink]="'/profiles/'+owner.id" queryParamsHandling="merge" *ngFor="let owner of ownerData"
                     style="margin-right: 0.6em;">{{owner.name}}</a>
                   <span>&nbsp;</span>
                 </div>
@@ -88,7 +88,8 @@
 
                 <strong *ngIf="solutions.length">Solutions</strong>
                 <div *ngFor="let solution of solutions">
-                  <a [routerLink]="'/solutions/'+solution.id" style="margin-right: 0.3em;">{{solution.title}}</a>
+                  <a [routerLink]="'/solutions/'+solution.id" queryParamsHandling="merge"
+                    style="margin-right: 0.3em;">{{solution.title}}</a>
                   <!-- <span>&nbsp;</span> -->
                 </div>
 
@@ -120,7 +121,7 @@
             <!--  -->
             <div class="dropdown">
               <button *ngIf="(userId===problemData.created_by) || owners.has(userId)" [routerLink]="
-                '/problems/'+ problemData.id+'/edit'"
+                '/problems/'+ problemData.id+'/edit'" queryParamsHandling="merge"
                 [disabled]="this.collaborators.length || this.enrichment.length || this.validation.length"
                 class="btn btn-sm btn-warning" aria-expanded="true">
                 <i class="material-icons actions">
@@ -203,7 +204,7 @@
           <button mat-raised-button *ngIf="auth.currentUserValue.id" class="btn btn-warning btn-round"
             matTooltip="Click to add enrichment" [matTooltipPosition]="'below'"
             [disabled]="disableEnrichButton || !auth.currentUserValue.id"
-            [routerLink]="['/enrichment/add',{problemId:problemData.id}]">Enrich</button>
+            [routerLink]="['/enrichment/add',{problemId:problemData.id}]" queryParamsHandling="merge">Enrich</button>
           <p *ngIf="!auth.currentUserValue.id">Login to enrich the problem</p>
           <!-- <a mat-button NguCarouselNext class="rightRs">
               <i class="material-icons">
@@ -615,7 +616,8 @@
               <span>&nbsp;</span>
               <span>&nbsp;</span>
               <span>&nbsp;</span>
-              <h5>Do you have a solution? <a [routerLink]="['/solutions/add',{problemId:problemData.id}]">click
+              <h5>Do you have a solution? <a [routerLink]="['/solutions/add',{problemId:problemData.id}]"
+                  queryParamsHandling="merge">click
                   here</a>
               </h5>
             </div>
