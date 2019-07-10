@@ -18,6 +18,8 @@ export class ProblemsViewComponent implements OnInit, OnDestroy {
   problemViewQuery: QueryRef<any>;
   problemViewSubscription: Subscription;
   constructor(private apollo: Apollo, private auth: AuthService) {}
+  cities: any = ["paris", "london", "amsterdam"];
+  currentCity: any;
 
   ngOnInit() {
     // console.log(Number(this.auth.currentUserValue.id), "id");
@@ -175,6 +177,10 @@ export class ProblemsViewComponent implements OnInit, OnDestroy {
         console.error(JSON.stringify(error));
       }
     );
+  }
+
+  test() {
+    console.log(this.currentCity, "current city");
   }
 
   ngOnDestroy() {
