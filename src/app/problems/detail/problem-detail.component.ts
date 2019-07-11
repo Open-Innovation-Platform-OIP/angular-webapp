@@ -770,7 +770,7 @@ export class ProblemDetailComponent implements OnInit, OnDestroy {
       if (problem.problem_tags) {
         this.tags = problem.problem_tags.map(tagArray => {
           // console.log(tagArray, "work");
-          return tagArray.tag.name;
+          return tagArray.tag;
         });
       }
       Object.keys(this.problemData).map(key => {
@@ -957,6 +957,14 @@ export class ProblemDetailComponent implements OnInit, OnDestroy {
     } else {
       return false;
     }
+  }
+
+  sectorSelected(sector) {
+    // console.log(sector,"sector");
+    this.router.navigate(["/problems"], {
+      queryParams: { [sector.name]: sector.id },
+      queryParamsHandling: "merge"
+    });
   }
 
   toggleProblemAttachmentsIndex(dir: boolean) {

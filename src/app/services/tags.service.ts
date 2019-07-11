@@ -12,6 +12,8 @@ export class TagsService {
   // getTagsSub: Subscription;
 
   public allTags = {};
+  public allTagsArray: any[] = [];
+  public sectorFilterArray = [];
 
   // public upsert_tags = ;
 
@@ -19,6 +21,7 @@ export class TagsService {
     this.getTagsFromDB();
   }
   getTagsFromDB() {
+    this.allTagsArray = [];
     this.apollo
       .watchQuery<any>({
         query: gql`
@@ -37,6 +40,7 @@ export class TagsService {
         if (data.tags.length > 0) {
           data.tags.map(tag => {
             this.allTags[tag.name] = tag;
+            this.allTagsArray.push(tag.id);
           });
         }
       });

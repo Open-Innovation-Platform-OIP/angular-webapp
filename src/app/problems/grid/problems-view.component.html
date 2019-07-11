@@ -8,13 +8,13 @@
         <mat-form-field>
             <mat-select searchable="Search here" multiple placeholder="Sectors" [(ngModel)]="selectedSectors"
                 name="Paris" ariaLabel="objectValues(sectors)[0]">
-                <mat-option (click)="selectSector()" *ngFor="let sector of objectValues(sectors)" [value]="sector">
+                <mat-option (click)="selectSector()" *ngFor="let sector of objectValues(sectors)" [value]="sector.name">
                     {{ sector.name }}
                 </mat-option>
             </mat-select>
         </mat-form-field>
 
-        <button class="btn btn-rose" (click)="test()">test</button>
+        <!-- <button class="btn btn-rose" (click)="test()">test</button> -->
 
         <!-- <h3 *ngIf="userProblems.length" class="card-title text-center">Problems added by you</h3>
         <br />
@@ -27,7 +27,7 @@
         <br />
         <div class="row">
             <div class="col-md-3" *ngFor="let problem of problems">
-                <app-problem-card [problemData]="problem"></app-problem-card>
+                <app-problem-card [problemData]="problem.problem"></app-problem-card>
             </div>
         </div>
     </div>

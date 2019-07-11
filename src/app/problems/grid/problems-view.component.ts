@@ -8,6 +8,7 @@ import { AuthService } from "../../services/auth.service";
 import { ActivatedRoute, Router } from "@angular/router";
 import { TagsService } from "../../services/tags.service";
 import { take } from "rxjs/operators";
+import { FilterService } from "../../services/filter.service";
 
 @Component({
   selector: "app-problems-view",
@@ -26,29 +27,45 @@ export class ProblemsViewComponent implements OnInit, OnDestroy, OnChanges {
     private auth: AuthService,
     private activatedRoute: ActivatedRoute,
     private router: Router,
-    private tagsService: TagsService
+    private tagsService: TagsService,
+    private filterService: FilterService
   ) {
     // this.tagsService.getTagsFromDB();
   }
-  cities: any = ["paris", "london", "amsterdam"];
-  selectedSectors: any;
-  sectors: any;
+  cities: any = [1, 2, 3];
+  selectedSectors: any = [];
+  sectors: any = {};
   objectValues = Object.values;
+  sectorFilter: any = {};
+  in_query: string = ``;
 
   ngOnInit() {
     this.tagsService.getTagsFromDB();
+
     console.log(this.tagsService.allTags, "tag");
     this.sectors = this.tagsService.allTags;
 
     this.activatedRoute.queryParams.subscribe(params => {
-      console.log("params", params);
-      console.log("working", this.tagsService.allTags); // Print the parameter to the console.
+      // let test = this.tagsService.allTagsArray;
+      // if (!Object.keys(params).length) {
+      //   this.in_query = `_nin:[0]`;
+      // } else {
+      //   this.tagsService.sectorFilterArray = Object.values(params).map(String);
+      //   console.log(this.tagsService.sectorFilterArray, "tag array");
+      //   this.in_query = `_in:[${this.tagsService.sectorFilterArray}]`;
+      // }
+      this.selectedSectors = this.filterService.filterSector(params);
+      // this.filterService.filterSector(params);
+
+      // console.log(test.length, "tags array");
+      // console.log("params", params);
+      // console.log("working", this.tagsService.allTags); // Print the parameter to the console.
       this.problemViewQuery = this.apollo.watchQuery<any>({
         query: gql`
           query PostsGetQuery {
             problems_tags(
               where: {
-                tag_id: { _in: [12066] }
+                tag_id: { ${this.filterService.sector_filter_query} }
                 problem: { is_draft: { _eq: false } }
               }
               order_by: { problem: { updated_at: desc } }
@@ -110,10 +127,9 @@ export class ProblemsViewComponent implements OnInit, OnDestroy, OnChanges {
 
       this.problemViewSubscription = this.problemViewQuery.valueChanges.subscribe(
         result => {
-          // if (result.data.problems.length > 0) {
-          //   this.problems = result.data.problems;
-
-          // }
+          if (result.data.problems_tags.length > 0) {
+            this.problems = result.data.problems_tags;
+          }
           console.log("PROBLEMS", result);
         },
         error => {
@@ -215,14 +231,15 @@ export class ProblemsViewComponent implements OnInit, OnDestroy, OnChanges {
     // console.log(this.tagsService.allTags, "tags");
   }
   selectSector() {
-    const sectorFilter = {};
+    // let sectorFilterObject = {};
 
-    this.selectedSectors.map(sector => {
-      sectorFilter["filter" + sector.name] = sector.id;
+    this.selectedSectors.map(sectorName => {
+      this.sectorFilter[sectorName] = this.tagsService.allTags[sectorName].id;
+      // this.tagsService.sectorFilterArray.push()
     });
 
     this.router.navigate(["/problems"], {
-      queryParams: sectorFilter
+      queryParams: this.sectorFilter
     });
   }
 
