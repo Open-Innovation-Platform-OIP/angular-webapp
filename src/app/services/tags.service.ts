@@ -15,7 +15,9 @@ export class TagsService {
 
   // public upsert_tags = ;
 
-  constructor(private apollo: Apollo) {}
+  constructor(private apollo: Apollo) {
+    this.getTagsFromDB();
+  }
   getTagsFromDB() {
     this.apollo
       .watchQuery<any>({

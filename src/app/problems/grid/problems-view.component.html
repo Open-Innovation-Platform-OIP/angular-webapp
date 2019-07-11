@@ -6,13 +6,16 @@
             <i class="material-icons">add</i>
         </button>
         <mat-form-field>
-            <mat-select searchable="Search here" multiple placeholder="Multiple Cities" [(ngModel)]="currentCity"
-                name="Paris" ariaLabel="cities[0]">
-                <mat-option (click)="test()" *ngFor="let city of cities" [value]="city">
-                    {{ city }}
+            <mat-select searchable="Search here" multiple placeholder="Sectors" [(ngModel)]="selectedSectors"
+                name="Paris" ariaLabel="objectValues(sectors)[0]">
+                <mat-option (click)="selectSector()" *ngFor="let sector of objectValues(sectors)" [value]="sector">
+                    {{ sector.name }}
                 </mat-option>
             </mat-select>
         </mat-form-field>
+
+        <button class="btn btn-rose" (click)="test()">test</button>
+
         <!-- <h3 *ngIf="userProblems.length" class="card-title text-center">Problems added by you</h3>
         <br />
         <div class="row">
