@@ -1,0 +1,11 @@
+<div class="d-flex justify-content-end">
+
+  <mat-form-field class="dropDown">
+    <mat-select multiple placeholder="Sectors" [(ngModel)]="selectedSectors" ariaLabel="objectValues(sectors)[0]">
+      <mat-option (click)="selectSector()" *ngFor="let sector of objectValues(sectors)" [value]="sector.name">
+        {{ sector.name }}
+      </mat-option>
+    </mat-select>
+  </mat-form-field>
+
+</div>

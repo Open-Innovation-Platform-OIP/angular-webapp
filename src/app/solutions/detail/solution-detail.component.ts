@@ -672,7 +672,7 @@ export class SolutionDetailComponent implements OnInit {
     if (solution.solutions_tags) {
       this.tags = solution.solutions_tags.map(tagArray => {
         // console.log(tagArray, "work");
-        return tagArray.tag.name;
+        return tagArray.tag;
       });
     }
     solution.solution_watchers.map(watcher => {
@@ -1509,6 +1509,14 @@ export class SolutionDetailComponent implements OnInit {
           "</div>"
       }
     );
+  }
+
+  sectorSelected(sector) {
+    // console.log(sector,"sector");
+    this.router.navigate(["/solutions"], {
+      queryParams: { [sector.name]: sector.id },
+      queryParamsHandling: "merge"
+    });
   }
 
   ngOnDestroy() {

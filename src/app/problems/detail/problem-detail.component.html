@@ -56,7 +56,7 @@
 
                 <strong *ngIf="tags.length">Sectors</strong>
                 <div *ngIf="tags.length">
-                  <span *ngFor="let tag of tags" (click)="sectorSelected(tag)" class="badge badge-warning"
+                  <span *ngFor="let tag of tags" (click)="sectorSelected(tag)" class="badge badge-warning actions"
                     style="margin-right: 0.3em;">{{tag.name}}</span>
                   <span>&nbsp;</span>
                 </div>

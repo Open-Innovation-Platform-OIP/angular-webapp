@@ -27,6 +27,7 @@ import { WizardContainerComponent } from "./wizard-container/wizard-container.co
 // import { GlobalSearchCardsComponent } from "./global-search-cards/global-search-cards.component";
 import { ShareAutofocusModule } from "../share-autofocus/share-autofocus.module";
 import { SolutionCardComponent } from "./solution-card/solution-card.component";
+import { FilterDropdownComponent } from "./filter-dropdown/filter-dropdown.component";
 
 @NgModule({
   imports: [
@@ -56,7 +57,8 @@ import { SolutionCardComponent } from "./solution-card/solution-card.component";
     ProblemCardComponent,
     DisplayModalComponent,
     WizardContainerComponent,
-    SolutionCardComponent
+    SolutionCardComponent,
+    FilterDropdownComponent
   ],
   exports: [
     AddEnrichmentComponent,
@@ -76,7 +78,8 @@ import { SolutionCardComponent } from "./solution-card/solution-card.component";
     ProblemCardComponent,
     SolutionCardComponent,
     DisplayModalComponent,
-    WizardContainerComponent
+    WizardContainerComponent,
+    FilterDropdownComponent
   ],
   providers: [
     {

@@ -5,14 +5,6 @@
             [routerLink]="['/problems/add']" queryParamsHandling="merge" *ngIf="auth.currentUserValue.id">
             <i class="material-icons">add</i>
         </button>
-        <mat-form-field>
-            <mat-select searchable="Search here" multiple placeholder="Sectors" [(ngModel)]="selectedSectors"
-                name="Paris" ariaLabel="objectValues(sectors)[0]">
-                <mat-option (click)="selectSector()" *ngFor="let sector of objectValues(sectors)" [value]="sector.name">
-                    {{ sector.name }}
-                </mat-option>
-            </mat-select>
-        </mat-form-field>
 
         <!-- <button class="btn btn-rose" (click)="test()">test</button> -->
 
@@ -25,6 +17,25 @@
         </div> -->
         <h3 *ngIf="problems.length" class="card-title text-center">Problems worth Solving</h3>
         <br />
+
+        <!-- <div class="d-flex justify-content-end">
+
+            <mat-form-field class="dropDown">
+                <mat-select multiple placeholder="Sectors" [(ngModel)]="selectedSectors" name="Paris"
+                    ariaLabel="objectValues(sectors)[0]">
+                    <mat-option (click)="selectSector()" *ngFor="let sector of objectValues(sectors)"
+                        [value]="sector.name">
+                        {{ sector.name }}
+                    </mat-option>
+                </mat-select>
+            </mat-form-field>
+
+        </div> -->
+        <app-filter-dropdown [selectedSectors]="selectedSectors" [type]="'problems'">
+        </app-filter-dropdown>
+
+
+
         <div class="row">
             <div class="col-md-3" *ngFor="let problem of problems">
                 <app-problem-card [problemData]="problem.problem"></app-problem-card>

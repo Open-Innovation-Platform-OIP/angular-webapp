@@ -7,6 +7,8 @@ import { ProblemService } from "../services/problem.service";
 import { isArray } from "util";
 import { NgxUiLoaderService } from "ngx-ui-loader";
 import { UsersService } from "../services/users.service";
+import { FilterService } from "../services/filter.service";
+import { ActivatedRoute } from "@angular/router";
 
 declare const $: any;
 
@@ -101,7 +103,9 @@ export class DashboardComponent implements OnInit, OnDestroy {
     private auth: AuthService,
     private problemService: ProblemService,
     private ngxService: NgxUiLoaderService,
-    private userService: UsersService
+    private userService: UsersService,
+    private filterService: FilterService,
+    private activatedRoute: ActivatedRoute
   ) {
     // console.log('dashboard')
   }
@@ -411,9 +415,16 @@ export class DashboardComponent implements OnInit, OnDestroy {
   }
 
   getRecommendedProblems() {
-    const recoProblemsQuery = gql`
+    this.activatedRoute.queryParams.subscribe(params => {
+      this.filterService.filterSector(params);
+
+      const recoProblemsQuery = gql`
     {
-      users_tags(where:{user_id:{_eq:${this.auth.currentUserValue.id}}}) {
+     
+      users_tags(where:{ _and: [
+        {user_id:{_eq:${this.auth.currentUserValue.id}}},
+        { tag_id:{${this.filterService.sector_filter_query}}}
+      ]}) {
         tag{
           tag_problems{
             problem ${this.problemQueryString}
@@ -422,34 +433,35 @@ export class DashboardComponent implements OnInit, OnDestroy {
       }
     }
     `;
-    this.recommendedProblemsQueryRef = this.apollo.watchQuery({
-      query: recoProblemsQuery,
-      pollInterval: 1000,
-      fetchPolicy: "network-only"
-    });
-    this.recommendedProblemsSub = this.recommendedProblemsQueryRef.valueChanges.subscribe(
-      ({ data }) => {
-        if (data.users_tags.length > 0) {
-          data.users_tags.map(tagData => {
-            if (tagData.tag && tagData.tag.tag_problems.length > 0) {
-              tagData.tag.tag_problems.map(p => {
-                if (p && p.problem && p.problem.id) {
-                  const problem = p.problem;
-                  this.recommendedProblems[problem["id"]] = problem;
-                  this.userService.dashboardRecommendations[
-                    problem["id"]
-                  ] = problem;
-                }
-                // this.recommendedProblems.add(problem.problem);
-              });
-            }
-          });
+      this.recommendedProblemsQueryRef = this.apollo.watchQuery({
+        query: recoProblemsQuery,
+        pollInterval: 1000,
+        fetchPolicy: "network-only"
+      });
+      this.recommendedProblemsSub = this.recommendedProblemsQueryRef.valueChanges.subscribe(
+        ({ data }) => {
+          if (data.users_tags.length > 0) {
+            data.users_tags.map(tagData => {
+              if (tagData.tag && tagData.tag.tag_problems.length > 0) {
+                tagData.tag.tag_problems.map(p => {
+                  if (p && p.problem && p.problem.id) {
+                    const problem = p.problem;
+                    this.recommendedProblems[problem["id"]] = problem;
+                    this.userService.dashboardRecommendations[
+                      problem["id"]
+                    ] = problem;
+                  }
+                  // this.recommendedProblems.add(problem.problem);
+                });
+              }
+            });
+          }
+        },
+        error => {
+          console.error(JSON.stringify(error));
         }
-      },
-      error => {
-        console.error(JSON.stringify(error));
-      }
-    );
+      );
+    });
   }
 
   getRecommendedUsers() {

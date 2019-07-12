@@ -5,7 +5,9 @@ import gql from "graphql-tag";
 import { Observable, Subscription } from "rxjs";
 import { P } from "@angular/cdk/keycodes";
 import { AuthService } from "../../services/auth.service";
-import { Router } from "@angular/router";
+import { Router, ActivatedRoute } from "@angular/router";
+import { TagsService } from "../../services/tags.service";
+import { FilterService } from "../../services/filter.service";
 
 @Component({
   selector: "app-solutions-view",
@@ -20,67 +22,74 @@ export class SolutionsViewComponent implements OnInit {
   solutionViewQuery: QueryRef<any>;
   solutionViewSubscription: Subscription;
 
+  selectedSectors: any = [];
+
   constructor(
     private apollo: Apollo,
     private auth: AuthService,
-    private router: Router
+    private router: Router,
+    private activatedRoute: ActivatedRoute,
+    private tagsService: TagsService,
+    private filterService: FilterService
   ) {}
 
   ngOnInit() {
-    this.solutionViewQuery = this.apollo.watchQuery<any>({
-      query: gql`
-        query PostsGetQuery {
-          solutions(
-            where: { is_draft: { _eq: false } }
-            order_by: { updated_at: desc }
-          ) {
-            id
-            title
-            description
-            technology
-            impact
-            website_url
-            deployment
-            budget
-            image_urls
-            modified_at
-            updated_at
-            featured_url
-            is_deleted
-            solution_watchers {
-              user_id
-            }
-            solution_voters {
-              user_id
-            }
+    this.tagsService.getTagsFromDB();
 
-            solution_validations(order_by: { edited_at: desc }) {
-              validated_by
+    this.activatedRoute.queryParams.subscribe(params => {
+      this.selectedSectors = this.filterService.filterSector(params);
+
+      this.solutionViewQuery = this.apollo.watchQuery<any>({
+        query: gql`
+          query PostsGetQuery {
+            solutions_tags(
+              where: {
+                tag_id: { ${this.filterService.sector_filter_query} }
+                solution: { is_draft: { _eq: false } }
+              }
+              order_by: { solution: { updated_at: desc } }
+            ) {
+              solution {
+              id
+              title
+              description
+              technology
+              impact
+              website_url
+              deployment
+              budget
+              image_urls
+              modified_at
+              updated_at
+              featured_url
+              is_deleted
+              solution_watchers {
+                user_id
+              }
+              solution_voters {
+                user_id
+              }
+
+              solution_validations(order_by: { edited_at: desc }) {
+                validated_by
+              }
+            }
             }
           }
+        `,
+        pollInterval: 500,
+        fetchPolicy: "network-only"
+      });
+      this.solutionViewSubscription = this.solutionViewQuery.valueChanges.subscribe(
+        result => {
+          if (result.data.solutions_tags.length > 0) {
+            this.solutions = result.data.solutions_tags;
+          }
+        },
+        error => {
+          console.error(JSON.stringify(error));
         }
-      `,
-      pollInterval: 500,
-      fetchPolicy: "network-only"
-    });
-    this.solutionViewSubscription = this.solutionViewQuery.valueChanges.subscribe(
-      result => {
-        if (result.data.solutions.length > 0) {
-          this.solutions = result.data.solutions;
-          // console.log(this.problems, "problem card data", result.data.problems);
-        }
-        // console.log("PROBLEMS", this.problems);
-      },
-      error => {
-        console.error(JSON.stringify(error));
-      }
-    );
-  }
-
-  test() {
-    this.router.navigate(["/problems"], {
-      queryParams: { sector: "water" },
-      queryParamsHandling: "merge"
+      );
     });
   }
 

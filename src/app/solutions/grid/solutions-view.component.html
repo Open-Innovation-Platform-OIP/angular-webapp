@@ -4,13 +4,18 @@
       [routerLink]="['/solutions/add']" queryParamsHandling="merge" *ngIf="auth.currentUserValue.id">
       <i class="material-icons">add</i>
     </button>
-    <button class="btn btn-rose" (click)="test()">test</button>
+    <!-- <button class="btn btn-rose" (click)="test()">test</button> -->
 
     <h3 *ngIf="solutions.length" class="card-title text-center">Solutions worth Sharing</h3>
     <br />
+
+
+    <app-filter-dropdown [selectedSectors]="selectedSectors" [type]="'solutions'">
+    </app-filter-dropdown>
+
     <div class="row">
       <div class="col-md-3" *ngFor="let solution of solutions">
-        <app-solution-card [solutionData]="solution"></app-solution-card>
+        <app-solution-card [solutionData]="solution.solution"></app-solution-card>
       </div>
     </div>
   </div>
