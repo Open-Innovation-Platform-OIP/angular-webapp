@@ -5,15 +5,15 @@
 
 
 <quill-editor [style]="{height: '100px'}" *ngIf="auth.currentUserValue.id" [(ngModel)]="content" [sanitize]="false"
-  [modules]="modules" (onEditorCreated)="setFocus($event)">
+  [modules]="modules" (keyup)="checkForSpaces($event)" (onEditorCreated)="setFocus($event)">
 </quill-editor>
 <div class="stats">
   <button mat-raised-button *ngIf="auth.currentUserValue.id" class="btn btn-sm btn-round"
     [ngClass]="{'btn-warning': !pageType, 'btn-rose': pageType == 'solution'}" matTooltip="Click to add comment"
-    [matTooltipPosition]="'below'" [disabled]="!auth.currentUserValue.id &&  !content "
-    (click)="submitComment()">{{actionText}}</button>
-  <button *ngIf="auth.currentUserValue.id && cancelShown" mat-raised-button class="btn btn-danger btn-sm btn-round"
-    matTooltip="Click to close comment box" [matTooltipPosition]="'below'" (click)="cancel.emit()">Cancel</button>
+    [matTooltipPosition]="'below'" [disabled]="blankSpace" (click)="submitComment()">{{actionText}}</button>
+  <button *ngIf="auth.currentUserValue.id && cancelShown" [disabled]="blankSpace" mat-raised-button
+    class="btn btn-danger btn-sm btn-round" matTooltip="Click to close comment box" [matTooltipPosition]="'below'"
+    (click)="cancel.emit()">Cancel</button>
 
   <label for="fileInput-{{id}}" *ngIf="auth.currentUserValue.id"
     [ngStyle]="{ 'cursor' : (!content) ? 'default' : 'pointer' }" class="btn btn-secondary btn-sm btn-round right">

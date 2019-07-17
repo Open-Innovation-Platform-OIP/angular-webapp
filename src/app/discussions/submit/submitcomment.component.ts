@@ -32,6 +32,7 @@ export class CommentSubmitComponent implements OnInit {
   @Output() submit = new EventEmitter();
   @Output() cancel = new EventEmitter();
   content = "";
+  blankSpace: Boolean = true;
   mentions = [];
   attachments: Blob[] = [];
   file_types = [
@@ -47,7 +48,7 @@ export class CommentSubmitComponent implements OnInit {
     mention: {
       listItemClass: "ql-mention-list-item",
       mentionListClass: "ql-mention-list",
-      mentionContainerClass: "ql-mention-list-container",
+      mentionContainerClass: "ql-mention-list-container custom",
       allowedChars: /^[A-Za-z\sÅÄÖåäö]*$/,
       contenteditable: false,
       isolateCharacter: true,
@@ -58,6 +59,7 @@ export class CommentSubmitComponent implements OnInit {
         // necessary because quill-mention triggers changes as 'api' instead of 'user'
         editor.insertText(editor.getLength() - 1, "", "user");
       },
+
       source: (searchTerm, renderList) => {
         if (searchTerm.length === 0) {
           renderList(this.users, searchTerm);
@@ -91,7 +93,7 @@ export class CommentSubmitComponent implements OnInit {
     private auth: AuthService,
     public fileService: FilesService,
     private ngxService: NgxUiLoaderService
-  ) { }
+  ) {}
 
   setFocus(event) {
     // tslint:disable-next-line:no-console
@@ -106,6 +108,20 @@ export class CommentSubmitComponent implements OnInit {
     this.content = "";
     this.mentions = [];
     this.attachments = [];
+  }
+
+  checkForSpaces(input) {
+    console.log("checking for spaces", input.target.innerText.length);
+    if (input.target.innerText.length > 0) {
+      let value = input.target.innerText.trim();
+      console.log(value.length, value, "trim value");
+      if (value.length) {
+        this.blankSpace = false;
+      } else {
+        this.blankSpace = true;
+      }
+      console.log(this.blankSpace, "blankspace");
+    }
   }
 
   ngOnInit() {
@@ -127,7 +143,7 @@ export class CommentSubmitComponent implements OnInit {
   }
 
   isFileDuplicate(file) {
-    let found = this.attachments.find((attachment) => {
+    let found = this.attachments.find(attachment => {
       return attachment["name"] === file.name;
     });
 

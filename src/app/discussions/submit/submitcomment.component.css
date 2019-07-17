@@ -44,19 +44,24 @@ pre {
 }
 
 .ql-mention-list-container {
+    background-color: red;
+
     width: 270px;
     border: 1px solid #f0f0f0;
     border-radius: 4px;
     background-color: #fff;
     box-shadow: 0 2px 12px 0 rgba(30, 30, 30, .08);
-    z-index: 9001
+    z-index: 9001;
+
 }
 
 .ql-mention-list {
     list-style: none;
     margin: 0;
     padding: 0;
-    overflow: hidden
+    overflow: hidden;
+    background-color: red;
+
 }
 
 .ql-mention-list-item {
@@ -65,7 +70,8 @@ pre {
     line-height: 44px;
     font-size: 16px;
     padding: 0 20px;
-    vertical-align: middle
+    vertical-align: middle;
+    background-color: red;
 }
 
 .ql-mention-list-item.selected {
@@ -83,4 +89,8 @@ pre {
 
 .mention>span {
     margin: 0 3px
+}
+
+.custom {
+    background-color: red;
 }
