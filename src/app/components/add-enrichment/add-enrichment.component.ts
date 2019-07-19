@@ -9,8 +9,7 @@ import {
 import { Router, ActivatedRoute } from "@angular/router";
 import { Observable, Subscription } from "rxjs";
 import { first, finalize } from "rxjs/operators";
-import { ProblemService } from "../../services/problem-handle.service";
-import * as Query from "../../services/queries";
+
 import { Apollo } from "apollo-angular";
 import gql from "graphql-tag";
 import swal from "sweetalert2";
@@ -36,8 +35,7 @@ export class AddEnrichmentComponent implements OnChanges, OnInit {
     min_population: 0,
     max_population: 0,
     extent: "",
-    beneficiary_attributes: "",
-    voted_by: "{}"
+    beneficiary_attributes: ""
   };
 
   @Output() submitted = new EventEmitter();
@@ -56,7 +54,7 @@ export class AddEnrichmentComponent implements OnChanges, OnInit {
     private router: Router,
     private route: ActivatedRoute,
     private imgUpload: FilesService,
-    private problemService: ProblemService,
+
     private apollo: Apollo,
     private enrichmentService: EnrichmentService,
     private auth: AuthService,

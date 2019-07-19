@@ -33,7 +33,7 @@ export class DiscussionsService {
           objects: $discussions
           on_conflict: {
             constraint: discussions_pkey
-            update_columns: [text, modified_at]
+            update_columns: [text, edited_at]
           }
         ) {
           affected_rows
@@ -91,11 +91,11 @@ export class DiscussionsService {
             id
             created_by
             created_at
-            modified_at
+            edited_at
             text
             linked_comment_id
             attachments
-            usersBycreatedBy{
+            user{
               name
               photo_url
             }

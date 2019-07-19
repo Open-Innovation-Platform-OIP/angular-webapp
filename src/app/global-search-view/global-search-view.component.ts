@@ -3,7 +3,6 @@ import { Router, ActivatedRoute, NavigationEnd } from "@angular/router";
 import { first, finalize, startWith, take, map } from "rxjs/operators";
 import { SearchService } from "../services/search.service";
 
-import * as Query from "../services/queries";
 import { Apollo } from "apollo-angular";
 import gql from "graphql-tag";
 import { AuthService } from "../services/auth.service";

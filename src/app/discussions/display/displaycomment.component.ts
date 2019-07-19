@@ -104,8 +104,8 @@ export class CommentDisplayComponent implements OnInit, OnDestroy {
   }
 
   compareDateForSort(a, b) {
-    var dateA = a.modified_at;
-    var dateB = b.modified_at;
+    var dateA = a.edited_at;
+    var dateB = b.edited_at;
     if (dateA < dateB) {
       return 1;
     }

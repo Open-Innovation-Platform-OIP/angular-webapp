@@ -29,7 +29,7 @@ interface verificationDetails {
   providedIn: "root"
 })
 export class AuthService {
-  authEndpoint = "https://auth.socialalpha.jaagalabs.com/auth/";
+  authEndpoint = "https://auth-new.socialalpha.jaagalabs.com/auth/";
   private jwtHelper;
   public user: Observable<any>;
   private currentUserSubject: BehaviorSubject<User>;

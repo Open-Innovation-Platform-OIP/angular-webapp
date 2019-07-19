@@ -1,7 +1,7 @@
 import { Injectable } from "@angular/core";
 import { Apollo } from "apollo-angular";
 import gql from "graphql-tag";
-import * as Query from "./queries";
+
 import { Timestamp } from "aws-sdk/clients/workspaces";
 import { stringType } from "aws-sdk/clients/iam";
 import { String } from "aws-sdk/clients/sns";

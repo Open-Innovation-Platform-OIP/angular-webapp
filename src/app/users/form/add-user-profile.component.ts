@@ -307,7 +307,7 @@ export class AddUserProfileComponent implements OnInit, OnChanges {
                 id
                 name
               }
-              user_tags{
+              users_tags{
                 tag {
                     id
                     name
@@ -352,7 +352,7 @@ export class AddUserProfileComponent implements OnInit, OnChanges {
               this.isPhoneValid = this.phone_pattern.test(
                 this.user.phone_number
               );
-              this.sectors = data.users[0].user_tags.map(tagArray => {
+              this.sectors = data.users[0].users_tags.map(tagArray => {
                 return tagArray.tag.name;
               });
             },
@@ -404,7 +404,7 @@ export class AddUserProfileComponent implements OnInit, OnChanges {
 
         const tags = [];
 
-        const user_tags = new Set();
+        const users_tags = new Set();
 
         this.sectors.map(sector => {
           tags.push({ name: sector });
@@ -413,7 +413,7 @@ export class AddUserProfileComponent implements OnInit, OnChanges {
             this.tagService.allTags[sector] &&
             this.tagService.allTags[sector].id
           ) {
-            user_tags.add({
+            users_tags.add({
               tag_id: this.tagService.allTags[sector].id,
               user_id: this.user["id"]
             });
@@ -422,9 +422,9 @@ export class AddUserProfileComponent implements OnInit, OnChanges {
 
         this.tagService.addTagsInDb(tags, "users", this.user["id"]);
 
-        if (user_tags.size > 0) {
-          const upsert_user_tags = gql`
-            mutation upsert_user_tags(
+        if (users_tags.size > 0) {
+          const upsert_users_tags = gql`
+            mutation upsert_users_tags(
               $users_tags: [users_tags_insert_input!]!
             ) {
               insert_users_tags(
@@ -444,9 +444,9 @@ export class AddUserProfileComponent implements OnInit, OnChanges {
           `;
           this.apollo
             .mutate({
-              mutation: upsert_user_tags,
+              mutation: upsert_users_tags,
               variables: {
-                users_tags: Array.from(user_tags)
+                users_tags: Array.from(users_tags)
               }
             })
             .pipe(take(1))

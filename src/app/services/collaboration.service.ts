@@ -9,7 +9,7 @@ declare var $: any;
 
 export interface collaborator {
   intent: String;
-  timestamp?: Timestamp;
+  created_at?: Timestamp;
   edited_at?: boolean;
   problem_id?: number;
   user_id?: number;
@@ -33,13 +33,13 @@ export class CollaborationService {
     // console.log(collaborationData, "collab data");
     console.log(collaborationData, "collab data in submit");
     const upsert_collaborators = gql`
-      mutation upsert_collaborators(
-        $collaborators: [collaborators_insert_input!]!
+      mutation upsert_problem_collaborators(
+        $problem_collaborators: [problem_collaborators_insert_input!]!
       ) {
-        insert_collaborators(
-          objects: $collaborators
+        insert_problem_collaborators(
+          objects: $problem_collaborators
           on_conflict: {
-            constraint: collaborators_pkey
+            constraint: problem_collaborators_pkey
             update_columns: [
               intent
               is_ngo

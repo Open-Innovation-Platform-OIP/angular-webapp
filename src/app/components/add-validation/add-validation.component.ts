@@ -7,7 +7,7 @@ import {
   DoCheck
 } from "@angular/core";
 import { FilesService } from "../../services/files.service";
-import { ProblemService } from "../../services/problem-handle.service";
+
 import swal from "sweetalert2";
 import { ValidationService } from "../../services/validation.service";
 
@@ -30,7 +30,7 @@ export class AddValidationComponent implements OnInit {
 
   constructor(
     private space: FilesService // private problemService: ProblemService, // private validationService: ValidationService
-  ) { }
+  ) {}
 
   ngOnInit() {
     // console.log(this.validationData, "validation data check");
@@ -58,7 +58,7 @@ export class AddValidationComponent implements OnInit {
   }
 
   isFileDuplicate(file) {
-    let found = this.validationData.files.find((attachment) => {
+    let found = this.validationData.files.find(attachment => {
       return attachment["key"] === file.name;
     });
 

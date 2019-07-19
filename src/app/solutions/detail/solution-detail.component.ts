@@ -30,7 +30,7 @@ import {
 import { ProblemService } from "../../services/problem.service";
 import { AuthService } from "../../services/auth.service";
 import { UsersService } from "../../services/users.service";
-import * as Query from "../../services/queries";
+
 import { Apollo, QueryRef } from "apollo-angular";
 import gql from "graphql-tag";
 import swal from "sweetalert2";
@@ -286,7 +286,7 @@ export class SolutionDetailComponent implements OnInit {
               is_beneficiary
               is_incubator
               is_entrepreneur
-              user_tags{
+              users_tags{
                 tag {
                     id
                     name
@@ -308,7 +308,7 @@ export class SolutionDetailComponent implements OnInit {
             this.userPersonas[persona] = result.data.users[0][persona];
           });
           // console.log("persona assignment", result.data.users[0]);
-          result.data.users[0].user_tags.map(tag => {
+          result.data.users[0].users_tags.map(tag => {
             this.userInterests[tag.tag.name] = tag.tag;
           });
           // console.log(this.userInterests, "user interests");
@@ -431,7 +431,7 @@ export class SolutionDetailComponent implements OnInit {
   }
 
     solution_validations(order_by:{edited_at: desc}){
-      validated_by
+      user_id
       comment
       agree
       created_at
@@ -479,12 +479,12 @@ export class SolutionDetailComponent implements OnInit {
       id
       created_by
       created_at
-      modified_at
+      edited_at
       text
       is_deleted
       linked_comment_id
       attachments
-      usersBycreatedBy {
+      user {
         name
         photo_url
       }
@@ -502,7 +502,7 @@ export class SolutionDetailComponent implements OnInit {
             location
             resources_needed
             image_urls
-            modified_at
+            edited_at
             updated_at
 
             featured_url
@@ -517,7 +517,7 @@ export class SolutionDetailComponent implements OnInit {
               user_id
             }
             problem_validations {
-              validated_by
+              user_id
             }
           
       }
@@ -528,7 +528,7 @@ export class SolutionDetailComponent implements OnInit {
     
     
     attachments
-    usersBycreatedBy{
+    user{
       name
     }
 
@@ -654,11 +654,11 @@ export class SolutionDetailComponent implements OnInit {
 
       this.solutionData[key] = solution[key];
     });
-    this.solutionOwner = solution.usersBycreatedBy.name;
+    this.solutionOwner = solution.user.name;
 
     // problem.problem_validations.map(validation => {
-    //   // console.log(validation.validated_by, "test55");
-    //   if (validation.validated_by === Number(this.auth.currentUserValue.id)) {
+    //   // console.log(validation.user_id, "test55");
+    //   if (validation.user_id === Number(this.auth.currentUserValue.id)) {
     //     this.disableValidateButton = true;
     //   }
     // });
@@ -683,8 +683,8 @@ export class SolutionDetailComponent implements OnInit {
     });
 
     solution.solution_validations.map(validation => {
-      // console.log(validation.validated_by, "test55");
-      if (validation.validated_by === Number(this.auth.currentUserValue.id)) {
+      // console.log(validation.user_id, "test55");
+      if (validation.user_id === Number(this.auth.currentUserValue.id)) {
         this.disableValidateButton = true;
       }
     });
@@ -709,22 +709,22 @@ export class SolutionDetailComponent implements OnInit {
 
     // console.log(this.problemData, "result from nested queries");
     // console.log(problem.is_draft, "is draft");
-    // if (problem.usersBycreatedBy) {
-    //   this.problemOwner = problem.usersBycreatedBy.name;
-    //   problem.problem_tags.map(tags => {
+    // if (problem.user) {
+    //   this.problemOwner = problem.user.name;
+    //   problem.problems_tags.map(tags => {
     //     if (this.userInterests[tags.tag.name]) {
     //       this.sectorMatched = true;
     //       // console.log(this.sectorMatched, "sector matched");
     //     }
     //   });
-    // if (problem.problem_tags) {
-    //   this.tags = problem.problem_tags.map(tagArray => {
+    // if (problem.problems_tags) {
+    //   this.tags = problem.problems_tags.map(tagArray => {
     //     // console.log(tagArray, "work");
     //     return tagArray.tag.name;
     //   });
     // }
     // Object.keys(this.problemData).map(key => {
-    //   if (problem[key] && key !== "problem_tags") {
+    //   if (problem[key] && key !== "problems_tags") {
     //     this.problemData[key] = problem[key];
     //   }
     // });
@@ -761,7 +761,7 @@ export class SolutionDetailComponent implements OnInit {
       this.solution_attachments_index
     ];
 
-    // console.log(problem.discussionssByproblemId);
+    // console.log(problem.discussions);
     solution.discussions.map(comment => {
       if (comment.linked_comment_id) {
         // console.log(comment);
@@ -791,10 +791,10 @@ export class SolutionDetailComponent implements OnInit {
       .sort((a, b) => {
         // sorting by date
         if (this.comments[a]) {
-          var dateA = this.comments[a].modified_at;
+          var dateA = this.comments[a].edited_at;
         }
         if (this.comments[b]) {
-          var dateB = this.comments[b].modified_at;
+          var dateB = this.comments[b].edited_at;
         }
         if (dateA < dateB) {
           return 1;
@@ -882,8 +882,8 @@ export class SolutionDetailComponent implements OnInit {
   }
 
   compareDateForSort(a, b) {
-    var dateA = a.modified_at;
-    var dateB = b.modified_at;
+    var dateA = a.edited_at;
+    var dateB = b.edited_at;
     if (dateA < dateB) {
       return 1;
     }
@@ -1197,7 +1197,7 @@ export class SolutionDetailComponent implements OnInit {
   }
 
   onValidationSubmit(validationData) {
-    validationData.validated_by = Number(this.auth.currentUserValue.id);
+    validationData.user_id = Number(this.auth.currentUserValue.id);
 
     validationData.solution_id = this.solutionData.id;
 

@@ -73,11 +73,11 @@ export class EnrichmentFormComponent implements OnInit, OnDestroy {
                         featured_type
                         embed_urls
                         
-                        usersBycreatedBy {
+                        user {
                           id
                           name
                         }
-                        problem_tags{
+                        problems_tags{
                           tag {
                               id
                               name
@@ -169,11 +169,11 @@ export class EnrichmentFormComponent implements OnInit, OnDestroy {
                               featured_type
                               embed_urls
                              
-                              usersBycreatedBy {
+                              user {
                                 id
                                 name
                               }
-                              problem_tags{
+                              problems_tags{
                                 tag {
                                     id
                                     name
@@ -225,7 +225,7 @@ export class EnrichmentFormComponent implements OnInit, OnDestroy {
   onEnrichmentSubmit(enrichmentData) {
     if (enrichmentData.__typename) {
       delete enrichmentData.__typename;
-      // delete enrichmentData.usersBycreatedBy;
+      // delete enrichmentData.user;
     }
     enrichmentData.created_by = Number(this.auth.currentUserValue.id);
 

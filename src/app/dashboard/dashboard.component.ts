@@ -41,7 +41,7 @@ export class DashboardComponent implements OnInit, OnDestroy {
   userSolutionsQuerySub: Subscription;
   recommendedProblemsSub: Subscription;
   recommendedUsersSub: Subscription;
-  // problemFields = ['id', 'featured_url','title','description','location','problem_voters{user_id}','problem_watchers{user_id}','problem_validations{validated_by}'];
+  // problemFields = ['id', 'featured_url','title','description','location','problem_voters{user_id}','problem_watchers{user_id}','problem_validations{user_id}'];
   problemQueryString = `{
     id
     is_draft
@@ -51,9 +51,9 @@ export class DashboardComponent implements OnInit, OnDestroy {
     location
     problem_voters{user_id}
     problem_watchers{user_id}
-    problem_validations{validated_by}
+    problem_validations{user_id}
     updated_at
-    modified_at
+    edited_at
   }`;
 
   solutionQueryString = `{
@@ -65,9 +65,9 @@ export class DashboardComponent implements OnInit, OnDestroy {
     
     solution_voters{user_id}
     solution_watchers{user_id}
-    solution_validations{validated_by}
+    solution_validations{user_id}
     updated_at
-    modified_at
+    edited_at
   }`;
   userQueryString = `{
     id
@@ -90,7 +90,7 @@ export class DashboardComponent implements OnInit, OnDestroy {
       enrichmentssBycreatedBy(where: { is_deleted: { _eq: false } }){
         id
       }
-      user_tags{
+      users_tags{
         tag {
             id
             name
@@ -148,12 +148,12 @@ export class DashboardComponent implements OnInit, OnDestroy {
       {
         problems(where:{is_draft:{_eq:true},is_deleted:{_eq:false}, created_by:{_eq: ${
           this.auth.currentUserValue.id
-        }}} order_by: {modified_at: desc}) ${this.problemQueryString}
+        }}} order_by: {edited_at: desc}) ${this.problemQueryString}
         ,
         
           solutions(where:{is_draft:{_eq:true},is_deleted:{_eq:false}, created_by:{_eq: ${
             this.auth.currentUserValue.id
-          }}} order_by: {modified_at: desc}) ${this.solutionQueryString}
+          }}} order_by: {edited_at: desc}) ${this.solutionQueryString}
       
 
 
@@ -171,10 +171,10 @@ export class DashboardComponent implements OnInit, OnDestroy {
       if (data.problems.length > 0) {
         let problems_solutions = data.problems.concat(data.solutions);
         problems_solutions.sort((a, b) => {
-          if (a.modified_at < b.modified_at) {
+          if (a.edited_at < b.edited_at) {
             return 1;
           }
-          if (a.modified_at > b.modified_at) {
+          if (a.edited_at > b.edited_at) {
             return -1;
           }
         });
@@ -191,7 +191,7 @@ export class DashboardComponent implements OnInit, OnDestroy {
   //     {
   //       solutions(where:{is_draft:{_eq:true},is_deleted:{_eq:false}, created_by:{_eq: ${
   //         this.auth.currentUserValue.id
-  //       }}} order_by: {modified_at: desc}) ${this.solutionQueryString}
+  //       }}} order_by: {edited_at: desc}) ${this.solutionQueryString}
   //   }
   //   `;
 
@@ -278,10 +278,14 @@ export class DashboardComponent implements OnInit, OnDestroy {
       ] }) {
        problemsByproblemId ${this.problemQueryString}
      }
-     validations(where:{validated_by:{_eq: ${this.auth.currentUserValue.id}}}) {
+     problems_validations(where:{user_id:{_eq: ${
+       this.auth.currentUserValue.id
+     }}}) {
        problem ${this.problemQueryString}
      }
-     collaborators(where:{user_id:{_eq: ${this.auth.currentUserValue.id}}}) {
+     problem_collaborators(where:{user_id:{_eq: ${
+       this.auth.currentUserValue.id
+     }}}) {
        problem ${this.problemQueryString}
      }
      discussions(where:{created_by:{_eq: ${this.auth.currentUserValue.id}}}) {
@@ -289,7 +293,7 @@ export class DashboardComponent implements OnInit, OnDestroy {
      }
 
 
-     solution_validations(where:{validated_by:{_eq: ${
+     solution_validations(where:{user_id:{_eq: ${
        this.auth.currentUserValue.id
      }}}) {
       solution ${this.solutionQueryString}
@@ -366,7 +370,7 @@ export class DashboardComponent implements OnInit, OnDestroy {
     //   ] }) {
     //    problemsByproblemId ${this.problemQueryString}
     //  }
-    //  validations(where:{validated_by:{_eq: ${this.auth.currentUserValue.id}}}) {
+    //  validations(where:{user_id:{_eq: ${this.auth.currentUserValue.id}}}) {
     //    problem ${this.problemQueryString}
     //  }
     //  collaborators(where:{user_id:{_eq: ${this.auth.currentUserValue.id}}}) {

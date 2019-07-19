@@ -10,7 +10,7 @@
         <div class="card card-product" *ngIf="problemData">
           <div class="card-header card-header-warning">
             <h4 class="card-title">{{problemData.title}}</h4>
-            <p class="card-category"><b>Created By : {{problemData.usersBycreatedBy.name}}</b></p>
+            <p class="card-category"><b>Created By : {{problemData.user.name}}</b></p>
           </div>
           <div class="card-body">
             <div class="row">
@@ -46,9 +46,9 @@
                 <strong *ngIf="problemData.resources_needed">Resources Needed</strong>
                 <p class="description" style="white-space: pre-wrap;">{{problemData.resources_needed}}</p>
 
-                <strong *ngIf="problemData.problem_tags.length">Sectors</strong>
+                <strong *ngIf="problemData.problems_tags.length">Sectors</strong>
                 <div>
-                  <span *ngFor="let tags of problemData.problem_tags "
+                  <span *ngFor="let tags of problemData.problems_tags "
                     class="badge badge-warning">{{tags.tag.name}}</span>
                   <span>&nbsp;</span>
                 </div>

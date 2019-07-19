@@ -26,7 +26,7 @@
   </div>
   <div class="card-footer">
     <p *ngIf="validationData&&validationData.user">Validated by :
-      {{ (auth.currentUserValue.id == validationData.validated_by) ? 'You' : validationData.user.name}}</p>
+      {{ (auth.currentUserValue.id == validationData.user_id) ? 'You' : validationData.user.name}}</p>
   </div>
 </div>
 

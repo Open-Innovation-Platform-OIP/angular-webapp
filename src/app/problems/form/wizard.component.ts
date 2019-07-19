@@ -105,6 +105,7 @@ export class WizardComponent
     featured_url: "",
     embed_urls: [],
     featured_type: "",
+    organization_id: 1,
 
     created_by: Number(this.auth.currentUserValue.id),
     is_draft: true,
@@ -298,7 +299,7 @@ export class WizardComponent
   ngOnInit() {
     // this.tagService.getTagsFromDB();
 
-    console.log("wizard ng on in it");
+    // console.log("wizard ng on in it",this.auth.currentUserValue.);
     clearInterval(this.autosaveInterval);
     this.autosaveInterval = setInterval(() => {
       this.autoSave();
@@ -342,7 +343,7 @@ export class WizardComponent
                             }
                            
                           
-                            problem_tags{
+                            problems_tags{
                                 tag {
                                     id
                                     name
@@ -374,8 +375,8 @@ export class WizardComponent
               if (this.problem.title && this.problem.is_draft) {
                 this.smartSearch();
               }
-              if (result.data.problems[0].problem_tags) {
-                this.sectors = result.data.problems[0].problem_tags.map(
+              if (result.data.problems[0].problems_tags) {
+                this.sectors = result.data.problems[0].problems_tags.map(
                   tagArray => {
                     return tagArray.tag.name;
                   }
@@ -393,7 +394,9 @@ export class WizardComponent
 
               this.is_edit = true;
             } else {
-              this.router.navigate(["problems/add"], { queryParamsHandling: 'preserve' });
+              this.router.navigate(["problems/add"], {
+                queryParamsHandling: "preserve"
+              });
             }
           });
       }
@@ -888,7 +891,7 @@ export class WizardComponent
                     id
                     title
                     description
-                    modified_at
+                    edited_at
                     updated_at
                     image_urls
                     featured_url
@@ -903,7 +906,7 @@ export class WizardComponent
                       user_id
       
                     }
-                    problem_tags {
+                    problems_tags {
                         tag {
                             name
                         }
@@ -914,7 +917,7 @@ export class WizardComponent
                       agree
                       created_at
                       files
-                      validated_by
+                      user_id
                       edited_at
                       is_deleted
               
@@ -1136,7 +1139,7 @@ export class WizardComponent
               video_urls
               min_population
               max_population
-              modified_at
+              edited_at
               featured_url
               featured_type
               embed_urls
@@ -1190,7 +1193,7 @@ export class WizardComponent
 
             const tags = [];
 
-            const problem_tags = new Set();
+            const problems_tags = new Set();
             // console.log(this.sectors, "sectors");
 
             this.sectors.map(sector => {
@@ -1200,7 +1203,7 @@ export class WizardComponent
                 this.tagService.allTags[sector] &&
                 this.tagService.allTags[sector].id
               ) {
-                problem_tags.add({
+                problems_tags.add({
                   tag_id: this.tagService.allTags[sector].id,
                   problem_id: this.problem["id"]
                 });
@@ -1209,9 +1212,9 @@ export class WizardComponent
 
             this.tagService.addTagsInDb(tags, "problems", this.problem["id"]);
 
-            if (problem_tags.size > 0) {
-              const upsert_problem_tags = gql`
-                mutation upsert_problem_tags(
+            if (problems_tags.size > 0) {
+              const upsert_problems_tags = gql`
+                mutation upsert_problems_tags(
                   $problems_tags: [problems_tags_insert_input!]!
                 ) {
                   insert_problems_tags(
@@ -1231,9 +1234,9 @@ export class WizardComponent
               `;
               this.apollo
                 .mutate({
-                  mutation: upsert_problem_tags,
+                  mutation: upsert_problems_tags,
                   variables: {
-                    problems_tags: Array.from(problem_tags)
+                    problems_tags: Array.from(problems_tags)
                   }
                 })
                 .pipe(take(1))
@@ -1319,7 +1322,9 @@ export class WizardComponent
     //   this.showSuccessSwal("Problem Added");
     // }
 
-    this.router.navigate(["problems", this.problem["id"]], { queryParamsHandling: 'preserve' });
+    this.router.navigate(["problems", this.problem["id"]], {
+      queryParamsHandling: "preserve"
+    });
   }
 
   deleteProblem() {
@@ -1347,7 +1352,9 @@ export class WizardComponent
         .pipe(take(1))
         .subscribe(
           data => {
-            this.router.navigate(["problems"], { queryParamsHandling: 'preserve' });
+            this.router.navigate(["problems"], {
+              queryParamsHandling: "preserve"
+            });
           },
           err => {
             console.error(JSON.stringify(err));

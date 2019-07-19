@@ -1,5 +1,5 @@
 import { Component, OnInit, OnDestroy } from "@angular/core";
-import * as Query from "../../services/queries";
+
 import { Apollo, QueryRef } from "apollo-angular";
 import gql from "graphql-tag";
 import { Observable, Subscription } from "rxjs";
@@ -59,7 +59,7 @@ export class SolutionsViewComponent implements OnInit {
               deployment
               budget
               image_urls
-              modified_at
+              edited_at
               updated_at
               featured_url
               is_deleted
@@ -71,7 +71,7 @@ export class SolutionsViewComponent implements OnInit {
               }
 
               solution_validations(order_by: { edited_at: desc }) {
-                validated_by
+                user_id
               }
             }
             }

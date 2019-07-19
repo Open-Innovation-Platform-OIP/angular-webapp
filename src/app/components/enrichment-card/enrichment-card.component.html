@@ -44,7 +44,7 @@
       {{voters.size}}
     </div>
     <p>Added by :
-      {{ (auth.currentUserValue.id == enrichmentData.created_by) ? 'You' : enrichmentData.usersBycreatedBy.name}}
+      {{ (auth.currentUserValue.id == enrichmentData.created_by) ? 'You' : enrichmentData.user.name}}
     </p>
 
   </div>

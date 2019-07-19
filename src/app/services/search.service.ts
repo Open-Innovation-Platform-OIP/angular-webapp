@@ -23,7 +23,7 @@ export class SearchService {
           photo_url
           organization
           location
-          user_tags{
+          users_tags{
             tag {
                 id
                 name
@@ -58,7 +58,7 @@ export class SearchService {
             id
             title
             description
-            modified_at
+            edited_at
             updated_at
             image_urls
             featured_url
@@ -86,7 +86,7 @@ export class SearchService {
               agree
               created_at
               files
-              validated_by
+              user_id
               edited_at
               is_deleted
       
@@ -113,7 +113,7 @@ export class SearchService {
             id
             title
             description
-            modified_at
+            edited_at
             updated_at
             image_urls
             featured_url
@@ -132,7 +132,7 @@ export class SearchService {
               agree
               created_at
               files
-              validated_by
+              user_id
               edited_at
               is_deleted
       

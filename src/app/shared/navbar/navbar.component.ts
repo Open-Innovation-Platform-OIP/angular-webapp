@@ -28,7 +28,7 @@ const misc: any = {
   active_collapse: true,
   disabled_collapse_init: 0
 };
-import * as Query from "../../services/queries";
+
 import { Apollo } from "apollo-angular";
 import gql from "graphql-tag";
 import { AuthService } from "../../services/auth.service";
@@ -174,10 +174,10 @@ export class NavbarComponent implements OnInit {
         }
       });
 
-    if (this.user_id) {
-      this.getNotificationsSub = this.apollo
-        .watchQuery<any>({
-          query: gql`
+    // if (this.user_id) {
+    this.getNotificationsSub = this.apollo
+      .watchQuery<any>({
+        query: gql`
           query {
             notifications(
               where: { user_id: { _eq: ${
@@ -193,7 +193,7 @@ export class NavbarComponent implements OnInit {
               enrichment_id
               collaborator
               discussion_id
-              validated_by
+              user_id
               tag_id
               tag{
                 name
@@ -204,7 +204,7 @@ export class NavbarComponent implements OnInit {
              
               problemsByproblemId {
                 title
-                problem_tags {
+                problems_tags {
                   tag {
                     name
                   }
@@ -213,31 +213,31 @@ export class NavbarComponent implements OnInit {
             }
           }
         `,
-          pollInterval: 3000,
-          fetchPolicy: "network-only"
-        })
-        .valueChanges.subscribe(
-          ({ data }) => {
-            console.log(data, "from notifications");
-            data.notifications.map(notification => {
-              if (notification.discussion) {
-                notification.discussion.text = notification.discussion.text.replace(
-                  /<[^>]*>/g,
-                  ""
-                );
-              }
-              this.notifications[notification.id] = notification;
-            });
+        pollInterval: 3000,
+        fetchPolicy: "network-only"
+      })
+      .valueChanges.subscribe(
+        ({ data }) => {
+          console.log(data, "from notifications");
+          data.notifications.map(notification => {
+            if (notification.discussion) {
+              notification.discussion.text = notification.discussion.text.replace(
+                /<[^>]*>/g,
+                ""
+              );
+            }
+            this.notifications[notification.id] = notification;
+          });
 
-            // this.notifications = data.notifications;
-            // this.no_notification = this.notifications.length;
-          },
-          err => {
-            console.log("could not get notifications", err);
-            console.error(JSON.stringify(err));
-          }
-        );
-    }
+          // this.notifications = data.notifications;
+          // this.no_notification = this.notifications.length;
+        },
+        err => {
+          console.log("could not get notifications", err);
+          console.error(JSON.stringify(err));
+        }
+      );
+    // }
   }
 
   onResize(event) {
@@ -484,7 +484,7 @@ export class NavbarComponent implements OnInit {
   }
 
   openSearchComponent() {
-    this.router.navigate(["/search"], { queryParamsHandling: 'preserve' });
+    this.router.navigate(["/search"], { queryParamsHandling: "preserve" });
     let searchBar = <HTMLBaseElement>(
       document.querySelector("input[name=searchInput]")
     );

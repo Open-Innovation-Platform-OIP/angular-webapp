@@ -9,7 +9,7 @@ export interface validation {
   comment: String;
   agree: boolean;
   files: any[];
-  validated_by?: number;
+  user_id?: number;
   problem_id?: number;
   created_at?: Timestamp;
   edited_at?: Timestamp;
@@ -24,17 +24,17 @@ export class ValidationService {
     console.log("test2");
   }
 
-  submitValidationToDB(validationData: validation) {
+  submitProblemValidationToDB(validationData: validation) {
     console.log(validationData, "validation data on submit");
 
     this.apollo
       .mutate({
         mutation: gql`
-          mutation upsert_validations(
-            $validations: [validations_insert_input!]!
+          mutation upsert_problem_validations(
+            $problem_validations: [problem_validations_insert_input!]!
           ) {
-            insert_validations(
-              objects: $validations
+            insert_problem_validations(
+              objects: $problem_validations
               on_conflict: {
                 constraint: validations_pkey
                 update_columns: [comment, files, agree]
@@ -48,7 +48,7 @@ export class ValidationService {
           }
         `,
         variables: {
-          validations: [validationData]
+          problem_validations: [validationData]
         }
       })
       .pipe(take(1))
@@ -88,8 +88,8 @@ export class ValidationService {
       `,
       variables: {
         where: {
-          validated_by: {
-            _eq: validationData.validated_by
+          user_id: {
+            _eq: validationData.user_id
           },
           problem_id: {
             _eq: validationData.problem_id
@@ -161,8 +161,8 @@ export class ValidationService {
       `,
       variables: {
         where: {
-          validated_by: {
-            _eq: validationData.validated_by
+          user_id: {
+            _eq: validationData.user_id
           },
           solution_id: {
             _eq: validationData.solution_id

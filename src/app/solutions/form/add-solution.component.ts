@@ -360,7 +360,7 @@ export class AddSolutionComponent
                       max_population
                       beneficiary_attributes
                       resources_needed
-                      problem_tags{
+                      problems_tags{
                         tag{
                           name
                         }
@@ -376,8 +376,8 @@ export class AddSolutionComponent
         result => {
           let problemData = result.data.problems[0];
           // console.log(problemData, "problem data from db");
-          if (problemData.problem_tags.length && this.solution.is_draft) {
-            problemData.problem_tags.map(tags => {
+          if (problemData.problems_tags.length && this.solution.is_draft) {
+            problemData.problems_tags.map(tags => {
               this.sectors.push(tags.tag.name);
             });
             this.sectors = this.removeDuplicates(this.sectors);
@@ -606,7 +606,7 @@ export class AddSolutionComponent
                     id
                     title
                     description
-                    modified_at
+                    edited_at
                     updated_at
                     image_urls
                     featured_url
@@ -622,7 +622,7 @@ export class AddSolutionComponent
                       user_id
       
                     }
-                    problem_tags {
+                    problems_tags {
                         tag {
                             name
                         }
@@ -633,7 +633,7 @@ export class AddSolutionComponent
                       agree
                       created_at
                       files
-                      validated_by
+                      user_id
                       edited_at
                       is_deleted
               

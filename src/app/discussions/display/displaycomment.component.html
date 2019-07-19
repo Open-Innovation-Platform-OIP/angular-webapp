@@ -3,7 +3,7 @@
     <h5 class="mb-0">
       <a class="collapsed" data-toggle="collapse" href="#comment-{{comment.id}}" aria-expanded="true"
         attr.aria-controls="comment-{{comment.id}}">
-        {{comment.usersBycreatedBy.name || 'Anonymous'}}, {{comment.modified_at | date:short}}
+        {{comment.user.name || 'Anonymous'}}, {{comment.edited_at | date:short}}
         <i class="material-icons">keyboard_arrow_down</i>
       </a>
     </h5>
@@ -109,7 +109,7 @@
           <h5 class="mb-0">
             <a class="collapsed" data-toggle="collapse" href="#reply-{{reply.id}}" aria-expanded="true"
               attr.aria-controls="reply-{{reply.id}}">
-              {{reply.usersBycreatedBy.name || 'Anonymous'}}, {{reply.modified_at | date:short}}
+              {{reply.user.name || 'Anonymous'}}, {{reply.edited_at | date:short}}
               <i class="material-icons">keyboard_arrow_down</i>
             </a>
           </h5>

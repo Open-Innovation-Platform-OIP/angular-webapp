@@ -7,7 +7,7 @@ import {
   EventEmitter
 } from "@angular/core";
 import { AuthService } from "../../services/auth.service";
-import { ProblemService } from "../../services/problem-handle.service";
+
 import swal from "sweetalert2";
 declare var $: any;
 
@@ -26,10 +26,7 @@ export class DetailedValidateViewComponent implements OnInit, OnChanges {
     files: []
   };
 
-  constructor(
-    private auth: AuthService,
-    private problemService: ProblemService
-  ) {}
+  constructor(private auth: AuthService) {}
 
   ngOnInit() {
     console.log(this.validationData, "in detailed validate");

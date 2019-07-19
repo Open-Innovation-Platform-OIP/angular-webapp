@@ -1,9 +1,9 @@
 import { Component, OnInit, OnDestroy } from "@angular/core";
-import { UserHandlerService } from "../../services/user-handler.service";
+
 import { Router, ActivatedRoute, ParamMap } from "@angular/router";
 import { Observable, Subscription } from "rxjs";
 import { first, finalize, switchMap } from "rxjs/operators";
-import * as Query from "../../services/queries";
+
 import { Apollo, QueryRef } from "apollo-angular";
 import gql from "graphql-tag";
 import { AuthService } from "../../services/auth.service";
@@ -25,7 +25,6 @@ export class ViewUserProfileComponent implements OnInit, OnDestroy {
   organizationName: any;
 
   constructor(
-    private userHandlerService: UserHandlerService,
     private route: ActivatedRoute,
     private apollo: Apollo,
     private auth: AuthService
@@ -62,8 +61,8 @@ export class ViewUserProfileComponent implements OnInit, OnDestroy {
             this.organizationName =
               result.data.users[0].organizationByOrganizationId.name;
           }
-          if (result.data.users[0].user_tags) {
-            this.interests = result.data.users[0].user_tags.map(tagArray => {
+          if (result.data.users[0].users_tags) {
+            this.interests = result.data.users[0].users_tags.map(tagArray => {
               return tagArray.tag.name;
             });
           }
@@ -120,7 +119,7 @@ export class ViewUserProfileComponent implements OnInit, OnDestroy {
                 id
                 name
               }
-              user_tags{
+              users_tags{
                 tag {
                     id
                     name
@@ -148,7 +147,7 @@ export class ViewUserProfileComponent implements OnInit, OnDestroy {
     //     }
     //   });
 
-    //   this.interests = result.data.users[0].user_tags.map(tagArray => {
+    //   this.interests = result.data.users[0].users_tags.map(tagArray => {
     //     return tagArray.tag.name;
     //   });
     //   console.log(this.userData, "userData");

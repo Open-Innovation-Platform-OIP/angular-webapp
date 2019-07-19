@@ -1,5 +1,5 @@
 import { Component, OnInit, OnDestroy } from "@angular/core";
-import * as Query from "../../services/queries";
+
 import { Apollo, QueryRef } from "apollo-angular";
 import gql from "graphql-tag";
 import { Observable, Subscription } from "rxjs";
@@ -60,7 +60,7 @@ export class ProblemsViewComponent implements OnInit, OnDestroy {
                 location
                 resources_needed
                 image_urls
-                modified_at
+                edited_at
                 updated_at
 
                 featured_url
@@ -75,12 +75,12 @@ export class ProblemsViewComponent implements OnInit, OnDestroy {
                   user_id
                 }
                 problem_validations {
-                  validated_by
+                  user_id
                   comment
                   agree
                   created_at
                   files
-                  validated_by
+                  user_id
                   edited_at
                   is_deleted
                   problem_id
@@ -90,16 +90,7 @@ export class ProblemsViewComponent implements OnInit, OnDestroy {
                   problem_id
                   edited_at
                 }
-                discussionssByproblemId {
-                  id
-                  problem_id
-                  modified_at
-                }
-                enrichmentsByproblemId {
-                  id
-                  problem_id
-                  edited_at
-                }
+                  
               }
             }
           }

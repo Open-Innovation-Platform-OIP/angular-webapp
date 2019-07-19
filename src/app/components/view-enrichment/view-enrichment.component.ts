@@ -7,7 +7,7 @@ import {
   Output,
   EventEmitter
 } from "@angular/core";
-import { ProblemService } from "../../services/problem-handle.service";
+
 import gql from "graphql-tag";
 
 import { take } from "rxjs/operators";
@@ -38,11 +38,7 @@ export class ViewEnrichmentComponent implements OnInit, OnChanges, OnDestroy {
   userId: any;
   voters: any = new Set();
 
-  constructor(
-    private problemService: ProblemService,
-    private auth: AuthService,
-    private apollo: Apollo
-  ) {
+  constructor(private auth: AuthService, private apollo: Apollo) {
     console.log("aswewrwe");
     this.enrichmentVoted = false;
   }

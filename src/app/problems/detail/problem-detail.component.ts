@@ -30,7 +30,7 @@ import { domain } from "../../../environments/environment";
 import { ProblemService } from "../../services/problem.service";
 import { AuthService } from "../../services/auth.service";
 import { UsersService } from "../../services/users.service";
-import * as Query from "../../services/queries";
+
 import { Apollo, QueryRef } from "apollo-angular";
 import gql from "graphql-tag";
 import swal from "sweetalert2";
@@ -289,7 +289,7 @@ export class ProblemDetailComponent implements OnInit, OnDestroy {
               is_beneficiary
               is_incubator
               is_entrepreneur
-              user_tags{
+              users_tags{
                 tag {
                     id
                     name
@@ -311,7 +311,7 @@ export class ProblemDetailComponent implements OnInit, OnDestroy {
             this.userPersonas[persona] = result.data.users[0][persona];
           });
           // console.log("persona assignment", result.data.users[0]);
-          result.data.users[0].user_tags.map(tag => {
+          result.data.users[0].users_tags.map(tag => {
             this.userInterests[tag.tag.name] = tag.tag;
           });
           // console.log(this.userInterests, "user interests");
@@ -438,7 +438,7 @@ export class ProblemDetailComponent implements OnInit, OnDestroy {
           resources_needed
           is_draft
           created_by
-          modified_at
+          edited_at
           updated_at
           image_urls
          
@@ -454,11 +454,11 @@ export class ProblemDetailComponent implements OnInit, OnDestroy {
           embed_urls
           featured_type
           attachments
-          usersBycreatedBy {
+          user {
             id
             name
           } 
-          problem_tags{
+          problems_tags{
             tag {
                 id
                 name
@@ -466,12 +466,12 @@ export class ProblemDetailComponent implements OnInit, OnDestroy {
         }
 
         problem_validations(order_by:{edited_at: desc}){
-          validated_by
+          user_id
           comment
           agree
           created_at
           files
-          validated_by
+          user_id
           edited_at
           is_deleted
   
@@ -501,9 +501,9 @@ export class ProblemDetailComponent implements OnInit, OnDestroy {
             impact
             website_url
             deployment
-            budget
+            
             image_urls
-            modified_at
+            edited_at
             updated_at
             featured_url
             is_deleted
@@ -516,7 +516,7 @@ export class ProblemDetailComponent implements OnInit, OnDestroy {
             }
 
             solution_validations(order_by: { edited_at: desc }) {
-              validated_by
+              user_id
             }
 
           }
@@ -530,16 +530,16 @@ export class ProblemDetailComponent implements OnInit, OnDestroy {
           }
         }
 
-        discussionssByproblemId(where: { is_deleted: { _eq: false} },order_by: {created_at: desc}) {
+        discussions(where: { is_deleted: { _eq: false} },order_by: {created_at: desc}) {
           id
           created_by
           created_at
-          modified_at
+          edited_at
           text
           is_deleted
           linked_comment_id
           attachments
-          usersBycreatedBy {
+          user {
             name
             photo_url
           }
@@ -567,7 +567,7 @@ export class ProblemDetailComponent implements OnInit, OnDestroy {
           
         }
 
-        enrichmentsByproblemId(where: { is_deleted: { _eq: false } },order_by:{edited_at: desc}){
+        enrichments(where: { is_deleted: { _eq: false } },order_by:{edited_at: desc}){
           id
           description
           extent
@@ -586,13 +586,13 @@ export class ProblemDetailComponent implements OnInit, OnDestroy {
           video_urls
           created_by
           edited_at
-          voted_by
+          
           is_deleted
           featured_url
           embed_urls
           featured_type
          
-          usersBycreatedBy{
+          user{
             id
             name
             photo_url
@@ -722,17 +722,17 @@ export class ProblemDetailComponent implements OnInit, OnDestroy {
       }
     });
 
-    problem.enrichmentsByproblemId.map(enrichment => {
+    problem.enrichments.map(enrichment => {
       if (enrichment.created_by === Number(this.auth.currentUserValue.id)) {
         this.disableEnrichButton = true;
       }
     });
-    this.enrichment = problem.enrichmentsByproblemId;
+    this.enrichment = problem.enrichments;
     console.log("enrichment", this.enrichment);
 
     problem.problem_validations.map(validation => {
-      // console.log(validation.validated_by, "test55");
-      if (validation.validated_by === Number(this.auth.currentUserValue.id)) {
+      // console.log(validation.user_id, "test55");
+      if (validation.user_id === Number(this.auth.currentUserValue.id)) {
         this.disableValidateButton = true;
       }
     });
@@ -759,22 +759,22 @@ export class ProblemDetailComponent implements OnInit, OnDestroy {
 
     // console.log(this.problemData, "result from nested queries");
     // console.log(problem.is_draft, "is draft");
-    if (problem.usersBycreatedBy) {
-      this.problemOwner = problem.usersBycreatedBy.name;
-      problem.problem_tags.map(tags => {
+    if (problem.user) {
+      this.problemOwner = problem.user.name;
+      problem.problems_tags.map(tags => {
         if (this.userInterests[tags.tag.name]) {
           this.sectorMatched = true;
           // console.log(this.sectorMatched, "sector matched");
         }
       });
-      if (problem.problem_tags) {
-        this.tags = problem.problem_tags.map(tagArray => {
+      if (problem.problems_tags) {
+        this.tags = problem.problems_tags.map(tagArray => {
           // console.log(tagArray, "work");
           return tagArray.tag;
         });
       }
       Object.keys(this.problemData).map(key => {
-        if (problem[key] && key !== "problem_tags") {
+        if (problem[key] && key !== "problems_tags") {
           this.problemData[key] = problem[key];
         }
       });
@@ -809,8 +809,8 @@ export class ProblemDetailComponent implements OnInit, OnDestroy {
         this.problem_attachments_index
       ];
 
-      // console.log(problem.discussionssByproblemId);
-      problem.discussionssByproblemId.map(comment => {
+      // console.log(problem.discussions);
+      problem.discussions.map(comment => {
         if (comment.linked_comment_id) {
           // console.log(comment);
           // this comment is a reply - add it to the replies object
@@ -839,10 +839,10 @@ export class ProblemDetailComponent implements OnInit, OnDestroy {
         .sort((a, b) => {
           // sorting by date
           if (this.comments[a]) {
-            var dateA = this.comments[a].modified_at;
+            var dateA = this.comments[a].edited_at;
           }
           if (this.comments[b]) {
-            var dateB = this.comments[b].modified_at;
+            var dateB = this.comments[b].edited_at;
           }
           if (dateA < dateB) {
             return 1;
@@ -931,8 +931,8 @@ export class ProblemDetailComponent implements OnInit, OnDestroy {
   }
 
   compareDateForSort(a, b) {
-    var dateA = a.modified_at;
-    var dateB = b.modified_at;
+    var dateA = a.edited_at;
+    var dateB = b.edited_at;
     if (dateA < dateB) {
       return 1;
     }
@@ -1244,7 +1244,7 @@ export class ProblemDetailComponent implements OnInit, OnDestroy {
   onEnrichmentSubmit(enrichmentData) {
     if (enrichmentData.__typename) {
       delete enrichmentData.__typename;
-      // delete enrichmentData.usersBycreatedBy;
+      // delete enrichmentData.user;
     }
     enrichmentData.created_by = Number(this.auth.currentUserValue.id);
 
@@ -1310,11 +1310,11 @@ export class ProblemDetailComponent implements OnInit, OnDestroy {
   }
 
   onValidationSubmit(validationData) {
-    validationData.validated_by = Number(this.auth.currentUserValue.id);
+    validationData.user_id = Number(this.auth.currentUserValue.id);
 
     validationData.problem_id = this.problemData.id;
 
-    this.validationService.submitValidationToDB(validationData);
+    this.validationService.submitProblemValidationToDB(validationData);
     this.startInterval();
   }
 
