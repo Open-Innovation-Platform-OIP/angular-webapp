@@ -26,7 +26,7 @@ import { GeocoderService } from "../../services/geocoder.service";
 export class AddEnrichmentComponent implements OnChanges, OnInit {
   @Input() enrichmentData: any = {
     description: "",
-    location: "",
+
     organization: "",
     resources_needed: "",
     image_urls: [],

@@ -39,6 +39,8 @@ import { Observable, Subscription } from "rxjs";
 import { map, startWith } from "rxjs/operators";
 import { first, take } from "rxjs/operators";
 import { ProblemService } from "../../services/problem.service";
+import { GeocoderService } from "../../services/geocoder.service";
+
 declare var H: any;
 declare const $: any;
 interface FileReaderEventTarget extends EventTarget {
@@ -89,13 +91,13 @@ export class WizardComponent
   // owners = [];
   voted_by = [];
   watched_by = [];
+  problemLocations: any[] = [];
   problem = {
     title: "",
     description: "",
     organization: "",
     impact: "",
     extent: "",
-    location: [],
     min_population: 0,
     max_population: 0,
     beneficiary_attributes: "",
@@ -156,7 +158,8 @@ export class WizardComponent
     private tagService: TagsService,
     private usersService: UsersService,
     private auth: AuthService,
-    private problemService: ProblemService
+    private problemService: ProblemService,
+    private geoService: GeocoderService
   ) {
     canProceed = true;
 
@@ -297,7 +300,8 @@ export class WizardComponent
     // this.addTagsSub.unsubscribe();
   }
   ngOnInit() {
-    // this.tagService.getTagsFromDB();
+    this.tagService.getTagsFromDB();
+    this.geoService.getLocationsFromDB();
 
     // console.log("wizard ng on in it",this.auth.currentUserValue.);
     clearInterval(this.autosaveInterval);
@@ -316,7 +320,7 @@ export class WizardComponent
                             created_by
                             updated_at
                             description
-                            location
+                            
                             resources_needed
                             is_draft
                             image_urls
@@ -349,19 +353,29 @@ export class WizardComponent
                                     name
                                 }
                             }
+
+                            problem_locations{
+                              location{
+                                id
+                                location_name
+                                location
+                                lat
+                                long
+                              }
+                            }
                             }
                         }
                         `,
-            // pollInterval: 500,
+            pollInterval: 1000,
             fetchPolicy: "network-only"
           })
-          .valueChanges.pipe(take(1))
-          .subscribe(result => {
+          .valueChanges.subscribe(result => {
             // console.log(result, "pppp>>>>>>>>");
             if (
               result.data.problems.length >= 1 &&
               result.data.problems[0].id
             ) {
+              console.log(result.data.problems[0], "problem");
               // console.log(result.data.problems[0], "edit problem");
               canProceed = true;
               this.problem["id"] = result.data.problems[0].id;
@@ -383,6 +397,18 @@ export class WizardComponent
                 );
                 // console.log(this.sectors, "sectors from db");
               }
+              if (result.data.problems[0].problem_locations) {
+                this.problemLocations = result.data.problems[0].problem_locations.map(
+                  locations => {
+                    return locations.location;
+                  }
+                );
+
+                this.problem["locations"] = this.problemLocations;
+
+                console.log(this.problemLocations, "locations from db");
+              }
+
               if (result.data.problems[0].problem_owners) {
                 // this.owners = result.data.problems[0].problem_owners;
                 result.data.problems[0].problem_owners.forEach(ownerArray => {
@@ -895,6 +921,15 @@ export class WizardComponent
                     updated_at
                     image_urls
                     featured_url
+
+                    problem_locations{
+                      location{
+                        id
+                        location_name
+                        lat
+                        long
+                      }
+                    }
                    
                     
                     problem_voters{
@@ -964,9 +999,7 @@ export class WizardComponent
     return (
       this.problem.title &&
       this.problem.description &&
-      this.problem.organization &&
-      // this.problem.min_population &&
-      this.problem.location
+      this.problem.organization
     );
   }
   updateProblem(updatedProblem) {
@@ -1129,7 +1162,6 @@ export class WizardComponent
             update_columns: [
               title
               description
-              location
               resources_needed
               organization
               impact
@@ -1191,9 +1223,12 @@ export class WizardComponent
 
             this.saveOwnersInDB(this.problem["id"], this.owners);
 
+            // this.saveLocationsInDB(this.problem["id"], this.problemLocations);
+
             const tags = [];
 
             const problems_tags = new Set();
+            const problem_locations = new Set();
             // console.log(this.sectors, "sectors");
 
             this.sectors.map(sector => {
@@ -1211,6 +1246,37 @@ export class WizardComponent
             });
 
             this.tagService.addTagsInDb(tags, "problems", this.problem["id"]);
+
+            this.problemLocations.map(location => {
+              const locationUniqueId =
+                location.lat.toString() + location.long.toString();
+              if (
+                this.geoService.allLocations[locationUniqueId] &&
+                this.geoService.allLocations[locationUniqueId].id
+              ) {
+                problem_locations.add({
+                  location_id: this.geoService.allLocations[locationUniqueId]
+                    .id,
+                  problem_id: this.problem["id"]
+                });
+              }
+            });
+
+            if (problem_locations.size > 0) {
+              this.geoService.addRelationToLocations(
+                this.problem["id"],
+                problem_locations,
+                "problems"
+              );
+            }
+
+            if (this.problemLocations) {
+              this.geoService.addLocationsInDB(
+                this.problemLocations,
+                "problems",
+                this.problem["id"]
+              );
+            }
 
             if (problems_tags.size > 0) {
               const upsert_problems_tags = gql`
@@ -1315,6 +1381,7 @@ export class WizardComponent
         }
       );
   }
+
   confirmSubmission() {
     // if (this.is_edit) {
     //   this.showSuccessSwal("Problem Updated");
@@ -1384,5 +1451,45 @@ export class WizardComponent
         this.problem.featured_type = "embed";
       }
     }
+  }
+
+  addLocation(locations) {
+    this.problemLocations = locations;
+    console.log(this.geoService.allLocations, "all locations");
+  }
+
+  removeLocation(removedLocation) {
+    const locationUniqueId =
+      removedLocation.lat.toString() + removedLocation.long.toString();
+
+    this.problemLocations = this.problemLocations.filter(location => {
+      if (
+        location.location.coordinates[0] !==
+          removedLocation.location.coordinates[0] &&
+        location.location.coordinates[1] !==
+          removedLocation.location.coordinates[1]
+      ) {
+        return location;
+      }
+    });
+
+    // const index = this.sectors.indexOf(sector);
+    // if (index >= 0) {
+    //   this.sectors.splice(index, 1);
+    // }
+    if (this.geoService.allLocations[locationUniqueId] && this.problem["id"]) {
+      this.geoService.removeLocationRelation(
+        this.geoService.allLocations[locationUniqueId].id,
+        this.problem["id"],
+        "problems"
+      );
+    } else if (removedLocation.id) {
+      this.geoService.removeLocationRelation(
+        removedLocation.id,
+        this.problem["id"],
+        "problems"
+      );
+    }
+    // this.problemLocations = locations;
   }
 }

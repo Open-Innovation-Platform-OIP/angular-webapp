@@ -43,6 +43,8 @@ export class ProblemsViewComponent implements OnInit, OnDestroy {
     this.activatedRoute.queryParams.subscribe(params => {
       this.selectedSectors = this.filterService.filterSector(params);
 
+      console.log(this.filterService.sector_filter_query, "tag");
+
       this.problemViewQuery = this.apollo.watchQuery<any>({
         query: gql`
           query PostsGetQuery {
@@ -57,7 +59,7 @@ export class ProblemsViewComponent implements OnInit, OnDestroy {
                 id
                 title
                 description
-                location
+                
                 resources_needed
                 image_urls
                 edited_at
@@ -73,6 +75,14 @@ export class ProblemsViewComponent implements OnInit, OnDestroy {
                 problem_watchers {
                   problem_id
                   user_id
+                }
+                problem_locations{
+                  location{
+                    id
+                    location_name
+                    lat
+                    long
+                  }
                 }
                 problem_validations {
                   user_id

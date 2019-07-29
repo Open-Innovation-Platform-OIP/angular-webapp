@@ -79,6 +79,8 @@ export class WizardContainerComponent
   @Input() sectors: string[] = [];
   @Input() contentType: any;
   @Input() owners: any[] = [];
+  @Input() selectedLocations = [];
+
   // @Input() canProceed: any = true;
   @Output() fieldsPopulated = new EventEmitter();
   @Output() smartSearchInput = new EventEmitter();
@@ -88,6 +90,8 @@ export class WizardContainerComponent
   @Output() deleteDraft = new EventEmitter();
   @Output() addedOwners = new EventEmitter();
   @Output() removedOwners = new EventEmitter();
+  @Output() locationSelected = new EventEmitter();
+  @Output() locationRemoved = new EventEmitter();
 
   file_types = [
     "application/msword",
@@ -101,7 +105,10 @@ export class WizardContainerComponent
 
   objectKeys = Object.keys;
 
+  // locationCoordinates: any[] = [];
+
   localSectors: any[] = [];
+
   matcher = new MyErrorStateMatcher();
   type: FormGroup;
   is_edit = false;
@@ -193,7 +200,25 @@ export class WizardContainerComponent
   }
 
   selectedLocation(event) {
-    this.content.location.push(event.option.value);
+    // this.content.location.push(event.option.value);
+
+    const coordinateArray = [
+      event.option.value.DisplayPosition.Latitude,
+      event.option.value.DisplayPosition.Longitude
+    ];
+
+    const locationData = {
+      location: { type: "Point", coordinates: coordinateArray },
+      location_name: event.option.value.Address.Label,
+      lat: coordinateArray[0],
+      long: coordinateArray[1]
+    };
+
+    this.selectedLocations.push(locationData);
+
+    // console.log(this.selectedLocations, "selected locations");
+
+    this.locationSelected.emit(this.selectedLocations);
 
     this.locationInput.nativeElement.value = "";
     this.locationCtrl.setValue(null);
@@ -206,7 +231,8 @@ export class WizardContainerComponent
 
       // Add our sector
       if ((value || "").trim()) {
-        this.content.location.push(value);
+        console.log(value, "value location");
+        // this.content.location.push(value);
       }
       // Reset the input value
       if (input) {
@@ -217,11 +243,25 @@ export class WizardContainerComponent
     }
   }
 
-  removeLocation(location) {
-    const index = this.content.location.indexOf(location);
-    if (index >= 0) {
-      this.content.location.splice(index, 1);
-    }
+  removeLocation(removedLocation) {
+    console.log(location, "removed location");
+    this.selectedLocations = this.selectedLocations.filter(location => {
+      if (
+        location.location.coordinates[0] !==
+          removedLocation.location.coordinates[0] &&
+        location.location.coordinates[1] !==
+          removedLocation.location.coordinates[1]
+      ) {
+        return location;
+      }
+    });
+    // const index = this.selectedLocations.indexOf(location);
+    // if (index >= 0) {
+    //   this.selectedLocations.splice(index, 1);
+    // }
+    // console.log(this.selectedLocations, "selected locations after removal");
+
+    this.locationRemoved.emit(removedLocation);
   }
 
   deleteClicked() {
@@ -325,7 +365,12 @@ export class WizardContainerComponent
   }
 
   ngOnInit() {
-    console.log(this.usersService.currentUser, "current user");
+    // console.log(
+    //   this.content.locations,
+    //   "wizard container locations",
+    //   this.content
+    // );
+    // this.selectedLocations = this.content.locations;
 
     if (
       this.usersService.currentUser &&
@@ -338,7 +383,7 @@ export class WizardContainerComponent
     }
 
     clearInterval(this.autosaveInterval);
-    this.autosaveInterval = setInterval(() => { }, 10000);
+    this.autosaveInterval = setInterval(() => {}, 10000);
 
     canProceed = true;
 
@@ -381,19 +426,19 @@ export class WizardContainerComponent
         }
       },
 
-      highlight: function (element) {
+      highlight: function(element) {
         $(element)
           .closest(".form-group")
           .removeClass("has-success")
           .addClass("has-danger");
       },
-      success: function (element) {
+      success: function(element) {
         $(element)
           .closest(".form-group")
           .removeClass("has-danger")
           .addClass("has-success");
       },
-      errorPlacement: function (error, element) {
+      errorPlacement: function(error, element) {
         $(element).append(error);
       }
     });
@@ -404,7 +449,7 @@ export class WizardContainerComponent
       nextSelector: ".btn-next",
       previousSelector: ".btn-previous",
 
-      onNext: function (tab, navigation, index) {
+      onNext: function(tab, navigation, index) {
         window.scroll(0, 0);
 
         const $valid = $(".card-wizard form").valid();
@@ -426,7 +471,7 @@ export class WizardContainerComponent
         }
       },
 
-      onInit: function (tab: any, navigation: any, index: any) {
+      onInit: function(tab: any, navigation: any, index: any) {
         let $total = navigation.find("li").length;
         const $wizard = navigation.closest(".card-wizard");
 
@@ -483,7 +528,7 @@ export class WizardContainerComponent
         $(".moving-tab").css("transition", "transform 0s");
       },
 
-      onTabClick: function (tab: any, navigation: any, index: any) {
+      onTabClick: function(tab: any, navigation: any, index: any) {
         return true;
         const $valid = $(".card-wizard form").valid();
 
@@ -494,7 +539,7 @@ export class WizardContainerComponent
         }
       },
 
-      onTabShow: function (tab: any, navigation: any, index: any) {
+      onTabShow: function(tab: any, navigation: any, index: any) {
         let $total = navigation.find("li").length;
         let $current = index + 1;
 
@@ -527,7 +572,7 @@ export class WizardContainerComponent
           .find("li:nth-child(" + $current + ") a")
           .html();
 
-        setTimeout(function () {
+        setTimeout(function() {
           $(".moving-tab").text(button_text);
         }, 150);
 
@@ -593,13 +638,13 @@ export class WizardContainerComponent
     });
 
     // Prepare the preview for profile picture
-    $("#wizard-picture").change(function () {
+    $("#wizard-picture").change(function() {
       const input = $(this);
 
       if (input[0].files && input[0].files[0]) {
         const reader = new FileReader();
 
-        reader.onload = function (e: any) {
+        reader.onload = function(e: any) {
           $("#wizardPicturePreview")
             .attr("src", e.target.result)
             .fadeIn("slow");
@@ -608,7 +653,7 @@ export class WizardContainerComponent
       }
     });
 
-    $('[data-toggle="wizard-radio"]').click(function () {
+    $('[data-toggle="wizard-radio"]').click(function() {
       const wizard = $(this).closest(".card-wizard");
       wizard.find('[data-toggle="wizard-radio"]').removeClass("active");
       $(this).addClass("active");
@@ -620,7 +665,7 @@ export class WizardContainerComponent
         .attr("checked", "true");
     });
 
-    $('[data-toggle="wizard-checkbox"]').click(function () {
+    $('[data-toggle="wizard-checkbox"]').click(function() {
       if ($(this).hasClass("active")) {
         $(this).removeClass("active");
         $(this)
@@ -654,12 +699,12 @@ export class WizardContainerComponent
       );
     }
 
-    console.log("wizard container ngonchanges");
+    console.log("wizard container ngonchanges", this.selectedLocations);
 
     const input = $(this);
     if (input[0].files && input[0].files[0]) {
       const reader: any = new FileReader();
-      reader.onload = function (e: any) {
+      reader.onload = function(e: any) {
         $("#wizardPicturePreview")
           .attr("src", e.target.result)
           .fadeIn("slow");
@@ -673,7 +718,7 @@ export class WizardContainerComponent
     this.smartSearchInput.emit(input);
   }
 
-  checkForSpaces($event) { }
+  checkForSpaces($event) {}
 
   publishContent() {
     this.contentSubmitted.emit(this.content);
@@ -684,8 +729,9 @@ export class WizardContainerComponent
   }
 
   ngAfterViewInit() {
+
     $(window).resize(() => {
-      $(".card-wizard").each(function () {
+      $(".card-wizard").each(function() {
         const $wizard = $(this);
         const index = $wizard.bootstrapWizard("currentIndex");
         const $total = $wizard.find(".nav li").length;
@@ -1049,15 +1095,18 @@ export class WizardContainerComponent
         this.content.organization &&
         this.localSectors.length &&
         // this.content.min_population &&
-        this.content.max_population &&
-        this.content.location.length
+        this.content.max_population
+
+        // &&
+        // this.content.location.length
       );
     } else {
       return (
         this.content.description &&
         this.content.organization &&
-        this.content.max_population &&
-        this.content.location.length
+        this.content.max_population
+        // &&
+        // this.content.location.length
       );
     }
   }

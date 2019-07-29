@@ -52,6 +52,14 @@ export class DashboardComponent implements OnInit, OnDestroy {
     problem_voters{user_id}
     problem_watchers{user_id}
     problem_validations{user_id}
+    problem_locations{
+      location{
+        id
+        location_name
+        lat
+        long
+      }
+    }
     updated_at
     edited_at
   }`;

@@ -121,7 +121,7 @@ export class ProblemDetailComponent implements OnInit, OnDestroy {
     organization: "",
     impact: "",
     extent: "",
-    location: [],
+
     min_population: 0,
     max_population: 0,
     beneficiary_attributes: "",
@@ -434,7 +434,7 @@ export class ProblemDetailComponent implements OnInit, OnDestroy {
           title
           description
           organization
-          location
+          
           resources_needed
           is_draft
           created_by
@@ -579,7 +579,7 @@ export class ProblemDetailComponent implements OnInit, OnDestroy {
           }
           organization
           beneficiary_attributes
-          location
+          
           resources_needed
           image_urls
           attachments

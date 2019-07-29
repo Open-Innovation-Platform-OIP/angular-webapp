@@ -176,7 +176,7 @@
                   <div class="input-group-prepend">
                     <span class="input-group-text">
                       <i class="material-icons" [ngStyle]="{
-                          color: !content.location.length
+                          color: !selectedLocations.length
                             ? 'red'
                             : '#495057'
                         }">place</i>
@@ -209,11 +209,11 @@
                 </div>
               </div>
             </div>
-            <div class="row justify-content-center">
+            <div class="row justify-content-center" *ngIf="selectedLocations.length">
               <div class="col-sm-10">
-                <mat-chip *ngFor="let location of content.location" [selectable]="selectable" [removable]="removable"
+                <mat-chip *ngFor="let location of selectedLocations" [selectable]="selectable" [removable]="removable"
                   (removed)="removeLocation(location)" style="margin-right:0.3em; margin-bottom: 0.4em;">
-                  {{location.Address.Label}}
+                  {{location.location_name}}
                   <mat-icon matChipRemove *ngIf="removable">cancel</mat-icon>
                 </mat-chip>
 

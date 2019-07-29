@@ -62,6 +62,14 @@ export class SearchService {
             updated_at
             image_urls
             featured_url
+            problem_locations{
+              location{
+                id
+                location_name
+                lat
+                long
+              }
+            }
 
             problem_voters_aggregate {
               aggregate {

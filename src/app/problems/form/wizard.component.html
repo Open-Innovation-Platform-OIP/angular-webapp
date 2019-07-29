@@ -10,8 +10,18 @@
           (fieldsPopulated)="updateProblem($event)" (tagAdded)="addTags($event)" (tagRemoved)="remove($event)"
           (contentSubmitted)="publishProblem(problem)" [owners]="owners" (deleteDraft)="deleteDraft($event)"
           (addedOwners)="addOwners($event)" (removedOwners)="removeOwners($event)" [sectors]="sectors"
-          [contentType]="'problem'">
+          [contentType]="'problem'" [selectedLocations]="problemLocations" (locationSelected)="addLocation($event)"
+          (locationRemoved)="removeLocation($event)">
         </app-wizard-container>
+
+        <!-- <app-wizard-container *ngIf="is_edit && problemLocations.length" [content]="problem"
+          (smartSearchInput)="smartSearch($event)" (fieldsPopulated)="updateProblem($event)"
+          (tagAdded)="addTags($event)" (tagRemoved)="remove($event)" (contentSubmitted)="publishProblem(problem)"
+          [owners]="owners" (deleteDraft)="deleteDraft($event)" (addedOwners)="addOwners($event)"
+          (removedOwners)="removeOwners($event)" [sectors]="sectors" [contentType]="'problem'"
+          (locationsFromParent)="problemLocations" (locationSelected)="addLocation($event)"
+          (locationRemoved)="removeLocation($event)">
+        </app-wizard-container> -->
 
 
         <!-- wizard container -->

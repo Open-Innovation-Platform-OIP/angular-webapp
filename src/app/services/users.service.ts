@@ -201,6 +201,7 @@ export class UsersService {
                 organization
                 qualification
                 location
+                
                 photo_url
                 phone_number
                 is_ngo
