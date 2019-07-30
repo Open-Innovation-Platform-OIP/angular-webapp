@@ -34,6 +34,7 @@ export class ProblemsViewComponent implements OnInit, OnDestroy {
   }
 
   selectedSectors: any = [];
+  selectedLocation: any = "";
 
   ngOnInit() {
     this.tagsService.getTagsFromDB();
@@ -41,21 +42,30 @@ export class ProblemsViewComponent implements OnInit, OnDestroy {
     console.log(this.tagsService.allTags, "tag");
 
     this.activatedRoute.queryParams.subscribe(params => {
+      console.log("params", params);
       this.selectedSectors = this.filterService.filterSector(params);
+      this.selectedLocation = this.filterService.filterLocation(params);
 
-      console.log(this.filterService.sector_filter_query, "tag");
+      console.log(this.filterService.queryVariable, "query varibale");
+      console.log(
+        this.filterService.location_filter_header,
+        "query header varibale"
+      );
+
+      console.log(this.filterService.sector_filter_query, "tag query");
 
       this.problemViewQuery = this.apollo.watchQuery<any>({
         query: gql`
-          query PostsGetQuery {
-            problems_tags(
-              where: {
-                tag_id: { ${this.filterService.sector_filter_query} }
-                problem: { is_draft: { _eq: false } }
-              }
-              order_by: { problem: { updated_at: desc } }
-            ) {
-              problem {
+          
+              query table${this.filterService.location_filter_header}{ 
+                problems(where:{is_draft: { _eq: false },_or:[{problems_tags:{tag_id:{${
+                  this.filterService.sector_filter_query
+                }}}},${
+          this.filterService.location_filter_query
+        }]} order_by: {  updated_at: desc } )
+                
+                 
+                {
                 id
                 title
                 description
@@ -103,18 +113,23 @@ export class ProblemsViewComponent implements OnInit, OnDestroy {
                   
               }
             }
-          }
+          
         `,
+        variables: this.filterService.queryVariable,
         pollInterval: 500,
         fetchPolicy: "network-only"
       });
 
       this.problemViewSubscription = this.problemViewQuery.valueChanges.subscribe(
         result => {
-          if (result.data.problems_tags.length > 0) {
-            this.problems = result.data.problems_tags;
+          if (result.data.problems.length > 0) {
+            console.log("PROBLEMS", result.data.problems_tags);
+
+            this.problems = result.data.problems;
+            console.log("PROBLEMS in Component", this.problems);
+          } else {
+            this.problems = [];
           }
-          console.log("PROBLEMS", result);
         },
         error => {
           console.error(JSON.stringify(error));

@@ -2,7 +2,7 @@ import { Component, OnInit, Input } from "@angular/core";
 import { Router } from "@angular/router";
 import { TagsService } from "../../services/tags.service";
 // import { take } from "rxjs/operators";
-// import { FilterService } from "../../services/filter.service";
+import { GeocoderService } from "../../services/geocoder.service";
 
 @Component({
   selector: "app-filter-dropdown",
@@ -12,14 +12,21 @@ import { TagsService } from "../../services/tags.service";
 export class FilterDropdownComponent implements OnInit {
   @Input() selectedSectors: any = [];
   @Input() type: string;
+  @Input() selectedLocation: any = "";
 
   sectors: any = {};
+  locations: any = {};
   objectValues = Object.values;
 
-  constructor(private tagsService: TagsService, private router: Router) {}
+  constructor(
+    private tagsService: TagsService,
+    private router: Router,
+    private geoService: GeocoderService
+  ) {}
 
   ngOnInit() {
     this.sectors = this.tagsService.allTags;
+    this.locations = this.geoService.allLocations;
   }
 
   selectSector() {
@@ -30,13 +37,34 @@ export class FilterDropdownComponent implements OnInit {
 
     if (this.selectedSectors.length) {
       this.selectedSectors.map(sectorName => {
-        sectorFilter[sectorName] = this.tagsService.allTags[sectorName].id;
+        sectorFilter[sectorName] = "filter";
         // this.tagsService.sectorFilterArray.push()
       });
     }
 
     this.router.navigate(["/" + this.type], {
-      queryParams: sectorFilter
+      queryParams: sectorFilter,
+      queryParamsHandling: "merge"
+    });
+  }
+
+  selectLocation() {
+    const locationFilter = {};
+
+    // if (this.selectedLocations.length) {
+    //   this.selectedLocations.map(locationName => {
+    //     locationFilter["filterLocation"] = ;
+    //     // this.tagsService.sectorFilterArray.push()
+    //   });
+    console.log(this.selectedLocation, "selected location =====");
+    // }
+    locationFilter["filterLocation"] = this.selectedLocation;
+    console.log(locationFilter, "location filter");
+    // this.lothis.selectLocation
+
+    this.router.navigate(["/" + this.type], {
+      queryParams: locationFilter,
+      queryParamsHandling: "merge"
     });
   }
 }

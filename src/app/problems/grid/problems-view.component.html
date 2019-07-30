@@ -31,14 +31,15 @@
             </mat-form-field>
 
         </div> -->
-        <app-filter-dropdown [selectedSectors]="selectedSectors" [type]="'problems'">
+        <app-filter-dropdown [selectedSectors]="selectedSectors" [selectedLocation]="selectedLocations"
+            [type]="'problems'">
         </app-filter-dropdown>
 
 
 
-        <div class="row">
+        <div class="row" *ngIf="problems.length">
             <div class="col-md-3" *ngFor="let problem of problems">
-                <app-problem-card [problemData]="problem.problem"></app-problem-card>
+                <app-problem-card [problemData]="problem"></app-problem-card>
             </div>
         </div>
     </div>
