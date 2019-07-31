@@ -9,7 +9,7 @@ export class FilterService {
   sectorFilterArray: any[] = [];
   sector_filter_query: string = ``;
   location_filter_query: string = ``;
-  range = 3;
+  range = 0.2;
   queryVariable = {};
   location_filter_header: any = ``;
   selectedSectors: any[] = [];

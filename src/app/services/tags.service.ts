@@ -14,6 +14,7 @@ export class TagsService {
   public allTags = {};
   public allTagsArray: any[] = [];
   public sectorFilterArray = [];
+  public allTagsSubscription = Subscription;
 
   // public upsert_tags = ;
 

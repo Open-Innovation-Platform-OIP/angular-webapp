@@ -83,8 +83,8 @@ export class GeocoderService {
         ({ data }) => {
           if (data.locations.length > 0) {
             data.locations.map(location => {
-              let uniqueId = location.lat.toString() + location.long.toString();
-              this.allLocations[uniqueId] = location;
+              // let uniqueId = location.lat.toString() + location.long.toString();
+              this.allLocations[location.location_name] = location;
               // this.alllocationsArray.push(location.id);
             });
             console.log(this.allLocations, "locations");

@@ -1251,12 +1251,13 @@ export class WizardComponent
               const locationUniqueId =
                 location.lat.toString() + location.long.toString();
               if (
-                this.geoService.allLocations[locationUniqueId] &&
-                this.geoService.allLocations[locationUniqueId].id
+                this.geoService.allLocations[location.location_name] &&
+                this.geoService.allLocations[location.location_name].id
               ) {
                 problem_locations.add({
-                  location_id: this.geoService.allLocations[locationUniqueId]
-                    .id,
+                  location_id: this.geoService.allLocations[
+                    location.location_name
+                  ].id,
                   problem_id: this.problem["id"]
                 });
               }
@@ -1459,16 +1460,12 @@ export class WizardComponent
   }
 
   removeLocation(removedLocation) {
+    console.log(this.problemLocations, "removed location");
     const locationUniqueId =
       removedLocation.lat.toString() + removedLocation.long.toString();
 
     this.problemLocations = this.problemLocations.filter(location => {
-      if (
-        location.location.coordinates[0] !==
-          removedLocation.location.coordinates[0] &&
-        location.location.coordinates[1] !==
-          removedLocation.location.coordinates[1]
-      ) {
+      if (location.location_name !== removedLocation.location_name) {
         return location;
       }
     });
@@ -1477,9 +1474,12 @@ export class WizardComponent
     // if (index >= 0) {
     //   this.sectors.splice(index, 1);
     // }
-    if (this.geoService.allLocations[locationUniqueId] && this.problem["id"]) {
+    if (
+      this.geoService.allLocations[removedLocation.location_name] &&
+      this.problem["id"]
+    ) {
       this.geoService.removeLocationRelation(
-        this.geoService.allLocations[locationUniqueId].id,
+        removedLocation.id,
         this.problem["id"],
         "problems"
       );
