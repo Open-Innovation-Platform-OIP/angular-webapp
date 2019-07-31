@@ -11,15 +11,13 @@ import { FilterService } from "../../services/filter.service";
   styleUrls: ["./filter-dropdown.component.css"]
 })
 export class FilterDropdownComponent implements OnInit {
-  selectedSectors: any = [];
   @Input() type: string;
+  selectedSectors: any = [];
   selectedLocation: any = "";
-  // selected: any;
 
   sectors: any = {};
   locations: any = {};
   objectValues = Object.values;
-  // queryParams: any = {};
 
   constructor(
     private tagsService: TagsService,
@@ -39,26 +37,34 @@ export class FilterDropdownComponent implements OnInit {
   selectDropdown(event) {
     let queries = {};
 
-    // if (this.selectedSectors.length) {
-    //   this.selectedSectors.map(sectorName => {
-    //     sectorFilter[sectorName] = "filter";
-    //     // this.tagsService.sectorFilterArray.push()
-    //   });
-    // }
-
     this.selectedSectors.map(sector => {
       queries[sector] = "filter";
     });
-    console.log(this.selectedLocation, "selectedLocation");
-    if (this.selectedLocation === "") {
-      this.filterService.selectedLocation = "";
-      console.log(queries, "queries");
+
+    if (!this.selectedLocation) {
       this.router.navigate(["/" + this.type], {
         queryParams: queries
       });
       return;
     }
+
     queries["filterLocation"] = this.selectedLocation;
+
+    // if (this.selectedSectors.length) {
+    //   for (let sector in this.selectedSectors) {
+    //     if (!sector) {
+    //       this.selectedSectors = [];
+    //       this.router.navigate(["/" + this.type], {
+    //         queryParams: queries
+    //       });
+
+    //       // break;
+    //       return;
+    //     } else {
+    //       queries[sector] = "filter";
+    //     }
+    //   }
+    // }
 
     // console.log(queries, "queries");
     this.router.navigate(["/" + this.type], {

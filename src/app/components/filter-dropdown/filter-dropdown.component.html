@@ -2,6 +2,8 @@
 
   <mat-form-field class="dropDown">
     <mat-select multiple placeholder="Sectors" [(ngModel)]="selectedSectors" ariaLabel="objectValues(sectors)[0]">
+      <!-- <mat-option (click)="selectDropdown($event)" [value]="null">All</mat-option> -->
+
       <mat-option (click)="selectDropdown($event)" *ngFor="let sector of objectValues(sectors)" [value]="sector.name">
         {{ sector.name }}
       </mat-option>
@@ -10,7 +12,7 @@
 
   <mat-form-field class="dropDown">
     <mat-select placeholder="Locations" [(ngModel)]="selectedLocation" ariaLabel="selectedLocation">
-      <mat-option (click)="selectDropdown($event)" [value]="''">All</mat-option>
+      <mat-option (click)="selectDropdown($event)" [value]="null">All</mat-option>
       <mat-option (click)="selectDropdown($event)" *ngFor="let location of objectValues(locations)"
         [value]="location.lat.toString()+location.long.toString()">
         {{ location.location_name }}
