@@ -1,6 +1,7 @@
 import { Injectable } from "@angular/core";
 import { Apollo } from "apollo-angular";
 import { take } from "rxjs/operators";
+import { Subscription, Observable } from "rxjs";
 
 import gql from "graphql-tag";
 declare var H: any;
@@ -12,6 +13,8 @@ export class GeocoderService {
   public platform: any;
   public geocoder: any;
   public geocodingParameters: any;
+
+  allLocationObservable: Observable<any>;
 
   allLocations: any = {};
 
@@ -63,37 +66,45 @@ export class GeocoderService {
 
   getLocationsFromDB() {
     // this.all
-    this.apollo
-      .watchQuery<any>({
-        query: gql`
-          query {
-            locations {
-              id
-              location_name
-              lat
-              long
-            }
+    this.allLocationObservable = this.apollo.watchQuery<any>({
+      query: gql`
+        query {
+          locations {
+            id
+            location_name
+            lat
+            long
           }
-        `,
-        fetchPolicy: "network-only"
-        // pollInterval: 500
-      })
-      .valueChanges.pipe(take(1))
-      .subscribe(
+        }
+      `,
+      fetchPolicy: "network-only"
+      // pollInterval: 500
+    }).valueChanges;
+
+    return new Promise((resolve, reject) => {
+      // this.test.pipe(take(1)).subscribe(({ data }) => {
+      //   if (data.tags.length > 0) {
+      //     data.tags.map(tag => {
+      //       this.allTags[tag.name] = tag;
+      //       this.allTagsArray.push(tag.id);
+      //     });
+      //   }
+      // });
+      this.allLocationObservable.pipe(take(1)).subscribe(
         ({ data }) => {
           if (data.locations.length > 0) {
             data.locations.map(location => {
-              // let uniqueId = location.lat.toString() + location.long.toString();
               this.allLocations[location.location_name] = location;
-              // this.alllocationsArray.push(location.id);
             });
-            console.log(this.allLocations, "locations");
           }
+          resolve(data);
         },
         err => {
           console.log(err);
+          reject(err);
         }
       );
+    });
   }
 
   public addLocationsInDB(locations, tableName, tableId?) {

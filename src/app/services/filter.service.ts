@@ -6,6 +6,7 @@ import { GeocoderService } from "./geocoder.service";
   providedIn: "root"
 })
 export class FilterService {
+  sectorsArray = [];
   sectorFilterArray: any[] = [];
   sector_filter_query: string = ``;
   location_filter_query: string = ``;
@@ -25,19 +26,20 @@ export class FilterService {
       this.sector_filter_query = `_nin:[0]`;
       return [];
     } else {
-      this.sectorFilterArray = Object.keys(queryParams)
-        .filter(param => param !== "filterLocation")
-        .map(sector => {
-          if (sector && this.tagsService.allTags[sector]) {
-            return this.tagsService.allTags[sector].id;
-          }
-        });
+      this.sectorsArray = Object.keys(queryParams).filter(
+        param => param !== "filterLocation"
+      );
+      this.sectorFilterArray = this.sectorsArray.map(sector => {
+        if (sector && this.tagsService.allTags[sector]) {
+          return this.tagsService.allTags[sector].id;
+        }
+      });
 
       // console.log(this.sectorFilterArray, "tag array");
       if (this.sectorFilterArray.length) {
         this.sector_filter_query = `_in:[${this.sectorFilterArray}]`;
       }
-      return Object.keys(queryParams);
+      return this.sectorsArray;
     }
   }
 

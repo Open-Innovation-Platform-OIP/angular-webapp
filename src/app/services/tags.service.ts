@@ -1,7 +1,7 @@
 import { Injectable } from "@angular/core";
 import { Apollo } from "apollo-angular";
 import gql from "graphql-tag";
-import { Subscription } from "rxjs";
+import { Subscription, Observable } from "rxjs";
 import { take } from "rxjs/operators";
 @Injectable({
   providedIn: "root"
@@ -10,6 +10,7 @@ export class TagsService {
   // getTagsSub: Subscription;
   // addTagsSub: Subscription;
   // getTagsSub: Subscription;
+  test: Observable<any>;
 
   public allTags = {};
   public allTagsArray: any[] = [];
@@ -23,28 +24,30 @@ export class TagsService {
   }
   getTagsFromDB() {
     this.allTagsArray = [];
-    this.apollo
-      .watchQuery<any>({
-        query: gql`
-          query {
-            tags {
-              id
-              name
-            }
+    this.test = this.apollo.watchQuery<any>({
+      query: gql`
+        query {
+          tags {
+            id
+            name
           }
-        `,
-        fetchPolicy: "network-only"
-        // pollInterval: 500
-      })
-      .valueChanges.pipe(take(1))
-      .subscribe(({ data }) => {
+        }
+      `,
+      fetchPolicy: "network-only"
+      // pollInterval: 500
+    }).valueChanges;
+
+    return new Promise((resolve, reject) => {
+      this.test.pipe(take(1)).subscribe(({ data }) => {
         if (data.tags.length > 0) {
           data.tags.map(tag => {
             this.allTags[tag.name] = tag;
             this.allTagsArray.push(tag.id);
           });
         }
+        resolve(this.allTags);
       });
+    });
   }
   addTagsInDb(tags, tableName, tableId?) {
     let trimmedTableName = tableName.slice(0, tableName.length - 1);

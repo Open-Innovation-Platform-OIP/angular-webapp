@@ -1,4 +1,4 @@
-import { Component, OnInit, Input } from "@angular/core";
+import { Component, OnInit, Input, OnChanges } from "@angular/core";
 import { Router, ActivatedRoute } from "@angular/router";
 import { TagsService } from "../../services/tags.service";
 // import { take } from "rxjs/operators";
@@ -30,8 +30,21 @@ export class FilterDropdownComponent implements OnInit {
   ngOnInit() {
     this.sectors = this.tagsService.allTags;
     this.locations = this.geoService.allLocations;
-    this.selectedLocation = this.filterService.selectedLocation;
-    this.selectedSectors = this.filterService.selectedSectors;
+
+    this.activatedRoute.queryParams.subscribe(params => {
+      console.log(params, "params in dropdown");
+      this.selectedSectors = this.filterService.filterSector(params);
+      this.selectedLocation = this.filterService.filterLocation(params);
+
+      console.log(
+        "sectors==",
+        this.selectedSectors,
+        "this.selectedLocations",
+        this.selectedLocation
+      );
+    });
+    // this.selectedLocation = this.filterService.selectedLocation;
+    // this.selectedSectors = this.filterService.selectedSectors;
   }
 
   selectDropdown(event) {
