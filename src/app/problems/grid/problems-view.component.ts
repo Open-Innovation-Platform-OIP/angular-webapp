@@ -42,15 +42,15 @@ export class ProblemsViewComponent implements OnInit, OnDestroy {
     console.log(this.tagsService.allTags, "tag");
 
     this.activatedRoute.queryParams.subscribe(params => {
-      console.log("params", params);
+      // console.log("params", params);
       this.selectedSectors = this.filterService.filterSector(params);
       this.selectedLocation = this.filterService.filterLocation(params);
 
-      console.log(this.filterService.queryVariable, "query varibale");
-      console.log(
-        this.filterService.location_filter_header,
-        "query header varibale"
-      );
+      // console.log(this.filterService.queryVariable, "query varibale");
+      // console.log(
+      //   this.filterService.location_filter_header,
+      //   "query header varibale"
+      // );
 
       console.log(this.filterService.sector_filter_query, "tag query");
 
@@ -58,7 +58,7 @@ export class ProblemsViewComponent implements OnInit, OnDestroy {
         query: gql`
           
               query table${this.filterService.location_filter_header}{ 
-                problems(where:{is_draft: { _eq: false },_or:[{problems_tags:{tag_id:{${
+                problems(where:{is_draft: { _eq: false },_and:[{problems_tags:{tag_id:{${
                   this.filterService.sector_filter_query
                 }}}},${
           this.filterService.location_filter_query
@@ -123,10 +123,10 @@ export class ProblemsViewComponent implements OnInit, OnDestroy {
       this.problemViewSubscription = this.problemViewQuery.valueChanges.subscribe(
         result => {
           if (result.data.problems.length > 0) {
-            console.log("PROBLEMS", result.data.problems_tags);
+            // console.log("PROBLEMS", result.data.problems_tags);
 
             this.problems = result.data.problems;
-            console.log("PROBLEMS in Component", this.problems);
+            // console.log("PROBLEMS in Component", this.problems);
           } else {
             this.problems = [];
           }

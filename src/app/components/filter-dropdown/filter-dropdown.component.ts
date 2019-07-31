@@ -13,10 +13,12 @@ export class FilterDropdownComponent implements OnInit {
   @Input() selectedSectors: any = [];
   @Input() type: string;
   @Input() selectedLocation: any = "";
+  // selected: any;
 
   sectors: any = {};
   locations: any = {};
   objectValues = Object.values;
+  // queryParams: any = {};
 
   constructor(
     private tagsService: TagsService,
@@ -29,42 +31,44 @@ export class FilterDropdownComponent implements OnInit {
     this.locations = this.geoService.allLocations;
   }
 
-  selectSector() {
-    // let sectorFilterObject = {};
-    const sectorFilter = {};
+  selectDropdown(event) {
+    let queries = {};
 
-    console.log(this.selectedSectors, "sector filter");
-
-    if (this.selectedSectors.length) {
-      this.selectedSectors.map(sectorName => {
-        sectorFilter[sectorName] = "filter";
-        // this.tagsService.sectorFilterArray.push()
-      });
-    }
-
-    this.router.navigate(["/" + this.type], {
-      queryParams: sectorFilter,
-      queryParamsHandling: "merge"
-    });
-  }
-
-  selectLocation() {
-    const locationFilter = {};
-
-    // if (this.selectedLocations.length) {
-    //   this.selectedLocations.map(locationName => {
-    //     locationFilter["filterLocation"] = ;
+    // if (this.selectedSectors.length) {
+    //   this.selectedSectors.map(sectorName => {
+    //     sectorFilter[sectorName] = "filter";
     //     // this.tagsService.sectorFilterArray.push()
     //   });
-    console.log(this.selectedLocation, "selected location =====");
     // }
-    locationFilter["filterLocation"] = this.selectedLocation;
-    console.log(locationFilter, "location filter");
-    // this.lothis.selectLocation
 
+    this.selectedSectors.map(sector => {
+      queries[sector] = "filter";
+    });
+    queries["filterLocation"] = this.selectedLocation;
+
+    console.log(queries, "queries");
     this.router.navigate(["/" + this.type], {
-      queryParams: locationFilter,
-      queryParamsHandling: "merge"
+      queryParams: queries
     });
   }
+
+  // selectLocation() {
+  //   const locationFilter = {};
+
+  //   // if (this.selectedLocations.length) {
+  //   //   this.selectedLocations.map(locationName => {
+  //   //     locationFilter["filterLocation"] = ;
+  //   //     // this.tagsService.sectorFilterArray.push()
+  //   //   });
+  //   console.log(this.selectedLocation, "selected location =====");
+  //   // }
+  //   locationFilter["filterLocation"] = this.selectedLocation;
+  //   console.log(locationFilter, "location filter");
+  //   // this.lothis.selectLocation
+
+  //   this.router.navigate(["/" + this.type], {
+  //     queryParams: locationFilter,
+  //     queryParamsHandling: "merge"
+  //   });
+  // }
 }

@@ -26,24 +26,27 @@ export class FilterService {
       this.sectorFilterArray = Object.keys(queryParams)
         .filter(param => param !== "filterLocation")
         .map(sector => {
-          if (this.tagsService.allTags[sector]) {
+          if (sector && this.tagsService.allTags[sector]) {
             return this.tagsService.allTags[sector].id;
           }
         });
 
-      console.log(this.sectorFilterArray, "tag array");
-      this.sector_filter_query = `_in:[${this.sectorFilterArray}]`;
+      // console.log(this.sectorFilterArray, "tag array");
+      if (this.sectorFilterArray.length) {
+        this.sector_filter_query = `_in:[${this.sectorFilterArray}]`;
+      }
       return Object.keys(queryParams);
     }
   }
 
   filterLocation(queryParams) {
     let coordinates;
+
     if (queryParams.filterLocation) {
-      console.log(
-        this.geoService.allLocations[queryParams.filterLocation],
-        "all locations"
-      );
+      // console.log(
+      //   this.geoService.allLocations[queryParams.filterLocation],
+      //   "all locations"
+      // );
       if (this.geoService.allLocations[queryParams.filterLocation]) {
         coordinates = [
           this.geoService.allLocations[queryParams.filterLocation].lat,
