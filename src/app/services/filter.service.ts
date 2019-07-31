@@ -12,6 +12,8 @@ export class FilterService {
   range = 3;
   queryVariable = {};
   location_filter_header: any = ``;
+  selectedSectors: any[] = [];
+  selectedLocation: any = "";
 
   constructor(
     private tagsService: TagsService,
@@ -74,6 +76,9 @@ export class FilterService {
       this.location_filter_header = `($point:geometry!)`;
 
       return queryParams.filterLocation;
+    } else {
+      this.location_filter_query = ``;
+      return "";
     }
   }
 }

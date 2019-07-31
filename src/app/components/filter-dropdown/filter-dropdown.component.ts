@@ -1,8 +1,9 @@
 import { Component, OnInit, Input } from "@angular/core";
-import { Router } from "@angular/router";
+import { Router, ActivatedRoute } from "@angular/router";
 import { TagsService } from "../../services/tags.service";
 // import { take } from "rxjs/operators";
 import { GeocoderService } from "../../services/geocoder.service";
+import { FilterService } from "../../services/filter.service";
 
 @Component({
   selector: "app-filter-dropdown",
@@ -10,9 +11,9 @@ import { GeocoderService } from "../../services/geocoder.service";
   styleUrls: ["./filter-dropdown.component.css"]
 })
 export class FilterDropdownComponent implements OnInit {
-  @Input() selectedSectors: any = [];
+  selectedSectors: any = [];
   @Input() type: string;
-  @Input() selectedLocation: any = "";
+  selectedLocation: any = "";
   // selected: any;
 
   sectors: any = {};
@@ -23,12 +24,16 @@ export class FilterDropdownComponent implements OnInit {
   constructor(
     private tagsService: TagsService,
     private router: Router,
-    private geoService: GeocoderService
+    private geoService: GeocoderService,
+    private activatedRoute: ActivatedRoute,
+    private filterService: FilterService
   ) {}
 
   ngOnInit() {
     this.sectors = this.tagsService.allTags;
     this.locations = this.geoService.allLocations;
+    this.selectedLocation = this.filterService.selectedLocation;
+    this.selectedSectors = this.filterService.selectedSectors;
   }
 
   selectDropdown(event) {
@@ -44,9 +49,18 @@ export class FilterDropdownComponent implements OnInit {
     this.selectedSectors.map(sector => {
       queries[sector] = "filter";
     });
+    console.log(this.selectedLocation, "selectedLocation");
+    if (this.selectedLocation === "") {
+      this.filterService.selectedLocation = "";
+      console.log(queries, "queries");
+      this.router.navigate(["/" + this.type], {
+        queryParams: queries
+      });
+      return;
+    }
     queries["filterLocation"] = this.selectedLocation;
 
-    console.log(queries, "queries");
+    // console.log(queries, "queries");
     this.router.navigate(["/" + this.type], {
       queryParams: queries
     });

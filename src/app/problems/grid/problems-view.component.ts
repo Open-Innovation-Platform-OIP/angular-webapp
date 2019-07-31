@@ -5,9 +5,9 @@ import gql from "graphql-tag";
 import { Observable, Subscription } from "rxjs";
 import { P } from "@angular/cdk/keycodes";
 import { AuthService } from "../../services/auth.service";
-import { ActivatedRoute, Router } from "@angular/router";
+import { ActivatedRoute, Router, ParamMap } from "@angular/router";
 import { TagsService } from "../../services/tags.service";
-import { take } from "rxjs/operators";
+import { take, switchMap } from "rxjs/operators";
 import { FilterService } from "../../services/filter.service";
 
 @Component({
@@ -21,38 +21,46 @@ export class ProblemsViewComponent implements OnInit, OnDestroy {
   userProblemViewQuery: QueryRef<any>;
   userProblemViewSubscription: Subscription;
   problemViewQuery: QueryRef<any>;
-  problemViewSubscription: Subscription;
+  problemViewSubscription: any;
   constructor(
     private apollo: Apollo,
     private auth: AuthService,
     private activatedRoute: ActivatedRoute,
     private router: Router,
     private tagsService: TagsService,
-    private filterService: FilterService
+    private filterService: FilterService,
+    private route: ActivatedRoute
   ) {
     // this.tagsService.getTagsFromDB();
   }
-
-  selectedSectors: any = [];
-  selectedLocation: any = "";
 
   ngOnInit() {
     this.tagsService.getTagsFromDB();
 
     console.log(this.tagsService.allTags, "tag");
 
+    // console.log(this.filterService.queryVariable, "query varibale");
+    // console.log(
+    //   this.filterService.location_filter_header,
+    //   "query header varibale"
+
+    // );
+
+    console.log(this.filterService.sector_filter_query, "tag query");
+
     this.activatedRoute.queryParams.subscribe(params => {
-      // console.log("params", params);
-      this.selectedSectors = this.filterService.filterSector(params);
-      this.selectedLocation = this.filterService.filterLocation(params);
-
-      // console.log(this.filterService.queryVariable, "query varibale");
-      // console.log(
-      //   this.filterService.location_filter_header,
-      //   "query header varibale"
-      // );
-
-      console.log(this.filterService.sector_filter_query, "tag query");
+      console.log(
+        params,
+        "params",
+        "location",
+        this.filterService.location_filter_query
+      );
+      this.filterService.selectedSectors = this.filterService.filterSector(
+        params
+      );
+      this.filterService.selectedLocation = this.filterService.filterLocation(
+        params
+      );
 
       this.problemViewQuery = this.apollo.watchQuery<any>({
         query: gql`
@@ -120,7 +128,13 @@ export class ProblemsViewComponent implements OnInit, OnDestroy {
         fetchPolicy: "network-only"
       });
 
-      this.problemViewSubscription = this.problemViewQuery.valueChanges.subscribe(
+      this.problemViewSubscription = this.route.paramMap.pipe(
+        switchMap((params: ParamMap) => {
+          return this.problemViewQuery.valueChanges;
+        })
+      );
+
+      this.problemViewSubscription.subscribe(
         result => {
           if (result.data.problems.length > 0) {
             // console.log("PROBLEMS", result.data.problems_tags);
