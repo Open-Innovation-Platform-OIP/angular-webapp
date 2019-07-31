@@ -35,116 +35,118 @@ export class ProblemsViewComponent implements OnInit, OnDestroy {
     private geoService: GeocoderService
   ) {
     // this.tagsService.getTagsFromDB();
-  }
-
-  ngOnInit() {
     this.tagsService
       .getTagsFromDB()
       .then(result => {
         return this.geoService.getLocationsFromDB();
       })
       .then(result => {
-        console.log(result, "result");
-        console.log(this.geoService.allLocations, "result 2");
-
-        this.activatedRoute.queryParams.subscribe(params => {
-          this.filterService.selectedSectors = this.filterService.filterSector(
-            params
-          );
-          this.filterService.selectedLocation = this.filterService.filterLocation(
-            params
-          );
-
-          this.problemViewQuery = this.apollo.watchQuery<any>({
-            query: gql`
-          
-              query table${this.filterService.location_filter_header}{ 
-                problems(where:{is_draft: { _eq: false },_and:[{problems_tags:{tag_id:{${
-                  this.filterService.sector_filter_query
-                }}}},${
-              this.filterService.location_filter_query
-            }]} order_by: {  updated_at: desc } )
-                
-                 
-                {
-                id
-                title
-                description
-                
-                resources_needed
-                image_urls
-                edited_at
-                updated_at
-
-                featured_url
-
-                is_deleted
-                problem_voters {
-                  problem_id
-                  user_id
-                }
-                problem_watchers {
-                  problem_id
-                  user_id
-                }
-                problem_locations{
-                  location{
-                    id
-                    location_name
-                    lat
-                    long
-                  }
-                }
-                problem_validations {
-                  user_id
-                  comment
-                  agree
-                  created_at
-                  files
-                  user_id
-                  edited_at
-                  is_deleted
-                  problem_id
-                }
-                problem_collaborators {
-                  user_id
-                  problem_id
-                  edited_at
-                }
-                  
-              }
-            }
-          
-        `,
-            variables: this.filterService.queryVariable,
-            pollInterval: 500,
-            fetchPolicy: "network-only"
-          });
-
-          this.problemViewSubscription = this.route.paramMap.pipe(
-            switchMap((params: ParamMap) => {
-              return this.problemViewQuery.valueChanges;
-            })
-          );
-
-          this.problemViewSubscription.subscribe(
-            result => {
-              if (result.data.problems.length > 0) {
-                // console.log("PROBLEMS", result.data.problems_tags);
-
-                this.problems = result.data.problems;
-                // console.log("PROBLEMS in Component", this.problems);
-              } else {
-                this.problems = [];
-              }
-            },
-            error => {
-              console.error(JSON.stringify(error));
-            }
-          );
-        });
+        this.getProblems();
       })
       .catch(err => console.log(err, "error"));
+  }
+
+  ngOnInit() {
+    this.getProblems();
+  }
+
+  getProblems() {
+    this.activatedRoute.queryParams.subscribe(params => {
+      this.filterService.selectedSectors = this.filterService.filterSector(
+        params
+      );
+      this.filterService.selectedLocation = this.filterService.filterLocation(
+        params
+      );
+
+      this.problemViewQuery = this.apollo.watchQuery<any>({
+        query: gql`
+      
+          query table${this.filterService.location_filter_header}{ 
+            problems(where:{is_draft: { _eq: false },_and:[{problems_tags:{tag_id:{${
+              this.filterService.sector_filter_query
+            }}}},${
+          this.filterService.location_filter_query
+        }]} order_by: {  updated_at: desc } )
+            
+             
+            {
+            id
+            title
+            description
+            
+            resources_needed
+            image_urls
+            edited_at
+            updated_at
+
+            featured_url
+
+            is_deleted
+            problem_voters {
+              problem_id
+              user_id
+            }
+            problem_watchers {
+              problem_id
+              user_id
+            }
+            problem_locations{
+              location{
+                id
+                location_name
+                lat
+                long
+              }
+            }
+            problem_validations {
+              user_id
+              comment
+              agree
+              created_at
+              files
+              user_id
+              edited_at
+              is_deleted
+              problem_id
+            }
+            problem_collaborators {
+              user_id
+              problem_id
+              edited_at
+            }
+              
+          }
+        }
+      
+    `,
+        variables: this.filterService.queryVariable,
+        pollInterval: 500,
+        fetchPolicy: "network-only"
+      });
+
+      this.problemViewSubscription = this.route.paramMap.pipe(
+        switchMap((params: ParamMap) => {
+          return this.problemViewQuery.valueChanges;
+        })
+      );
+
+      this.problemViewSubscription.subscribe(
+        result => {
+          if (result.data.problems.length > 0) {
+            // console.log("PROBLEMS", result.data.problems_tags);
+
+            this.problems = result.data.problems;
+            // console.log("PROBLEMS in Component", this.problems);
+          } else {
+            this.problems = [];
+          }
+        },
+        error => {
+          console.error(JSON.stringify(error));
+        }
+      );
+    });
   }
 
   ngOnDestroy() {
