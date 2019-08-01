@@ -163,6 +163,7 @@ export class ProblemDetailComponent implements OnInit, OnDestroy {
   problem_attachments: any[] = [];
   problem_attachments_index: number = 0;
   problem_attachments_src: any;
+  problemLocations: any = [];
   modalSrc: any;
   sources: any;
   singleImg: boolean = false;
@@ -463,6 +464,13 @@ export class ProblemDetailComponent implements OnInit, OnDestroy {
                 id
                 name
             }
+        }
+
+        problem_locations{
+          location{
+            location_name
+            id
+          }
         }
 
         problem_validations(order_by:{edited_at: desc}){
@@ -778,13 +786,26 @@ export class ProblemDetailComponent implements OnInit, OnDestroy {
           this.problemData[key] = problem[key];
         }
       });
-      problem.problem_watchers.map(watcher => {
-        this.watchers.add(watcher.user_id);
-      });
 
-      problem.problem_voters.map(voter => {
-        this.voters.add(voter.user_id);
-      });
+      console.log(problem.problem_locations, "==problem locations");
+
+      if (problem.problem_locations) {
+        this.problemLocations = problem.problem_locations.map(location => {
+          return location.location;
+        });
+      }
+      if (problem.problem_watchers.length) {
+        problem.problem_watchers.map(watcher => {
+          this.watchers.add(watcher.user_id);
+        });
+      }
+
+      if (problem.problem_voters.length) {
+        problem.problem_voters.map(voter => {
+          this.voters.add(voter.user_id);
+        });
+      }
+
       if (problem.problem_owners.length) {
         this.ownerData = problem.problem_owners.map(owner => {
           this.owners.add(owner.user_id);
@@ -962,7 +983,14 @@ export class ProblemDetailComponent implements OnInit, OnDestroy {
   sectorSelected(sector) {
     // console.log(sector,"sector");
     this.router.navigate(["/problems"], {
-      queryParams: { [sector.name]: sector.id },
+      queryParams: { [sector.name]: "sectorFilter" },
+      queryParamsHandling: "merge"
+    });
+  }
+
+  locationSelected(location) {
+    this.router.navigate(["/problems"], {
+      queryParams: { ["filterLocation"]: location.location_name },
       queryParamsHandling: "merge"
     });
   }

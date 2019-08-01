@@ -68,7 +68,7 @@ export class FilterDropdownComponent implements OnInit {
     }
 
     this.selectedSectors.map(sector => {
-      queries[sector] = "filter";
+      queries[sector] = "sectorFilter";
     });
 
     if (!this.selectedLocation) {

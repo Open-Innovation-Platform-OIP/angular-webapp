@@ -69,12 +69,13 @@
                 <strong *ngIf="problemData.extent">Extent</strong>
                 <p class="description" style="white-space: pre-wrap;">{{problemData.extent}}</p>
 
-                <!-- <strong>Location(s)</strong>
-                <div *ngIf="problemData.location.length">
-                  <div *ngFor="let location of problemData.location" style="margin-right: 0.3em;">
-                    {{location.Address.Label}}</div> -->
-                <!-- <span>&nbsp;</span> -->
-                <!-- </div> -->
+                <strong>Location(s)</strong>
+                <div *ngIf="problemLocations.length">
+                  <div *ngFor="let location of problemLocations" (click)="locationSelected(location)" class="actions"
+                    style="margin-right: 0.3em; ">
+                    {{location.location_name}}</div>
+                  <span>&nbsp;</span>
+                </div>
 
                 <br />
 

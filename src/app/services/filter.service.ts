@@ -22,7 +22,11 @@ export class FilterService {
   ) {}
 
   filterSector(queryParams) {
-    if (!Object.keys(queryParams).length) {
+    if (
+      !Object.keys(queryParams).filter(
+        param => param !== "filterLocation" && param !== "locationRange"
+      ).length
+    ) {
       this.sector_filter_query = `_nin:[0]`;
       return [];
     } else {

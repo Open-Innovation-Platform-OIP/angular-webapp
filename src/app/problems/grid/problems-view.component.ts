@@ -52,12 +52,17 @@ export class ProblemsViewComponent implements OnInit, OnDestroy {
 
   getProblems() {
     this.activatedRoute.queryParams.subscribe(params => {
-      console.log(this.filterService.range, "range");
       this.filterService.selectedSectors = this.filterService.filterSector(
         params
       );
       this.filterService.selectedLocation = this.filterService.filterLocation(
         params
+      );
+
+      console.log(
+        this.filterService.location_filter_header,
+        "location filter header",
+        this.filterService.sector_filter_query
       );
 
       this.problemViewQuery = this.apollo.watchQuery<any>({
@@ -100,6 +105,12 @@ export class ProblemsViewComponent implements OnInit, OnDestroy {
                 long
               }
             }
+            problem_locations{
+              location{
+                location_name
+                id
+              }
+            }
             problem_validations {
               user_id
               comment
@@ -134,11 +145,12 @@ export class ProblemsViewComponent implements OnInit, OnDestroy {
 
       this.problemViewSubscription.subscribe(
         result => {
+          console.log(result, "results");
           if (result.data.problems.length > 0) {
             // console.log("PROBLEMS", result.data.problems_tags);
 
             this.problems = result.data.problems;
-            // console.log("PROBLEMS in Component", this.problems);
+            console.log("PROBLEMS in Component", this.problems);
           } else {
             this.problems = [];
           }

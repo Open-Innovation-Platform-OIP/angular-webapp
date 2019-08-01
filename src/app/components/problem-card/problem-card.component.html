@@ -24,9 +24,9 @@
       </ng-template>
     </div>
     <span> <b> Location(s) </b></span>
-    <div *ngFor="let location of problemData.location; let i = index" class="location">
-      <span *ngIf="location.Address && location.Address.Label && i < 1">{{
-        location.Address.Label
+    <div *ngFor="let location of problemData.problem_locations; let i = index" class="location">
+      <span *ngIf="location.location&& i < 1">{{
+        location.location.location_name
       }}</span>
       <span *ngIf="i < 1">&nbsp;</span>
     </div>
