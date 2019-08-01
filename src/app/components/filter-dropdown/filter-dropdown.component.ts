@@ -14,10 +14,20 @@ export class FilterDropdownComponent implements OnInit {
   @Input() type: string;
   selectedSectors: any = [];
   selectedLocation: any = "";
+  range: any;
+
+  ranges = {
+    0: "None",
+    25: "25 kms",
+    50: "50 kms",
+    100: "100 kms",
+    200: "200 kms"
+  };
 
   sectors: any = {};
   locations: any = {};
   objectValues = Object.values;
+  objectKeys = Object.keys;
 
   constructor(
     private tagsService: TagsService,
@@ -35,73 +45,48 @@ export class FilterDropdownComponent implements OnInit {
       console.log(params, "params in dropdown");
       this.selectedSectors = this.filterService.filterSector(params);
       this.selectedLocation = this.filterService.filterLocation(params);
-
-      console.log(
-        "sectors==",
-        this.selectedSectors,
-        "this.selectedLocations",
-        this.selectedLocation
-      );
+      if (params.locationRange) {
+        console.log(typeof params.locationRange, "location range");
+        this.range = Math.round(+params.locationRange * 110).toString();
+        this.filterService.range = +params.locationRange;
+      } else {
+        this.range = "0";
+      }
     });
     // this.selectedLocation = this.filterService.selectedLocation;
     // this.selectedSectors = this.filterService.selectedSectors;
   }
 
   selectDropdown(event) {
+    console.log(this.range, "range");
     let queries = {};
+    if (+this.range !== 0) {
+      this.filterService.range = +this.range / 110;
+      queries["locationRange"] = this.filterService.range;
+    } else {
+      this.filterService.range = 0.2;
+    }
 
     this.selectedSectors.map(sector => {
       queries[sector] = "filter";
     });
 
     if (!this.selectedLocation) {
+      if (queries["locationRange"]) {
+        delete queries["locationRange"];
+      }
       this.router.navigate(["/" + this.type], {
         queryParams: queries
       });
       return;
     }
 
-    queries["filterLocation"] = this.selectedLocation;
+    if (this.selectedLocation) {
+      queries["filterLocation"] = this.selectedLocation;
+    }
 
-    // if (this.selectedSectors.length) {
-    //   for (let sector in this.selectedSectors) {
-    //     if (!sector) {
-    //       this.selectedSectors = [];
-    //       this.router.navigate(["/" + this.type], {
-    //         queryParams: queries
-    //       });
-
-    //       // break;
-    //       return;
-    //     } else {
-    //       queries[sector] = "filter";
-    //     }
-    //   }
-    // }
-
-    // console.log(queries, "queries");
     this.router.navigate(["/" + this.type], {
       queryParams: queries
     });
   }
-
-  // selectLocation() {
-  //   const locationFilter = {};
-
-  //   // if (this.selectedLocations.length) {
-  //   //   this.selectedLocations.map(locationName => {
-  //   //     locationFilter["filterLocation"] = ;
-  //   //     // this.tagsService.sectorFilterArray.push()
-  //   //   });
-  //   console.log(this.selectedLocation, "selected location =====");
-  //   // }
-  //   locationFilter["filterLocation"] = this.selectedLocation;
-  //   console.log(locationFilter, "location filter");
-  //   // this.lothis.selectLocation
-
-  //   this.router.navigate(["/" + this.type], {
-  //     queryParams: locationFilter,
-  //     queryParamsHandling: "merge"
-  //   });
-  // }
 }

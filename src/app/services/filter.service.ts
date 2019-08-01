@@ -10,7 +10,7 @@ export class FilterService {
   sectorFilterArray: any[] = [];
   sector_filter_query: string = ``;
   location_filter_query: string = ``;
-  range = 0.2;
+  range: number = 0.2;
   queryVariable = {};
   location_filter_header: any = ``;
   selectedSectors: any[] = [];
@@ -27,7 +27,7 @@ export class FilterService {
       return [];
     } else {
       this.sectorsArray = Object.keys(queryParams).filter(
-        param => param !== "filterLocation"
+        param => param !== "filterLocation" && param !== "locationRange"
       );
       this.sectorFilterArray = this.sectorsArray.map(sector => {
         if (sector && this.tagsService.allTags[sector]) {

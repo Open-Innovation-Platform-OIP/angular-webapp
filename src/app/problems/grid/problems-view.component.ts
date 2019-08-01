@@ -52,6 +52,7 @@ export class ProblemsViewComponent implements OnInit, OnDestroy {
 
   getProblems() {
     this.activatedRoute.queryParams.subscribe(params => {
+      console.log(this.filterService.range, "range");
       this.filterService.selectedSectors = this.filterService.filterSector(
         params
       );

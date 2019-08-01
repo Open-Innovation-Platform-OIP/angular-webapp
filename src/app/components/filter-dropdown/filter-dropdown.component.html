@@ -11,12 +11,32 @@
   </mat-form-field>
 
   <mat-form-field class="dropDown">
-    <mat-select placeholder="Locations" [(ngModel)]="selectedLocation" ariaLabel="selectedLocation">
+    <mat-select placeholder="Location" [(ngModel)]="selectedLocation" ariaLabel="selectedLocation">
       <mat-option (click)="selectDropdown($event)" [value]="null">All</mat-option>
       <mat-option (click)="selectDropdown($event)" *ngFor="let location of objectValues(locations)"
         [value]="location.location_name">
         {{ location.location_name }}
       </mat-option>
+    </mat-select>
+  </mat-form-field>
+
+  <mat-form-field class="dropDown" *ngIf="selectedLocation">
+    <mat-select (click)="selectDropdown($event)" placeholder="Around" [(ngModel)]="range" ariaLabel="range">
+      <!-- <mat-option (click)="selectDropdown($event)" [value]="null">All</mat-option> -->
+      <mat-option (click)="selectDropdown($event)" *ngFor="let range of objectKeys(ranges)" [value]="range">
+        {{ ranges[range] }}
+      </mat-option>
+
+      <!-- <mat-option [value]="25">25 Kms</mat-option>
+      <mat-option [value]="50">50 Kms</mat-option>
+      <mat-option [value]="100">100 Kms</mat-option>
+      <mat-option [value]="200">200 Kms</mat-option> -->
+
+
+
+
+
+
     </mat-select>
   </mat-form-field>
 
