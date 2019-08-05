@@ -404,7 +404,7 @@ export class WizardComponent
                   }
                 );
 
-                this.problem["locations"] = this.problemLocations;
+                // this.problem["locations"] = this.problemLocations;
 
                 console.log(this.problemLocations, "locations from db");
               }
@@ -1152,7 +1152,7 @@ export class WizardComponent
   }
 
   submitProblemToDB(problem) {
-    // console.log(problem, "submitted");
+    console.log(problem, "submitted");
     const upsert_problem = gql`
       mutation upsert_problem($problems: [problems_insert_input!]!) {
         insert_problems(
@@ -1248,8 +1248,8 @@ export class WizardComponent
             this.tagService.addTagsInDb(tags, "problems", this.problem["id"]);
 
             this.problemLocations.map(location => {
-              const locationUniqueId =
-                location.lat.toString() + location.long.toString();
+              // const locationUniqueId =
+              //   location.lat.toString() + location.long.toString();
               if (
                 this.geoService.allLocations[location.location_name] &&
                 this.geoService.allLocations[location.location_name].id

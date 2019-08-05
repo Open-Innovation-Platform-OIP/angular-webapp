@@ -110,6 +110,7 @@ export class GeocoderService {
   public addLocationsInDB(locations, tableName, tableId?) {
     let locationData = [];
     let test = `location_name`;
+    console.log(locations, "locations in add geocoder");
     locationData = locations.map(location => {
       // location.lat = location.location.coordinates[0];
       // location.long = location.location.coordinates[1];

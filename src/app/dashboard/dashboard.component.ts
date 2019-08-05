@@ -48,7 +48,7 @@ export class DashboardComponent implements OnInit, OnDestroy {
     featured_url
     title
     description
-    location
+  
     problem_voters{user_id}
     problem_watchers{user_id}
     problem_validations{user_id}
@@ -84,18 +84,18 @@ export class DashboardComponent implements OnInit, OnDestroy {
       organizationByOrganizationId {
         name
       }
-      location
+      
 
-      problemsByUser(where: { is_draft: { _eq: false } }){
+      problems(where: { is_draft: { _eq: false } }){
         id
       }
-      user_collaborators{
+      problem_collaborators {
         intent
       }
-      user_validations{
+      problem_validations {
         comment
       }
-      enrichmentssBycreatedBy(where: { is_deleted: { _eq: false } }){
+      enrichments(where: { is_deleted: { _eq: false } }){
         id
       }
       users_tags{
@@ -284,9 +284,9 @@ export class DashboardComponent implements OnInit, OnDestroy {
         { created_by: {_eq: ${this.auth.currentUserValue.id}}},
         { is_deleted: {_eq: false}}
       ] }) {
-       problemsByproblemId ${this.problemQueryString}
+       problem ${this.problemQueryString}
      }
-     problems_validations(where:{user_id:{_eq: ${
+     problem_validations(where:{user_id:{_eq: ${
        this.auth.currentUserValue.id
      }}}) {
        problem ${this.problemQueryString}
@@ -297,7 +297,7 @@ export class DashboardComponent implements OnInit, OnDestroy {
        problem ${this.problemQueryString}
      }
      discussions(where:{created_by:{_eq: ${this.auth.currentUserValue.id}}}) {
-       problemsByproblemId ${this.problemQueryString}
+       problem ${this.problemQueryString}
      }
 
 
@@ -438,7 +438,7 @@ export class DashboardComponent implements OnInit, OnDestroy {
         { tag_id:{${this.filterService.sector_filter_query}}}
       ]}) {
         tag{
-          tag_problems{
+          problems_tags {
             problem ${this.problemQueryString}
           }
         }
@@ -481,7 +481,7 @@ export class DashboardComponent implements OnInit, OnDestroy {
     {
       users_tags(where:{user_id:{_eq:${this.auth.currentUserValue.id}}}) {
         tag{
-          tag_users(where:{user_id:{_neq:${this.auth.currentUserValue.id}}}){
+          users_tags (where:{user_id:{_neq:${this.auth.currentUserValue.id}}}){
             user ${this.userQueryString}
           }
         }

@@ -90,7 +90,7 @@ export class ViewUserProfileComponent implements OnInit, OnDestroy {
               name
               qualification
               photo_url
-              location
+            
               email
               phone_number
               is_ngo
@@ -103,16 +103,16 @@ export class ViewUserProfileComponent implements OnInit, OnDestroy {
               is_beneficiary 
               
 
-              problemsByUser(where: { is_draft: { _eq: false } }){
+              problems(where: { is_draft: { _eq: false } }){
                 id
               }
-              user_collaborators{
+              problem_collaborators{
                 intent
               }
-              user_validations{
+              problem_validations{
                 comment
               }
-              enrichmentssBycreatedBy(where: { is_deleted: { _eq: false } }){
+              enrichments(where: { is_deleted: { _eq: false } }){
                 id
               }
               organizationByOrganizationId{

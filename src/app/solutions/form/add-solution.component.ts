@@ -30,7 +30,7 @@ import { GeocoderService } from "../../services/geocoder.service";
 import swal from "sweetalert2";
 var Buffer = require("buffer/").Buffer;
 import { FormBuilder } from "@angular/forms";
-import {take} from "rxjs/operators";
+import { take } from "rxjs/operators";
 
 import { Content } from "@angular/compiler/src/render3/r3_ast";
 
@@ -356,6 +356,15 @@ export class AddSolutionComponent
                       impact
                       extent
                       min_population
+                      problem_locations{
+                        location{
+                          id
+                          location_name
+                          location
+                          lat
+                          long
+                        }
+                      }
                       
                       max_population
                       beneficiary_attributes
@@ -372,7 +381,8 @@ export class AddSolutionComponent
         // pollInterval: 500,
         fetchPolicy: "network-only"
       })
-      .valueChanges.pipe(take(1)).subscribe(
+      .valueChanges.pipe(take(1))
+      .subscribe(
         result => {
           let problemData = result.data.problems[0];
           // console.log(problemData, "problem data from db");
@@ -462,7 +472,8 @@ export class AddSolutionComponent
               }
             }
           }
-        }).pipe(take(1))
+        })
+        .pipe(take(1))
         .subscribe(
           ({ data }) => {
             console.log("worked", data);
@@ -516,7 +527,8 @@ export class AddSolutionComponent
         variables: {
           problems_solutions: problems
         }
-      }).pipe(take(1))
+      })
+      .pipe(take(1))
       .subscribe(
         data => {
           console.log("problem adddition worked");
@@ -558,7 +570,8 @@ export class AddSolutionComponent
         variables: {
           solution_owners: owners
         }
-      }).pipe(take(1))
+      })
+      .pipe(take(1))
       .subscribe(
         data => {
           console.log("owner adddition worked");
@@ -610,7 +623,16 @@ export class AddSolutionComponent
                     updated_at
                     image_urls
                     featured_url
-                    location
+                    problem_locations{
+                      location{
+                        id
+                        location_name
+                        location
+                        lat
+                        long
+                      }
+                    }
+                    
                    
                     
                     problem_voters{
@@ -704,7 +726,8 @@ export class AddSolutionComponent
               }
             }
           }
-        }).pipe(take(1))
+        })
+        .pipe(take(1))
         .subscribe(
           ({ data }) => {
             console.log("worked", data);
@@ -809,7 +832,8 @@ export class AddSolutionComponent
             // pollInterval: 500,
             fetchPolicy: "network-only"
           })
-          .valueChanges.pipe(take(1)).subscribe(
+          .valueChanges.pipe(take(1))
+          .subscribe(
             result => {
               this.solution["id"] = result.data.solutions[0].id;
               this.is_edit = true;
@@ -1175,7 +1199,8 @@ export class AddSolutionComponent
               }
             }
           }
-        }).pipe(take(1))
+        })
+        .pipe(take(1))
         .subscribe(
           ({ data }) => {
             console.log("worked", data);
@@ -1450,7 +1475,8 @@ export class AddSolutionComponent
         variables: {
           solutions: [this.solution]
         }
-      }).pipe(take(1))
+      })
+      .pipe(take(1))
       .subscribe(
         result => {
           if (result.data.insert_solutions.returning.length > 0) {
@@ -1464,13 +1490,19 @@ export class AddSolutionComponent
             console.log(this.solution.is_draft, "draft", this.is_edit);
 
             if (this.is_edit && !this.solution.is_draft) {
-              this.router.navigate(["solutions", this.solution["id"]], { queryParamsHandling: 'preserve' });
+              this.router.navigate(["solutions", this.solution["id"]], {
+                queryParamsHandling: "preserve"
+              });
             } else if (!this.is_edit && !this.solution.is_draft) {
               this.showSuccessSwal("Solution Added");
-              this.router.navigate(["solutions", this.solution["id"]], { queryParamsHandling: 'preserve' });
+              this.router.navigate(["solutions", this.solution["id"]], {
+                queryParamsHandling: "preserve"
+              });
             } else if (this.is_edit && !updatedSolutionData.is_draft) {
               this.showSuccessSwal("Solution Added");
-              this.router.navigate(["solutions", this.solution["id"]], { queryParamsHandling: 'preserve' });
+              this.router.navigate(["solutions", this.solution["id"]], {
+                queryParamsHandling: "preserve"
+              });
             }
             // else if (this.is_edit && this.solution.is_draft) {
             //   this.router.navigate(["solutions", this.solution["id"]]);
@@ -1533,7 +1565,8 @@ export class AddSolutionComponent
           variables: {
             solutions_tags: Array.from(solution_tags)
           }
-        }).pipe(take(1))
+        })
+        .pipe(take(1))
         .subscribe(
           data => {},
           err => {

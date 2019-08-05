@@ -87,7 +87,8 @@ export class AddUserProfileComponent implements OnInit, OnChanges {
   objectKeys = Object.keys;
   personaArray = [];
   organization: any = {};
-  userLocation: any;
+  userLocationName: any;
+  locationData = {};
 
   user: any = {
     id: "",
@@ -242,16 +243,15 @@ export class AddUserProfileComponent implements OnInit, OnChanges {
   }
 
   getLocation() {
-    if (this.userLocation != "Unknown") {
-      this.here.getAddress(this.userLocation).then(
-        result => {
-          this.locations = <Array<any>>result;
-        },
-        error => {
-          console.error(error);
-        }
-      );
-    }
+    this.here.getAddress(this.userLocationName).then(
+      result => {
+        this.locations = <Array<any>>result;
+      },
+      error => {
+        console.error(error);
+      }
+    );
+
     // var obj = personas;
     // console.log(personas);
     // var keys = Object.keys(obj);
@@ -262,9 +262,22 @@ export class AddUserProfileComponent implements OnInit, OnChanges {
     // console.log(JSON.parse("{" + filtered.toString() + "}"));
     // console.log(typeof JSON.parse("{" + filtered.toString() + "}"));
   }
-  public storeLocation(location) {
-    this.user.location = location.option.value;
-    this.userLocation = location.option.value.Address.Label;
+  public storeLocation(event) {
+    // this.user.location = location.option.value;
+    const coordinateArray = [
+      event.option.value.DisplayPosition.Latitude,
+      event.option.value.DisplayPosition.Longitude
+    ];
+
+    const locationData = {
+      location: { type: "Point", coordinates: coordinateArray },
+      location_name: event.option.value.Address.Label,
+      lat: coordinateArray[0],
+      long: coordinateArray[1]
+    };
+
+    this.userLocationName = event.option.value.Address.Label;
+    this.locationData = locationData;
   }
   ngOnInit() {
     this.tagService.getTagsFromDB();
@@ -289,7 +302,7 @@ export class AddUserProfileComponent implements OnInit, OnChanges {
               email
               qualification
               photo_url
-              location
+              
               phone_number
               is_ngo
               is_innovator
@@ -339,9 +352,9 @@ export class AddUserProfileComponent implements OnInit, OnChanges {
                     // }
                   }
                 });
-                if (data.users[0].location.Address) {
-                  this.userLocation = data.users[0].location.Address.Label;
-                }
+                // if (data.users[0].location.Address) {
+                //   this.userLocation = data.users[0].location.Address.Label;
+                // }
 
                 if (data.users[0].organizationByOrganizationId) {
                   this.organization =

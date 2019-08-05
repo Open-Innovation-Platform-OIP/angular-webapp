@@ -202,7 +202,7 @@ export class NavbarComponent implements OnInit {
                 text
               }
              
-              problemsByproblemId {
+              problem {
                 title
                 problems_tags {
                   tag {

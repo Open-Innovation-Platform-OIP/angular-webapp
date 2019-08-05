@@ -17,7 +17,7 @@ export class FilterDropdownComponent implements OnInit {
   range: any;
 
   ranges = {
-    0: "None",
+    0: "0 Kms",
     25: "25 kms",
     50: "50 kms",
     100: "100 kms",

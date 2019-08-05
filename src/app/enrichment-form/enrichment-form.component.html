@@ -3,7 +3,8 @@
     <div class="row">
       <div class="col-md-8">
         <app-wizard-container [content]="enrichmentData" [contentType]="'enrichment'"
-          (contentSubmitted)="onEnrichmentSubmit($event)"></app-wizard-container>
+          (contentSubmitted)="onEnrichmentSubmit($event)" [selectedLocations]="enrichmentLocations"
+          (locationSelected)="addLocation($event)" (locationRemoved)="removeLocation($event)"></app-wizard-container>
       </div>
       <div class="col-md-4">
         <!-- <app-problem-card *ngIf="problemData" [problemData]="problemData"></app-problem-card> -->

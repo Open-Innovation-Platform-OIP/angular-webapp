@@ -468,8 +468,11 @@ export class ProblemDetailComponent implements OnInit, OnDestroy {
 
         problem_locations{
           location{
-            location_name
             id
+            location_name
+            location
+            lat
+            long
           }
         }
 
@@ -586,6 +589,15 @@ export class ProblemDetailComponent implements OnInit, OnDestroy {
             user_id
           }
           organization
+          enrichment_locations{
+            location{
+              id
+            location_name
+            location
+            lat
+            long
+            }
+          }
           beneficiary_attributes
           
           resources_needed

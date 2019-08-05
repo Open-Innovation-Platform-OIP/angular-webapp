@@ -21,7 +21,6 @@ export class EnrichmentCardComponent implements OnInit {
     this.enrichmentData.enrichment_voters.map(voter => {
       this.voters.add(voter.user_id);
     });
-    // console.log(this.enrichmentData, "enrichment app card");
   }
   cardClicked() {
     console.log("card clicked");
