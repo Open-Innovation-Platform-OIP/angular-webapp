@@ -105,7 +105,7 @@ export class SolutionDetailComponent implements OnInit {
     impact: "",
     website_url: "",
     deployment: 0,
-    budget: {},
+
     budget_title: "",
     min_budget: 0,
     max_budget: 0,
@@ -126,7 +126,7 @@ export class SolutionDetailComponent implements OnInit {
     organization: "",
     impact: "",
     extent: "",
-    location: [],
+
     min_population: 0,
     max_population: 0,
     beneficiary_attributes: "",
@@ -407,7 +407,7 @@ export class SolutionDetailComponent implements OnInit {
     technology
     website_url
     deployment
-    budget
+    
     budget_title
     min_budget
     max_budget
@@ -499,7 +499,7 @@ export class SolutionDetailComponent implements OnInit {
         id
             title
             description
-            location
+            
             resources_needed
             image_urls
             edited_at
@@ -1200,6 +1200,8 @@ export class SolutionDetailComponent implements OnInit {
     validationData.user_id = Number(this.auth.currentUserValue.id);
 
     validationData.solution_id = this.solutionData.id;
+
+    console.log(validationData, "validation data solution");
 
     this.validationService.submitSolutionValidationToDB(validationData);
     this.startInterval();

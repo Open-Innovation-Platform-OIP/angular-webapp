@@ -41,13 +41,23 @@ export class LandingPageComponent implements OnInit, OnDestroy {
               id
               title
               description
-              location
+
               resources_needed
               image_urls
               edited_at
               updated_at
 
               featured_url
+
+              problem_locations {
+                location {
+                  id
+                  location_name
+                  location
+                  lat
+                  long
+                }
+              }
 
               is_deleted
               problem_voters {

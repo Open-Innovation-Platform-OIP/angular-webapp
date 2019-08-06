@@ -76,10 +76,10 @@
                     </div>
 
                     <div class="row justify-content-center">
-                      <div class="col-sm-10" *ngFor="let problem of objectValues(selectedProblems)">
+                      <div class="col-sm-10" *ngFor="let problem of objectValues(selectedProblemsData)">
 
-                        <mat-chip *ngIf="problem.title" [selectable]="selectable" [removable]="removable"
-                          (removed)="remove(problem)" style="margin-right:0.3em; margin-bottom: 0.4em;">
+                        <mat-chip [selectable]="selectable" [removable]="removable" (removed)="remove(problem)"
+                          style="margin-right:0.3em; margin-bottom: 0.4em;">
                           <a [routerLink]="'/problems/'+problem.id" queryParamsHandling="merge">
                             {{problem.title}}
                           </a>

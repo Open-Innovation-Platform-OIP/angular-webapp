@@ -57,7 +57,7 @@ export class SolutionsViewComponent implements OnInit {
               impact
               website_url
               deployment
-              budget
+              
               image_urls
               edited_at
               updated_at

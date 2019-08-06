@@ -66,7 +66,7 @@ export class CollaborationService {
         mutation: upsert_collaborators,
 
         variables: {
-          collaborators: [collaborationData]
+          problem_collaborators: [collaborationData]
         }
       })
       .pipe(take(1))
@@ -99,8 +99,8 @@ export class CollaborationService {
   deleteCollaboration(collaboratorData) {
     return this.apollo.mutate<any>({
       mutation: gql`
-        mutation DeleteMutation($where: collaborators_bool_exp!) {
-          delete_collaborators(where: $where) {
+        mutation DeleteMutation($where: problem_collaborators_bool_exp!) {
+          delete_problem_collaborators(where: $where) {
             affected_rows
             returning {
               problem_id

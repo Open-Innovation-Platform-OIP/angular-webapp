@@ -179,10 +179,7 @@ export class AddSolutionComponent
     pilots: "",
     website_url: "",
     deployment: 0,
-    budget: {
-      title: "",
-      cost: 0
-    },
+
     budget_title: "",
     min_budget: 0,
     max_budget: 0,
@@ -344,6 +341,7 @@ export class AddSolutionComponent
   }
 
   getProblemData(id) {
+    console.log(id, "id");
     // this.searchResultsObservable.unsubscribe();
     this.apollo
       .watchQuery<any>({
@@ -356,24 +354,18 @@ export class AddSolutionComponent
                       impact
                       extent
                       min_population
-                      problem_locations{
-                        location{
-                          id
-                          location_name
-                          location
-                          lat
-                          long
-                        }
-                      }
-                      
-                      max_population
-                      beneficiary_attributes
-                      resources_needed
+
                       problems_tags{
                         tag{
                           name
                         }
                       }
+                      
+                      
+                      max_population
+                      beneficiary_attributes
+                      resources_needed
+                     
                                   
                       }
                   }
@@ -394,10 +386,14 @@ export class AddSolutionComponent
           }
 
           this.selectedProblemsData[problemData.id] = problemData;
-          // console.log(this.selectedProblemsData, "problem data from db");
+          console.log(
+            this.selectedProblemsData,
+            " selected problems in solutions"
+          );
         },
         error => {
           console.log(error);
+          console.error(JSON.stringify(error));
         }
       );
   }
@@ -493,9 +489,9 @@ export class AddSolutionComponent
   }
 
   saveProblemsInDB(solutionId, problemsArray) {
-    let problems = [];
+    let problems_solutions = [];
     problemsArray = Object.values(problemsArray);
-    problems = problemsArray.map(problem => {
+    problems_solutions = problemsArray.map(problem => {
       return {
         problem_id: problem.id,
         solution_id: solutionId
@@ -520,12 +516,12 @@ export class AddSolutionComponent
         }
       }
     `;
-    console.log(problems, "problem added");
+    // console.log(problems, "problem added");
     this.apollo
       .mutate({
         mutation: upsert_problems_solutions,
         variables: {
-          problems_solutions: problems
+          problems_solutions: problems_solutions
         }
       })
       .pipe(take(1))
@@ -601,6 +597,7 @@ export class AddSolutionComponent
             result.data.search_problems_v2.map(problem => {
               this.searchResults[problem["id"]] = problem;
             });
+            console.log(this.searchResults, "search results");
           }
         },
         err => {
@@ -765,9 +762,9 @@ export class AddSolutionComponent
     console.log(this.selectedProblems, "selected problems set ");
 
     if (Object.values(this.selectedProblems).length) {
-      Object.values(this.selectedProblems).forEach(problem => {
-        console.log("selected problems on ngoninit");
-        this.getProblemData(problem["id"]);
+      Object.values(this.selectedProblems).forEach(problemId => {
+        // console.log("selected problems on ngoninit", problem);
+        this.getProblemData(problemId);
       });
     }
 
@@ -789,7 +786,7 @@ export class AddSolutionComponent
                             description
                             website_url
                             deployment
-                            budget
+                            
                             budget_title
                             min_budget
                             max_budget
@@ -1443,7 +1440,6 @@ export class AddSolutionComponent
               timeline
               pilots
               deployment
-              budget
               budget_title
               min_budget
               max_budget
@@ -1483,7 +1479,10 @@ export class AddSolutionComponent
             let updatedSolutionData = result.data.insert_solutions.returning[0];
             this.solution["id"] = result.data.insert_solutions.returning[0].id;
 
-            this.saveProblemsInDB(this.solution["id"], this.selectedProblems);
+            this.saveProblemsInDB(
+              this.solution["id"],
+              this.selectedProblemsData
+            );
             this.saveOwnersInDB(this.solution["id"], this.owners);
             this.saveSectorsInDB();
 

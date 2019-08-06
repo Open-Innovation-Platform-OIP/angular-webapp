@@ -77,8 +77,8 @@ export class ValidationService {
     // console.log(id, "ID");
     return this.apollo.mutate<any>({
       mutation: gql`
-        mutation DeleteMutation($where: validations_bool_exp!) {
-          delete_validations(where: $where) {
+        mutation DeleteMutation($where: problem_validations_bool_exp!) {
+          delete_problem_validations(where: $where) {
             affected_rows
             returning {
               problem_id
@@ -134,6 +134,8 @@ export class ValidationService {
         },
         err => {
           console.log(err, "error");
+          console.error(JSON.stringify(err));
+
           swal({
             title: "Error",
             text: "Try Again",
