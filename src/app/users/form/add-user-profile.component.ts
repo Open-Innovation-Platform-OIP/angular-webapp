@@ -88,7 +88,8 @@ export class AddUserProfileComponent implements OnInit, OnChanges {
   personaArray = [];
   organization: any = {};
   userLocationName: any;
-  locationData = {};
+  locationData = [];
+  prevLocation: any = {};
 
   user: any = {
     id: "",
@@ -101,7 +102,7 @@ export class AddUserProfileComponent implements OnInit, OnChanges {
     qualification: "",
     photo_url: {},
     phone_number: "",
-    location: {},
+
     is_ngo: false,
     is_innovator: false,
     is_expert: false,
@@ -127,7 +128,8 @@ export class AddUserProfileComponent implements OnInit, OnChanges {
     private imgUpload: FilesService,
     private auth: AuthService,
     private here: GeocoderService,
-    private tagService: TagsService
+    private tagService: TagsService,
+    private geoService: GeocoderService
   ) {
     this.filteredSectors = this.sectorCtrl.valueChanges.pipe(
       startWith(null),
@@ -264,12 +266,13 @@ export class AddUserProfileComponent implements OnInit, OnChanges {
   }
   public storeLocation(event) {
     // this.user.location = location.option.value;
+    this.locationData = [];
     const coordinateArray = [
       event.option.value.DisplayPosition.Latitude,
       event.option.value.DisplayPosition.Longitude
     ];
 
-    const locationData = {
+    const location = {
       location: { type: "Point", coordinates: coordinateArray },
       location_name: event.option.value.Address.Label,
       lat: coordinateArray[0],
@@ -277,8 +280,10 @@ export class AddUserProfileComponent implements OnInit, OnChanges {
     };
 
     this.userLocationName = event.option.value.Address.Label;
-    this.locationData = locationData;
+    this.locationData.push(location);
+    // console.log(this.locationData, "location data");
   }
+
   ngOnInit() {
     this.tagService.getTagsFromDB();
 
@@ -302,6 +307,18 @@ export class AddUserProfileComponent implements OnInit, OnChanges {
               email
               qualification
               photo_url
+
+              user_locations{
+                location{
+                  id
+                  location_name
+                  location
+                  lat
+                  long
+              
+                }
+
+              }
               
               phone_number
               is_ngo
@@ -343,18 +360,21 @@ export class AddUserProfileComponent implements OnInit, OnChanges {
                 Object.keys(this.user).map(key => {
                   if (data.users[0][key]) {
                     this.user[key] = data.users[0][key];
-
-                    // if (typeof data.users[0][key] === "boolean") {
-                    // this.personaArray.push(data.users[0][key]);
-                    // if (data.users[0][key]) {
-                    //   this.personas.push(data.users[0][key].slice(3));
-                    // }
-                    // }
                   }
                 });
-                // if (data.users[0].location.Address) {
-                //   this.userLocation = data.users[0].location.Address.Label;
-                // }
+
+                if (data.users[0].user_locations.length) {
+                  const userLocationFromDB =
+                    data.users[0].user_locations[0].location;
+                  delete userLocationFromDB.__typename;
+                  console.log(data.users[0].user_locations, "user locations");
+                  this.userLocationName = userLocationFromDB.location_name;
+
+                  this.prevLocation = userLocationFromDB;
+
+                  this.locationData.push(userLocationFromDB);
+                  console.log(this.locationData, "location data ng on it");
+                }
 
                 if (data.users[0].organizationByOrganizationId) {
                   this.organization =
@@ -387,6 +407,15 @@ export class AddUserProfileComponent implements OnInit, OnChanges {
   }
 
   updateProfileToDb() {
+    if (Object.values(this.prevLocation).length) {
+      if (this.prevLocation.location_name !== this.userLocationName) {
+        this.geoService.removeLocationRelation(
+          this.prevLocation.id,
+          this.user["id"],
+          "users"
+        );
+      }
+    }
     this.sectors = this.removeDuplicates(this.sectors);
     this.user.phone_number = this.user.phone_number.toString();
     if (Number(this.auth.currentUserValue.id)) {
@@ -418,6 +447,40 @@ export class AddUserProfileComponent implements OnInit, OnChanges {
         const tags = [];
 
         const users_tags = new Set();
+        const user_location = new Set();
+        if (this.locationData.length) {
+          this.locationData.map(location => {
+            // const locationUniqueId =
+            //   location.lat.toString() + location.long.toString();
+            if (
+              this.geoService.allLocations[location.location_name] &&
+              this.geoService.allLocations[location.location_name].id
+            ) {
+              user_location.add({
+                location_id: this.geoService.allLocations[
+                  location.location_name
+                ].id,
+                user_id: this.user["id"]
+              });
+            }
+          });
+        }
+
+        if (user_location.size > 0) {
+          this.geoService.addRelationToLocations(
+            this.user["id"],
+            user_location,
+            "users"
+          );
+        }
+
+        if (this.locationData.length) {
+          this.geoService.addLocationsInDB(
+            this.locationData,
+            "users",
+            this.user["id"]
+          );
+        }
 
         this.sectors.map(sector => {
           tags.push({ name: sector });

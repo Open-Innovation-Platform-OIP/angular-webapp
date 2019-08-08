@@ -132,7 +132,7 @@ export class ProblemDetailComponent implements OnInit, OnDestroy {
     embed_urls: [],
     featured_type: "",
     voted_by: "",
-    created_by: "",
+    user_id: "",
     is_draft: "",
     attachments: []
   };
@@ -311,7 +311,7 @@ export class ProblemDetailComponent implements OnInit, OnDestroy {
           Object.keys(result.data.users[0]).map(persona => {
             this.userPersonas[persona] = result.data.users[0][persona];
           });
-          // console.log("persona assignment", result.data.users[0]);
+          console.log("persona assignment", this.userPersonas);
           result.data.users[0].users_tags.map(tag => {
             this.userInterests[tag.tag.name] = tag.tag;
           });
@@ -438,7 +438,7 @@ export class ProblemDetailComponent implements OnInit, OnDestroy {
           
           resources_needed
           is_draft
-          created_by
+          user_id
           edited_at
           updated_at
           image_urls
@@ -543,7 +543,7 @@ export class ProblemDetailComponent implements OnInit, OnDestroy {
 
         discussions(where: { is_deleted: { _eq: false} },order_by: {created_at: desc}) {
           id
-          created_by
+          user_id
           created_at
           edited_at
           text
@@ -604,7 +604,7 @@ export class ProblemDetailComponent implements OnInit, OnDestroy {
           image_urls
           attachments
           video_urls
-          created_by
+          user_id
           edited_at
           
           is_deleted
@@ -743,7 +743,7 @@ export class ProblemDetailComponent implements OnInit, OnDestroy {
     });
 
     problem.enrichments.map(enrichment => {
-      if (enrichment.created_by === Number(this.auth.currentUserValue.id)) {
+      if (enrichment.user_id === Number(this.auth.currentUserValue.id)) {
         this.disableEnrichButton = true;
       }
     });
@@ -781,6 +781,7 @@ export class ProblemDetailComponent implements OnInit, OnDestroy {
     // console.log(problem.is_draft, "is draft");
     if (problem.user) {
       this.problemOwner = problem.user.name;
+      // console.log(problem.problems_tags, "problem tags");
       problem.problems_tags.map(tags => {
         if (this.userInterests[tags.tag.name]) {
           this.sectorMatched = true;
@@ -1125,7 +1126,7 @@ export class ProblemDetailComponent implements OnInit, OnDestroy {
   toggleWatchProblem() {
     // console.log('toggling watch flag');
     if (
-      !(this.userId == this.problemData.created_by) &&
+      !(this.userId == this.problemData.user_id) &&
       this.auth.currentUserValue.id
     ) {
       if (!this.watchers.has(this.userId)) {
@@ -1201,7 +1202,7 @@ export class ProblemDetailComponent implements OnInit, OnDestroy {
   toggleVoteProblem() {
     // console.log('toggling watch flag');
     if (
-      !(this.userId == this.problemData.created_by) &&
+      !(this.userId == this.problemData.user_id) &&
       this.auth.currentUserValue.id
     ) {
       if (!this.voters.has(this.userId)) {
@@ -1286,7 +1287,7 @@ export class ProblemDetailComponent implements OnInit, OnDestroy {
       delete enrichmentData.__typename;
       // delete enrichmentData.user;
     }
-    enrichmentData.created_by = Number(this.auth.currentUserValue.id);
+    enrichmentData.user_id = Number(this.auth.currentUserValue.id);
 
     enrichmentData.problem_id = this.problemData.id;
 
@@ -1479,7 +1480,7 @@ export class ProblemDetailComponent implements OnInit, OnDestroy {
 
     console.log(mentions, "mentions of discussions");
     // let comment = {
-    //   created_by: this.auth.currentUserValue.id,
+    //   user_id: this.auth.currentUserValue.id,
     //   problem_id: this.problemData["id"],
     //   text: content,
     //   attachments: file_links, // overwriting the incoming blobs
@@ -1498,7 +1499,7 @@ export class ProblemDetailComponent implements OnInit, OnDestroy {
 
   submitComment(content, mentions, attachments?, comment_id?) {
     let comment = {
-      created_by: this.auth.currentUserValue.id,
+      user_id: this.auth.currentUserValue.id,
       problem_id: this.problemData["id"],
       text: content,
       attachments: attachments // overwriting the incoming blobs
@@ -1541,7 +1542,7 @@ export class ProblemDetailComponent implements OnInit, OnDestroy {
   //     });
   //   }
 
-  //   comment["created_by"] = this.auth.currentUserValue.id;
+  //   comment["user_id"] = this.auth.currentUserValue.id;
   //   comment["problem_id"] = this.problemData["id"];
   //   comment["attachments"] = file_links; // overwriting the incoming blobs
   //   this.discussionsService.submitCommentToDB(comment);

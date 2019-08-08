@@ -109,7 +109,7 @@ export class WizardComponent
     featured_type: "",
     organization_id: 1,
 
-    created_by: Number(this.auth.currentUserValue.id),
+    user_id: Number(this.auth.currentUserValue.id),
     is_draft: true,
 
     attachments: []
@@ -317,7 +317,7 @@ export class WizardComponent
                             problems(where: { id: { _eq: ${params.id} } }) {
                             id
                             title
-                            created_by
+                            user_id
                             updated_at
                             description
                             
@@ -400,6 +400,8 @@ export class WizardComponent
               if (result.data.problems[0].problem_locations) {
                 this.problemLocations = result.data.problems[0].problem_locations.map(
                   locations => {
+                    delete locations.location.__typename;
+
                     return locations.location;
                   }
                 );
@@ -1315,6 +1317,7 @@ export class WizardComponent
                   },
                   err => {
                     console.error("Error uploading tags", err);
+                    console.error(JSON.stringify(err));
                     if (!this.problem.is_draft) {
                       this.confirmSubmission();
                     }

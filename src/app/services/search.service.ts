@@ -22,24 +22,33 @@ export class SearchService {
           email
           photo_url
           organization
-          location
+          user_locations{
+            location{
+              location_name
+              id
+              location
+              lat
+              long
+
+            }
+          }
           users_tags{
             tag {
                 id
                 name
             }
         }
-        problemsByUser(where: { is_draft: { _eq: false } }){
+        problems(where: { is_draft: { _eq: false } }){
           id
     
         }
-        user_collaborators{
+        solution_collaborators {
           intent
         }
-        user_validations{
-          comment
+        problem_collaborators {
+          intent
         }
-        enrichmentssBycreatedBy(where: { is_deleted: { _eq: false } }){
+        enrichments(where: { is_deleted: { _eq: false } }){
           id
         }
          
@@ -52,9 +61,10 @@ export class SearchService {
   }
 
   problemSearch(searchInput) {
+    // ,order_by: {problem_voters_aggregate: {count: desc}}
     return this.apollo.watchQuery<any>({
       query: gql`query {
-          search_problems_multiword(args: {search: "${searchInput}"},where: { is_draft: { _eq: false } },order_by: {problem_voters_aggregate: {count: desc}}) {
+          search_problems_multiword(args: {search: "${searchInput}"},where: { is_draft: { _eq: false } }) {
             id
             title
             description
@@ -71,11 +81,7 @@ export class SearchService {
               }
             }
 
-            problem_voters_aggregate {
-              aggregate {
-                count
-              }
-            }
+            
 
             
 

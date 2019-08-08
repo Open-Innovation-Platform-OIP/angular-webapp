@@ -22,7 +22,7 @@ export class EnrichmentFormComponent implements OnInit, OnDestroy {
   private problemData: any;
   enrichmentLocations: any = [];
   private enrichmentData: any = {
-    created_by: "",
+    user_id: "",
 
     description: "",
 
@@ -66,7 +66,7 @@ export class EnrichmentFormComponent implements OnInit, OnDestroy {
                         
                         id
                         title
-                        created_by
+                        user_id
                         description
                         
                         resources_needed
@@ -151,7 +151,7 @@ export class EnrichmentFormComponent implements OnInit, OnDestroy {
                             
                             id
                             
-                            created_by
+                            user_id
                             description
                             
                             resources_needed
@@ -182,7 +182,7 @@ export class EnrichmentFormComponent implements OnInit, OnDestroy {
                             problem{
                               id
                               title
-                              created_by
+                              user_id
                               description
                               
                               problem_locations{
@@ -308,7 +308,7 @@ export class EnrichmentFormComponent implements OnInit, OnDestroy {
       delete enrichmentData.__typename;
       // delete enrichmentData.user;
     }
-    enrichmentData.created_by = Number(this.auth.currentUserValue.id);
+    enrichmentData.user_id = Number(this.auth.currentUserValue.id);
 
     enrichmentData.problem_id = this.problemId;
 

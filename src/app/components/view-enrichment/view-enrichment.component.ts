@@ -111,13 +111,13 @@ export class ViewEnrichmentComponent implements OnInit, OnChanges, OnDestroy {
     if (this.auth.currentUserValue.id) {
       if (
         !(
-          this.enrichmentData.created_by ===
+          this.enrichmentData.user_id ===
           Number(this.auth.currentUserValue.id)
         )
       ) {
         // console.log(this.comment, "comment", this.userId, "user id");
         // console.log('toggling watch flag');
-        // if (!(this.userId == this.comment.created_by)) {
+        // if (!(this.userId == this.comment.user_id)) {
         if (!this.voters.has(this.auth.currentUserValue.id)) {
           // user is not currently watching this problem
           // let's add them

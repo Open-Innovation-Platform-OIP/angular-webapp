@@ -114,7 +114,7 @@ export class SolutionDetailComponent implements OnInit {
     featured_url: "",
     embed_urls: [],
     featured_type: "",
-    created_by: 0,
+    user_id: 0,
     is_draft: true,
     attachments: []
   };
@@ -137,7 +137,7 @@ export class SolutionDetailComponent implements OnInit {
     embed_urls: [],
     featured_type: "",
     voted_by: "",
-    created_by: "",
+    user_id: "",
     is_draft: "",
     attachments: []
   };
@@ -401,7 +401,7 @@ export class SolutionDetailComponent implements OnInit {
           
     title
     description
-    created_by
+    user_id
   
     impact
     technology
@@ -477,7 +477,7 @@ export class SolutionDetailComponent implements OnInit {
 
     discussions(where: { is_deleted: { _eq: false} },order_by: {created_at: desc}) {
       id
-      created_by
+      user_id
       created_at
       edited_at
       text
@@ -1028,7 +1028,7 @@ export class SolutionDetailComponent implements OnInit {
   toggleWatchSolution() {
     // console.log('toggling watch flag');
     if (
-      !(this.userId == this.solutionData.created_by) &&
+      !(this.userId == this.solutionData.user_id) &&
       this.auth.currentUserValue.id
     ) {
       if (!this.watchers.has(this.userId)) {
@@ -1104,7 +1104,7 @@ export class SolutionDetailComponent implements OnInit {
   toggleVoteSolution() {
     // console.log('toggling watch flag');
     if (
-      !(this.userId == this.solutionData.created_by) &&
+      !(this.userId == this.solutionData.user_id) &&
       this.auth.currentUserValue.id
     ) {
       if (!this.voters.has(this.userId)) {
@@ -1318,7 +1318,7 @@ export class SolutionDetailComponent implements OnInit {
 
     console.log(mentions, "mentions of discussions");
     // let comment = {
-    //   created_by: this.auth.currentUserValue.id,
+    //   user_id: this.auth.currentUserValue.id,
     //   problem_id: this.problemData["id"],
     //   text: content,
     //   attachments: file_links, // overwriting the incoming blobs
@@ -1337,7 +1337,7 @@ export class SolutionDetailComponent implements OnInit {
 
   submitComment(content, mentions, attachments?, comment_id?) {
     let comment = {
-      created_by: this.auth.currentUserValue.id,
+      user_id: this.auth.currentUserValue.id,
       solution_id: this.solutionData["id"],
       text: content,
       attachments: attachments // overwriting the incoming blobs
@@ -1380,7 +1380,7 @@ export class SolutionDetailComponent implements OnInit {
   //     });
   //   }
 
-  //   comment["created_by"] = this.auth.currentUserValue.id;
+  //   comment["user_id"] = this.auth.currentUserValue.id;
   //   comment["problem_id"] = this.problemData["id"];
   //   comment["attachments"] = file_links; // overwriting the incoming blobs
   //   this.discussionsService.submitCommentToDB(comment);

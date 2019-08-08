@@ -48,6 +48,7 @@ export class DashboardComponent implements OnInit, OnDestroy {
     featured_url
     title
     description
+    user_id
   
     problem_voters{user_id}
     problem_watchers{user_id}
@@ -154,12 +155,12 @@ export class DashboardComponent implements OnInit, OnDestroy {
     //  console.log(this.problemQueryString);
     const draftsQuery = gql`
       {
-        problems(where:{is_draft:{_eq:true},is_deleted:{_eq:false}, created_by:{_eq: ${
+        problems(where:{is_draft:{_eq:true},is_deleted:{_eq:false}, user_id:{_eq: ${
           this.auth.currentUserValue.id
         }}} order_by: {edited_at: desc}) ${this.problemQueryString}
         ,
         
-          solutions(where:{is_draft:{_eq:true},is_deleted:{_eq:false}, created_by:{_eq: ${
+          solutions(where:{is_draft:{_eq:true},is_deleted:{_eq:false}, user_id:{_eq: ${
             this.auth.currentUserValue.id
           }}} order_by: {edited_at: desc}) ${this.solutionQueryString}
       
@@ -198,7 +199,7 @@ export class DashboardComponent implements OnInit, OnDestroy {
   // getSolutionDrafts() {
   //   const solutionDraftsQuery = gql`
   //     {
-  //       solutions(where:{is_draft:{_eq:true},is_deleted:{_eq:false}, created_by:{_eq: ${
+  //       solutions(where:{is_draft:{_eq:true},is_deleted:{_eq:false}, user_id:{_eq: ${
   //         this.auth.currentUserValue.id
   //       }}} order_by: {edited_at: desc}) ${this.solutionQueryString}
   //   }
@@ -231,7 +232,7 @@ export class DashboardComponent implements OnInit, OnDestroy {
       problems( 
         where:{ _and:[
         { is_draft: {_eq: false}},
-        {created_by: {_eq: ${this.auth.currentUserValue.id} }}
+        {user_id: {_eq: ${this.auth.currentUserValue.id} }}
       ]
     } order_by: {updated_at: desc}) ${this.problemQueryString}
     }
@@ -257,7 +258,7 @@ export class DashboardComponent implements OnInit, OnDestroy {
       solutions( 
         where:{ _and:[
         { is_draft: {_eq: false}},
-        {created_by: {_eq: ${this.auth.currentUserValue.id} }}
+        {user_id: {_eq: ${this.auth.currentUserValue.id} }}
       ]
     } order_by: {updated_at: desc}) ${this.solutionQueryString}
     }
@@ -282,7 +283,7 @@ export class DashboardComponent implements OnInit, OnDestroy {
     const contributionsQuery = gql`
     {
       enrichments( where:{ _and: [
-        { created_by: {_eq: ${this.auth.currentUserValue.id}}},
+        { user_id: {_eq: ${this.auth.currentUserValue.id}}},
         { is_deleted: {_eq: false}}
       ] }) {
        problem ${this.problemQueryString}
@@ -297,7 +298,7 @@ export class DashboardComponent implements OnInit, OnDestroy {
      }}}) {
        problem ${this.problemQueryString}
      }
-     discussions(where:{created_by:{_eq: ${this.auth.currentUserValue.id}}}) {
+     discussions(where:{user_id:{_eq: ${this.auth.currentUserValue.id}}}) {
        problem ${this.problemQueryString}
      }
 
@@ -312,7 +313,7 @@ export class DashboardComponent implements OnInit, OnDestroy {
     }}}) {
       solution ${this.solutionQueryString}
     }
-    discussions(where:{created_by:{_eq: ${this.auth.currentUserValue.id}}}) {
+    discussions(where:{user_id:{_eq: ${this.auth.currentUserValue.id}}}) {
       solution ${this.solutionQueryString}
     }
     }
@@ -375,7 +376,7 @@ export class DashboardComponent implements OnInit, OnDestroy {
     // const solutionContributionsQuery = gql`
     // {
     //   enrichments( where:{ _and: [
-    //     { created_by: {_eq: ${this.auth.currentUserValue.id}}},
+    //     { user_id: {_eq: ${this.auth.currentUserValue.id}}},
     //     { is_deleted: {_eq: false}}
     //   ] }) {
     //    problemsByproblemId ${this.problemQueryString}
@@ -386,7 +387,7 @@ export class DashboardComponent implements OnInit, OnDestroy {
     //  collaborators(where:{user_id:{_eq: ${this.auth.currentUserValue.id}}}) {
     //    problem ${this.problemQueryString}
     //  }
-    //  discussions(where:{created_by:{_eq: ${this.auth.currentUserValue.id}}}) {
+    //  discussions(where:{user_id:{_eq: ${this.auth.currentUserValue.id}}}) {
     //    problemsByproblemId ${this.problemQueryString}
     //  }
     // }
@@ -456,10 +457,18 @@ export class DashboardComponent implements OnInit, OnDestroy {
         ({ data }) => {
           if (data.users_tags.length > 0) {
             data.users_tags.map(tagData => {
-              if (tagData.tag && tagData.tag.tag_problems.length > 0) {
-                tagData.tag.tag_problems.map(p => {
+              console.log(tagData, "tag data");
+              if (tagData.tag && tagData.tag.problems_tags.length > 0) {
+                tagData.tag.problems_tags.map(p => {
                   if (p && p.problem && p.problem.id) {
                     const problem = p.problem;
+
+                    console.log(
+                      "problem user id",
+                      problem.user_id,
+                      "user id ==",
+                      this.auth.currentUserValue.id
+                    );
                     this.recommendedProblems[problem["id"]] = problem;
                     this.userService.dashboardRecommendations[
                       problem["id"]
@@ -506,7 +515,7 @@ export class DashboardComponent implements OnInit, OnDestroy {
       ({ data }) => {
         if (data.users_tags.length > 0) {
           data.users_tags.map(users => {
-            if (users.tag && users.tag.tag_users.length > 0) {
+            if (users.tag && users.tag.users_tags.length > 0) {
               users.tag.tag_users.map(u => {
                 if (u && u.user && u.user.id) {
                   const user = u.user;

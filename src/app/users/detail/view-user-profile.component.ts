@@ -101,6 +101,13 @@ export class ViewUserProfileComponent implements OnInit, OnDestroy {
               is_funder
               is_government
               is_beneficiary 
+              user_locations{
+                location{
+                  location_name
+              
+                }
+
+              }
               
 
               problems(where: { is_draft: { _eq: false } }){
@@ -111,6 +118,14 @@ export class ViewUserProfileComponent implements OnInit, OnDestroy {
               }
               problem_validations{
                 comment
+              }
+
+              solution_validations{
+                user_id
+              }
+
+              solution_collaborators {
+                user_id
               }
               enrichments(where: { is_deleted: { _eq: false } }){
                 id
@@ -136,26 +151,6 @@ export class ViewUserProfileComponent implements OnInit, OnDestroy {
     });
 
     return this.userDataQuery.valueChanges;
-    // .subscribe(result => {
-    //   this.interests = [];
-    //   this.personas = [];
-    //   console.log(result, "result");
-    //   this.userData = result.data.users[0];
-    //   Object.entries(this.userData).map(data => {
-    //     if (typeof data[1] === "boolean" && data[1]) {
-    //       this.personas.push(data[0]);
-    //     }
-    //   });
-
-    //   this.interests = result.data.users[0].users_tags.map(tagArray => {
-    //     return tagArray.tag.name;
-    //   });
-    //   console.log(this.userData, "userData");
-    //   if (this.userData.id === Number(this.auth.currentUserValue.id)) {
-    //     this.loggedInUsersProfile = true;
-    //   }
-    //   // console.log(this.problemService.problem, "problem");
-    // });
   }
 
   ngOnDestroy() {

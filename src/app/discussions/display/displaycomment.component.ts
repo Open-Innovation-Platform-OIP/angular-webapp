@@ -64,7 +64,7 @@ export class CommentDisplayComponent implements OnInit, OnDestroy {
     const [content, mentions, attachments] = event;
 
     // let comment = {
-    //   created_by: 0,
+    //   user_id: 0,
     //   problem_id: 0,
     //   text: content,
     //   attachments: attachments,
@@ -143,7 +143,7 @@ export class CommentDisplayComponent implements OnInit, OnDestroy {
   toggleVoteDiscussions() {
     console.log(this.comment, "comment", this.userId, "user id");
     // console.log('toggling watch flag');
-    // if (!(this.userId == this.comment.created_by)) {
+    // if (!(this.userId == this.comment.user_id)) {
     if (!this.voters.has(this.userId)) {
       // user is not currently watching this problem
       // let's add them

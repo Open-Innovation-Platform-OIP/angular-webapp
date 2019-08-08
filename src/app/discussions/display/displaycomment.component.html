@@ -15,7 +15,7 @@
     <div class="card-body">
 
       <!-- More button for comment -->
-      <ul class="navbar-nav" style="float:right;" *ngIf="comment.created_by==auth.currentUserValue.id">
+      <ul class="navbar-nav" style="float:right;" *ngIf="comment.user_id==auth.currentUserValue.id">
         <li class="nav-item dropdown">
           <a class="nav-link more_icon" href="#pablo" id="discussion_more_btn" data-toggle="dropdown"
             aria-haspopup="true" aria-expanded="false">
@@ -119,7 +119,7 @@
           <div class="card-body">
 
             <!-- More button for replies -->
-            <ul class="navbar-nav" style="float:right;" *ngIf="reply.created_by==auth.currentUserValue.id">
+            <ul class="navbar-nav" style="float:right;" *ngIf="reply.user_id==auth.currentUserValue.id">
               <li class="nav-item dropdown">
                 <a class="nav-link more_icon" href="#pablo" id="discussion_more_btn" data-toggle="dropdown"
                   aria-haspopup="true" aria-expanded="false">

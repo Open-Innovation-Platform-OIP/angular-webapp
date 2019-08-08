@@ -69,7 +69,7 @@
 
 
 
-<div class="card-footer" *ngIf="enrichmentData.created_by===auth.currentUserValue.id">
+<div class="card-footer" *ngIf="enrichmentData.user_id===auth.currentUserValue.id">
   <div class="text-center">
     <button mat-button type="button" (click)="editEnrichment()" class="btn btn-warning" aria-hidden="true" data-dismiss="modal"
       data-toggle="modal" data-target="#EditEnrichModal">Edit</button>
@@ -209,7 +209,7 @@
   <!-- </div> -->
   <!-- <div class="text-center"> -->
   <button mat-button type="button" (click)="editEnrichment()" class="btn btn-warning pull-right" aria-hidden="true"
-    *ngIf="enrichmentData.created_by===auth.currentUserValue.id && !showModal"
+    *ngIf="enrichmentData.user_id===auth.currentUserValue.id && !showModal"
     [routerLink]="'/enrichment/'+ enrichmentData.id+'/edit'" queryParamsHandling="merge">
     <i class="material-icons actions">
       create
@@ -217,7 +217,7 @@
   </button>
 
   <button mat-button type="button" class="btn btn-danger pull-right" (click)="deleteEnrichment()"
-    *ngIf="enrichmentData.created_by===auth.currentUserValue.id && !showModal">
+    *ngIf="enrichmentData.user_id===auth.currentUserValue.id && !showModal">
     <i class="material-icons actions">
       delete
     </i>

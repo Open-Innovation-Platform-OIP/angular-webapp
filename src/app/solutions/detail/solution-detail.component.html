@@ -7,7 +7,7 @@
           <div class="card-header card-header-rose fixed-top">
             <h4 class="card-title">{{solutionData.title}}</h4>
             <p class="card-category"><b>Created By :
-                {{ (auth.currentUserValue.id == solutionData.created_by) ? 'You' : solutionOwner }}</b></p>
+                {{ (auth.currentUserValue.id == solutionData.user_id) ? 'You' : solutionOwner }}</b></p>
           </div>
           <div class="card-body">
             <div class="row">
@@ -106,7 +106,7 @@
                 visibility
               </i>
               <span> {{watchers.size}}</span>
-              <!-- <i *ngIf="userId===solutionData.created_by" [routerLink]="
+              <!-- <i *ngIf="userId===solutionData.user_id" [routerLink]="
                 '/problems/'+ solutionData.id+'/edit'" class="material-icons actions">
                 create
               </i> -->
@@ -114,7 +114,7 @@
 
             <!--  -->
             <div class="dropdown">
-              <button *ngIf="userId===solutionData.created_by || owners.has(userId)" [routerLink]="
+              <button *ngIf="userId===solutionData.user_id || owners.has(userId)" [routerLink]="
                 '/solutions/'+ solutionData.id+'/edit'" queryParamsHandling="merge" class="btn btn-sm btn-rose"
                 aria-expanded="true">
                 <i class="material-icons actions">
@@ -190,7 +190,7 @@
           </a> -->
           <button mat-raised-button class="btn btn-rose btn-round" data-toggle="modal" data-target="#validatorModal"
             matTooltip="Click to validate solution" [matTooltipPosition]="'below'"
-            [disabled]="disableValidateButton || userId == solutionData.created_by || !auth.currentUserValue.id "
+            [disabled]="disableValidateButton || userId == solutionData.user_id || !auth.currentUserValue.id "
             *ngIf="auth.currentUserValue.id">Validate</button>
           <!-- <a mat-button>
             <i class="material-icons">
@@ -237,7 +237,7 @@
         <div class="row justify-content-center">
           <!-- 
         <p
-          *ngIf="!(userId == solutionData.created_by) && userPersonas.is_expert && !sectorMatched && !disableValidateButton">
+          *ngIf="!(userId == solutionData.user_id) && userPersonas.is_expert && !sectorMatched && !disableValidateButton">
           Please ensure that
           your interests match with the problem
           sectors in order to validate</p> -->
@@ -345,7 +345,7 @@
           </a> -->
           <button mat-raised-button *ngIf="auth.currentUserValue.id" class="btn btn-rose btn-round" data-toggle="modal"
             data-target="#collaboratorModal" matTooltip="Click to collaborate"
-            [disabled]="disableCollaborateButton || userId == solutionData.created_by || !auth.currentUserValue.id "
+            [disabled]="disableCollaborateButton || userId == solutionData.user_id || !auth.currentUserValue.id "
             [matTooltipPosition]="'below'">Collaborate</button>
           <p *ngIf="!auth.currentUserValue.id">Login to collaborate on this solution</p>
           <!-- <a mat-button>

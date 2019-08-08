@@ -30,7 +30,7 @@ interface verificationDetails {
 })
 export class AuthService {
   // authEndpoint = "https://auth-new.socialalpha.jaagalabs.com/auth/";
-  authEndpoint = "http://sa-auth.cap.jaagalabs.com/auth/";
+  authEndpoint = "https://sa-auth.cap.jaagalabs.com/auth/";
   private jwtHelper;
   public user: Observable<any>;
   private currentUserSubject: BehaviorSubject<User>;

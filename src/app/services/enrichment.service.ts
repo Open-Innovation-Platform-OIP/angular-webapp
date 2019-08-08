@@ -26,7 +26,7 @@ export interface enrichment {
   id?: Number;
   problem_id?: Number;
   solution_id?: Number;
-  created_by?: Number;
+  user_id?: Number;
   created_at?: Timestamp;
   edited_at?: Timestamp;
   is_deleted?: Boolean;

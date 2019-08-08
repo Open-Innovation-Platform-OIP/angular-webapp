@@ -36,7 +36,7 @@ export class ValidationService {
             insert_problem_validations(
               objects: $problem_validations
               on_conflict: {
-                constraint: validations_pkey
+                constraint: problem_validations_pkey
                 update_columns: [comment, files, agree]
               }
             ) {

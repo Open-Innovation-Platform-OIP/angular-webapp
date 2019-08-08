@@ -7,7 +7,7 @@ import { take } from "rxjs/operators";
 
 export interface Comment {
   id?: number; // new comments will automatically get ids from PostgreSQL. Edits will have an id.
-  created_by: number; // user_id
+  user_id: number; // user_id
   problem_id?: number; // linked problem
   solution_id?: any; // linked solution
   text: String; // text/html for comment
@@ -26,7 +26,7 @@ export class DiscussionsService {
       console.log("cannot continue without problem or solution id");
       return false;
     }
-    comment.created_by = this.auth.currentUserValue.id;
+    comment.user_id = this.auth.currentUserValue.id;
     const upsert_comment = gql`
       mutation upsert_comment($discussions: [discussions_insert_input!]!) {
         insert_discussions(
@@ -89,7 +89,7 @@ export class DiscussionsService {
         {
           discussions(where: { problem_id: { _eq: ${id} } }, order_by:{created_at:desc}) {
             id
-            created_by
+            user_id
             created_at
             edited_at
             text

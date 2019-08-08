@@ -16,7 +16,7 @@ export interface User {
   qualification: String;
   photo_url: any;
   phone_number: String;
-  location: String;
+
   is_ngo: Boolean;
   is_innovator: Boolean;
   is_expert: Boolean;
@@ -29,25 +29,6 @@ export interface User {
   notify_sms: Boolean;
   notify_app: Boolean;
 }
-
-// id: "",
-//     email: "",
-//     token: "",
-//     password: "",
-//     name: "",
-//     organization: "",
-//     qualification: "",
-//     photo_url: {},
-//     phone_number: "",
-//     location: "",
-//     is_ngo: false,
-//     is_innovator: false,
-//     is_expert: false,
-//     is_government: false,
-//     is_funder: false,
-//     is_beneficiary: false,
-//     is_incubator: false,
-//     is_entrepreneur: false
 
 @Injectable({
   providedIn: "root"
@@ -200,8 +181,6 @@ export class UsersService {
                 name
                 organization
                 qualification
-                location
-                
                 photo_url
                 phone_number
                 is_ngo

@@ -190,7 +190,7 @@ export class AddSolutionComponent
     featured_url: "",
     embed_urls: [],
     featured_type: "",
-    created_by: Number(this.auth.currentUserValue.id),
+    user_id: Number(this.auth.currentUserValue.id),
     is_draft: true,
     attachments: []
   };
@@ -780,7 +780,7 @@ export class AddSolutionComponent
                             solutions(where: { id: { _eq: ${params.id} } }) {
                             id
                             title
-                            created_by
+                            user_id
                             technology
                             resources                            
                             description
