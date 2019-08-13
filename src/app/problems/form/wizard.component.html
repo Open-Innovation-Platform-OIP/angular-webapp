@@ -11,7 +11,7 @@
           (contentSubmitted)="publishProblem(problem)" [owners]="owners" (deleteDraft)="deleteDraft($event)"
           (addedOwners)="addOwners($event)" (removedOwners)="removeOwners($event)" [sectors]="sectors"
           [contentType]="'problem'" [selectedLocations]="problemLocations" (locationSelected)="addLocation($event)"
-          (locationRemoved)="removeLocation($event)">
+          (locationRemoved)="removeLocation($event)" (nextTab)="scrollUp($event)">
         </app-wizard-container>
 
         <!-- <app-wizard-container *ngIf="is_edit && problemLocations.length" [content]="problem"

@@ -26,14 +26,16 @@
     <span> <b> Location(s) </b></span>
     <div *ngFor="let location of problemData.problem_locations; let i = index" class="location">
       <span *ngIf="location.location&& i < 1">{{
-        location.location.location_name
+        location.location.location_name.substring(0, 35)+"..."
+      
       }}</span>
       <span *ngIf="i < 1">&nbsp;</span>
     </div>
   </div>
   <div>
-    <button *ngIf="usedInSmartSearch && showAddButton" class="btn btn-rose btn-sm" style="margin-top: 2px;">
-      <a (click)="selectProblem()">Add</a>
+    <button (click)="selectProblem()" *ngIf="usedInSmartSearch && showAddButton" class="btn btn-rose btn-sm"
+      style="margin-top: 2px;">
+      <a>Add</a>
     </button>
   </div>
 

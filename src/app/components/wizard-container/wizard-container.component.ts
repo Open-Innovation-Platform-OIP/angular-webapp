@@ -92,6 +92,7 @@ export class WizardContainerComponent
   @Output() removedOwners = new EventEmitter();
   @Output() locationSelected = new EventEmitter();
   @Output() locationRemoved = new EventEmitter();
+  @Output() nextTab = new EventEmitter();
 
   file_types = [
     "application/msword",
@@ -451,6 +452,8 @@ export class WizardContainerComponent
 
       onNext: function(tab, navigation, index) {
         window.scroll(0, 0);
+        console.log("next tab");
+        this.nextTab.emit(true);
 
         const $valid = $(".card-wizard form").valid();
         if (!$valid) {
@@ -729,7 +732,6 @@ export class WizardContainerComponent
   }
 
   ngAfterViewInit() {
-
     $(window).resize(() => {
       $(".card-wizard").each(function() {
         const $wizard = $(this);
@@ -1061,6 +1063,10 @@ export class WizardContainerComponent
         }
       }
     }
+  }
+
+  nextSelected() {
+    this.nextTab.emit(true);
   }
 
   removeVideo(index: number) {

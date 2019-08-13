@@ -10,7 +10,7 @@
     </mat-select>
   </mat-form-field>
 
-  <mat-form-field class="dropDown">
+  <mat-form-field class="dropDown" *ngIf="type==='problems'">
     <mat-select placeholder="Location" [(ngModel)]="selectedLocation" ariaLabel="selectedLocation">
       <mat-option (click)="selectDropdown($event)" [value]="null">All</mat-option>
       <mat-option (click)="selectDropdown($event)" *ngFor="let location of objectValues(locations)"
@@ -20,7 +20,7 @@
     </mat-select>
   </mat-form-field>
 
-  <mat-form-field class="dropDown" *ngIf="selectedLocation">
+  <mat-form-field class="dropDown" *ngIf="selectedLocation && type==='problems'">
     <mat-select (click)="selectDropdown($event)" placeholder="Distance" [(ngModel)]="range" ariaLabel="range">
       <!-- <mat-option (click)="selectDropdown($event)" [value]="null">All</mat-option> -->
       <mat-option (click)="selectDropdown($event)" *ngFor="let range of objectKeys(ranges)" [value]="range">

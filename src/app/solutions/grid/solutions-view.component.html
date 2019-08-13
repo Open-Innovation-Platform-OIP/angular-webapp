@@ -10,12 +10,12 @@
     <br />
 
 
-    <!-- <app-filter-dropdown [selectedSectors]="selectedSectors" [type]="'solutions'">
-    </app-filter-dropdown> -->
+    <app-filter-dropdown [type]="'solutions'">
+    </app-filter-dropdown>
 
     <div class="row">
       <div class="col-md-3" *ngFor="let solution of solutions">
-        <app-solution-card [solutionData]="solution.solution"></app-solution-card>
+        <app-solution-card [solutionData]="solution"></app-solution-card>
       </div>
     </div>
   </div>

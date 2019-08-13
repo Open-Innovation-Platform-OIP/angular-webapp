@@ -1516,7 +1516,7 @@ export class SolutionDetailComponent implements OnInit {
   sectorSelected(sector) {
     // console.log(sector,"sector");
     this.router.navigate(["/solutions"], {
-      queryParams: { [sector.name]: sector.id },
+      queryParams: { [sector.name]: "sectorFilter" },
       queryParamsHandling: "merge"
     });
   }

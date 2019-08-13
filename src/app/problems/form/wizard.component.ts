@@ -1012,6 +1012,11 @@ export class WizardComponent
     return Array.from(new Set(array));
   }
 
+  scrollUp(event) {
+    console.log("scroll up");
+    window.scroll(0, 0);
+  }
+
   autoSave() {
     // console.log(this.problem, "problem data");
     // console.log("trying to auto save");

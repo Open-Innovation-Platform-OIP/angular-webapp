@@ -28,7 +28,8 @@
     <!-- <span><i class="material-icons">
         more_horiz
       </i></span> -->
-    <span style="cursor:pointer;" (click)="seeMore()"><small><b>see more...</b></small></span>
+    <span style="cursor:pointer;" *ngIf=" collaboratorData.intent.length>60" (click)="seeMore()"><small><b>see
+          more...</b></small></span>
 
     <br />
 

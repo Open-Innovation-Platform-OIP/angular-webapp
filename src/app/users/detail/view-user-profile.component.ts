@@ -41,6 +41,8 @@ export class ViewUserProfileComponent implements OnInit, OnDestroy {
     console.log("init on user profile");
     this.user = this.route.paramMap.pipe(
       switchMap((params: ParamMap) => {
+        console.log("result");
+
         return this.getProfile(params.get("id"));
       })
     );
@@ -145,7 +147,7 @@ export class ViewUserProfileComponent implements OnInit, OnDestroy {
               
            
         `,
-      fetchPolicy: "network-only",
+      fetchPolicy: "no-cache",
 
       pollInterval: 1000
     });

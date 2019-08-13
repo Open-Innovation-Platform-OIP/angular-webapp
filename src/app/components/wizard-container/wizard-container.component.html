@@ -554,8 +554,8 @@
             value="Previous">
           <input type="button" class=" btn btn-fill btn-warning btn-wd" [disabled]="!isComplete()"
             (click)="publishContent()" value="Publish">
-          <input type="button" class="btn btn-next btn-fill btn-warning btn-wd" [disabled]="!isComplete()" name="next"
-            value="Next">
+          <input type="button" (click)="nextSelected()" class="btn btn-next btn-fill btn-warning btn-wd"
+            [disabled]="!isComplete()" name="next" value="Next">
 
 
 

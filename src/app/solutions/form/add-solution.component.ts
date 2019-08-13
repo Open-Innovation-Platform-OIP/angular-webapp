@@ -334,6 +334,7 @@ export class AddSolutionComponent
     // delete this.searchResults[selectedProblem.id];
   }
   selectProblem(problem) {
+    console.log(problem,"====smart card problem selected")
     this.selectedProblems[problem.id] = problem;
     this.getProblemData(problem.id);
     // console.log(this.selectedProblems, "selected problem set");
@@ -1913,6 +1914,10 @@ export class AddSolutionComponent
       this.solution.featured_type = "embed";
       this.solution.featured_url = this.solution.embed_urls[index];
     }
+  }
+
+  nextSelected(){
+    window.scroll(0,0);
   }
 
   addMediaUrl() {

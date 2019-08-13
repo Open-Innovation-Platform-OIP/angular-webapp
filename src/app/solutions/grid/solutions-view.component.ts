@@ -39,17 +39,29 @@ export class SolutionsViewComponent implements OnInit {
     this.activatedRoute.queryParams.subscribe(params => {
       this.selectedSectors = this.filterService.filterSector(params);
 
+      // solutions_tags(
+      //   where: {
+      //     tag_id: { ${this.filterService.sector_filter_query} }
+      //     solution: { is_draft: { _eq: false } }
+      //   }
+      //   order_by: { solution: { updated_at: desc } }
+      // )
+
       this.solutionViewQuery = this.apollo.watchQuery<any>({
         query: gql`
           query PostsGetQuery {
-            solutions_tags(
+           
+            solutions(
               where: {
-                tag_id: { ${this.filterService.sector_filter_query} }
-                solution: { is_draft: { _eq: false } }
+                solutions_tags:{tag_id:{${
+                  this.filterService.sector_filter_query
+                }
+                }}
+               
+                is_draft: { _eq: false } 
               }
-              order_by: { solution: { updated_at: desc } }
-            ) {
-              solution {
+              order_by: { updated_at: desc } 
+            ){
               id
               title
               description
@@ -75,15 +87,16 @@ export class SolutionsViewComponent implements OnInit {
               }
             }
             }
-          }
+          
         `,
         pollInterval: 500,
         fetchPolicy: "network-only"
       });
       this.solutionViewSubscription = this.solutionViewQuery.valueChanges.subscribe(
         result => {
-          if (result.data.solutions_tags.length > 0) {
-            this.solutions = result.data.solutions_tags;
+          console.log(result, "solution view result");
+          if (result.data.solutions.length > 0) {
+            this.solutions = result.data.solutions;
           }
         },
         error => {

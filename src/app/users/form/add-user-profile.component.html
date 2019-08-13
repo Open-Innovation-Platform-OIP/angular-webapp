@@ -146,7 +146,9 @@
                   <!-- [ngStyle]="{
                       color: !locationData.length ? 'red' : '#AAAAAA'
                     }" -->
-                  <label class="col-md-2 col-2 col-form-label">Location (Geo)
+                  <label class="col-md-2 col-2 col-form-label" [ngStyle]="{
+                    color: !userLocationName ? 'red' : '#AAAAAA'
+                  }">Location (Geo)
                   </label>
                   <div class="col-md-10 col-9">
                     <mat-form-field class="example-full-width">

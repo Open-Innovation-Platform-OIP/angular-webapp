@@ -85,6 +85,16 @@ export class DashboardComponent implements OnInit, OnDestroy {
       organizationByOrganizationId {
         name
       }
+
+      user_locations{
+        location{
+          id
+          location_name
+          location
+          lat
+         long
+        }
+      }
       
 
       problems(where: { is_draft: { _eq: false } }){
@@ -516,7 +526,7 @@ export class DashboardComponent implements OnInit, OnDestroy {
         if (data.users_tags.length > 0) {
           data.users_tags.map(users => {
             if (users.tag && users.tag.users_tags.length > 0) {
-              users.tag.tag_users.map(u => {
+              users.tag.users_tags.map(u => {
                 if (u && u.user && u.user.id) {
                   const user = u.user;
                   this.recommendedUsers[user.id] = user;
