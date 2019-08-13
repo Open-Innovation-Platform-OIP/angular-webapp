@@ -13,8 +13,9 @@ import { FilterService } from "../../services/filter.service";
 export class FilterDropdownComponent implements OnInit {
   @Input() type: string;
   selectedSectors: any = [];
-  selectedLocation: any = "";
+  selectedLocation: any = {};
   range: any;
+  selectedLocationName: string = "";
 
   ranges = {
     0: "0 Kms",
@@ -25,7 +26,7 @@ export class FilterDropdownComponent implements OnInit {
   };
 
   sectors: any = {};
-  locations: any = {};
+  locations: any = [];
   objectValues = Object.values;
   objectKeys = Object.keys;
 
@@ -39,12 +40,16 @@ export class FilterDropdownComponent implements OnInit {
 
   ngOnInit() {
     this.sectors = this.tagsService.allTags;
-    this.locations = this.geoService.allLocations;
+    // this.locations = this.geoService.allLocations;
 
     this.activatedRoute.queryParams.subscribe(params => {
       console.log(params, "params in dropdown");
       this.selectedSectors = this.filterService.filterSector(params);
+      // this.selectedLocationName = this.filterService.filterLocation(params).location_name;
       this.selectedLocation = this.filterService.filterLocation(params);
+      if (Object.values(this.selectedLocation).length) {
+        this.selectedLocationName = this.selectedLocation.location_name;
+      }
       if (params.locationRange) {
         console.log(typeof params.locationRange, "location range");
         this.range = Math.round(+params.locationRange * 110).toString();
@@ -57,9 +62,49 @@ export class FilterDropdownComponent implements OnInit {
     // this.selectedSectors = this.filterService.selectedSectors;
   }
 
+  getLocation(input) {
+    // console.log(input, "input tag");
+    this.geoService.getAddress(this.selectedLocationName).then(
+      result => {
+        this.locations = <Array<any>>result;
+      },
+      error => {
+        console.error(error);
+      }
+    );
+
+    // var obj = personas;
+    // console.log(personas);
+    // var keys = Object.keys(obj);
+
+    // var filtered = keys.filter(function(key) {
+    //   return obj[key];
+    // });
+    // console.log(JSON.parse("{" + filtered.toString() + "}"));
+    // console.log(typeof JSON.parse("{" + filtered.toString() + "}"));
+  }
+
   selectDropdown(event) {
-    console.log(this.range, "range");
+    if (
+      event &&
+      event.option &&
+      event.option.value &&
+      event.option.value.Address
+    ) {
+      this.selectedLocationName = event.option.value.Address.Label;
+      this.selectedLocation = {
+        location_name: event.option.value.Address.Label,
+        latitude: event.option.value.DisplayPosition.Latitude,
+        longitude: event.option.value.DisplayPosition.Longitude
+      };
+    }
+
+    if (!this.selectedLocationName) {
+      this.selectedLocation = {};
+    }
+
     let queries = {};
+
     if (+this.range !== 0) {
       this.filterService.range = +this.range / 110;
       queries["locationRange"] = this.filterService.range;
@@ -71,7 +116,7 @@ export class FilterDropdownComponent implements OnInit {
       queries[sector] = "sectorFilter";
     });
 
-    if (!this.selectedLocation) {
+    if (!Object.values(this.selectedLocation).length) {
       if (queries["locationRange"]) {
         delete queries["locationRange"];
       }
@@ -81,9 +126,11 @@ export class FilterDropdownComponent implements OnInit {
       return;
     }
 
-    if (this.selectedLocation) {
-      queries["filterLocation"] = this.selectedLocation;
+    if (Object.values(this.selectedLocation).length) {
+      queries["filterLocation"] = JSON.stringify(this.selectedLocation);
     }
+
+    console.log(queries, "queries");
 
     this.router.navigate(["/" + this.type], {
       queryParams: queries

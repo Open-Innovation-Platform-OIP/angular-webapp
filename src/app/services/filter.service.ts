@@ -49,18 +49,15 @@ export class FilterService {
 
   filterLocation(queryParams) {
     let coordinates;
+    let parsedQuery;
 
     if (queryParams.filterLocation) {
-      // console.log(
-      //   this.geoService.allLocations[queryParams.filterLocation],
-      //   "all locations"
-      // );
-      if (this.geoService.allLocations[queryParams.filterLocation]) {
-        coordinates = [
-          this.geoService.allLocations[queryParams.filterLocation].lat,
-          this.geoService.allLocations[queryParams.filterLocation].long
-        ];
-      }
+      parsedQuery = JSON.parse(queryParams.filterLocation);
+
+      coordinates = [parsedQuery.latitude, parsedQuery.longitude];
+
+      console.log(coordinates, "cordinates");
+
       this.location_filter_query = `{problem_locations:{ location:{location: {_st_d_within: {distance: ${
         this.range
       }, from: $point}}}}}`;
@@ -81,10 +78,10 @@ export class FilterService {
 
       this.location_filter_header = `($point:geometry!)`;
 
-      return queryParams.filterLocation;
+      return parsedQuery;
     } else {
       this.location_filter_query = ``;
-      return "";
+      return {};
     }
   }
 }

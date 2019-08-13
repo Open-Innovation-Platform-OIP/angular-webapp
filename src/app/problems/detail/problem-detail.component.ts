@@ -1002,8 +1002,14 @@ export class ProblemDetailComponent implements OnInit, OnDestroy {
   }
 
   locationSelected(location) {
+    let locationQuery = {
+      location_name: location.location_name,
+      latitude: location.lat,
+      longitude: location.long
+    };
+
     this.router.navigate(["/problems"], {
-      queryParams: { ["filterLocation"]: location.location_name },
+      queryParams: { ["filterLocation"]: JSON.stringify(locationQuery) },
       queryParamsHandling: "merge"
     });
   }
