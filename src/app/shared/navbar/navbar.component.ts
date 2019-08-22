@@ -193,6 +193,7 @@ export class NavbarComponent implements OnInit {
               enrichment_id
               collaborator
               discussion_id
+              validated_by
               user_id
               tag_id
               tag{

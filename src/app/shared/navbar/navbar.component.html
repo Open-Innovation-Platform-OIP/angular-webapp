@@ -137,62 +137,62 @@
             <div *ngFor="let notification of objectValues(notifications)">
 
 
-              <a *ngIf=" notification.problemsByproblemId && !notification.enrichment_id && !notification.collaborator && !notification.discussion_id && !notification.user_id && notification.tag_id && !notification.is_update"
+              <a *ngIf=" notification.problem && !notification.enrichment_id && !notification.collaborator && !notification.discussion_id && notification.user_id && notification.tag_id && !notification.is_update && !notification.validated_by"
                 class="dropdown-item" name="{{ notification.id }}" [routerLink]="
                 
                 '/problems/' + notification.problem_id
               " queryParamsHandling="merge" (click)="onRead($event)">
 
-                New problem "{{ notification.problemsByproblemId?.title }}"
+                New problem "{{ notification.problem.title }}"
                 {{ (notification.is_update && "updated") || "added" }} in sector "{{notification.tag.name}}"
 
 
               </a>
 
-              <a *ngIf="notification.problemsByproblemId && !notification.enrichment_id && !notification.collaborator && !notification.discussion_id && !notification.user_id && !notification.tag_id "
+              <a *ngIf="notification.problem && !notification.enrichment_id && !notification.collaborator && !notification.discussion_id && notification.user_id && !notification.tag_id && !notification.validated_by "
                 class="dropdown-item" name="{{ notification.id }}" [routerLink]="
                 
                 '/problems/' + notification.problem_id
               " queryParamsHandling="merge" (click)="onRead($event)">
 
-                Problem "{{ notification.problemsByproblemId.title }}" is
-                {{ (notification.is_update && "updated") || "added" }}
+                Problem "{{ notification.problem.title }}" is
+                updated
 
 
               </a>
 
-              <a *ngIf="notification.problemsByproblemId &&  notification.enrichment_id" class="dropdown-item"
+              <a *ngIf="notification.problem &&  notification.enrichment_id" class="dropdown-item"
                 name="{{ notification.id }}" (click)="onRead($event)" [routerLink]="
                 
                 '/problems/' + notification.problem_id
               " queryParamsHandling="merge">
 
-                Enrichment added for problem "{{ notification.problemsByproblemId.title }}"
+                Enrichment added for problem "{{ notification.problem.title }}"
 
               </a>
 
-              <a *ngIf="notification.problemsByproblemId && notification.collaborator" class="dropdown-item"
+              <a *ngIf="notification.problem && notification.collaborator" class="dropdown-item"
                 name="{{ notification.id }}" (click)="onRead($event)" [routerLink]="
                 
                 '/problems/' + notification.problem_id
               " queryParamsHandling="merge">
 
-                New Collaboration on problem "{{ notification.problemsByproblemId.title }}"
+                New Collaboration on problem "{{ notification.problem.title }}"
 
 
               </a>
 
-              <a *ngIf="notification.problemsByproblemId && notification.user_id" class="dropdown-item"
+              <a *ngIf="notification.problem && notification.user_id && notification.validated_by" class="dropdown-item"
                 name="{{ notification.id }}" (click)="onRead($event)" [routerLink]="
                 
                 '/problems/' + notification.problem_id
               " queryParamsHandling="merge">
 
-                Problem "{{ notification.problemsByproblemId.title }}" is validated by an expert
+                Problem "{{ notification.problem.title }}" is validated by an expert
 
               </a>
 
-              <a *ngIf="notification.problemsByproblemId && notification.discussion_id" class="dropdown-item"
+              <a *ngIf="notification.problem && notification.discussion_id" class="dropdown-item"
                 name="{{ notification.id }}" (click)="onRead($event)" [routerLink]="
                 
                 '/problems/' + notification.problem_id
@@ -200,7 +200,7 @@
 
                 You were mentioned on discussion "{{ notification.discussion.text}}" on
                 problem
-                "{{ notification.problemsByproblemId.title }}"
+                "{{ notification.problem.title }}"
 
               </a>
             </div>
