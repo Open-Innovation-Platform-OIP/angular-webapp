@@ -137,7 +137,7 @@
             <div *ngFor="let notification of objectValues(notifications)">
 
 
-              <a *ngIf=" notification.problem && !notification.enrichment_id && !notification.collaborator && !notification.discussion_id && notification.user_id && notification.tag_id && !notification.is_update && !notification.validated_by"
+              <a *ngIf=" notification.problem && !notification.solution_id && !notification.enrichment_id && !notification.collaborator && !notification.discussion_id && notification.user_id && notification.tag_id && !notification.is_update && !notification.validated_by"
                 class="dropdown-item" name="{{ notification.id }}" [routerLink]="
                 
                 '/problems/' + notification.problem_id
@@ -149,7 +149,7 @@
 
               </a>
 
-              <a *ngIf="notification.problem && !notification.enrichment_id && !notification.collaborator && !notification.discussion_id && notification.user_id && !notification.tag_id && !notification.validated_by "
+              <a *ngIf="notification.problem && !notification.solution_id && !notification.enrichment_id && !notification.collaborator && !notification.discussion_id && notification.user_id && !notification.tag_id && !notification.validated_by "
                 class="dropdown-item" name="{{ notification.id }}" [routerLink]="
                 
                 '/problems/' + notification.problem_id
@@ -171,8 +171,8 @@
 
               </a>
 
-              <a *ngIf="notification.problem && notification.collaborator" class="dropdown-item"
-                name="{{ notification.id }}" (click)="onRead($event)" [routerLink]="
+              <a *ngIf="notification.problem && notification.collaborator && !notification.solution_id"
+                class="dropdown-item" name="{{ notification.id }}" (click)="onRead($event)" [routerLink]="
                 
                 '/problems/' + notification.problem_id
               " queryParamsHandling="merge">
@@ -182,8 +182,8 @@
 
               </a>
 
-              <a *ngIf="notification.problem && notification.user_id && notification.validated_by" class="dropdown-item"
-                name="{{ notification.id }}" (click)="onRead($event)" [routerLink]="
+              <a *ngIf="notification.problem && notification.user_id && notification.validated_by && !notification.solution_id"
+                class="dropdown-item" name="{{ notification.id }}" (click)="onRead($event)" [routerLink]="
                 
                 '/problems/' + notification.problem_id
               " queryParamsHandling="merge">
@@ -203,7 +203,56 @@
                 "{{ notification.problem.title }}"
 
               </a>
+
+
+              <a *ngIf="notification.solution_id && !notification.is_update && notification.problem_id && !notification.collaborator && !notification.validated_by"
+                class="dropdown-item" name="{{ notification.id }}" (click)="onRead($event)" [routerLink]="
+                
+                '/solutions/' + notification.solution_id
+              " queryParamsHandling="merge">
+
+                Solution added for problem "{{ notification.problem.title}}"
+
+
+              </a>
+
+              <a *ngIf="notification.solution_id && notification.is_update && !notification.problem_id && !notification.collaborator && !notification.validated_by"
+                class="dropdown-item" name="{{ notification.id }}" (click)="onRead($event)" [routerLink]="
+                
+                '/solutions/' + notification.solution_id
+              " queryParamsHandling="merge">
+
+                Solution "{{ notification.solution.title}}" updated
+
+
+              </a>
+
+              <a *ngIf="notification.solution_id && !notification.is_update && !notification.problem_id && notification.collaborator && !notification.validated_by"
+                class="dropdown-item" name="{{ notification.id }}" (click)="onRead($event)" [routerLink]="
+            
+            '/solutions/' + notification.solution_id
+          " queryParamsHandling="merge">
+
+                New collaboration on solution "{{notification.solution.title}}"
+
+
+              </a>
+
+
+              <a *ngIf="notification.solution_id && !notification.is_update && !notification.problem_id && !notification.collaborator && notification.validated_by"
+                class="dropdown-item" name="{{ notification.id }}" (click)="onRead($event)" [routerLink]="
+          
+          '/solutions/' + notification.solution_id
+        " queryParamsHandling="merge">
+
+                Expert validation on solution "{{notification.solution.title}}"
+
+
+              </a>
+
             </div>
+
+
 
             <div class="text-center" *ngIf="objectValues(notifications).length > 0; else noNotification">
               <button mat-raised-button class="btn btn-success my-2" (click)="allRead()"

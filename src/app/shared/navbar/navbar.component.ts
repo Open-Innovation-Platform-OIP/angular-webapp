@@ -202,6 +202,10 @@ export class NavbarComponent implements OnInit {
               discussion{
                 text
               }
+
+              solution{
+                title
+              }
              
               problem {
                 title
