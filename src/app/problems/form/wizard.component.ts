@@ -40,6 +40,7 @@ import { map, startWith } from "rxjs/operators";
 import { first, take } from "rxjs/operators";
 import { ProblemService } from "../../services/problem.service";
 import { GeocoderService } from "../../services/geocoder.service";
+import { HttpClient } from "@angular/common/http";
 
 declare var H: any;
 declare const $: any;
@@ -114,7 +115,7 @@ export class WizardComponent
 
     attachments: []
   };
-  searchResults = {};
+  searchResults:any = [];
   sectorCtrl = new FormControl();
   filteredSectors: Observable<string[]>;
   sectors: any = [];
@@ -159,7 +160,8 @@ export class WizardComponent
     private usersService: UsersService,
     private auth: AuthService,
     private problemService: ProblemService,
-    private geoService: GeocoderService
+    private geoService: GeocoderService,
+    private http: HttpClient
   ) {
     canProceed = true;
 
@@ -909,91 +911,105 @@ export class WizardComponent
     console.log(searchKey, "searchkey");
 
     if (searchKey.length >= 3) {
-      this.searchResults = {};
-      this.apollo
-        .watchQuery<any>({
-          query: gql`query {
-                    search_problems_v2(
-                    args: {search: "${searchKey.toLowerCase()}"},where: { is_draft: { _eq: false } }
-                    ){
-                    id
-                    title
-                    description
-                    edited_at
-                    updated_at
-                    image_urls
-                    featured_url
+      this.searchResults = [];
 
-                    problem_locations{
-                      location{
-                        id
-                        location_name
-                        lat
-                        long
-                      }
-                    }
-                   
-                    
-                    problem_voters{
-                      problem_id
-                      user_id
-                    }
-                    problem_watchers{
-                      problem_id
-                      user_id
-      
-                    }
-                    problems_tags {
-                        tag {
-                            name
-                        }
-                    }
-                   
-                    problem_validations{
-                      comment
-                      agree
-                      created_at
-                      files
-                      user_id
-                      edited_at
-                      is_deleted
-              
-                      problem_id
-                      user {
-                        id
-                        name
-                      } 
-                      
-                    }
-                    }
-                    }`,
-          fetchPolicy: "no-cache"
-          // pollInterval: 200
-        })
-        .valueChanges.pipe(take(1))
+      this.http
+        .post(
+          "http://elasticsearch-microservice-test.cap.jaagalabs.com/search_problems",
+          { keyword: searchKey }
+        )
         .subscribe(
-          result => {
-            console.log(result, "result from search");
-            if (result.data.search_problems_v2.length > 0) {
-              // console.log(result.data.search_problems_v2.length, "search");
-              result.data.search_problems_v2.map(result => {
-                if (result.id != this.problem["id"]) {
-                  this.searchResults[result.id] = result;
-                }
-              });
-              // console.log(this.searchResults, ">>>>>searchresults");
-              if (!this.is_edit) {
-                canProceed = false;
-              }
-            }
+          searchResults => {
+            this.searchResults = searchResults;
+            console.log(this.searchResults,"wizard smart search")
           },
-          err => {
-            // console.log(err, "error from smart search");
-            console.error(JSON.stringify(err));
+          error => {
+            console.log(error);
           }
         );
+      // this.apollo
+      //   .watchQuery<any>({
+      //     query: gql`query {
+      //               search_problems_v2(
+      //               args: {search: "${searchKey.toLowerCase()}"},where: { is_draft: { _eq: false } }
+      //               ){
+      //               id
+      //               title
+      //               description
+      //               edited_at
+      //               updated_at
+      //               image_urls
+      //               featured_url
+
+      //               problem_locations{
+      //                 location{
+      //                   id
+      //                   location_name
+      //                   lat
+      //                   long
+      //                 }
+      //               }
+
+      //               problem_voters{
+      //                 problem_id
+      //                 user_id
+      //               }
+      //               problem_watchers{
+      //                 problem_id
+      //                 user_id
+
+      //               }
+      //               problems_tags {
+      //                   tag {
+      //                       name
+      //                   }
+      //               }
+
+      //               problem_validations{
+      //                 comment
+      //                 agree
+      //                 created_at
+      //                 files
+      //                 user_id
+      //                 edited_at
+      //                 is_deleted
+
+      //                 problem_id
+      //                 user {
+      //                   id
+      //                   name
+      //                 }
+
+      //               }
+      //               }
+      //               }`,
+      //     fetchPolicy: "no-cache"
+      //     // pollInterval: 200
+      //   })
+      //   .valueChanges.pipe(take(1))
+      //   .subscribe(
+      //     result => {
+      //       console.log(result, "result from search");
+      //       if (result.data.search_problems_v2.length > 0) {
+      //         // console.log(result.data.search_problems_v2.length, "search");
+      //         result.data.search_problems_v2.map(result => {
+      //           if (result.id != this.problem["id"]) {
+      //             this.searchResults[result.id] = result;
+      //           }
+      //         });
+      //         // console.log(this.searchResults, ">>>>>searchresults");
+      //         if (!this.is_edit) {
+      //           canProceed = false;
+      //         }
+      //       }
+      //     },
+      //     err => {
+      //       // console.log(err, "error from smart search");
+      //       console.error(JSON.stringify(err));
+      //     }
+      //   );
     } else {
-      this.searchResults = {};
+      this.searchResults = [];
     }
   }
 

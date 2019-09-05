@@ -31,6 +31,8 @@ import swal from "sweetalert2";
 var Buffer = require("buffer/").Buffer;
 import { FormBuilder } from "@angular/forms";
 import { take } from "rxjs/operators";
+import { HttpClient } from "@angular/common/http";
+
 
 import { Content } from "@angular/compiler/src/render3/r3_ast";
 
@@ -122,7 +124,7 @@ export class AddSolutionComponent
   sectors: any = [];
 
   readonly separatorKeysCodes: number[] = [ENTER, COMMA];
-  searchResults = {};
+  problemSearchResults:any = [];
   solutionSearchResults: any = [];
   // searchResults = [];
   // smartSearchResults = [];
@@ -131,7 +133,7 @@ export class AddSolutionComponent
   locationCtrl = new FormControl();
   sectorCtrl = new FormControl();
   filteredProblems: Observable<any>;
-  searchResultsObservable: Subscription;
+  // searchResultsObservable: Subscription;
 
   selectedProblemsData: any = {};
   // filteredProblems = [];
@@ -209,7 +211,9 @@ export class AddSolutionComponent
     private searchService: SearchService,
     private auth: AuthService,
     private here: GeocoderService,
-    private apollo: Apollo
+    private apollo: Apollo,
+    private http: HttpClient
+
   ) {
     this.type = this.formBuilder.group({
       // To add a validator, we must first convert the string value into an array. The first item in the array is the default value if any, then the next item in the array is the validator. Here we are adding a required validator meaning that the firstName attribute must have a value in it.
@@ -400,16 +404,36 @@ export class AddSolutionComponent
   }
 
   solutionSearch(solutionSearchInput: string) {
-    if (solutionSearchInput.length >= 3) {
-      this.searchService.solutionSearch(solutionSearchInput).subscribe(
-        value => {
-          this.solutionSearchResults = value.data.search_solutions_v2;
-          // console.log("Solution title search", this.solutionSearchResults);
-        },
-        error => {
-          console.log(JSON.stringify(error));
-        }
-      );
+    if (solutionSearchInput.length >= 1) {
+
+      this.problemSearchResults = [];
+
+      this.http
+        .post(
+          "http://elasticsearch-microservice-test.cap.jaagalabs.com/search_solutions",
+          { keyword:solutionSearchInput }
+        )
+        .subscribe(
+          searchResults => {
+            this.solutionSearchResults= searchResults;
+
+          },
+          error => {
+            console.log(error);
+          }
+        );
+      // this.searchService.solutionSearch(solutionSearchInput).subscribe(
+      //   value => {
+      //     this.solutionSearchResults = value.data.search_solutions_v2;
+      //     // console.log("Solution title search", this.solutionSearchResults);
+      //   },
+      //   error => {
+      //     console.log(JSON.stringify(error));
+      //   }
+      // );
+
+
+
     } else {
       this.solutionSearchResults = [];
     }
@@ -582,96 +606,115 @@ export class AddSolutionComponent
   searchProblem(event) {
     // console.log("Search Event", event);
     if (event && event.target && event.target.value) {
+      const keyword= event.target.value;
+      this.problemSearchResults = [];
+
+      this.http
+        .post(
+          "http://elasticsearch-microservice-test.cap.jaagalabs.com/search_problems",
+          { keyword: keyword }
+        )
+        .subscribe(
+          searchResults => {
+            this.problemSearchResults = searchResults;
+
+          },
+          error => {
+            console.log(error);
+          }
+        );
+
+        }
       // this.searchResultsObservable = this.smartSearch(event.target.value);
       // console.log("Search Event ==", event);
 
-      this.searchResultsObservable = this.smartSearch(
-        event.target.value
-      ).subscribe(
-        result => {
-          // console.log(result, "result from search");
-          if (result.data.search_problems_v2.length > 0) {
-            // this.smartSearchResults = [];
-            // this.searchResults = [];
-            this.searchResults = {};
+    //   this.searchResultsObservable = this.smartSearch(
+    //     event.target.value
+    //   ).subscribe(
+    //     result => {
+    //       // console.log(result, "result from search");
+    //       if (result.data.search_problems_v2.length > 0) {
+    //         // this.smartSearchResults = [];
+    //         // this.searchResults = [];
+    //         this.searchResults = {};
 
-            result.data.search_problems_v2.map(problem => {
-              this.searchResults[problem["id"]] = problem;
-            });
-            console.log(this.searchResults, "search results");
-          }
-        },
-        err => {
-          console.error(JSON.stringify(err));
-        }
-      );
-    }
-  }
+    //         result.data.search_problems_v2.map(problem => {
+    //           this.searchResults[problem["id"]] = problem;
+    //         });
+    //         console.log(this.searchResults, "search results");
+    //       }
+    //     },
+    //     err => {
+    //       console.error(JSON.stringify(err));
+    //     }
+    //   );
+    // }
+  
+}
 
-  smartSearch(searchKey) {
-    return this.apollo.watchQuery<any>({
-      query: gql`query {
-                    search_problems_v2(
-                    args: {search: "${searchKey.toLowerCase()}"},where: { is_draft: { _eq: false } }
-                    ){
-                    id
-                    title
-                    description
-                    edited_at
-                    updated_at
-                    image_urls
-                    featured_url
-                    problem_locations{
-                      location{
-                        id
-                        location_name
-                        location
-                        lat
-                        long
-                      }
-                    }
+  // smartSearch(searchKey) {
+  //   return this.apollo.watchQuery<any>({
+  //     query: gql`query {
+  //                   search_problems_v2(
+  //                   args: {search: "${searchKey.toLowerCase()}"},where: { is_draft: { _eq: false } }
+  //                   ){
+  //                   id
+  //                   title
+  //                   description
+  //                   edited_at
+  //                   updated_at
+  //                   image_urls
+  //                   featured_url
+  //                   problem_locations{
+  //                     location{
+  //                       id
+  //                       location_name
+  //                       location
+  //                       lat
+  //                       long
+  //                     }
+  //                   }
                     
                    
                     
-                    problem_voters{
-                      problem_id
-                      user_id
-                    }
-                    problem_watchers{
-                      problem_id
-                      user_id
+  //                   problem_voters{
+  //                     problem_id
+  //                     user_id
+  //                   }
+  //                   problem_watchers{
+  //                     problem_id
+  //                     user_id
       
-                    }
-                    problems_tags {
-                        tag {
-                            name
-                        }
-                    }
+  //                   }
+  //                   problems_tags {
+  //                       tag {
+  //                           name
+  //                       }
+  //                   }
                    
-                    problem_validations{
-                      comment
-                      agree
-                      created_at
-                      files
-                      user_id
-                      edited_at
-                      is_deleted
+  //                   problem_validations{
+  //                     comment
+  //                     agree
+  //                     created_at
+  //                     files
+  //                     user_id
+  //                     edited_at
+  //                     is_deleted
               
-                      problem_id
-                      user {
-                        id
-                        name
-                      } 
+  //                     problem_id
+  //                     user {
+  //                       id
+  //                       name
+  //                     } 
                       
-                    }
-                    }
-                    }`,
-      fetchPolicy: "no-cache"
-      // pollInterval: 200
-    }).valueChanges;
-  }
-
-  private filterOwners(value: String): any[] {
+  //                   }
+  //                   }
+  //                   }`,
+  //     fetchPolicy: "no-cache"
+  //     // pollInterval: 200
+  //   }).valueChanges;
+  // }
+ filterOwners(value: String): any[] {
     if (typeof value === "string") {
       console.log(value, "value in filtered owners");
       const filterValue = value.toLowerCase();
