@@ -149,7 +149,7 @@
 
               </a>
 
-              <a *ngIf="notification.problem && !notification.solution_id && !notification.enrichment_id && !notification.collaborator && !notification.discussion_id && notification.user_id && !notification.tag_id && !notification.validated_by "
+              <a *ngIf="notification.problem && notification.is_update && !notification.solution_id && !notification.enrichment_id && !notification.collaborator && !notification.discussion_id && notification.user_id && !notification.tag_id && !notification.validated_by "
                 class="dropdown-item" name="{{ notification.id }}" [routerLink]="
                 
                 '/problems/' + notification.problem_id
@@ -177,7 +177,7 @@
                 '/problems/' + notification.problem_id
               " queryParamsHandling="merge">
 
-                New Collaboration on problem "{{ notification.problem.title }}"
+                New collaboration on problem "{{ notification.problem.title }}"
 
 
               </a>
