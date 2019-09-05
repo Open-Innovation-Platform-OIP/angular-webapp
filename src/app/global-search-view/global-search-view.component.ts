@@ -53,38 +53,50 @@ export class GlobalSearchViewComponent implements OnInit, OnChanges {
 
   globalSearch(searchInput: string) {
     // this.router.navigateByUrl(`/search/${searchInput}`);
-    if (searchInput.length >= 3) {
+    if (searchInput.length >= 1) {
       this.globalProblemSearchResults = [];
       this.userSearchResults = [];
       this.solutionSearchResults = [];
+
+      this.searchService.globalSearch(searchInput).subscribe(
+        searchData => {
+          this.globalProblemSearchResults = searchData["problems"];
+          this.userSearchResults = searchData["users"];
+          this.solutionSearchResults = searchData["solutions"];
+          console.log(searchData, "search data");
+        },
+        error => {
+          console.error(JSON.stringify(error));
+        }
+      );
       // this.searchResults = [];
-      this.searchService.problemSearch(searchInput).subscribe(
-        value => {
-          this.globalProblemSearchResults =
-            value.data.search_problems_multiword;
-        },
-        error => {
-          console.error(JSON.stringify(error));
-        }
-      );
+      // this.searchService.problemSearch(searchInput).subscribe(
+      //   value => {
+      //     this.globalProblemSearchResults =
+      //       value.data.search_problems_multiword;
+      //   },
+      //   error => {
+      //     console.error(JSON.stringify(error));
+      //   }
+      // );
 
-      this.searchService.userSearch(searchInput).subscribe(
-        value => {
-          this.userSearchResults = value.data.search_users;
-        },
-        error => {
-          console.error(JSON.stringify(error));
-        }
-      );
+      // this.searchService.userSearch(searchInput).subscribe(
+      //   value => {
+      //     this.userSearchResults = value.data.search_users;
+      //   },
+      //   error => {
+      //     console.error(JSON.stringify(error));
+      //   }
+      // );
 
-      this.searchService.solutionSearch(searchInput).subscribe(
-        value => {
-          this.solutionSearchResults = value.data.search_solutions_v2;
-        },
-        error => {
-          console.log(JSON.stringify(error));
-        }
-      );
+      // this.searchService.solutionSearch(searchInput).subscribe(
+      //   value => {
+      //     this.solutionSearchResults = value.data.search_solutions_v2;
+      //   },
+      //   error => {
+      //     console.log(JSON.stringify(error));
+      //   }
+      // );
     } else {
       this.globalProblemSearchResults = [];
       this.userSearchResults = [];

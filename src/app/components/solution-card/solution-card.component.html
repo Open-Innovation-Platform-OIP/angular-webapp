@@ -30,7 +30,7 @@
       highlight
     </i>
   </div>
-  <div class="card-footer">
+  <div class="card-footer" *ngIf="solutionData.solution_voters || solutionData.solution_watchers ">
     <div class="stats">
       <i class="material-icons">
         thumb_up

@@ -10,12 +10,12 @@ export class SearchService {
   constructor(private apollo: Apollo, private http: HttpClient) {}
 
   globalSearch(keyword) {
-    const results = this.http.post(
+    return this.http.post(
       "http://elasticsearch-microservice-test.cap.jaagalabs.com/global_search",
       { keyword: keyword }
     );
 
-    return results;
+    // return results;
   }
 
   userSearch(searchInput) {

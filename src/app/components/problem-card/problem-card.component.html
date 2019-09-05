@@ -46,7 +46,8 @@
     </i>
   </div>
 
-  <div class="card-footer">
+  <div class="card-footer"
+    *ngIf="problemData.problem_voters || problemData.problem_watchers || problemData.problem_validations">
     <div class="stats">
       <i class="material-icons">
         thumb_up
