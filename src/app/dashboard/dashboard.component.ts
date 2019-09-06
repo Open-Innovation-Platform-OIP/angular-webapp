@@ -199,7 +199,7 @@ export class DashboardComponent implements OnInit, OnDestroy {
         });
         // console.log(problems_solutions, "solutions and problems");
         this.drafts = problems_solutions;
-        console.log(this.drafts, "drafts");
+        // console.log(this.drafts, "drafts");
         this.userService.dashboardDrafts = data.problems;
         this.userService.solutionDrafts = data.solutions;
       }
@@ -371,7 +371,7 @@ export class DashboardComponent implements OnInit, OnDestroy {
                 // );
               }
             }
-            console.log(this.contributions, "contributions");
+            // console.log(this.contributions, "contributions");
             // this.contributions.add(Object.values(problem)[0]);
           });
         });
@@ -473,12 +473,12 @@ export class DashboardComponent implements OnInit, OnDestroy {
                   if (p && p.problem && p.problem.id) {
                     const problem = p.problem;
 
-                    console.log(
-                      "problem user id",
-                      problem.user_id,
-                      "user id ==",
-                      this.auth.currentUserValue.id
-                    );
+                    // console.log(
+                    //   "problem user id",
+                    //   problem.user_id,
+                    //   "user id ==",
+                    //   this.auth.currentUserValue.id
+                    // );
                     this.recommendedProblems[problem["id"]] = problem;
                     this.userService.dashboardRecommendations[
                       problem["id"]
