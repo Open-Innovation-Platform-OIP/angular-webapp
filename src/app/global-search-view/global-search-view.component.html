@@ -12,7 +12,7 @@
         <h4 class="card-title text-center">Problems</h4>
         <br />
         <div *ngFor="let problem of globalProblemSearchResults">
-          <app-problem-card *ngIf="problem" [problemData]="problem['_source']">
+          <app-problem-card *ngIf="problem" [problemData]="problem">
           </app-problem-card>
           <br />
         </div>
@@ -32,7 +32,7 @@
         <h4 class="card-title text-center">Solutions</h4>
         <br />
         <div *ngFor="let solution of solutionSearchResults">
-          <app-solution-card *ngIf="solution" [solutionData]="solution['_source']">
+          <app-solution-card *ngIf="solution" [solutionData]="solution">
           </app-solution-card>
           <br />
         </div>

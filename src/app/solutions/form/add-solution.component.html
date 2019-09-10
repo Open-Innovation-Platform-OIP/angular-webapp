@@ -65,8 +65,8 @@
                             <mat-chip-list #chipList>
                             </mat-chip-list>
                             <mat-autocomplete #auto="matAutocomplete" (optionSelected)="selected($event)">
-                              <mat-option *ngFor="let problem of problemSearchResults" [value]="problem._source">
-                                {{problem._source.title}}
+                              <mat-option *ngFor="let problem of problemSearchResults" [value]="problem">
+                                {{problem.title}}
                               </mat-option>
                             </mat-autocomplete>
                           </mat-form-field>
@@ -848,7 +848,7 @@
           </div>
           <div class="row justify-content-center">
             <div class="col-sm-12" *ngFor="let result of problemSearchResults">
-              <app-problem-card *ngIf="result" [problemData]="result['_source']" (selected)="selectProblem($event)"
+              <app-problem-card *ngIf="result" [problemData]="result" (selected)="selectProblem($event)"
                 [usedInSmartSearch]="true" [showAddButton]="true">
 
               </app-problem-card>
@@ -868,7 +868,7 @@
           </div>
           <div class="row justify-content-center">
             <div class="col-sm-12" *ngFor="let solution of solutionSearchResults">
-              <app-solution-card *ngIf="solution" [solutionData]="solution['_source']">
+              <app-solution-card *ngIf="solution" [solutionData]="solution">
               </app-solution-card>
             </div>
           </div>

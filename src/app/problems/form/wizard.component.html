@@ -36,7 +36,7 @@
           </div>
           <div class="row">
             <div class="col-sm-12" *ngFor="let result of searchResults">
-              <app-problem-card *ngIf="problem" [problemData]="result['_source']">
+              <app-problem-card *ngIf="problem" [problemData]="result">
               </app-problem-card>
 
             </div>
