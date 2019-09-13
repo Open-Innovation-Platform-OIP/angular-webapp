@@ -33,7 +33,6 @@ import { FormBuilder } from "@angular/forms";
 import { take } from "rxjs/operators";
 import { HttpClient } from "@angular/common/http";
 
-
 import { Content } from "@angular/compiler/src/render3/r3_ast";
 
 import { COMMA, ENTER } from "@angular/cdk/keycodes";
@@ -124,7 +123,7 @@ export class AddSolutionComponent
   sectors: any = [];
 
   readonly separatorKeysCodes: number[] = [ENTER, COMMA];
-  problemSearchResults:any = [];
+  problemSearchResults: any = [];
   solutionSearchResults: any = [];
   // searchResults = [];
   // smartSearchResults = [];
@@ -213,7 +212,6 @@ export class AddSolutionComponent
     private here: GeocoderService,
     private apollo: Apollo,
     private http: HttpClient
-
   ) {
     this.type = this.formBuilder.group({
       // To add a validator, we must first convert the string value into an array. The first item in the array is the default value if any, then the next item in the array is the validator. Here we are adding a required validator meaning that the firstName attribute must have a value in it.
@@ -338,7 +336,7 @@ export class AddSolutionComponent
     // delete this.searchResults[selectedProblem.id];
   }
   selectProblem(problem) {
-    console.log(problem,"====smart card problem selected")
+    console.log(problem, "====smart card problem selected");
     this.selectedProblems[problem.id] = problem;
     this.getProblemData(problem.id);
     // console.log(this.selectedProblems, "selected problem set");
@@ -405,18 +403,16 @@ export class AddSolutionComponent
 
   solutionSearch(solutionSearchInput: string) {
     if (solutionSearchInput.length >= 1) {
-
       this.problemSearchResults = [];
 
       this.http
         .post(
-          "http://elasticsearch-microservice-test.cap.jaagalabs.com/search_solutions",
-          { keyword:solutionSearchInput }
+          "https://elasticsearch-microservice.dev.jaagalabs.com/search_solutions",
+          { keyword: solutionSearchInput }
         )
         .subscribe(
           searchResults => {
-            this.solutionSearchResults= searchResults;
-
+            this.solutionSearchResults = searchResults;
           },
           error => {
             console.log(error);
@@ -431,9 +427,6 @@ export class AddSolutionComponent
       //     console.log(JSON.stringify(error));
       //   }
       // );
-
-
-
     } else {
       this.solutionSearchResults = [];
     }
@@ -606,27 +599,25 @@ export class AddSolutionComponent
   searchProblem(event) {
     // console.log("Search Event", event);
     if (event && event.target && event.target.value) {
-      const keyword= event.target.value;
+      const keyword = event.target.value;
       this.problemSearchResults = [];
 
       this.http
         .post(
-          "http://elasticsearch-microservice-test.cap.jaagalabs.com/search_problems",
+          "https://elasticsearch-microservice.dev.jaagalabs.com/search_problems",
           { keyword: keyword }
         )
         .subscribe(
           searchResults => {
             this.problemSearchResults = searchResults;
-
           },
           error => {
             console.log(error);
           }
         );
-
-        }
-      // this.searchResultsObservable = this.smartSearch(event.target.value);
-      // console.log("Search Event ==", event);
+    }
+    // this.searchResultsObservable = this.smartSearch(event.target.value);
+    // console.log("Search Event ==", event);
 
     //   this.searchResultsObservable = this.smartSearch(
     //     event.target.value
@@ -649,8 +640,7 @@ export class AddSolutionComponent
     //     }
     //   );
     // }
-  
-}
+  }
 
   // smartSearch(searchKey) {
   //   return this.apollo.watchQuery<any>({
@@ -674,9 +664,7 @@ export class AddSolutionComponent
   //                       long
   //                     }
   //                   }
-                    
-                   
-                    
+
   //                   problem_voters{
   //                     problem_id
   //                     user_id
@@ -684,14 +672,14 @@ export class AddSolutionComponent
   //                   problem_watchers{
   //                     problem_id
   //                     user_id
-      
+
   //                   }
   //                   problems_tags {
   //                       tag {
   //                           name
   //                       }
   //                   }
-                   
+
   //                   problem_validations{
   //                     comment
   //                     agree
@@ -700,13 +688,13 @@ export class AddSolutionComponent
   //                     user_id
   //                     edited_at
   //                     is_deleted
-              
+
   //                     problem_id
   //                     user {
   //                       id
   //                       name
-  //                     } 
-                      
+  //                     }
+
   //                   }
   //                   }
   //                   }`,
@@ -714,7 +702,7 @@ export class AddSolutionComponent
   //     // pollInterval: 200
   //   }).valueChanges;
   // }
- filterOwners(value: String): any[] {
+  filterOwners(value: String): any[] {
     if (typeof value === "string") {
       console.log(value, "value in filtered owners");
       const filterValue = value.toLowerCase();
@@ -858,9 +846,7 @@ export class AddSolutionComponent
                                   name
                               }
                           }
-                            solution_owners(where: { user_id: { _neq: ${
-                              this.auth.currentUserValue.id
-                            } } }) {
+                            solution_owners(where: { user_id: { _neq: ${this.auth.currentUserValue.id} } }) {
                               user {
                                 id
                                 name
@@ -1959,8 +1945,8 @@ export class AddSolutionComponent
     }
   }
 
-  nextSelected(){
-    window.scroll(0,0);
+  nextSelected() {
+    window.scroll(0, 0);
   }
 
   addMediaUrl() {

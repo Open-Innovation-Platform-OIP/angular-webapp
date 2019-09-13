@@ -11,7 +11,7 @@ export class SearchService {
 
   globalSearch(keyword) {
     return this.http.post(
-      "http://elasticsearch-microservice-test.cap.jaagalabs.com/global_search",
+      "https://elasticsearch-microservice.dev.jaagalabs.com/global_search",
       { keyword: keyword }
     );
 

@@ -915,7 +915,7 @@ export class WizardComponent
 
       this.http
         .post(
-          "http://elasticsearch-microservice-test.cap.jaagalabs.com/search_problems",
+          "https://elasticsearch-microservice.dev.jaagalabs.com/search_problems",
           { keyword: searchKey }
         )
         .subscribe(
