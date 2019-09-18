@@ -24,7 +24,7 @@
               <div class="col-md-4">
                 <div class="picture text-center">
                   <img
-                    src="{{(problemData.featured_url && checkUrlIsImg(fileServerUrl+problemData.featured_url)) ? fileServerUrl+problemData.featured_url : './assets/img/image_placeholder.jpg'}}"
+                    src="{{(problemData.featured_url && checkUrlIsImg(filesService.fileAccessUrl+problemData.featured_url)) ? filesService.fileAccessUrl+problemData.featured_url : './assets/img/image_placeholder.jpg'}}"
                     alt="Thumbnail Image" class="rounded img-fluid">
                   <div>
                     <button mat-raised-button *ngIf="problem_attachments.length > 0"
@@ -167,7 +167,7 @@
                 </button>
               </div>
               <div class="modal-body">
-                <app-display-modal *ngIf="problem_attachments_src && problem_attachments_src.fileEndpoint"
+                <app-display-modal *ngIf="problem_attachments_src "
                   [source]="problem_attachments[problem_attachments_index]">
                 </app-display-modal>
               </div>

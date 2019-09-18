@@ -1,27 +1,31 @@
 import {
   Component,
   ViewChild,
-  AfterViewInit,
+  OnInit,
   Input,
   Output,
   EventEmitter
 } from "@angular/core";
 import { EmbedVideoService } from "ngx-embed-video";
-import { uploadVariables } from "../../../environments/environment";
+// import { fileUploadVariables } from "../../../environments/environment";
+import { FilesService } from "../../services/files.service";
 @Component({
   selector: "app-display-modal",
   templateUrl: "./display-modal.component.html",
   styleUrls: ["./display-modal.component.css"]
 })
-export class DisplayModalComponent implements AfterViewInit {
+export class DisplayModalComponent implements OnInit {
   @Input() source;
   iframe_html: any;
-  fileServerUrl: string = "";
+  // filesService.fileAccessUrl: string = "";
 
-  constructor(private embedService: EmbedVideoService) {}
+  constructor(
+    private embedService: EmbedVideoService,
+    private filesService: FilesService
+  ) {}
 
-  ngAfterViewInit() {
-    this.fileServerUrl = uploadVariables.accessUrl + "/";
+  ngOnInit() {
+    // this.filesService.fileAccessUrl = fileUploadVariables.accessUrl + "/";
     console.log(this.source, "source");
   }
 
@@ -45,6 +49,7 @@ export class DisplayModalComponent implements AfterViewInit {
   }
 
   checkUrlIsEmbeded(url) {
+    console.log(url, "url embed");
     var arr = ["youtube", "vimeo", "dailymotion"];
     // var ext = url.substring(url.lastIndexOf(".") + 1);
     let filtered = arr.filter(provider => {

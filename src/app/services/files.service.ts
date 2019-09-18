@@ -1,7 +1,7 @@
 import { Injectable } from "@angular/core";
 import * as AWS from "aws-sdk";
 import { digitalocean } from "../../environments/environment";
-import { uploadVariables } from "../../environments/environment";
+import { fileUploadVariables } from "../../environments/environment";
 
 import { resolve } from "dns";
 import { reject } from "q";
@@ -23,6 +23,7 @@ export class FilesService {
   s3: any;
   fileinput_id: string;
   authToken: string = "";
+  fileAccessUrl: string = "";
 
   constructor(private http: HttpClient) {
     this.s3 = new AWS.S3({
@@ -30,6 +31,7 @@ export class FilesService {
       accessKeyId: accessKeyId,
       secretAccessKey: secretAccessKey
     });
+    this.fileAccessUrl = fileUploadVariables.accessUrl + "/";
   }
 
   uploadFile(blob, key) {
@@ -52,7 +54,37 @@ export class FilesService {
       }
     });
   }
+  showSpinner() {
+    let btn_id = this.fileinput_id;
 
+    let comment_btn = <HTMLInputElement>document.getElementById(btn_id);
+    let spinner = document.getElementById("loader");
+    let upoadBtn = <HTMLInputElement>document.getElementById("file_input_btn");
+    if (spinner && upoadBtn) {
+      spinner.style.display = "block";
+      upoadBtn.disabled = true;
+    }
+    if (comment_btn) {
+      comment_btn.disabled = true;
+    }
+    document.body.style.setProperty("cursor", "wait", "important");
+  }
+
+  hideSpinner() {
+    let btn_id = this.fileinput_id;
+
+    let comment_btn = <HTMLInputElement>document.getElementById(btn_id);
+    let spinner = document.getElementById("loader");
+    let uploadBtn = <HTMLInputElement>document.getElementById("file_input_btn");
+    if (spinner && uploadBtn) {
+      spinner.style.display = "none";
+      uploadBtn.disabled = false;
+    }
+    if (comment_btn) {
+      comment_btn.disabled = false;
+    }
+    document.body.style.cursor = "default";
+  }
   // # Based on the example described:
   // https://gist.github.com/sevastos/5804803
 
@@ -221,7 +253,7 @@ export class FilesService {
     return this.s3.deleteObject(params);
   }
 
-  minioUpload(file, type) {
+  fileUpload(file, type) {
     const currentUser = JSON.parse(localStorage.getItem("currentUser"));
     if (currentUser) {
       // token = currentUser["token"];
@@ -231,12 +263,13 @@ export class FilesService {
       Authorization: this.authToken
     });
     let options = { headers: headers };
+    this.showSpinner();
 
     return new Promise((resolve, reject) => {
       this.http
         .post(
-          uploadVariables.UploadUrlEndpoint,
-          { file_data: `${uploadVariables.bucketName}/${file.name}` },
+          fileUploadVariables.UploadUrlEndpoint,
+          { file_data: `${fileUploadVariables.bucketName}/${file.name}` },
           options
         )
         .subscribe(
@@ -256,10 +289,11 @@ export class FilesService {
                   result => {
                     console.log(result, "minio upload");
                     let returnObject = {
-                      fileEndpoint: `${uploadVariables.bucketName}/${file.name}`,
+                      fileEndpoint: `${fileUploadVariables.bucketName}/${file.name}`,
                       type: type
                     };
                     resolve(returnObject);
+                    this.hideSpinner();
                   },
                   error => {
                     reject(error);

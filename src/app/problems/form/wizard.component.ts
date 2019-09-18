@@ -115,7 +115,7 @@ export class WizardComponent
 
     attachments: []
   };
-  searchResults:any = [];
+  searchResults: any = [];
   sectorCtrl = new FormControl();
   filteredSectors: Observable<string[]>;
   sectors: any = [];
@@ -337,9 +337,7 @@ export class WizardComponent
                             organization
                             featured_url
                             featured_type
-                            problem_owners(where: { user_id: { _neq: ${
-                              this.auth.currentUserValue.id
-                            } } }){
+                            problem_owners(where: { user_id: { _neq: ${this.auth.currentUserValue.id} } }){
                               user{
                                 id
                                 name
@@ -824,86 +822,86 @@ export class WizardComponent
     });
   }
 
-  onFileSelected(event) {
-    for (let i = 0; i < event.target.files.length; i++) {
-      const file = event.target.files[i];
-      const type = event.target.files[i].type.split("/")[0];
-      switch (type) {
-        case "image": {
-          if (typeof FileReader !== "undefined") {
-            const reader = new FileReader();
+  // onFileSelected(event) {
+  //   for (let i = 0; i < event.target.files.length; i++) {
+  //     const file = event.target.files[i];
+  //     const type = event.target.files[i].type.split("/")[0];
+  //     switch (type) {
+  //       case "image": {
+  //         if (typeof FileReader !== "undefined") {
+  //           const reader = new FileReader();
 
-            reader.onload = (e: any) => {
-              const img_id = file.name;
-              this.filesService
-                .uploadFile(e.target.result, img_id)
-                .promise()
-                .then(values => {
-                  this.problem.image_urls.push({
-                    url: values["Location"],
-                    key: values["Key"]
-                  });
-                  if (!this.problem.featured_url) {
-                    this.problem.featured_url = this.problem.image_urls[0].url;
-                    this.problem.featured_type = "image";
-                  }
-                })
-                .catch(e => console.log("Err:: ", e));
-            };
-            reader.readAsArrayBuffer(file);
-          }
-          break;
-        }
-        case "video": {
-          const video = event.target.files[i];
-          this.filesService
-            .uploadFile(video, video.name)
-            .promise()
-            .then(data => {
-              this.problem.video_urls.push({
-                key: data["Key"],
-                url: data["Location"]
-              });
-              if (!this.problem.featured_url) {
-                this.problem.featured_url = this.problem.video_urls[0].url;
-                this.problem.featured_type = "video";
-              }
-            })
-            .catch(e => console.log("Err:: ", e));
-          break;
-        }
-        default: {
-          console.log("unknown file type");
-          alert("Unknown file type. Please upload images or videos");
-          break;
-        }
-      }
-    }
-  }
+  //           reader.onload = (e: any) => {
+  //             const img_id = file.name;
+  //             this.filesService
+  //               .uploadFile(e.target.result, img_id)
+  //               .promise()
+  //               .then(values => {
+  //                 this.problem.image_urls.push({
+  //                   url: values["Location"],
+  //                   key: values["Key"]
+  //                 });
+  //                 if (!this.problem.featured_url) {
+  //                   this.problem.featured_url = this.problem.image_urls[0].url;
+  //                   this.problem.featured_type = "image";
+  //                 }
+  //               })
+  //               .catch(e => console.log("Err:: ", e));
+  //           };
+  //           reader.readAsArrayBuffer(file);
+  //         }
+  //         break;
+  //       }
+  //       case "video": {
+  //         const video = event.target.files[i];
+  //         this.filesService
+  //           .uploadFile(video, video.name)
+  //           .promise()
+  //           .then(data => {
+  //             this.problem.video_urls.push({
+  //               key: data["Key"],
+  //               url: data["Location"]
+  //             });
+  //             if (!this.problem.featured_url) {
+  //               this.problem.featured_url = this.problem.video_urls[0].url;
+  //               this.problem.featured_type = "video";
+  //             }
+  //           })
+  //           .catch(e => console.log("Err:: ", e));
+  //         break;
+  //       }
+  //       default: {
+  //         console.log("unknown file type");
+  //         alert("Unknown file type. Please upload images or videos");
+  //         break;
+  //       }
+  //     }
+  //   }
+  // }
 
-  removeVideo(index: number) {
-    this.filesService
-      .deleteFile(this.problem["video_urls"][index]["key"])
-      .promise()
-      .then(data => {
-        if (this.problem.video_urls[index].url === this.problem.featured_url) {
-          this.problem.featured_url = "";
-          this.problem.featured_type = "";
-        }
-        this.problem.video_urls.splice(index, 1);
-      })
-      .catch(e => {
-        console.log("Err: ", e);
-      });
-  }
+  // removeVideo(index: number) {
+  //   this.filesService
+  //     .deleteFile(this.problem["video_urls"][index]["key"])
+  //     .promise()
+  //     .then(data => {
+  //       if (this.problem.video_urls[index].url === this.problem.featured_url) {
+  //         this.problem.featured_url = "";
+  //         this.problem.featured_type = "";
+  //       }
+  //       this.problem.video_urls.splice(index, 1);
+  //     })
+  //     .catch(e => {
+  //       console.log("Err: ", e);
+  //     });
+  // }
 
-  removeEmbed(index: number) {
-    this.problem.embed_urls.splice(index, 1);
-    if (this.problem.embed_urls[index] === this.problem.featured_url) {
-      this.problem.featured_url = "";
-      this.problem.featured_type = "";
-    }
-  }
+  // removeEmbed(index: number) {
+  //   this.problem.embed_urls.splice(index, 1);
+  //   if (this.problem.embed_urls[index] === this.problem.featured_url) {
+  //     this.problem.featured_url = "";
+  //     this.problem.featured_type = "";
+  //   }
+  // }
 
   smartSearch() {
     let searchKey = this.problem.title + " " + this.problem.description;
@@ -921,7 +919,7 @@ export class WizardComponent
         .subscribe(
           searchResults => {
             this.searchResults = searchResults;
-            console.log(this.searchResults,"wizard smart search")
+            console.log(this.searchResults, "wizard smart search");
           },
           error => {
             console.log(error);

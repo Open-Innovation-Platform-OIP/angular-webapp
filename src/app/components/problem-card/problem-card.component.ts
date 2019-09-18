@@ -1,6 +1,7 @@
 import { Component, OnInit, Input, Output, EventEmitter } from "@angular/core";
 import { Router, ActivatedRoute } from "@angular/router";
-import { uploadVariables } from "../../../environments/environment";
+// import { fileUploadVariables } from "../../../environments/environment";
+import { FilesService } from "../../services/files.service";
 
 const misc: any = {
   navbar_menu_visible: 0,
@@ -17,7 +18,7 @@ export class ProblemCardComponent implements OnInit {
   @Input() problemData: any;
   @Input() usedInSmartSearch: Boolean = false;
   @Input() showAddButton: Boolean = false;
-  fileServerUrl: string = "";
+  // filesService.fileAccessUrl: string = "";
 
   @Output() selected = new EventEmitter();
 
@@ -29,10 +30,10 @@ export class ProblemCardComponent implements OnInit {
   // modifiedAt: any;
   // sectors: any[] = [];
 
-  constructor(private router: Router) {}
+  constructor(private router: Router, private filesService: FilesService) {}
 
   ngOnInit() {
-    this.fileServerUrl = uploadVariables.accessUrl + "/";
+    // this.filesService.fileAccessUrl = fileUploadVariables.accessUrl + "/";
     // console.log("problem card", this.problemData);
     // console.log(this.usedIn, "used");
     if (this.problemData.is_draft) {

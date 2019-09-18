@@ -15,7 +15,7 @@ export const digitalocean = {
 
 export const domain = "https://app.socialalpha.jaagalabs.com";
 
-export const uploadVariables = {
+export const fileUploadVariables = {
   UploadUrlEndpoint:
     "http://minio-microservice.dev.jaagalabs.com/create_presigned_url",
   bucketName: "test",

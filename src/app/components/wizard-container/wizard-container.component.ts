@@ -20,7 +20,7 @@ import { Router, ActivatedRoute } from "@angular/router";
 import { map, startWith } from "rxjs/operators";
 import { Observable } from "rxjs";
 import { GeocoderService } from "../../services/geocoder.service";
-import { uploadVariables } from "../../../environments/environment";
+// import { fileUploadVariables } from "../../../environments/environment";
 import swal from "sweetalert2";
 var Buffer = require("buffer/").Buffer;
 
@@ -374,7 +374,7 @@ export class WizardContainerComponent
     //   this.content
     // );
     // this.selectedLocations = this.content.locations;
-    this.accessUrl = uploadVariables.accessUrl;
+    // this.accessUrl = fileUploadVariables.accessUrl;
 
     if (
       this.usersService.currentUser &&
@@ -1014,7 +1014,7 @@ export class WizardContainerComponent
             reader.onload = (e: any) => {
               const img_id = file.name;
               this.filesService
-                .minioUpload(file, mimeType)
+                .fileUpload(file, mimeType)
                 .then(values => {
                   this.content.image_urls.push({
                     fileEndpoint: values["fileEndpoint"],
@@ -1035,7 +1035,7 @@ export class WizardContainerComponent
         case "video": {
           const video = event.target.files[i];
           this.filesService
-            .minioUpload(video, mimeType)
+            .fileUpload(video, mimeType)
 
             .then(data => {
               this.content.video_urls.push({
@@ -1051,7 +1051,7 @@ export class WizardContainerComponent
         case "text": {
           const doc = event.target.files[i];
           this.filesService
-            .minioUpload(doc, mimeType)
+            .fileUpload(doc, mimeType)
 
             .then(data => {
               this.content.attachments.push({

@@ -15,7 +15,7 @@ import {
 import { Router, ActivatedRoute, ParamMap } from "@angular/router";
 import { Observable, Subscription, interval } from "rxjs";
 import { NgxUiLoaderService } from "ngx-ui-loader";
-
+// import { FilesService } from "../../services/files.service";
 import {
   first,
   finalize,
@@ -42,7 +42,7 @@ import { FilesService } from "src/app/services/files.service";
 import { CollaborationService } from "src/app/services/collaboration.service";
 import { ValidationService } from "src/app/services/validation.service";
 import { EnrichmentService } from "src/app/services/enrichment.service";
-import { uploadVariables } from "../../../environments/environment";
+import { fileUploadVariables } from "../../../environments/environment";
 import { sharing } from "../../globalconfig";
 import { reject } from "q";
 var Buffer = require("buffer/").Buffer;
@@ -78,7 +78,7 @@ interface queryString {
 })
 export class ProblemDetailComponent implements OnInit, OnDestroy {
   channels = sharing;
-  fileServerUrl: string = "";
+  // filesService.fileAccessUrl: string = "";
   // chartData: any;
   message: any;
   popup: any;
@@ -253,7 +253,7 @@ export class ProblemDetailComponent implements OnInit, OnDestroy {
     private cdr: ChangeDetectorRef,
     private auth: AuthService,
     public usersService: UsersService,
-    public fileService: FilesService,
+    public filesService: FilesService,
     private discussionsService: DiscussionsService,
     private collaborationService: CollaborationService,
     private validationService: ValidationService,
@@ -390,7 +390,7 @@ export class ProblemDetailComponent implements OnInit, OnDestroy {
 
   ngOnInit() {
     this.userId = Number(this.auth.currentUserValue.id);
-    this.fileServerUrl = uploadVariables.accessUrl + "/";
+    // this.filesService.fileAccessUrl = fileUploadVariables.accessUrl + "/";
     console.log(this.auth.currentUserValue, "current user value");
 
     this.getUserData(Number(this.auth.currentUserValue.id));
@@ -1454,7 +1454,7 @@ export class ProblemDetailComponent implements OnInit, OnDestroy {
 
           reader.onload = (e: any) => {
             let buffer = Buffer.from(e.target.result);
-            resolve(this.fileService.multiPartUpload(buffer, file.name));
+            resolve(this.filesService.multiPartUpload(buffer, file.name));
           };
           reader.readAsArrayBuffer(file);
         }

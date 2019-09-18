@@ -430,7 +430,7 @@
               <div class="col-md-4" *ngFor="let imgSrc of content.image_urls;let i = index">
                 <div class="card card-product">
                   <div class="card-header card-header-image" data-header-animation="false">
-                    <img class="img" src="{{ accessUrl +'/'+ imgSrc.fileEndpoint }}">
+                    <img class="img" src="{{ filesService.fileAccessUrl + imgSrc.fileEndpoint }}">
                   </div>
                   <div class="card-body"></div>
                   <div class="card-footer">
@@ -460,7 +460,7 @@
                 <div class="card card-product">
                   <div class="card-header card-header-image" data-header-animation="false">
                     <video controls width="100%">
-                      <source src="{{accessUrl+'/'+video.fileEndpoint}}">
+                      <source src="{{filesService.fileAccessUrl+video.fileEndpoint}}">
                       Your browser does not support the video tag.
                     </video>
                   </div>

@@ -1814,83 +1814,83 @@ export class AddSolutionComponent
     }
   }
 
-  onFileSelected(event) {
-    for (let i = 0; i < event.target.files.length; i++) {
-      const file = event.target.files[i];
-      const type = event.target.files[i].type.split("/")[0];
-      const size = file.size;
+  // onFileSelected(event) {
+  //   for (let i = 0; i < event.target.files.length; i++) {
+  //     const file = event.target.files[i];
+  //     const type = event.target.files[i].type.split("/")[0];
+  //     const size = file.size;
 
-      if (size > 5e6) {
-        alert("File size exceeds the 5MB limit");
-        return;
-      }
+  //     if (size > 5e6) {
+  //       alert("File size exceeds the 5MB limit");
+  //       return;
+  //     }
 
-      switch (type) {
-        case "image": {
-          if (typeof FileReader !== "undefined") {
-            const reader = new FileReader();
+  //     switch (type) {
+  //       case "image": {
+  //         if (typeof FileReader !== "undefined") {
+  //           const reader = new FileReader();
 
-            reader.onload = (e: any) => {
-              const img_id = file.name;
-              this.filesService
-                .uploadFile(e.target.result, img_id)
-                .promise()
-                .then(values => {
-                  this.solution.image_urls.push({
-                    url: values["Location"],
-                    mimeType: event.target.files[i].type,
-                    key: values["Key"]
-                  });
-                  if (!this.solution.featured_url) {
-                    this.solution.featured_url = this.solution.image_urls[0].url;
-                    this.solution.featured_type = "image";
-                  }
-                })
-                .catch(e => console.log("Err:: ", e));
-            };
-            reader.readAsArrayBuffer(file);
-          }
-          break;
-        }
-        case "video": {
-          const video = event.target.files[i];
-          this.filesService
-            .uploadFile(video, video.name)
-            .promise()
-            .then(data => {
-              this.solution.video_urls.push({
-                key: data["Key"],
-                mimeType: event.target.files[i].type,
-                url: data["Location"]
-              });
-            })
-            .catch(e => console.log("Err:: ", e));
-          break;
-        }
-        case "application":
-        case "text": {
-          const doc = event.target.files[i];
-          this.filesService
-            .uploadFile(doc, doc.name)
-            .promise()
-            .then(data => {
-              this.solution.attachments.push({
-                key: data["Key"],
-                mimeType: event.target.files[i].type,
-                url: data["Location"]
-              });
-            })
-            .catch(e => console.log("Err:: ", e));
-          break;
-        }
-        default: {
-          console.log("unknown file type");
-          alert("Unknown file type.");
-          break;
-        }
-      }
-    }
-  }
+  //           reader.onload = (e: any) => {
+  //             const img_id = file.name;
+  //             this.filesService
+  //               .uploadFile(e.target.result, img_id)
+  //               .promise()
+  //               .then(values => {
+  //                 this.solution.image_urls.push({
+  //                   url: values["Location"],
+  //                   mimeType: event.target.files[i].type,
+  //                   key: values["Key"]
+  //                 });
+  //                 if (!this.solution.featured_url) {
+  //                   this.solution.featured_url = this.solution.image_urls[0].url;
+  //                   this.solution.featured_type = "image";
+  //                 }
+  //               })
+  //               .catch(e => console.log("Err:: ", e));
+  //           };
+  //           reader.readAsArrayBuffer(file);
+  //         }
+  //         break;
+  //       }
+  //       case "video": {
+  //         const video = event.target.files[i];
+  //         this.filesService
+  //           .uploadFile(video, video.name)
+  //           .promise()
+  //           .then(data => {
+  //             this.solution.video_urls.push({
+  //               key: data["Key"],
+  //               mimeType: event.target.files[i].type,
+  //               url: data["Location"]
+  //             });
+  //           })
+  //           .catch(e => console.log("Err:: ", e));
+  //         break;
+  //       }
+  //       case "application":
+  //       case "text": {
+  //         const doc = event.target.files[i];
+  //         this.filesService
+  //           .uploadFile(doc, doc.name)
+  //           .promise()
+  //           .then(data => {
+  //             this.solution.attachments.push({
+  //               key: data["Key"],
+  //               mimeType: event.target.files[i].type,
+  //               url: data["Location"]
+  //             });
+  //           })
+  //           .catch(e => console.log("Err:: ", e));
+  //         break;
+  //       }
+  //       default: {
+  //         console.log("unknown file type");
+  //         alert("Unknown file type.");
+  //         break;
+  //       }
+  //     }
+  //   }
+  // }
 
   removeVideo(index: number) {
     this.filesService
