@@ -1662,50 +1662,48 @@ export class AddSolutionComponent
     });
   }
 
-  removePhoto(index) {
-    this.filesService
-      .deleteFile(this.solution["image_urls"][index]["key"])
-      .promise()
-      .then(data => {
+  removeSelectedItem(type: string, index: number) {
+    switch (type) {
+      case "image":
+        this.solution.image_urls.splice(index, 1);
+        this.solution.featured_url = "";
+        this.setDefaultFeaturedImage();
+        break;
+
+      case "video":
         if (
-          this.solution.image_urls[index].url === this.solution.featured_url
+          this.solution.video_urls[index].fileEndpoint ===
+          this.solution.featured_url
         ) {
           this.solution.featured_url = "";
           this.solution.featured_type = "";
         }
-        this.solution.image_urls.splice(index, 1);
-      })
-      .catch(e => {
-        console.log("Err: ", e);
-      });
-  }
+        this.solution.video_urls.splice(index, 1);
+        break;
 
-  removeAttachment(index) {
-    this.filesService
-      .deleteFile(this.solution["attachments"][index]["key"])
-      .promise()
-      .then(data => {
+      case "embed":
+        this.solution.embed_urls.splice(index, 1);
+        if (this.solution.embed_urls[index] === this.solution.featured_url) {
+          this.solution.featured_url = "";
+          this.solution.featured_type = "";
+        }
+        break;
+
+      case "link":
         this.solution.attachments.splice(index, 1);
-      })
-      .catch(e => {
-        console.log("Err: ", e);
-      });
+        break;
+
+      default:
+        console.log("remove item default case");
+        break;
+    }
   }
 
-  removeAll() {
-    this.solution.image_urls.forEach((imageObj, i) => {
-      this.filesService
-        .deleteFile(imageObj["key"])
-        .promise()
-        .then(data => {
-          if (this.solution.image_urls.length === i + 1) {
-            this.solution.image_urls = [];
-          }
-        })
-        .catch(e => {
-          console.log("Err: ", e);
-        });
-    });
+  setDefaultFeaturedImage() {
+    if (!this.solution.featured_url && this.solution.image_urls.length) {
+      this.solution.featured_url = this.solution.image_urls[0].url;
+      this.solution.featured_type = "image";
+    }
   }
 
   checkIfExist(data: string) {
@@ -1728,194 +1726,86 @@ export class AddSolutionComponent
     }
   }
 
-  // function trigger the multipart upload for more than 5MB
-  onFileSelectForBiggerFiles(event) {
+  onFileSelected(event) {
     for (let i = 0; i < event.target.files.length; i++) {
       const file = event.target.files[i];
-      const type = event.target.files[i].type;
-      let duplicate = this.checkIfExist(file.name);
+      const type = event.target.files[i].type.split("/")[0];
+      const mimeType = event.target.files[i].type;
+      const size = file.size;
 
-      if (typeof FileReader !== "undefined" && !duplicate) {
-        const reader = new FileReader();
+      if (size > 5e6) {
+        alert("File size exceeds the 5MB limit");
+        return;
+      }
 
-        reader.onload = (e: any) => {
-          let buffer = Buffer.from(e.target.result);
-          this.manageUploads(type, file.name, buffer);
-        };
-        reader.readAsArrayBuffer(file);
+      switch (type) {
+        case "image": {
+          if (typeof FileReader !== "undefined") {
+            const reader = new FileReader();
+
+            reader.onload = (e: any) => {
+              const img_id = file.name;
+              this.filesService
+                .fileUpload(file, mimeType)
+                .then(values => {
+                  this.solution.image_urls.push({
+                    fileEndpoint: values["fileEndpoint"],
+                    mimeType: event.target.files[i].type,
+                    key: file.name
+                  });
+                  if (!this.solution.featured_url) {
+                    this.solution.featured_url = this.solution.image_urls[0].fileEndpoint;
+                    this.solution.featured_type = "image";
+                  }
+                })
+                .catch(e => console.log("Err:: ", e));
+            };
+            reader.readAsArrayBuffer(file);
+          }
+          break;
+        }
+        case "video": {
+          const video = event.target.files[i];
+          this.filesService
+            .fileUpload(video, mimeType)
+
+            .then(data => {
+              this.solution.video_urls.push({
+                fileEndpoint: data["fileEndpoint"],
+                mimeType: event.target.files[i].type,
+                key: file.name
+              });
+            })
+            .catch(e => console.log("Err:: ", e));
+          break;
+        }
+        case "application":
+        case "text": {
+          const doc = event.target.files[i];
+          this.filesService
+            .fileUpload(doc, mimeType)
+
+            .then(data => {
+              this.solution.attachments.push({
+                fileEndpoint: data["fileEndpoint"],
+                mimeType: event.target.files[i].type,
+                key: file.name
+              });
+            })
+            .catch(e => console.log("Err:: ", e));
+          break;
+        }
+        default: {
+          console.log("unknown file type");
+          alert("Unknown file type.");
+          break;
+        }
       }
     }
   }
 
-  manageUploads(type, name, file) {
-    let startWith = type.split("/")[0];
-    switch (startWith) {
-      case "image":
-        this.filesService
-          .multiPartUpload(file, name)
-          .then(values => {
-            if (!values["Location"].startsWith("https")) {
-              values["Location"] = `https://${values["Location"]}`;
-            }
-
-            this.solution.image_urls.push({
-              url: values["Location"],
-              mimeType: type,
-              key: values["Key"]
-            });
-            if (!this.solution.featured_url) {
-              this.solution.featured_url = this.solution.image_urls[0].url;
-              this.solution.featured_type = "image";
-            }
-          })
-          .catch(err => console.log("Image Err: ", err));
-
-        break;
-
-      case "video":
-        this.filesService
-          .multiPartUpload(file, name)
-          .then(values => {
-            if (!values["Location"].startsWith("https")) {
-              values["Location"] = `https://${values["Location"]}`;
-            }
-
-            this.solution.video_urls.push({
-              url: values["Location"],
-              mimeType: type,
-              key: values["Key"]
-            });
-          })
-          .catch(err => console.log("Video Err: ", err));
-        break;
-
-      case "application":
-      case "text":
-        this.filesService
-          .multiPartUpload(file, name)
-          .then(values => {
-            if (!values["Location"].startsWith("https")) {
-              values["Location"] = `https://${values["Location"]}`;
-            }
-
-            this.solution.attachments.push({
-              url: values["Location"],
-              mimeType: type,
-              key: values["Key"]
-            });
-          })
-          .catch(err => console.log("Docs Err: ", err));
-        break;
-
-      default:
-        console.log("unknown file type");
-        alert("Unknown file type.");
-        break;
-    }
-  }
-
-  // onFileSelected(event) {
-  //   for (let i = 0; i < event.target.files.length; i++) {
-  //     const file = event.target.files[i];
-  //     const type = event.target.files[i].type.split("/")[0];
-  //     const size = file.size;
-
-  //     if (size > 5e6) {
-  //       alert("File size exceeds the 5MB limit");
-  //       return;
-  //     }
-
-  //     switch (type) {
-  //       case "image": {
-  //         if (typeof FileReader !== "undefined") {
-  //           const reader = new FileReader();
-
-  //           reader.onload = (e: any) => {
-  //             const img_id = file.name;
-  //             this.filesService
-  //               .uploadFile(e.target.result, img_id)
-  //               .promise()
-  //               .then(values => {
-  //                 this.solution.image_urls.push({
-  //                   url: values["Location"],
-  //                   mimeType: event.target.files[i].type,
-  //                   key: values["Key"]
-  //                 });
-  //                 if (!this.solution.featured_url) {
-  //                   this.solution.featured_url = this.solution.image_urls[0].url;
-  //                   this.solution.featured_type = "image";
-  //                 }
-  //               })
-  //               .catch(e => console.log("Err:: ", e));
-  //           };
-  //           reader.readAsArrayBuffer(file);
-  //         }
-  //         break;
-  //       }
-  //       case "video": {
-  //         const video = event.target.files[i];
-  //         this.filesService
-  //           .uploadFile(video, video.name)
-  //           .promise()
-  //           .then(data => {
-  //             this.solution.video_urls.push({
-  //               key: data["Key"],
-  //               mimeType: event.target.files[i].type,
-  //               url: data["Location"]
-  //             });
-  //           })
-  //           .catch(e => console.log("Err:: ", e));
-  //         break;
-  //       }
-  //       case "application":
-  //       case "text": {
-  //         const doc = event.target.files[i];
-  //         this.filesService
-  //           .uploadFile(doc, doc.name)
-  //           .promise()
-  //           .then(data => {
-  //             this.solution.attachments.push({
-  //               key: data["Key"],
-  //               mimeType: event.target.files[i].type,
-  //               url: data["Location"]
-  //             });
-  //           })
-  //           .catch(e => console.log("Err:: ", e));
-  //         break;
-  //       }
-  //       default: {
-  //         console.log("unknown file type");
-  //         alert("Unknown file type.");
-  //         break;
-  //       }
-  //     }
-  //   }
-  // }
-
-  removeVideo(index: number) {
-    this.filesService
-      .deleteFile(this.solution["video_urls"][index]["key"])
-      .promise()
-      .then(data => {
-        if (
-          this.solution.video_urls[index].url === this.solution.featured_url
-        ) {
-          this.solution.featured_url = "";
-          this.solution.featured_type = "";
-        }
-        this.solution.video_urls.splice(index, 1);
-      })
-      .catch(e => {
-        console.log("Err: ", e);
-      });
-  }
-
-  removeEmbed(index: number) {
-    this.solution.embed_urls.splice(index, 1);
-    if (this.solution.embed_urls[index] === this.solution.featured_url) {
-      this.solution.featured_url = "";
-      this.solution.featured_type = "";
-    }
+  nextSelected() {
+    window.scroll(0, 0);
   }
 
   isComplete() {
@@ -1930,23 +1820,18 @@ export class AddSolutionComponent
       Object.values(this.selectedProblems).length
     );
   }
-
   setFeatured(type, index) {
     // console.log(type, index);
     if (type === "image") {
       this.solution.featured_type = "image";
-      this.solution.featured_url = this.solution.image_urls[index].url;
+      this.solution.featured_url = this.solution.image_urls[index].fileEndpoint;
     } else if (type === "video") {
       this.solution.featured_type = "video";
-      this.solution.featured_url = this.solution.video_urls[index].url;
+      this.solution.featured_url = this.solution.video_urls[index].fileEndpoint;
     } else if (type === "embed") {
       this.solution.featured_type = "embed";
       this.solution.featured_url = this.solution.embed_urls[index];
     }
-  }
-
-  nextSelected() {
-    window.scroll(0, 0);
   }
 
   addMediaUrl() {

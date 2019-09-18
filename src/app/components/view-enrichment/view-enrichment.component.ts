@@ -17,6 +17,7 @@ import { take } from "rxjs/operators";
 import { AuthService } from "../../services/auth.service";
 import swal from "sweetalert2";
 import { Apollo, QueryRef } from "apollo-angular";
+import { FilesService } from "../../services/files.service";
 
 @Component({
   selector: "app-view-enrichment",
@@ -38,7 +39,11 @@ export class ViewEnrichmentComponent implements OnInit, OnChanges, OnDestroy {
   userId: any;
   voters: any = new Set();
 
-  constructor(private auth: AuthService, private apollo: Apollo) {
+  constructor(
+    private auth: AuthService,
+    private apollo: Apollo,
+    private filesService: FilesService
+  ) {
     console.log("aswewrwe");
     this.enrichmentVoted = false;
   }
@@ -110,10 +115,7 @@ export class ViewEnrichmentComponent implements OnInit, OnChanges, OnDestroy {
   voteEnrichment() {
     if (this.auth.currentUserValue.id) {
       if (
-        !(
-          this.enrichmentData.user_id ===
-          Number(this.auth.currentUserValue.id)
-        )
+        !(this.enrichmentData.user_id === Number(this.auth.currentUserValue.id))
       ) {
         // console.log(this.comment, "comment", this.userId, "user id");
         // console.log('toggling watch flag');

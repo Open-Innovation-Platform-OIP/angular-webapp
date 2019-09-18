@@ -17,6 +17,7 @@ import { Router, ActivatedRoute, ParamMap } from "@angular/router";
 import { Observable, Subscription, interval } from "rxjs";
 import { NgxUiLoaderService } from "ngx-ui-loader";
 import { domain } from "../../../environments/environment";
+// import { FilesService } from "../../services/files.service";
 
 import {
   first,
@@ -247,7 +248,7 @@ export class SolutionDetailComponent implements OnInit {
     private cdr: ChangeDetectorRef,
     private auth: AuthService,
     public usersService: UsersService,
-    public fileService: FilesService,
+    public filesService: FilesService,
     private discussionsService: DiscussionsService,
     private collaborationService: CollaborationService,
     private validationService: ValidationService,
@@ -259,9 +260,7 @@ export class SolutionDetailComponent implements OnInit {
     this.pageUrl = domain + ngLocation.path();
     const subject = encodeURI("Can you help solve this problem?");
     const body = encodeURI(
-      `Hello,\n\nCheck out this link on Social Alpha's Open Innovation platform - ${
-        this.pageUrl
-      }\n\nRegards,`
+      `Hello,\n\nCheck out this link on Social Alpha's Open Innovation platform - ${this.pageUrl}\n\nRegards,`
     );
     this.mailToLink = `mailto:?subject=${subject}&body=${body}`;
   }
@@ -573,9 +572,7 @@ export class SolutionDetailComponent implements OnInit {
     // not a great approach as the popup doesn't autoclose. Better to use href on button click.
     const subject = encodeURI("Check out this solution");
     const body = encodeURI(
-      `Hello,\n\nCheck out this link on Social Alpha's Open Innovation platform - ${
-        this.pageUrl
-      }\n\nRegards,`
+      `Hello,\n\nCheck out this link on Social Alpha's Open Innovation platform - ${this.pageUrl}\n\nRegards,`
     );
     const href = `mailto:?subject=${subject}&body=${body}`;
     this.popup = window.open(href, "email-popup", "height=350,width=600");
@@ -1285,7 +1282,7 @@ export class SolutionDetailComponent implements OnInit {
 
           reader.onload = (e: any) => {
             let buffer = Buffer.from(e.target.result);
-            resolve(this.fileService.multiPartUpload(buffer, file.name));
+            resolve(this.filesService.multiPartUpload(buffer, file.name));
           };
           reader.readAsArrayBuffer(file);
         }

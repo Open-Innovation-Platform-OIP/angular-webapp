@@ -5,7 +5,7 @@
     <div class="col-md-4">
       <!-- <div class="picture"> -->
       <img
-        src="{{ (enrichmentData.featured_url && checkUrlIsImg(enrichmentData.featured_url)) ? enrichmentData.featured_url :'./assets/img/image_placeholder.jpg'}}"
+        src="{{ (enrichmentData.featured_url && checkUrlIsImg(filesService.fileAccessUrl+enrichmentData.featured_url)) ? (filesService.fileAccessUrl+enrichmentData.featured_url) :'./assets/img/image_placeholder.jpg'}}"
         alt="Thumbnail Image" class="rounded img-fluid" width="250px" height="200px" style="object-fit: cover;">
       <!-- </div> -->
       <div class="row justify-content-center" *ngIf="combinedImgAndVideo.length > 0">

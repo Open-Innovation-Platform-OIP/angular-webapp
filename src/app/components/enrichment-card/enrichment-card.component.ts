@@ -1,5 +1,6 @@
 import { Component, OnInit, Input, Output, EventEmitter } from "@angular/core";
 import { AuthService } from "../../services/auth.service";
+import { FilesService } from "../../services/files.service";
 
 @Component({
   selector: "app-enrichment-card",
@@ -12,7 +13,7 @@ export class EnrichmentCardComponent implements OnInit {
   numberOfVotes: any = 0;
   voters = new Set();
 
-  constructor(private auth: AuthService) {}
+  constructor(private auth: AuthService, private filesService: FilesService) {}
 
   ngOnInit() {
     // if (this.enrichmentData && this.enrichmentData.voted_by) {

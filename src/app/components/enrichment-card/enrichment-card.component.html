@@ -4,7 +4,7 @@
 
 <div class="card card-product enrich-card" (click)="cardClicked()" *ngIf="enrichmentData.description">
   <img class="card-img-top" style="object-fit:cover;"
-    src="{{ (this.enrichmentData.featured_url && checkUrlIsImg(enrichmentData.featured_url)) ? this.enrichmentData.featured_url : './assets/img/image_placeholder.jpg' }}"
+    src="{{ (this.enrichmentData.featured_url && checkUrlIsImg(filesService.fileAccessUrl+enrichmentData.featured_url)) ? filesService.fileAccessUrl+this.enrichmentData.featured_url : './assets/img/image_placeholder.jpg' }}"
     alt="Card image cap" width="150px" height="140px">
   <div class="card-body">
     <div class="description">
