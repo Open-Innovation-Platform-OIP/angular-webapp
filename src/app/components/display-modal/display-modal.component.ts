@@ -1,24 +1,29 @@
 import {
-  Component, ViewChild, OnInit, Input,
+  Component,
+  ViewChild,
+  AfterViewInit,
+  Input,
   Output,
   EventEmitter
-} from '@angular/core';
-import { EmbedVideoService } from 'ngx-embed-video';
-
+} from "@angular/core";
+import { EmbedVideoService } from "ngx-embed-video";
+import { uploadVariables } from "../../../environments/environment";
 @Component({
-  selector: 'app-display-modal',
-  templateUrl: './display-modal.component.html',
-  styleUrls: ['./display-modal.component.css']
+  selector: "app-display-modal",
+  templateUrl: "./display-modal.component.html",
+  styleUrls: ["./display-modal.component.css"]
 })
-export class DisplayModalComponent implements OnInit {
+export class DisplayModalComponent implements AfterViewInit {
   @Input() source;
   iframe_html: any;
+  fileServerUrl: string = "";
 
-  constructor(
-    private embedService: EmbedVideoService,
-  ) { }
+  constructor(private embedService: EmbedVideoService) {}
 
-  ngOnInit() { }
+  ngAfterViewInit() {
+    this.fileServerUrl = uploadVariables.accessUrl + "/";
+    console.log(this.source, "source");
+  }
 
   checkUrlIsImg(url) {
     var arr = ["jpeg", "jpg", "gif", "png"];
@@ -42,12 +47,14 @@ export class DisplayModalComponent implements OnInit {
   checkUrlIsEmbeded(url) {
     var arr = ["youtube", "vimeo", "dailymotion"];
     // var ext = url.substring(url.lastIndexOf(".") + 1);
-    let filtered = arr.filter((provider) => {
+    let filtered = arr.filter(provider => {
       return url.indexOf(provider) > -1;
-    })
+    });
 
     if (filtered.length) {
-      this.iframe_html = this.iframe_html = this.embedService.embed(url, { attr: { width: '100%', height: 500 } });
+      this.iframe_html = this.iframe_html = this.embedService.embed(url, {
+        attr: { width: "100%", height: 500 }
+      });
       return true;
     } else {
       return false;

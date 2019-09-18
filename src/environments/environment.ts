@@ -14,3 +14,10 @@ export const digitalocean = {
 };
 
 export const domain = "https://app.socialalpha.jaagalabs.com";
+
+export const uploadVariables = {
+  UploadUrlEndpoint:
+    "http://minio-microservice.dev.jaagalabs.com/create_presigned_url",
+  bucketName: "test",
+  accessUrl: "http://minio-storage.dev.jaagalabs.com"
+};

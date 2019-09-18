@@ -379,8 +379,8 @@
                 <div class="picture-container">
                   <div class="picture">
                     <img src="./assets/img/plus.png" class="picture-src" id="wizardPicturePreview" title="" />
-                    <input type="file" id="file_input_btn" (change)="onFileSelectForBiggerFiles($event)" name="..."
-                      multiple accept="{{file_types.join(',')}}">
+                    <input type="file" id="file_input_btn" (change)="onFileSelected($event)" name="..." multiple
+                      accept="{{file_types.join(',')}}">
                   </div>
                   <h6 class="description">Choose Media</h6>
                 </div>
@@ -430,16 +430,18 @@
               <div class="col-md-4" *ngFor="let imgSrc of content.image_urls;let i = index">
                 <div class="card card-product">
                   <div class="card-header card-header-image" data-header-animation="false">
-                    <img class="img" src="{{ imgSrc.url }}">
+                    <img class="img" src="{{ accessUrl +'/'+ imgSrc.fileEndpoint }}">
                   </div>
                   <div class="card-body"></div>
                   <div class="card-footer">
                     <div class="price">
+                      <textarea type="text" matInput></textarea>
                       <button mat-raised-button type="button" class="btn btn-default btn-link"
                         matTooltip="Select icon to set as featured image" [matTooltipPosition]="'below'"
                         (click)="setFeatured('image',i)">
-                        <i *ngIf="imgSrc.url !== content.featured_url" class="material-icons">turned_in_not</i>
-                        <i *ngIf="imgSrc.url === content.featured_url" class="material-icons orange600">turned_in</i>
+                        <i *ngIf="imgSrc.fileEndpoint !== content.featured_url" class="material-icons">turned_in_not</i>
+                        <i *ngIf="imgSrc.fileEndpoint === content.featured_url"
+                          class="material-icons orange600">turned_in</i>
                       </button>
                     </div>
                     <div class="stats">
@@ -458,7 +460,7 @@
                 <div class="card card-product">
                   <div class="card-header card-header-image" data-header-animation="false">
                     <video controls width="100%">
-                      <source src="{{video.url}}">
+                      <source src="{{accessUrl+'/'+video.fileEndpoint}}">
                       Your browser does not support the video tag.
                     </video>
                   </div>

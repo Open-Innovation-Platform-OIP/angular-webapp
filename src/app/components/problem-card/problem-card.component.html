@@ -1,8 +1,8 @@
 <div class="card card-product actions problem-card">
   <div class="card-header card-header-image" (click)="navigation()">
     <img src="{{
-        problemData.featured_url && checkUrlIsImg(problemData.featured_url)
-          ? problemData.featured_url
+        fileServerUrl+problemData.featured_url && checkUrlIsImg(fileServerUrl+problemData.featured_url)
+          ? fileServerUrl+problemData.featured_url
           : './assets/img/image_placeholder.jpg'
       }}" width="200px" height="180px" style="object-fit:inherit;" />
   </div>

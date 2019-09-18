@@ -1,5 +1,6 @@
 import { Component, OnInit, Input, Output, EventEmitter } from "@angular/core";
 import { Router, ActivatedRoute } from "@angular/router";
+import { uploadVariables } from "../../../environments/environment";
 
 const misc: any = {
   navbar_menu_visible: 0,
@@ -16,6 +17,7 @@ export class ProblemCardComponent implements OnInit {
   @Input() problemData: any;
   @Input() usedInSmartSearch: Boolean = false;
   @Input() showAddButton: Boolean = false;
+  fileServerUrl: string = "";
 
   @Output() selected = new EventEmitter();
 
@@ -30,6 +32,7 @@ export class ProblemCardComponent implements OnInit {
   constructor(private router: Router) {}
 
   ngOnInit() {
+    this.fileServerUrl = uploadVariables.accessUrl + "/";
     // console.log("problem card", this.problemData);
     // console.log(this.usedIn, "used");
     if (this.problemData.is_draft) {

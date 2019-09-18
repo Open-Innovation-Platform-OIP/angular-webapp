@@ -20,6 +20,7 @@ import { Router, ActivatedRoute } from "@angular/router";
 import { map, startWith } from "rxjs/operators";
 import { Observable } from "rxjs";
 import { GeocoderService } from "../../services/geocoder.service";
+import { uploadVariables } from "../../../environments/environment";
 import swal from "sweetalert2";
 var Buffer = require("buffer/").Buffer;
 
@@ -74,6 +75,7 @@ export class MyErrorStateMatcher implements ErrorStateMatcher {
 })
 export class WizardContainerComponent
   implements OnInit, OnChanges, AfterViewInit {
+  accessUrl: string;
   @Input() content;
 
   @Input() sectors: string[] = [];
@@ -372,6 +374,7 @@ export class WizardContainerComponent
     //   this.content
     // );
     // this.selectedLocations = this.content.locations;
+    this.accessUrl = uploadVariables.accessUrl;
 
     if (
       this.usersService.currentUser &&
@@ -792,11 +795,15 @@ export class WizardContainerComponent
     switch (type) {
       case "image":
         this.content.image_urls.splice(index, 1);
+        this.content.featured_url = "";
         this.setDefaultFeaturedImage();
         break;
 
       case "video":
-        if (this.content.video_urls[index].url === this.content.featured_url) {
+        if (
+          this.content.video_urls[index].fileEndpoint ===
+          this.content.featured_url
+        ) {
           this.content.featured_url = "";
           this.content.featured_type = "";
         }
@@ -821,25 +828,25 @@ export class WizardContainerComponent
     }
   }
 
-  removePhoto(index) {
-    this.content.image_urls.splice(index, 1);
-    this.setDefaultFeaturedImage();
+  // removePhoto(index) {
+  //   this.content.image_urls.splice(index, 1);
+  //   this.setDefaultFeaturedImage();
 
-    // this.filesService
-    //   .deleteFile(this.content["image_urls"][index]["key"])
-    //   .promise()
-    //   .then(data => {
-    //     if (this.content.image_urls[index].url === this.content.featured_url) {
-    //       this.content.featured_url = "";
-    //       this.content.featured_type = "";
-    //     }
-    //     this.content.image_urls.splice(index, 1);
-    //     this.setDefaultFeaturedImage();
-    //   })
-    //   .catch(e => {
-    //     console.log("Err: ", e);
-    //   });
-  }
+  // this.filesService
+  //   .deleteFile(this.content["image_urls"][index]["key"])
+  //   .promise()
+  //   .then(data => {
+  //     if (this.content.image_urls[index].url === this.content.featured_url) {
+  //       this.content.featured_url = "";
+  //       this.content.featured_type = "";
+  //     }
+  //     this.content.image_urls.splice(index, 1);
+  //     this.setDefaultFeaturedImage();
+  //   })
+  //   .catch(e => {
+  //     console.log("Err: ", e);
+  //   });
+  // }
 
   setDefaultFeaturedImage() {
     if (!this.content.featured_url && this.content.image_urls.length) {
@@ -848,33 +855,33 @@ export class WizardContainerComponent
     }
   }
 
-  removeAttachment(index) {
-    this.filesService
-      .deleteFile(this.content["attachments"][index]["key"])
-      .promise()
-      .then(data => {
-        this.content.attachments.splice(index, 1);
-      })
-      .catch(e => {
-        console.log("Err: ", e);
-      });
-  }
+  // removeAttachment(index) {
+  //   this.filesService
+  //     .deleteFile(this.content["attachments"][index]["key"])
+  //     .promise()
+  //     .then(data => {
+  //       this.content.attachments.splice(index, 1);
+  //     })
+  //     .catch(e => {
+  //       console.log("Err: ", e);
+  //     });
+  // }
 
-  removeAll() {
-    this.content.image_urls.forEach((imageObj, i) => {
-      this.filesService
-        .deleteFile(imageObj["key"])
-        .promise()
-        .then(data => {
-          if (this.content.image_urls.length === i + 1) {
-            this.content.image_urls = [];
-          }
-        })
-        .catch(e => {
-          console.log("Err: ", e);
-        });
-    });
-  }
+  // removeAll() {
+  //   this.content.image_urls.forEach((imageObj, i) => {
+  //     this.filesService
+  //       .deleteFile(imageObj["key"])
+  //       .promise()
+  //       .then(data => {
+  //         if (this.content.image_urls.length === i + 1) {
+  //           this.content.image_urls = [];
+  //         }
+  //       })
+  //       .catch(e => {
+  //         console.log("Err: ", e);
+  //       });
+  //   });
+  // }
 
   checkIfExist(data: string) {
     let problem_attachments = [
@@ -897,100 +904,101 @@ export class WizardContainerComponent
   }
 
   // function trigger the multipart upload for more than 5MB
-  onFileSelectForBiggerFiles(event) {
-    for (let i = 0; i < event.target.files.length; i++) {
-      const file = event.target.files[i];
-      const type = event.target.files[i].type;
-      let duplicate = this.checkIfExist(file.name);
+  // onFileSelectForBiggerFiles(event) {
+  //   for (let i = 0; i < event.target.files.length; i++) {
+  //     const file = event.target.files[i];
+  //     const type = event.target.files[i].type;
+  //     let duplicate = this.checkIfExist(file.name);
 
-      if (duplicate) {
-        alert(`File: ${file.name} already exist.`);
-        continue;
-      } else {
-        if (typeof FileReader !== "undefined") {
-          const reader = new FileReader();
+  //     if (duplicate) {
+  //       alert(`File: ${file.name} already exist.`);
+  //       continue;
+  //     } else {
+  //       if (typeof FileReader !== "undefined") {
+  //         const reader = new FileReader();
 
-          reader.onload = (e: any) => {
-            let buffer = Buffer.from(e.target.result);
-            this.manageUploads(type, file.name, buffer);
-          };
-          reader.readAsArrayBuffer(file);
-        }
-      }
-    }
-  }
+  //         reader.onload = (e: any) => {
+  //           let buffer = Buffer.from(e.target.result);
+  //           this.manageUploads(type, file.name, buffer);
+  //         };
+  //         reader.readAsArrayBuffer(file);
+  //       }
+  //     }
+  //   }
+  // }
 
-  manageUploads(type, name, file) {
-    let startWith = type.split("/")[0];
-    switch (startWith) {
-      case "image":
-        this.filesService
-          .multiPartUpload(file, name)
-          .then(values => {
-            if (!values["Location"].startsWith("https")) {
-              values["Location"] = `https://${values["Location"]}`;
-            }
+  // manageUploads(type, name, file) {
+  //   let startWith = type.split("/")[0];
+  //   switch (startWith) {
+  //     case "image":
+  //       this.filesService
+  //         .multiPartUpload(file, name)
+  //         .then(values => {
+  //           if (!values["Location"].startsWith("https")) {
+  //             values["Location"] = `https://${values["Location"]}`;
+  //           }
 
-            this.content.image_urls.push({
-              url: values["Location"],
-              mimeType: type,
-              key: values["Key"]
-            });
-            if (!this.content.featured_url) {
-              this.content.featured_url = this.content.image_urls[0].url;
-              this.content.featured_type = "image";
-            }
-          })
-          .catch(err => console.log("Image Err: ", err));
+  //           this.content.image_urls.push({
+  //             url: values["Location"],
+  //             mimeType: type,
+  //             key: values["Key"]
+  //           });
+  //           if (!this.content.featured_url) {
+  //             this.content.featured_url = this.content.image_urls[0].url;
+  //             this.content.featured_type = "image";
+  //           }
+  //         })
+  //         .catch(err => console.log("Image Err: ", err));
 
-        break;
+  //       break;
 
-      case "video":
-        this.filesService
-          .multiPartUpload(file, name)
-          .then(values => {
-            if (!values["Location"].startsWith("https")) {
-              values["Location"] = `https://${values["Location"]}`;
-            }
+  //     case "video":
+  //       this.filesService
+  //         .multiPartUpload(file, name)
+  //         .then(values => {
+  //           if (!values["Location"].startsWith("https")) {
+  //             values["Location"] = `https://${values["Location"]}`;
+  //           }
 
-            this.content.video_urls.push({
-              url: values["Location"],
-              mimeType: type,
-              key: values["Key"]
-            });
-          })
-          .catch(err => console.log("Video Err: ", err));
-        break;
+  //           this.content.video_urls.push({
+  //             url: values["Location"],
+  //             mimeType: type,
+  //             key: values["Key"]
+  //           });
+  //         })
+  //         .catch(err => console.log("Video Err: ", err));
+  //       break;
 
-      case "application":
-      case "text":
-        this.filesService
-          .multiPartUpload(file, name)
-          .then(values => {
-            if (!values["Location"].startsWith("https")) {
-              values["Location"] = `https://${values["Location"]}`;
-            }
+  //     case "application":
+  //     case "text":
+  //       this.filesService
+  //         .multiPartUpload(file, name)
+  //         .then(values => {
+  //           if (!values["Location"].startsWith("https")) {
+  //             values["Location"] = `https://${values["Location"]}`;
+  //           }
 
-            this.content.attachments.push({
-              url: values["Location"],
-              mimeType: type,
-              key: values["Key"]
-            });
-          })
-          .catch(err => console.log("Docs Err: ", err));
-        break;
+  //           this.content.attachments.push({
+  //             url: values["Location"],
+  //             mimeType: type,
+  //             key: values["Key"]
+  //           });
+  //         })
+  //         .catch(err => console.log("Docs Err: ", err));
+  //       break;
 
-      default:
-        console.log("unknown file type");
-        alert("Unknown file type.");
-        break;
-    }
-  }
+  //     default:
+  //       console.log("unknown file type");
+  //       alert("Unknown file type.");
+  //       break;
+  //   }
+  // }
 
   onFileSelected(event) {
     for (let i = 0; i < event.target.files.length; i++) {
       const file = event.target.files[i];
       const type = event.target.files[i].type.split("/")[0];
+      const mimeType = event.target.files[i].type;
       const size = file.size;
 
       if (size > 5e6) {
@@ -1006,16 +1014,15 @@ export class WizardContainerComponent
             reader.onload = (e: any) => {
               const img_id = file.name;
               this.filesService
-                .uploadFile(e.target.result, img_id)
-                .promise()
+                .minioUpload(file, mimeType)
                 .then(values => {
                   this.content.image_urls.push({
-                    url: values["Location"],
+                    fileEndpoint: values["fileEndpoint"],
                     mimeType: event.target.files[i].type,
-                    key: values["Key"]
+                    key: file.name
                   });
                   if (!this.content.featured_url) {
-                    this.content.featured_url = this.content.image_urls[0].url;
+                    this.content.featured_url = this.content.image_urls[0].fileEndpoint;
                     this.content.featured_type = "image";
                   }
                 })
@@ -1028,13 +1035,13 @@ export class WizardContainerComponent
         case "video": {
           const video = event.target.files[i];
           this.filesService
-            .uploadFile(video, video.name)
-            .promise()
+            .minioUpload(video, mimeType)
+
             .then(data => {
               this.content.video_urls.push({
-                key: data["Key"],
+                fileEndpoint: data["fileEndpoint"],
                 mimeType: event.target.files[i].type,
-                url: data["Location"]
+                key: file.name
               });
             })
             .catch(e => console.log("Err:: ", e));
@@ -1044,13 +1051,13 @@ export class WizardContainerComponent
         case "text": {
           const doc = event.target.files[i];
           this.filesService
-            .uploadFile(doc, doc.name)
-            .promise()
+            .minioUpload(doc, mimeType)
+
             .then(data => {
               this.content.attachments.push({
-                key: data["Key"],
+                fileEndpoint: data["fileEndpoint"],
                 mimeType: event.target.files[i].type,
-                url: data["Location"]
+                key: file.name
               });
             })
             .catch(e => console.log("Err:: ", e));
@@ -1069,29 +1076,29 @@ export class WizardContainerComponent
     this.nextTab.emit(true);
   }
 
-  removeVideo(index: number) {
-    this.filesService
-      .deleteFile(this.content["video_urls"][index]["key"])
-      .promise()
-      .then(data => {
-        if (this.content.video_urls[index].url === this.content.featured_url) {
-          this.content.featured_url = "";
-          this.content.featured_type = "";
-        }
-        this.content.video_urls.splice(index, 1);
-      })
-      .catch(e => {
-        console.log("Err: ", e);
-      });
-  }
+  // removeVideo(index: number) {
+  //   this.filesService
+  //     .deleteFile(this.content["video_urls"][index]["key"])
+  //     .promise()
+  //     .then(data => {
+  //       if (this.content.video_urls[index].url === this.content.featured_url) {
+  //         this.content.featured_url = "";
+  //         this.content.featured_type = "";
+  //       }
+  //       this.content.video_urls.splice(index, 1);
+  //     })
+  //     .catch(e => {
+  //       console.log("Err: ", e);
+  //     });
+  // }
 
-  removeEmbed(index: number) {
-    this.content.embed_urls.splice(index, 1);
-    if (this.content.embed_urls[index] === this.content.featured_url) {
-      this.content.featured_url = "";
-      this.content.featured_type = "";
-    }
-  }
+  // removeEmbed(index: number) {
+  //   this.content.embed_urls.splice(index, 1);
+  //   if (this.content.embed_urls[index] === this.content.featured_url) {
+  //     this.content.featured_url = "";
+  //     this.content.featured_type = "";
+  //   }
+  // }
 
   isComplete() {
     if (this.contentType === "problem") {
@@ -1121,10 +1128,10 @@ export class WizardContainerComponent
     // console.log(type, index);
     if (type === "image") {
       this.content.featured_type = "image";
-      this.content.featured_url = this.content.image_urls[index].url;
+      this.content.featured_url = this.content.image_urls[index].fileEndpoint;
     } else if (type === "video") {
       this.content.featured_type = "video";
-      this.content.featured_url = this.content.video_urls[index].url;
+      this.content.featured_url = this.content.video_urls[index].fileEndpoint;
     } else if (type === "embed") {
       this.content.featured_type = "embed";
       this.content.featured_url = this.content.embed_urls[index];

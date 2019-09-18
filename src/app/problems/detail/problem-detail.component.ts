@@ -42,6 +42,7 @@ import { FilesService } from "src/app/services/files.service";
 import { CollaborationService } from "src/app/services/collaboration.service";
 import { ValidationService } from "src/app/services/validation.service";
 import { EnrichmentService } from "src/app/services/enrichment.service";
+import { uploadVariables } from "../../../environments/environment";
 import { sharing } from "../../globalconfig";
 import { reject } from "q";
 var Buffer = require("buffer/").Buffer;
@@ -77,6 +78,7 @@ interface queryString {
 })
 export class ProblemDetailComponent implements OnInit, OnDestroy {
   channels = sharing;
+  fileServerUrl: string = "";
   // chartData: any;
   message: any;
   popup: any;
@@ -263,9 +265,7 @@ export class ProblemDetailComponent implements OnInit, OnDestroy {
     this.pageUrl = domain + ngLocation.path();
     const subject = encodeURI("Can you help solve this problem?");
     const body = encodeURI(
-      `Hello,\n\nCheck out this link on Social Alpha's Open Innovation platform - ${
-        this.pageUrl
-      }\n\nRegards,`
+      `Hello,\n\nCheck out this link on Social Alpha's Open Innovation platform - ${this.pageUrl}\n\nRegards,`
     );
     this.mailToLink = `mailto:?subject=${subject}&body=${body}`;
   }
@@ -390,6 +390,7 @@ export class ProblemDetailComponent implements OnInit, OnDestroy {
 
   ngOnInit() {
     this.userId = Number(this.auth.currentUserValue.id);
+    this.fileServerUrl = uploadVariables.accessUrl + "/";
     console.log(this.auth.currentUserValue, "current user value");
 
     this.getUserData(Number(this.auth.currentUserValue.id));
@@ -658,9 +659,7 @@ export class ProblemDetailComponent implements OnInit, OnDestroy {
     // not a great approach as the popup doesn't autoclose. Better to use href on button click.
     const subject = encodeURI("Can you help solve this problem?");
     const body = encodeURI(
-      `Hello,\n\nCheck out this link on Social Alpha's Open Innovation platform - ${
-        this.pageUrl
-      }\n\nRegards,`
+      `Hello,\n\nCheck out this link on Social Alpha's Open Innovation platform - ${this.pageUrl}\n\nRegards,`
     );
     const href = `mailto:?subject=${subject}&body=${body}`;
     this.popup = window.open(href, "email-popup", "height=350,width=600");
@@ -842,6 +841,8 @@ export class ProblemDetailComponent implements OnInit, OnDestroy {
       this.problem_attachments_src = this.problem_attachments[
         this.problem_attachments_index
       ];
+
+      console.log(this.problem_attachments, "===src");
 
       // console.log(problem.discussions);
       problem.discussions.map(comment => {

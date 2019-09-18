@@ -17,6 +17,11 @@
         </div> -->
         <h3 *ngIf="problems.length" class="card-title text-center">Problems worth Solving</h3>
         <br />
+        <!-- <button class="btn btn-warning btn-lg btn-fab btn-round">video
+
+        </button> -->
+        <input type="file" id="file_input_btn" (change)="test($event)" name="..." multiple
+            accept="{{file_types.join(',')}}">
 
         <!-- <div class="d-flex justify-content-end">
 
