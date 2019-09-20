@@ -8,7 +8,7 @@
           <div class="card-avatar photo_div">
             <!-- <a href=""> -->
             <img class="img profile_photo"
-              src="{{(userData.photo_url && userData.photo_url.url) ? userData.photo_url.url : './assets/img/default-avatar.png'}}" />
+              src="{{(userData.photo_url && userData.photo_url.fileEndpoint) ? filesService.fileAccessUrl+userData.photo_url.fileEndpoint : './assets/img/default-avatar.png'}}" />
             <!-- </a> -->
           </div>
           <div class="card-body">

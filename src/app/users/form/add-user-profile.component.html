@@ -17,8 +17,8 @@
                     <div class="fileinput fileinput-new text-center" data-provides="fileinput">
                       <div class="fileinput-new thumbnail profile_photo_div">
                         <img src="{{
-                            user.photo_url && user.photo_url.url
-                              ? user.photo_url.url
+                            user.photo_url && user.photo_url.fileEndpoint
+                              ? filesService.fileAccessUrl+user.photo_url.fileEndpoint
                               : './assets/img/placeholder.jpg'
                           }}" alt="..." />
                       </div>

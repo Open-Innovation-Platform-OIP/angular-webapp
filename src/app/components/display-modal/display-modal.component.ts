@@ -26,7 +26,7 @@ export class DisplayModalComponent implements OnInit {
 
   ngOnInit() {
     // this.filesService.fileAccessUrl = fileUploadVariables.accessUrl + "/";
-    console.log(this.source, "source");
+    // console.log(this.source, "source");
   }
 
   checkUrlIsImg(url) {
@@ -49,7 +49,7 @@ export class DisplayModalComponent implements OnInit {
   }
 
   checkUrlIsEmbeded(url) {
-    console.log(url, "url embed");
+    // console.log(url, "url embed");
     var arr = ["youtube", "vimeo", "dailymotion"];
     // var ext = url.substring(url.lastIndexOf(".") + 1);
     let filtered = arr.filter(provider => {

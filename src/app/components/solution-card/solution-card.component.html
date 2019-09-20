@@ -1,7 +1,7 @@
 <div class="card card-product actions solution-card" [routerLink]="link" queryParamsHandling="merge">
   <div class="card-header card-header-image">
     <img
-      src="{{ (solutionData.featured_url && checkUrlIsImg(solutionData.featured_url)) ? solutionData.featured_url : './assets/img/image_placeholder.jpg' }}"
+      src="{{ (solutionData.featured_url && checkUrlIsImg(filesService.fileAccessUrl+solutionData.featured_url)) ? filesService.fileAccessUrl+solutionData.featured_url : './assets/img/image_placeholder.jpg' }}"
       width="200px" height="180px" style="object-fit:inherit;" />
   </div>
   <div class="card-body">

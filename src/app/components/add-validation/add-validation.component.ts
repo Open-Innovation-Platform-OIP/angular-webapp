@@ -10,6 +10,7 @@ import { FilesService } from "../../services/files.service";
 
 import swal from "sweetalert2";
 import { ValidationService } from "../../services/validation.service";
+// import {FilesService} from "../../services/files.service"
 
 @Component({
   selector: "app-add-validation",
@@ -29,7 +30,7 @@ export class AddValidationComponent implements OnInit {
   blankSpace: boolean;
 
   constructor(
-    private space: FilesService // private problemService: ProblemService, // private validationService: ValidationService
+    private filesService: FilesService // private problemService: ProblemService, // private validationService: ValidationService
   ) {}
 
   ngOnInit() {
@@ -41,19 +42,32 @@ export class AddValidationComponent implements OnInit {
     for (let i = 0; i < event.target.files.length; i++) {
       const file = event.target.files[i];
       if (!this.isFileDuplicate(file)) {
-        let attachment = await this.space
-          .uploadFile(file, file["name"])
-          .promise();
+        this.filesService
+          .fileUpload(file, file.type)
 
-        this.validationData.files.push({
-          key: attachment["key"],
-          url: attachment["Location"],
-          mimeType: file.type
-        });
+          .then(data => {
+            this.validationData.files.push({
+              fileEndpoint: data["fileEndpoint"],
+              mimeType: file.type,
+              key: file.name
+            });
+          })
+          .catch(e => console.log("Err:: ", e));
+
+        //   let attachment = await this.space
+        //     .uploadFile(file, file["name"])
+        //     .promise();
+
+        //   this.validationData.files.push({
+        //     key: attachment["key"],
+        //     url: attachment["Location"],
+        //     mimeType: file.type
+        //   });
       } else {
         alert(`File: ${file.name} already exist.`);
         continue;
       }
+      // }
     }
   }
 

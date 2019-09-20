@@ -39,7 +39,8 @@
       <p>
         <span *ngFor="let attachment of comment.attachments; let i= index;" class="discussion_thumbnail">
           <ng-container *ngIf="attachment.mimeType">
-            <img *ngIf="attachment.mimeType.startsWith('image') && i < attachmentToShow" src="{{attachment['url']}}"
+            <img *ngIf="attachment.mimeType.startsWith('image') && i < attachmentToShow"
+              src="{{filesService.fileAccessUrl+attachment['fileEndpoint']}}"
               (click)="assignUrl(comment.attachments, i)" />
 
             <!-- icon in case url is of video -->
@@ -143,7 +144,8 @@
             <p>
               <span *ngFor="let attachment of reply.attachments; let i=index;" class="discussion_thumbnail">
                 <img *ngIf="attachment.mimeType.startsWith('image') && i < repliesAttachmentNum"
-                  (click)="assignUrl(reply.attachments, i)" src="{{attachment['url']}}" />
+                  (click)="assignUrl(reply.attachments, i)"
+                  src="{{filesService.fileAccessUrl+attachment['fileEndpoint']}}" />
 
                 <!-- icon in case url is of video -->
                 <img src="../../../assets/img/video_icon.png" alt="video"

@@ -11,7 +11,7 @@
         {{validationData.agree?'Agreed':'Disagreed'}}
       </div>
     </div>
-    <div class="row" *ngIf="validationData.files.length>0">
+    <div class="row" *ngIf="validationData&&validationData.files&&validationData.files.length>0">
       <label class="col-sm-3">Download</label>
       <div class="col-sm-9">
         <div *ngFor="let file of validationData.files">
@@ -20,7 +20,7 @@
           </span>
           &nbsp;
           <sup>
-            <a href="{{file.url}}">
+            <a href="{{filesService.fileAccessUrl+file.fileEndpoint}}">
               <i class="material-icons" title="Download all the Attachments">cloud_download
               </i>
             </a>

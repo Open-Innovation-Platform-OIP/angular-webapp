@@ -30,7 +30,7 @@
   <div class="card-avatar photo_div">
     <a>
       <img class="img profile_photo" style="object-fit: cover;"
-        src="{{(userData.photo_url && userData.photo_url.url) ? userData.photo_url.url : './assets/img/default-avatar.png'}}" />
+        src="{{(userData.photo_url && userData.photo_url.fileEndpoint) ? filesService.fileAccessUrl+userData.photo_url.fileEndpoint : './assets/img/default-avatar.png'}}" />
     </a>
   </div>
   <div class="card-body">

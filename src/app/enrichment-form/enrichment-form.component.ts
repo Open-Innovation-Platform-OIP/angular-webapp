@@ -106,8 +106,8 @@ export class EnrichmentFormComponent implements OnInit, OnDestroy {
                        
                         }
                     }
-                    `,
-          fetchPolicy: "network-only"
+                    `
+          // fetchPolicy: "network-only"
           // pollInterval: 500,
         })
         .valueChanges.pipe(take(1))

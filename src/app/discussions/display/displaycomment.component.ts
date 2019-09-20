@@ -13,6 +13,7 @@ import { Apollo, QueryRef } from "apollo-angular";
 import { AuthService } from "../../services/auth.service";
 import { Subscription } from "rxjs";
 import { take } from "rxjs/operators";
+import { FilesService } from "../../services/files.service";
 
 import gql from "graphql-tag";
 @Component({
@@ -41,7 +42,11 @@ export class CommentDisplayComponent implements OnInit, OnDestroy {
   repliesExpanded = false;
   commentsExpanded = false;
 
-  constructor(private apollo: Apollo, private auth: AuthService) {}
+  constructor(
+    private apollo: Apollo,
+    private auth: AuthService,
+    private filesService: FilesService
+  ) {}
   ngOnInit() {
     this.comment.discussion_voters.map(voter => {
       this.voters.add(voter.user_id);

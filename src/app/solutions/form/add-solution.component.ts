@@ -855,9 +855,8 @@ export class AddSolutionComponent
                             
                             }
                         }
-                        `,
+                        `
             // pollInterval: 500,
-            fetchPolicy: "network-only"
           })
           .valueChanges.pipe(take(1))
           .subscribe(
@@ -1663,10 +1662,25 @@ export class AddSolutionComponent
   }
 
   removeSelectedItem(type: string, index: number) {
+    let fileName;
     switch (type) {
       case "image":
+        if (
+          this.solution.video_urls[index].fileEndpoint ===
+          this.solution.featured_url
+        ) {
+          this.solution.featured_url = "";
+          this.solution.featured_type = "";
+        }
         this.solution.image_urls.splice(index, 1);
-        this.solution.featured_url = "";
+        fileName = this.solution.image_urls[index].fileEndpoint.split("/")[1];
+        this.filesService.deleteFile(fileName).subscribe(
+          result => console.log(result),
+          error => {
+            console.log(error);
+          }
+        );
+
         this.setDefaultFeaturedImage();
         break;
 
@@ -1679,6 +1693,13 @@ export class AddSolutionComponent
           this.solution.featured_type = "";
         }
         this.solution.video_urls.splice(index, 1);
+        fileName = this.solution.video_urls[index].fileEndpoint.split("/")[1];
+        this.filesService.deleteFile(fileName).subscribe(
+          result => console.log(result),
+          error => {
+            console.log(error);
+          }
+        );
         break;
 
       case "embed":
@@ -1687,10 +1708,18 @@ export class AddSolutionComponent
           this.solution.featured_url = "";
           this.solution.featured_type = "";
         }
+
         break;
 
       case "link":
         this.solution.attachments.splice(index, 1);
+        fileName = this.solution.attachments[index].fileEndpoint.split("/")[1];
+        this.filesService.deleteFile(fileName).subscribe(
+          result => console.log(result),
+          error => {
+            console.log(error);
+          }
+        );
         break;
 
       default:

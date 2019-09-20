@@ -1,4 +1,5 @@
 import { Component, OnInit, Input } from "@angular/core";
+import { FilesService } from "../../services/files.service";
 
 @Component({
   selector: "app-profile-card",
@@ -8,7 +9,7 @@ import { Component, OnInit, Input } from "@angular/core";
 export class ProfileCardComponent implements OnInit {
   @Input() userData: any;
 
-  constructor() {}
+  constructor(private filesService: FilesService) {}
 
   ngOnInit() {
     // console.log(this.userData, "in card");

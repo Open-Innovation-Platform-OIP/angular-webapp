@@ -279,7 +279,7 @@
             aria-expanded="false">
             <div class="photo">
               <img class="img"
-                src="{{(usersService.currentUser.photo_url && usersService.currentUser.photo_url.url) ? usersService.currentUser.photo_url.url : './assets/img/default-avatar.png'}}"
+                src="{{(usersService.currentUser.photo_url && usersService.currentUser.photo_url.fileEndpoint) ? filesService.fileAccessUrl+usersService.currentUser.photo_url.fileEndpoint : './assets/img/default-avatar.png'}}"
                 style="border-radius:50%;object-fit: cover;height: 40px;width: 40px;" />
             </div>
           </a>

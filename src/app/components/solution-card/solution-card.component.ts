@@ -1,4 +1,5 @@
 import { Component, OnInit, Input } from "@angular/core";
+import { FilesService } from "../../services/files.service";
 
 @Component({
   selector: "app-solution-card",
@@ -14,7 +15,7 @@ export class SolutionCardComponent implements OnInit {
   validated: Boolean = false;
   link = "";
 
-  constructor() {}
+  constructor(private filesService: FilesService) {}
 
   ngOnInit() {
     console.log(this.solutionData, "solution data");

@@ -7,6 +7,8 @@ import { first, finalize, switchMap } from "rxjs/operators";
 import { Apollo, QueryRef } from "apollo-angular";
 import gql from "graphql-tag";
 import { AuthService } from "../../services/auth.service";
+import { FilesService } from "../../services/files.service";
+
 @Component({
   selector: "app-view-user-profile",
   templateUrl: "./view-user-profile.component.html",
@@ -27,7 +29,8 @@ export class ViewUserProfileComponent implements OnInit, OnDestroy {
   constructor(
     private route: ActivatedRoute,
     private apollo: Apollo,
-    private auth: AuthService
+    private auth: AuthService,
+    private filesService: FilesService
   ) {
     // this.route.params.pipe(first()).subscribe(params => {
     //   console.log(params.id, "params id");

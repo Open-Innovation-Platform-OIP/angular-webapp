@@ -56,7 +56,7 @@ const misc: any = {
 declare var $: any;
 interface attachment_object {
   key: string;
-  url: string;
+  fileEndpoint: string;
   mimeType: string;
 }
 interface queryString {
@@ -306,16 +306,16 @@ export class ProblemDetailComponent implements OnInit, OnDestroy {
 
     this.userDataQuery.valueChanges.subscribe(
       result => {
-        // console.log("PERSONAS", result);
+        // //console.log("PERSONAS", result);
         if (result.data.users[0]) {
           Object.keys(result.data.users[0]).map(persona => {
             this.userPersonas[persona] = result.data.users[0][persona];
           });
-          console.log("persona assignment", this.userPersonas);
+          // //console.log("persona assignment", this.userPersonas);
           result.data.users[0].users_tags.map(tag => {
             this.userInterests[tag.tag.name] = tag.tag;
           });
-          // console.log(this.userInterests, "user interests");
+          // //console.log(this.userInterests, "user interests");
         }
       },
       error => {
@@ -325,7 +325,7 @@ export class ProblemDetailComponent implements OnInit, OnDestroy {
   }
 
   loadCarousels() {
-    console.log("LOAD CAROUSELS", this.validation);
+    // //console.log("LOAD CAROUSELS", this.validation);
     this.carouselTileItemsEnrichment$ = interval(500).pipe(
       startWith(-1),
       take(2),
@@ -391,7 +391,7 @@ export class ProblemDetailComponent implements OnInit, OnDestroy {
   ngOnInit() {
     this.userId = Number(this.auth.currentUserValue.id);
     // this.filesService.fileAccessUrl = fileUploadVariables.accessUrl + "/";
-    console.log(this.auth.currentUserValue, "current user value");
+    // //console.log(this.auth.currentUserValue, "current user value");
 
     this.getUserData(Number(this.auth.currentUserValue.id));
 
@@ -400,7 +400,7 @@ export class ProblemDetailComponent implements OnInit, OnDestroy {
     // this.minimizeSidebar();
 
     this.route.queryParams.subscribe(params => {
-      console.log("params ", params, this.qs);
+      // //console.log("params ", params, this.qs);
       if (params.commentId) {
         this.qs.commentId = params.commentId;
       }
@@ -419,12 +419,12 @@ export class ProblemDetailComponent implements OnInit, OnDestroy {
         }
       },
       error => {
-        console.log("error", error);
+        // //console.log("error", error);
         console.error(JSON.stringify(error));
       }
     );
 
-    console.log("check title", this.problemData.title);
+    //console.log("check title", this.problemData.title);
   }
 
   getProblemData(id) {
@@ -686,7 +686,7 @@ export class ProblemDetailComponent implements OnInit, OnDestroy {
       body: JSON.stringify(data) // body data type must match "Content-Type" header
     })
       .then(response => {
-        // console.log(response.json());
+        // //console.log(response.json());
         alert("Your message has been sent");
       }) // parses JSON response into native Javascript objects
       .catch(e => {
@@ -726,16 +726,16 @@ export class ProblemDetailComponent implements OnInit, OnDestroy {
   parseProblem(problem) {
     this.count++;
     if (problem.title && this.count < 2) {
-      console.log("Message", problem.title);
+      //console.log("Message", problem.title);
       this.message = problem.title;
       this.showNotification("bottom", "right", this.message);
     }
 
-    console.log(problem, "problem");
+    //console.log(problem, "problem");
 
     // map core keys
     Object.keys(this.problemData).map(key => {
-      // console.log(key, result.data.problems[0][key]);
+      // //console.log(key, result.data.problems[0][key]);
       if (problem[key]) {
         this.problemData[key] = problem[key];
       }
@@ -747,10 +747,10 @@ export class ProblemDetailComponent implements OnInit, OnDestroy {
       }
     });
     this.enrichment = problem.enrichments;
-    console.log("enrichment", this.enrichment);
+    //console.log("enrichment", this.enrichment);
 
     problem.problem_validations.map(validation => {
-      // console.log(validation.user_id, "test55");
+      // //console.log(validation.user_id, "test55");
       if (validation.user_id === Number(this.auth.currentUserValue.id)) {
         this.disableValidateButton = true;
       }
@@ -772,24 +772,24 @@ export class ProblemDetailComponent implements OnInit, OnDestroy {
       });
     }
 
-    console.log(this.solutions, "solutions refresh");
+    //console.log(this.solutions, "solutions refresh");
 
     this.loadCarousels();
 
-    // console.log(this.problemData, "result from nested queries");
-    // console.log(problem.is_draft, "is draft");
+    // //console.log(this.problemData, "result from nested queries");
+    // //console.log(problem.is_draft, "is draft");
     if (problem.user) {
       this.problemOwner = problem.user.name;
-      // console.log(problem.problems_tags, "problem tags");
+      // //console.log(problem.problems_tags, "problem tags");
       problem.problems_tags.map(tags => {
         if (this.userInterests[tags.tag.name]) {
           this.sectorMatched = true;
-          // console.log(this.sectorMatched, "sector matched");
+          // //console.log(this.sectorMatched, "sector matched");
         }
       });
       if (problem.problems_tags) {
         this.tags = problem.problems_tags.map(tagArray => {
-          // console.log(tagArray, "work");
+          // //console.log(tagArray, "work");
           return tagArray.tag;
         });
       }
@@ -799,7 +799,7 @@ export class ProblemDetailComponent implements OnInit, OnDestroy {
         }
       });
 
-      console.log(problem.problem_locations, "==problem locations");
+      //console.log(problem.problem_locations, "==problem locations");
 
       if (problem.problem_locations) {
         this.problemLocations = problem.problem_locations.map(location => {
@@ -842,12 +842,12 @@ export class ProblemDetailComponent implements OnInit, OnDestroy {
         this.problem_attachments_index
       ];
 
-      console.log(this.problem_attachments, "===src");
+      //console.log(this.problem_attachments, "===src");
 
-      // console.log(problem.discussions);
+      // //console.log(problem.discussions);
       problem.discussions.map(comment => {
         if (comment.linked_comment_id) {
-          // console.log(comment);
+          // //console.log(comment);
           // this comment is a reply - add it to the replies object
           if (!this.replies[comment.linked_comment_id]) {
             // create reply object so we can add reply
@@ -862,7 +862,7 @@ export class ProblemDetailComponent implements OnInit, OnDestroy {
         } else {
           // this comment is a parent comment - add it to the comments object
           // comment object does not exist
-          // console.log("COMMENT ID", comment.id);
+          // //console.log("COMMENT ID", comment.id);
           this.comments[comment.id] = comment;
           if (!this.replies[comment.id]) {
             this.replies[comment.id] = []; // create an empty array for replies to this comment
@@ -895,9 +895,9 @@ export class ProblemDetailComponent implements OnInit, OnDestroy {
         .filter(commentId => this.comments[commentId]) // to avoid undefined
         .map(commentId => this.comments[commentId]); //mapping the sorted array
 
-      console.log("REPLIES", this.replies);
-      console.log("COMMENTS", this.comments);
-      console.log("POPULAR", this.popularDiscussions);
+      //console.log("REPLIES", this.replies);
+      //console.log("COMMENTS", this.comments);
+      //console.log("POPULAR", this.popularDiscussions);
     }
   }
 
@@ -908,7 +908,7 @@ export class ProblemDetailComponent implements OnInit, OnDestroy {
   }
 
   sortComments(comments) {
-    // console.log("comments>>>>> ", comments);
+    // //console.log("comments>>>>> ", comments);
     let sortByDate = comments.sort(this.compareDateForSort);
     let sharedComment = comments.filter(comment => {
       if (this.qs.commentId) {
@@ -932,7 +932,7 @@ export class ProblemDetailComponent implements OnInit, OnDestroy {
     let deleteResp = this.discussionsService.deleteCommentsFromDB(comment.id);
     deleteResp.subscribe(
       result => {
-        console.log(result, "delete worked");
+        //console.log(result, "delete worked");
         // location.reload();
         if (
           this.comments.hasOwnProperty(comment.id) &&
@@ -981,7 +981,7 @@ export class ProblemDetailComponent implements OnInit, OnDestroy {
   replyTo(discussionId) {
     this.showReplyBox = true;
     this.replyingTo = discussionId;
-    console.log(discussionId);
+    //console.log(discussionId);
   }
 
   checkUrlIsImg(url) {
@@ -995,7 +995,7 @@ export class ProblemDetailComponent implements OnInit, OnDestroy {
   }
 
   sectorSelected(sector) {
-    // console.log(sector,"sector");
+    // //console.log(sector,"sector");
     this.router.navigate(["/problems"], {
       queryParams: { [sector.name]: "sectorFilter" },
       queryParamsHandling: "merge"
@@ -1131,7 +1131,7 @@ export class ProblemDetailComponent implements OnInit, OnDestroy {
     this.mobile_menu_visible = 0;
   }
   toggleWatchProblem() {
-    // console.log('toggling watch flag');
+    // //console.log('toggling watch flag');
     if (
       !(this.userId == this.problemData.user_id) &&
       this.auth.currentUserValue.id
@@ -1165,7 +1165,7 @@ export class ProblemDetailComponent implements OnInit, OnDestroy {
           .subscribe(
             result => {
               if (result.data) {
-                // console.log(result.data);
+                // //console.log(result.data);
               }
             },
             err => {
@@ -1195,7 +1195,7 @@ export class ProblemDetailComponent implements OnInit, OnDestroy {
           .subscribe(
             result => {
               if (result.data) {
-                // console.log(result.data);
+                // //console.log(result.data);
               }
             },
             err => {
@@ -1207,7 +1207,7 @@ export class ProblemDetailComponent implements OnInit, OnDestroy {
   }
 
   toggleVoteProblem() {
-    // console.log('toggling watch flag');
+    // //console.log('toggling watch flag');
     if (
       !(this.userId == this.problemData.user_id) &&
       this.auth.currentUserValue.id
@@ -1241,7 +1241,7 @@ export class ProblemDetailComponent implements OnInit, OnDestroy {
           .subscribe(
             result => {
               if (result.data) {
-                // console.log(result.data);
+                // //console.log(result.data);
               }
             },
             err => {
@@ -1271,7 +1271,7 @@ export class ProblemDetailComponent implements OnInit, OnDestroy {
           .subscribe(
             result => {
               if (result.data) {
-                // console.log(result.data);
+                // //console.log(result.data);
               }
             },
             err => {
@@ -1329,7 +1329,7 @@ export class ProblemDetailComponent implements OnInit, OnDestroy {
         // location.reload();
       },
       error => {
-        console.log("Could not delete due to " + error);
+        //console.log("Could not delete due to " + error);
         swal({
           title: "Error",
           text: "Try Again",
@@ -1346,13 +1346,13 @@ export class ProblemDetailComponent implements OnInit, OnDestroy {
   }
 
   onCollaborationSubmit(collaborationData) {
-    console.log(collaborationData, "collaboration data");
+    //console.log(collaborationData, "collaboration data");
     collaborationData.user_id = Number(this.auth.currentUserValue.id);
 
     collaborationData.problem_id = this.problemData.id;
 
     this.collaborationService.submitCollaboratorToDB(collaborationData);
-    console.log(event, "from problem details collab");
+    //console.log(event, "from problem details collab");
     // close modal
     // send to db
   }
@@ -1382,7 +1382,7 @@ export class ProblemDetailComponent implements OnInit, OnDestroy {
         return;
       },
       error => {
-        console.log("Could not delete due to " + error);
+        //console.log("Could not delete due to " + error);
         swal({
           title: "Error",
           text: "Try Again",
@@ -1401,7 +1401,7 @@ export class ProblemDetailComponent implements OnInit, OnDestroy {
         this.disableCollaborateButton = false;
       },
       error => {
-        console.log("Could delete due to " + error);
+        //console.log("Could delete due to " + error);
         swal({
           title: "Error",
           text: "Try Again",
@@ -1418,7 +1418,7 @@ export class ProblemDetailComponent implements OnInit, OnDestroy {
   }
   handleEnrichEditMode(enrichData) {
     this.enrichmentData = enrichData;
-    console.log(enrichData, "event on edit");
+    //console.log(enrichData, "event on edit");
   }
 
   handleValidationCardClicked(validationData) {
@@ -1437,24 +1437,25 @@ export class ProblemDetailComponent implements OnInit, OnDestroy {
   }
 
   handleCollaborationEditMode(collaborationData) {
-    console.log("edit collab", collaborationData);
+    //console.log("edit collab", collaborationData);
     this.collaboratorDataToEdit = collaborationData;
   }
 
   async onCommentSubmit(event, comment_id?) {
     const [content, mentions, attachments] = event;
-    // console.log(event);
+    // //console.log(event);
     let file_links: attachment_object[];
     let _links = []; //local array
 
     let all_promise = await attachments.map(file => {
+      //console.log(file, "comment file");
       return new Promise((resolve, reject) => {
         if (typeof FileReader !== "undefined") {
           const reader = new FileReader();
 
           reader.onload = (e: any) => {
             let buffer = Buffer.from(e.target.result);
-            resolve(this.filesService.multiPartUpload(buffer, file.name));
+            resolve(this.filesService.fileUpload(file, file.type));
           };
           reader.readAsArrayBuffer(file);
         }
@@ -1465,34 +1466,36 @@ export class ProblemDetailComponent implements OnInit, OnDestroy {
     try {
       _links = await Promise.all(all_promise);
     } catch (error) {
-      console.log("Err while uploading reply files", error);
+      //console.log("Err while uploading reply files", error);
     }
 
     if (_links.length) {
       file_links = [];
 
       _links.forEach((link, i) => {
+        //console.log(link, "link");
         // additional check
-        if (!link["Location"].startsWith("https")) {
-          link["Location"] = `https://${link["Location"]}`;
-        }
+        // if (!link["Location"].startsWith("https")) {
+        //   link["Location"] = `https://${link["Location"]}`;
+        // }
+        //console.log(attachments[i], "attachments");
 
         file_links.push({
-          key: link["key"],
-          url: link["Location"],
+          key: attachments[i].name,
+          fileEndpoint: link.fileEndpoint,
           mimeType: attachments[i].type
         });
       });
     }
 
-    console.log(mentions, "mentions of discussions");
+    //console.log(mentions, "mentions of discussions");
     // let comment = {
     //   user_id: this.auth.currentUserValue.id,
     //   problem_id: this.problemData["id"],
     //   text: content,
     //   attachments: file_links, // overwriting the incoming blobs
     // };
-    // // console.log(content, mentions);
+    // // //console.log(content, mentions);
     // if (comment_id) {
     //   comment["linked_comment_id"] = comment_id;
     //   // this.replyingTo = 0;
@@ -1514,7 +1517,7 @@ export class ProblemDetailComponent implements OnInit, OnDestroy {
     if (comment_id) {
       comment["linked_comment_id"] = comment_id;
     }
-    // console.log(content, mentions);
+    // //console.log(content, mentions);
     if (this.showReplyBox) {
       comment["linked_comment_id"] = this.replyingTo;
       this.replyingTo = 0;
@@ -1535,7 +1538,7 @@ export class ProblemDetailComponent implements OnInit, OnDestroy {
   //   try {
   //     _links = await Promise.all(all_promise);
   //   } catch (error) {
-  //     console.log("Err while uploading reply files");
+  //     //console.log("Err while uploading reply files");
   //   }
 
   //   if (_links.length) {
@@ -1572,7 +1575,7 @@ export class ProblemDetailComponent implements OnInit, OnDestroy {
         buttonsStyling: false
       }).then(result => {
         if (result.value) {
-          console.log("Received result", result);
+          //console.log("Received result", result);
           $("#collaboratorModal").modal("hide");
         }
       });
@@ -1596,7 +1599,7 @@ export class ProblemDetailComponent implements OnInit, OnDestroy {
   }
 
   closeModal(e) {
-    // console.log(e, "e");
+    // //console.log(e, "e");
     if (e.type === "click") {
       let problemVideoTag: HTMLMediaElement = document.querySelector(
         "#modalVideo"

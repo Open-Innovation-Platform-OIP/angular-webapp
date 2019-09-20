@@ -174,7 +174,7 @@ export class WizardComponent
           : Object.keys(this.tagService.allTags).slice()
       )
     );
-    // console.log(this.auth.currentUserValue);
+    // //console.log(this.auth.currentUserValue);
   }
 
   add(event: MatChipInputEvent): void {
@@ -196,7 +196,7 @@ export class WizardComponent
   }
 
   addTags(tags) {
-    // console.log(tags, "tag working");
+    // //console.log(tags, "tag working");
     this.sectors = tags;
   }
 
@@ -224,7 +224,7 @@ export class WizardComponent
     if (index >= 0) {
       this.owners.splice(index, 1);
     }
-    console.log(this.owners, "removed from wizard");
+    //console.log(this.owners, "removed from wizard");
     if (this.problem["id"]) {
       this.apollo
         .mutate<any>({
@@ -252,7 +252,7 @@ export class WizardComponent
         .pipe(take(1))
         .subscribe(
           ({ data }) => {
-            console.log("worked", data);
+            //console.log("worked", data);
             // location.reload();
             // location.reload();
             // this.router.navigateByUrl("/problems");
@@ -260,7 +260,7 @@ export class WizardComponent
             return;
           },
           error => {
-            console.log("Could not delete due to " + error);
+            //console.log("Could not delete due to " + error);
           }
         );
     }
@@ -302,10 +302,11 @@ export class WizardComponent
     // this.addTagsSub.unsubscribe();
   }
   ngOnInit() {
+    console.log("wizard on in it");
     this.tagService.getTagsFromDB();
     this.geoService.getLocationsFromDB();
 
-    // console.log("wizard ng on in it",this.auth.currentUserValue.);
+    // //console.log("wizard ng on in it",this.auth.currentUserValue.);
     clearInterval(this.autosaveInterval);
     this.autosaveInterval = setInterval(() => {
       this.autoSave();
@@ -365,22 +366,21 @@ export class WizardComponent
                             }
                             }
                         }
-                        `,
-            pollInterval: 1000,
-            fetchPolicy: "network-only"
+                        `
           })
           .valueChanges.subscribe(result => {
-            // console.log(result, "pppp>>>>>>>>");
+            console.log(result, "result");
+            // //console.log(result, "pppp>>>>>>>>");
             if (
               result.data.problems.length >= 1 &&
               result.data.problems[0].id
             ) {
-              console.log(result.data.problems[0], "problem");
-              // console.log(result.data.problems[0], "edit problem");
+              //console.log(result.data.problems[0], "problem");
+              // //console.log(result.data.problems[0], "edit problem");
               canProceed = true;
               this.problem["id"] = result.data.problems[0].id;
               Object.keys(this.problem).map(key => {
-                // console.log(key, result.data.problems[0][key]);
+                // //console.log(key, result.data.problems[0][key]);
                 if (result.data.problems[0][key]) {
                   this.problem[key] = result.data.problems[0][key];
                 }
@@ -395,7 +395,7 @@ export class WizardComponent
                     return tagArray.tag.name;
                   }
                 );
-                // console.log(this.sectors, "sectors from db");
+                // //console.log(this.sectors, "sectors from db");
               }
               if (result.data.problems[0].problem_locations) {
                 this.problemLocations = result.data.problems[0].problem_locations.map(
@@ -408,7 +408,7 @@ export class WizardComponent
 
                 // this.problem["locations"] = this.problemLocations;
 
-                console.log(this.problemLocations, "locations from db");
+                //console.log(this.problemLocations, "locations from db");
               }
 
               if (result.data.problems[0].problem_owners) {
@@ -417,7 +417,7 @@ export class WizardComponent
                   this.owners.push(ownerArray.user);
                 });
 
-                // console.log(this.owners, "owners from db");
+                // //console.log(this.owners, "owners from db");
               }
 
               this.is_edit = true;
@@ -786,41 +786,41 @@ export class WizardComponent
   }
 
   test(event) {
-    // console.log(event, "event");
+    // //console.log(event, "event");
   }
 
-  removePhoto(index) {
-    this.filesService
-      .deleteFile(this.problem["image_urls"][index]["key"])
-      .promise()
-      .then(data => {
-        if (this.problem.image_urls[index].url === this.problem.featured_url) {
-          this.problem.featured_url = "";
-          this.problem.featured_type = "";
-        }
-        this.problem.image_urls.splice(index, 1);
-      })
-      .catch(e => {
-        console.log("Err: ", e);
-      });
-  }
+  // removePhoto(index) {
+  //   this.filesService
+  //     .deleteFile(this.problem["image_urls"][index]["key"])
+  //     .promise()
+  //     .then(data => {
+  //       if (this.problem.image_urls[index].url === this.problem.featured_url) {
+  //         this.problem.featured_url = "";
+  //         this.problem.featured_type = "";
+  //       }
+  //       this.problem.image_urls.splice(index, 1);
+  //     })
+  //     .catch(e => {
+  //       //console.log("Err: ", e);
+  //     });
+  // }
 
-  removeAll() {
-    this.problem.image_urls.forEach((imageObj, i) => {
-      this.filesService
-        .deleteFile(imageObj["key"])
-        .promise()
-        .then(data => {
-          // console.log("Deleted file: ", data);
-          if (this.problem.image_urls.length === i + 1) {
-            this.problem.image_urls = [];
-          }
-        })
-        .catch(e => {
-          console.log("Err: ", e);
-        });
-    });
-  }
+  // removeAll() {
+  //   this.problem.image_urls.forEach((imageObj, i) => {
+  //     this.filesService
+  //       .deleteFile(imageObj["key"])
+  //       .promise()
+  //       .then(data => {
+  //         // //console.log("Deleted file: ", data);
+  //         if (this.problem.image_urls.length === i + 1) {
+  //           this.problem.image_urls = [];
+  //         }
+  //       })
+  //       .catch(e => {
+  //         //console.log("Err: ", e);
+  //       });
+  //   });
+  // }
 
   // onFileSelected(event) {
   //   for (let i = 0; i < event.target.files.length; i++) {
@@ -846,7 +846,7 @@ export class WizardComponent
   //                   this.problem.featured_type = "image";
   //                 }
   //               })
-  //               .catch(e => console.log("Err:: ", e));
+  //               .catch(e => //console.log("Err:: ", e));
   //           };
   //           reader.readAsArrayBuffer(file);
   //         }
@@ -867,11 +867,11 @@ export class WizardComponent
   //               this.problem.featured_type = "video";
   //             }
   //           })
-  //           .catch(e => console.log("Err:: ", e));
+  //           .catch(e => //console.log("Err:: ", e));
   //         break;
   //       }
   //       default: {
-  //         console.log("unknown file type");
+  //         //console.log("unknown file type");
   //         alert("Unknown file type. Please upload images or videos");
   //         break;
   //       }
@@ -891,7 +891,7 @@ export class WizardComponent
   //       this.problem.video_urls.splice(index, 1);
   //     })
   //     .catch(e => {
-  //       console.log("Err: ", e);
+  //       //console.log("Err: ", e);
   //     });
   // }
 
@@ -906,7 +906,7 @@ export class WizardComponent
   smartSearch() {
     let searchKey = this.problem.title + " " + this.problem.description;
     searchKey = searchKey.replace(/[^a-zA-Z ]/g, "");
-    console.log(searchKey, "searchkey");
+    //console.log(searchKey, "searchkey");
 
     if (searchKey.length >= 3) {
       this.searchResults = [];
@@ -919,10 +919,10 @@ export class WizardComponent
         .subscribe(
           searchResults => {
             this.searchResults = searchResults;
-            console.log(this.searchResults, "wizard smart search");
+            //console.log(this.searchResults, "wizard smart search");
           },
           error => {
-            console.log(error);
+            //console.log(error);
           }
         );
       // this.apollo
@@ -987,22 +987,22 @@ export class WizardComponent
       //   .valueChanges.pipe(take(1))
       //   .subscribe(
       //     result => {
-      //       console.log(result, "result from search");
+      //       //console.log(result, "result from search");
       //       if (result.data.search_problems_v2.length > 0) {
-      //         // console.log(result.data.search_problems_v2.length, "search");
+      //         // //console.log(result.data.search_problems_v2.length, "search");
       //         result.data.search_problems_v2.map(result => {
       //           if (result.id != this.problem["id"]) {
       //             this.searchResults[result.id] = result;
       //           }
       //         });
-      //         // console.log(this.searchResults, ">>>>>searchresults");
+      //         // //console.log(this.searchResults, ">>>>>searchresults");
       //         if (!this.is_edit) {
       //           canProceed = false;
       //         }
       //       }
       //     },
       //     err => {
-      //       // console.log(err, "error from smart search");
+      //       // //console.log(err, "error from smart search");
       //       console.error(JSON.stringify(err));
       //     }
       //   );
@@ -1019,7 +1019,7 @@ export class WizardComponent
     );
   }
   updateProblem(updatedProblem) {
-    // console.log(updatedProblem, "updated problem");
+    console.log(updatedProblem, "updated problem");
     this.problem = updatedProblem;
   }
   removeDuplicates(array) {
@@ -1027,13 +1027,13 @@ export class WizardComponent
   }
 
   scrollUp(event) {
-    console.log("scroll up");
+    //console.log("scroll up");
     window.scroll(0, 0);
   }
 
   autoSave() {
-    // console.log(this.problem, "problem data");
-    // console.log("trying to auto save");
+    // //console.log(this.problem, "problem data");
+    // //console.log("trying to auto save");
     if (this.problem.is_draft) {
       if (this.problem.title) {
         this.submitProblemToDB(this.problem);
@@ -1069,6 +1069,7 @@ export class WizardComponent
   // }
 
   publishProblem(problem) {
+    console.log(problem, " publish problem");
     clearInterval(this.autosaveInterval);
 
     if (
@@ -1136,7 +1137,7 @@ export class WizardComponent
       problem.is_draft = false;
       this.submitProblemToDB(problem);
     }
-    // console.log(problem, "problem before publishing");
+    // //console.log(problem, "problem before publishing");
   }
 
   deleteDraft(id) {
@@ -1164,7 +1165,7 @@ export class WizardComponent
             // this.router.navigateByUrl("/dashboard");
           },
           error => {
-            console.log("Could delete due to " + error);
+            //console.log("Could delete due to " + error);
             console.error(JSON.stringify(error));
           }
         );
@@ -1173,7 +1174,8 @@ export class WizardComponent
   }
 
   submitProblemToDB(problem) {
-    console.log(problem, "submitted");
+    //console.log(problem, "submitted");
+    console.log(problem, "Problem");
     const upsert_problem = gql`
       mutation upsert_problem($problems: [problems_insert_input!]!) {
         insert_problems(
@@ -1210,10 +1212,10 @@ export class WizardComponent
       }
     `;
 
-    console.log(this.sectors, "sectors before removing duplicates");
+    //console.log(this.sectors, "sectors before removing duplicates");
 
     this.sectors = this.removeDuplicates(this.sectors);
-    console.log(this.sectors, "sectors after removing duplicates");
+    //console.log(this.sectors, "sectors after removing duplicates");
 
     this.apollo
       .mutate({
@@ -1250,7 +1252,7 @@ export class WizardComponent
 
             const problems_tags = new Set();
             const problem_locations = new Set();
-            // console.log(this.sectors, "sectors");
+            // //console.log(this.sectors, "sectors");
 
             this.sectors.map(sector => {
               tags.push({ name: sector });
@@ -1386,7 +1388,7 @@ export class WizardComponent
         }
       }
     `;
-    console.log(owners, "owners added");
+    //console.log(owners, "owners added");
     this.apollo
       .mutate({
         mutation: upsert_problem_owners,
@@ -1397,7 +1399,7 @@ export class WizardComponent
       .pipe(take(1))
       .subscribe(
         data => {
-          console.log("owner adddition worked");
+          //console.log("owner adddition worked");
         },
         error => {
           console.error(JSON.stringify(error));
@@ -1478,11 +1480,11 @@ export class WizardComponent
 
   addLocation(locations) {
     this.problemLocations = locations;
-    console.log(this.geoService.allLocations, "all locations");
+    //console.log(this.geoService.allLocations, "all locations");
   }
 
   removeLocation(removedLocation) {
-    console.log(this.problemLocations, "removed location");
+    //console.log(this.problemLocations, "removed location");
     const locationUniqueId =
       removedLocation.lat.toString() + removedLocation.long.toString();
 

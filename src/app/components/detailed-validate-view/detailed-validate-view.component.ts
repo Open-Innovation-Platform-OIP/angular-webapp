@@ -9,6 +9,7 @@ import {
 import { AuthService } from "../../services/auth.service";
 
 import swal from "sweetalert2";
+import { FilesService } from "../../services/files.service";
 declare var $: any;
 
 @Component({
@@ -26,7 +27,7 @@ export class DetailedValidateViewComponent implements OnInit, OnChanges {
     files: []
   };
 
-  constructor(private auth: AuthService) {}
+  constructor(private auth: AuthService, private filesService: FilesService) {}
 
   ngOnInit() {
     console.log(this.validationData, "in detailed validate");

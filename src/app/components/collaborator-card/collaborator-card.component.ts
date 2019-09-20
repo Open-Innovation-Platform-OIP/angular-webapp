@@ -13,6 +13,7 @@ import { Router, ActivatedRoute } from "@angular/router";
 import { Apollo } from "apollo-angular";
 import gql from "graphql-tag";
 import swal from "sweetalert2";
+import { FilesService } from "../../services/files.service";
 declare var $: any;
 
 @Component({
@@ -42,7 +43,8 @@ export class CollaboratorCardComponent implements OnInit, OnChanges {
   constructor(
     private collaborationService: CollaborationService,
     private auth: AuthService,
-    private apollo: Apollo
+    private apollo: Apollo,
+    private filesService: FilesService
   ) {}
 
   ngOnInit() {
@@ -129,9 +131,7 @@ export class CollaboratorCardComponent implements OnInit, OnChanges {
     swal({
       title: "Intent",
       // text: `${this.collaboratorData.intent}`,
-      html: `<div style="white-space: pre-wrap;text-align: left;">${
-        this.collaboratorData.intent
-      }</div>`,
+      html: `<div style="white-space: pre-wrap;text-align: left;">${this.collaboratorData.intent}</div>`,
       timer: 20000,
       showConfirmButton: false
     }).catch(swal.noop);

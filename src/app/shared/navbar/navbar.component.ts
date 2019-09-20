@@ -10,6 +10,7 @@ import {
 } from "@angular/core";
 import { ROUTES } from "../.././sidebar/sidebar.component";
 import { take } from "rxjs/operators";
+import { FilesService } from "../../services/files.service";
 
 import {
   Router,
@@ -82,11 +83,13 @@ export class NavbarComponent implements OnInit {
     private apollo: Apollo,
     private auth: AuthService,
     private usersService: UsersService,
-    private route: ActivatedRoute // private search: SearchService
+    private route: ActivatedRoute,
+    private filesService: FilesService
   ) {
     this.location = location;
     this.nativeElement = element.nativeElement;
     this.sidebarVisible = false;
+
     // console.log(this.user_id);
   }
 
@@ -180,9 +183,7 @@ export class NavbarComponent implements OnInit {
         query: gql`
           query {
             notifications(
-              where: { user_id: { _eq: ${
-                this.user_id
-              } }, is_read: { _eq: false } }
+              where: { user_id: { _eq: ${this.user_id} }, is_read: { _eq: false } }
             ) {
               id
               problem_id

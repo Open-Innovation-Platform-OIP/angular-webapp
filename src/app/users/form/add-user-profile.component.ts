@@ -125,7 +125,7 @@ export class AddUserProfileComponent implements OnInit, OnChanges {
     private apollo: Apollo,
     private router: Router,
     private route: ActivatedRoute,
-    private imgUpload: FilesService,
+    private filesService: FilesService,
     private auth: AuthService,
     private here: GeocoderService,
     private tagService: TagsService,
@@ -545,14 +545,15 @@ export class AddUserProfileComponent implements OnInit, OnChanges {
       console.log("inside image blob");
 
       // Handle the image name if you want
-      this.imgUpload
-        .uploadFile(this.imageBlob, this.imageBlob["name"])
-        .promise()
+      this.filesService
+        .fileUpload(this.imageBlob, this.imageBlob["type"])
+
         .then(values => {
+          console.log(values, "user values");
           this.user.photo_url = {};
-          this.user.photo_url.url = values["Location"];
+          this.user.photo_url.fileEndpoint = values["fileEndpoint"];
           this.user.photo_url.mimeType = this.imageBlob["type"];
-          this.user.photo_url.key = values["Key"];
+          this.user.photo_url.key = this.imageBlob["name"];
 
           this.updateProfileToDb();
         })

@@ -56,7 +56,7 @@ const misc: any = {
 declare var $: any;
 interface attachment_object {
   key: string;
-  url: string;
+  fileEndpoint: string;
   mimeType: string;
 }
 interface queryString {
@@ -1276,13 +1276,14 @@ export class SolutionDetailComponent implements OnInit {
     let _links = []; //local array
 
     let all_promise = await attachments.map(file => {
+      console.log(file, "comment file");
       return new Promise((resolve, reject) => {
         if (typeof FileReader !== "undefined") {
           const reader = new FileReader();
 
           reader.onload = (e: any) => {
             let buffer = Buffer.from(e.target.result);
-            resolve(this.filesService.multiPartUpload(buffer, file.name));
+            resolve(this.filesService.fileUpload(file, file.type));
           };
           reader.readAsArrayBuffer(file);
         }
@@ -1300,14 +1301,16 @@ export class SolutionDetailComponent implements OnInit {
       file_links = [];
 
       _links.forEach((link, i) => {
+        console.log(link, "link");
         // additional check
-        if (!link["Location"].startsWith("https")) {
-          link["Location"] = `https://${link["Location"]}`;
-        }
+        // if (!link["Location"].startsWith("https")) {
+        //   link["Location"] = `https://${link["Location"]}`;
+        // }
+        console.log(attachments[i], "attachments");
 
         file_links.push({
-          key: link["key"],
-          url: link["Location"],
+          key: attachments[i].name,
+          fileEndpoint: link.fileEndpoint,
           mimeType: attachments[i].type
         });
       });

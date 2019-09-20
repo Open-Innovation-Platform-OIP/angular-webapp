@@ -219,7 +219,7 @@ export class WizardContainerComponent
 
     this.selectedLocations.push(locationData);
 
-    // console.log(this.selectedLocations, "selected locations");
+    // //console.log(this.selectedLocations, "selected locations");
 
     this.locationSelected.emit(this.selectedLocations);
 
@@ -234,7 +234,7 @@ export class WizardContainerComponent
 
       // Add our sector
       if ((value || "").trim()) {
-        console.log(value, "value location");
+        //console.log(value, "value location");
         // this.content.location.push(value);
       }
       // Reset the input value
@@ -247,7 +247,7 @@ export class WizardContainerComponent
   }
 
   removeLocation(removedLocation) {
-    console.log(location, "removed location");
+    //console.log(location, "removed location");
     this.selectedLocations = this.selectedLocations.filter(location => {
       if (
         location.location.coordinates[0] !==
@@ -262,7 +262,7 @@ export class WizardContainerComponent
     // if (index >= 0) {
     //   this.selectedLocations.splice(index, 1);
     // }
-    // console.log(this.selectedLocations, "selected locations after removal");
+    // //console.log(this.selectedLocations, "selected locations after removal");
 
     this.locationRemoved.emit(removedLocation);
   }
@@ -294,7 +294,7 @@ export class WizardContainerComponent
   }
 
   selected(event: MatAutocompleteSelectedEvent): void {
-    // console.log(this.sectors, "test for sector");
+    // //console.log(this.sectors, "test for sector");
     this.localSectors.push(event.option.viewValue);
     this.sectorInput.nativeElement.value = "";
     this.sectorCtrl.setValue(null);
@@ -311,13 +311,13 @@ export class WizardContainerComponent
 
   private filterOwners(value: String): any[] {
     if (typeof value === "string") {
-      console.log(value, "value in filtered owners");
+      //console.log(value, "value in filtered owners");
       const filterValue = value.toLowerCase();
-      console.log(filterValue, "value from filter");
+      //console.log(filterValue, "value from filter");
 
       return Object.values(this.usersService.allUsers).filter(owner => {
         if (owner["value"].toLowerCase().indexOf(filterValue) === 0) {
-          console.log(owner, "owner", filterValue);
+          //console.log(owner, "owner", filterValue);
           return owner;
         }
       });
@@ -325,7 +325,7 @@ export class WizardContainerComponent
   }
 
   selectedOwner(event: MatAutocompleteSelectedEvent): void {
-    console.log(event.option, "event value");
+    //console.log(event.option, "event value");
     this.owners.push(event.option.value);
     this.ownerInput.nativeElement.value = "";
     this.ownersCtrl.setValue(null);
@@ -333,17 +333,17 @@ export class WizardContainerComponent
   }
 
   removeOwner(owner) {
-    console.log(owner, "remove");
+    //console.log(owner, "remove");
     const index = this.owners.indexOf(owner);
     if (index >= 0) {
       this.owners.splice(index, 1);
       this.removedOwners.emit(owner);
     }
-    console.log(this.owners, "removed in container");
+    //console.log(this.owners, "removed in container");
   }
 
   addOwner(event) {
-    console.log(event, "event");
+    //console.log(event, "event");
   }
 
   displayFieldCss(form: FormGroup, field: string) {
@@ -368,7 +368,7 @@ export class WizardContainerComponent
   }
 
   ngOnInit() {
-    // console.log(
+    // //console.log(
     //   this.content.locations,
     //   "wizard container locations",
     //   this.content
@@ -381,7 +381,7 @@ export class WizardContainerComponent
       this.usersService.currentUser.organization
     ) {
       this.content.organization = this.usersService.currentUser.organization;
-      console.log(this.content.organization, "test orgs on user");
+      //console.log(this.content.organization, "test orgs on user");
     } else {
       this.content.organization = "None";
     }
@@ -455,7 +455,7 @@ export class WizardContainerComponent
 
       onNext: function(tab, navigation, index) {
         window.scroll(0, 0);
-        console.log("next tab");
+        //console.log("next tab");
         this.nextTab.emit(true);
 
         const $valid = $(".card-wizard form").valid();
@@ -689,23 +689,23 @@ export class WizardContainerComponent
 
   ngOnChanges(changes: SimpleChanges) {
     if (this.localSectors.length <= this.sectors.length) {
-      console.log(this.localSectors, ">>>>> local sectors ");
+      //console.log(this.localSectors, ">>>>> local sectors ");
       this.localSectors = this.sectors;
-      console.log(
-        this.localSectors,
-        "local sectors on ng on change",
-        this.sectors
-      );
+      // //console.log(
+      //   this.localSectors,
+      //   "local sectors on ng on change",
+      //   this.sectors
+      // );
     } else {
-      console.log(
-        this.localSectors,
-        "local sectors on ng on change",
-        "sectors from parent==",
-        this.sectors
-      );
+      // //console.log(
+      //   this.localSectors,
+      //   "local sectors on ng on change",
+      //   "sectors from parent==",
+      //   this.sectors
+      // );
     }
 
-    console.log("wizard container ngonchanges", this.selectedLocations);
+    //console.log("wizard container ngonchanges", this.selectedLocations);
 
     const input = $(this);
     if (input[0].files && input[0].files[0]) {
@@ -720,13 +720,14 @@ export class WizardContainerComponent
   }
 
   sendInputToParent(input) {
-    // console.log(event, "test for event");
+    // //console.log(event, "test for event");
     this.smartSearchInput.emit(input);
   }
 
   checkForSpaces($event) {}
 
   publishContent() {
+    console.log(this.content, "content");
     this.contentSubmitted.emit(this.content);
   }
 
@@ -792,10 +793,33 @@ export class WizardContainerComponent
   }
 
   removeSelectedItem(type: string, index: number) {
+    let fileName;
     switch (type) {
       case "image":
+        // //console.log(
+        //   this.content.image_urls[index],
+        //   "deleted image",
+        //   this.content.featured_url
+        // );
+
+        if (
+          this.content.image_urls[index].fileEndpoint ==
+          this.content.featured_url
+        ) {
+          this.content.featured_url = "";
+          this.content.featured_type = "";
+          console.log(this.content.featured_url, "content featured");
+          console.log(this.content, "content");
+        }
+        fileName = this.content.image_urls[index].fileEndpoint.split("/")[1];
+        this.filesService.deleteFile(fileName).subscribe(
+          result => console.log(result),
+          error => {
+            console.log(error);
+          }
+        );
         this.content.image_urls.splice(index, 1);
-        this.content.featured_url = "";
+
         this.setDefaultFeaturedImage();
         break;
 
@@ -808,6 +832,8 @@ export class WizardContainerComponent
           this.content.featured_type = "";
         }
         this.content.video_urls.splice(index, 1);
+        fileName = this.content.video_urls[index].fileEndpoint.split("/")[1];
+        this.filesService.deleteFile(fileName);
         break;
 
       case "embed":
@@ -816,22 +842,28 @@ export class WizardContainerComponent
           this.content.featured_url = "";
           this.content.featured_type = "";
         }
+        // fileName = this.content.image_urls[index].fileEndpoint.split("/")[1];
+        // this.filesService.deleteFile(fileName);
         break;
 
       case "link":
         this.content.attachments.splice(index, 1);
+        fileName = this.content.attachments[index].fileEndpoint.split("/")[1];
+        this.filesService.deleteFile(fileName);
         break;
 
       default:
-        console.log("remove item default case");
+        //console.log("remove item default case");
         break;
     }
   }
 
   setDefaultFeaturedImage() {
     if (!this.content.featured_url && this.content.image_urls.length) {
-      this.content.featured_url = this.content.image_urls[0].url;
+      //console.log(this.content.image_urls[0].fileEndpoint, "deafault");
+      this.content.featured_url = this.content.image_urls[0].fileEndpoint;
       this.content.featured_type = "image";
+      console.log(this.content, "default contetn");
     }
   }
 
@@ -887,7 +919,7 @@ export class WizardContainerComponent
                     this.content.featured_type = "image";
                   }
                 })
-                .catch(e => console.log("Err:: ", e));
+                .catch(e => {}); //console.log("Err:: ", e));
             };
             reader.readAsArrayBuffer(file);
           }
@@ -905,7 +937,9 @@ export class WizardContainerComponent
                 key: file.name
               });
             })
-            .catch(e => console.log("Err:: ", e));
+            .catch((
+              e //console.log("Err:: ", e));
+            ) => {});
           break;
         }
         case "application":
@@ -921,11 +955,11 @@ export class WizardContainerComponent
                 key: file.name
               });
             })
-            .catch(e => console.log("Err:: ", e));
+            .catch(e => {}); //console.log("Err:: ", e));
           break;
         }
         default: {
-          console.log("unknown file type");
+          //console.log("unknown file type");
           alert("Unknown file type.");
           break;
         }
@@ -962,7 +996,7 @@ export class WizardContainerComponent
   }
 
   setFeatured(type, index) {
-    // console.log(type, index);
+    // //console.log(type, index);
     if (type === "image") {
       this.content.featured_type = "image";
       this.content.featured_url = this.content.image_urls[index].fileEndpoint;

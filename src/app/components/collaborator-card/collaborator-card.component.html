@@ -7,8 +7,8 @@
     <a *ngIf="collaboratorData.user && collaboratorData.user.photo_url">
       <img class="img profile_photo" style="object-fit: cover;"
         *ngIf="collaboratorData.user && collaboratorData.user.photo_url" src="{{
-        collaboratorData.user.photo_url && collaboratorData.user.photo_url.url
-            ? collaboratorData.user.photo_url.url
+        collaboratorData.user.photo_url && collaboratorData.user.photo_url.fileEndpoint
+            ? filesService.fileAccessUrl+collaboratorData.user.photo_url.fileEndpoint
             : './assets/img/default-avatar.png'
         }}" />
     </a>

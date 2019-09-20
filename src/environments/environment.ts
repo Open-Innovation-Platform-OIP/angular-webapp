@@ -19,5 +19,6 @@ export const fileUploadVariables = {
   UploadUrlEndpoint:
     "http://minio-microservice.dev.jaagalabs.com/create_presigned_url",
   bucketName: "test",
-  accessUrl: "http://minio-storage.dev.jaagalabs.com"
+  accessUrl: "http://minio-storage.dev.jaagalabs.com",
+  deleteEndpoint: "http://minio-microservice.dev.jaagalabs.com/delete_file"
 };
