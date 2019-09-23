@@ -165,14 +165,10 @@ export class DashboardComponent implements OnInit, OnDestroy {
     //  console.log(this.problemQueryString);
     const draftsQuery = gql`
       {
-        problems(where:{is_draft:{_eq:true},is_deleted:{_eq:false}, user_id:{_eq: ${
-          this.auth.currentUserValue.id
-        }}} order_by: {edited_at: desc}) ${this.problemQueryString}
+        problems(where:{is_draft:{_eq:true},is_deleted:{_eq:false}, user_id:{_eq: ${this.auth.currentUserValue.id}},problems_tags:{tag_id:{${this.filterService.sector_filter_query}}}} order_by: {edited_at: desc}) ${this.problemQueryString}
         ,
         
-          solutions(where:{is_draft:{_eq:true},is_deleted:{_eq:false}, user_id:{_eq: ${
-            this.auth.currentUserValue.id
-          }}} order_by: {edited_at: desc}) ${this.solutionQueryString}
+          solutions(where:{is_draft:{_eq:true},is_deleted:{_eq:false}, user_id:{_eq: ${this.auth.currentUserValue.id}},solutions_tags:{tag_id:{${this.filterService.sector_filter_query}}}} order_by: {edited_at: desc}) ${this.solutionQueryString}
       
 
 
@@ -242,8 +238,10 @@ export class DashboardComponent implements OnInit, OnDestroy {
       problems( 
         where:{ _and:[
         { is_draft: {_eq: false}},
-        {user_id: {_eq: ${this.auth.currentUserValue.id} }}
-      ]
+        {user_id: {_eq: ${this.auth.currentUserValue.id} }},
+        {problems_tags:{tag_id:{${this.filterService.sector_filter_query}}}}
+      ],
+      
     } order_by: {updated_at: desc}) ${this.problemQueryString}
     }
     `;
@@ -268,7 +266,8 @@ export class DashboardComponent implements OnInit, OnDestroy {
       solutions( 
         where:{ _and:[
         { is_draft: {_eq: false}},
-        {user_id: {_eq: ${this.auth.currentUserValue.id} }}
+        {user_id: {_eq: ${this.auth.currentUserValue.id} }},
+        {solutions_tags:{tag_id:{${this.filterService.sector_filter_query}}}}
       ]
     } order_by: {updated_at: desc}) ${this.solutionQueryString}
     }
@@ -294,38 +293,29 @@ export class DashboardComponent implements OnInit, OnDestroy {
     {
       enrichments( where:{ _and: [
         { user_id: {_eq: ${this.auth.currentUserValue.id}}},
-        { is_deleted: {_eq: false}}
+        { is_deleted: {_eq: false}},
+        {problem:{problems_tags:{tag_id:{${this.filterService.sector_filter_query}}}}}
       ] }) {
        problem ${this.problemQueryString}
      }
-     problem_validations(where:{user_id:{_eq: ${
-       this.auth.currentUserValue.id
-     }}}) {
+     problem_validations(where:{user_id:{_eq: ${this.auth.currentUserValue.id}},problem:{problems_tags:{tag_id:{${this.filterService.sector_filter_query}}}}}) {
        problem ${this.problemQueryString}
      }
-     problem_collaborators(where:{user_id:{_eq: ${
-       this.auth.currentUserValue.id
-     }}}) {
+     problem_collaborators(where:{user_id:{_eq: ${this.auth.currentUserValue.id}},problem:{problems_tags:{tag_id:{${this.filterService.sector_filter_query}}}}}) {
        problem ${this.problemQueryString}
      }
-     discussions(where:{user_id:{_eq: ${this.auth.currentUserValue.id}}}) {
+     discussions(where:{user_id:{_eq: ${this.auth.currentUserValue.id}},problem:{problems_tags:{tag_id:{${this.filterService.sector_filter_query}}}}}) {
        problem ${this.problemQueryString}
      }
 
 
-     solution_validations(where:{user_id:{_eq: ${
-       this.auth.currentUserValue.id
-     }}}) {
+     solution_validations(where:{user_id:{_eq: ${this.auth.currentUserValue.id}},solution:{solutions_tags:{tag_id:{${this.filterService.sector_filter_query}}}}}) {
       solution ${this.solutionQueryString}
     }
-    solution_collaborators(where:{user_id:{_eq: ${
-      this.auth.currentUserValue.id
-    }}}) {
+    solution_collaborators(where:{user_id:{_eq: ${this.auth.currentUserValue.id}},solution:{solutions_tags:{tag_id:{${this.filterService.sector_filter_query}}}}}) {
       solution ${this.solutionQueryString}
     }
-    discussions(where:{user_id:{_eq: ${this.auth.currentUserValue.id}}}) {
-      solution ${this.solutionQueryString}
-    }
+   
     }
     `;
     this.contributionsQueryRef = this.apollo.watchQuery({
@@ -509,9 +499,7 @@ export class DashboardComponent implements OnInit, OnDestroy {
       }
       users(where:{id:{_eq:${this.auth.currentUserValue.id}}}) {
         organizationByOrganizationId{
-          users(where:{id:{_neq:${this.auth.currentUserValue.id}}}) ${
-      this.userQueryString
-    }
+          users(where:{id:{_neq:${this.auth.currentUserValue.id}}}) ${this.userQueryString}
         }
       }
     }
