@@ -27,9 +27,10 @@ import {
   MatAutocomplete
 } from "@angular/material";
 import { Apollo } from "apollo-angular";
-import swal from "sweetalert2";
 
 import gql from "graphql-tag";
+import swal from "sweetalert2";
+
 import { TagsService } from "../../services/tags.service";
 import { FilesService } from "../../services/files.service";
 import { UsersService } from "../../services/users.service";

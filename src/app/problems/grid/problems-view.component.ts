@@ -70,11 +70,16 @@ export class ProblemsViewComponent implements OnInit, OnDestroy {
         params
       );
 
-      console.log(
-        this.filterService.location_filter_header,
-        "location filter header",
-        this.filterService.sector_filter_query
-      );
+      // console.log(
+      //   this.filterService.location_filter_header,
+      //   "location filter header",
+      //   this.filterService.sector_filter_query
+      // );
+
+      // console.log(
+      //   this.filterService.sector_filter_query,
+      //   "sector filter query"
+      // );
 
       this.problemViewQuery = this.apollo.watchQuery<any>({
         query: gql`
@@ -157,7 +162,7 @@ export class ProblemsViewComponent implements OnInit, OnDestroy {
             // console.log("PROBLEMS", result.data.problems_tags);
 
             this.problems = result.data.problems;
-            console.log("PROBLEMS in Component", this.problems);
+            // console.log("PROBLEMS in Component", this.problems);
           } else {
             this.problems = [];
           }
