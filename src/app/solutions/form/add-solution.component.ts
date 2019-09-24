@@ -32,7 +32,7 @@ var Buffer = require("buffer/").Buffer;
 import { FormBuilder } from "@angular/forms";
 import { take } from "rxjs/operators";
 import { HttpClient } from "@angular/common/http";
-
+import { FilterService } from "../../services/filter.service";
 import { Content } from "@angular/compiler/src/render3/r3_ast";
 
 import { COMMA, ENTER } from "@angular/cdk/keycodes";
@@ -211,7 +211,8 @@ export class AddSolutionComponent
     private auth: AuthService,
     private here: GeocoderService,
     private apollo: Apollo,
-    private http: HttpClient
+    private http: HttpClient,
+    private filterService: FilterService
   ) {
     this.type = this.formBuilder.group({
       // To add a validator, we must first convert the string value into an array. The first item in the array is the default value if any, then the next item in the array is the validator. Here we are adding a required validator meaning that the firstName attribute must have a value in it.
@@ -408,7 +409,10 @@ export class AddSolutionComponent
       this.http
         .post(
           "https://elasticsearch-microservice.dev.jaagalabs.com/search_solutions",
-          { keyword: solutionSearchInput }
+          {
+            keyword: solutionSearchInput,
+            filter: this.filterService.sector_filter_query
+          }
         )
         .subscribe(
           searchResults => {
@@ -605,7 +609,7 @@ export class AddSolutionComponent
       this.http
         .post(
           "https://elasticsearch-microservice.dev.jaagalabs.com/search_problems",
-          { keyword: keyword }
+          { keyword: keyword, filter: this.filterService.sector_filter_query }
         )
         .subscribe(
           searchResults => {

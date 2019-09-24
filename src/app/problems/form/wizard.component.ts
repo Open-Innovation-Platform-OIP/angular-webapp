@@ -42,6 +42,7 @@ import { first, take } from "rxjs/operators";
 import { ProblemService } from "../../services/problem.service";
 import { GeocoderService } from "../../services/geocoder.service";
 import { HttpClient } from "@angular/common/http";
+import { FilterService } from "../../services/filter.service";
 
 declare var H: any;
 declare const $: any;
@@ -162,7 +163,8 @@ export class WizardComponent
     private auth: AuthService,
     private problemService: ProblemService,
     private geoService: GeocoderService,
-    private http: HttpClient
+    private http: HttpClient,
+    private filterService: FilterService
   ) {
     canProceed = true;
 
@@ -915,7 +917,7 @@ export class WizardComponent
       this.http
         .post(
           "https://elasticsearch-microservice.dev.jaagalabs.com/search_problems",
-          { keyword: searchKey }
+          { keyword: searchKey, filter: this.filterService.sector_filter_query }
         )
         .subscribe(
           searchResults => {

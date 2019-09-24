@@ -2,17 +2,22 @@ import { Injectable } from "@angular/core";
 import { Apollo } from "apollo-angular";
 import gql from "graphql-tag";
 import { HttpClient } from "@angular/common/http";
+import { FilterService } from "../services/filter.service";
 
 @Injectable({
   providedIn: "root"
 })
 export class SearchService {
-  constructor(private apollo: Apollo, private http: HttpClient) {}
+  constructor(
+    private apollo: Apollo,
+    private http: HttpClient,
+    private filterService: FilterService
+  ) {}
 
   globalSearch(keyword) {
     return this.http.post(
       "https://elasticsearch-microservice.dev.jaagalabs.com/global_search",
-      { keyword: keyword }
+      { keyword: keyword, filter: this.filterService.sector_filter_query }
     );
 
     // return results;

@@ -490,14 +490,14 @@ export class DashboardComponent implements OnInit, OnDestroy {
   getRecommendedUsers() {
     const recommendedUsersQuery = gql`
     {
-      users_tags(where:{user_id:{_eq:${this.auth.currentUserValue.id}}}) {
+      users_tags(where:{user_id:{_eq:${this.auth.currentUserValue.id}},user:{users_tags:{tag:{id:{${this.filterService.sector_filter_query}}}}}}) {
         tag{
           users_tags (where:{user_id:{_neq:${this.auth.currentUserValue.id}}}){
             user ${this.userQueryString}
           }
         }
       }
-      users(where:{id:{_eq:${this.auth.currentUserValue.id}}}) {
+      users(where:{id:{_eq:${this.auth.currentUserValue.id}},users_tags:{tag:{id:{${this.filterService.sector_filter_query}}}}}) {
         organizationByOrganizationId{
           users(where:{id:{_neq:${this.auth.currentUserValue.id}}}) ${this.userQueryString}
         }
