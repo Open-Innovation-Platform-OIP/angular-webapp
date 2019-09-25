@@ -553,7 +553,7 @@ export class AddUserProfileComponent implements OnInit, OnChanges {
           this.user.photo_url = {};
           this.user.photo_url.fileEndpoint = values["fileEndpoint"];
           this.user.photo_url.mimeType = this.imageBlob["type"];
-          this.user.photo_url.key = this.imageBlob["name"];
+          this.user.photo_url.key = values["key"];
 
           this.updateProfileToDb();
         })

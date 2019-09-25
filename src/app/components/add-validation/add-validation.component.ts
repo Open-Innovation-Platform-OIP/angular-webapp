@@ -45,11 +45,11 @@ export class AddValidationComponent implements OnInit {
         this.filesService
           .fileUpload(file, file.type)
 
-          .then(data => {
+          .then(values => {
             this.validationData.files.push({
-              fileEndpoint: data["fileEndpoint"],
+              fileEndpoint: values["fileEndpoint"],
               mimeType: file.type,
-              key: file.name
+              key: values["key"]
             });
           })
           .catch(e => console.log("Err:: ", e));
@@ -80,9 +80,18 @@ export class AddValidationComponent implements OnInit {
   }
 
   removeAttachment(index) {
+    let fileName;
     if (this.validationData && this.validationData.files.length < 2) {
       this.validationData.files = [];
     } else {
+      fileName = this.validationData.files[index].fileEndpoint.split("/")[1];
+      this.filesService.deleteFile(fileName).subscribe(
+        result => console.log(result),
+        error => {
+          console.log(error);
+        }
+      );
+
       this.validationData.files.splice(index, 1);
     }
   }

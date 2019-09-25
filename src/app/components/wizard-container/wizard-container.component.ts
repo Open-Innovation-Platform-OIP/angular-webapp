@@ -912,7 +912,7 @@ export class WizardContainerComponent
                   this.content.image_urls.push({
                     fileEndpoint: values["fileEndpoint"],
                     mimeType: event.target.files[i].type,
-                    key: file.name
+                    key: values["key"]
                   });
                   if (!this.content.featured_url) {
                     this.content.featured_url = this.content.image_urls[0].fileEndpoint;
@@ -930,11 +930,11 @@ export class WizardContainerComponent
           this.filesService
             .fileUpload(video, mimeType)
 
-            .then(data => {
+            .then(values => {
               this.content.video_urls.push({
-                fileEndpoint: data["fileEndpoint"],
+                fileEndpoint: values["fileEndpoint"],
                 mimeType: event.target.files[i].type,
-                key: file.name
+                key: values["key"]
               });
             })
             .catch((
@@ -948,11 +948,11 @@ export class WizardContainerComponent
           this.filesService
             .fileUpload(doc, mimeType)
 
-            .then(data => {
+            .then(values => {
               this.content.attachments.push({
-                fileEndpoint: data["fileEndpoint"],
+                fileEndpoint: values["fileEndpoint"],
                 mimeType: event.target.files[i].type,
-                key: file.name
+                key: values["key"]
               });
             })
             .catch(e => {}); //console.log("Err:: ", e));

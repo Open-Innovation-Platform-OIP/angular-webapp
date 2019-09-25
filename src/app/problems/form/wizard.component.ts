@@ -371,7 +371,8 @@ export class WizardComponent
                         }
                         `
           })
-          .valueChanges.subscribe(result => {
+          .valueChanges.pipe(take(1))
+          .subscribe(result => {
             console.log(result, "result");
             // //console.log(result, "pppp>>>>>>>>");
             if (

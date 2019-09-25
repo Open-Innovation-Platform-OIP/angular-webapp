@@ -1666,18 +1666,20 @@ export class AddSolutionComponent
   }
 
   removeSelectedItem(type: string, index: number) {
+    console.log("delete index,", index, this.solution);
     let fileName;
     switch (type) {
       case "image":
         if (
-          this.solution.video_urls[index].fileEndpoint ===
+          this.solution.image_urls[index].fileEndpoint ===
           this.solution.featured_url
         ) {
           this.solution.featured_url = "";
           this.solution.featured_type = "";
         }
-        this.solution.image_urls.splice(index, 1);
         fileName = this.solution.image_urls[index].fileEndpoint.split("/")[1];
+        this.solution.image_urls.splice(index, 1);
+
         this.filesService.deleteFile(fileName).subscribe(
           result => console.log(result),
           error => {
@@ -1696,8 +1698,9 @@ export class AddSolutionComponent
           this.solution.featured_url = "";
           this.solution.featured_type = "";
         }
-        this.solution.video_urls.splice(index, 1);
         fileName = this.solution.video_urls[index].fileEndpoint.split("/")[1];
+        this.solution.video_urls.splice(index, 1);
+
         this.filesService.deleteFile(fileName).subscribe(
           result => console.log(result),
           error => {
@@ -1707,17 +1710,18 @@ export class AddSolutionComponent
         break;
 
       case "embed":
-        this.solution.embed_urls.splice(index, 1);
         if (this.solution.embed_urls[index] === this.solution.featured_url) {
           this.solution.featured_url = "";
           this.solution.featured_type = "";
         }
+        this.solution.embed_urls.splice(index, 1);
 
         break;
 
       case "link":
-        this.solution.attachments.splice(index, 1);
         fileName = this.solution.attachments[index].fileEndpoint.split("/")[1];
+        this.solution.attachments.splice(index, 1);
+
         this.filesService.deleteFile(fileName).subscribe(
           result => console.log(result),
           error => {
@@ -1784,7 +1788,7 @@ export class AddSolutionComponent
                   this.solution.image_urls.push({
                     fileEndpoint: values["fileEndpoint"],
                     mimeType: event.target.files[i].type,
-                    key: file.name
+                    key: values["key"]
                   });
                   if (!this.solution.featured_url) {
                     this.solution.featured_url = this.solution.image_urls[0].fileEndpoint;
@@ -1802,11 +1806,11 @@ export class AddSolutionComponent
           this.filesService
             .fileUpload(video, mimeType)
 
-            .then(data => {
+            .then(values => {
               this.solution.video_urls.push({
-                fileEndpoint: data["fileEndpoint"],
+                fileEndpoint: values["fileEndpoint"],
                 mimeType: event.target.files[i].type,
-                key: file.name
+                key: values["key"]
               });
             })
             .catch(e => console.log("Err:: ", e));
@@ -1818,11 +1822,11 @@ export class AddSolutionComponent
           this.filesService
             .fileUpload(doc, mimeType)
 
-            .then(data => {
+            .then(values => {
               this.solution.attachments.push({
-                fileEndpoint: data["fileEndpoint"],
+                fileEndpoint: values["fileEndpoint"],
                 mimeType: event.target.files[i].type,
-                key: file.name
+                key: values["key"]
               });
             })
             .catch(e => console.log("Err:: ", e));

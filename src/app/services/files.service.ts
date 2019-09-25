@@ -82,12 +82,24 @@ export class FilesService {
     });
     let options = { headers: headers };
     this.showSpinner();
+    const fileName = file.name.substring(0, file.name.lastIndexOf("."));
+    const fileExt = file.name.substring(
+      file.name.lastIndexOf(".") + 1,
+      file.name.length
+    );
+    const uniqueFileName = (
+      fileName +
+      "-" +
+      Date.now() +
+      "." +
+      fileExt
+    ).toLowerCase();
 
     return new Promise((resolve, reject) => {
       this.http
         .post(
           fileUploadVariables.UploadUrlEndpoint,
-          { file_data: `${fileUploadVariables.bucketName}/${file.name}` },
+          { file_data: `${fileUploadVariables.bucketName}/${uniqueFileName}` },
           options
         )
         .subscribe(
@@ -107,8 +119,9 @@ export class FilesService {
                   result => {
                     console.log(result, "minio upload");
                     let returnObject = {
-                      fileEndpoint: `${fileUploadVariables.bucketName}/${file.name}`,
-                      type: type
+                      fileEndpoint: `${fileUploadVariables.bucketName}/${uniqueFileName}`,
+                      type: type,
+                      key: uniqueFileName
                     };
                     resolve(returnObject);
                     this.hideSpinner();
