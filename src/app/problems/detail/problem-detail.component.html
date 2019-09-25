@@ -14,8 +14,8 @@
       <!--Problem Details-->
       <div class="col-md-8">
         <div class="card card-product">
-          <div class="card-header card-header-warning">
-            <h4 class="card-title">{{problemData.title}}</h4>
+          <div class="card-header card-header-warning" tabindex="0">
+            <h1 class="card-title" style="font-size: 2rem;">{{problemData.title}}</h1>
             <p class="card-category"><b>Created By :
                 {{ (auth.currentUserValue.id == problemData.user_id) ? 'You' : problemOwner }}</b></p>
           </div>
@@ -35,7 +35,7 @@
                   </div>
                 </div>
               </div>
-              <div class="col-md-8">
+              <div class="col-md-8" tabindex="0">
                 <strong *ngIf="problemData.description">Description</strong>
                 <p class="description" style="white-space: pre-wrap;">{{problemData.description}}</p>
 
@@ -101,19 +101,25 @@
             </div>
           </div>
           <div class="card-footer">
-
-
             <div class="stats">
-              <i class="material-icons actions" (click)="toggleVoteProblem()"
-                [ngStyle]="{'color':voters.has(userId) ? '#1E90FF' : 'black' }">
-                thumb_up
-              </i>
-              <span>{{voters.size}}</span>
-              <i class="material-icons actions col-md-3" (click)="toggleWatchProblem()"
-                [ngStyle]="{'color':watchers.has(userId) ? '#1E90FF' : 'black' }">
-                visibility
-              </i>
-              <span> {{watchers.size}}</span>
+              <a href="javascript:void(0)" (click)="toggleVoteProblem()" role="button"
+                [attr.aria-pressed]="voters.has(userId)">
+                <i class="material-icons actions" [ngStyle]="{'color':voters.has(userId) ? '#1E90FF' : 'black' }"
+                  aria-label="number of likes">
+                  thumb_up
+                </i>
+                <span>{{voters.size}}</span>
+              </a>
+
+              <a class="mx-2" href="javascript:void(0)" (click)="toggleWatchProblem()" role="button"
+                [attr.aria-pressed]="watchers.has(userId)">
+                <i class="material-icons actions" [ngStyle]="{'color':watchers.has(userId) ? '#1E90FF' : 'black' }"
+                  aria-label="problem watched">
+                  visibility
+                </i>
+                <span>{{watchers.size}}</span>
+              </a>
+
               <!-- <i *ngIf="userId===problemData.user_id" [routerLink]="
                 '/problems/'+ problemData.id+'/edit'" class="material-icons actions">
                 create
@@ -132,7 +138,8 @@
               </button>
               <span>&nbsp;</span>
               <span>&nbsp;</span>
-              <button href="#" class="btn btn-sm btn-warning" data-toggle="dropdown" aria-expanded="true">
+              <button href="javascript:void(0)" class="btn btn-sm btn-warning" data-toggle="dropdown"
+                aria-expanded="false" (click)="shareBtnFocus()">
                 <i class="material-icons actions">
                   share
                 </i>
@@ -145,7 +152,6 @@
                 <li *ngIf="channels.sms"><a (click)="smsShare()">SMS</a></li>
               </ul>
             </div>
-
           </div>
         </div>
         <!--Problem Details-->

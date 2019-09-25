@@ -103,7 +103,7 @@ import { AuthInterceptor } from "./services/auth-interceptor";
     // WizardComponent
   ]
 })
-export class MaterialModule {}
+export class MaterialModule { }
 
 // Sentry.init({
 //   dsn: "https://aa3877830cee4ba6b6999be089316f57@sentry.io/1408858"
@@ -140,4 +140,4 @@ export class MaterialModule {}
   ],
   bootstrap: [AppComponent]
 })
-export class AppModule {}
+export class AppModule { }

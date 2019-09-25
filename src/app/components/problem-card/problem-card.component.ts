@@ -16,6 +16,7 @@ const misc: any = {
 })
 export class ProblemCardComponent implements OnInit {
   @Input() problemData: any;
+  @Input() index: number;
   @Input() usedInSmartSearch: Boolean = false;
   @Input() showAddButton: Boolean = false;
   // filesService.fileAccessUrl: string = "";
@@ -30,7 +31,7 @@ export class ProblemCardComponent implements OnInit {
   // modifiedAt: any;
   // sectors: any[] = [];
 
-  constructor(private router: Router, private filesService: FilesService) {}
+  constructor(private router: Router, private filesService: FilesService) { }
 
   ngOnInit() {
     // this.filesService.fileAccessUrl = fileUploadVariables.accessUrl + "/";
