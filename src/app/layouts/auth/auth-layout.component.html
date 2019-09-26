@@ -4,7 +4,7 @@
       <a class="navbar-brand d-none d-sm-none d-md-block" [routerLink]="['/dashboard']">Solve Together</a>
       <a class="navbar-brand d-block d-sm-block d-md-none" [routerLink]="['/dashboard']">Solve Together</a>
     </div>
-    <button mat-button class="navbar-toggler" type="button" aria-label="menu" aria-expanded="false"
+    <button mat-button class="navbar-toggler" type="button" aria-label="menu" [attr.aria-expanded]="[sidebarVisible]"
       (click)="sidebarToggle()">
       <span class="sr-only">Toggle navigation</span>
       <span class="navbar-toggler-icon icon-bar"></span>
