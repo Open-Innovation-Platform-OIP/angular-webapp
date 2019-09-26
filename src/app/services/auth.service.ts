@@ -30,7 +30,8 @@ interface verificationDetails {
 })
 export class AuthService {
   // authEndpoint = "https://auth-new.socialalpha.jaagalabs.com/auth/";
-  authEndpoint = "https://sa-auth.cap.jaagalabs.com/auth/";
+  authEndpoint = "http://sa-auth-test.cap.jaagalabs.com/auth/";
+
   private jwtHelper;
   public user: Observable<any>;
   private currentUserSubject: BehaviorSubject<User>;
@@ -93,6 +94,7 @@ export class AuthService {
       )
       .pipe(
         map(user => {
+          console.log(user, "user login");
           if (user && user["token"] && user["id"]) {
             user["email"] = loginDetails.email;
             // localStorage.setItem('currentUser', JSON.stringify(user));

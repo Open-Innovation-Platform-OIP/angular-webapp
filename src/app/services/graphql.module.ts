@@ -10,9 +10,11 @@ export function createApollo(httpLink: HttpLink) {
   const currentUser = JSON.parse(localStorage.getItem("currentUser"));
   if (currentUser) {
     token = currentUser["token"];
+    // console.log(token, "token");
   }
   let headers = <HttpHeaders>{};
   if (token) {
+    console.log(token, "token==");
     headers = new HttpHeaders()
       .set("Content-Type", "application/json")
       .set("Authorization", `Bearer ${token}`);
