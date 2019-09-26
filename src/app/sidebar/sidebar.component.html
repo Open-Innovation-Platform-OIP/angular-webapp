@@ -8,7 +8,8 @@
     <!-- <a href="" class="simple-text logo-normal" style="font-size: 0.8em;">
         Solve Together
       </a> -->
-    <i class="material-icons" (click)="sidebarClose()" style="cursor: pointer; margin-top: 0.1em;margin-left: 9em;">
+    <i class="material-icons" (click)="sidebarClose()" aria-label="close"
+      style="cursor: pointer; margin-top: 0.1em;margin-left: 9em;">
       clear
     </i>
   </div>
@@ -152,15 +153,18 @@
     </li>
 
     <li class="nav-item" *ngIf="!auth.currentUserValue.id">
-      <a class="nav-link" [routerLink]="'/auth/register'" queryParamsHandling="merge">
+      <a class="nav-link" [routerLink]="'/auth/register'" tabindex="-1" aria-label="register"
+        queryParamsHandling="merge">
         <i class="material-icons">person</i>
         <p>
-          <span class="d-lg-none d-md-block">Register</span>
+          Register
+          <!-- <span class="d-lg-none d-md-block">Register</span> -->
         </p>
       </a>
     </li>
     <li class="nav-item" *ngIf="!auth.currentUserValue.id">
-      <a class="nav-link" [routerLink]="'/auth/login'" queryParamsHandling="merge">
+      <a class="nav-link" [routerLink]="'/auth/login'" aria-disabled="true" aria-label="login"
+        queryParamsHandling="merge">
         <i class="material-icons">person</i>
         <p>
           <span class="d-lg-none d-md-block">Login</span>

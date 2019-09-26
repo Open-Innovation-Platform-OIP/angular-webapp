@@ -16,7 +16,7 @@ const misc: any = {
 })
 export class ProblemCardComponent implements OnInit {
   @Input() problemData: any;
-  @Input() index: number;
+  @Input() index: number = null;
   @Input() usedInSmartSearch: Boolean = false;
   @Input() showAddButton: Boolean = false;
   // filesService.fileAccessUrl: string = "";

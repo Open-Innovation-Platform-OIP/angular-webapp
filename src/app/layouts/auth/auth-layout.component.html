@@ -4,7 +4,8 @@
       <a class="navbar-brand d-none d-sm-none d-md-block" [routerLink]="['/dashboard']">Solve Together</a>
       <a class="navbar-brand d-block d-sm-block d-md-none" [routerLink]="['/dashboard']">Solve Together</a>
     </div>
-    <button mat-button class="navbar-toggler" type="button" (click)="sidebarToggle()">
+    <button mat-button class="navbar-toggler" type="button" aria-label="menu" aria-expanded="false"
+      (click)="sidebarToggle()">
       <span class="sr-only">Toggle navigation</span>
       <span class="navbar-toggler-icon icon-bar"></span>
       <span class="navbar-toggler-icon icon-bar"></span>
@@ -18,12 +19,12 @@
           </a>
         </li> -->
         <li class="nav-item" routerLinkActive="active">
-          <a class="nav-link" [routerLink]="['/auth/register']" queryParamsHandling="merge">
+          <a class="nav-link" [routerLink]="['/auth/register']" aria-label="register" queryParamsHandling="merge">
             <i class="material-icons">person_add</i> Register
           </a>
         </li>
         <li class="nav-item" routerLinkActive="active">
-          <a class="nav-link" [routerLink]="['/auth/login']" queryParamsHandling="merge">
+          <a class="nav-link" [routerLink]="['/auth/login']" aria-label="login" queryParamsHandling="merge">
             <i class="material-icons">fingerprint</i> Login
           </a>
         </li>

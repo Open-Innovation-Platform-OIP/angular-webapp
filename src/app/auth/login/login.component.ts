@@ -1,4 +1,4 @@
-import { Component, OnInit, ElementRef, OnDestroy, Renderer2, ViewChild, AfterViewInit, ChangeDetectorRef, NgZone } from "@angular/core";
+import { Component, OnInit, ElementRef, OnDestroy } from "@angular/core";
 import { Title } from '@angular/platform-browser';
 import { FocusMonitor, LiveAnnouncer } from '@angular/cdk/a11y';
 import { isEmail } from "validator";
@@ -14,7 +14,7 @@ declare var $: any;
   selector: "app-login-cmp",
   templateUrl: "./login.component.html"
 })
-export class LoginComponent implements OnInit, OnDestroy, AfterViewInit {
+export class LoginComponent implements OnInit, OnDestroy {
   loginDetails = {
     email: "",
     password: ""
@@ -35,21 +35,13 @@ export class LoginComponent implements OnInit, OnDestroy, AfterViewInit {
     private router: Router,
     private userService: UsersService,
     private currentTitle: Title,
-    private render: Renderer2,
     private focusMonitor: FocusMonitor,
-    private _cdr: ChangeDetectorRef,
-    private _ngZone: NgZone,
     private liveAnnouncer: LiveAnnouncer,
   ) {
     this.nativeElement = element.nativeElement;
     this.sidebarVisible = false;
     setTimeout(() => {
     }, 1000);
-  }
-
-  ngAfterViewInit() {
-    const pageHeading = this.element.nativeElement.querySelector('#heading');
-
   }
 
   ngOnInit() {

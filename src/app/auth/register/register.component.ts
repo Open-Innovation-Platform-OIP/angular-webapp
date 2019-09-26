@@ -1,5 +1,6 @@
-import { Component, OnInit, OnDestroy } from "@angular/core";
+import { Component, OnInit, OnDestroy, ElementRef } from "@angular/core";
 import { Title } from '@angular/platform-browser';
+import { FocusMonitor } from '@angular/cdk/a11y';
 import { isEmail } from "validator";
 import { AuthService } from "src/app/services/auth.service";
 import { Router, ActivatedRoute, NavigationEnd } from "@angular/router";
@@ -25,6 +26,8 @@ export class RegisterComponent implements OnInit, OnDestroy {
   constructor(
     private auth: AuthService,
     private currentTitle: Title,
+    private focusMonitor: FocusMonitor,
+    private elementRef: ElementRef,
     private router: Router) { }
 
   ngOnInit() {
@@ -39,6 +42,11 @@ export class RegisterComponent implements OnInit, OnDestroy {
     const body = document.getElementsByTagName("body")[0];
     body.classList.add("register-page");
     body.classList.add("off-canvas-sidebar");
+
+    const pageHeading = this.elementRef.nativeElement.querySelector('#heading');
+    setTimeout(() => {
+      this.focusMonitor.focusVia(pageHeading, 'program');
+    }, 1000);
   }
 
   ngOnDestroy() {

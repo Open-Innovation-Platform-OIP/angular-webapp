@@ -110,7 +110,7 @@
         <!-- <app-problem-card *ngIf="i < 4" [problemData]="problem"></app-problem-card> -->
         <ng-container *ngIf="contribution.problem_locations">
 
-          <app-problem-card *ngIf="i < 4" [problemData]="contribution"></app-problem-card>
+          <app-problem-card *ngIf="i < 4" [index]="i" [problemData]="contribution"></app-problem-card>
 
 
         </ng-container>
