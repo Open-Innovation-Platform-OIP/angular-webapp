@@ -33,7 +33,7 @@ export class RegisterComponent implements OnInit, OnDestroy {
   ngOnInit() {
     this.router.events
       .subscribe((event) => {
-        console.log(event);
+        // console.log(event);
         this.currentTitle.setTitle('Register');
       }
       );
