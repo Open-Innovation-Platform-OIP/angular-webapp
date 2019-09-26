@@ -27,7 +27,8 @@ export class ProblemCardComponent implements OnInit {
   numOfWatchers: Number = 0;
   numOfValidations: Number = 0;
   validated: Boolean = false;
-  link = "";
+  link = '';
+  imageAlt = 'default image';
   // modifiedAt: any;
   // sectors: any[] = [];
 

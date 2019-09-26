@@ -1,7 +1,8 @@
 import { Component, OnInit, OnDestroy } from "@angular/core";
+import { Title } from '@angular/platform-browser';
 import { isEmail } from "validator";
 import { AuthService } from "src/app/services/auth.service";
-import { Router, ActivatedRoute } from "@angular/router";
+import { Router, ActivatedRoute, NavigationEnd } from "@angular/router";
 import { first } from "rxjs/operators";
 import swal from "sweetalert2";
 declare var $: any;
@@ -21,13 +22,25 @@ export class RegisterComponent implements OnInit, OnDestroy {
   passwordRegex = new RegExp("^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.{6,})");
   // mediumRegex = new RegExp("^(((?=.*[a-z])(?=.*[A-Z]))|((?=.*[a-z])(?=.*[0-9]))|((?=.*[A-Z])(?=.*[0-9])))(?=.{6,})");
   loading = false;
-  constructor(private auth: AuthService, private router: Router) {}
+  constructor(
+    private auth: AuthService,
+    private currentTitle: Title,
+    private router: Router) { }
 
   ngOnInit() {
+    this.router.events
+      .subscribe((event) => {
+        console.log(event);
+        this.currentTitle.setTitle('Register');
+      }
+      );
+    // this.currentTitle.setTitle('Register');
+
     const body = document.getElementsByTagName("body")[0];
     body.classList.add("register-page");
     body.classList.add("off-canvas-sidebar");
   }
+
   ngOnDestroy() {
     const body = document.getElementsByTagName("body")[0];
     body.classList.remove("register-page");

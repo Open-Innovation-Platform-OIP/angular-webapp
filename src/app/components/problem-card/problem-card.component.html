@@ -1,25 +1,26 @@
-<div class="card card-product actions problem-card" tabindex="0">
-  <div class="card-header card-header-image" (click)="navigation()">
+<div class="card card-product actions problem-card" role="group">
+  <div class="card-header card-header-image" tabindex="0" (click)="navigation()">
+    <div [attr.aria-label]="['problem',index +1]"></div>
     <img src="{{
         filesService.fileAccessUrl+problemData.featured_url && checkUrlIsImg(filesService.fileAccessUrl+problemData.featured_url)
           ? filesService.fileAccessUrl+problemData.featured_url
           : './assets/img/image_placeholder.jpg'
-      }}" width="200px" height="180px" style="object-fit:inherit;" alt="" />
+      }}" width="200px" height="180px" style="object-fit:inherit;" [attr.alt]="[imageAlt]" />
   </div>
 
   <div class="card-body" (click)="navigation()">
-    <div [attr.aria-label]="['problem card',index +1,'title']"></div>
-    <div style="text-align: center;">
-      <a href="javascript:void(0)" (click)="navigation()" role="button" class="card-title title "
+    <div [attr.aria-label]="['problem',index +1]"></div>
+    <div style="text-align: center;" aria-level="1" role="heading">
+      <a href="javascript:void(0);" (click)="navigation()" class="card-title title "
         *ngIf="problemData.title.length < 30; else longTitle">
         {{ problemData.title }}
       </a>
     </div>
 
     <ng-template #longTitle>
-      <p class="card-title title">
+      <h1 style="font-size: 2rem;" class="card-title title">
         {{ problemData.title.substring(0, 30) + "..." }}
-      </p>
+      </h1>
     </ng-template>
     <div class="description">
       <strong>Description</strong>
@@ -44,7 +45,7 @@
     </button>
   </div> -->
 
-  <div *ngIf="!usedInSmartSearch" aria-label="click for help" tabindex="-1" aria-hidden="true"
+  <div *ngIf="!usedInSmartSearch" aria-hidden="true"
     style="background-color: #FF625E; width: 3em; box-shadow: 0 4px 6px rgba(25, 25, 25, 0.2);">
     <i class="material-icons" style="color: #FFFFFF; margin-top: 0.2em; font-size: 1.2em;">
       help
