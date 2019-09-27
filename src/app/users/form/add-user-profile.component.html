@@ -34,7 +34,8 @@
                           <input type="file" name="..." (change)="getBlob($event)" accept="image/*" />
                         </label>
                         <button *ngIf="objectKeys(user.photo_url).length"
-                          class="btn btn-sm btn-danger btn-round fileinput-new" (click)="user.photo_url = {}">
+                          class="btn btn-sm btn-danger btn-round fileinput-new"
+                          (click)="deleteProfileImage(user.photo_url)">
                           <i class="material-icons">
                             delete_outline
                           </i>

@@ -141,6 +141,21 @@ export class AddUserProfileComponent implements OnInit, OnChanges {
     );
   }
 
+  deleteProfileImage(image) {
+    console.log(image);
+    let fileName = image.fileEndpoint.split("/")[1];
+
+    this.filesService.deleteFile(fileName).subscribe(
+      result => {
+        console.log(result);
+        this.user.photo_url = {};
+      },
+      error => {
+        console.log(error);
+      }
+    );
+  }
+
   checkPhoneNumber(phone) {
     console.log("pn>>>> ", phone);
 
