@@ -390,8 +390,9 @@ export class ProblemDetailComponent implements OnInit, OnDestroy {
 
   ngOnInit() {
     this.userId = Number(this.auth.currentUserValue.id);
+
     // this.filesService.fileAccessUrl = fileUploadVariables.accessUrl + "/";
-    // //console.log(this.auth.currentUserValue, "current user value");
+    console.log(this.auth.currentUserValue, "current user value");
 
     this.getUserData(Number(this.auth.currentUserValue.id));
 

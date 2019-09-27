@@ -3,6 +3,8 @@ import { Routes } from "@angular/router";
 import { AdminLayoutComponent } from "./layouts/admin/admin-layout.component";
 import { AuthLayoutComponent } from "./layouts/auth/auth-layout.component";
 import { AuthGuard } from "./services/auth.guard";
+import { AdminGuard } from "./services/admin.guard";
+
 export const AppRoutes: Routes = [
   {
     path: "",
@@ -45,6 +47,11 @@ export const AppRoutes: Routes = [
         path: "search",
         loadChildren:
           "./global-search-view/global-search-view.module#GlobalSearchViewModule"
+      },
+      {
+        path: "admin",
+        loadChildren: "./admin-view/admin-view.module#AdminViewModule",
+        canActivate: [AdminGuard]
       },
       {
         path: "landing-page",

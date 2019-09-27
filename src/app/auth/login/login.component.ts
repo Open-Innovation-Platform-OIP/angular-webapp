@@ -59,7 +59,8 @@ export class LoginComponent implements OnInit, OnDestroy {
       const user = {
         id: params["id"],
         email: params["email"],
-        token: params["token"]
+        token: params["token"],
+        role: params["role"]
       };
       this.returnUrl = params["returnUrl"] || "/";
       console.log(user, "user on enter");

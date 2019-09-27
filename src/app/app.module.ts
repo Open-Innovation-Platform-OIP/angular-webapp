@@ -58,6 +58,7 @@ import { AppRoutes } from "./app.routing";
 import { GraphQLModule } from "./services/graphql.module";
 import { EmbedVideo } from "ngx-embed-video";
 import { AuthInterceptor } from "./services/auth-interceptor";
+import { AdminViewComponent } from './admin-view/admin-view.component';
 // import { WizardComponent } from './solution/form/wizard/wizard.component';
 // import { LandingPageComponent } from './landing-page/landing-page.component';
 // import { AutofocusDirective } from './autofocus.directive';
@@ -101,7 +102,7 @@ import { AuthInterceptor } from "./services/auth-interceptor";
   imports: [GraphQLModule, HttpClientModule, QuillModule, EmbedVideo.forRoot()],
   declarations: [
     // WizardComponent
-  ]
+  AdminViewComponent]
 })
 export class MaterialModule {}
 
