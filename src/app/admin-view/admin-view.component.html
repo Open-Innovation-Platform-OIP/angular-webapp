@@ -1,6 +1,41 @@
-<h1>
-  admin-view works!
-  sadasdasd
-  asdasdasd
-  asdasdasdsad
-</h1>
+<div class="main-content" style="margin-top: 10%;">
+  <div class="container-fluid">
+    <div class="row mt-4">
+
+
+
+      <div class="card" *ngIf="userDataTable&&userDataTable.dataRows">
+        <div class="card-header card-header-icon card-header-rose">
+          <div class="card-icon">
+            <i class="material-icons">assignment</i>
+          </div>
+          <h4 class="card-title ">Users</h4>
+        </div>
+        <div class="card-body">
+          <div class="table-responsive">
+            <table class="table">
+              <thead class="text-primary">
+                <tr>
+                  <th *ngFor="let cell of userDataTable.headerRow">{{ cell }}</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr *ngFor="let row of userDataTable.dataRows">
+                  <td>{{row[0]}}</td>
+                  <td>{{row[1]}}</td>
+
+                  <td>
+                    <mat-checkbox [checked]="row[2]" (change)="adminToggle($event,row)"></mat-checkbox>
+                  </td>
+
+                </tr>
+              </tbody>
+            </table>
+
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</div>

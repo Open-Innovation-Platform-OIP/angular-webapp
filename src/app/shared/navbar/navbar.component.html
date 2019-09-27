@@ -44,12 +44,12 @@
               highlight
             </i>Solutions</a>
         </li>
-        <!-- <li class="nav-item" routerLinkActive="active">
+        <li class="nav-item" routerLinkActive="active" *ngIf="authService.currentUserValue.role==='admin'">
           <a class="nav-link" [routerLink]="['/admin']" queryParamsHandling="merge">
             <i class="material-icons">
-              highlight
+              supervised_user_circle
             </i>Admin</a>
-        </li> -->
+        </li>
       </ul>
     </div>
     <div class="collapse navbar-collapse justify-content-end" id="navigation">

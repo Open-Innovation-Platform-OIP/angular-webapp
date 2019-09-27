@@ -1,13 +1,13 @@
 import { NgModule } from "@angular/core";
 import { RouterModule } from "@angular/router";
 import { CommonModule } from "@angular/common";
+
 import { FormsModule, ReactiveFormsModule } from "@angular/forms";
 import { MdModule } from "../md/md.module";
 import { MaterialModule } from "../app.module";
 import { ComponentsModule } from "../components/components.module";
-// import { DashboardComponent } from "./dashboard.component";
-// import { DashboardRoutes } from "./admin-view.routing";
-// import { ViewAllComponent } from "../view-all/view-all.component";
+import { AdminViewComponent } from "./admin-view.component";
+
 import { NgxUiLoaderModule } from "ngx-ui-loader";
 import { AdminViewRoutes } from "./admin-view.routing";
 
@@ -19,8 +19,11 @@ import { AdminViewRoutes } from "./admin-view.routing";
     MdModule,
     MaterialModule,
     ComponentsModule,
-    NgxUiLoaderModule
+    NgxUiLoaderModule,
+    ReactiveFormsModule
   ],
-  declarations: []
+
+  declarations: [AdminViewComponent],
+  exports: [AdminViewComponent]
 })
 export class AdminViewModule {}

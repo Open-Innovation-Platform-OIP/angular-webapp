@@ -3,7 +3,6 @@ import { Component, OnInit, OnDestroy } from "@angular/core";
 import { Router, ActivatedRoute, ParamMap } from "@angular/router";
 import { Observable, Subscription } from "rxjs";
 import { first, finalize, switchMap } from "rxjs/operators";
-import { TableData } from "../../md/md-table/md-table.component";
 
 import { Apollo, QueryRef } from "apollo-angular";
 import gql from "graphql-tag";
@@ -19,7 +18,7 @@ export class ViewUserProfileComponent implements OnInit, OnDestroy {
   user: any;
   userData: any = {};
   userDataQuery: QueryRef<any>;
-  public tableData1: TableData;
+
 
   interests: any[] = [];
   loggedInUsersProfile: boolean = false;
@@ -43,17 +42,7 @@ export class ViewUserProfileComponent implements OnInit, OnDestroy {
   }
 
   ngOnInit() {
-    this.tableData1 = {
-      headerRow: ["Name", "Organization", "Admin"],
-      dataRows: [
-        ["Dakota Rice", "Niger"],
-        ["Minerva Hooper", "Curaçao"],
-        ["Sage Rodriguez", "Netherlands"],
-        ["Philip Chaney", "Korea, South"],
-        ["Doris Greene", "Malawi"],
-        ["Mason Porter", "Chile"]
-      ]
-    };
+   
 
     console.log("init on user profile");
     this.user = this.route.paramMap.pipe(

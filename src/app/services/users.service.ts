@@ -136,9 +136,10 @@ export class UsersService {
         query: gql`
           query {
             users {
+              is_admin
               id
               name
-              organization
+
               organizationByOrganizationId {
                 name
               }

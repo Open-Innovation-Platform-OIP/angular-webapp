@@ -56,7 +56,7 @@ export class SidebarComponent implements OnInit {
   mobile_menu_visible: any = 0;
 
   constructor(
-    public auth: AuthService,
+    public authService: AuthService,
     private router: Router,
     private element: ElementRef,
     private usersService: UsersService

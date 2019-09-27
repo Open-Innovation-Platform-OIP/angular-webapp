@@ -84,7 +84,8 @@ export class NavbarComponent implements OnInit {
     private auth: AuthService,
     private usersService: UsersService,
     private route: ActivatedRoute,
-    private filesService: FilesService
+    private filesService: FilesService,
+    private authService: AuthService
   ) {
     this.location = location;
     this.nativeElement = element.nativeElement;

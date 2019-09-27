@@ -66,16 +66,16 @@
           </p>
         </a>
       </li>
-      <li class="nav-item" *ngIf="auth.currentUserValue.id">
-        <a class="nav-link" [routerLink]="'/users/'+auth.currentUserValue.id" queryParamsHandling="merge">
+      <li class="nav-item" *ngIf="authService.currentUserValue.id">
+        <a class="nav-link" [routerLink]="'/users/'+authService.currentUserValue.id" queryParamsHandling="merge">
           <i class="material-icons">notifications</i>
           <p>
             <span class="d-lg-none d-md-block">Notifications</span>
           </p>
         </a>
       </li>
-      <li class="nav-item" *ngIf="auth.currentUserValue.id">
-        <a class="nav-link" [routerLink]="'/users/'+auth.currentUserValue.id" queryParamsHandling="merge">
+      <li class="nav-item" *ngIf="authService.currentUserValue.id">
+        <a class="nav-link" [routerLink]="'/users/'+authService.currentUserValue.id" queryParamsHandling="merge">
           <i class="material-icons">person</i>
           <p>
             <span class="d-lg-none d-md-block">My Profile</span>
@@ -121,7 +121,8 @@
   <ul class="nav">
     <li routerLinkActive="active" *ngFor="let menuitem of menuItems" class="nav-item">
       <a [routerLink]="[menuitem.path]" queryParamsHandling="merge"
-        *ngIf="menuitem.type === 'link' && menuitem.title=='Dashboard' && auth.currentUserValue.id" class="nav-link">
+        *ngIf="menuitem.type === 'link' && menuitem.title=='Dashboard' && authService.currentUserValue.id"
+        class="nav-link">
         <i class="material-icons">{{ menuitem.icontype }}</i>
         <p>{{ menuitem.title }}</p>
       </a>
@@ -151,7 +152,17 @@
       </div>
     </li>
 
-    <li class="nav-item" *ngIf="!auth.currentUserValue.id">
+    <li class="nav-item" *ngIf="authService.currentUserValue.id && authService.currentUserValue.role === 'admin'">
+      <a class="nav-link" [routerLink]="'/admin'" queryParamsHandling="merge">
+        <i class="material-icons">supervised_user_circle</i>
+        <p>
+          <span class="d-lg-none d-md-block">Admin</span>
+        </p>
+      </a>
+    </li>
+
+
+    <li class="nav-item" *ngIf="!authService.currentUserValue.id">
       <a class="nav-link" [routerLink]="'/auth/register'" queryParamsHandling="merge">
         <i class="material-icons">person</i>
         <p>
@@ -159,7 +170,7 @@
         </p>
       </a>
     </li>
-    <li class="nav-item" *ngIf="!auth.currentUserValue.id">
+    <li class="nav-item" *ngIf="!authService.currentUserValue.id">
       <a class="nav-link" [routerLink]="'/auth/login'" queryParamsHandling="merge">
         <i class="material-icons">person</i>
         <p>
