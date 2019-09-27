@@ -14,24 +14,15 @@ import { Subscription } from "rxjs";
 })
 export class AdminViewComponent implements OnInit, OnDestroy {
   public userDataTable: TableData;
+  allUsers = {};
 
-  public allUsers = {};
   usersQuery: QueryRef<any>;
   usersSubscription: Subscription;
 
   constructor(private apollo: Apollo, private authService: AuthService) {}
 
   ngOnInit() {
-    this.getUsersFromDB()
-      .then(value => {
-        this.allUsers = value;
-        // console.log(this.allUsers, "all users");
-        this.generateUserTable(this.allUsers);
-        console.log(value);
-      })
-      .catch(error => {
-        console.log(error);
-      });
+    this.getUsersFromDB();
   }
 
   generateUserTable(userData) {
@@ -53,61 +44,56 @@ export class AdminViewComponent implements OnInit, OnDestroy {
   }
 
   getUsersFromDB() {
-    return new Promise((resolve, reject) => {
-      this.usersQuery = this.apollo.watchQuery<any>({
-        query: gql`
-          query {
-            users {
-              is_admin
-              id
-              name
+    this.usersQuery = this.apollo.watchQuery<any>({
+      query: gql`
+        query {
+          users {
+            is_admin
+            id
+            name
 
-              organizationByOrganizationId {
-                name
-              }
+            organizationByOrganizationId {
+              name
             }
           }
-        `,
-        // pollInterval: 500
-        pollInterval: 2000,
-
-        fetchPolicy: "network-only"
-      });
-
-      this.usersSubscription = this.usersQuery.valueChanges.subscribe(
-        ({ data }) => {
-          let allUsers = {};
-          if (data.users.length > 0) {
-            data.users.map(user => {
-              if (user.id !== this.authService.currentUserValue.id) {
-                if (user.id && user.name) {
-                  // console.log(user.name);
-                  allUsers[user.id] = {
-                    id: user.id,
-                    name: user.name,
-                    is_admin: user.is_admin,
-                    organization: "Nil"
-                  };
-                }
-                if (user.organizationByOrganizationId) {
-                  allUsers[user.id].organization =
-                    user.organizationByOrganizationId.name;
-                }
-              }
-            });
-
-            resolve(allUsers);
-          }
-        },
-        error => {
-          reject(error);
         }
-      );
+      `,
+
+      pollInterval: 4000,
+
+      fetchPolicy: "network-only"
     });
+
+    this.usersSubscription = this.usersQuery.valueChanges.subscribe(
+      ({ data }) => {
+        if (data.users.length > 0) {
+          data.users.map(user => {
+            if (user.id !== this.authService.currentUserValue.id) {
+              if (user.id && user.name) {
+                this.allUsers[user.id] = {
+                  id: user.id,
+                  name: user.name,
+                  is_admin: user.is_admin,
+                  organization: "Nil"
+                };
+              }
+              if (user.organizationByOrganizationId) {
+                this.allUsers[user.id].organization =
+                  user.organizationByOrganizationId.name;
+              }
+            }
+          });
+
+          this.generateUserTable(this.allUsers);
+        }
+      },
+      error => {
+        console.log(error);
+      }
+    );
   }
 
   adminToggle(event, user) {
-    // console.log(user, event);
     const userId = user[3];
     const isAdmin = event.checked;
     this.updateUserAdminStatus(isAdmin, userId);
@@ -136,6 +122,7 @@ export class AdminViewComponent implements OnInit, OnDestroy {
           }
         `
       })
+      .pipe(take(1))
       .subscribe(
         data => {
           let user = data.data.update_users.returning[0];
@@ -159,8 +146,6 @@ export class AdminViewComponent implements OnInit, OnDestroy {
   }
 
   ngOnDestroy() {
-    // this.userProblemViewQuery.stopPolling();
-    // this.userProblemViewSubscription.unsubscribe();
     this.usersQuery.stopPolling();
     this.usersSubscription.unsubscribe();
   }
