@@ -62,6 +62,11 @@ export class LoginComponent implements OnInit, OnDestroy {
         token: params["token"],
         role: params["role"]
       };
+      if (user.role == "admin") {
+        user["is_admin"] = true;
+      } else {
+        user["is_admin"] = false;
+      }
       this.returnUrl = params["returnUrl"] || "/";
       console.log(user, "user on enter");
       if (user && user["token"] && user["id"] && user["email"]) {

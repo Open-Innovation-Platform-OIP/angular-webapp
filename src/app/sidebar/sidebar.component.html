@@ -152,7 +152,7 @@
       </div>
     </li>
 
-    <li class="nav-item" *ngIf="authService.currentUserValue.id && authService.currentUserValue.role === 'admin'">
+    <li class="nav-item" *ngIf="authService.currentUserValue.id && authService.currentUserValue.is_admin">
       <a class="nav-link" [routerLink]="'/admin'" queryParamsHandling="merge">
         <i class="material-icons">supervised_user_circle</i>
         <p>
