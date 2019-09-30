@@ -199,21 +199,16 @@ export class LoginComponent implements OnInit, OnDestroy {
               `/auth/verify?email=${this.loginDetails.email}`
             );
           } else if (
-            typeof msg === "string" &&
-            msg.toLowerCase().search("unknown") !== -1
+            typeof msg === 'string' &&
+            msg.toLowerCase().search('unknown') !== -1
           ) {
-            let message =
-              "Unknown email address. Perhaps you have not signed up yet?";
-            this.showNotification([
-              "top",
-              "center",
-              4,
-              "warning",
-              3000,
-              message
-            ]);
+            const message =
+              'Unknown email address. Perhaps you have not signed up yet?';
+            this.showNotification(['top', 'center', 4, 'warning', 3000, message]);
+          } else if (msg instanceof Object && !Object.entries(msg)) {
+            this.login();
           } else {
-            this.showNotification(["top", "center", 4, "warning", 3000, msg]);
+            this.showNotification(['top', 'center', 4, 'warning', 3000, msg]);
           }
           this.loading = false;
           // alert(error.error.errors[0].msg);
