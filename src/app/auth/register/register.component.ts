@@ -46,12 +46,12 @@ export class RegisterComponent implements OnInit, OnDestroy {
 
   ngOnInit() {
     this.registerForm = new FormGroup({
-      emailFormControl: new FormControl('', [
+      email: new FormControl('', [
         Validators.required,
         Validators.email,
       ]),
-      fullname: new FormControl('', [Validators.required]),
-      password: new FormControl('', [Validators.required, Validators.pattern(this.passwordRegex)]),
+      name: new FormControl(null, [Validators.required]),
+      password: new FormControl(null, [Validators.required, Validators.pattern(this.passwordRegex)]),
       confirmPassword: new FormControl(null, [Validators.required], this.passwordMismatch)
     });
 
@@ -141,11 +141,12 @@ export class RegisterComponent implements OnInit, OnDestroy {
     );
   }
 
-  onSubmit() {
-    // console.log(this.registerForm);
-    // console.log(this.registerForm.valid);
+  onSubmit(): void {
     if (this.registerForm.valid) {
+      this.user = { ...this.registerForm.value };
       this.register();
+    } else {
+      alert('Signup form not valid');
     }
   }
 }

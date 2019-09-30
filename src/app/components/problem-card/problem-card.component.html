@@ -8,7 +8,6 @@
   </div>
 
   <div class="card-body" (click)="navigation()">
-    <div [attr.aria-label]="['problem',index +1]"></div>
     <div style="text-align: center;" aria-level="2" role="heading">
       <a href="javascript:void(0);" (click)="navigation()" class="card-title title "
         *ngIf="problemData.title.length < 30; else longTitle">
