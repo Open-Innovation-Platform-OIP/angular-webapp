@@ -43,7 +43,7 @@
 
 
 
-        <div class="row" *ngIf="problems.length" role="region" aria-label="problem cards" tabindex="0">
+        <div class="row" *ngIf="problems.length" role="region" aria-label="problem cards">
             <div class="col-md-3" *ngFor="let problem of problems; let i = index;">
                 <app-problem-card [index]="i" [problemData]="problem"></app-problem-card>
             </div>

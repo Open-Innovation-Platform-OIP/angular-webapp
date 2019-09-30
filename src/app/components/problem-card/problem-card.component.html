@@ -1,6 +1,5 @@
-<div class="card card-product actions problem-card" role="group">
-  <div class="card-header card-header-image" tabindex="0" (click)="navigation()">
-    <div [attr.aria-label]="['problem',index +1]"></div>
+<div class="card card-product actions problem-card" role="group" [attr.aria-label]="['problem',index +1]">
+  <div class="card-header card-header-image" (click)="navigation()">
     <img src="{{
         filesService.fileAccessUrl+problemData.featured_url && checkUrlIsImg(filesService.fileAccessUrl+problemData.featured_url)
           ? filesService.fileAccessUrl+problemData.featured_url
@@ -10,7 +9,7 @@
 
   <div class="card-body" (click)="navigation()">
     <div [attr.aria-label]="['problem',index +1]"></div>
-    <div style="text-align: center;" aria-level="1" role="heading">
+    <div style="text-align: center;" aria-level="2" role="heading">
       <a href="javascript:void(0);" (click)="navigation()" class="card-title title "
         *ngIf="problemData.title.length < 30; else longTitle">
         {{ problemData.title }}
@@ -18,9 +17,9 @@
     </div>
 
     <ng-template #longTitle>
-      <h1 style="font-size: 2rem;" class="card-title title">
+      <p class="card-title title">
         {{ problemData.title.substring(0, 30) + "..." }}
-      </h1>
+      </p>
     </ng-template>
     <div class="description">
       <strong>Description</strong>
@@ -29,7 +28,7 @@
         <p>{{ problemData.description.substring(0,75) + ', ...' }}</p>
       </ng-template>
     </div>
-    <span aria-label="location"><strong> Location(s)</strong></span>
+    <span><strong> Location(s)</strong></span>
     <div *ngFor="let location of problemData.problem_locations; let i = index" class="location">
       <span *ngIf="location.location&& i < 1">{{
         location.location.location_name.substring(0, 35)+", ..."
@@ -52,7 +51,7 @@
     </i>
   </div>
 
-  <div class="card-footer" role="contentinfo"
+  <div class="card-footer"
     *ngIf="problemData.problem_voters || problemData.problem_watchers || problemData.problem_validations">
     <div class="stats">
       <i class="material-icons" aria-label="number of upvotes">

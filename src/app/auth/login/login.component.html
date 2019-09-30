@@ -5,7 +5,7 @@
     <div class="container">
       <div class="row">
         <div class="col-lg-4 col-md-6 col-sm-6 ml-auto mr-auto">
-          <form class="form">
+          <form class="form" autocomplete="off">
             <div class="card card-login card-hidden">
               <div class="card-header card-header-warning text-center">
                 <h1 #mainHeading id="heading" style="font-size: 1.5rem;" class="card-title" tabindex="0">Log in</h1>
@@ -37,7 +37,7 @@
                       </span>
                     </div>
                     <input type="email" class="form-control" name="email" [(ngModel)]="loginDetails.email"
-                      placeholder="Email" autofocus>
+                      placeholder="Email" autofocus aria-required="true">
                   </div>
                 </span>
                 <span class="bmd-form-group">
@@ -48,7 +48,7 @@
                       </span>
                     </div>
                     <input type="password" class="form-control" name="password" [(ngModel)]="loginDetails.password"
-                      placeholder="Password">
+                      placeholder="Password" aria-required="true">
                   </div>
                 </span>
               </div>

@@ -6,7 +6,17 @@ import { AuthService } from "src/app/services/auth.service";
 import { Router, ActivatedRoute, NavigationEnd } from "@angular/router";
 import { first } from "rxjs/operators";
 import swal from "sweetalert2";
+import { FormGroup, FormControl, Validators } from '@angular/forms';
+import { Observable } from 'rxjs';
+
 declare var $: any;
+
+// export function passwordMismatch(control: FormControl): { [s: string]: boolean } {
+//   if (this.passwordMismatch.indexOf(control.value)) {
+//     return { 'mismatch': true };
+//   }
+//   return null;
+// };
 
 @Component({
   selector: "app-register-cmp",
@@ -15,14 +25,18 @@ declare var $: any;
 export class RegisterComponent implements OnInit, OnDestroy {
   // test: Date = new Date();
   user = {
-    name: "",
-    email: "",
-    password: "",
-    confirmPassword: ""
+    name: '',
+    email: '',
+    password: '',
+    confirmPassword: ''
   };
-  passwordRegex = new RegExp("^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.{6,})");
+  passwordRegex = new RegExp('^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.{6,})');
   // mediumRegex = new RegExp("^(((?=.*[a-z])(?=.*[A-Z]))|((?=.*[a-z])(?=.*[0-9]))|((?=.*[A-Z])(?=.*[0-9])))(?=.{6,})");
+
   loading = false;
+  registerForm: FormGroup;
+  sampleForm: FormGroup;
+
   constructor(
     private auth: AuthService,
     private currentTitle: Title,
@@ -31,6 +45,16 @@ export class RegisterComponent implements OnInit, OnDestroy {
     private router: Router) { }
 
   ngOnInit() {
+    this.registerForm = new FormGroup({
+      emailFormControl: new FormControl('', [
+        Validators.required,
+        Validators.email,
+      ]),
+      fullname: new FormControl('', [Validators.required]),
+      password: new FormControl('', [Validators.required, Validators.pattern(this.passwordRegex)]),
+      confirmPassword: new FormControl(null, [Validators.required], this.passwordMismatch)
+    });
+
     this.router.events
       .subscribe((event) => {
         // console.log(event);
@@ -47,6 +71,23 @@ export class RegisterComponent implements OnInit, OnDestroy {
     setTimeout(() => {
       this.focusMonitor.focusVia(pageHeading, 'program');
     }, 1000);
+  }
+
+  passwordMismatch(control: FormControl): Promise<any> | Observable<any> {
+
+    const promise = new Promise((resolve, reject) => {
+      setTimeout(() => {
+        const pwd = control.parent.value['password'];
+        const confirmPwd = control.parent.value['confirmPassword'];
+        if (pwd === confirmPwd) {
+          resolve(null);
+        } else {
+          resolve({ 'mismatch': true });
+        }
+      }, 10);
+    });
+
+    return promise;
   }
 
   ngOnDestroy() {
@@ -89,14 +130,22 @@ export class RegisterComponent implements OnInit, OnDestroy {
         this.loading = false;
         const msg = err.error.message;
         if (
-          typeof msg === "string" &&
-          msg.toLowerCase().search("duplicate") != -1
+          typeof msg === 'string' &&
+          msg.toLowerCase().search('duplicate') != -1
         ) {
-          alert("Email already registered. Please try logging in instead.");
+          alert('Email already registered. Please try logging in instead.');
         } else {
           alert(msg);
         }
       }
     );
+  }
+
+  onSubmit() {
+    // console.log(this.registerForm);
+    // console.log(this.registerForm.valid);
+    if (this.registerForm.valid) {
+      this.register();
+    }
   }
 }
