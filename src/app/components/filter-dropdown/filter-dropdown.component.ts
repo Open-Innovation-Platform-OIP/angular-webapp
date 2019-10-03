@@ -2,6 +2,7 @@ import { Component, OnInit, Input, OnChanges } from "@angular/core";
 import { Router, ActivatedRoute } from "@angular/router";
 import { TagsService } from "../../services/tags.service";
 // import { take } from "rxjs/operators";
+import { FormControl } from '@angular/forms';
 import { GeocoderService } from "../../services/geocoder.service";
 import { FilterService } from "../../services/filter.service";
 
@@ -16,6 +17,8 @@ export class FilterDropdownComponent implements OnInit {
   selectedLocation: any = {};
   range: any;
   selectedLocationName: string = "";
+
+  myControl = new FormControl();
 
   ranges = {
     0: "0 Kms",
@@ -36,9 +39,15 @@ export class FilterDropdownComponent implements OnInit {
     private geoService: GeocoderService,
     private activatedRoute: ActivatedRoute,
     private filterService: FilterService
-  ) {}
+  ) { }
 
   ngOnInit() {
+    this.myControl.valueChanges
+      .subscribe(val => {
+        this.getLocation(val);
+      });
+
+
     this.sectors = this.tagsService.allTags;
     // this.locations = this.geoService.allLocations;
 

@@ -8,11 +8,15 @@
     <!-- <a href="" class="simple-text logo-normal" style="font-size: 0.8em;">
         Solve Together
       </a> -->
-    <i class="material-icons" (click)="sidebarClose()" style="cursor: pointer; margin-top: 0.1em;margin-left: 9em;">
+    <i
+      class="material-icons"
+      (click)="sidebarClose()"
+      aria-label="close"
+      style="cursor: pointer; margin-top: 0.1em;margin-left: 9em;"
+    >
       clear
     </i>
   </div>
-
 
   <!-- <div class="user"> -->
   <!-- <div class="photo">
@@ -59,7 +63,11 @@
     </form>
     <ul class="nav navbar-nav nav-mobile-menu">
       <li class="nav-item">
-        <a class="nav-link" [routerLink]="'/search'" queryParamsHandling="merge">
+        <a
+          class="nav-link"
+          [routerLink]="'/search'"
+          queryParamsHandling="merge"
+        >
           <i class="material-icons">search</i>
           <p>
             <span class="d-lg-none d-md-block">Search</span>
@@ -67,7 +75,11 @@
         </a>
       </li>
       <li class="nav-item" *ngIf="authService.currentUserValue.id">
-        <a class="nav-link" [routerLink]="'/users/'+authService.currentUserValue.id" queryParamsHandling="merge">
+        <a
+          class="nav-link"
+          [routerLink]="'/users/' + authService.currentUserValue.id"
+          queryParamsHandling="merge"
+        >
           <i class="material-icons">notifications</i>
           <p>
             <span class="d-lg-none d-md-block">Notifications</span>
@@ -75,7 +87,11 @@
         </a>
       </li>
       <li class="nav-item" *ngIf="authService.currentUserValue.id">
-        <a class="nav-link" [routerLink]="'/users/'+authService.currentUserValue.id" queryParamsHandling="merge">
+        <a
+          class="nav-link"
+          [routerLink]="'/users/' + authService.currentUserValue.id"
+          queryParamsHandling="merge"
+        >
           <i class="material-icons">person</i>
           <p>
             <span class="d-lg-none d-md-block">My Profile</span>
@@ -119,31 +135,63 @@
     </ul>
   </div>
   <ul class="nav">
-    <li routerLinkActive="active" *ngFor="let menuitem of menuItems" class="nav-item">
-      <a [routerLink]="[menuitem.path]" queryParamsHandling="merge"
-        *ngIf="menuitem.type === 'link' && menuitem.title=='Dashboard' && authService.currentUserValue.id"
-        class="nav-link">
+    <li
+      routerLinkActive="active"
+      *ngFor="let menuitem of menuItems"
+      class="nav-item"
+    >
+      <a
+        [routerLink]="[menuitem.path]"
+        queryParamsHandling="merge"
+        *ngIf="
+          menuitem.type === 'link' &&
+          menuitem.title == 'Dashboard' &&
+          authService.currentUserValue.id
+        "
+        class="nav-link"
+      >
         <i class="material-icons">{{ menuitem.icontype }}</i>
         <p>{{ menuitem.title }}</p>
       </a>
       <!--If is a single link-->
-      <a [routerLink]="[menuitem.path]" queryParamsHandling="merge"
-        *ngIf="menuitem.type === 'link' && menuitem.title!='Dashboard'" class="nav-link">
+      <a
+        [routerLink]="[menuitem.path]"
+        queryParamsHandling="merge"
+        *ngIf="menuitem.type === 'link' && menuitem.title != 'Dashboard'"
+        class="nav-link"
+      >
         <i class="material-icons">{{ menuitem.icontype }}</i>
         <p>{{ menuitem.title }}</p>
       </a>
       <!--If it have a submenu-->
-      <a data-toggle="collapse" href="#{{ menuitem.collapse }}" *ngIf="menuitem.type === 'sub'" (click)="updatePS()"
-        class="nav-link">
+      <a
+        data-toggle="collapse"
+        href="#{{ menuitem.collapse }}"
+        *ngIf="menuitem.type === 'sub'"
+        (click)="updatePS()"
+        class="nav-link"
+      >
         <i class="material-icons">{{ menuitem.icontype }}</i>
         <p>{{ menuitem.title }}<b class="caret"></b></p>
       </a>
 
       <!--Display the submenu items-->
-      <div id="{{ menuitem.collapse }}" class="collapse" *ngIf="menuitem.type === 'sub'">
+      <div
+        id="{{ menuitem.collapse }}"
+        class="collapse"
+        *ngIf="menuitem.type === 'sub'"
+      >
         <ul class="nav">
-          <li routerLinkActive="active" *ngFor="let childitem of menuitem.children" class="nav-item">
-            <a [routerLink]="[menuitem.path, childitem.path]" queryParamsHandling="merge" class="nav-link">
+          <li
+            routerLinkActive="active"
+            *ngFor="let childitem of menuitem.children"
+            class="nav-item"
+          >
+            <a
+              [routerLink]="[menuitem.path, childitem.path]"
+              queryParamsHandling="merge"
+              class="nav-link"
+            >
               <span class="sidebar-mini">{{ childitem.ab }}</span>
               <span class="sidebar-normal">{{ childitem.title }}</span>
             </a>
@@ -152,7 +200,12 @@
       </div>
     </li>
 
-    <li class="nav-item" *ngIf="authService.currentUserValue.id && authService.currentUserValue.is_admin">
+    <li
+      class="nav-item"
+      *ngIf="
+        authService.currentUserValue.id && authService.currentUserValue.is_admin
+      "
+    >
       <a class="nav-link" [routerLink]="'/admin'" queryParamsHandling="merge">
         <i class="material-icons">supervised_user_circle</i>
         <p>
@@ -161,17 +214,29 @@
       </a>
     </li>
 
-
     <li class="nav-item" *ngIf="!authService.currentUserValue.id">
-      <a class="nav-link" [routerLink]="'/auth/register'" queryParamsHandling="merge">
+      <a
+        class="nav-link"
+        [routerLink]="'/auth/register'"
+        queryParamsHandling="merge"
+        tabindex="-1"
+        aria-label="register"
+      >
         <i class="material-icons">person</i>
         <p>
-          <span class="d-lg-none d-md-block">Register</span>
+          Register
+          <!-- <span class="d-lg-none d-md-block">Register</span> -->
         </p>
       </a>
     </li>
-    <li class="nav-item" *ngIf="!authService.currentUserValue.id">
-      <a class="nav-link" [routerLink]="'/auth/login'" queryParamsHandling="merge">
+    <li class="nav-item" *ngIf="!auth.currentUserValue.id">
+      <a
+        class="nav-link"
+        [routerLink]="'/auth/login'"
+        aria-disabled="true"
+        aria-label="login"
+        queryParamsHandling="merge"
+      >
         <i class="material-icons">person</i>
         <p>
           <span class="d-lg-none d-md-block">Login</span>

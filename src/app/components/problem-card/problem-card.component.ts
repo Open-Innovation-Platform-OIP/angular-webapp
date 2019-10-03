@@ -16,6 +16,7 @@ const misc: any = {
 })
 export class ProblemCardComponent implements OnInit {
   @Input() problemData: any;
+  @Input() index: number = null;
   @Input() usedInSmartSearch: Boolean = false;
   @Input() showAddButton: Boolean = false;
   // filesService.fileAccessUrl: string = "";
@@ -26,11 +27,12 @@ export class ProblemCardComponent implements OnInit {
   numOfWatchers: Number = 0;
   numOfValidations: Number = 0;
   validated: Boolean = false;
-  link = "";
+  link = '';
+  imageAlt = 'default image';
   // modifiedAt: any;
   // sectors: any[] = [];
 
-  constructor(private router: Router, private filesService: FilesService) {}
+  constructor(private router: Router, private filesService: FilesService) { }
 
   ngOnInit() {
     // this.filesService.fileAccessUrl = fileUploadVariables.accessUrl + "/";

@@ -1,11 +1,11 @@
 <!--      Wizard container        -->
 <div class="wizard-container">
   <div class="card card-wizard" data-color="orange" id="wizardProfile">
-    <form [formGroup]="type" action="" method="" (keyup)="sendDataBack($event)">
-      <div class="card-header text-center">
-        <h3 class="card-title" *ngIf="contentType==='problem'">
+    <form autocomplete="off" [formGroup]="type" action="" method="" (keyup)="sendDataBack($event)">
+      <div class="card-header text-center" >
+        <h1 class="card-title" style="font-size: 1.7rem;" tabindex="0" *ngIf="contentType==='problem'">
           {{content.title || "Let's add a content"}}
-        </h3>
+        </h1>
       </div>
       <div class="wizard-navigation">
         <ul class="nav nav-pills">
@@ -43,8 +43,8 @@
                     </span>
                   </div>
                   <mat-form-field class="example-full-width has-label" [ngClass]="displayFieldCss(type, 'title')">
-                    <input type="text" name="title" matInput id="title" placeholder="Title *" formControlName="title"
-                      [(ngModel)]="content.title" (input)="sendInputToParent($event.target.value)">
+                    <input type="text" name="title" matInput id="title" placeholder="Title" formControlName="title"
+                      [(ngModel)]="content.title" (input)="sendInputToParent($event.target.value)" required>
                   </mat-form-field>
                 </div>
               </div>
@@ -62,9 +62,10 @@
                     </span>
                   </div>
                   <mat-form-field class="example-full-width has-label" [ngClass]="displayFieldCss(type, 'description')">
-                    <textarea type="text" name="description" matInput id="description" placeholder="Description *"
+                    <textarea type="text" name="description" matInput id="description" placeholder="Description"
                       formControlName="description" rows="4" wrap="hard"
-                      (input)="sendInputToParent($event.target.value)" [(ngModel)]="content.description"></textarea>
+                      (input)="sendInputToParent($event.target.value)" [(ngModel)]="content.description"
+                      required></textarea>
                   </mat-form-field>
                 </div>
               </div>
@@ -84,17 +85,28 @@
                     }">business_center</i>
                     </span>
                   </div>
-                  <mat-form-field class="example-full-width has-label"
-                    [ngClass]="displayFieldCss(type, 'organization')">
-                    <mat-select name="organization" placeholder="Select Organization *" matInput id="organization"
-                      formControlName="organization" [(ngModel)]="content.organization">
-                      <mat-option value="None">None</mat-option>
-                      <mat-option *ngFor="let org of objectKeys(usersService.allOrgs)" value="{{org}}">{{org}}
-                      </mat-option>
 
-                    </mat-select>
+                  <mat-form-field>
+                    <mat-label>Select Organization</mat-label>
+                    <select matNativeControl formControlName="organization" [(ngModel)]="content.organization" required>
+                      <option disabled value="none">None</option>
+                      <ng-container>
+                        <option *ngFor="let org of objectKeys(usersService.allOrgs)" value="{{org}}">{{org}}</option>
+                      </ng-container>
+                    </select>
+                  </mat-form-field>
+                  <!-- <mat-form-field class=" example-full-width has-label"
+                          [ngClass]="displayFieldCss(type, 'organization')">
+                          <mat-select name="organization" placeholder="Select Organization" id="organization"
+                            formControlName="organization" [(ngModel)]="content.organization"
+                            ariaLabel="objectValues(usersService.allOrgs)[0]" required>
 
-                    <!-- <input placeholder="Organization" [matAutocomplete]="auto" matInput [(ngModel)]="content.organization"
+                            <mat-option *ngFor="let org of objectKeys(usersService.allOrgs)" value="{{org}}">{{org}}
+                            </mat-option>
+
+                          </mat-select> -->
+
+                  <!-- <input placeholder="Organization" [matAutocomplete]="auto" matInput [(ngModel)]="content.organization"
                       id="organization" formControlName="organization">
 
                     <mat-autocomplete #auto="matAutocomplete" (optionSelected)="organizationSelected($event)">
@@ -102,7 +114,7 @@
                         {{org}}
                       </mat-option>
                     </mat-autocomplete> -->
-                  </mat-form-field>
+                  <!-- </mat-form-field> -->
                 </div>
               </div>
             </div>
@@ -118,7 +130,17 @@
                     }">group_add</i>
                     </span>
                   </div>
-                  <mat-form-field class="example-full-width has-label" [ngClass]="displayFieldCss(type, 'population')">
+
+                  <mat-form-field>
+                    <mat-label>Select size of affected population</mat-label>
+                    <select matNativeControl formControlName="population" [(ngModel)]="content.max_population"
+                      (selectionChange)="populationValueChanged($event)" required >
+                      <ng-container>
+                        <option *ngFor="let size of sizes" [value]="size.value">{{size.viewValue}}</option>
+                      </ng-container>
+                    </select>
+                  </mat-form-field>
+                  <!-- <mat-form-field class="example-full-width has-label" [ngClass]="displayFieldCss(type, 'population')">
 
                     <mat-select matInput formControlName="population" (selectionChange)="populationValueChanged($event)"
                       [(ngModel)]="content.max_population" placeholder="Select size of affected population *"
@@ -127,7 +149,7 @@
                         {{ size.viewValue }}
                       </mat-option>
                     </mat-select>
-                  </mat-form-field>
+                  </mat-form-field> -->
                 </div>
               </div>
             </div>
@@ -190,16 +212,12 @@
                             {{location.Location.Address.Label}}
                           </mat-option>
                         </mat-autocomplete> -->
-                    <input placeholder="Locations*" [(ngModel)]="locationInputValue" rows="2" #locationInput
+                    <input placeholder="Locations" [(ngModel)]="locationInputValue" rows="2" #locationInput
                       [formControl]="locationCtrl" [matAutocomplete]="auto" [matChipInputFor]="chipList"
-                      [matChipInputSeparatorKeyCodes]="separatorKeysCodes" (keyup)="getLocation()"
-                      [matChipInputAddOnBlur]="addOnBlur" (matChipInputTokenEnd)="addLocation($event)">
+                      [matChipInputSeparatorKeyCodes]="separatorKeysCodes" (ngModelChange)="getLocation()"
+                      [matChipInputAddOnBlur]="addOnBlur" (matChipInputTokenEnd)="addLocation($event)" required>
 
-                    <mat-chip-list #chipList>
-
-
-
-                    </mat-chip-list>
+                    <mat-chip-list #chipList></mat-chip-list>
                     <mat-autocomplete #auto="matAutocomplete" (optionSelected)="selectedLocation($event)">
                       <mat-option *ngFor="let location of locations" [value]="location.Location">
                         {{location.Location.Address.Label}}
@@ -209,16 +227,14 @@
                 </div>
               </div>
             </div>
-            <div class="row justify-content-center" *ngIf="selectedLocations.length">
+            <div class="row justify-content-center" *ngIf="selectedLocations.length" role="group"
+              aria-label="selected locations" tabindex="0">
               <div class="col-sm-10">
                 <mat-chip *ngFor="let location of selectedLocations" [selectable]="selectable" [removable]="removable"
                   (removed)="removeLocation(location)" style="margin-right:0.3em; margin-bottom: 0.4em;">
                   {{location.location_name}}
                   <mat-icon matChipRemove *ngIf="removable">cancel</mat-icon>
                 </mat-chip>
-
-
-
               </div>
             </div>
 
@@ -292,9 +308,9 @@
 
                   <mat-form-field class="example-chip-list">
                     <mat-chip-list #chipList>
-                      <input placeholder="Sectors*" #sectorInput [formControl]="sectorCtrl" [matAutocomplete]="auto"
+                      <input placeholder="Sectors" #sectorInput [formControl]="sectorCtrl" [matAutocomplete]="auto"
                         [matChipInputFor]="chipList" [matChipInputSeparatorKeyCodes]="separatorKeysCodes"
-                        [matChipInputAddOnBlur]="addOnBlur" (matChipInputTokenEnd)="add($event)">
+                        [matChipInputAddOnBlur]="addOnBlur" (matChipInputTokenEnd)="add($event)" required>
                     </mat-chip-list>
                     <mat-autocomplete #auto="matAutocomplete" (optionSelected)="selected($event)">
                       <mat-option *ngFor="let sector of filteredSectors | async" [value]="sector">
@@ -307,7 +323,7 @@
               </div>
             </div>
 
-            <div class="row justify-content-center">
+            <div class="row justify-content-center" tabindex="0" *ngIf="localSectors.length" role="listbox">
               <div class="col-sm-10">
 
                 <mat-chip *ngFor="let sector of localSectors" [selectable]="selectable" [removable]="removable"
@@ -355,7 +371,7 @@
                 </div>
               </div>
             </div>
-            <div class="row justify-content-center">
+            <div class="row justify-content-center" tabindex="0" *ngIf="owners.length" role="listbox">
               <div class="col-sm-10">
 
                 <mat-chip *ngFor="let owner of owners" [selectable]="selectable" [removable]="removable"
@@ -435,7 +451,7 @@
                   <div class="card-body"></div>
                   <div class="card-footer">
                     <div class="price">
-                      <textarea type="text" matInput></textarea>
+                      <!-- <textarea type="text" matInput></textarea> -->
                       <button mat-raised-button type="button" class="btn btn-default btn-link"
                         matTooltip="Select icon to set as featured image" [matTooltipPosition]="'below'"
                         (click)="setFeatured('image',i)">

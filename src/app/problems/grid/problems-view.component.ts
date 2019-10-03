@@ -1,5 +1,4 @@
 import { Component, OnInit, OnDestroy } from "@angular/core";
-
 import { Apollo, QueryRef } from "apollo-angular";
 import gql from "graphql-tag";
 import { Observable, Subscription } from "rxjs";
@@ -43,7 +42,7 @@ export class ProblemsViewComponent implements OnInit, OnDestroy {
     private filterService: FilterService,
     private route: ActivatedRoute,
     private geoService: GeocoderService,
-    private http: HttpClient
+    private http: HttpClient,
   ) {
     // this.tagsService.getTagsFromDB();
     this.tagsService

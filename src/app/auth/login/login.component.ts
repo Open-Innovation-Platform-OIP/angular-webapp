@@ -1,4 +1,6 @@
 import { Component, OnInit, ElementRef, OnDestroy } from "@angular/core";
+import { Title } from '@angular/platform-browser';
+import { FocusMonitor, LiveAnnouncer } from '@angular/cdk/a11y';
 import { isEmail } from "validator";
 import { AuthService } from "src/app/services/auth.service";
 import { Router, ActivatedRoute } from "@angular/router";
@@ -31,20 +33,32 @@ export class LoginComponent implements OnInit, OnDestroy {
     private auth: AuthService,
     private route: ActivatedRoute,
     private router: Router,
-    private userService: UsersService
+    private userService: UsersService,
+    private currentTitle: Title,
+    private focusMonitor: FocusMonitor,
+    private liveAnnouncer: LiveAnnouncer,
   ) {
     this.nativeElement = element.nativeElement;
     this.sidebarVisible = false;
+    setTimeout(() => {
+    }, 1000);
   }
 
   ngOnInit() {
+    const pageHeading = this.element.nativeElement.querySelector('#heading');
+    setTimeout(() => {
+      // this.liveAnnouncer.announce('Login Page');
+      this.focusMonitor.focusVia(pageHeading, 'program');
+    }, 1000);
+    this.currentTitle.setTitle('Login');
+
     var navbar: HTMLElement = this.element.nativeElement;
     this.toggleButton = navbar.getElementsByClassName("navbar-toggle")[0];
     const body = document.getElementsByTagName("body")[0];
     body.classList.add("login-page");
     body.classList.add("off-canvas-sidebar");
     const card = document.getElementsByClassName("card")[0];
-    setTimeout(function() {
+    setTimeout(function () {
       // after 1000 ms we add the class animated to the login/register card
       card.classList.remove("card-hidden");
     }, 700);
@@ -90,7 +104,7 @@ export class LoginComponent implements OnInit, OnDestroy {
     var body = document.getElementsByTagName("body")[0];
     var sidebar = document.getElementsByClassName("navbar-collapse")[0];
     if (this.sidebarVisible == false) {
-      setTimeout(function() {
+      setTimeout(function () {
         toggleButton.classList.add("toggled");
       }, 500);
       body.classList.add("nav-open");
@@ -191,21 +205,16 @@ export class LoginComponent implements OnInit, OnDestroy {
               `/auth/verify?email=${this.loginDetails.email}`
             );
           } else if (
-            typeof msg === "string" &&
-            msg.toLowerCase().search("unknown") !== -1
+            typeof msg === 'string' &&
+            msg.toLowerCase().search('unknown') !== -1
           ) {
-            let message =
-              "Unknown email address. Perhaps you have not signed up yet?";
-            this.showNotification([
-              "top",
-              "center",
-              4,
-              "warning",
-              3000,
-              message
-            ]);
+            const message =
+              'Unknown email address. Perhaps you have not signed up yet?';
+            this.showNotification(['top', 'center', 4, 'warning', 3000, message]);
+          } else if (msg instanceof Object && !Object.entries(msg)) {
+            this.login();
           } else {
-            this.showNotification(["top", "center", 4, "warning", 3000, msg]);
+            this.showNotification(['top', 'center', 4, 'warning', 3000, msg]);
           }
           this.loading = false;
           // alert(error.error.errors[0].msg);

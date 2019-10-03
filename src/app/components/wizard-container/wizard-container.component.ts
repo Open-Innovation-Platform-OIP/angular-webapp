@@ -10,19 +10,19 @@ import {
   EventEmitter,
   ElementRef,
   ViewChild
-} from "@angular/core";
-import { ErrorStateMatcher } from "@angular/material/core";
-import { TagsService } from "../../services/tags.service";
-import { FilesService } from "../../services/files.service";
-import { UsersService } from "../../services/users.service";
-import { AuthService } from "../../services/auth.service";
-import { Router, ActivatedRoute } from "@angular/router";
-import { map, startWith } from "rxjs/operators";
-import { Observable } from "rxjs";
-import { GeocoderService } from "../../services/geocoder.service";
+} from '@angular/core';
+import { ErrorStateMatcher } from '@angular/material/core';
+import { TagsService } from '../../services/tags.service';
+import { FilesService } from '../../services/files.service';
+import { UsersService } from '../../services/users.service';
+import { AuthService } from '../../services/auth.service';
+import { Router, ActivatedRoute } from '@angular/router';
+import { map, startWith } from 'rxjs/operators';
+import { Observable } from 'rxjs';
+import { GeocoderService } from '../../services/geocoder.service';
 // import { fileUploadVariables } from "../../../environments/environment";
-import swal from "sweetalert2";
-var Buffer = require("buffer/").Buffer;
+import swal from 'sweetalert2';
+var Buffer = require('buffer/').Buffer;
 
 import {
   FormControl,
@@ -31,15 +31,16 @@ import {
   NgForm,
   Validators,
   FormGroup
-} from "@angular/forms";
-import { Content } from "@angular/compiler/src/render3/r3_ast";
+} from '@angular/forms';
+import { Content } from '@angular/compiler/src/render3/r3_ast';
 
-import { COMMA, ENTER } from "@angular/cdk/keycodes";
+import { COMMA, ENTER } from '@angular/cdk/keycodes';
 import {
   MatAutocompleteSelectedEvent,
   MatChipInputEvent,
   MatAutocomplete
-} from "@angular/material";
+} from '@angular/material';
+import { FocusMonitor } from '@angular/cdk/a11y';
 declare const $: any;
 
 let canProceed: boolean;
@@ -69,9 +70,9 @@ export class MyErrorStateMatcher implements ErrorStateMatcher {
 }
 
 @Component({
-  selector: "app-wizard-container",
-  templateUrl: "./wizard-container.component.html",
-  styleUrls: ["./wizard-container.component.css"]
+  selector: 'app-wizard-container',
+  templateUrl: './wizard-container.component.html',
+  styleUrls: ['./wizard-container.component.css']
 })
 export class WizardContainerComponent
   implements OnInit, OnChanges, AfterViewInit {
@@ -97,13 +98,13 @@ export class WizardContainerComponent
   @Output() nextTab = new EventEmitter();
 
   file_types = [
-    "application/msword",
-    " application/vnd.ms-excel",
-    " application/vnd.ms-powerpoint",
-    "text/plain",
-    " application/pdf",
-    " image/*",
-    "video/*"
+    'application/msword',
+    ' application/vnd.ms-excel',
+    ' application/vnd.ms-powerpoint',
+    'text/plain',
+    ' application/pdf',
+    ' image/*',
+    'video/*'
   ];
 
   objectKeys = Object.keys;
@@ -116,11 +117,11 @@ export class WizardContainerComponent
   type: FormGroup;
   is_edit = false;
   populationValue: Number;
-  media_url = "";
+  media_url = '';
   autosaveInterval: any;
   locations: any = [];
   locationInputValue: any;
-  input_pattern = new RegExp("^s*");
+  input_pattern = new RegExp('^s*');
 
   readonly separatorKeysCodes: number[] = [ENTER, COMMA];
   searchResults = {};
@@ -133,19 +134,19 @@ export class WizardContainerComponent
   tags = [];
   removable = true;
   sizes = [
-    { value: 100, viewValue: "<100" },
-    { value: 1000, viewValue: "<1000" },
-    { value: 10000, viewValue: "<10000" },
-    { value: 100000, viewValue: "<100,000" },
-    { value: Number.MAX_VALUE, viewValue: ">100,000" }
+    { value: 100, viewValue: '<100' },
+    { value: 1000, viewValue: '<1000' },
+    { value: 10000, viewValue: '<10000' },
+    { value: 100000, viewValue: '<100,000' },
+    { value: Number.MAX_VALUE, viewValue: '>100,000' }
   ];
   touch: boolean;
 
-  @ViewChild("sectorInput") sectorInput: ElementRef<HTMLInputElement>;
-  @ViewChild("locationInput") locationInput: ElementRef<HTMLInputElement>;
-  @ViewChild("ownerInput") ownerInput: ElementRef<HTMLInputElement>;
+  @ViewChild('sectorInput') sectorInput: ElementRef<HTMLInputElement>;
+  @ViewChild('locationInput') locationInput: ElementRef<HTMLInputElement>;
+  @ViewChild('ownerInput') ownerInput: ElementRef<HTMLInputElement>;
 
-  @ViewChild("auto") matAutocomplete: MatAutocomplete;
+  @ViewChild('auto') matAutocomplete: MatAutocomplete;
   constructor(
     private router: Router,
     private route: ActivatedRoute,
@@ -154,7 +155,9 @@ export class WizardContainerComponent
     private tagService: TagsService,
     private usersService: UsersService,
     private auth: AuthService,
-    private here: GeocoderService
+    private here: GeocoderService,
+    private elementRef: ElementRef,
+    private focusMonitor: FocusMonitor
   ) {
     this.filteredSectors = this.sectorCtrl.valueChanges.pipe(
       startWith(null),
@@ -170,19 +173,19 @@ export class WizardContainerComponent
       map((owner: string | null) => (owner ? this.filterOwners(owner) : []))
     );
 
-    this.type = this.formBuilder.group({
-      title: [null, Validators.required],
-      description: [null, Validators.required],
-      location: [null, Validators.required],
-      population: [null, Validators.required],
-      organization: [null, Validators.required],
-      impact: [null, null],
-      extent: [null, null],
-      beneficiary: [null, null],
-      resources: [null, null],
-      sectors: [null, null],
-      media_url: [null, null]
-    });
+    // this.type = this.formBuilder.group({
+    //   title: [null, Validators.required],
+    //   description: [null, Validators.required],
+    //   location: [null, Validators.required],
+    //   population: [null, Validators.required],
+    //   organization: [null, Validators.required],
+    //   impact: [null, null],
+    //   extent: [null, null],
+    //   beneficiary: [null, null],
+    //   resources: [null, null],
+    //   sectors: [null, null],
+    //   media_url: [null, null]
+    // });
   }
 
   add(event: MatChipInputEvent): void {
@@ -190,12 +193,12 @@ export class WizardContainerComponent
       const input = event.input;
       const value = event.value;
       // Add our sector
-      if ((value || "").trim()) {
+      if ((value || '').trim()) {
         this.localSectors.push(value.trim().toUpperCase());
       }
       // Reset the input value
       if (input) {
-        input.value = "";
+        input.value = '';
       }
       this.sectorCtrl.setValue(null);
       // this.tagAdded.emit(this.sectors);
@@ -211,7 +214,7 @@ export class WizardContainerComponent
     ];
 
     const locationData = {
-      location: { type: "Point", coordinates: coordinateArray },
+      location: { type: 'Point', coordinates: coordinateArray },
       location_name: event.option.value.Address.Label,
       lat: coordinateArray[0],
       long: coordinateArray[1]
@@ -223,7 +226,7 @@ export class WizardContainerComponent
 
     this.locationSelected.emit(this.selectedLocations);
 
-    this.locationInput.nativeElement.value = "";
+    this.locationInput.nativeElement.value = '';
     this.locationCtrl.setValue(null);
   }
 
@@ -233,13 +236,13 @@ export class WizardContainerComponent
       const value = event.value;
 
       // Add our sector
-      if ((value || "").trim()) {
+      if ((value || '').trim()) {
         //console.log(value, "value location");
         // this.content.location.push(value);
       }
       // Reset the input value
       if (input) {
-        input.value = "";
+        input.value = '';
       }
       this.sectorCtrl.setValue(null);
       // this.tagAdded.emit(this.sectors);
@@ -280,8 +283,8 @@ export class WizardContainerComponent
     this.tagRemoved.emit(sector);
   }
 
-  getLocation(input) {
-    if (this.locationInputValue != "Unknown") {
+  getLocation() {
+    if (this.locationInputValue !== 'Unknown') {
       this.here.getAddress(this.locationInputValue).then(
         result => {
           this.locations = <Array<any>>result;
@@ -296,7 +299,7 @@ export class WizardContainerComponent
   selected(event: MatAutocompleteSelectedEvent): void {
     // //console.log(this.sectors, "test for sector");
     this.localSectors.push(event.option.viewValue);
-    this.sectorInput.nativeElement.value = "";
+    this.sectorInput.nativeElement.value = '';
     this.sectorCtrl.setValue(null);
     this.tagAdded.emit(this.localSectors);
   }
@@ -310,13 +313,13 @@ export class WizardContainerComponent
   }
 
   private filterOwners(value: String): any[] {
-    if (typeof value === "string") {
+    if (typeof value === 'string') {
       //console.log(value, "value in filtered owners");
       const filterValue = value.toLowerCase();
       //console.log(filterValue, "value from filter");
 
       return Object.values(this.usersService.allUsers).filter(owner => {
-        if (owner["value"].toLowerCase().indexOf(filterValue) === 0) {
+        if (owner['value'].toLowerCase().indexOf(filterValue) === 0) {
           //console.log(owner, "owner", filterValue);
           return owner;
         }
@@ -327,7 +330,7 @@ export class WizardContainerComponent
   selectedOwner(event: MatAutocompleteSelectedEvent): void {
     //console.log(event.option, "event value");
     this.owners.push(event.option.value);
-    this.ownerInput.nativeElement.value = "";
+    this.ownerInput.nativeElement.value = '';
     this.ownersCtrl.setValue(null);
     this.addedOwners.emit(this.owners);
   }
@@ -348,8 +351,8 @@ export class WizardContainerComponent
 
   displayFieldCss(form: FormGroup, field: string) {
     return {
-      "has-error": this.isFieldValid(form, field),
-      "has-feedback": this.isFieldValid(form, field)
+      'has-error': this.isFieldValid(form, field),
+      'has-feedback': this.isFieldValid(form, field)
     };
   }
 
@@ -381,9 +384,9 @@ export class WizardContainerComponent
       this.usersService.currentUser.organization
     ) {
       this.content.organization = this.usersService.currentUser.organization;
-      //console.log(this.content.organization, "test orgs on user");
+      // console.log(this.content.organization, "test orgs on user");
     } else {
-      this.content.organization = "None";
+      this.content.organization = 'none';
     }
 
     clearInterval(this.autosaveInterval);
@@ -409,8 +412,9 @@ export class WizardContainerComponent
       sectors: [null, null],
       media_url: [null, null]
     });
+
     // Code for the Validator
-    const $validator = $(".card-wizard form").validate({
+    const $validator = $('.card-wizard form').validate({
       rules: {
         title: {
           required: true,
@@ -432,15 +436,15 @@ export class WizardContainerComponent
 
       highlight: function(element) {
         $(element)
-          .closest(".form-group")
-          .removeClass("has-success")
-          .addClass("has-danger");
+          .closest('.form-group')
+          .removeClass('has-success')
+          .addClass('has-danger');
       },
       success: function(element) {
         $(element)
-          .closest(".form-group")
-          .removeClass("has-danger")
-          .addClass("has-success");
+          .closest('.form-group')
+          .removeClass('has-danger')
+          .addClass('has-success');
       },
       errorPlacement: function(error, element) {
         $(element).append(error);
@@ -448,24 +452,24 @@ export class WizardContainerComponent
     });
 
     // Wizard Initialization
-    $(".card-wizard").bootstrapWizard({
-      tabClass: "nav nav-pills",
-      nextSelector: ".btn-next",
-      previousSelector: ".btn-previous",
+    $('.card-wizard').bootstrapWizard({
+      tabClass: 'nav nav-pills',
+      nextSelector: '.btn-next',
+      previousSelector: '.btn-previous',
 
       onNext: function(tab, navigation, index) {
         window.scroll(0, 0);
         //console.log("next tab");
         this.nextTab.emit(true);
 
-        const $valid = $(".card-wizard form").valid();
+        const $valid = $('.card-wizard form').valid();
         if (!$valid) {
           $validator.focusInvalid();
           return false;
         } else if (!canProceed) {
           if (
             confirm(
-              "Are you sure you want to add a new content and not enrich an existing one?"
+              'Are you sure you want to add a new content and not enrich an existing one?'
             )
           ) {
             canProceed = true;
@@ -478,19 +482,19 @@ export class WizardContainerComponent
       },
 
       onInit: function(tab: any, navigation: any, index: any) {
-        let $total = navigation.find("li").length;
-        const $wizard = navigation.closest(".card-wizard");
+        let $total = navigation.find('li').length;
+        const $wizard = navigation.closest('.card-wizard');
 
-        const $first_li = navigation.find("li:first-child a").html();
+        const $first_li = navigation.find('li:first-child a').html();
         const $moving_div = $(
-          '<div class="moving-tab">' + $first_li + "</div>"
+          '<div class="moving-tab">' + $first_li + '</div>'
         );
-        $(".card-wizard .wizard-navigation").append($moving_div);
+        $('.card-wizard .wizard-navigation').append($moving_div);
 
-        $total = $wizard.find(".nav li").length;
+        $total = $wizard.find('.nav li').length;
         let $li_width = 100 / $total;
 
-        const total_steps = $wizard.find(".nav li").length;
+        const total_steps = $wizard.find('.nav li').length;
         let move_distance = $wizard.width() / total_steps;
         let index_temp = index;
         let vertical_level = 0;
@@ -503,7 +507,7 @@ export class WizardContainerComponent
           $li_width = 50;
         }
 
-        $wizard.find(".nav li").css("width", $li_width + "%");
+        $wizard.find('.nav li').css('width', $li_width + '%');
 
         const step_width = move_distance;
         move_distance = move_distance * index_temp;
@@ -525,18 +529,18 @@ export class WizardContainerComponent
           vertical_level = vertical_level * 38;
         }
 
-        $wizard.find(".moving-tab").css("width", step_width);
-        $(".moving-tab").css({
+        $wizard.find('.moving-tab').css('width', step_width);
+        $('.moving-tab').css({
           transform:
-            "translate3d(" + move_distance + "px, " + vertical_level + "px, 0)",
-          transition: "all 0.5s cubic-bezier(0.29, 1.42, 0.79, 1)"
+            'translate3d(' + move_distance + 'px, ' + vertical_level + 'px, 0)',
+          transition: 'all 0.5s cubic-bezier(0.29, 1.42, 0.79, 1)'
         });
-        $(".moving-tab").css("transition", "transform 0s");
+        $('.moving-tab').css('transition', 'transform 0s');
       },
 
       onTabClick: function(tab: any, navigation: any, index: any) {
         return true;
-        const $valid = $(".card-wizard form").valid();
+        const $valid = $('.card-wizard form').valid();
 
         if (!$valid) {
           return false;
@@ -546,60 +550,60 @@ export class WizardContainerComponent
       },
 
       onTabShow: function(tab: any, navigation: any, index: any) {
-        let $total = navigation.find("li").length;
+        let $total = navigation.find('li').length;
         let $current = index + 1;
 
-        const $wizard = navigation.closest(".card-wizard");
+        const $wizard = navigation.closest('.card-wizard');
 
         // If it's the last tab then hide the last button and show the finish instead
         if ($current >= $total) {
           $($wizard)
-            .find(".publish")
+            .find('.publish')
             .hide();
           $($wizard)
-            .find(".btn-next")
+            .find('.btn-next')
             .hide();
           $($wizard)
-            .find(".btn-finish")
+            .find('.btn-finish')
             .show();
         } else {
           $($wizard)
-            .find(".publish")
+            .find('.publish')
             .show();
           $($wizard)
-            .find(".btn-next")
+            .find('.btn-next')
             .show();
           $($wizard)
-            .find(".btn-finish")
+            .find('.btn-finish')
             .show();
         }
 
         const button_text = navigation
-          .find("li:nth-child(" + $current + ") a")
+          .find('li:nth-child(' + $current + ') a')
           .html();
 
         setTimeout(function() {
-          $(".moving-tab").text(button_text);
+          $('.moving-tab').text(button_text);
         }, 150);
 
-        const checkbox = $(".footer-checkbox");
+        const checkbox = $('.footer-checkbox');
 
         if (index !== 0) {
           $(checkbox).css({
-            opacity: "0",
-            visibility: "hidden",
-            position: "absolute"
+            opacity: '0',
+            visibility: 'hidden',
+            position: 'absolute'
           });
         } else {
           $(checkbox).css({
-            opacity: "1",
-            visibility: "visible"
+            opacity: '1',
+            visibility: 'visible'
           });
         }
-        $total = $wizard.find(".nav li").length;
+        $total = $wizard.find('.nav li').length;
         let $li_width = 100 / $total;
 
-        const total_steps = $wizard.find(".nav li").length;
+        const total_steps = $wizard.find('.nav li').length;
         let move_distance = $wizard.width() / total_steps;
         let index_temp = index;
         let vertical_level = 0;
@@ -612,7 +616,7 @@ export class WizardContainerComponent
           $li_width = 50;
         }
 
-        $wizard.find(".nav li").css("width", $li_width + "%");
+        $wizard.find('.nav li').css('width', $li_width + '%');
 
         const step_width = move_distance;
         move_distance = move_distance * index_temp;
@@ -634,57 +638,57 @@ export class WizardContainerComponent
           vertical_level = vertical_level * 38;
         }
 
-        $wizard.find(".moving-tab").css("width", step_width);
-        $(".moving-tab").css({
+        $wizard.find('.moving-tab').css('width', step_width);
+        $('.moving-tab').css({
           transform:
-            "translate3d(" + move_distance + "px, " + vertical_level + "px, 0)",
-          transition: "all 0.5s cubic-bezier(0.29, 1.42, 0.79, 1)"
+            'translate3d(' + move_distance + 'px, ' + vertical_level + 'px, 0)',
+          transition: 'all 0.5s cubic-bezier(0.29, 1.42, 0.79, 1)'
         });
       }
     });
 
     // Prepare the preview for profile picture
-    $("#wizard-picture").change(function() {
+    $('#wizard-picture').change(function() {
       const input = $(this);
 
       if (input[0].files && input[0].files[0]) {
         const reader = new FileReader();
 
         reader.onload = function(e: any) {
-          $("#wizardPicturePreview")
-            .attr("src", e.target.result)
-            .fadeIn("slow");
+          $('#wizardPicturePreview')
+            .attr('src', e.target.result)
+            .fadeIn('slow');
         };
         reader.readAsDataURL(input[0].files[0]);
       }
     });
 
     $('[data-toggle="wizard-radio"]').click(function() {
-      const wizard = $(this).closest(".card-wizard");
-      wizard.find('[data-toggle="wizard-radio"]').removeClass("active");
-      $(this).addClass("active");
+      const wizard = $(this).closest('.card-wizard');
+      wizard.find('[data-toggle="wizard-radio"]').removeClass('active');
+      $(this).addClass('active');
       $(wizard)
         .find('[type="radio"]')
-        .removeAttr("checked");
+        .removeAttr('checked');
       $(this)
         .find('[type="radio"]')
-        .attr("checked", "true");
+        .attr('checked', 'true');
     });
 
     $('[data-toggle="wizard-checkbox"]').click(function() {
-      if ($(this).hasClass("active")) {
-        $(this).removeClass("active");
+      if ($(this).hasClass('active')) {
+        $(this).removeClass('active');
         $(this)
           .find('[type="checkbox"]')
-          .removeAttr("checked");
+          .removeAttr('checked');
       } else {
-        $(this).addClass("active");
+        $(this).addClass('active');
         $(this)
           .find('[type="checkbox"]')
-          .attr("checked", "true");
+          .attr('checked', 'true');
       }
     });
-    $(".set-full-height").css("height", "auto");
+    $('.set-full-height').css('height', 'auto');
   }
 
   ngOnChanges(changes: SimpleChanges) {
@@ -711,9 +715,9 @@ export class WizardContainerComponent
     if (input[0].files && input[0].files[0]) {
       const reader: any = new FileReader();
       reader.onload = function(e: any) {
-        $("#wizardPicturePreview")
-          .attr("src", e.target.result)
-          .fadeIn("slow");
+        $('#wizardPicturePreview')
+          .attr('src', e.target.result)
+          .fadeIn('slow');
       };
       reader.readAsDataURL(input[0].files[0]);
     }
@@ -727,7 +731,7 @@ export class WizardContainerComponent
   checkForSpaces($event) {}
 
   publishContent() {
-    console.log(this.content, "content");
+    console.log(this.content, 'content');
     this.contentSubmitted.emit(this.content);
   }
 
@@ -737,13 +741,13 @@ export class WizardContainerComponent
 
   ngAfterViewInit() {
     $(window).resize(() => {
-      $(".card-wizard").each(function() {
+      $('.card-wizard').each(function() {
         const $wizard = $(this);
-        const index = $wizard.bootstrapWizard("currentIndex");
-        const $total = $wizard.find(".nav li").length;
+        const index = $wizard.bootstrapWizard('currentIndex');
+        const $total = $wizard.find('.nav li').length;
         let $li_width = 100 / $total;
 
-        const total_steps = $wizard.find(".nav li").length;
+        const total_steps = $wizard.find('.nav li').length;
         let move_distance = $wizard.width() / total_steps;
         let index_temp = index;
         let vertical_level = 0;
@@ -756,7 +760,7 @@ export class WizardContainerComponent
           $li_width = 50;
         }
 
-        $wizard.find(".nav li").css("width", $li_width + "%");
+        $wizard.find('.nav li').css('width', $li_width + '%');
 
         const step_width = move_distance;
         move_distance = move_distance * index_temp;
@@ -778,24 +782,34 @@ export class WizardContainerComponent
           vertical_level = vertical_level * 38;
         }
 
-        $wizard.find(".moving-tab").css("width", step_width);
-        $(".moving-tab").css({
+        $wizard.find('.moving-tab').css('width', step_width);
+        $('.moving-tab').css({
           transform:
-            "translate3d(" + move_distance + "px, " + vertical_level + "px, 0)",
-          transition: "all 0.5s cubic-bezier(0.29, 1.42, 0.79, 1)"
+            'translate3d(' + move_distance + 'px, ' + vertical_level + 'px, 0)',
+          transition: 'all 0.5s cubic-bezier(0.29, 1.42, 0.79, 1)'
         });
 
-        $(".moving-tab").css({
-          transition: "transform 0s"
+        $('.moving-tab').css({
+          transition: 'transform 0s'
         });
       });
     });
+
+    setTimeout(() => {
+      const cardHeading = this.elementRef.nativeElement.querySelector(
+        'h1.card-title'
+      );
+
+      console.log('heading: ', cardHeading);
+
+      this.focusMonitor.focusVia(cardHeading, 'program');
+    }, 1000);
   }
 
   removeSelectedItem(type: string, index: number) {
     let fileName;
     switch (type) {
-      case "image":
+      case 'image':
         // //console.log(
         //   this.content.image_urls[index],
         //   "deleted image",
@@ -806,12 +820,12 @@ export class WizardContainerComponent
           this.content.image_urls[index].fileEndpoint ==
           this.content.featured_url
         ) {
-          this.content.featured_url = "";
-          this.content.featured_type = "";
-          console.log(this.content.featured_url, "content featured");
-          console.log(this.content, "content");
+          this.content.featured_url = '';
+          this.content.featured_type = '';
+          console.log(this.content.featured_url, 'content featured');
+          console.log(this.content, 'content');
         }
-        fileName = this.content.image_urls[index].fileEndpoint.split("/")[1];
+        fileName = this.content.image_urls[index].fileEndpoint.split('/')[1];
         this.filesService.deleteFile(fileName).subscribe(
           result => console.log(result),
           error => {
@@ -823,32 +837,32 @@ export class WizardContainerComponent
         this.setDefaultFeaturedImage();
         break;
 
-      case "video":
+      case 'video':
         if (
           this.content.video_urls[index].fileEndpoint ===
           this.content.featured_url
         ) {
-          this.content.featured_url = "";
-          this.content.featured_type = "";
+          this.content.featured_url = '';
+          this.content.featured_type = '';
         }
         this.content.video_urls.splice(index, 1);
-        fileName = this.content.video_urls[index].fileEndpoint.split("/")[1];
+        fileName = this.content.video_urls[index].fileEndpoint.split('/')[1];
         this.filesService.deleteFile(fileName);
         break;
 
-      case "embed":
+      case 'embed':
         this.content.embed_urls.splice(index, 1);
         if (this.content.embed_urls[index] === this.content.featured_url) {
-          this.content.featured_url = "";
-          this.content.featured_type = "";
+          this.content.featured_url = '';
+          this.content.featured_type = '';
         }
         // fileName = this.content.image_urls[index].fileEndpoint.split("/")[1];
         // this.filesService.deleteFile(fileName);
         break;
 
-      case "link":
+      case 'link':
         this.content.attachments.splice(index, 1);
-        fileName = this.content.attachments[index].fileEndpoint.split("/")[1];
+        fileName = this.content.attachments[index].fileEndpoint.split('/')[1];
         this.filesService.deleteFile(fileName);
         break;
 
@@ -862,16 +876,16 @@ export class WizardContainerComponent
     if (!this.content.featured_url && this.content.image_urls.length) {
       //console.log(this.content.image_urls[0].fileEndpoint, "deafault");
       this.content.featured_url = this.content.image_urls[0].fileEndpoint;
-      this.content.featured_type = "image";
-      console.log(this.content, "default contetn");
+      this.content.featured_type = 'image';
+      console.log(this.content, 'default contetn');
     }
   }
 
   checkIfExist(data: string) {
     let problem_attachments = [
-      ...this.content["image_urls"],
-      ...this.content["video_urls"],
-      ...this.content["attachments"]
+      ...this.content['image_urls'],
+      ...this.content['video_urls'],
+      ...this.content['attachments']
     ];
 
     let checked = problem_attachments.filter(attachmentObj => {
@@ -890,18 +904,18 @@ export class WizardContainerComponent
   onFileSelected(event) {
     for (let i = 0; i < event.target.files.length; i++) {
       const file = event.target.files[i];
-      const type = event.target.files[i].type.split("/")[0];
+      const type = event.target.files[i].type.split('/')[0];
       const mimeType = event.target.files[i].type;
       const size = file.size;
 
       if (size > 5e6) {
-        alert("File size exceeds the 5MB limit");
+        alert('File size exceeds the 5MB limit');
         return;
       }
 
       switch (type) {
-        case "image": {
-          if (typeof FileReader !== "undefined") {
+        case 'image': {
+          if (typeof FileReader !== 'undefined') {
             const reader = new FileReader();
 
             reader.onload = (e: any) => {
@@ -910,57 +924,55 @@ export class WizardContainerComponent
                 .fileUpload(file, mimeType)
                 .then(values => {
                   this.content.image_urls.push({
-                    fileEndpoint: values["fileEndpoint"],
+                    fileEndpoint: values['fileEndpoint'],
                     mimeType: event.target.files[i].type,
-                    key: values["key"]
+                    key: values['key']
                   });
                   if (!this.content.featured_url) {
                     this.content.featured_url = this.content.image_urls[0].fileEndpoint;
-                    this.content.featured_type = "image";
+                    this.content.featured_type = 'image';
                   }
                 })
-                .catch(e => {}); //console.log("Err:: ", e));
+                .catch(e => {});
             };
             reader.readAsArrayBuffer(file);
           }
           break;
         }
-        case "video": {
+        case 'video': {
           const video = event.target.files[i];
           this.filesService
             .fileUpload(video, mimeType)
 
             .then(values => {
               this.content.video_urls.push({
-                fileEndpoint: values["fileEndpoint"],
+                fileEndpoint: values['fileEndpoint'],
                 mimeType: event.target.files[i].type,
-                key: values["key"]
+                key: values['key']
               });
             })
-            .catch((
-              e //console.log("Err:: ", e));
-            ) => {});
+            .catch(e => {});
           break;
         }
-        case "application":
-        case "text": {
+        case 'application':
+        case 'text': {
           const doc = event.target.files[i];
           this.filesService
             .fileUpload(doc, mimeType)
 
             .then(values => {
               this.content.attachments.push({
-                fileEndpoint: values["fileEndpoint"],
+                fileEndpoint: values['fileEndpoint'],
                 mimeType: event.target.files[i].type,
-                key: values["key"]
+                key: values['key']
               });
             })
-            .catch(e => {}); //console.log("Err:: ", e));
+            .catch(e => {});
           break;
         }
         default: {
-          //console.log("unknown file type");
-          alert("Unknown file type.");
+          // console.log('unknown file type');
+          alert('Unknown file type.');
           break;
         }
       }
@@ -968,11 +980,16 @@ export class WizardContainerComponent
   }
 
   nextSelected() {
+    const tabUpload = this.elementRef.nativeElement.querySelector(
+      '[href="#media"]'
+    );
+
+    this.focusMonitor.focusVia(tabUpload, 'program');
     this.nextTab.emit(true);
   }
 
   isComplete() {
-    if (this.contentType === "problem") {
+    if (this.contentType === 'problem') {
       return (
         this.content.title &&
         this.content.description &&
@@ -997,14 +1014,14 @@ export class WizardContainerComponent
 
   setFeatured(type, index) {
     // //console.log(type, index);
-    if (type === "image") {
-      this.content.featured_type = "image";
+    if (type === 'image') {
+      this.content.featured_type = 'image';
       this.content.featured_url = this.content.image_urls[index].fileEndpoint;
-    } else if (type === "video") {
-      this.content.featured_type = "video";
+    } else if (type === 'video') {
+      this.content.featured_type = 'video';
       this.content.featured_url = this.content.video_urls[index].fileEndpoint;
-    } else if (type === "embed") {
-      this.content.featured_type = "embed";
+    } else if (type === 'embed') {
+      this.content.featured_type = 'embed';
       this.content.featured_url = this.content.embed_urls[index];
     }
   }
@@ -1014,19 +1031,19 @@ export class WizardContainerComponent
 
     if (this.media_url && !duplicate) {
       this.content.embed_urls.push(this.media_url);
-      this.media_url = "";
+      this.media_url = '';
       if (!this.content.featured_url) {
         this.content.featured_url = this.media_url;
-        this.content.featured_type = "embed";
+        this.content.featured_type = 'embed';
       }
     }
     if (duplicate) {
-      alert("Link already exist.");
+      alert('Link already exist.');
     }
   }
 
   checkMedialUrl(url: string) {
-    if (!url.startsWith("http")) {
+    if (!url.startsWith('http')) {
       return false;
     }
 
