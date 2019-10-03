@@ -18,6 +18,7 @@ import {
   Validators,
   FormGroup
 } from '@angular/forms';
+import { LiveAnnouncer } from '@angular/cdk/a11y';
 import { Router, ActivatedRoute } from '@angular/router';
 import { ErrorStateMatcher } from '@angular/material/core';
 import { COMMA, ENTER } from '@angular/cdk/keycodes';
@@ -164,7 +165,8 @@ export class WizardComponent
     private problemService: ProblemService,
     private geoService: GeocoderService,
     private http: HttpClient,
-    private filterService: FilterService
+    private filterService: FilterService,
+    private liveAnouncer: LiveAnnouncer
   ) {
     canProceed = true;
 
@@ -178,6 +180,10 @@ export class WizardComponent
       )
     );
     // //console.log(this.auth.currentUserValue);
+
+    setTimeout(() => {
+      // this.liveAnouncer.announce('Hello people');
+    }, 3000);
   }
 
   add(event: MatChipInputEvent): void {

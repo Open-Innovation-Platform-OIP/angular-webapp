@@ -22,7 +22,7 @@ import { Observable } from 'rxjs';
 import { GeocoderService } from '../../services/geocoder.service';
 // import { fileUploadVariables } from "../../../environments/environment";
 import swal from 'sweetalert2';
-var Buffer = require('buffer/').Buffer;
+// var Buffer = require('buffer/').Buffer;
 
 import {
   FormControl,
@@ -800,8 +800,6 @@ export class WizardContainerComponent
         'h1.card-title'
       );
 
-      console.log('heading: ', cardHeading);
-
       this.focusMonitor.focusVia(cardHeading, 'program');
     }, 1000);
   }
@@ -986,6 +984,21 @@ export class WizardContainerComponent
 
     this.focusMonitor.focusVia(tabUpload, 'program');
     this.nextTab.emit(true);
+  }
+
+  prevSelected() {
+    const nextBtn = this.elementRef.nativeElement.querySelector(
+      'input.btn-next'
+    );
+
+    if (!nextBtn.disabled) {
+      setTimeout(() => {
+        this.focusMonitor.focusVia(nextBtn, 'program');
+      }, 1000);
+    } else {
+      const tab = this.elementRef.nativeElement.querySelector('[href="#text"]');
+      this.focusMonitor.focusVia(tab, 'program');
+    }
   }
 
   isComplete() {
