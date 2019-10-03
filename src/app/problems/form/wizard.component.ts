@@ -18,7 +18,6 @@ import {
   Validators,
   FormGroup
 } from '@angular/forms';
-import { LiveAnnouncer } from '@angular/cdk/a11y';
 import { Router, ActivatedRoute } from '@angular/router';
 import { ErrorStateMatcher } from '@angular/material/core';
 import { COMMA, ENTER } from '@angular/cdk/keycodes';
@@ -165,8 +164,7 @@ export class WizardComponent
     private problemService: ProblemService,
     private geoService: GeocoderService,
     private http: HttpClient,
-    private filterService: FilterService,
-    private liveAnouncer: LiveAnnouncer
+    private filterService: FilterService
   ) {
     canProceed = true;
 
@@ -180,10 +178,6 @@ export class WizardComponent
       )
     );
     // //console.log(this.auth.currentUserValue);
-
-    setTimeout(() => {
-      // this.liveAnouncer.announce('Hello people');
-    }, 3000);
   }
 
   add(event: MatChipInputEvent): void {
@@ -233,7 +227,7 @@ export class WizardComponent
     if (index >= 0) {
       this.owners.splice(index, 1);
     }
-    //console.log(this.owners, "removed from wizard");
+
     if (this.problem['id']) {
       this.apollo
         .mutate<any>({
@@ -261,16 +255,9 @@ export class WizardComponent
         .pipe(take(1))
         .subscribe(
           ({ data }) => {
-            //console.log("worked", data);
-            // location.reload();
-            // location.reload();
-            // this.router.navigateByUrl("/problems");
-
             return;
           },
-          error => {
-            //console.log("Could not delete due to " + error);
-          }
+          error => {}
         );
     }
   }
@@ -332,7 +319,6 @@ export class WizardComponent
                             user_id
                             updated_at
                             description
-                            
                             resources_needed
                             is_draft
                             image_urls
@@ -353,10 +339,7 @@ export class WizardComponent
                                 name
 
                               }
-                             
                             }
-                           
-                          
                             problems_tags{
                                 tag {
                                     id
@@ -385,8 +368,6 @@ export class WizardComponent
               result.data.problems.length >= 1 &&
               result.data.problems[0].id
             ) {
-              //console.log(result.data.problems[0], "problem");
-              // //console.log(result.data.problems[0], "edit problem");
               canProceed = true;
               this.problem['id'] = result.data.problems[0].id;
               Object.keys(this.problem).map(key => {
@@ -415,10 +396,6 @@ export class WizardComponent
                     return locations.location;
                   }
                 );
-
-                // this.problem["locations"] = this.problemLocations;
-
-                //console.log(this.problemLocations, "locations from db");
               }
 
               if (result.data.problems[0].problem_owners) {
@@ -916,7 +893,6 @@ export class WizardComponent
   smartSearch() {
     let searchKey = this.problem.title + ' ' + this.problem.description;
     searchKey = searchKey.replace(/[^a-zA-Z ]/g, '');
-    //console.log(searchKey, "searchkey");
 
     if (searchKey.length >= 3) {
       this.searchResults = [];
@@ -929,11 +905,8 @@ export class WizardComponent
         .subscribe(
           searchResults => {
             this.searchResults = searchResults;
-            //console.log(this.searchResults, "wizard smart search");
           },
-          error => {
-            //console.log(error);
-          }
+          error => {}
         );
       // this.apollo
       //   .watchQuery<any>({
@@ -1184,7 +1157,6 @@ export class WizardComponent
   }
 
   submitProblemToDB(problem) {
-    //console.log(problem, "submitted");
     console.log(problem, 'Problem');
     const upsert_problem = gql`
       mutation upsert_problem($problems: [problems_insert_input!]!) {
@@ -1222,10 +1194,7 @@ export class WizardComponent
       }
     `;
 
-    //console.log(this.sectors, "sectors before removing duplicates");
-
     this.sectors = this.removeDuplicates(this.sectors);
-    //console.log(this.sectors, "sectors after removing duplicates");
 
     this.apollo
       .mutate({
@@ -1398,7 +1367,7 @@ export class WizardComponent
         }
       }
     `;
-    //console.log(owners, "owners added");
+
     this.apollo
       .mutate({
         mutation: upsert_problem_owners,
@@ -1408,9 +1377,7 @@ export class WizardComponent
       })
       .pipe(take(1))
       .subscribe(
-        data => {
-          //console.log("owner adddition worked");
-        },
+        data => {},
         error => {
           console.error(JSON.stringify(error));
         }
@@ -1490,11 +1457,9 @@ export class WizardComponent
 
   addLocation(locations) {
     this.problemLocations = locations;
-    //console.log(this.geoService.allLocations, "all locations");
   }
 
   removeLocation(removedLocation) {
-    //console.log(this.problemLocations, "removed location");
     const locationUniqueId =
       removedLocation.lat.toString() + removedLocation.long.toString();
 
