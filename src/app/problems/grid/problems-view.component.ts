@@ -194,7 +194,7 @@ export class ProblemsViewComponent implements OnInit, OnDestroy {
       // console.log("file", file.name);
       this.http
         .post(
-          "http://minio-microservice.dev.jaagalabs.com/create_presigned_url",
+          "https://minio-microservice.dev.jaagalabs.com/create_presigned_url",
           { file_data: `test/${file.name}` },
           options
         )

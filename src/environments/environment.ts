@@ -17,8 +17,8 @@ export const domain = "https://app.socialalpha.jaagalabs.com";
 
 export const fileUploadVariables = {
   UploadUrlEndpoint:
-    "http://minio-microservice.dev.jaagalabs.com/create_presigned_url",
+    "https://minio-microservice.dev.jaagalabs.com/create_presigned_url",
   bucketName: "test",
-  accessUrl: "http://minio-storage.dev.jaagalabs.com",
-  deleteEndpoint: "http://minio-microservice.dev.jaagalabs.com/delete_file"
+  accessUrl: "https://minio-storage.dev.jaagalabs.com",
+  deleteEndpoint: "https://minio-microservice.dev.jaagalabs.com/delete_file"
 };

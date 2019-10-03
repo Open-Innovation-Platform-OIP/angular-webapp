@@ -14,7 +14,7 @@ export class AppComponent implements OnInit {
 
   ngOnInit() {
     console.log(window.location.href, "router url");
-    this.filterService.filterSectorByDomain("localhost:4200");
+    // this.filterService.filterSectorByDomain("localhost:4200");
 
     this._router = this.router.events
       .filter(event => event instanceof NavigationEnd)
