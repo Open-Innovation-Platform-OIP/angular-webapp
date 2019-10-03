@@ -1,29 +1,29 @@
-import { Component, OnInit, ElementRef, OnDestroy } from "@angular/core";
+import { Component, OnInit, ElementRef, OnDestroy } from '@angular/core';
 import { Title } from '@angular/platform-browser';
 import { FocusMonitor, LiveAnnouncer } from '@angular/cdk/a11y';
-import { isEmail } from "validator";
-import { AuthService } from "src/app/services/auth.service";
-import { Router, ActivatedRoute } from "@angular/router";
-import { first } from "rxjs/operators";
-import { link } from "fs";
-import { UsersService } from "../../services/users.service";
+import { isEmail } from 'validator';
+import { AuthService } from 'src/app/services/auth.service';
+import { Router, ActivatedRoute } from '@angular/router';
+import { first } from 'rxjs/operators';
+import { link } from 'fs';
+import { UsersService } from '../../services/users.service';
 
 declare var $: any;
 
 @Component({
-  selector: "app-login-cmp",
-  templateUrl: "./login.component.html"
+  selector: 'app-login-cmp',
+  templateUrl: './login.component.html'
 })
 export class LoginComponent implements OnInit, OnDestroy {
   loginDetails = {
-    email: "",
-    password: ""
+    email: '',
+    password: ''
   };
   loading = true;
   submitted = false;
-  returnUrl: string = "/";
-  error = "";
-  link = "";
+  returnUrl: string = '/';
+  error = '';
+  link = '';
   private toggleButton: any;
   private sidebarVisible: boolean;
   private nativeElement: Node;
@@ -36,12 +36,11 @@ export class LoginComponent implements OnInit, OnDestroy {
     private userService: UsersService,
     private currentTitle: Title,
     private focusMonitor: FocusMonitor,
-    private liveAnnouncer: LiveAnnouncer,
+    private liveAnnouncer: LiveAnnouncer
   ) {
     this.nativeElement = element.nativeElement;
     this.sidebarVisible = false;
-    setTimeout(() => {
-    }, 1000);
+    setTimeout(() => {}, 1000);
   }
 
   ngOnInit() {
@@ -53,46 +52,46 @@ export class LoginComponent implements OnInit, OnDestroy {
     this.currentTitle.setTitle('Login');
 
     var navbar: HTMLElement = this.element.nativeElement;
-    this.toggleButton = navbar.getElementsByClassName("navbar-toggle")[0];
-    const body = document.getElementsByTagName("body")[0];
-    body.classList.add("login-page");
-    body.classList.add("off-canvas-sidebar");
-    const card = document.getElementsByClassName("card")[0];
-    setTimeout(function () {
+    this.toggleButton = navbar.getElementsByClassName('navbar-toggle')[0];
+    const body = document.getElementsByTagName('body')[0];
+    body.classList.add('login-page');
+    body.classList.add('off-canvas-sidebar');
+    const card = document.getElementsByClassName('card')[0];
+    setTimeout(function() {
       // after 1000 ms we add the class animated to the login/register card
-      card.classList.remove("card-hidden");
+      card.classList.remove('card-hidden');
     }, 700);
     this.route.queryParams.subscribe(params => {
       // console.log(params);
-      const err = params["err"];
+      const err = params['err'];
       if (err) {
         console.log(err);
         alert(err);
         return false;
       }
       const user = {
-        id: params["id"],
-        email: params["email"],
-        token: params["token"],
-        role: params["role"]
+        id: params['id'],
+        email: params['email'],
+        token: params['token'],
+        role: params['role']
       };
-      if (user.role == "admin") {
-        user["is_admin"] = true;
+      if (user.role == 'admin') {
+        user['is_admin'] = true;
       } else {
-        user["is_admin"] = false;
+        user['is_admin'] = false;
       }
-      this.returnUrl = params["returnUrl"] || "/";
-      console.log(user, "user on enter");
-      if (user && user["token"] && user["id"] && user["email"]) {
+      this.returnUrl = params['returnUrl'] || '/';
+      console.log(user, 'user on enter');
+      if (user && user['token'] && user['id'] && user['email']) {
         const res = this.auth.storeUser(user);
         if (res) {
           // this.
-          console.log("valid token for", this.auth.currentUserValue.email);
+          console.log('valid token for', this.auth.currentUserValue.email);
           // this.router.navigate([this.returnUrl]);
           window.location.href = `${this.returnUrl}`;
         } else {
           // console.log('invalid token');
-          alert("Invalid login. Please try again");
+          alert('Invalid login. Please try again');
         }
       }
     });
@@ -101,24 +100,24 @@ export class LoginComponent implements OnInit, OnDestroy {
   }
   sidebarToggle() {
     var toggleButton = this.toggleButton;
-    var body = document.getElementsByTagName("body")[0];
-    var sidebar = document.getElementsByClassName("navbar-collapse")[0];
+    var body = document.getElementsByTagName('body')[0];
+    var sidebar = document.getElementsByClassName('navbar-collapse')[0];
     if (this.sidebarVisible == false) {
-      setTimeout(function () {
-        toggleButton.classList.add("toggled");
+      setTimeout(function() {
+        toggleButton.classList.add('toggled');
       }, 500);
-      body.classList.add("nav-open");
+      body.classList.add('nav-open');
       this.sidebarVisible = true;
     } else {
-      this.toggleButton.classList.remove("toggled");
+      this.toggleButton.classList.remove('toggled');
       this.sidebarVisible = false;
-      body.classList.remove("nav-open");
+      body.classList.remove('nav-open');
     }
   }
   ngOnDestroy() {
-    const body = document.getElementsByTagName("body")[0];
-    body.classList.remove("login-page");
-    body.classList.remove("off-canvas-sidebar");
+    const body = document.getElementsByTagName('body')[0];
+    body.classList.remove('login-page');
+    body.classList.remove('off-canvas-sidebar');
   }
 
   onTyping(event) {
@@ -138,7 +137,7 @@ export class LoginComponent implements OnInit, OnDestroy {
   }
   login() {
     if (!(isEmail(this.loginDetails.email) && this.loginDetails.password)) {
-      return alert("Please enter a valid email and password");
+      return alert('Please enter a valid email and password');
     }
     this.submitted = true;
     this.loading = true;
@@ -156,14 +155,14 @@ export class LoginComponent implements OnInit, OnDestroy {
           this.userService.getCurrentUser();
 
           let message =
-            "Update your profile information to make the most out of the platform.";
+            'Update your profile information to make the most out of the platform.';
 
           setTimeout(() => {
             this.showNotification([
-              "bottom",
-              "left",
-              "",
-              "notifications",
+              'bottom',
+              'left',
+              '',
+              'notifications',
               3000,
               message
             ]);
@@ -174,30 +173,30 @@ export class LoginComponent implements OnInit, OnDestroy {
           this.error = error;
           const msg = error.error.msg;
           if (
-            typeof msg === "string" &&
-            msg.toLowerCase().search("already verified") !== -1
+            typeof msg === 'string' &&
+            msg.toLowerCase().search('already verified') !== -1
           ) {
             let message =
-              "Your email is already verified. You can login or request a password reset";
+              'Your email is already verified. You can login or request a password reset';
             this.showNotification([
-              "top",
-              "center",
+              'top',
+              'center',
               4,
-              "warning",
+              'warning',
               3000,
               message
             ]);
           } else if (
-            typeof msg === "string" &&
-            msg.toLowerCase().search("not been verified") !== -1
+            typeof msg === 'string' &&
+            msg.toLowerCase().search('not been verified') !== -1
           ) {
             let message =
-              "Your email has not been verified. Click OK to proceed to the email verification page.";
+              'Your email has not been verified. Click OK to proceed to the email verification page.';
             this.showNotification([
-              "top",
-              "center",
+              'top',
+              'center',
               4,
-              "warning",
+              'warning',
               3000,
               message
             ]);
@@ -210,8 +209,15 @@ export class LoginComponent implements OnInit, OnDestroy {
           ) {
             const message =
               'Unknown email address. Perhaps you have not signed up yet?';
-            this.showNotification(['top', 'center', 4, 'warning', 3000, message]);
-          } else if (msg instanceof Object && !Object.entries(msg)) {
+            this.showNotification([
+              'top',
+              'center',
+              4,
+              'warning',
+              3000,
+              message
+            ]);
+          } else if (msg instanceof Object && !Object.entries(msg).length) {
             this.login();
           } else {
             this.showNotification(['top', 'center', 4, 'warning', 3000, msg]);
@@ -229,13 +235,13 @@ export class LoginComponent implements OnInit, OnDestroy {
   showNotification(values) {
     let [from, align, color, icon, time, message] = [...values];
     const type = [
-      "",
-      "info",
-      "success",
-      "warning",
-      "danger",
-      "rose",
-      "primary"
+      '',
+      'info',
+      'success',
+      'warning',
+      'danger',
+      'rose',
+      'primary'
     ];
 
     if (!color) {
@@ -262,9 +268,9 @@ export class LoginComponent implements OnInit, OnDestroy {
           '<span data-notify="message">{2}</span>' +
           '<div class="progress" data-notify="progressbar">' +
           '<div class="progress-bar progress-bar-{0}" role="progressbar" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100" style="width: 0%;"></div>' +
-          "</div>" +
+          '</div>' +
           '<a href="{3}" target="{4}" data-notify="url"></a>' +
-          "</div>"
+          '</div>'
       }
     );
   }
