@@ -27,7 +27,7 @@ import {
   MatAutocomplete
 } from '@angular/material';
 import { Apollo } from 'apollo-angular';
-
+import { LiveAnnouncer, FocusMonitor } from '@angular/cdk/a11y';
 import gql from 'graphql-tag';
 import swal from 'sweetalert2';
 
@@ -141,6 +141,9 @@ export class WizardComponent
     ' image/*',
     'video/*'
   ];
+  goToTitle = false;
+  wizardHeight;
+  headingHeight = 0;
 
   // removeOwnerSub: Subscription;
   // getProlemSub: Subscription;
@@ -164,7 +167,10 @@ export class WizardComponent
     private problemService: ProblemService,
     private geoService: GeocoderService,
     private http: HttpClient,
-    private filterService: FilterService
+    private filterService: FilterService,
+    private liveAnouncer: LiveAnnouncer,
+    private elementRef: ElementRef,
+    private focusMonitor: FocusMonitor
   ) {
     canProceed = true;
 
@@ -298,7 +304,7 @@ export class WizardComponent
     // this.addTagsSub.unsubscribe();
   }
   ngOnInit() {
-    console.log('wizard on in it');
+    // console.log('wizard on in it');
     this.tagService.getTagsFromDB();
     this.geoService.getLocationsFromDB();
 
@@ -703,7 +709,9 @@ export class WizardComponent
     $('.set-full-height').css('height', 'auto');
   }
 
-  ngOnChanges(changes: SimpleChanges) {
+  ngOnChanges() {
+    console.log('>>>>>>>>>>>>>>>>>>>');
+
     const input = $(this);
     if (input[0].files && input[0].files[0]) {
       const reader: any = new FileReader();
@@ -714,7 +722,10 @@ export class WizardComponent
       };
       reader.readAsDataURL(input[0].files[0]);
     }
+
+    console.log('search result: ', this.searchResults.length);
   }
+
   ngAfterViewInit() {
     $(window).resize(() => {
       $('.card-wizard').each(function() {
@@ -770,6 +781,20 @@ export class WizardComponent
         });
       });
     });
+
+    this.setScrollableHeight();
+  }
+
+  setScrollableHeight() {
+    // setting search result div height
+    setTimeout(() => {
+      this.wizardHeight = this.elementRef.nativeElement.querySelector(
+        'div.card.card-wizard'
+      ).clientHeight;
+
+      this.wizardHeight -= this.headingHeight;
+      console.log('>>> ', this.wizardHeight);
+    }, 10);
   }
 
   test(event) {
@@ -905,6 +930,24 @@ export class WizardComponent
         .subscribe(
           searchResults => {
             this.searchResults = searchResults;
+
+            if (this.searchResults.length) {
+              this.liveAnouncer.announce(
+                `Found ${this.searchResults.length} similar problems.`
+              );
+            }
+
+            // calculate extra heading height to scoll search result
+            setTimeout(() => {
+              if (this.searchResults.length) {
+                this.headingHeight = this.elementRef.nativeElement.querySelector(
+                  'h2#resultsList'
+                ).clientHeight;
+                this.setScrollableHeight();
+              } else {
+                this.headingHeight = 0;
+              }
+            }, 10);
           },
           error => {}
         );
@@ -1002,7 +1045,7 @@ export class WizardComponent
     );
   }
   updateProblem(updatedProblem) {
-    console.log(updatedProblem, 'updated problem');
+    // console.log(updatedProblem, 'updated problem');
     this.problem = updatedProblem;
   }
   removeDuplicates(array) {
@@ -1157,7 +1200,7 @@ export class WizardComponent
   }
 
   submitProblemToDB(problem) {
-    console.log(problem, 'Problem');
+    // console.log(problem, 'Problem');
     const upsert_problem = gql`
       mutation upsert_problem($problems: [problems_insert_input!]!) {
         insert_problems(
@@ -1490,5 +1533,19 @@ export class WizardComponent
       );
     }
     // this.problemLocations = locations;
+  }
+
+  moveFocusSearchHeading() {
+    this.setFocus('h2.h2_heading');
+    this.goToTitle = false;
+  }
+
+  setFocus(elemId: string): void {
+    const element = this.elementRef.nativeElement.querySelector(elemId);
+    this.focusMonitor.focusVia(element, 'program');
+  }
+
+  focusBackToTitle() {
+    this.goToTitle = true;
   }
 }

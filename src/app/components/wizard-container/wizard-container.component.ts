@@ -78,15 +78,17 @@ export class WizardContainerComponent
   implements OnInit, OnChanges, AfterViewInit {
   accessUrl: string;
   @Input() content;
-
+  @Input() searchedResults: any[];
   @Input() sectors: string[] = [];
   @Input() contentType: any;
   @Input() owners: any[] = [];
   @Input() selectedLocations = [];
+  @Input() revertFocus: boolean;
 
   // @Input() canProceed: any = true;
   @Output() fieldsPopulated = new EventEmitter();
   @Output() smartSearchInput = new EventEmitter();
+  @Output() changeFocus = new EventEmitter();
   @Output() tagAdded = new EventEmitter();
   @Output() tagRemoved = new EventEmitter();
   @Output() contentSubmitted = new EventEmitter();
@@ -692,8 +694,13 @@ export class WizardContainerComponent
   }
 
   ngOnChanges(changes: SimpleChanges) {
+    // Revert focus
+    if (this.revertFocus) {
+      this.setFocus('input[name="title"]');
+    }
+
     if (this.localSectors.length <= this.sectors.length) {
-      //console.log(this.localSectors, ">>>>> local sectors ");
+      // console.log(this.localSectors, ">>>>> local sectors ");
       this.localSectors = this.sectors;
       // //console.log(
       //   this.localSectors,
@@ -796,12 +803,13 @@ export class WizardContainerComponent
     });
 
     setTimeout(() => {
-      const cardHeading = this.elementRef.nativeElement.querySelector(
-        'h1.card-title'
-      );
-
-      this.focusMonitor.focusVia(cardHeading, 'program');
+      this.setFocus('h1.card-title');
     }, 1000);
+  }
+
+  setFocus(elemId) {
+    const elm = this.elementRef.nativeElement.querySelector(elemId);
+    this.focusMonitor.focusVia(elm, 'program');
   }
 
   removeSelectedItem(type: string, index: number) {
@@ -1065,5 +1073,9 @@ export class WizardContainerComponent
     } else {
       return false;
     }
+  }
+
+  moveFocus() {
+    this.changeFocus.emit(true);
   }
 }

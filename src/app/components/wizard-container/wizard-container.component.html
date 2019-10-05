@@ -3,7 +3,7 @@
   <div class="card card-wizard" data-color="orange" id="wizardProfile">
     <form autocomplete="off" [formGroup]="type" action="" method="" (keyup)="sendDataBack($event)">
       <div class="card-header text-center" >
-        <h1 class="card-title" style="font-size: 1.7rem;" tabindex="0" *ngIf="contentType==='problem'">
+        <h1 class="card-title" style="font-size: 1.7rem;" tabindex="-1" *ngIf="contentType==='problem'">
           {{content.title || "Let's add a content"}}
         </h1>
       </div>
@@ -47,6 +47,11 @@
                       [(ngModel)]="content.title" (input)="sendInputToParent($event.target.value)" required>
                   </mat-form-field>
                 </div>
+              </div>
+            </div>
+            <div class="row">
+              <div class="col-sm-12 mx-5">
+                <a class="sr-only sr-only-focusable" *ngIf="searchedResults.length" href="javascript:void(0);" (click)="moveFocus()">Skip to found results</a>
               </div>
             </div>
             <div class="row justify-content-center">
