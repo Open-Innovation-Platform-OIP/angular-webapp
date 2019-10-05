@@ -788,17 +788,20 @@ export class WizardComponent
   setScrollableHeight() {
     // setting search result div height
     setTimeout(() => {
+      if (this.searchResults.length) {
+        this.headingHeight =
+          this.elementRef.nativeElement.querySelector('h2#resultsList')
+            .clientHeight || 0;
+      } else {
+        this.headingHeight = 0;
+      }
+
       this.wizardHeight = this.elementRef.nativeElement.querySelector(
         'div.card.card-wizard'
       ).clientHeight;
 
       this.wizardHeight -= this.headingHeight;
-      console.log('>>> ', this.wizardHeight);
     }, 10);
-  }
-
-  test(event) {
-    // //console.log(event, "event");
   }
 
   // removePhoto(index) {
@@ -937,17 +940,7 @@ export class WizardComponent
               );
             }
 
-            // calculate extra heading height to scoll search result
-            setTimeout(() => {
-              if (this.searchResults.length) {
-                this.headingHeight = this.elementRef.nativeElement.querySelector(
-                  'h2#resultsList'
-                ).clientHeight;
-                this.setScrollableHeight();
-              } else {
-                this.headingHeight = 0;
-              }
-            }, 10);
+            this.setScrollableHeight();
           },
           error => {}
         );

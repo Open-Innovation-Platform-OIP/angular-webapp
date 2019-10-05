@@ -40,7 +40,7 @@ import {
   MatChipInputEvent,
   MatAutocomplete
 } from '@angular/material';
-import { FocusMonitor } from '@angular/cdk/a11y';
+import { FocusMonitor, LiveAnnouncer } from '@angular/cdk/a11y';
 declare const $: any;
 
 let canProceed: boolean;
@@ -159,7 +159,8 @@ export class WizardContainerComponent
     private auth: AuthService,
     private here: GeocoderService,
     private elementRef: ElementRef,
-    private focusMonitor: FocusMonitor
+    private focusMonitor: FocusMonitor,
+    private liveAnnouncer: LiveAnnouncer
   ) {
     this.filteredSectors = this.sectorCtrl.valueChanges.pipe(
       startWith(null),
@@ -223,6 +224,7 @@ export class WizardContainerComponent
     };
 
     this.selectedLocations.push(locationData);
+    this.liveAnnouncer.announce(`Added ${locationData.location_name}`);
 
     // //console.log(this.selectedLocations, "selected locations");
 
@@ -252,7 +254,7 @@ export class WizardContainerComponent
   }
 
   removeLocation(removedLocation) {
-    //console.log(location, "removed location");
+    // console.log(removedLocation, 'removed location');
     this.selectedLocations = this.selectedLocations.filter(location => {
       if (
         location.location.coordinates[0] !==
@@ -270,6 +272,7 @@ export class WizardContainerComponent
     // //console.log(this.selectedLocations, "selected locations after removal");
 
     this.locationRemoved.emit(removedLocation);
+    this.liveAnnouncer.announce(`Remove ${removedLocation.location_name}`);
   }
 
   deleteClicked() {
@@ -277,12 +280,15 @@ export class WizardContainerComponent
   }
 
   remove(sector: string): void {
+    console.log(sector, this.localSectors);
     const index = this.localSectors.indexOf(sector);
     if (index >= 0) {
       this.localSectors.splice(index, 1);
     }
 
     this.tagRemoved.emit(sector);
+
+    this.liveAnnouncer.announce(`Removed ${sector}`);
   }
 
   getLocation() {
@@ -290,6 +296,9 @@ export class WizardContainerComponent
       this.here.getAddress(this.locationInputValue).then(
         result => {
           this.locations = <Array<any>>result;
+          this.liveAnnouncer.announce(
+            `Found ${this.locations.length} locations`
+          );
         },
         error => {
           console.error(error);
@@ -303,6 +312,7 @@ export class WizardContainerComponent
     this.localSectors.push(event.option.viewValue);
     this.sectorInput.nativeElement.value = '';
     this.sectorCtrl.setValue(null);
+    this.liveAnnouncer.announce(`Added ${event.option.viewValue}`);
     this.tagAdded.emit(this.localSectors);
   }
 
@@ -330,21 +340,20 @@ export class WizardContainerComponent
   }
 
   selectedOwner(event: MatAutocompleteSelectedEvent): void {
-    //console.log(event.option, "event value");
     this.owners.push(event.option.value);
     this.ownerInput.nativeElement.value = '';
     this.ownersCtrl.setValue(null);
     this.addedOwners.emit(this.owners);
+    this.liveAnnouncer.announce(`Added ${event.option.value.value}`);
   }
 
   removeOwner(owner) {
-    //console.log(owner, "remove");
     const index = this.owners.indexOf(owner);
     if (index >= 0) {
       this.owners.splice(index, 1);
       this.removedOwners.emit(owner);
+      this.liveAnnouncer.announce(`Removed ${owner.value || owner.name}`);
     }
-    //console.log(this.owners, "removed in container");
   }
 
   addOwner(event) {
