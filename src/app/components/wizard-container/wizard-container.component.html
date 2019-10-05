@@ -15,7 +15,7 @@
             </a>
           </li>
           <li class="nav-item">
-            <a class="nav-link" href="#media" data-toggle="tab" role="tab">
+            <a class="nav-link" href="#media" data-toggle="tab" role="tab" aria-label="upload image and media contents">
               Media:
               image(s) and video(s)
             </a>
@@ -35,7 +35,7 @@
                 <div class="input-group form-control-lg" *ngIf="contentType==='problem'">
                   <div class="input-group-prepend">
                     <span class="input-group-text">
-                      <i class="material-icons" [ngStyle]="{
+                      <i class="material-icons" aria-hidden="true" [ngStyle]="{
                       color: !content.title
                         ? 'red'
                         : '#495057'
@@ -59,7 +59,7 @@
                 <div class="input-group form-control-lg">
                   <div class="input-group-prepend">
                     <span class="input-group-text">
-                      <i class="material-icons" [ngStyle]="{
+                      <i class="material-icons" aria-hidden="true" [ngStyle]="{
                       color: !content.description
                         ? 'red'
                         : '#495057'
@@ -83,7 +83,7 @@
                 <div class="input-group form-control-lg">
                   <div class="input-group-prepend">
                     <span class="input-group-text">
-                      <i class="material-icons" [ngStyle]="{
+                      <i class="material-icons" aria-hidden="true" [ngStyle]="{
                       color: !content.organization
                         ? 'red'
                         : '#495057'
@@ -128,7 +128,7 @@
                 <div class="input-group form-control-lg">
                   <div class="input-group-prepend">
                     <span class="input-group-text">
-                      <i class="material-icons" [ngStyle]="{
+                      <i class="material-icons" aria-hidden="true" [ngStyle]="{
                       color: !content.max_population
                         ? 'red'
                         : '#495057'
@@ -165,7 +165,7 @@
                 <div class="input-group form-control-lg">
                   <div class="input-group-prepend">
                     <span class="input-group-text">
-                      <i class="material-icons">nature_people</i>
+                      <i class="material-icons" aria-hidden="true">nature_people</i>
                     </span>
                   </div>
                   <mat-form-field class="example-full-width has-label" [ngClass]="displayFieldCss(type, 'location')">
@@ -184,7 +184,7 @@
                 <div class="input-group form-control-lg">
                   <div class="input-group-prepend">
                     <span class="input-group-text">
-                      <i class="material-icons">trending_up</i>
+                      <i class="material-icons" aria-hidden="true">trending_up</i>
                     </span>
                   </div>
                   <mat-form-field class="example-full-width has-label" [ngClass]="displayFieldCss(type, 'resources')">
@@ -202,7 +202,7 @@
                 <div class="input-group form-control-lg">
                   <div class="input-group-prepend">
                     <span class="input-group-text">
-                      <i class="material-icons" [ngStyle]="{
+                      <i class="material-icons" aria-hidden="true" [ngStyle]="{
                           color: !selectedLocations.length
                             ? 'red'
                             : '#495057'
@@ -260,7 +260,7 @@
                 <div class="input-group form-control-lg">
                   <div class="input-group-prepend">
                     <span class="input-group-text">
-                      <i class="material-icons">trending_up</i>
+                      <i class="material-icons" aria-hidden="true">trending_up</i>
                     </span>
                   </div>
                   <mat-form-field class="example-full-width has-label" [ngClass]="displayFieldCss(type, 'impact')">
@@ -278,7 +278,7 @@
                 <div class="input-group form-control-lg">
                   <div class="input-group-prepend">
                     <span class="input-group-text">
-                      <i class="material-icons">public</i>
+                      <i class="material-icons" aria-hidden="true">public</i>
                     </span>
                   </div>
                   <mat-form-field class="example-full-width has-label" [ngClass]="displayFieldCss(type, 'extent')">
@@ -303,7 +303,7 @@
                 <div class="input-group form-control-lg">
                   <div class="input-group-prepend">
                     <span class="input-group-text">
-                      <i class="material-icons" [ngStyle]="{
+                      <i class="material-icons" aria-hidden="true" [ngStyle]="{
                                 color: !localSectors.length
                                   ? 'red'
                                   : '#495057'
@@ -399,7 +399,7 @@
               <div class="col-sm-6">
                 <div class="picture-container">
                   <div class="picture">
-                    <img src="./assets/img/plus.png" class="picture-src" id="wizardPicturePreview" title="" />
+                    <img src="./assets/img/plus.png" aria-hidden="true" class="picture-src" id="wizardPicturePreview" title="" />
                     <input type="file" id="file_input_btn" (change)="onFileSelected($event)" name="..." multiple
                       accept="{{file_types.join(',')}}">
                   </div>
@@ -410,7 +410,7 @@
                 <div class="input-group">
                   <div class="input-group-prepend">
                     <span class="input-group-text">
-                      <i class="material-icons" [ngStyle]="{
+                      <i class="material-icons" aria-hidden="true" [ngStyle]="{
                       color: checkMedialUrl(media_url) == false
                         ? 'red'
                         : '#495057'
@@ -435,7 +435,7 @@
             <div class="row" id="loader" style="display:none;">
               <div class="col">
                 <div class="d-flex align-items-center">
-                  <i class="fa fa-spinner fa-spin" style="font-size:32px;color: grey;"></i>
+                  <i class="fa fa-spinner fa-spin" aria-hidden="true" style="font-size:32px;color: grey;"></i>
                   <strong>&nbsp;&nbsp; Uploading...</strong>
                 </div>
               </div>
