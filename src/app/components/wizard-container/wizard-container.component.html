@@ -32,7 +32,7 @@
             </div> -->
             <div class="row justify-content-center">
               <div class="col-sm-12">
-                <div class="input-group form-control-lg" *ngIf="contentType==='problem'">
+                <div class="input-group form-control-lg" *ngIf="contentType ==='problem'">
                   <div class="input-group-prepend">
                     <span class="input-group-text">
                       <i class="material-icons" aria-hidden="true" [ngStyle]="{
@@ -51,8 +51,10 @@
             </div>
             <div class="row">
               <div class="col-sm-12 mx-5">
-                <a class="sr-only sr-only-focusable" *ngIf="searchedResults.length" href="javascript:void(0);"
+                <a class="cdk-visually-hidden" *ngIf=" contentType === 'problem' && searchedResults.length" href="javascript:void(0);"
                   (click)="moveFocus()">Skip to found results</a>
+                <a class="cdk-visually-hidden" *ngIf=" contentType === 'enrichment'" href="javascript:void(0);"
+                  (click)="moveFocus()">Skip to problem details</a>
               </div>
             </div>
             <div class="row justify-content-center">

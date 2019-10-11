@@ -78,12 +78,12 @@ export class WizardContainerComponent
   implements OnInit, OnChanges, AfterViewInit {
   accessUrl: string;
   @Input() content;
-  @Input() searchedResults: any[];
+  @Input() searchedResults: any[] = [];
   @Input() sectors: string[] = [];
   @Input() contentType: any;
   @Input() owners: any[] = [];
   @Input() selectedLocations = [];
-  @Input() revertFocus: boolean;
+  @Input() revertFocus = false;
 
   // @Input() canProceed: any = true;
   @Output() fieldsPopulated = new EventEmitter();
@@ -704,8 +704,10 @@ export class WizardContainerComponent
 
   ngOnChanges(changes: SimpleChanges) {
     // Revert focus
-    if (this.revertFocus) {
+    if (this.contentType === 'problem' && this.revertFocus) {
       this.setFocus('input[name="title"]');
+    } else if (this.contentType === 'enrichment' && this.revertFocus) {
+      this.setFocus('textarea[name="description"]');
     }
 
     if (this.localSectors.length <= this.sectors.length) {
@@ -818,7 +820,10 @@ export class WizardContainerComponent
 
   setFocus(elemId) {
     const elm = this.elementRef.nativeElement.querySelector(elemId);
-    this.focusMonitor.focusVia(elm, 'program');
+
+    if (elm) {
+      this.focusMonitor.focusVia(elm, 'program');
+    }
   }
 
   removeSelectedItem(type: string, index: number) {

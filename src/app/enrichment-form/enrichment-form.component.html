@@ -2,96 +2,135 @@
   <div class="container-fluid">
     <div class="row">
       <div class="col-md-8">
-        <app-wizard-container [content]="enrichmentData" [contentType]="'enrichment'"
-          (contentSubmitted)="onEnrichmentSubmit($event)" [selectedLocations]="enrichmentLocations"
-          (locationSelected)="addLocation($event)" (locationRemoved)="removeLocation($event)"></app-wizard-container>
+        <app-wizard-container
+          [content]="enrichmentData"
+          [contentType]="'enrichment'"
+          (contentSubmitted)="onEnrichmentSubmit($event)"
+          [selectedLocations]="enrichmentLocations"
+          (locationSelected)="addLocation($event)"
+          (locationRemoved)="removeLocation($event)"
+          (changeFocus)="focusToProblemDetails($event)"
+          [revertFocus]="moveFocusBack"
+        ></app-wizard-container>
       </div>
       <div class="col-md-4">
-        <!-- <app-problem-card *ngIf="problemData" [problemData]="problemData"></app-problem-card> -->
-        <div class="card card-product" *ngIf="problemData">
+        <div class="card card-product mt-5" *ngIf="problemData">
           <div class="card-header card-header-warning">
-            <h4 class="card-title">{{problemData.title}}</h4>
-            <p class="card-category"><b>Created By : {{problemData.user.name}}</b></p>
+            <h2
+              style="font-size: 1.5rem;"
+              class="card-title"
+              tabindex="0"
+              #cardHeading
+            >
+              {{ problemData.title }}
+            </h2>
+            <p class="card-category">
+              <b>Created By : {{ problemData.user.name }}</b>
+            </p>
           </div>
           <div class="card-body">
             <div class="row">
-              <!-- <div class="col-md-4">
-                  <div class="picture">
-                    <img
-                      src="{{(problemData.featured_url && checkUrlIsImg(problemData.featured_url)) ? problemData.featured_url : './assets/img/image_placeholder.jpg'}}"
-                      alt="Thumbnail Image" class="rounded img-fluid">
-                    <div class="row justify-content-center">
-                      <button mat-raised-button *ngIf="problem_attachments.length > 1"
-                        class="btn btn-raised btn-info btn-sm" data-toggle="modal" data-target="#viewMoreImgModal">
-                        view media ({{problem_attachments.length}})
-                      </button>
-                    </div>
-                  </div>
-                </div> -->
               <div class="col-md-8">
-                <strong *ngIf="problemData.description">Description</strong>
-                <p class="description" style="white-space: pre-wrap;">{{problemData.description}}</p>
+                <div *ngIf="problemData.description">
+                  <h3 class="headingFontSize">
+                    Description
+                  </h3>
+                  <p class="description" style="white-space: pre-wrap;">
+                    {{ problemData.description }}
+                  </p>
+                </div>
 
-                <strong *ngIf="problemData.organization">Organization</strong>
-                <p class="description">{{problemData.organization}}</p>
+                <div *ngIf="problemData.organization">
+                  <h3 class="headingFontSize">
+                    Organization
+                  </h3>
+                  <p class="description">{{ problemData.organization }}</p>
+                </div>
 
-                <strong>Population Affected</strong>
-                <p class="description" *ngIf="problemData.min_population===0">Between {{problemData.min_population}}
-                  and {{problemData.max_population}}</p>
-                <p class="description" *ngIf="problemData.min_population!==0">More than
-                  {{problemData.min_population}}</p>
-
-                <strong *ngIf="problemData.beneficiary_attributes">Beneficiary Attributes</strong>
-                <p class="description" style="white-space: pre-wrap;">{{problemData.beneficiary_attributes}}</p>
-
-                <strong *ngIf="problemData.resources_needed">Resources Needed</strong>
-                <p class="description" style="white-space: pre-wrap;">{{problemData.resources_needed}}</p>
-
-                <strong *ngIf="problemData.problems_tags.length">Sectors</strong>
                 <div>
-                  <span *ngFor="let tags of problemData.problems_tags "
-                    class="badge badge-warning">{{tags.tag.name}}</span>
-                  <span>&nbsp;</span>
+                  <h3 class="headingFontSize">Population Affected</h3>
+                  <p
+                    class="description"
+                    *ngIf="problemData.min_population === 0"
+                  >
+                    Between {{ problemData.min_population }} and
+                    {{ problemData.max_population }}
+                  </p>
+                  <p
+                    class="description"
+                    *ngIf="problemData.min_population !== 0"
+                  >
+                    More than {{ problemData.min_population }}
+                  </p>
                 </div>
 
-                <strong *ngIf="problemData.impact">Impact</strong>
-                <p class="description" style="white-space: pre-wrap;">{{problemData.impact}}</p>
-
-                <strong *ngIf="problemData.extent">Extent</strong>
-                <p class="description" style="white-space: pre-wrap;">{{problemData.extent}}</p>
-
-                <strong>Location(s)</strong>
-                <div *ngFor="let location of problemData.location">
-                  <span class="badge badge-warning" *ngIf="location.Address.Label">{{location.Address.Label}}</span>
-                  <span>&nbsp;</span>
+                <div *ngIf="problemData.beneficiary_attributes">
+                  <h3 class="headingFontSize">Beneficiary Attributes</h3>
+                  <p class="description" style="white-space: pre-wrap;">
+                    {{ problemData.beneficiary_attributes }}
+                  </p>
                 </div>
 
+                <div *ngIf="problemData.resources_needed">
+                  <h3 class="headingFontSize">Resources Needed</h3>
+                  <p class="description" style="white-space: pre-wrap;">
+                    {{ problemData.resources_needed }}
+                  </p>
+                </div>
+
+                <div *ngIf="problemData.problems_tags.length">
+                  <h3 class="headingFontSize">
+                    Sectors
+                  </h3>
+                  <div>
+                    <span
+                      *ngFor="let tags of problemData.problems_tags"
+                      class="badge badge-warning mx-1"
+                      >{{ tags.tag.name }}</span
+                    >
+                  </div>
+                </div>
+
+                <div *ngIf="problemData.impact">
+                  <h3 class="headingFontSize">
+                    Impact
+                  </h3>
+                  <p class="description" style="white-space: pre-wrap;">
+                    {{ problemData.impact }}
+                  </p>
+                </div>
+
+                <div *ngIf="problemData.extent">
+                  <h3 class="headingFontSize">
+                    Extent
+                  </h3>
+                  <p class="description" style="white-space: pre-wrap;">
+                    {{ problemData.extent }}
+                  </p>
+                </div>
+
+                <div>
+                  <h3 class="headingFontSize">Location(s)</h3>
+                  <div *ngFor="let location of problemData.location">
+                    <span
+                      class="badge badge-warning mx-1"
+                      *ngIf="location.Address.Label"
+                      >{{ location.Address.Label }}</span
+                    >
+                  </div>
+                </div>
               </div>
             </div>
           </div>
-          <!-- <div class="card-footer">
-              <div>
-                <i class="material-icons actions" (click)="voteProblem()"
-                  [ngStyle]="{'color':isVoted ? '#1E90FF' : 'black' }">
-                  thumb_up
-                </i>
-                <span>{{number_of_votes}}</span>
-                <i class="material-icons actions col-md-3" (click)="watchProblem()"
-                  [ngStyle]="{'color':isWatching ? '#1E90FF' : 'black' }">
-                  visibility
-                </i>
-                <span>&nbsp;</span>
-                <span>&nbsp;</span>
-                <span> {{watchedBy}}</span>
-              </div>
-              <div *ngIf="userId===problemData.user_id" [routerLink]="
-                '/problems/'+ problemData.id+'/edit'">
-                <i class="material-icons actions">
-                  create
-                </i>
-              </div>
-  
-            </div> -->
+        </div>
+        <div class="col-sm-12 text-right">
+          <a
+            class="cdk-visually-hidden"
+            href="javascript:void(0);"
+            (click)="revertFocus()"
+          >
+            Go to description
+          </a>
         </div>
       </div>
     </div>
