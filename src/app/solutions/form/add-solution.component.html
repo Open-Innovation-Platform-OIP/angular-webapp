@@ -6,84 +6,135 @@
           <div class="card card-wizard" data-color="rose" id="wizardProfile">
             <form [formGroup]="type" action="" method="">
               <div class="card-header text-center">
-                <h3 class="card-title">
+                <h1 class="card-title page-heading" #heading tabindex="-1">
                   {{ solution.title || "Let's add content" }}
-                </h3>
+                </h1>
               </div>
               <div class="wizard-navigation">
-                <ul class="nav nav-pills">
-                  <li class="nav-item">
-                    <a class="nav-link active" href="#text" data-toggle="tab" role="tab">
+                <ul class="nav nav-pills" role="tablist">
+                  <li
+                    class="nav-item"
+                    role="tab"
+                    aria-controls="text"
+                    id="textTab"
+                  >
+                    <a class="nav-link active" href="#text" data-toggle="tab">
                       Text
                     </a>
                   </li>
-                  <li class="nav-item">
-                    <a class="nav-link" href="#media" data-toggle="tab" role="tab">
-                      Media:
-                      image(s) and video(s)
+                  <li
+                    class="nav-item"
+                    role="tab"
+                    aria-controls="media"
+                    id="mediaTab"
+                  >
+                    <a
+                      class="nav-link"
+                      href="#media"
+                      data-toggle="tab"
+                      aria-label="upload image and media contents"
+                    >
+                      Media: image(s) and video(s)
                     </a>
                   </li>
                 </ul>
               </div>
               <div class="card-body">
                 <div class="tab-content">
-                  <div class="tab-pane active" id="text">
-                    <div class="row justify-content-center">
+                  <div
+                    class="tab-pane active"
+                    id="text"
+                    role="tabpanel"
+                    aria-labelledby="textTab"
+                  >
+                    <!-- <div class="row justify-content-center">
                       <a href="#media" data-toggle="tab" role="tab" class="nav-link"
                         *ngIf="solution.image_urls.length+solution.video_urls.length>0">
                         {{solution.image_urls.length}} image(s) and {{solution.video_urls.length}} video(s) attached</a>
-                    </div>
+                    </div> -->
 
                     <div class="row justify-content-center">
                       <!-- <div class="col-sm-12">
                             <div class="input-group form-control-lg">
                               <div class="input-group-prepend">
                                 <span class="input-group-text">
-                                  <i class="material-icons">label</i>
+                                   <i class="material-icons" aria-hidden="true">label</i>
                                 </span>
                               </div> -->
                       <div class="col-sm-12">
                         <div class="input-group form-control-lg">
                           <div class="input-group-prepend">
                             <span class="input-group-text">
-
-                              <i class="material-icons" [ngStyle]="{
-                                color: !objectKeys(selectedProblems).length
-                                  ? 'red'
-                                  : '#495057'
-                              }">help</i>
+                              <i
+                                class="material-icons"
+                                aria-hidden="true"
+                                aria-hidden="true"
+                                [ngStyle]="{
+                                  color: !objectKeys(selectedProblems).length
+                                    ? 'red'
+                                    : '#495057'
+                                }"
+                                >help</i
+                              >
                             </span>
                           </div>
 
                           <mat-form-field class="example-chip-list">
-
-                            <input placeholder='Select Problem *' matInput style="width: 700px;" #problemInput
-                              [formControl]="problemCtrl" autofocus [matAutocomplete]="auto"
-                              [matChipInputFor]="chipList" [matChipInputSeparatorKeyCodes]="separatorKeysCodes"
-                              [matChipInputAddOnBlur]="addOnBlur" (input)="searchProblem($event)"
-                              (focus)="hideProblems('problem')">
-                            <mat-chip-list #chipList>
-                            </mat-chip-list>
-                            <mat-autocomplete #auto="matAutocomplete" (optionSelected)="selected($event)">
-                              <mat-option *ngFor="let problem of problemSearchResults" [value]="problem">
-                                {{problem.title}}
+                            <input
+                              placeholder="Select Problem"
+                              matInput
+                              style="width: 700px;"
+                              #problemInput
+                              [formControl]="problemCtrl"
+                              [matAutocomplete]="auto"
+                              [matChipInputFor]="chipList"
+                              [matChipInputSeparatorKeyCodes]="
+                                separatorKeysCodes
+                              "
+                              [matChipInputAddOnBlur]="addOnBlur"
+                              (input)="searchProblem($event)"
+                              (focus)="hideProblems('problem')"
+                              required
+                            />
+                            <mat-chip-list #chipList> </mat-chip-list>
+                            <mat-autocomplete
+                              #auto="matAutocomplete"
+                              (optionSelected)="selected($event)"
+                            >
+                              <mat-option
+                                *ngFor="let problem of problemSearchResults"
+                                [value]="problem"
+                              >
+                                {{ problem.title }}
                               </mat-option>
                             </mat-autocomplete>
                           </mat-form-field>
-
                         </div>
                       </div>
                     </div>
 
                     <div class="row justify-content-center">
-                      <div class="col-sm-10" *ngFor="let problem of objectValues(selectedProblemsData)">
-
-                        <mat-chip [selectable]="selectable" [removable]="removable" (removed)="remove(problem)"
-                          style="margin-right:0.3em; margin-bottom: 0.4em;">
-                          <a [routerLink]="'/problems/'+problem.id" queryParamsHandling="merge">
-                            {{problem.title}}
+                      <div
+                        class="col-sm-10"
+                        *ngFor="
+                          let problem of objectValues(selectedProblemsData)
+                        "
+                      >
+                        <mat-chip
+                          [selectable]="selectable"
+                          [removable]="removable"
+                          (removed)="remove(problem)"
+                          style="margin-right:0.3em; margin-bottom: 0.4em;"
+                        >
+                          <a
+                            [routerLink]="'/problems/' + problem.id"
+                            queryParamsHandling="merge"
+                          >
+                            {{ problem.title }}
                           </a>
-                          <mat-icon matChipRemove *ngIf="removable">cancel</mat-icon>
+                          <mat-icon matChipRemove *ngIf="removable"
+                            >cancel</mat-icon
+                          >
                         </mat-chip>
                       </div>
                     </div>
@@ -93,18 +144,33 @@
                         <div class="input-group form-control-lg">
                           <div class="input-group-prepend">
                             <span class="input-group-text">
-                              <i class="material-icons" [ngStyle]="{
-                              color: !solution.title
-                                ? 'red'
-                                : '#495057'
-                            }">title</i>
+                              <i
+                                class="material-icons"
+                                aria-hidden="true"
+                                aria-hidden="true"
+                                [ngStyle]="{
+                                  color: !solution.title ? 'red' : '#495057'
+                                }"
+                                >title</i
+                              >
                             </span>
                           </div>
-                          <mat-form-field class="example-full-width has-label"
-                            [ngClass]="displayFieldCss(type, 'title')">
-                            <input type="text" matInput id="title" appAutofocus placeholder="Title *"
-                              formControlName="title" [(ngModel)]="solution.title"
-                              (input)="solutionSearch($event.target.value)" (focus)="hideProblems('solution')">
+                          <mat-form-field
+                            class="example-full-width has-label"
+                            [ngClass]="displayFieldCss(type, 'title')"
+                          >
+                            <input
+                              type="text"
+                              matInput
+                              id="title"
+                              appAutofocus
+                              placeholder="Title"
+                              formControlName="title"
+                              [(ngModel)]="solution.title"
+                              (input)="solutionSearch($event.target.value)"
+                              (focus)="hideProblems('solution')"
+                              required
+                            />
                           </mat-form-field>
                         </div>
                       </div>
@@ -115,18 +181,34 @@
                         <div class="input-group form-control-lg">
                           <div class="input-group-prepend">
                             <span class="input-group-text">
-                              <i class="material-icons" [ngStyle]="{
-                              color: !solution.description
-                                ? 'red'
-                                : '#495057'
-                            }">description</i>
+                              <i
+                                class="material-icons"
+                                aria-hidden="true"
+                                [ngStyle]="{
+                                  color: !solution.description
+                                    ? 'red'
+                                    : '#495057'
+                                }"
+                                >description</i
+                              >
                             </span>
                           </div>
-                          <mat-form-field class="example-full-width has-label"
-                            [ngClass]="displayFieldCss(type, 'description')">
-                            <textarea type="text" name="description" matInput id="description"
-                              placeholder="Description *" formControlName="description"
-                              [(ngModel)]="solution.description" rows="4" wrap="hard"></textarea>
+                          <mat-form-field
+                            class="example-full-width has-label"
+                            [ngClass]="displayFieldCss(type, 'description')"
+                          >
+                            <textarea
+                              type="text"
+                              name="description"
+                              matInput
+                              id="description"
+                              placeholder="Description"
+                              formControlName="description"
+                              [(ngModel)]="solution.description"
+                              rows="4"
+                              wrap="hard"
+                              required
+                            ></textarea>
                           </mat-form-field>
                         </div>
                       </div>
@@ -141,18 +223,28 @@
                         <div class="input-group form-control-lg">
                           <div class="input-group-prepend">
                             <span class="input-group-text">
-                              <i class="material-icons">build</i>
+                              <i class="material-icons" aria-hidden="true"
+                                >build</i
+                              >
                             </span>
                           </div>
-                          <mat-form-field class="example-full-width has-label"
-                            [ngClass]="displayFieldCss(type, 'technology')">
-                            <input type="text" name="technology" matInput id="technology" appAutofocus
-                              placeholder="Innovation " formControlName="technology" [(ngModel)]="solution.technology">
+                          <mat-form-field
+                            class="example-full-width has-label"
+                            [ngClass]="displayFieldCss(type, 'technology')"
+                          >
+                            <input
+                              type="text"
+                              name="technology"
+                              matInput
+                              id="technology"
+                              appAutofocus
+                              placeholder="Innovation "
+                              formControlName="technology"
+                              [(ngModel)]="solution.technology"
+                            />
                           </mat-form-field>
                         </div>
                       </div>
-
-
                     </div>
 
                     <div class="row justify-content-center">
@@ -160,15 +252,27 @@
                         <div class="input-group form-control-lg">
                           <div class="input-group-prepend">
                             <span class="input-group-text">
-                              <i class="material-icons">nature_people</i>
+                              <i class="material-icons" aria-hidden="true"
+                                >nature_people</i
+                              >
                             </span>
                           </div>
-                          <mat-form-field class="example-full-width has-label"
-                            [ngClass]="displayFieldCss(type, 'resources')">
-                            <input type="text" name="resources" matInput id="resources_needed" appAutofocus
-                              placeholder="Resources Needed" formControlName="resources"
-                              [(ngModel)]="solution.resources" (focus)="focusOnField($event)"
-                              (blur)="blurOnField($event)">
+                          <mat-form-field
+                            class="example-full-width has-label"
+                            [ngClass]="displayFieldCss(type, 'resources')"
+                          >
+                            <input
+                              type="text"
+                              name="resources"
+                              matInput
+                              id="resources_needed"
+                              appAutofocus
+                              placeholder="Resources Needed"
+                              formControlName="resources"
+                              [(ngModel)]="solution.resources"
+                              (focus)="focusOnField($event)"
+                              (blur)="blurOnField($event)"
+                            />
                           </mat-form-field>
                         </div>
                       </div>
@@ -187,7 +291,7 @@
                                     <a data-toggle="collapse" href="#collapseOne" aria-expanded="true"
                                       aria-controls="collapseOne" class="collapsed">
                                       Resources Needed of Selected Problem(s)
-                                      <i class="material-icons">keyboard_arrow_down</i>
+                                       <i class="material-icons" aria-hidden="true">keyboard_arrow_down</i>
                                     </a>
                                   </h5>
                                 </div>
@@ -214,55 +318,144 @@
                         <div class="input-group form-control-lg">
                           <div class="input-group-prepend">
                             <span class="input-group-text">
-                              <i class="material-icons"
-                                [ngStyle]="{color: !solution.impact ? 'red' : '#495057'}">trending_up</i>
+                              <i
+                                class="material-icons"
+                                aria-hidden="true"
+                                [ngStyle]="{
+                                  color: !solution.impact ? 'red' : '#495057'
+                                }"
+                                >trending_up</i
+                              >
                             </span>
                           </div>
-                          <mat-form-field class="example-full-width has-label"
-                            [ngClass]="displayFieldCss(type, 'impact')">
-                            <textarea type="text" name="impact" matInput id="impact" placeholder="Impact *"
-                              formControlName="impact" (focus)="focusOnField($event)" (blur)="blurOnField($event)"
-                              [(ngModel)]="solution.impact"></textarea>
+                          <mat-form-field
+                            class="example-full-width has-label"
+                            [ngClass]="displayFieldCss(type, 'impact')"
+                          >
+                            <textarea
+                              type="text"
+                              name="impact"
+                              matInput
+                              id="impact"
+                              placeholder="Impact"
+                              formControlName="impact"
+                              (focus)="focusOnField($event)"
+                              (blur)="blurOnField($event)"
+                              [(ngModel)]="solution.impact"
+                              required
+                            ></textarea>
                           </mat-form-field>
                         </div>
                       </div>
                     </div>
-                    <div class="row justify-content-center"
-                      *ngIf="showProblemImpacts  && objectValues(selectedProblemsData).length">
+
+                    <div class="col-sm-10 left3rem" *ngIf="
+                        showProblemImpacts &&
+                        objectValues(selectedProblemsData).length
+                      ">
+                      <div class="card">
+                        <div class="card-header">
+                          <h4 aria-label="Impact of Selected Problems">
+                            Impact of Selected Problem(s)
+                            <button
+                              type="button"
+                              class="close"
+                              aria-label="Close"
+                              (click)="!showProblemImpacts"
+                            >
+                              <span aria-hidden="true">&times;</span>
+                            </button>
+                          </h4>
+                        </div>
+                        <div style="height: 15rem; overflow-y: scroll;">
+                          <ul class="list-group list-group-flush">
+                            <li
+                              class="list-group-item"
+                              *ngFor="
+                                let problem of objectValues(
+                                  selectedProblemsData
+                                );
+                                let i = index
+                              "
+                            >
+                              <span *ngIf="problem.impact">
+                                <strong
+                                  >Problem {{ i + 1 }} - {{ problem.title }}
+                                </strong>
+                                {{ problem.impact }} 
+                              </span>
+                            </li>
+                          </ul>
+                        </div>
+                      </div>
+                    </div>
+
+                    <!-- <div
+                      class="row justify-content-center"
+                      *ngIf="
+                        showProblemImpacts &&
+                        objectValues(selectedProblemsData).length
+                      "
+                    >
                       <div class="col-sm-10">
-                        <ng-container *ngIf="objectValues(selectedProblemsData).length">
+                        <ng-container
+                          *ngIf="objectValues(selectedProblemsData).length"
+                        >
                           <div class="card-body">
-
-
                             <div id="accordion" role="tablist">
                               <div class="card-collapse">
-                                <div class="card-header" role="tab" id="headingOne">
+                                <div
+                                  class="card-header"
+                                  role="tab"
+                                  id="headingOne"
+                                >
                                   <h5 class="mb-0">
-                                    <a data-toggle="collapse" href="#collapseOne" aria-expanded="true"
-                                      aria-controls="collapseOne" class="collapsed">
+                                    <a
+                                      data-toggle="collapse"
+                                      href="#collapseOne"
+                                      aria-expanded="true"
+                                      aria-controls="collapseOne"
+                                      class="collapsed"
+                                    >
                                       Impact of Selected Problem(s)
-                                      <i class="material-icons">keyboard_arrow_down</i>
+                                      <i
+                                        class="material-icons"
+                                        aria-hidden="true"
+                                        >keyboard_arrow_down</i
+                                      >
                                     </a>
                                   </h5>
                                 </div>
-                                <div id="collapseOne" class="collapse show" role="tabpanel" aria-labelledby="headingOne"
-                                  data-parent="#accordion" style="">
+                                <div
+                                  id="collapseOne"
+                                  class="collapse show"
+                                  role="tabpanel"
+                                  aria-labelledby="headingOne"
+                                  data-parent="#accordion"
+                                  style=""
+                                >
                                   <div class="card-body">
-                                    <!-- <ul class="list-group list-group-flush"
-                                      *ngFor="let problem of objectValues(selectedProblemsData); let i=index;">
-                                      <li class="list-group-item" *ngIf="problem.impact">
-                                        <p><u>Problem {{ i+1 }} - {{problem.title}}</u></p>
-                                        <p><b>{{problem.impact}}</b></p>
-                                        <hr>
-                                      </li>
-                                    </ul> -->
                                     <div class="table-responsive">
                                       <table class="table">
                                         <tbody>
-                                          <tr *ngFor="let problem of objectValues(selectedProblemsData); let i=index;">
+                                          <tr
+                                            *ngFor="
+                                              let problem of objectValues(
+                                                selectedProblemsData
+                                              );
+                                              let i = index
+                                            "
+                                          >
                                             <td>
-                                              <p *ngIf="problem.impact"><u>Problem {{ i+1 }} - {{problem.title}}</u></p>
-                                              <p *ngIf="problem.impact"><b>{{problem.impact}}</b></p>
+                                              <p *ngIf="problem.impact">
+                                                <u
+                                                  >Problem {{ i + 1 }} -
+                                                  {{ problem.title }}</u
+                                                >
+                                              </p>
+                                              <p *ngIf="problem.impact">
+                                                <b>{{ problem.impact }}</b>
+                                              </p>
                                             </td>
                                           </tr>
                                         </tbody>
@@ -275,60 +468,147 @@
                           </div>
                         </ng-container>
                       </div>
-                    </div>
-                    <br>
+                    </div> 
+                    <br /> -->
 
                     <div class="row justify-content-center">
                       <div class="col-sm-12">
                         <div class="input-group form-control-lg">
                           <div class="input-group-prepend">
                             <span class="input-group-text">
-                              <i class="material-icons">trending_up</i>
+                              <i class="material-icons" aria-hidden="true"
+                                >trending_up</i
+                              >
                             </span>
                           </div>
-                          <mat-form-field class="example-full-width has-label"
-                            [ngClass]="displayFieldCss(type, 'extent')">
-                            <textarea type="text" name="extent" matInput id="extent" placeholder="Extent"
-                              formControlName="extent" (focus)="focusOnField($event)" (blur)="blurOnField($event)"
-                              [(ngModel)]="solution.extent"></textarea>
+                          <mat-form-field
+                            class="example-full-width has-label"
+                            [ngClass]="displayFieldCss(type, 'extent')"
+                          >
+                            <textarea
+                              type="text"
+                              name="extent"
+                              matInput
+                              id="extent"
+                              placeholder="Extent"
+                              formControlName="extent"
+                              (focus)="focusOnField($event)"
+                              (blur)="blurOnField($event)"
+                              [(ngModel)]="solution.extent"
+                            ></textarea>
                           </mat-form-field>
                         </div>
                       </div>
                     </div>
-                    <div class="row justify-content-center"
-                      *ngIf="showProblemExtent && objectValues(selectedProblemsData).length">
+
+                    <div class="col-sm-10 left3rem" *ngIf="
+                        showProblemExtent &&
+                        objectValues(selectedProblemsData).length
+                      ">
+                      <div class="card">
+                        <div class="card-header">
+                          <h4 aria-label="Extent of Selected Problems">
+                            Extent of Selected Problem(s)
+                            <button
+                              type="button"
+                              class="close"
+                              aria-label="Close"
+                              (click)="!showProblemExtent"
+                            >
+                              <span aria-hidden="true">&times;</span>
+                            </button>
+                          </h4>
+                        </div>
+                        <div style="height: 15rem; overflow-y: scroll;">
+                          <ul class="list-group list-group-flush">
+                            <li
+                              class="list-group-item"
+                              *ngFor="
+                                let problem of objectValues(
+                                  selectedProblemsData
+                                );
+                                let i = index
+                              "
+                            >
+                              <span *ngIf="problem.extent">
+                                <strong
+                                  >Problem {{ i + 1 }} - {{ problem.title }}
+                                </strong>
+                                {{ problem.extent }} 
+                              </span>
+                            </li>
+                          </ul>
+                        </div>
+                      </div>
+                    </div>
+
+                    <!-- <div
+                      class="row justify-content-center"
+                      *ngIf="
+                        showProblemExtent &&
+                        objectValues(selectedProblemsData).length
+                      "
+                    >
                       <div class="col-sm-10">
-                        <ng-container *ngIf="objectValues(selectedProblemsData).length">
+                        <ng-container
+                          *ngIf="objectValues(selectedProblemsData).length"
+                        >
                           <div class="card-body">
-
-
                             <div id="accordion" role="tablist">
                               <div class="card-collapse">
-                                <div class="card-header" role="tab" id="headingOne">
+                                <div
+                                  class="card-header"
+                                  role="tab"
+                                  id="headingOne"
+                                >
                                   <h5 class="mb-0">
-                                    <a data-toggle="collapse" href="#collapseOne" aria-expanded="true"
-                                      aria-controls="collapseOne" class="collapsed">
+                                    <a
+                                      data-toggle="collapse"
+                                      href="#collapseOne"
+                                      aria-expanded="true"
+                                      aria-controls="collapseOne"
+                                      class="collapsed"
+                                    >
                                       Extent of Selected Problem(s)
-                                      <i class="material-icons">keyboard_arrow_down</i>
+                                      <i
+                                        class="material-icons"
+                                        aria-hidden="true"
+                                        >keyboard_arrow_down</i
+                                      >
                                     </a>
                                   </h5>
                                 </div>
-                                <div id="collapseOne" class="collapse show" role="tabpanel" aria-labelledby="headingOne"
-                                  data-parent="#accordion" style="">
+                                <div
+                                  id="collapseOne"
+                                  class="collapse show"
+                                  role="tabpanel"
+                                  aria-labelledby="headingOne"
+                                  data-parent="#accordion"
+                                  style=""
+                                >
                                   <div class="card-body">
-                                    <!-- <ul *ngFor="let problem of objectValues(selectedProblemsData)">
-                                      <li *ngIf="problem.extent">
-                                        <h5>Problem - "{{problem.title}}"</h5>
-                                        <h4>{{problem.extent}}</h4>
-                                      </li>
-                                    </ul> -->
+                                    
                                     <div class="table-responsive">
                                       <table class="table">
                                         <tbody>
-                                          <tr *ngFor="let problem of objectValues(selectedProblemsData); let i=index;">
+                                          <tr
+                                            *ngFor="
+                                              let problem of objectValues(
+                                                selectedProblemsData
+                                              );
+                                              let i = index
+                                            "
+                                          >
                                             <td>
-                                              <p *ngIf="problem.impact"><u>Problem {{ i+1 }} - {{problem.title}}</u></p>
-                                              <p *ngIf="problem.impact"><b>{{problem.extent}}</b></p>
+                                              <p *ngIf="problem.impact">
+                                                <u
+                                                  >Problem {{ i + 1 }} -
+                                                  {{ problem.title }}</u
+                                                >
+                                              </p>
+                                              <p *ngIf="problem.impact">
+                                                <b>{{ problem.extent }}</b>
+                                              </p>
                                             </td>
                                           </tr>
                                         </tbody>
@@ -343,67 +623,155 @@
                       </div>
                     </div>
 
-                    <br />
+                    <br /> -->
 
                     <div class="row justify-content-center">
                       <div class="col-sm-12">
                         <div class="input-group form-control-lg">
                           <div class="input-group-prepend">
                             <span class="input-group-text">
-                              <i class="material-icons">trending_up</i>
+                              <i class="material-icons" aria-hidden="true"
+                                >trending_up</i
+                              >
                             </span>
                           </div>
-                          <mat-form-field class="example-full-width has-label"
-                            [ngClass]="displayFieldCss(type, 'beneficiary_attributes')">
-                            <textarea type="text" name="beneficiary_attributes" matInput id="beneficiary_attributes"
-                              placeholder="Beneficiary Attributes" formControlName="beneficiary_attributes"
-                              (focus)="focusOnField($event)" (blur)="blurOnField($event)"
-                              [(ngModel)]="solution.beneficiary_attributes"></textarea>
+                          <mat-form-field
+                            class="example-full-width has-label"
+                            [ngClass]="
+                              displayFieldCss(type, 'beneficiary_attributes')
+                            "
+                          >
+                            <textarea
+                              type="text"
+                              name="beneficiary_attributes"
+                              matInput
+                              id="beneficiary_attributes"
+                              placeholder="Beneficiary Attributes"
+                              formControlName="beneficiary_attributes"
+                              (focus)="focusOnField($event)"
+                              (blur)="blurOnField($event)"
+                              [(ngModel)]="solution.beneficiary_attributes"
+                            ></textarea>
                           </mat-form-field>
                         </div>
                       </div>
                     </div>
-                    <div class="row justify-content-center"
-                      *ngIf="showProblemBeneficiaryAttributes && objectValues(selectedProblemsData).length">
+
+                    <div class="col-sm-10 left3rem" *ngIf="
+                        showProblemBeneficiaryAttributes &&
+                        objectValues(selectedProblemsData).length
+                      ">
+                      <div class="card">
+                        <div class="card-header">
+                          <h4 aria-label="Beneficiary Attributes of Selected Problems">
+                            Beneficiary Attributes of Selected Problem(s)
+                            <button
+                              type="button"
+                              class="close"
+                              aria-label="Close"
+                              (click)="!showProblemBeneficiaryAttributes"
+                            >
+                              <span aria-hidden="true">&times;</span>
+                            </button>
+                          </h4>
+                        </div>
+                        <div style="height: 15rem; overflow-y: scroll;">
+                          <ul class="list-group list-group-flush">
+                            <li
+                              class="list-group-item"
+                              *ngFor="
+                                let problem of objectValues(
+                                  selectedProblemsData
+                                );
+                                let i = index
+                              "
+                            >
+                              <span *ngIf="problem.beneficiary_attributes">
+                                <strong
+                                  >Problem {{ i + 1 }} - {{ problem.title }}
+                                </strong>
+                                {{ problem.beneficiary_attributes }} 
+                              </span>
+                            </li>
+                          </ul>
+                        </div>
+                      </div>
+                    </div>
+
+                    <!-- <div
+                      class="row justify-content-center"
+                      *ngIf="
+                        showProblemBeneficiaryAttributes &&
+                        objectValues(selectedProblemsData).length
+                      "
+                    >
                       <div class="col-sm-10">
-                        <ng-container *ngIf="objectValues(selectedProblemsData).length">
+                        <ng-container
+                          *ngIf="objectValues(selectedProblemsData).length"
+                        >
                           <div class="card-body">
-
-
                             <div id="accordion" role="tablist">
                               <div class="card-collapse">
-                                <div class="card-header" role="tab" id="headingOne">
+                                <div
+                                  class="card-header"
+                                  role="tab"
+                                  id="headingOne"
+                                >
                                   <h5 class="mb-0">
-                                    <a data-toggle="collapse" href="#collapseOne" aria-expanded="true"
-                                      aria-controls="collapseOne" class="collapsed">
-                                      Beneficiary Attributes of Selected Problem(s)
-                                      <i class="material-icons">keyboard_arrow_down</i>
+                                    <a
+                                      data-toggle="collapse"
+                                      href="#collapseOne"
+                                      aria-expanded="true"
+                                      aria-controls="collapseOne"
+                                      class="collapsed"
+                                    >
+                                      Beneficiary Attributes of Selected
+                                      Problem(s)
+                                      <i
+                                        class="material-icons"
+                                        aria-hidden="true"
+                                        >keyboard_arrow_down</i
+                                      >
                                     </a>
                                   </h5>
                                 </div>
-                                <div id="collapseOne" class="collapse show" role="tabpanel" aria-labelledby="headingOne"
-                                  data-parent="#accordion" style="">
+                                <div
+                                  id="collapseOne"
+                                  class="collapse show"
+                                  role="tabpanel"
+                                  aria-labelledby="headingOne"
+                                  data-parent="#accordion"
+                                  style=""
+                                >
                                   <div class="card-body">
-                                    <!-- <ul *ngFor="let problem of objectValues(selectedProblemsData)">
-                                      <li *ngIf="problem.beneficiary_attributes">
-                                        <h5>Problem - "{{problem.title}}"</h5>
-                                        <h4>{{problem.beneficiary_attributes}}</h4>
-                                      </li>
-                                    </ul> -->
-
                                     <div class="table-responsive">
                                       <table class="table">
                                         <tbody>
-                                          <tr *ngFor="let problem of objectValues(selectedProblemsData); let i=index;">
+                                          <tr
+                                            *ngFor="
+                                              let problem of objectValues(
+                                                selectedProblemsData
+                                              );
+                                              let i = index
+                                            "
+                                          >
                                             <td>
-                                              <p *ngIf="problem.impact"><u>Problem {{ i+1 }} - {{problem.title}}</u></p>
-                                              <p *ngIf="problem.impact"><b>{{problem.beneficiary_attributes}}</b></p>
+                                              <p *ngIf="problem.impact">
+                                                <u
+                                                  >Problem {{ i + 1 }} -
+                                                  {{ problem.title }}</u
+                                                >
+                                              </p>
+                                              <p *ngIf="problem.impact">
+                                                <b>{{
+                                                  problem.beneficiary_attributes
+                                                }}</b>
+                                              </p>
                                             </td>
                                           </tr>
                                         </tbody>
                                       </table>
                                     </div>
-
                                   </div>
                                 </div>
                               </div>
@@ -415,19 +783,59 @@
 
                     <br />
 
+                    <div class="row justify-content-center">
+                      <div class="col-sm-12">
+                        <div class="input-group form-control-lg">
+                          <div class="input-group-prepend">
+                            <span class="input-group-text">
+                              <i class="material-icons" aria-hidden="true"
+                                >schedule</i
+                              >
+                            </span>
+                          </div>
+                          <mat-form-field
+                            class="example-full-width has-label"
+                            [ngClass]="displayFieldCss(type, 'timeline')"
+                          >
+                            <textarea
+                              type="text"
+                              name="timeline"
+                              matInput
+                              id="timeline"
+                              placeholder="Timeline"
+                              formControlName="timeline"
+                              [(ngModel)]="solution.timeline"
+                            ></textarea>
+                          </mat-form-field>
+                        </div>
+                      </div>
+                    </div>
+
+                    <br /> -->
 
                     <div class="row justify-content-center">
                       <div class="col-sm-12">
                         <div class="input-group form-control-lg">
                           <div class="input-group-prepend">
                             <span class="input-group-text">
-                              <i class="material-icons">schedule</i>
+                              <i class="material-icons" aria-hidden="true"
+                                >beenhere</i
+                              >
                             </span>
                           </div>
-                          <mat-form-field class="example-full-width has-label"
-                            [ngClass]="displayFieldCss(type, 'timeline')">
-                            <textarea type="text" name="timeline" matInput id="timeline" placeholder="Timeline"
-                              formControlName="timeline" [(ngModel)]="solution.timeline"></textarea>
+                          <mat-form-field
+                            class="example-full-width has-label"
+                            [ngClass]="displayFieldCss(type, 'pilots')"
+                          >
+                            <textarea
+                              type="text"
+                              name="pilots"
+                              matInput
+                              id="pilots"
+                              placeholder="Pilots"
+                              formControlName="pilots"
+                              [(ngModel)]="solution.pilots"
+                            ></textarea>
                           </mat-form-field>
                         </div>
                       </div>
@@ -440,45 +848,42 @@
                         <div class="input-group form-control-lg">
                           <div class="input-group-prepend">
                             <span class="input-group-text">
-                              <i class="material-icons">beenhere</i>
-                            </span>
-                          </div>
-                          <mat-form-field class="example-full-width has-label"
-                            [ngClass]="displayFieldCss(type, 'pilots')">
-                            <textarea type="text" name="pilots" matInput id="pilots" placeholder="Pilots"
-                              formControlName="pilots" [(ngModel)]="solution.pilots"></textarea>
-                          </mat-form-field>
-                        </div>
-                      </div>
-                    </div>
-
-                    <br />
-
-                    <div class="row justify-content-center">
-                      <div class="col-sm-12">
-                        <div class="input-group form-control-lg">
-                          <div class="input-group-prepend">
-                            <span class="input-group-text">
-
-                              <i class="material-icons" [ngStyle]="{
-                                      color: !sectors.length
-                                        ? 'red'
-                                        : '#495057'
-                                    }">label</i>
+                              <i
+                                class="material-icons"
+                                aria-hidden="true"
+                                [ngStyle]="{
+                                  color: !sectors.length ? 'red' : '#495057'
+                                }"
+                                >label</i
+                              >
                             </span>
                           </div>
 
                           <mat-form-field class="example-chip-list">
-
-
-                            <input placeholder="Sectors*" style="width: 700px;" matInput #sectorInput
-                              [formControl]="sectorCtrl" [matAutocomplete]="autoSector" [matChipInputFor]="chipList"
-                              [matChipInputSeparatorKeyCodes]="separatorKeysCodes" [matChipInputAddOnBlur]="addOnBlur"
-                              (matChipInputTokenEnd)="addSector($event)" />
-                            <mat-chip-list #chipList>
-                            </mat-chip-list>
-                            <mat-autocomplete #autoSector="matAutocomplete" (optionSelected)="sectorSelected($event)">
-                              <mat-option *ngFor="let sector of filteredSectors | async" [value]="sector">
+                            <input
+                              placeholder="Sectors"
+                              style="width: 700px;"
+                              matInput
+                              #sectorInput
+                              [formControl]="sectorCtrl"
+                              [matAutocomplete]="autoSector"
+                              [matChipInputFor]="chipList"
+                              [matChipInputSeparatorKeyCodes]="
+                                separatorKeysCodes
+                              "
+                              [matChipInputAddOnBlur]="addOnBlur"
+                              (matChipInputTokenEnd)="addSector($event)"
+                              required
+                            />
+                            <mat-chip-list #chipList> </mat-chip-list>
+                            <mat-autocomplete
+                              #autoSector="matAutocomplete"
+                              (optionSelected)="sectorSelected($event)"
+                            >
+                              <mat-option
+                                *ngFor="let sector of filteredSectors | async"
+                                [value]="sector"
+                              >
                                 {{ sector }}
                               </mat-option>
                             </mat-autocomplete>
@@ -489,27 +894,45 @@
 
                     <div class="row justify-content-center">
                       <div class="col-sm-10">
-                        <mat-chip *ngFor="let sector of sectors" [selectable]="selectable" [removable]="removable"
-                          (removed)="removeSector(sector)" style="margin-right:0.3em; margin-bottom: 0.4em;">
+                        <mat-chip
+                          *ngFor="let sector of sectors"
+                          [selectable]="selectable"
+                          [removable]="removable"
+                          (removed)="removeSector(sector)"
+                          style="margin-right:0.3em; margin-bottom: 0.4em;"
+                        >
                           {{ sector }}
-                          <mat-icon matChipRemove *ngIf="removable">cancel</mat-icon>
+                          <mat-icon matChipRemove *ngIf="removable"
+                            >cancel</mat-icon
+                          >
                         </mat-chip>
                       </div>
                     </div>
-
 
                     <div class="row justify-content-center">
                       <div class="col-sm-12">
                         <div class="input-group form-control-lg">
                           <div class="input-group-prepend">
                             <span class="input-group-text">
-                              <i class="material-icons">language</i>
+                              <i class="material-icons" aria-hidden="true"
+                                >language</i
+                              >
                             </span>
                           </div>
-                          <mat-form-field class="example-full-width has-label"
-                            [ngClass]="displayFieldCss(type, 'website_url')">
-                            <input type="text" name="website_url" matInput id="website_url" appAutofocus
-                              placeholder="Website" formControlName="website_url" [(ngModel)]="solution.website_url">
+                          <mat-form-field
+                            class="example-full-width has-label"
+                            [ngClass]="displayFieldCss(type, 'website_url')"
+                          >
+                            <input
+                              type="text"
+                              name="website_url"
+                              matInput
+                              id="website_url"
+                              appAutofocus
+                              placeholder="Website"
+                              formControlName="website_url"
+                              [(ngModel)]="solution.website_url"
+                            />
                           </mat-form-field>
                         </div>
                       </div>
@@ -520,15 +943,33 @@
                         <div class="input-group form-control-lg">
                           <div class="input-group-prepend">
                             <span class="input-group-text">
-                              <i class="material-icons"
-                                [ngStyle]="{color: !solution.deployment ? 'red' : '#495057'}">local_shipping</i>
+                              <i
+                                class="material-icons"
+                                aria-hidden="true"
+                                [ngStyle]="{
+                                  color: !solution.deployment
+                                    ? 'red'
+                                    : '#495057'
+                                }"
+                                >local_shipping</i
+                              >
                             </span>
                           </div>
-                          <mat-form-field class="example-full-width has-label"
-                            [ngClass]="displayFieldCss(type, 'deployment')">
-                            <input type="number" name="deployment" matInput id="deployment" appAutofocus
-                              placeholder="Deployments *" formControlName="deployment"
-                              [(ngModel)]="solution.deployment">
+                          <mat-form-field
+                            class="example-full-width has-label"
+                            [ngClass]="displayFieldCss(type, 'deployment')"
+                          >
+                            <input
+                              type="number"
+                              name="deployment"
+                              matInput
+                              id="deployment"
+                              appAutofocus
+                              placeholder="Deployments"
+                              formControlName="deployment"
+                              [(ngModel)]="solution.deployment"
+                              required
+                            />
                           </mat-form-field>
                         </div>
                       </div>
@@ -541,7 +982,7 @@
                             <div class="col-sm-2">
                               <div class="input-group-prepend">
                                 <span class="input-group-text">
-                                  <i class="material-icons"
+                                   <i class="material-icons" aria-hidden="true"
                                     [ngStyle]="{color: (!solution.budget.title && !solution.budget.cost) ? 'red' : '#495057'}">monetization_on</i>
                                 </span>
                               </div>
@@ -576,14 +1017,36 @@
                         <div class="input-group form-control-lg">
                           <div class="input-group-prepend">
                             <span class="input-group-text">
-                              <i class="material-icons"
-                                [ngStyle]="{color: (!solution.budget_title && !solution.min_budget && !solution.max_budget ) ? 'red' : '#495057'}">monetization_on</i>
+                              <i
+                                class="material-icons"
+                                aria-hidden="true"
+                                [ngStyle]="{
+                                  color:
+                                    !solution.budget_title &&
+                                    !solution.min_budget &&
+                                    !solution.max_budget
+                                      ? 'red'
+                                      : '#495057'
+                                }"
+                                >monetization_on</i
+                              >
                             </span>
                           </div>
-                          <mat-form-field class="example-full-width has-label"
-                            [ngClass]="displayFieldCss(type, 'deployment')">
-                            <input type="text" name="budget" matInput id="budget" appAutofocus
-                              placeholder="Budget title *" formControlName="budget" [(ngModel)]="solution.budget_title">
+                          <mat-form-field
+                            class="example-full-width has-label"
+                            [ngClass]="displayFieldCss(type, 'deployment')"
+                          >
+                            <input
+                              type="text"
+                              name="budget"
+                              matInput
+                              id="budget"
+                              appAutofocus
+                              placeholder="Budget title"
+                              formControlName="budget"
+                              [(ngModel)]="solution.budget_title"
+                              required
+                            />
                           </mat-form-field>
                         </div>
                       </div>
@@ -591,19 +1054,43 @@
 
                     <div class="row justify-content-center">
                       <div class="col-sm-5">
-                        <mat-form-field class="example-full-width has-label"
-                          [ngClass]="displayFieldCss(type, 'assessment_metrics')">
-                          <input type="number" name="budget" matInput id="budget" appAutofocus
-                            placeholder="Minimum Budget (in Rupees) *" formControlName="min_budget"
-                            [(ngModel)]="solution.min_budget">
+                        <mat-form-field
+                          class="example-full-width has-label"
+                          [ngClass]="
+                            displayFieldCss(type, 'assessment_metrics')
+                          "
+                        >
+                          <input
+                            type="number"
+                            name="budget"
+                            matInput
+                            id="budget"
+                            appAutofocus
+                            placeholder="Minimum Budget (in Rupees)"
+                            formControlName="min_budget"
+                            [(ngModel)]="solution.min_budget"
+                            required
+                          />
                         </mat-form-field>
                       </div>
                       <div class="col-sm-5">
-                        <mat-form-field class="example-full-width has-label"
-                          [ngClass]="displayFieldCss(type, 'assessment_metrics')">
-                          <input type="number" name="budget" matInput id="budget" appAutofocus
-                            placeholder="Maximum Budget (in Rupees) *" formControlName="max_budget"
-                            [(ngModel)]="solution.max_budget">
+                        <mat-form-field
+                          class="example-full-width has-label"
+                          [ngClass]="
+                            displayFieldCss(type, 'assessment_metrics')
+                          "
+                        >
+                          <input
+                            type="number"
+                            name="budget"
+                            matInput
+                            id="budget"
+                            appAutofocus
+                            placeholder="Maximum Budget (in Rupees)"
+                            formControlName="max_budget"
+                            [(ngModel)]="solution.max_budget"
+                            required
+                          />
                         </mat-form-field>
                       </div>
                     </div>
@@ -613,19 +1100,35 @@
                         <div class="input-group form-control-lg">
                           <div class="input-group-prepend">
                             <span class="input-group-text">
-                              <i class="material-icons">supervisor_account</i>
+                              <i class="material-icons" aria-hidden="true"
+                                >supervisor_account</i
+                              >
                             </span>
                           </div>
                           <mat-form-field class="example-chip-list">
-                            <input placeholder="Solver Team *" #ownerInput [formControl]="ownersCtrl"
-                              [matAutocomplete]="owner" [matChipInputFor]="chipList"
-                              [matChipInputSeparatorKeyCodes]="separatorKeysCodes" [matChipInputAddOnBlur]="addOnBlur"
-                              (matChipInputTokenEnd)="addOwner($event)">
-                            <mat-chip-list #chipList>
-                            </mat-chip-list>
-                            <mat-autocomplete #owner="matAutocomplete" (optionSelected)="selectedOwner($event)">
-                              <mat-option *ngFor="let owner of filteredOwners | async" [value]="owner">
-                                {{owner.value}}
+                            <input
+                              placeholder="Solver Team"
+                              #ownerInput
+                              [formControl]="ownersCtrl"
+                              [matAutocomplete]="owner"
+                              [matChipInputFor]="chipList"
+                              [matChipInputSeparatorKeyCodes]="
+                                separatorKeysCodes
+                              "
+                              [matChipInputAddOnBlur]="addOnBlur"
+                              (matChipInputTokenEnd)="addOwner($event)"
+                              required
+                            />
+                            <mat-chip-list #chipList> </mat-chip-list>
+                            <mat-autocomplete
+                              #owner="matAutocomplete"
+                              (optionSelected)="selectedOwner($event)"
+                            >
+                              <mat-option
+                                *ngFor="let owner of filteredOwners | async"
+                                [value]="owner"
+                              >
+                                {{ owner.value }}
                               </mat-option>
                             </mat-autocomplete>
                           </mat-form-field>
@@ -634,28 +1137,61 @@
                     </div>
                     <div class="row justify-content-center">
                       <div class="col-sm-10">
-                        <mat-chip *ngFor="let owner of owners" [selectable]="selectable" [removable]="removable"
-                          (removed)="removeOwner(owner)" style="margin-right:0.3em; margin-bottom: 0.4em;">
-                          {{owner.value||owner.name}}
-                          <mat-icon matChipRemove *ngIf="removable">cancel</mat-icon>
+                        <mat-chip
+                          *ngFor="let owner of owners"
+                          [selectable]="selectable"
+                          [removable]="removable"
+                          (removed)="removeOwner(owner)"
+                          style="margin-right:0.3em; margin-bottom: 0.4em;"
+                        >
+                          {{ owner.value || owner.name }}
+                          <mat-icon matChipRemove *ngIf="removable"
+                            >cancel</mat-icon
+                          >
                         </mat-chip>
                       </div>
                     </div>
                   </div>
 
-                  <div class="tab-pane" id="media">
+                  <div
+                    class="tab-pane"
+                    id="media"
+                    aria-labelledby="mediaTab"
+                    role="tabpanel"
+                  >
                     <div class="row justify-content-center">
-                      <a href="#media" data-toggle="tab" role="tab" class="nav-link"
-                        *ngIf="solution.image_urls.length+solution.video_urls.length>0">{{solution.image_urls.length}}
-                        image(s) and {{solution.video_urls.length}} video(s) attached</a>
+                      <a
+                        href="#media"
+                        data-toggle="tab"
+                        role="tab"
+                        class="nav-link"
+                        *ngIf="
+                          solution.image_urls.length +
+                            solution.video_urls.length >
+                          0
+                        "
+                        >{{ solution.image_urls.length }} image(s) and
+                        {{ solution.video_urls.length }} video(s) attached</a
+                      >
                     </div>
                     <div class="row justify-content-center">
                       <div class="col-sm-6">
                         <div class="picture-container">
                           <div class="picture">
-                            <img src="./assets/img/plus.png" class="picture-src" id="wizardPicturePreview" title="" />
-                            <input type="file" id="file_input_btn" (change)="onFileSelected($event)" name="..." multiple
-                              accept="{{file_types.join(',')}}">
+                            <img
+                              src="./assets/img/plus.png"
+                              class="picture-src"
+                              id="wizardPicturePreview"
+                              title=""
+                            />
+                            <input
+                              type="file"
+                              id="file_input_btn"
+                              (change)="onFileSelected($event)"
+                              name="..."
+                              multiple
+                              accept="{{ file_types.join(',') }}"
+                            />
                           </div>
                           <h6 class="description">Choose Media</h6>
                         </div>
@@ -664,19 +1200,35 @@
                         <div class="input-group">
                           <div class="input-group-prepend">
                             <span class="input-group-text">
-                              <i class="material-icons" [ngStyle]="{
-                          color: checkMedialUrl(media_url) == false
-                            ? 'red'
-                            : '#AAAAAA'
-                        }">link</i>
+                              <i
+                                class="material-icons"
+                                aria-hidden="true"
+                                [ngStyle]="{
+                                  color:
+                                    checkMedialUrl(media_url) == false
+                                      ? 'red'
+                                      : '#AAAAAA'
+                                }"
+                                >link</i
+                              >
                             </span>
                           </div>
                           <mat-form-field class="example-full-width has-label">
-                            <input type="text" name="media_url" matInput id="media_url" formControlName="media_url"
-                              placeholder="Video URL (youtube,vimeo and dailymotion)" [(ngModel)]="media_url">
+                            <input
+                              type="text"
+                              name="media_url"
+                              matInput
+                              id="media_url"
+                              formControlName="media_url"
+                              placeholder="Video URL (youtube,vimeo and dailymotion)"
+                              [(ngModel)]="media_url"
+                            />
                           </mat-form-field>
-                          <button class="btn btn-success" [disabled]="checkMedialUrl(media_url) == false"
-                            (click)="addMediaUrl()">
+                          <button
+                            class="btn btn-success"
+                            [disabled]="checkMedialUrl(media_url) == false"
+                            (click)="addMediaUrl()"
+                          >
                             Add Video By URL
                           </button>
                           <!-- <input type="button" class="btn btn-finish btn-fill btn-success btn-wd" (click)="addMediaUrl()"
@@ -689,7 +1241,10 @@
                     <div class="row" id="loader" style="display:none;">
                       <div class="col">
                         <div class="d-flex align-items-center">
-                          <i class="fa fa-spinner fa-spin" style="font-size:32px;color: grey;"></i>
+                          <i
+                            class="fa fa-spinner fa-spin"
+                            style="font-size:32px;color: grey;"
+                          ></i>
                           <strong>&nbsp;&nbsp; Uploading...</strong>
                         </div>
                       </div>
@@ -697,51 +1252,102 @@
 
                     <div class="row">
                       <div class="alert col-md-6">
-                        <em>Select <i class="material-icons orange600">turned_in</i> to set as featured
-                          image</em>
+                        <em
+                          >Select
+                          <i class="material-icons orange600">turned_in</i> to
+                          set as featured image</em
+                        >
                       </div>
                     </div>
 
                     <div class="row">
-                      <div class="col-md-4" *ngFor="let imgSrc of solution.image_urls;let i = index">
+                      <div
+                        class="col-md-4"
+                        *ngFor="
+                          let imgSrc of solution.image_urls;
+                          let i = index
+                        "
+                      >
                         <div class="card card-product">
-                          <div class="card-header card-header-image" data-header-animation="false">
-                            <img class="img" src="{{ filesService.fileAccessUrl + imgSrc.fileEndpoint }}">
+                          <div
+                            class="card-header card-header-image"
+                            data-header-animation="false"
+                          >
+                            <img
+                              class="img"
+                              src="{{
+                                filesService.fileAccessUrl + imgSrc.fileEndpoint
+                              }}"
+                            />
                           </div>
                           <div class="card-body"></div>
                           <div class="card-footer">
                             <div class="price">
-                              <button mat-raised-button type="button" class="btn btn-default btn-link"
-                                matTooltip="Select icon to set as featured image" [matTooltipPosition]="'below'"
-                                (click)="setFeatured('image',i)">
-                                <i *ngIf="imgSrc.fileEndpoint !== solution.featured_url"
-                                  class="material-icons">turned_in_not</i>
-                                <i *ngIf="imgSrc.fileEndpoint=== solution.featured_url"
-                                  class="material-icons orange600">turned_in</i>
+                              <button
+                                mat-raised-button
+                                type="button"
+                                class="btn btn-default btn-link"
+                                matTooltip="Select icon to set as featured image"
+                                [matTooltipPosition]="'below'"
+                                (click)="setFeatured('image', i)"
+                              >
+                                <i
+                                  *ngIf="
+                                    imgSrc.fileEndpoint !==
+                                    solution.featured_url
+                                  "
+                                  class="material-icons"
+                                  >turned_in_not</i
+                                >
+                                <i
+                                  *ngIf="
+                                    imgSrc.fileEndpoint ===
+                                    solution.featured_url
+                                  "
+                                  class="material-icons orange600"
+                                  >turned_in</i
+                                >
                               </button>
                             </div>
                             <div class="stats">
-                              <button mat-raised-button type="button" class="btn btn-danger btn-link"
-                                matTooltip="Remove" [matTooltipPosition]="'below'"
-                                (click)="removeSelectedItem('image',i)">
-                                <i class="material-icons">close</i>
+                              <button
+                                mat-raised-button
+                                type="button"
+                                class="btn btn-danger btn-link"
+                                matTooltip="Remove"
+                                [matTooltipPosition]="'below'"
+                                (click)="removeSelectedItem('image', i)"
+                              >
+                                <i class="material-icons" aria-hidden="true"
+                                  >close</i
+                                >
                               </button>
                             </div>
-
                           </div>
                         </div>
                       </div>
                     </div>
                     <div class="row">
-                      <div class="col-md-4" *ngFor="let video of solution.video_urls;let i = index">
+                      <div
+                        class="col-md-4"
+                        *ngFor="let video of solution.video_urls; let i = index"
+                      >
                         <div class="card card-product">
-                          <div class="card-header card-header-image" data-header-animation="false">
+                          <div
+                            class="card-header card-header-image"
+                            data-header-animation="false"
+                          >
                             <video controls width="100%">
-                              <source src="{{filesService.fileAccessUrl+video.fileEndpoint}}">
+                              <source
+                                src="{{
+                                  filesService.fileAccessUrl +
+                                    video.fileEndpoint
+                                }}"
+                              />
                               Your browser does not support the video tag.
                             </video>
                           </div>
-                          <div class="card-body">{{video.key}}</div>
+                          <div class="card-body">{{ video.key }}</div>
                           <div class="card-footer">
                             <div class="price">
                               <!-- <button mat-raised-button type="button" class="btn btn-default btn-link" matTooltip="Feature"
@@ -751,10 +1357,17 @@
                           </button> -->
                             </div>
                             <div class="stats">
-                              <button mat-raised-button type="button" class="btn btn-danger btn-link"
-                                matTooltip="Remove" [matTooltipPosition]="'below'"
-                                (click)="removeSelectedItem('video',i)">
-                                <i class="material-icons">close</i>
+                              <button
+                                mat-raised-button
+                                type="button"
+                                class="btn btn-danger btn-link"
+                                matTooltip="Remove"
+                                [matTooltipPosition]="'below'"
+                                (click)="removeSelectedItem('video', i)"
+                              >
+                                <i class="material-icons" aria-hidden="true"
+                                  >close</i
+                                >
                               </button>
                             </div>
                           </div>
@@ -762,9 +1375,15 @@
                       </div>
                     </div>
                     <div class="row">
-                      <div class="col-md-4" *ngFor="let embed_url of solution.embed_urls;let i = index">
+                      <div
+                        class="col-md-4"
+                        *ngFor="
+                          let embed_url of solution.embed_urls;
+                          let i = index
+                        "
+                      >
                         <div class="card card-product">
-                          <div class="card-body">{{embed_url}}</div>
+                          <div class="card-body">{{ embed_url }}</div>
                           <div class="card-footer">
                             <div class="price">
                               <!-- <button mat-raised-button type="button" class="btn btn-default btn-link" matTooltip="Feature"
@@ -774,10 +1393,17 @@
                           </button> -->
                             </div>
                             <div class="stats">
-                              <button mat-raised-button type="button" class="btn btn-danger btn-link"
-                                matTooltip="Remove" [matTooltipPosition]="'below'"
-                                (click)="removeSelectedItem('embed',i)">
-                                <i class="material-icons">close</i>
+                              <button
+                                mat-raised-button
+                                type="button"
+                                class="btn btn-danger btn-link"
+                                matTooltip="Remove"
+                                [matTooltipPosition]="'below'"
+                                (click)="removeSelectedItem('embed', i)"
+                              >
+                                <i class="material-icons" aria-hidden="true"
+                                  >close</i
+                                >
                               </button>
                             </div>
                           </div>
@@ -785,13 +1411,23 @@
                       </div>
                     </div>
                     <div class="row">
-                      <div class="col-md-4" *ngFor="let attachment of solution.attachments;let i = index">
+                      <div
+                        class="col-md-4"
+                        *ngFor="
+                          let attachment of solution.attachments;
+                          let i = index
+                        "
+                      >
                         <div class="card card-product">
                           <div class="card-body">
-                            <i class="material-icons" style="zoom:2; color: grey;">
+                            <i
+                              class="material-icons"
+                              aria-hidden="true"
+                              style="zoom:2; color: grey;"
+                            >
                               description
                             </i>
-                            {{attachment.key}}
+                            {{ attachment.key }}
                           </div>
                           <div class="card-footer">
                             <div class="price">
@@ -802,10 +1438,17 @@
                           </button> -->
                             </div>
                             <div class="stats">
-                              <button mat-raised-button type="button" class="btn btn-danger btn-link"
-                                matTooltip="Remove" [matTooltipPosition]="'below'"
-                                (click)="removeSelectedItem('link',i)">
-                                <i class="material-icons">close</i>
+                              <button
+                                mat-raised-button
+                                type="button"
+                                class="btn btn-danger btn-link"
+                                matTooltip="Remove"
+                                [matTooltipPosition]="'below'"
+                                (click)="removeSelectedItem('link', i)"
+                              >
+                                <i class="material-icons" aria-hidden="true"
+                                  >close</i
+                                >
                               </button>
                             </div>
                           </div>
@@ -818,21 +1461,46 @@
 
               <div class="card-footer">
                 <div class="mr-auto">
-                  <input type="button" class="btn" onclick="window.history.back()" name="cancel" value="Cancel">
+                  <input
+                    type="button"
+                    class="btn"
+                    onclick="window.history.back()"
+                    name="cancel"
+                    value="Cancel"
+                  />
                 </div>
                 <div class="ml-auto">
                   <!-- <button class="btn btn-danger" (click)="deleteClicked()">
                 Delete
               </button> -->
-                  <button *ngIf="solution.id  && solution.is_draft" class="btn btn-danger" (click)="delete()">
+                  <button
+                    *ngIf="solution.id && solution.is_draft"
+                    class="btn btn-danger"
+                    (click)="delete()"
+                  >
                     Delete
                   </button>
-                  <input type="button" class="btn btn-previous btn-fill btn-default btn-wd disabled" name="previous"
-                    value="Previous">
-                  <input type="button" class="publish btn btn-fill btn-rose btn-wd" (click)="publishSolution(solution)"
-                    value="Publish" [disabled]="!isComplete()">
-                  <input type="button" (click)="nextSelected()" class="btn btn-next btn-fill btn-rose btn-wd"
-                    [disabled]="!isComplete()" name="next" value="Next">
+                  <input
+                    type="button"
+                    class="btn btn-previous btn-fill btn-default btn-wd disabled"
+                    name="previous"
+                    value="Previous"
+                  />
+                  <input
+                    type="button"
+                    class="publish btn btn-fill btn-rose btn-wd"
+                    (click)="publishSolution(solution)"
+                    value="Publish"
+                    [disabled]="!isComplete()"
+                  />
+                  <input
+                    type="button"
+                    (click)="nextSelected()"
+                    class="btn btn-next btn-fill btn-rose btn-wd"
+                    [disabled]="!isComplete()"
+                    name="next"
+                    value="Next"
+                  />
                   <!-- <input type="button" class="btn btn-finish btn-fill btn-warning btn-wd" [disabled]="!isComplete()"
                 (click)="publishContent()" name="finish" value="Publish" style="display: none;"> -->
                 </div>
@@ -848,14 +1516,18 @@
         <ng-container *ngIf="problemSearchResults.length > 0">
           <div class="row justify-content-center">
             <div class="col-sm-10">
-              <h4>Found {{problemSearchResults.length}} similar problems</h4>
+              <h4>Found {{ problemSearchResults.length }} similar problems</h4>
             </div>
           </div>
           <div class="row justify-content-center">
             <div class="col-sm-12" *ngFor="let result of problemSearchResults">
-              <app-problem-card *ngIf="result" [problemData]="result" (selected)="selectProblem($event)"
-                [usedInSmartSearch]="true" [showAddButton]="true">
-
+              <app-problem-card
+                *ngIf="result"
+                [problemData]="result"
+                (selected)="selectProblem($event)"
+                [usedInSmartSearch]="true"
+                [showAddButton]="true"
+              >
               </app-problem-card>
             </div>
           </div>
@@ -868,11 +1540,16 @@
         <ng-container *ngIf="solutionSearchResults.length > 0">
           <div class="row justify-content-center">
             <div class="col-sm-10">
-              <h4>Found {{solutionSearchResults.length}} similar solutions</h4>
+              <h4>
+                Found {{ solutionSearchResults.length }} similar solutions
+              </h4>
             </div>
           </div>
           <div class="row justify-content-center">
-            <div class="col-sm-12" *ngFor="let solution of solutionSearchResults">
+            <div
+              class="col-sm-12"
+              *ngFor="let solution of solutionSearchResults"
+            >
               <app-solution-card *ngIf="solution" [solutionData]="solution">
               </app-solution-card>
             </div>
@@ -880,7 +1557,6 @@
         </ng-container>
       </div>
       <!--Solution smart search results-->
-
     </div>
   </div>
 </div>
