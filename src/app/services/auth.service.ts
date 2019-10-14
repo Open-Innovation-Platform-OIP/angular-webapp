@@ -1,11 +1,11 @@
-import { Injectable } from "@angular/core";
-import { HttpClient, HttpHeaders } from "@angular/common/http";
+import { Injectable } from '@angular/core';
+import { HttpClient, HttpHeaders } from '@angular/common/http';
 // import { LocalStorage } from '@ngx-pwa/local-storage';
-import { JwtHelper } from "angular2-jwt";
-import { Observable, BehaviorSubject } from "rxjs";
-import { map } from "rxjs/operators";
-import { Apollo } from "apollo-angular";
-import { Router } from "@angular/router";
+import { JwtHelper } from 'angular2-jwt';
+import { Observable, BehaviorSubject } from 'rxjs';
+import { map } from 'rxjs/operators';
+import { Apollo } from 'apollo-angular';
+import { Router } from '@angular/router';
 
 interface User {
   email: string;
@@ -13,24 +13,24 @@ interface User {
   token: string;
 }
 
-interface resetDetails {
+interface ResetDetails {
   email: string;
   password: string;
   confirmPassword: string;
   otp: string;
 }
 
-interface verificationDetails {
+interface VerificationDetails {
   email: string;
   otp: string;
 }
 
 @Injectable({
-  providedIn: "root"
+  providedIn: 'root'
 })
 export class AuthService {
   // authEndpoint = "https://auth-new.socialalpha.jaagalabs.com/auth/";
-  authEndpoint = "https://sa-auth-test.cap.jaagalabs.com/auth/";
+  authEndpoint = 'https://sa-auth-test.cap.jaagalabs.com/auth/';
 
   private jwtHelper;
   public user: Observable<any>;
@@ -45,7 +45,7 @@ export class AuthService {
     this.jwtHelper = new JwtHelper();
     // this.getUser();
     this.currentUserSubject = new BehaviorSubject<any>(
-      JSON.parse(localStorage.getItem("currentUser"))
+      JSON.parse(localStorage.getItem('currentUser'))
     );
     this.currentUser = this.currentUserSubject.asObservable();
   }
@@ -55,21 +55,23 @@ export class AuthService {
       return this.currentUserSubject.value;
       // }
     } else {
-      return { id: 0, email: "", token: "" };
+      return { id: 0, email: '', token: '' };
     }
   }
 
   isExpired(jwt) {
     if (jwt) {
       return this.jwtHelper.isTokenExpired(jwt);
-    } else return true;
+    } else {
+      return true;
+    }
   }
 
   logout() {
-    console.log("deleting user token");
+    console.log('deleting user token');
     // remove user from local storage to log user out
     // this.localStorage.removeItem('user').subscribe(() => { });
-    localStorage.removeItem("currentUser");
+    localStorage.removeItem('currentUser');
     this.currentUserSubject.next(null);
     this.apollo.getClient().resetStore();
     // this.router.navigateByUrl("/landing-page");
@@ -83,20 +85,20 @@ export class AuthService {
     // console.log(loginDetails);
     const httpOptions = {
       headers: new HttpHeaders({
-        "Content-Type": "application/json"
+        'Content-Type': 'application/json'
       })
     };
     return this.http
       .post(
-        this.authEndpoint + "login",
+        this.authEndpoint + 'login',
         JSON.stringify(loginDetails),
         httpOptions
       )
       .pipe(
         map(user => {
-          console.log(user, "user login");
-          if (user && user["token"] && user["id"]) {
-            user["email"] = loginDetails.email;
+          console.log(user, 'user login');
+          if (user && user['token'] && user['id']) {
+            user['email'] = loginDetails.email;
             // localStorage.setItem('currentUser', JSON.stringify(user));
             return this.storeUser(user);
             // this.currentUserSubject.next(<User>user);
@@ -109,15 +111,15 @@ export class AuthService {
   storeUser(user) {
     if (
       user &&
-      user["token"] &&
-      user["id"] &&
-      user["email"] &&
-      !this.isExpired(user["token"])
+      user['token'] &&
+      user['id'] &&
+      user['email'] &&
+      !this.isExpired(user['token'])
     ) {
-      localStorage.setItem("currentUser", JSON.stringify(user));
+      localStorage.setItem('currentUser', JSON.stringify(user));
       // this.currentUserSubject.next(<User>user);
       this.currentUserSubject = new BehaviorSubject<any>(
-        JSON.parse(localStorage.getItem("currentUser"))
+        JSON.parse(localStorage.getItem('currentUser'))
       );
       this.currentUser = this.currentUserSubject.asObservable();
       return user;
@@ -129,11 +131,11 @@ export class AuthService {
     // console.log(user);
     const httpOptions = {
       headers: new HttpHeaders({
-        "Content-Type": "application/json"
+        'Content-Type': 'application/json'
       })
     };
     return this.http.post(
-      this.authEndpoint + "signup",
+      this.authEndpoint + 'signup',
       JSON.stringify(user),
       httpOptions
     );
@@ -142,27 +144,27 @@ export class AuthService {
   requestVerificationEmail(email: string) {
     const httpOptions = {
       headers: new HttpHeaders({
-        "Content-Type": "application/json"
+        'Content-Type': 'application/json'
       })
     };
     const payload = {
       email: email
     };
     return this.http.post(
-      this.authEndpoint + "verification",
+      this.authEndpoint + 'verification',
       JSON.stringify(payload),
       httpOptions
     );
   }
 
-  completeVerification(payload: verificationDetails) {
+  completeVerification(payload: VerificationDetails) {
     const httpOptions = {
       headers: new HttpHeaders({
-        "Content-Type": "application/json"
+        'Content-Type': 'application/json'
       })
     };
     return this.http.post(
-      this.authEndpoint + "verify",
+      this.authEndpoint + 'verify',
       JSON.stringify(payload),
       httpOptions
     );
@@ -171,28 +173,28 @@ export class AuthService {
   requestResetCode(email: string) {
     const httpOptions = {
       headers: new HttpHeaders({
-        "Content-Type": "application/json"
+        'Content-Type': 'application/json'
       })
     };
     const payload = {
       email: email
     };
     return this.http.post(
-      this.authEndpoint + "passwordreset",
+      this.authEndpoint + 'passwordreset',
       JSON.stringify(payload),
       httpOptions
     );
   }
 
-  resetPassword(payload: resetDetails) {
+  resetPassword(payload: ResetDetails) {
     // console.log(resetDetails);
     const httpOptions = {
       headers: new HttpHeaders({
-        "Content-Type": "application/json"
+        'Content-Type': 'application/json'
       })
     };
     return this.http.post(
-      this.authEndpoint + "changepassword",
+      this.authEndpoint + 'changepassword',
       JSON.stringify(payload),
       httpOptions
     );

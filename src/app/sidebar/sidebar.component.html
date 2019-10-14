@@ -229,7 +229,7 @@
         </p>
       </a>
     </li>
-    <li class="nav-item" *ngIf="!auth.currentUserValue.id">
+    <li class="nav-item" *ngIf="!authService.currentUserValue.id">
       <a
         class="nav-link"
         [routerLink]="'/auth/login'"
