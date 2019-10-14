@@ -37,5 +37,16 @@
       </div>
 
     </div>
+
+    <form class="example-form">
+      <mat-form-field class="example-full-width">
+        <input matInput placeholder="Invitee email" [(ngModel)]="inviteeEmail" [ngModelOptions]="{standalone: true}">
+      </mat-form-field>
+      <button (click)="inviteUser()" mat-raised-button class="btn btn-rose">Send invite</button>
+
+
+
+    </form>
+
   </div>
 </div>

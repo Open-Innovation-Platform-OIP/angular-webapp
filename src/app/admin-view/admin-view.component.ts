@@ -6,6 +6,7 @@ import { take } from "rxjs/operators";
 import { AuthService } from "../services/auth.service";
 import swal from "sweetalert2";
 import { Subscription } from "rxjs";
+import { HttpClient } from "@angular/common/http";
 
 @Component({
   selector: "app-admin-view",
@@ -15,11 +16,16 @@ import { Subscription } from "rxjs";
 export class AdminViewComponent implements OnInit, OnDestroy {
   public userDataTable: TableData;
   allUsers = {};
+  inviteeEmail: String = "";
 
   usersQuery: QueryRef<any>;
   usersSubscription: Subscription;
 
-  constructor(private apollo: Apollo, private authService: AuthService) {}
+  constructor(
+    private apollo: Apollo,
+    private authService: AuthService,
+    private http: HttpClient
+  ) {}
 
   ngOnInit() {
     this.getUsersFromDB();
@@ -42,6 +48,8 @@ export class AdminViewComponent implements OnInit, OnDestroy {
       dataRows: userDataRow
     };
   }
+
+  getUnapprovedUsersFromDB() {}
 
   getUsersFromDB() {
     this.usersQuery = this.apollo.watchQuery<any>({
@@ -138,6 +146,32 @@ export class AdminViewComponent implements OnInit, OnDestroy {
           }
 
           // console.log(data);
+        },
+        error => {
+          console.log(error);
+        }
+      );
+  }
+
+  inviteUser() {
+    console.log(this.inviteeEmail);
+    this.http
+      .post(
+        "https://invite-flow-microservice-test.dev.jaagalabs.com/invite_user",
+        {
+          email: this.inviteeEmail,
+          is_admin: this.authService.currentUserValue["is_admin"]
+        }
+      )
+      .subscribe(
+        data => {
+          console.log(data);
+          swal({
+            type: "success",
+            title: `Invite sent`,
+            timer: 1500,
+            showConfirmButton: false
+          }).catch(swal.noop);
         },
         error => {
           console.log(error);
