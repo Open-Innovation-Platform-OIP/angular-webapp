@@ -26,9 +26,8 @@ export class AdminViewComponent implements OnInit, OnDestroy {
   inviteeEmail: String = "";
 
   usersQuery: QueryRef<any>;
-  unapprovedUsersQuery: QueryRef<any>;
+
   usersSubscription: Subscription;
-  unapprovedUsersSubscription: Subscription;
 
   userInviteForm: FormGroup;
 
@@ -40,14 +39,14 @@ export class AdminViewComponent implements OnInit, OnDestroy {
 
   ngOnInit() {
     this.getUsersFromDB();
-    this.getUnapprovedUsersFromDB();
+
     this.userInviteForm = new FormGroup({
       email: new FormControl("", [Validators.email])
     });
   }
 
   generateUserTable(userData) {
-    const userHeaderRow = ["Name", "Organization", "Admin", "Is Approved"];
+    const userHeaderRow = ["Name", "Organization", "Admin", "Approval Status"];
     let userDataRow = [];
     Object.values(userData).map(user => {
       // console.log(user, "gnerate user table");
@@ -79,61 +78,6 @@ export class AdminViewComponent implements OnInit, OnDestroy {
     };
   }
 
-  getUnapprovedUsersFromDB() {
-    this.unapprovedUsersQuery = this.apollo.watchQuery<any>({
-      query: gql`
-        query {
-          users(where: { is_approved: { _eq: false } }) {
-            is_admin
-            id
-            email
-            is_approved
-
-            organizationByOrganizationId {
-              name
-            }
-          }
-        }
-      `,
-
-      pollInterval: 1000,
-
-      fetchPolicy: "network-only"
-    });
-
-    this.unapprovedUsersSubscription = this.unapprovedUsersQuery.valueChanges.subscribe(
-      ({ data }) => {
-        if (data.users.length > 0) {
-          this.allUnapprovedUsers = {};
-          data.users.map(user => {
-            if (user.id !== this.authService.currentUserValue.id) {
-              if (user.id) {
-                this.allUnapprovedUsers[user.id] = {
-                  id: user.id,
-                  name: user.name,
-                  is_admin: user.is_admin,
-                  email: user.email
-                };
-              }
-              if (user.organizationByOrganizationId) {
-                this.allUnapprovedUsers[user.id].organization =
-                  user.organizationByOrganizationId.name;
-              }
-            }
-          });
-          console.log(this.allUnapprovedUsers);
-
-          this.generateUnapprovedUserTable(this.allUnapprovedUsers);
-        } else {
-          this.allUnapprovedUsers = {};
-        }
-      },
-      error => {
-        console.log(error);
-      }
-    );
-  }
-
   getUsersFromDB() {
     this.usersQuery = this.apollo.watchQuery<any>({
       query: gql`
@@ -143,6 +87,7 @@ export class AdminViewComponent implements OnInit, OnDestroy {
             id
             name
             is_approved
+            email
 
             organizationByOrganizationId {
               name
@@ -151,7 +96,7 @@ export class AdminViewComponent implements OnInit, OnDestroy {
         }
       `,
 
-      pollInterval: 4000,
+      pollInterval: 2000,
 
       fetchPolicy: "network-only"
     });
@@ -159,6 +104,7 @@ export class AdminViewComponent implements OnInit, OnDestroy {
     this.usersSubscription = this.usersQuery.valueChanges.subscribe(
       ({ data }) => {
         this.allUsers = {};
+        this.allUnapprovedUsers = {};
         if (data.users.length > 0) {
           data.users.map(user => {
             if (user.id !== this.authService.currentUserValue.id) {
@@ -171,6 +117,15 @@ export class AdminViewComponent implements OnInit, OnDestroy {
                   is_approved: user.is_approved
                 };
               }
+              if (!user.is_approved) {
+                this.allUnapprovedUsers[user.id] = {
+                  id: user.id,
+                  name: user.name,
+                  is_admin: user.is_admin,
+                  email: user.email,
+                  is_approved: user.is_approved
+                };
+              }
               if (user.organizationByOrganizationId) {
                 this.allUsers[user.id].organization =
                   user.organizationByOrganizationId.name;
@@ -180,6 +135,7 @@ export class AdminViewComponent implements OnInit, OnDestroy {
           console.log(this.allUsers, "all approved");
 
           this.generateUserTable(this.allUsers);
+          this.generateUnapprovedUserTable(this.allUnapprovedUsers);
         }
       },
       error => {
@@ -379,8 +335,7 @@ export class AdminViewComponent implements OnInit, OnDestroy {
 
   ngOnDestroy() {
     this.usersQuery.stopPolling();
-    this.unapprovedUsersQuery.stopPolling();
+
     this.usersSubscription.unsubscribe();
-    this.unapprovedUsersSubscription.unsubscribe();
   }
 }
