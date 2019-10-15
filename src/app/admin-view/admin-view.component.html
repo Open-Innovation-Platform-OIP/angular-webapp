@@ -38,15 +38,62 @@
 
     </div>
 
-    <form class="example-form">
+    <h3>Invite User</h3>
+
+    <form class="example-form" [formGroup]="userInviteForm">
       <mat-form-field class="example-full-width">
-        <input matInput placeholder="Invitee email" [(ngModel)]="inviteeEmail" [ngModelOptions]="{standalone: true}">
+        <input matInput placeholder="Invitee email" formControlName="email">
+        <mat-error *ngIf="userInviteForm.get('email').hasError('email')">
+          Please enter a valid email address
+        </mat-error>
       </mat-form-field>
+
+
       <button (click)="inviteUser()" mat-raised-button class="btn btn-rose">Send invite</button>
 
 
 
     </form>
+
+    <h3 *ngIf="objectKeys(allUnapprovedUsers).length">Users to be approved</h3>
+    <div class="row mt-4">
+
+
+
+      <div class="card"
+        *ngIf="unapprovedUserDataTable&&unapprovedUserDataTable.dataRows && objectKeys(allUnapprovedUsers).length">
+        <div class="card-header card-header-icon card-header-rose">
+          <div class="card-icon">
+            <i class="material-icons">group</i>
+          </div>
+          <h4 class="card-title ">Users</h4>
+        </div>
+        <div class="card-body">
+          <div class="table-responsive">
+            <table class="table">
+              <thead class="text-primary">
+                <tr>
+                  <th *ngFor="let cell of unapprovedUserDataTable.headerRow">{{ cell }}</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr *ngFor="let row of unapprovedUserDataTable.dataRows">
+                  <td>{{row[0]}}</td>
+
+
+                  <td>
+                    <mat-checkbox (change)="approveUser($event,row)"></mat-checkbox>
+                  </td>
+
+                </tr>
+              </tbody>
+            </table>
+
+          </div>
+        </div>
+      </div>
+
+    </div>
 
   </div>
 </div>
