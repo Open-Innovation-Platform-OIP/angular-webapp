@@ -87,6 +87,9 @@ export class MyErrorStateMatcher implements ErrorStateMatcher {
 export class AddSolutionComponent
   implements OnInit, OnChanges, OnDestroy, AfterViewInit {
   @ViewChild('heading') pageHeading: ElementRef<HTMLElement>;
+  @ViewChild('foundProblems') foundProblemHeading: ElementRef<HTMLElement>;
+  @ViewChild('foundSolutions') foundSolutionHeading: ElementRef<HTMLElement>;
+  @ViewChild('wizardContainer') wizardContainer: ElementRef<HTMLElement>;
   // @Input() sectors: string[] = [];
 
   owners: any[] = [];
@@ -151,8 +154,10 @@ export class AddSolutionComponent
   ];
   touch: boolean;
   hide: boolean = false;
+  sideScrollHeight;
 
   @ViewChild('problemInput') problemInput: ElementRef<HTMLInputElement>;
+  @ViewChild('title') titleInput: ElementRef<HTMLInputElement>;
   @ViewChild('locationInput') locationInput: ElementRef<HTMLInputElement>;
   @ViewChild('ownerInput') ownerInput: ElementRef<HTMLInputElement>;
 
@@ -253,6 +258,25 @@ export class AddSolutionComponent
       startWith(null),
       map((owner: string | null) => (owner ? this.filterOwners(owner) : []))
     );
+  }
+
+  moveFocus(forHeading: string) {
+    if (this.foundProblemHeading && forHeading === 'solutions') {
+      this.focusMonitor.focusVia(this.foundProblemHeading, 'program');
+    }
+
+    if (this.foundSolutionHeading && forHeading === 'problems') {
+      this.focusMonitor.focusVia(this.foundSolutionHeading, 'program');
+    }
+  }
+
+  focusBack(place: string) {
+    if (this.problemInput && place === 'selectProblem') {
+      this.focusMonitor.focusVia(this.problemInput, 'program');
+    }
+    if (this.titleInput && place === 'title') {
+      this.focusMonitor.focusVia(this.titleInput, 'program');
+    }
   }
 
   isFieldValid(form: FormGroup, field: string) {
@@ -422,6 +446,12 @@ export class AddSolutionComponent
         .subscribe(
           searchResults => {
             this.solutionSearchResults = searchResults;
+
+            if (this.solutionSearchResults.length) {
+              this.liveannouncer.announce(
+                `Found ${this.solutionSearchResults.length} solutions`
+              );
+            }
           },
           error => {
             console.log(error);
@@ -625,6 +655,7 @@ export class AddSolutionComponent
                 `Found ${this.problemSearchResults.length} problems`
               );
             }
+            this.setScrollableHeight();
           },
           error => {
             console.log(error);
@@ -1191,6 +1222,19 @@ export class AddSolutionComponent
     $('.set-full-height').css('height', 'auto');
   }
 
+  setScrollableHeight() {
+    // setting search result div height
+    let wizardHeight = 0;
+    const oneRemInPx = 16;
+    const totalRemVal = 4;
+
+    if (this.wizardContainer) {
+      wizardHeight = this.wizardContainer.nativeElement.clientHeight;
+    }
+
+    this.sideScrollHeight = wizardHeight - oneRemInPx * totalRemVal;
+  }
+
   ngOnChanges(changes: SimpleChanges) {
     const input = $(this);
 
@@ -1679,6 +1723,8 @@ export class AddSolutionComponent
     if (this.pageHeading) {
       this.focusMonitor.focusVia(this.pageHeading, 'program');
     }
+
+    this.setScrollableHeight();
   }
 
   removeSelectedItem(type: string, index: number) {

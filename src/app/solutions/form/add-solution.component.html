@@ -2,7 +2,7 @@
   <div class="container-fluid">
     <div class="row">
       <div class="col-md-9">
-        <div class="wizard-container">
+        <div class="wizard-container" #wizardContainer>
           <div class="card card-wizard" data-color="rose" id="wizardProfile">
             <form [formGroup]="type" action="" method="">
               <div class="card-header text-center">
@@ -68,7 +68,6 @@
                               <i
                                 class="material-icons"
                                 aria-hidden="true"
-                                aria-hidden="true"
                                 [ngStyle]="{
                                   color: !objectKeys(selectedProblems).length
                                     ? 'red'
@@ -81,7 +80,7 @@
 
                           <mat-form-field class="example-chip-list">
                             <input
-                              placeholder="Select Problem"
+                              placeholder="Select Problem *"
                               matInput
                               style="width: 700px;"
                               #problemInput
@@ -94,9 +93,8 @@
                               [matChipInputAddOnBlur]="addOnBlur"
                               (input)="searchProblem($event)"
                               (focus)="hideProblems('problem')"
-                              required
                             />
-                            <mat-chip-list #chipList> </mat-chip-list>
+                            <!-- <mat-chip-list #chipList> </mat-chip-list> -->
                             <mat-autocomplete
                               #auto="matAutocomplete"
                               (optionSelected)="selected($event)"
@@ -110,6 +108,18 @@
                             </mat-autocomplete>
                           </mat-form-field>
                         </div>
+                      </div>
+                    </div>
+
+                    <div class="row">
+                      <div class="col-sm-12">
+                        <a
+                          *ngIf="problemSearchResults.length"
+                          class="cdk-visually-hidden"
+                          href="javascript:void(0);"
+                          (click)="moveFocus('solutions')"
+                          >skip to found problems</a
+                        >
                       </div>
                     </div>
 
@@ -163,6 +173,7 @@
                               type="text"
                               matInput
                               id="title"
+                              #title
                               appAutofocus
                               placeholder="Title"
                               formControlName="title"
@@ -173,6 +184,18 @@
                             />
                           </mat-form-field>
                         </div>
+                      </div>
+                    </div>
+
+                    <div class="row">
+                      <div class="col-sm-12">
+                        <a
+                          *ngIf="solutionSearchResults.length"
+                          class="cdk-visually-hidden"
+                          href="javascript:void(0);"
+                          (click)="moveFocus('problems')"
+                          >skip to found soution</a
+                        >
                       </div>
                     </div>
 
@@ -342,6 +365,7 @@
                               (focus)="focusOnField($event)"
                               (blur)="blurOnField($event)"
                               [(ngModel)]="solution.impact"
+                              aria-describedby="impactListHeading"
                               required
                             ></textarea>
                           </mat-form-field>
@@ -349,26 +373,29 @@
                       </div>
                     </div>
 
-                    <div class="col-sm-10 left3rem" *ngIf="
+                    <div
+                      class="col-sm-10 left3rem"
+                      *ngIf="
                         showProblemImpacts &&
                         objectValues(selectedProblemsData).length
-                      ">
+                      "
+                    >
                       <div class="card">
                         <div class="card-header">
-                          <h4 aria-label="Impact of Selected Problems">
+                          <h4 aria-label="Impact of Selected Problems" id="impactListHeading">
                             Impact of Selected Problem(s)
                             <button
                               type="button"
                               class="close"
                               aria-label="Close"
-                              (click)="!showProblemImpacts"
+                              (click)="(!showProblemImpacts)"
                             >
                               <span aria-hidden="true">&times;</span>
                             </button>
                           </h4>
                         </div>
                         <div style="height: 15rem; overflow-y: scroll;">
-                          <ul class="list-group list-group-flush">
+                          <ul class="list-group list-group-flush" id="impactList">
                             <li
                               class="list-group-item"
                               *ngFor="
@@ -382,7 +409,7 @@
                                 <strong
                                   >Problem {{ i + 1 }} - {{ problem.title }}
                                 </strong>
-                                {{ problem.impact }} 
+                                {{ problem.impact }}
                               </span>
                             </li>
                           </ul>
@@ -495,25 +522,29 @@
                               (focus)="focusOnField($event)"
                               (blur)="blurOnField($event)"
                               [(ngModel)]="solution.extent"
+                              aria-describedby="extentListHeading"
                             ></textarea>
                           </mat-form-field>
                         </div>
                       </div>
                     </div>
 
-                    <div class="col-sm-10 left3rem" *ngIf="
+                    <div
+                      class="col-sm-10 left3rem"
+                      *ngIf="
                         showProblemExtent &&
                         objectValues(selectedProblemsData).length
-                      ">
+                      "
+                    >
                       <div class="card">
                         <div class="card-header">
-                          <h4 aria-label="Extent of Selected Problems">
+                          <h4 aria-label="Extent of Selected Problems" id="extentListHeading">
                             Extent of Selected Problem(s)
                             <button
                               type="button"
                               class="close"
                               aria-label="Close"
-                              (click)="!showProblemExtent"
+                              (click)="(!showProblemExtent)"
                             >
                               <span aria-hidden="true">&times;</span>
                             </button>
@@ -534,7 +565,7 @@
                                 <strong
                                   >Problem {{ i + 1 }} - {{ problem.title }}
                                 </strong>
-                                {{ problem.extent }} 
+                                {{ problem.extent }}
                               </span>
                             </li>
                           </ul>
@@ -651,25 +682,32 @@
                               (focus)="focusOnField($event)"
                               (blur)="blurOnField($event)"
                               [(ngModel)]="solution.beneficiary_attributes"
+                              aria-describedby="beneficiary_attributesListHeading"
                             ></textarea>
                           </mat-form-field>
                         </div>
                       </div>
                     </div>
 
-                    <div class="col-sm-10 left3rem" *ngIf="
+                    <div
+                      class="col-sm-10 left3rem"
+                      *ngIf="
                         showProblemBeneficiaryAttributes &&
                         objectValues(selectedProblemsData).length
-                      ">
+                      "
+                    >
                       <div class="card">
                         <div class="card-header">
-                          <h4 aria-label="Beneficiary Attributes of Selected Problems">
+                          <h4
+                            aria-label="Beneficiary Attributes of Selected Problems"
+                            id="beneficiary_attributesListHeading"
+                          >
                             Beneficiary Attributes of Selected Problem(s)
                             <button
                               type="button"
                               class="close"
                               aria-label="Close"
-                              (click)="!showProblemBeneficiaryAttributes"
+                              (click)="(!showProblemBeneficiaryAttributes)"
                             >
                               <span aria-hidden="true">&times;</span>
                             </button>
@@ -690,7 +728,7 @@
                                 <strong
                                   >Problem {{ i + 1 }} - {{ problem.title }}
                                 </strong>
-                                {{ problem.beneficiary_attributes }} 
+                                {{ problem.beneficiary_attributes }}
                               </span>
                             </li>
                           </ul>
@@ -875,7 +913,7 @@
                               (matChipInputTokenEnd)="addSector($event)"
                               required
                             />
-                            <mat-chip-list #chipList> </mat-chip-list>
+                            <!-- <mat-chip-list #chipList> </mat-chip-list> -->
                             <mat-autocomplete
                               #autoSector="matAutocomplete"
                               (optionSelected)="sectorSelected($event)"
@@ -1512,50 +1550,91 @@
       </div>
 
       <!--Problem search results-->
-      <div class="col-md-3" *ngIf="hide">
+      <div class="col-md-3 mt-4" *ngIf="hide">
+        <!-- <div class="wizard-container"> -->
         <ng-container *ngIf="problemSearchResults.length > 0">
           <div class="row justify-content-center">
             <div class="col-sm-10">
-              <h4>Found {{ problemSearchResults.length }} similar problems</h4>
-            </div>
-          </div>
-          <div class="row justify-content-center">
-            <div class="col-sm-12" *ngFor="let result of problemSearchResults">
-              <app-problem-card
-                *ngIf="result"
-                [problemData]="result"
-                (selected)="selectProblem($event)"
-                [usedInSmartSearch]="true"
-                [showAddButton]="true"
-              >
-              </app-problem-card>
-            </div>
-          </div>
-        </ng-container>
-      </div>
-      <!--Problem search results-->
-
-      <!--Solution smart search results-->
-      <div class="col-md-3" *ngIf="!hide">
-        <ng-container *ngIf="solutionSearchResults.length > 0">
-          <div class="row justify-content-center">
-            <div class="col-sm-10">
-              <h4>
-                Found {{ solutionSearchResults.length }} similar solutions
-              </h4>
+              <h2 style="font-size: 1.6rem;" #foundProblems tabindex="-1">
+                Found {{ problemSearchResults.length }} similar problems
+              </h2>
             </div>
           </div>
           <div class="row justify-content-center">
             <div
               class="col-sm-12"
-              *ngFor="let solution of solutionSearchResults"
+              style="overflow-y: scroll;"
+              role="region"
+              aria-label="problem cards"
+              [style.height]="sideScrollHeight ? sideScrollHeight + 'px' : null"
             >
-              <app-solution-card *ngIf="solution" [solutionData]="solution">
-              </app-solution-card>
+              <div *ngFor="let result of problemSearchResults; let i = index">
+                <app-problem-card
+                  *ngIf="result"
+                  [index]="i"
+                  [problemData]="result"
+                  (selected)="selectProblem($event)"
+                  [usedInSmartSearch]="true"
+                  [showAddButton]="true"
+                >
+                </app-problem-card>
+              </div>
+            </div>
+
+            <div class="col-sm-12 text-right">
+              <a
+                class="cdk-visually-hidden"
+                href="javascript:void(0);"
+                (click)="focusBack('selectProblem')"
+              >
+                Back to select Problem
+              </a>
+            </div>
+          </div>
+        </ng-container>
+        <!-- </div> -->
+      </div>
+
+      <!--Problem search results-->
+
+      <!--Solution smart search results-->
+      <div class="col-md-3 mt-4" *ngIf="!hide">
+        <ng-container *ngIf="solutionSearchResults.length > 0">
+          <div class="row justify-content-center">
+            <div class="col-sm-10">
+              <h2 style="font-size: 1.6rem;" #foundSolutions tabindex="-1">
+                Found {{ solutionSearchResults.length }} similar solutions
+              </h2>
+            </div>
+          </div>
+          <div class="row justify-content-center">
+            <div
+              class="col-sm-12"
+              class="col-sm-12"
+              style="overflow-y: scroll;"
+              role="region"
+              aria-label="problem cards"
+              [style.height]="sideScrollHeight ? sideScrollHeight + 'px' : null"
+            >
+              <div *ngFor="let solution of solutionSearchResults">
+                <app-solution-card *ngIf="solution" [solutionData]="solution">
+                </app-solution-card>
+              </div>
+            </div>
+
+            <div class="col-sm-12 text-right" *ngIf="!hide">
+              <a
+                class="cdk-visually-hidden"
+                href="javascript:void(0);"
+                (click)="focusBack('title')"
+              >
+                Back to title
+              </a>
             </div>
           </div>
         </ng-container>
       </div>
+
       <!--Solution smart search results-->
     </div>
   </div>
