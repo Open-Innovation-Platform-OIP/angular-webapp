@@ -27,6 +27,10 @@
                   <td>
                     <mat-checkbox [checked]="row[2]" (change)="adminToggle($event,row)"></mat-checkbox>
                   </td>
+                  <td>
+                    <mat-checkbox [checked]="row[3]" (change)="approveUserToggle($event,row)"></mat-checkbox>
+                  </td>
+
 
                 </tr>
               </tbody>
@@ -82,7 +86,7 @@
 
 
                   <td>
-                    <mat-checkbox (change)="approveUser($event,row)"></mat-checkbox>
+                    <mat-checkbox [checked]="row[1]" (change)="approveUser($event,row)"></mat-checkbox>
                   </td>
 
                 </tr>

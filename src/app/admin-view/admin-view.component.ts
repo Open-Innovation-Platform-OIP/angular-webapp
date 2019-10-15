@@ -20,7 +20,7 @@ export class AdminViewComponent implements OnInit, OnDestroy {
 
   objectKeys = Object.keys;
 
-  allApprovedUsers = {};
+  allUsers = {};
   allUnapprovedUsers = {};
 
   inviteeEmail: String = "";
@@ -47,7 +47,7 @@ export class AdminViewComponent implements OnInit, OnDestroy {
   }
 
   generateUserTable(userData) {
-    const userHeaderRow = ["Name", "Organization", "Admin"];
+    const userHeaderRow = ["Name", "Organization", "Admin", "Is Approved"];
     let userDataRow = [];
     Object.values(userData).map(user => {
       // console.log(user, "gnerate user table");
@@ -55,6 +55,8 @@ export class AdminViewComponent implements OnInit, OnDestroy {
         user["name"].toUpperCase(),
         user["organization"].toUpperCase(),
         user["is_admin"],
+
+        user["is_approved"],
         user["id"]
       ]);
     });
@@ -69,7 +71,7 @@ export class AdminViewComponent implements OnInit, OnDestroy {
     let userDataRow = [];
     Object.values(userData).map(user => {
       // console.log(user, "gnerate user table");
-      userDataRow.push([user["email"], user["id"]]);
+      userDataRow.push([user["email"], user["is_approved"], user["id"]]);
     });
     this.unapprovedUserDataTable = {
       headerRow: userHeaderRow,
@@ -136,7 +138,7 @@ export class AdminViewComponent implements OnInit, OnDestroy {
     this.usersQuery = this.apollo.watchQuery<any>({
       query: gql`
         query {
-          users(where: { is_approved: { _eq: true } }) {
+          users {
             is_admin
             id
             name
@@ -156,11 +158,12 @@ export class AdminViewComponent implements OnInit, OnDestroy {
 
     this.usersSubscription = this.usersQuery.valueChanges.subscribe(
       ({ data }) => {
+        this.allUsers = {};
         if (data.users.length > 0) {
           data.users.map(user => {
             if (user.id !== this.authService.currentUserValue.id) {
               if (user.id && user.name) {
-                this.allApprovedUsers[user.id] = {
+                this.allUsers[user.id] = {
                   id: user.id,
                   name: user.name,
                   is_admin: user.is_admin,
@@ -169,14 +172,14 @@ export class AdminViewComponent implements OnInit, OnDestroy {
                 };
               }
               if (user.organizationByOrganizationId) {
-                this.allApprovedUsers[user.id].organization =
+                this.allUsers[user.id].organization =
                   user.organizationByOrganizationId.name;
               }
             }
           });
-          console.log(this.allApprovedUsers, "all approved");
+          console.log(this.allUsers, "all approved");
 
-          this.generateUserTable(this.allApprovedUsers);
+          this.generateUserTable(this.allUsers);
         }
       },
       error => {
@@ -186,7 +189,7 @@ export class AdminViewComponent implements OnInit, OnDestroy {
   }
 
   adminToggle(event, user) {
-    const userId = user[3];
+    const userId = user[4];
     const isAdmin = event.checked;
     this.updateUserAdminStatus(isAdmin, userId);
   }
@@ -268,8 +271,63 @@ export class AdminViewComponent implements OnInit, OnDestroy {
       );
   }
 
+  approveUserToggle(event, user) {
+    const userId = user[4];
+    const isApproved = event.checked;
+
+    console.log(user, "user id");
+    this.apollo
+      .mutate({
+        mutation: gql`
+          mutation update_users{
+            update_users(
+              where: {id: {_eq: ${userId}}},
+              _set: {
+               is_approved:${isApproved}
+              }
+            ) {
+              affected_rows
+              returning {
+                id
+                is_admin
+                email
+                name
+                is_approved
+                
+              }
+            }
+            
+          }
+        `
+      })
+      .pipe(take(1))
+      .subscribe(
+        data => {
+          let user = data.data.update_users.returning[0];
+          console.log(user, "data");
+          // this.getUnapprovedUsersFromDB();
+
+          if (user.is_approved) {
+            swal({
+              type: "success",
+              title: `${user.email} is approved.`,
+              timer: 1500,
+              showConfirmButton: false
+            }).catch(swal.noop);
+          }
+
+          // console.log(data);
+        },
+        error => {
+          console.log(error);
+        }
+      );
+  }
+
   approveUser(event, user) {
-    const userId = user[1];
+    const userId = user[2];
+    const isApproved = event.checked;
+
     console.log(user, "user id");
     this.apollo
       .mutate({
@@ -321,6 +379,8 @@ export class AdminViewComponent implements OnInit, OnDestroy {
 
   ngOnDestroy() {
     this.usersQuery.stopPolling();
+    this.unapprovedUsersQuery.stopPolling();
     this.usersSubscription.unsubscribe();
+    this.unapprovedUsersSubscription.unsubscribe();
   }
 }
