@@ -23,12 +23,14 @@
                 <tr *ngFor="let row of userDataTable.dataRows">
                   <td>{{row[0]}}</td>
                   <td>{{row[1]}}</td>
+                  <td>{{row[2]}}</td>
+
 
                   <td>
-                    <mat-checkbox [checked]="row[2]" (change)="adminToggle($event,row)"></mat-checkbox>
+                    <mat-checkbox [checked]="row[3]" (change)="adminToggle($event,row)"></mat-checkbox>
                   </td>
                   <td>
-                    <mat-checkbox [checked]="row[3]" (change)="approveUserToggle($event,row)"></mat-checkbox>
+                    <mat-checkbox [checked]="row[4]" (change)="approveUserToggle($event,row)"></mat-checkbox>
                   </td>
 
 

@@ -46,11 +46,18 @@ export class AdminViewComponent implements OnInit, OnDestroy {
   }
 
   generateUserTable(userData) {
-    const userHeaderRow = ["Name", "Organization", "Admin", "Approval Status"];
+    const userHeaderRow = [
+      "Email",
+      "Name",
+      "Organization",
+      "Admin",
+      "Approval Status"
+    ];
     let userDataRow = [];
     Object.values(userData).map(user => {
       // console.log(user, "gnerate user table");
       userDataRow.push([
+        user["email"],
         user["name"].toUpperCase(),
         user["organization"].toUpperCase(),
         user["is_admin"],
@@ -112,6 +119,7 @@ export class AdminViewComponent implements OnInit, OnDestroy {
                 this.allUsers[user.id] = {
                   id: user.id,
                   name: user.name,
+                  email: user.email,
                   is_admin: user.is_admin,
                   organization: "Nil",
                   is_approved: user.is_approved
@@ -145,7 +153,7 @@ export class AdminViewComponent implements OnInit, OnDestroy {
   }
 
   adminToggle(event, user) {
-    const userId = user[4];
+    const userId = user[5];
     const isAdmin = event.checked;
     this.updateUserAdminStatus(isAdmin, userId);
   }
@@ -228,7 +236,7 @@ export class AdminViewComponent implements OnInit, OnDestroy {
   }
 
   approveUserToggle(event, user) {
-    const userId = user[4];
+    const userId = user[5];
     const isApproved = event.checked;
 
     console.log(user, "user id");
