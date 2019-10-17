@@ -765,14 +765,10 @@ export class AddSolutionComponent
     }
   }
 
-  onSectorInput(evt) {
-    console.log('hello', evt);
-  }
-
   selectedOwner(event: MatAutocompleteSelectedEvent): void {
-    // console.log(event.option, "event value");
+    // console.log(event, 'event value');
     const owner = event.option.value;
-    this.liveannouncer.announce(`Added ${owner}`);
+    this.liveannouncer.announce(`Added ${owner.value}`);
     this.owners.push(owner);
     this.ownerInput.nativeElement.value = '';
     this.ownersCtrl.setValue(null);
@@ -781,7 +777,7 @@ export class AddSolutionComponent
 
   removeOwner(owner) {
     // console.log(owner, 'remove');
-    this.liveannouncer.announce(`Removed ${owner}`);
+    this.liveannouncer.announce(`Removed ${owner.value}`);
     const index = this.owners.indexOf(owner);
     if (index >= 0) {
       this.owners.splice(index, 1);

@@ -720,7 +720,6 @@
                               name="deployment"
                               matInput
                               id="deployment"
-                              appAutofocus
                               placeholder="Deployments"
                               formControlName="deployment"
                               [(ngModel)]="solution.deployment"
@@ -784,11 +783,12 @@
                             name="budget"
                             matInput
                             id="budget"
-                            appAutofocus
+                            
                             placeholder="Minimum Budget (in Rupees)"
                             formControlName="min_budget"
                             [(ngModel)]="solution.min_budget"
                             required
+                            
                           />
                         </mat-form-field>
                       </div>
@@ -804,7 +804,7 @@
                             name="budget"
                             matInput
                             id="budget"
-                            appAutofocus
+                            
                             placeholder="Maximum Budget (in Rupees)"
                             formControlName="max_budget"
                             [(ngModel)]="solution.max_budget"
