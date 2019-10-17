@@ -49,7 +49,7 @@
         <h4 class="card-title text-center">Contributors</h4>
         <br />
         <div *ngFor="let user of userSearchResults">
-          <app-profile-card *ngIf="user" [userData]="user['_source']"></app-profile-card>
+          <app-profile-card *ngIf="user" [userData]="user"></app-profile-card>
           <br />
         </div>
         <div class="card" *ngIf="
