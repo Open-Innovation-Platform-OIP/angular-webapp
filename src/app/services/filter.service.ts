@@ -33,6 +33,7 @@ export class FilterService {
   sectorFilterArray: any[] = [];
   sector_filter_query: string = ``;
   location_filter_query: string = ``;
+  solution_location_filter_query: string = ``;
   range: number = 0.2;
   queryVariable = {};
   location_filter_header: any = ``;
@@ -125,7 +126,7 @@ export class FilterService {
       console.log(coordinates, "cordinates");
 
       this.location_filter_query = `{problem_locations:{ location:{location: {_st_d_within: {distance: ${this.range}, from: $point}}}}}`;
-
+      this.solution_location_filter_query = `{problems_solutions:{problem:{problem_locations:{location:{location: {_st_d_within: {distance:${this.range}, from: $point}}}}}}}`;
       this.queryVariable = {
         point: {
           type: "Point",
@@ -145,6 +146,7 @@ export class FilterService {
       return parsedQuery;
     } else {
       this.location_filter_query = ``;
+      this.solution_location_filter_query = ``;
       return {};
     }
   }

@@ -10,7 +10,7 @@
     </mat-select>
   </mat-form-field>
 
-  <mat-form-field class="dropDown" *ngIf="type==='problems'">
+  <mat-form-field class="dropDown">
 
     <input placeholder="Location" matInput type="text" name="location" [matAutocomplete]="locationAuto"
       (keyup)="getLocation($event)" [(ngModel)]="selectedLocationName" #location="ngModel" />
@@ -31,8 +31,8 @@
     </mat-select> -->
   </mat-form-field>
 
-  <mat-form-field class="dropDown" *ngIf="objectValues(selectedLocation).length && type==='problems'">
-    <mat-select (click)="selectDropdown($event)" placeholder="Distance" [(ngModel)]="range" ariaLabel="range">
+  <mat-form-field class="dropDown" *ngIf="objectValues(selectedLocation).length">
+    <mat-select (click)=" selectDropdown($event)" placeholder="Distance" [(ngModel)]="range" ariaLabel="range">
       <!-- <mat-option (click)="selectDropdown($event)" [value]="null">All</mat-option> -->
       <mat-option (click)="selectDropdown($event)" *ngFor="let range of objectKeys(ranges)" [value]="range">
         {{ ranges[range] }}

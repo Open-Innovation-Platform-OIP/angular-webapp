@@ -37,7 +37,12 @@ export class SolutionsViewComponent implements OnInit {
     this.tagsService.getTagsFromDB();
 
     this.activatedRoute.queryParams.subscribe(params => {
-      this.selectedSectors = this.filterService.filterSector(params);
+      this.filterService.selectedSectors = this.filterService.filterSector(
+        params
+      );
+      this.filterService.selectedLocation = this.filterService.filterLocation(
+        params
+      );
 
       // solutions_tags(
       //   where: {
@@ -49,14 +54,14 @@ export class SolutionsViewComponent implements OnInit {
 
       this.solutionViewQuery = this.apollo.watchQuery<any>({
         query: gql`
-          query PostsGetQuery {
+          query PostsGetQuery${this.filterService.location_filter_header} {
            
             solutions(
               where: {
-                solutions_tags:{tag_id:{${
-                  this.filterService.sector_filter_query
-                }
-                }}
+                _and:[{
+                solutions_tags:{tag_id:{${this.filterService.sector_filter_query}
+                }}},${this.filterService.solution_location_filter_query}
+              ],
                
                 is_draft: { _eq: false } 
               }
@@ -89,6 +94,7 @@ export class SolutionsViewComponent implements OnInit {
             }
           
         `,
+        variables: this.filterService.queryVariable,
         pollInterval: 500,
         fetchPolicy: "network-only"
       });
@@ -97,6 +103,8 @@ export class SolutionsViewComponent implements OnInit {
           console.log(result, "solution view result");
           if (result.data.solutions.length > 0) {
             this.solutions = result.data.solutions;
+          } else {
+            this.solutions = [];
           }
         },
         error => {
