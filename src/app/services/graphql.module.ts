@@ -1,27 +1,27 @@
-import { NgModule } from "@angular/core";
-import { HttpHeaders } from "@angular/common/http";
-import { ApolloModule, APOLLO_OPTIONS } from "apollo-angular";
-import { HttpLinkModule, HttpLink } from "apollo-angular-link-http";
-import { InMemoryCache } from "apollo-cache-inmemory";
+import { NgModule } from '@angular/core';
+import { HttpHeaders } from '@angular/common/http';
+import { ApolloModule, APOLLO_OPTIONS } from 'apollo-angular';
+import { HttpLinkModule, HttpLink } from 'apollo-angular-link-http';
+import { InMemoryCache } from 'apollo-cache-inmemory';
 
-const uri = "https://hasura-sa.cap.jaagalabs.com/v1/graphql"; // <-- add the URL of the GraphQL server here
+const uri = 'https://sa-dev.dev.jaagalabs.com/v1/graphql'; // <-- add the URL of the GraphQL server here
 export function createApollo(httpLink: HttpLink) {
-  let token = "";
-  const currentUser = JSON.parse(localStorage.getItem("currentUser"));
+  let token = '';
+  const currentUser = JSON.parse(localStorage.getItem('currentUser'));
   if (currentUser) {
-    token = currentUser["token"];
+    token = currentUser['token'];
     // console.log(token, "token");
   }
   let headers = <HttpHeaders>{};
   if (token) {
-    console.log(token, "token==");
+    console.log(token, 'token==');
     headers = new HttpHeaders()
-      .set("Content-Type", "application/json")
-      .set("Authorization", `Bearer ${token}`);
+      .set('Content-Type', 'application/json')
+      .set('Authorization', `Bearer ${token}`);
   } else {
     headers = new HttpHeaders()
-      .set("Content-Type", "application/json")
-      .set("X-Hasura-Role", "public");
+      .set('Content-Type', 'application/json')
+      .set('X-Hasura-Role', 'public');
   }
   return {
     link: httpLink.create({ uri, headers: headers }),

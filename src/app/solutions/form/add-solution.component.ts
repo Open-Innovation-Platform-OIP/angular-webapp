@@ -354,14 +354,16 @@ export class AddSolutionComponent
   }
 
   selected(event: MatAutocompleteSelectedEvent): void {
-    let selectedProblem = event.option.value;
+    const selectedProblem = event.option.value;
     this.getProblemData(selectedProblem.id);
 
     this.selectedProblems[selectedProblem.id] = selectedProblem;
-    // console.log(this.selectedProblems, "problem set");
+    // console.log(selectedProblem['title'], 'problem set');
 
     this.problemInput.nativeElement.value = '';
     this.problemCtrl.setValue(null);
+    this.problemSearchResults = [];
+    this.liveannouncer.announce(`Added ${selectedProblem['title']}`);
     // this.getProblemData(selectedProblem.id);
     // delete this.searchResults[selectedProblem.id];
   }
@@ -495,11 +497,8 @@ export class AddSolutionComponent
   }
 
   remove(problem): void {
-    console.log(problem, 'remove');
-    // const index = this.selectedProblems.indexOf(problem);
-    // if (index >= 0) {
-    //   this.selectedProblems.splice(index, 1);
-    // }
+    // console.log(problem, 'remove');
+    this.liveannouncer.announce(`removed ${problem['title']}`);
     delete this.selectedProblems[problem.id];
     delete this.selectedProblemsData[problem.id];
     if (this.solution['id']) {

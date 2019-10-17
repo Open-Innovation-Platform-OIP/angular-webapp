@@ -47,20 +47,7 @@
                     role="tabpanel"
                     aria-labelledby="textTab"
                   >
-                    <!-- <div class="row justify-content-center">
-                      <a href="#media" data-toggle="tab" role="tab" class="nav-link"
-                        *ngIf="solution.image_urls.length+solution.video_urls.length>0">
-                        {{solution.image_urls.length}} image(s) and {{solution.video_urls.length}} video(s) attached</a>
-                    </div> -->
-
                     <div class="row justify-content-center">
-                      <!-- <div class="col-sm-12">
-                            <div class="input-group form-control-lg">
-                              <div class="input-group-prepend">
-                                <span class="input-group-text">
-                                   <i class="material-icons" aria-hidden="true">label</i>
-                                </span>
-                              </div> -->
                       <div class="col-sm-12">
                         <div class="input-group form-control-lg">
                           <div class="input-group-prepend">
@@ -129,21 +116,30 @@
                         *ngFor="
                           let problem of objectValues(selectedProblemsData)
                         "
+                        role="group"
                       >
                         <mat-chip
                           [selectable]="selectable"
                           [removable]="removable"
                           (removed)="remove(problem)"
-                          style="margin-right:0.3em; margin-bottom: 0.4em;"
+                          style="margin-right:0.3em; margin-bottom: 0.4em;max-width: 100%;"
                         >
                           <a
                             [routerLink]="'/problems/' + problem.id"
                             queryParamsHandling="merge"
                           >
-                            {{ problem.title }}
+                            <span style="width: 95%;" class="text-truncate">
+                              {{ problem.title }}
+                            </span>
                           </a>
-                          <mat-icon matChipRemove *ngIf="removable"
-                            >cancel</mat-icon
+                          <i
+                            class="material-icons mat-chip-remove mat-chip-trailing-icon mat-icon material-icons ng-star-inserted"
+                            matChipRemove
+                            tabindex="0"
+                            role="button"
+                            aria-label="remove"
+                            *ngIf="removable"
+                            >cancel</i
                           >
                         </mat-chip>
                       </div>
@@ -300,41 +296,6 @@
                         </div>
                       </div>
                     </div>
-                    <!-- <div class="row justify-content-center"
-                      *ngIf="showProblemResourcesNeeded && objectValues(selectedProblemsData).length">
-                      <div class="col-sm-10">
-                        <ng-container>
-                          <div class="card-body">
-
-
-                            <div id="accordion" role="tablist">
-                              <div class="card-collapse">
-                                <div class="card-header" role="tab" id="headingOne">
-                                  <h5 class="mb-0">
-                                    <a data-toggle="collapse" href="#collapseOne" aria-expanded="true"
-                                      aria-controls="collapseOne" class="collapsed">
-                                      Resources Needed of Selected Problem(s)
-                                       <i class="material-icons" aria-hidden="true">keyboard_arrow_down</i>
-                                    </a>
-                                  </h5>
-                                </div>
-                                <div id="collapseOne" class="collapse show" role="tabpanel" aria-labelledby="headingOne"
-                                  data-parent="#accordion" style="">
-                                  <div class="card-body">
-                                    <ul *ngFor="let problem of objectValues(selectedProblemsData)">
-                                      <li>
-                                        <h4>Resources needed for problem "{{problem.title}}"</h4>
-                                        <p>{{problem.resources_needed}}</p>
-                                      </li>
-                                    </ul>
-                                  </div>
-                                </div>
-                              </div>
-                            </div>
-                          </div>
-                        </ng-container>
-                      </div>
-                    </div> -->
 
                     <div class="row justify-content-center">
                       <div class="col-sm-12">
@@ -382,7 +343,10 @@
                     >
                       <div class="card">
                         <div class="card-header">
-                          <h4 aria-label="Impact of Selected Problems" id="impactListHeading">
+                          <h4
+                            aria-label="Impact of Selected Problems"
+                            id="impactListHeading"
+                          >
                             Impact of Selected Problem(s)
                             <button
                               type="button"
@@ -395,7 +359,10 @@
                           </h4>
                         </div>
                         <div style="height: 15rem; overflow-y: scroll;">
-                          <ul class="list-group list-group-flush" id="impactList">
+                          <ul
+                            class="list-group list-group-flush"
+                            id="impactList"
+                          >
                             <li
                               class="list-group-item"
                               *ngFor="
@@ -405,98 +372,22 @@
                                 let i = index
                               "
                             >
-                              <span *ngIf="problem.impact">
+                              <span>
                                 <strong
                                   >Problem {{ i + 1 }} - {{ problem.title }}
                                 </strong>
+                              </span>
+                              <span *ngIf="problem.impact; else impactNotFound">
                                 {{ problem.impact }}
                               </span>
+                              <ng-template #impactNotFound
+                                >No impact found</ng-template
+                              >
                             </li>
                           </ul>
                         </div>
                       </div>
                     </div>
-
-                    <!-- <div
-                      class="row justify-content-center"
-                      *ngIf="
-                        showProblemImpacts &&
-                        objectValues(selectedProblemsData).length
-                      "
-                    >
-                      <div class="col-sm-10">
-                        <ng-container
-                          *ngIf="objectValues(selectedProblemsData).length"
-                        >
-                          <div class="card-body">
-                            <div id="accordion" role="tablist">
-                              <div class="card-collapse">
-                                <div
-                                  class="card-header"
-                                  role="tab"
-                                  id="headingOne"
-                                >
-                                  <h5 class="mb-0">
-                                    <a
-                                      data-toggle="collapse"
-                                      href="#collapseOne"
-                                      aria-expanded="true"
-                                      aria-controls="collapseOne"
-                                      class="collapsed"
-                                    >
-                                      Impact of Selected Problem(s)
-                                      <i
-                                        class="material-icons"
-                                        aria-hidden="true"
-                                        >keyboard_arrow_down</i
-                                      >
-                                    </a>
-                                  </h5>
-                                </div>
-                                <div
-                                  id="collapseOne"
-                                  class="collapse show"
-                                  role="tabpanel"
-                                  aria-labelledby="headingOne"
-                                  data-parent="#accordion"
-                                  style=""
-                                >
-                                  <div class="card-body">
-                                    <div class="table-responsive">
-                                      <table class="table">
-                                        <tbody>
-                                          <tr
-                                            *ngFor="
-                                              let problem of objectValues(
-                                                selectedProblemsData
-                                              );
-                                              let i = index
-                                            "
-                                          >
-                                            <td>
-                                              <p *ngIf="problem.impact">
-                                                <u
-                                                  >Problem {{ i + 1 }} -
-                                                  {{ problem.title }}</u
-                                                >
-                                              </p>
-                                              <p *ngIf="problem.impact">
-                                                <b>{{ problem.impact }}</b>
-                                              </p>
-                                            </td>
-                                          </tr>
-                                        </tbody>
-                                      </table>
-                                    </div>
-                                  </div>
-                                </div>
-                              </div>
-                            </div>
-                          </div>
-                        </ng-container>
-                      </div>
-                    </div> 
-                    <br /> -->
 
                     <div class="row justify-content-center">
                       <div class="col-sm-12">
@@ -538,7 +429,10 @@
                     >
                       <div class="card">
                         <div class="card-header">
-                          <h4 aria-label="Extent of Selected Problems" id="extentListHeading">
+                          <h4
+                            aria-label="Extent of Selected Problems"
+                            id="extentListHeading"
+                          >
                             Extent of Selected Problem(s)
                             <button
                               type="button"
@@ -561,100 +455,22 @@
                                 let i = index
                               "
                             >
-                              <span *ngIf="problem.extent">
+                              <span>
                                 <strong
                                   >Problem {{ i + 1 }} - {{ problem.title }}
                                 </strong>
+                              </span>
+                              <span *ngIf="problem.extent; else extentNotFound">
                                 {{ problem.extent }}
                               </span>
+                              <ng-template #extentNotFound
+                                >No extent found</ng-template
+                              >
                             </li>
                           </ul>
                         </div>
                       </div>
                     </div>
-
-                    <!-- <div
-                      class="row justify-content-center"
-                      *ngIf="
-                        showProblemExtent &&
-                        objectValues(selectedProblemsData).length
-                      "
-                    >
-                      <div class="col-sm-10">
-                        <ng-container
-                          *ngIf="objectValues(selectedProblemsData).length"
-                        >
-                          <div class="card-body">
-                            <div id="accordion" role="tablist">
-                              <div class="card-collapse">
-                                <div
-                                  class="card-header"
-                                  role="tab"
-                                  id="headingOne"
-                                >
-                                  <h5 class="mb-0">
-                                    <a
-                                      data-toggle="collapse"
-                                      href="#collapseOne"
-                                      aria-expanded="true"
-                                      aria-controls="collapseOne"
-                                      class="collapsed"
-                                    >
-                                      Extent of Selected Problem(s)
-                                      <i
-                                        class="material-icons"
-                                        aria-hidden="true"
-                                        >keyboard_arrow_down</i
-                                      >
-                                    </a>
-                                  </h5>
-                                </div>
-                                <div
-                                  id="collapseOne"
-                                  class="collapse show"
-                                  role="tabpanel"
-                                  aria-labelledby="headingOne"
-                                  data-parent="#accordion"
-                                  style=""
-                                >
-                                  <div class="card-body">
-                                    
-                                    <div class="table-responsive">
-                                      <table class="table">
-                                        <tbody>
-                                          <tr
-                                            *ngFor="
-                                              let problem of objectValues(
-                                                selectedProblemsData
-                                              );
-                                              let i = index
-                                            "
-                                          >
-                                            <td>
-                                              <p *ngIf="problem.impact">
-                                                <u
-                                                  >Problem {{ i + 1 }} -
-                                                  {{ problem.title }}</u
-                                                >
-                                              </p>
-                                              <p *ngIf="problem.impact">
-                                                <b>{{ problem.extent }}</b>
-                                              </p>
-                                            </td>
-                                          </tr>
-                                        </tbody>
-                                      </table>
-                                    </div>
-                                  </div>
-                                </div>
-                              </div>
-                            </div>
-                          </div>
-                        </ng-container>
-                      </div>
-                    </div>
-
-                    <br /> -->
 
                     <div class="row justify-content-center">
                       <div class="col-sm-12">
@@ -724,132 +540,27 @@
                                 let i = index
                               "
                             >
-                              <span *ngIf="problem.beneficiary_attributes">
+                              <span>
                                 <strong
                                   >Problem {{ i + 1 }} - {{ problem.title }}
                                 </strong>
+                              </span>
+                              <span
+                                *ngIf="
+                                  problem.beneficiary_attributes;
+                                  else beneficiaryAttrNotFound
+                                "
+                              >
                                 {{ problem.beneficiary_attributes }}
                               </span>
+                              <ng-template #beneficiaryAttrNotFound
+                                >No beneficiary attributes found</ng-template
+                              >
                             </li>
                           </ul>
                         </div>
                       </div>
                     </div>
-
-                    <!-- <div
-                      class="row justify-content-center"
-                      *ngIf="
-                        showProblemBeneficiaryAttributes &&
-                        objectValues(selectedProblemsData).length
-                      "
-                    >
-                      <div class="col-sm-10">
-                        <ng-container
-                          *ngIf="objectValues(selectedProblemsData).length"
-                        >
-                          <div class="card-body">
-                            <div id="accordion" role="tablist">
-                              <div class="card-collapse">
-                                <div
-                                  class="card-header"
-                                  role="tab"
-                                  id="headingOne"
-                                >
-                                  <h5 class="mb-0">
-                                    <a
-                                      data-toggle="collapse"
-                                      href="#collapseOne"
-                                      aria-expanded="true"
-                                      aria-controls="collapseOne"
-                                      class="collapsed"
-                                    >
-                                      Beneficiary Attributes of Selected
-                                      Problem(s)
-                                      <i
-                                        class="material-icons"
-                                        aria-hidden="true"
-                                        >keyboard_arrow_down</i
-                                      >
-                                    </a>
-                                  </h5>
-                                </div>
-                                <div
-                                  id="collapseOne"
-                                  class="collapse show"
-                                  role="tabpanel"
-                                  aria-labelledby="headingOne"
-                                  data-parent="#accordion"
-                                  style=""
-                                >
-                                  <div class="card-body">
-                                    <div class="table-responsive">
-                                      <table class="table">
-                                        <tbody>
-                                          <tr
-                                            *ngFor="
-                                              let problem of objectValues(
-                                                selectedProblemsData
-                                              );
-                                              let i = index
-                                            "
-                                          >
-                                            <td>
-                                              <p *ngIf="problem.impact">
-                                                <u
-                                                  >Problem {{ i + 1 }} -
-                                                  {{ problem.title }}</u
-                                                >
-                                              </p>
-                                              <p *ngIf="problem.impact">
-                                                <b>{{
-                                                  problem.beneficiary_attributes
-                                                }}</b>
-                                              </p>
-                                            </td>
-                                          </tr>
-                                        </tbody>
-                                      </table>
-                                    </div>
-                                  </div>
-                                </div>
-                              </div>
-                            </div>
-                          </div>
-                        </ng-container>
-                      </div>
-                    </div>
-
-                    <br />
-
-                    <div class="row justify-content-center">
-                      <div class="col-sm-12">
-                        <div class="input-group form-control-lg">
-                          <div class="input-group-prepend">
-                            <span class="input-group-text">
-                              <i class="material-icons" aria-hidden="true"
-                                >schedule</i
-                              >
-                            </span>
-                          </div>
-                          <mat-form-field
-                            class="example-full-width has-label"
-                            [ngClass]="displayFieldCss(type, 'timeline')"
-                          >
-                            <textarea
-                              type="text"
-                              name="timeline"
-                              matInput
-                              id="timeline"
-                              placeholder="Timeline"
-                              formControlName="timeline"
-                              [(ngModel)]="solution.timeline"
-                            ></textarea>
-                          </mat-form-field>
-                        </div>
-                      </div>
-                    </div>
-
-                    <br /> -->
 
                     <div class="row justify-content-center">
                       <div class="col-sm-12">
@@ -1012,43 +723,6 @@
                         </div>
                       </div>
                     </div>
-
-                    <!-- <div class="row justify-content-center">
-                      <div class="col-sm-12">
-                        <div class="input-group form-control-lg">
-                          <div class="row">
-                            <div class="col-sm-2">
-                              <div class="input-group-prepend">
-                                <span class="input-group-text">
-                                   <i class="material-icons" aria-hidden="true"
-                                    [ngStyle]="{color: (!solution.budget.title && !solution.budget.cost) ? 'red' : '#495057'}">monetization_on</i>
-                                </span>
-                              </div>
-                            </div>
-                            <div class="col-sm-10">
-                              <div class="row">
-                                <div class="col-md-6">
-                                  <mat-form-field class="example-full-width has-label"
-                                    [ngClass]="displayFieldCss(type, 'deployment')">
-                                    <input type="text" name="budget" matInput id="budget" appAutofocus
-                                      placeholder="Budget title *" formControlName="budget"
-                                      [(ngModel)]="solution.budget.title">
-                                  </mat-form-field>
-                                </div>
-                                <div class="col-md-6">
-                                  <mat-form-field class="example-full-width has-label"
-                                    [ngClass]="displayFieldCss(type, 'assessment_metrics')">
-                                    <input type="number" name="budget" matInput id="budget" appAutofocus
-                                      placeholder="Cost *" formControlName="budgetCost"
-                                      [(ngModel)]="solution.budget.cost">
-                                  </mat-form-field>
-                                </div>
-                              </div>
-                            </div>
-                          </div>
-                        </div>
-                      </div>
-                    </div> -->
 
                     <div class="row justify-content-center">
                       <div class="col-sm-12">
@@ -1560,7 +1234,7 @@
               </h2>
             </div>
           </div>
-          <div class="row justify-content-center">
+          <div class="row justify-content-center" cdkTrapFocus>
             <div
               class="col-sm-12"
               style="overflow-y: scroll;"
@@ -1607,7 +1281,7 @@
               </h2>
             </div>
           </div>
-          <div class="row justify-content-center">
+          <div class="row justify-content-center" cdkTrapFocus>
             <div
               class="col-sm-12"
               class="col-sm-12"
