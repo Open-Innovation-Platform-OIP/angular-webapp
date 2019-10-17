@@ -642,7 +642,7 @@
                     </div>
 
                     <div class="row justify-content-center">
-                      <div class="col-sm-10">
+                      <div class="col-sm-10" role="group">
                         <mat-chip
                           *ngFor="let sector of sectors"
                           [selectable]="selectable"
@@ -651,8 +651,15 @@
                           style="margin-right:0.3em; margin-bottom: 0.4em;"
                         >
                           {{ sector }}
-                          <mat-icon matChipRemove *ngIf="removable"
-                            >cancel</mat-icon
+
+                          <i
+                            class="material-icons mat-chip-remove mat-chip-trailing-icon mat-icon material-icons ng-star-inserted"
+                            matChipRemove
+                            tabindex="0"
+                            role="button"
+                            aria-label="remove"
+                            *ngIf="removable"
+                            >cancel</i
                           >
                         </mat-chip>
                       </div>
@@ -848,7 +855,7 @@
                       </div>
                     </div>
                     <div class="row justify-content-center">
-                      <div class="col-sm-10">
+                      <div class="col-sm-10" role="group">
                         <mat-chip
                           *ngFor="let owner of owners"
                           [selectable]="selectable"
@@ -857,8 +864,14 @@
                           style="margin-right:0.3em; margin-bottom: 0.4em;"
                         >
                           {{ owner.value || owner.name }}
-                          <mat-icon matChipRemove *ngIf="removable"
-                            >cancel</mat-icon
+                          <i
+                            class="material-icons mat-chip-remove mat-chip-trailing-icon mat-icon material-icons ng-star-inserted"
+                            matChipRemove
+                            tabindex="0"
+                            role="button"
+                            aria-label="remove"
+                            *ngIf="removable"
+                            >cancel</i
                           >
                         </mat-chip>
                       </div>

@@ -309,10 +309,12 @@ export class AddSolutionComponent
   }
 
   sectorSelected(event: MatAutocompleteSelectedEvent): void {
-    console.log('event.option.viewValue', event);
-    this.sectors.push(event.option.value);
+    // console.log('event.option.viewValue', event);
+    const sectorValue = event.option.value;
+    this.sectors.push(sectorValue);
     this.sectorInput.nativeElement.value = '';
     this.sectorCtrl.setValue(null);
+    this.liveannouncer.announce(`Added ${sectorValue}`);
     // this.addedSectors.emit(this.sectors);
   }
 
@@ -334,6 +336,7 @@ export class AddSolutionComponent
 
   removeSector(sector: string): void {
     const index = this.sectors.indexOf(sector);
+    this.liveannouncer.announce(`removed ${sector}`);
     if (index >= 0) {
       this.sectors.splice(index, 1);
     }
@@ -762,16 +765,23 @@ export class AddSolutionComponent
     }
   }
 
+  onSectorInput(evt) {
+    console.log('hello', evt);
+  }
+
   selectedOwner(event: MatAutocompleteSelectedEvent): void {
     // console.log(event.option, "event value");
-    this.owners.push(event.option.value);
+    const owner = event.option.value;
+    this.liveannouncer.announce(`Added ${owner}`);
+    this.owners.push(owner);
     this.ownerInput.nativeElement.value = '';
     this.ownersCtrl.setValue(null);
     // this.addedOwners.emit(this.owners);
   }
 
   removeOwner(owner) {
-    console.log(owner, 'remove');
+    // console.log(owner, 'remove');
+    this.liveannouncer.announce(`Removed ${owner}`);
     const index = this.owners.indexOf(owner);
     if (index >= 0) {
       this.owners.splice(index, 1);
@@ -965,6 +975,7 @@ export class AddSolutionComponent
       min_budget: [null, Validators.required],
       max_budget: [null, Validators.required]
     });
+
     // Code for the Validator
     const $validator = $('.card-wizard form').validate({
       rules: {
