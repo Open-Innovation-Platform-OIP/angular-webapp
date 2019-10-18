@@ -1,52 +1,28 @@
+<button
+  class="btn btn-warning btn-lg btn-fab btn-round"
+  matTooltip="Add Problem"
+  [matTooltipPosition]="'left'"
+  [routerLink]="['/problems/add']"
+  queryParamsHandling="merge"
+  *ngIf="auth.currentUserValue.id"
+  aria-label="Add Problem"
+>
+  <i class="material-icons">add</i>
+</button>
+
 <div class="main-content">
   <div class="container-fluid">
-    <button
-      class="btn btn-warning btn-lg btn-fab btn-round"
-      matTooltip="Add Problem"
-      [matTooltipPosition]="'left'"
-      [routerLink]="['/problems/add']"
-      queryParamsHandling="merge"
-      *ngIf="auth.currentUserValue.id"
-      aria-label="Add Problem"
-    >
-      <i class="material-icons">add</i>
-    </button>
-
-    <!-- <button class="btn btn-rose" (click)="test()">test</button> -->
-
-    <!-- <h3 *ngIf="userProblems.length" class="card-title text-center">Problems added by you</h3>
-        <br />
-        <div class="row">
-            <div class="col-md-3" *ngFor="let problem of userProblems">
-                <app-problem-card [problemData]="problem"></app-problem-card>
-            </div>
-        </div> -->
     <h1
-      tabindex="0"
+      tabindex="-1"
       style="font-size: 2rem;"
       *ngIf="problems.length"
-      class="card-title text-center"
+      class="card-title text-center my-4"
+      #problemWorthSolving
     >
       Problems worth Solving
     </h1>
     <br />
-    <!-- <button class="btn btn-warning btn-lg btn-fab btn-round">video
 
-        </button> -->
-
-    <!-- <div class="d-flex justify-content-end">
-
-            <mat-form-field class="dropDown">
-                <mat-select multiple placeholder="Sectors" [(ngModel)]="selectedSectors" name="Paris"
-                    ariaLabel="objectValues(sectors)[0]">
-                    <mat-option (click)="selectSector()" *ngFor="let sector of objectValues(sectors)"
-                        [value]="sector.name">
-                        {{ sector.name }}
-                    </mat-option>
-                </mat-select>
-            </mat-form-field>
-
-        </div> -->
     <app-filter-dropdown [type]="'problems'"> </app-filter-dropdown>
 
     <div
@@ -62,9 +38,5 @@
         ></app-problem-card>
       </div>
     </div>
-    <!-- <div *ngIf="!problems.length">
-            <h2>No Results!</h2>
-
-        </div> -->
   </div>
 </div>
