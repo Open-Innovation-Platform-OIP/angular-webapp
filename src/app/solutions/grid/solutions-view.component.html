@@ -13,15 +13,18 @@
 
 <div class="main-content">
   <div class="container-fluid">
-    <h1
-      tabindex="-1"
-      style="font-size: 1.5rem;"
-      *ngIf="solutions.length"
-      class="card-title text-center my-4"
-      #solutionWorthSharing
-    >
-      Solutions worth Sharing
-    </h1>
+    <div class="row">
+      <div class="col">
+        <h1
+          tabindex="-1"
+          style="font-size: 1.5rem;"
+          class="card-title text-center my-4"
+          #solutionWorthSharing
+        >
+          Solutions worth Sharing
+        </h1>
+      </div>
+    </div>
 
     <app-filter-dropdown [type]="'solutions'"> </app-filter-dropdown>
 

@@ -1,31 +1,30 @@
-import { Component, OnInit, Input, OnChanges } from "@angular/core";
-import { Router, ActivatedRoute } from "@angular/router";
-import { TagsService } from "../../services/tags.service";
-// import { take } from "rxjs/operators";
+import { Component, OnInit, Input, OnChanges } from '@angular/core';
+import { Router, ActivatedRoute } from '@angular/router';
+import { TagsService } from '../../services/tags.service';
 import { FormControl } from '@angular/forms';
-import { GeocoderService } from "../../services/geocoder.service";
-import { FilterService } from "../../services/filter.service";
+import { GeocoderService } from '../../services/geocoder.service';
+import { FilterService } from '../../services/filter.service';
 
 @Component({
-  selector: "app-filter-dropdown",
-  templateUrl: "./filter-dropdown.component.html",
-  styleUrls: ["./filter-dropdown.component.css"]
+  selector: 'app-filter-dropdown',
+  templateUrl: './filter-dropdown.component.html',
+  styleUrls: ['./filter-dropdown.component.css']
 })
 export class FilterDropdownComponent implements OnInit {
   @Input() type: string;
   selectedSectors: any = [];
   selectedLocation: any = {};
   range: any;
-  selectedLocationName: string = "";
+  selectedLocationName = '';
 
   myControl = new FormControl();
 
   ranges = {
-    0: "0 Kms",
-    25: "25 kms",
-    50: "50 kms",
-    100: "100 kms",
-    200: "200 kms"
+    0: '0 Kms',
+    25: '25 kms',
+    50: '50 kms',
+    100: '100 kms',
+    200: '200 kms'
   };
 
   sectors: any = {};
@@ -39,20 +38,18 @@ export class FilterDropdownComponent implements OnInit {
     private geoService: GeocoderService,
     private activatedRoute: ActivatedRoute,
     private filterService: FilterService
-  ) { }
+  ) {}
 
   ngOnInit() {
-    this.myControl.valueChanges
-      .subscribe(val => {
-        this.getLocation(val);
-      });
-
+    this.myControl.valueChanges.subscribe(val => {
+      this.getLocation(val);
+    });
 
     this.sectors = this.tagsService.allTags;
     // this.locations = this.geoService.allLocations;
 
     this.activatedRoute.queryParams.subscribe(params => {
-      console.log(params, "params in dropdown");
+      console.log(params, 'params in dropdown');
       this.selectedSectors = this.filterService.filterSector(params);
       // this.selectedLocationName = this.filterService.filterLocation(params).location_name;
       this.selectedLocation = this.filterService.filterLocation(params);
@@ -60,11 +57,11 @@ export class FilterDropdownComponent implements OnInit {
         this.selectedLocationName = this.selectedLocation.location_name;
       }
       if (params.locationRange) {
-        console.log(typeof params.locationRange, "location range");
+        console.log(typeof params.locationRange, 'location range');
         this.range = Math.round(+params.locationRange * 110).toString();
         this.filterService.range = +params.locationRange;
       } else {
-        this.range = "0";
+        this.range = '0';
       }
     });
     // this.selectedLocation = this.filterService.selectedLocation;
@@ -116,32 +113,32 @@ export class FilterDropdownComponent implements OnInit {
 
     if (+this.range !== 0) {
       this.filterService.range = +this.range / 110;
-      queries["locationRange"] = this.filterService.range;
+      queries['locationRange'] = this.filterService.range;
     } else {
       this.filterService.range = 0.2;
     }
 
     this.selectedSectors.map(sector => {
-      queries[sector] = "sectorFilter";
+      queries[sector] = 'sectorFilter';
     });
 
     if (!Object.values(this.selectedLocation).length) {
-      if (queries["locationRange"]) {
-        delete queries["locationRange"];
+      if (queries['locationRange']) {
+        delete queries['locationRange'];
       }
-      this.router.navigate(["/" + this.type], {
+      this.router.navigate(['/' + this.type], {
         queryParams: queries
       });
       return;
     }
 
     if (Object.values(this.selectedLocation).length) {
-      queries["filterLocation"] = JSON.stringify(this.selectedLocation);
+      queries['filterLocation'] = JSON.stringify(this.selectedLocation);
     }
 
-    console.log(queries, "queries");
+    console.log(queries, 'queries');
 
-    this.router.navigate(["/" + this.type], {
+    this.router.navigate(['/' + this.type], {
       queryParams: queries
     });
   }
