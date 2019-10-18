@@ -15,6 +15,7 @@ export class SolutionCardComponent implements OnInit {
   numOfValidations: Number = 0;
   validated: Boolean = false;
   link = '';
+  imageAlt = 'default image';
 
   constructor(private filesService: FilesService) {}
 

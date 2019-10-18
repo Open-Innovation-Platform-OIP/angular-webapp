@@ -1,86 +1,129 @@
-<div class="card card-product actions problem-card" role="group" [attr.aria-label]="['problem',index +1]">
+<div
+  class="card card-product actions problem-card"
+  role="group"
+  [attr.aria-label]="['problem', index + 1]"
+>
   <div class="card-header card-header-image" (click)="navigation()">
-    <img src="{{
-        filesService.fileAccessUrl+problemData.featured_url && checkUrlIsImg(filesService.fileAccessUrl+problemData.featured_url)
-          ? filesService.fileAccessUrl+problemData.featured_url
+    <img
+      src="{{
+        filesService.fileAccessUrl + problemData.featured_url &&
+        checkUrlIsImg(filesService.fileAccessUrl + problemData.featured_url)
+          ? filesService.fileAccessUrl + problemData.featured_url
           : './assets/img/image_placeholder.jpg'
-      }}" width="200px" height="180px" style="object-fit:inherit;" [attr.alt]="[imageAlt]" />
+      }}"
+      width="200px"
+      height="180px"
+      style="object-fit:inherit;"
+      [attr.alt]="[imageAlt]"
+    />
   </div>
 
   <div class="card-body" (click)="navigation()">
     <div style="text-align: center;" aria-level="2" role="heading">
-      <a href="javascript:void(0);" (click)="navigation()" class="card-title title "
-        *ngIf="problemData.title.length < 30; else longTitle">
+      <a
+        href="javascript:void(0);"
+        (click)="navigation()"
+        class="card-title title "
+        *ngIf="problemData.title.length < 30; else longTitle"
+      >
         {{ problemData.title }}
       </a>
     </div>
 
     <ng-template #longTitle>
-      <p class="card-title title">
-        {{ problemData.title.substring(0, 30) + "..." }}
-      </p>
+      <a
+        href="javascript:void(0);"
+        (click)="navigation()"
+        class="card-title title "
+        [attr.aria-label]="[problemData.title]"
+      >
+        {{ problemData.title.substring(0, 30) + '...' }}
+      </a>
     </ng-template>
+
     <div class="description">
-      <strong>Description</strong>
-      <p *ngIf="problemData.description.length < 75; else longDescription">{{ problemData.description }}</p>
+      <strong aria-level="3" role="heading">Description</strong>
+      <p *ngIf="problemData.description.length < 75; else longDescription">
+        {{ problemData.description }}
+      </p>
       <ng-template #longDescription>
-        <p>{{ problemData.description.substring(0,75) + ', ...' }}</p>
+        <p>{{ problemData.description.substring(0, 75) + ', ...' }}</p>
       </ng-template>
     </div>
-    <span><strong> Location(s)</strong></span>
-    <div *ngFor="let location of problemData.problem_locations; let i = index" class="location">
-      <span *ngIf="location.location&& i < 1">{{
-        location.location.location_name.substring(0, 35)+", ..."
-      
+    <span><strong aria-level="3" role="heading"> Location(s)</strong></span>
+    <div
+      *ngFor="let location of problemData.problem_locations; let i = index"
+      class="location"
+    >
+      <span *ngIf="location.location && i < 1">{{
+        location.location.location_name.substring(0, 35) + ', ...'
       }}</span>
       <span *ngIf="i < 1">&nbsp;</span>
     </div>
   </div>
-  <!-- <div>
-    <button (click)="selectProblem()" *ngIf="usedInSmartSearch && showAddButton" class="btn btn-rose btn-sm"
-      style="margin-top: 2px;">
+
+  <div>
+    <button
+      (click)="selectProblem()"
+      *ngIf="usedInSmartSearch && showAddButton"
+      class="btn btn-rose btn-sm"
+      style="margin-top: 2px;"
+    >
       <a>Add</a>
     </button>
-  </div> -->
+  </div>
 
-  <div *ngIf="!usedInSmartSearch" aria-hidden="true"
-    style="background-color: #FF625E; width: 3em; box-shadow: 0 4px 6px rgba(25, 25, 25, 0.2);">
-    <i class="material-icons" style="color: #FFFFFF; margin-top: 0.2em; font-size: 1.2em;">
+  <div
+    *ngIf="!usedInSmartSearch"
+    aria-hidden="true"
+    style="background-color: #FF625E; width: 3em; box-shadow: 0 4px 6px rgba(25, 25, 25, 0.2);"
+  >
+    <i
+      class="material-icons"
+      style="color: #FFFFFF; margin-top: 0.2em; font-size: 1.2em;"
+    >
       help
     </i>
   </div>
 
-  <div class="card-footer"
-    *ngIf="problemData.problem_voters || problemData.problem_watchers || problemData.problem_validations">
+  <div
+    class="card-footer"
+    *ngIf="
+      problemData.problem_voters ||
+      problemData.problem_watchers ||
+      problemData.problem_validations
+    "
+  >
     <div class="stats">
-      <i class="material-icons" aria-label="number of upvotes">
-        thumb_up
-      </i>
-      {{ problemData.problem_voters.length }}
-      <span>&nbsp;</span>
-      <span>&nbsp;</span>
-      <span>&nbsp;</span>
-      <i class="material-icons" aria-label="total problem watched">
-        visibility
-      </i>
-      {{ problemData.problem_watchers.length }}
-      <span>&nbsp;</span>
-      <span>&nbsp;</span>
-      <span>&nbsp;</span>
-      <i class="material-icons" [ngStyle]="{ color: validated ? '#38e038' : '#878787' }" matTooltip="Expert validations"
-        [matTooltipPosition]="'below'" aria-label="Expert validations">
-        how_to_reg
-      </i>
-      {{ problemData.problem_validations.length }}
-      <!-- <span>&nbsp;</span>
-      <span>&nbsp;</span>
-      <span>&nbsp;</span>
-      <i class="material-icons" style="color: #FF625E">
-        help
-      </i> -->
+      <div aria-label="number of upvotes" class="mr-1">
+        <i class="material-icons" aria-hidden="true">
+          thumb_up
+        </i>
+        {{ problemData.problem_voters.length }}
+      </div>
+
+      <div aria-label="total problem watched" class="mr-1">
+        <i class="material-icons" aria-hidden="true">
+          visibility
+        </i>
+        {{ problemData.problem_watchers.length }}
+      </div>
+
+      <div aria-label="Expert validations">
+        <i
+          class="material-icons"
+          [ngStyle]="{ color: validated ? '#38e038' : '#878787' }"
+          matTooltip="Expert validations"
+          [matTooltipPosition]="'below'"
+          aria-hidden="true"
+        >
+          how_to_reg
+        </i>
+        {{ problemData.problem_validations.length }}
+      </div>
     </div>
-    <div class="stats">
-      <i class="material-icons" aria-label="last updated on">access_time</i>
+    <div class="stats" aria-label="last updated on">
+      <i class="material-icons" aria-hidden="true">access_time</i>
       {{ problemData.updated_at | date: short }}
     </div>
   </div>
