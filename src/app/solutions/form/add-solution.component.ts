@@ -90,6 +90,9 @@ export class AddSolutionComponent
   @ViewChild('foundProblems') foundProblemHeading: ElementRef<HTMLElement>;
   @ViewChild('foundSolutions') foundSolutionHeading: ElementRef<HTMLElement>;
   @ViewChild('wizardContainer') wizardContainer: ElementRef<HTMLElement>;
+  @ViewChild('mediaLink') mediaLink: ElementRef<HTMLElement>;
+  @ViewChild('nextBtn') nextBtn: ElementRef<HTMLElement>;
+  @ViewChild('textLink') textLink: ElementRef<HTMLElement>;
   // @Input() sectors: string[] = [];
 
   owners: any[] = [];
@@ -374,6 +377,7 @@ export class AddSolutionComponent
     console.log(problem, '====smart card problem selected');
     this.selectedProblems[problem.id] = problem;
     this.getProblemData(problem.id);
+    this.liveannouncer.announce(`Added ${problem.title}`);
     // console.log(this.selectedProblems, "selected problem set");
     // delete this.searchResults[problem.id];
   }
@@ -1911,6 +1915,16 @@ export class AddSolutionComponent
 
   nextSelected() {
     window.scroll(0, 0);
+    this.focusMonitor.focusVia(this.mediaLink, 'program');
+  }
+
+  clickPreviousBtn() {
+    const isBtnDisabled = this.nextBtn.nativeElement['disabled'];
+    if (isBtnDisabled) {
+      this.focusMonitor.focusVia(this.textLink, 'program');
+    } else {
+      this.focusMonitor.focusVia(this.nextBtn, 'program');
+    }
   }
 
   isComplete() {

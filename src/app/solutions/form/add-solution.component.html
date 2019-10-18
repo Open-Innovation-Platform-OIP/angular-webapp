@@ -18,7 +18,7 @@
                     aria-controls="text"
                     id="textTab"
                   >
-                    <a class="nav-link active" href="#text" data-toggle="tab">
+                    <a class="nav-link active" href="#text" data-toggle="tab" #textLink>
                       Text
                     </a>
                   </li>
@@ -27,12 +27,14 @@
                     role="tab"
                     aria-controls="media"
                     id="mediaTab"
+                    
                   >
                     <a
                       class="nav-link"
                       href="#media"
                       data-toggle="tab"
                       aria-label="upload image and media contents"
+                      #mediaLink
                     >
                       Media: image(s) and video(s)
                     </a>
@@ -127,10 +129,11 @@
                           <a
                             [routerLink]="'/problems/' + problem.id"
                             queryParamsHandling="merge"
+                            style="max-width: 95%;" class="text-truncate"
                           >
-                            <span style="width: 95%;" class="text-truncate">
+                            <!-- <span > -->
                               {{ problem.title }}
-                            </span>
+                            <!-- </span> -->
                           </a>
                           <i
                             class="material-icons mat-chip-remove mat-chip-trailing-icon mat-icon material-icons ng-star-inserted"
@@ -610,7 +613,7 @@
 
                           <mat-form-field class="example-chip-list">
                             <input
-                              placeholder="Sectors"
+                              placeholder="Sectors*"
                               style="width: 700px;"
                               matInput
                               #sectorInput
@@ -622,7 +625,7 @@
                               "
                               [matChipInputAddOnBlur]="addOnBlur"
                               (matChipInputTokenEnd)="addSector($event)"
-                              required
+                              
                             />
                             <!-- <mat-chip-list #chipList> </mat-chip-list> -->
                             <mat-autocomplete
@@ -1210,6 +1213,7 @@
                     class="btn btn-previous btn-fill btn-default btn-wd disabled"
                     name="previous"
                     value="Previous"
+                    (click)="clickPreviousBtn()"
                   />
                   <input
                     type="button"
@@ -1225,6 +1229,7 @@
                     [disabled]="!isComplete()"
                     name="next"
                     value="Next"
+                    #nextBtn
                   />
                   <!-- <input type="button" class="btn btn-finish btn-fill btn-warning btn-wd" [disabled]="!isComplete()"
                 (click)="publishContent()" name="finish" value="Publish" style="display: none;"> -->
@@ -1300,11 +1305,11 @@
               class="col-sm-12"
               style="overflow-y: scroll;"
               role="region"
-              aria-label="problem cards"
+              aria-label="solution cards"
               [style.height]="sideScrollHeight ? sideScrollHeight + 'px' : null"
             >
-              <div *ngFor="let solution of solutionSearchResults">
-                <app-solution-card *ngIf="solution" [solutionData]="solution">
+              <div *ngFor="let solution of solutionSearchResults; let i = index">
+                <app-solution-card *ngIf="solution" [index]="i" [solutionData]="solution">
                 </app-solution-card>
               </div>
             </div>
