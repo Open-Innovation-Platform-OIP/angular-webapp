@@ -135,10 +135,10 @@ export class VerifyEmailComponent implements OnInit, OnDestroy {
         data => {
           // console.log(data);
           alert(
-            "Thank you! You have been verified. Please click OK to await admin confirmation"
+            "Thank you! You have been verified. Please click OK to await admin approval"
           );
-          this.router.navigateByUrl("/auth/staging");
-          // this.router.navigate([this.returnUrl]);
+          // this.router.navigateByUrl("/auth/staging");
+          this.router.navigate([this.returnUrl]);
         },
         error => {
           console.log(error);

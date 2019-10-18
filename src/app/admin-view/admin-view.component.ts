@@ -288,6 +288,24 @@ export class AdminViewComponent implements OnInit, OnDestroy {
       );
   }
 
+  sendEmailToApprovedUser(email) {
+    this.http
+      .post(
+        "https://invite-flow-microservice-test.dev.jaagalabs.com/user_approved",
+        {
+          email: email
+        }
+      )
+      .subscribe(
+        data => {
+          console.log(data);
+        },
+        error => {
+          console.log(error);
+        }
+      );
+  }
+
   approveUser(event, user) {
     const userId = user[2];
     const isApproved = event.checked;
@@ -325,6 +343,8 @@ export class AdminViewComponent implements OnInit, OnDestroy {
           // this.getUnapprovedUsersFromDB();
 
           if (user.is_approved) {
+            this.sendEmailToApprovedUser(user.email);
+
             swal({
               type: "success",
               title: `${user.email} is approved.`,
