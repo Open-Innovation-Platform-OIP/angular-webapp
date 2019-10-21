@@ -132,6 +132,7 @@
               </button>
               <span>&nbsp;</span>
               <span>&nbsp;</span>
+
               <button href="#" class="btn btn-sm btn-warning" data-toggle="dropdown" aria-expanded="true">
                 <i class="material-icons actions">
                   share
@@ -144,10 +145,21 @@
                 <li *ngIf="channels.email"><a (click)="mailShare()">Email</a></li>
                 <li *ngIf="channels.sms"><a (click)="smsShare()">SMS</a></li>
               </ul>
+              <span>&nbsp;</span>
+              <span>&nbsp;</span>
+              <button *ngIf="(userId===problemData.user_id) || owners.has(userId)" (click)="openInviteModal()"
+                class="btn btn-sm btn-warning" aria-expanded="true">
+                <i class="material-icons actions">
+                  person_add
+                </i>
+              </button>
+
             </div>
 
           </div>
         </div>
+
+        <!-- <button mat-raised-button (click)="openDialog()">Pick one</button> -->
         <!--Problem Details-->
 
         <!-- <h2 *ngIf="collaborators[0].intent">{{collaborators[0].intent}}</h2> -->

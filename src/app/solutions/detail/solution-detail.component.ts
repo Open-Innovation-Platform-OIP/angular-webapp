@@ -17,6 +17,14 @@ import { Router, ActivatedRoute, ParamMap } from "@angular/router";
 import { Observable, Subscription, interval } from "rxjs";
 import { NgxUiLoaderService } from "ngx-ui-loader";
 import { domain } from "../../../environments/environment";
+import { ModalComponent } from "src/app/components/modal/modal.component";
+
+import {
+  MatDialog,
+  MatDialogRef,
+  MAT_DIALOG_DATA
+} from "@angular/material/dialog";
+
 // import { FilesService } from "../../services/files.service";
 
 import {
@@ -254,7 +262,8 @@ export class SolutionDetailComponent implements OnInit {
     private validationService: ValidationService,
     private enrichmentService: EnrichmentService,
     public ngLocation: Location,
-    private ngxService: NgxUiLoaderService
+    private ngxService: NgxUiLoaderService,
+    public dialog: MatDialog
   ) {
     this.startInterval();
     this.pageUrl = domain + ngLocation.path();
@@ -1518,6 +1527,17 @@ export class SolutionDetailComponent implements OnInit {
     this.router.navigate(["/solutions"], {
       queryParams: { [sector.name]: "sectorFilter" },
       queryParamsHandling: "merge"
+    });
+  }
+  openInviteModal(): void {
+    const inviteModalRef = this.dialog.open(ModalComponent, {
+      width: "500px",
+      data: {}
+    });
+
+    inviteModalRef.afterClosed().subscribe(result => {
+      console.log("The dialog was closed");
+      // this.animal = result;
     });
   }
 

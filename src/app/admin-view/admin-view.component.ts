@@ -205,7 +205,6 @@ export class AdminViewComponent implements OnInit, OnDestroy {
   }
 
   inviteUser() {
-    console.log(this.inviteeEmail);
     if (!this.userInviteForm.valid) {
       return;
     }
@@ -216,7 +215,9 @@ export class AdminViewComponent implements OnInit, OnDestroy {
         "https://invite-flow-microservice-test.dev.jaagalabs.com/invite_user",
         {
           email: email,
-          is_admin: this.authService.currentUserValue["is_admin"]
+          sender_id: this.authService.currentUserValue["id"],
+          sender_email: this.authService.currentUserValue["email"],
+          url: ""
         }
       )
       .subscribe(

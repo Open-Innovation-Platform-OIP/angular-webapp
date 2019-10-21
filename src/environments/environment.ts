@@ -13,7 +13,7 @@ export const digitalocean = {
   region: "sgp1" // Singapore region
 };
 
-export const domain = "https://app.socialalpha.jaagalabs.com";
+export const domain = "https://oip-dev.dev.jaagalabs.com";
 
 export const fileUploadVariables = {
   UploadUrlEndpoint:

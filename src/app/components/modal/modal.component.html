@@ -1,0 +1,20 @@
+<div class="main-content">
+  <div class="container-fluid">
+
+    <h3>Invite User</h3>
+
+    <form class="example-form" [formGroup]="userInviteModalForm">
+      <mat-form-field class="example-full-width">
+        <input matInput placeholder="Invitee email" formControlName="email">
+        <mat-error *ngIf="userInviteModalForm.get('email').hasError('email')">
+          Please enter a valid email address
+        </mat-error>
+      </mat-form-field>
+      <button (click)="inviteUser()" mat-raised-button class="btn btn-rose">Send invite</button>
+
+
+
+    </form>
+
+  </div>
+</div>

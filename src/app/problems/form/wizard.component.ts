@@ -1369,6 +1369,7 @@ export class WizardComponent
   }
 
   saveOwnersInDB(problemId, ownersArray) {
+    console.log(ownersArray, "owners array");
     let owners = [];
     owners = ownersArray.map(owner => {
       return {

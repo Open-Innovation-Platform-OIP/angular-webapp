@@ -28,8 +28,10 @@ import { WizardContainerComponent } from "./wizard-container/wizard-container.co
 import { ShareAutofocusModule } from "../share-autofocus/share-autofocus.module";
 import { SolutionCardComponent } from "./solution-card/solution-card.component";
 import { FilterDropdownComponent } from "./filter-dropdown/filter-dropdown.component";
+import { ModalComponent } from "./modal/modal.component";
 
 @NgModule({
+  entryComponents: [ModalComponent],
   imports: [
     CommonModule,
     FormsModule,
@@ -58,7 +60,8 @@ import { FilterDropdownComponent } from "./filter-dropdown/filter-dropdown.compo
     DisplayModalComponent,
     WizardContainerComponent,
     SolutionCardComponent,
-    FilterDropdownComponent
+    FilterDropdownComponent,
+    ModalComponent
   ],
   exports: [
     AddEnrichmentComponent,
@@ -79,7 +82,8 @@ import { FilterDropdownComponent } from "./filter-dropdown/filter-dropdown.compo
     SolutionCardComponent,
     DisplayModalComponent,
     WizardContainerComponent,
-    FilterDropdownComponent
+    FilterDropdownComponent,
+    ModalComponent
   ],
   providers: [
     {

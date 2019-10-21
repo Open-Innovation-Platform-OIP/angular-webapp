@@ -135,6 +135,14 @@
                 <li *ngIf="channels.email"><a (click)="mailShare()">Email</a></li>
                 <li *ngIf="channels.sms"><a (click)="smsShare()">SMS</a></li>
               </ul>
+              <span>&nbsp;</span>
+              <span>&nbsp;</span>
+              <button *ngIf="(userId===solutionData.user_id) || owners.has(userId)" (click)="openInviteModal()"
+                class="btn btn-sm btn-rose" aria-expanded="true">
+                <i class="material-icons actions">
+                  person_add
+                </i>
+              </button>
             </div>
 
           </div>
