@@ -102,6 +102,7 @@ export class SolutionDetailComponent implements OnInit {
   showCommentBox = false;
   numOfComments = 5;
   problems = [];
+  solutionLocations = [];
 
   owners = new Set();
   ownerData: any = [];
@@ -516,6 +517,17 @@ export class SolutionDetailComponent implements OnInit {
             featured_url
 
             is_deleted
+
+            problem_locations{
+              location{
+                id
+                          location_name
+                          location
+                           lat
+                           long
+              }
+            }
+
             problem_voters {
               problem_id
               user_id
@@ -675,6 +687,17 @@ export class SolutionDetailComponent implements OnInit {
     //     this.disableCollaborateButton = true;
     //   }
     // });
+    if (solution.problems_solutions) {
+      this.solutionLocations = [];
+
+      solution.problems_solutions.map(problems => {
+        let locations = problems.problem.problem_locations.map(location => {
+          this.solutionLocations.push(location.location);
+        });
+      });
+      console.log(this.solutionLocations, "solution locations");
+    }
+
     if (solution.solutions_tags) {
       this.tags = solution.solutions_tags.map(tagArray => {
         // console.log(tagArray, "work");
@@ -1538,6 +1561,19 @@ export class SolutionDetailComponent implements OnInit {
     inviteModalRef.afterClosed().subscribe(result => {
       console.log("The dialog was closed");
       // this.animal = result;
+    });
+  }
+
+  locationSelected(location) {
+    let locationQuery = {
+      location_name: location.location_name,
+      latitude: location.lat,
+      longitude: location.long
+    };
+
+    this.router.navigate(["/solutions"], {
+      queryParams: { ["filterLocation"]: JSON.stringify(locationQuery) },
+      queryParamsHandling: "merge"
     });
   }
 

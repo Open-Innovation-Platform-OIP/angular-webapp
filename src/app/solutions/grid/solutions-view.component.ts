@@ -90,6 +90,33 @@ export class SolutionsViewComponent implements OnInit {
               solution_validations(order_by: { edited_at: desc }) {
                 user_id
               }
+
+              problems_solutions{
+                problem{
+                  id
+                      title
+                      description
+                      
+                      resources_needed
+                      image_urls
+                      edited_at
+                      updated_at
+          
+                      featured_url
+          
+                      is_deleted
+          
+                      problem_locations{
+                        location{
+                          id
+                          location_name
+                          location
+                           lat
+                           long
+                        }
+                      }
+                    }
+                  }
             }
             }
           
