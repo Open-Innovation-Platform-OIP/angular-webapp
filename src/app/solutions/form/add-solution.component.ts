@@ -48,7 +48,11 @@ import { first } from 'rxjs/operators';
 import { SearchService } from '../../services/search.service';
 import { SolutionCardComponent } from 'src/app/components/solution-card/solution-card.component';
 import { DataRowOutlet } from '@angular/cdk/table';
-import { FocusMonitor, LiveAnnouncer } from '@angular/cdk/a11y';
+import {
+  FocusMonitor,
+  LiveAnnouncer,
+  AriaLivePoliteness
+} from '@angular/cdk/a11y';
 
 declare var H: any;
 declare const $: any;
@@ -228,7 +232,10 @@ export class AddSolutionComponent
     private liveannouncer: LiveAnnouncer
   ) {
     this.type = this.formBuilder.group({
-      // To add a validator, we must first convert the string value into an array. The first item in the array is the default value if any, then the next item in the array is the validator. Here we are adding a required validator meaning that the firstName attribute must have a value in it.
+      // To add a validator, we must first convert the string value into an array.
+      // The first item in the array is the default value if any,
+      // then the next item in the array is the validator.
+      // Here we are adding a required validator meaning that the firstName attribute must have a value in it.
       title: [null, Validators.required],
       description: [null, Validators.required],
       technology: [null, null],
@@ -317,7 +324,7 @@ export class AddSolutionComponent
     this.sectors.push(sectorValue);
     this.sectorInput.nativeElement.value = '';
     this.sectorCtrl.setValue(null);
-    this.liveannouncer.announce(`Added ${sectorValue}`);
+    this.announcement(`Added ${sectorValue}`);
     // this.addedSectors.emit(this.sectors);
   }
 
@@ -339,7 +346,7 @@ export class AddSolutionComponent
 
   removeSector(sector: string): void {
     const index = this.sectors.indexOf(sector);
-    this.liveannouncer.announce(`removed ${sector}`);
+    this.announcement(`removed ${sector}`);
     if (index >= 0) {
       this.sectors.splice(index, 1);
     }
@@ -369,7 +376,7 @@ export class AddSolutionComponent
     this.problemInput.nativeElement.value = '';
     this.problemCtrl.setValue(null);
     this.problemSearchResults = [];
-    this.liveannouncer.announce(`Added ${selectedProblem['title']}`);
+    this.announcement(`Added ${selectedProblem['title']}`);
     // this.getProblemData(selectedProblem.id);
     // delete this.searchResults[selectedProblem.id];
   }
@@ -377,7 +384,7 @@ export class AddSolutionComponent
     console.log(problem, '====smart card problem selected');
     this.selectedProblems[problem.id] = problem;
     this.getProblemData(problem.id);
-    this.liveannouncer.announce(`Added ${problem.title}`);
+    this.announcement(`Added ${problem.title}`);
     // console.log(this.selectedProblems, "selected problem set");
     // delete this.searchResults[problem.id];
   }
@@ -418,7 +425,7 @@ export class AddSolutionComponent
       .valueChanges.pipe(take(1))
       .subscribe(
         result => {
-          let problemData = result.data.problems[0];
+          const problemData = result.data.problems[0];
           // console.log(problemData, "problem data from db");
           if (problemData.problems_tags.length && this.solution.is_draft) {
             problemData.problems_tags.map(tags => {
@@ -456,11 +463,11 @@ export class AddSolutionComponent
           searchResults => {
             this.solutionSearchResults = searchResults;
 
-            if (this.solutionSearchResults.length) {
-              this.liveannouncer.announce(
-                `Found ${this.solutionSearchResults.length} solutions`
-              );
-            }
+            this.announcement(
+              `Found ${this.solutionSearchResults.length} ${
+                this.solutionSearchResults.length < 2 ? 'solution' : 'solutions'
+              }`
+            );
           },
           error => {
             console.log(error);
@@ -505,7 +512,7 @@ export class AddSolutionComponent
 
   remove(problem): void {
     // console.log(problem, 'remove');
-    this.liveannouncer.announce(`removed ${problem['title']}`);
+    this.announcement(`removed ${problem['title']}`);
     delete this.selectedProblems[problem.id];
     delete this.selectedProblemsData[problem.id];
     if (this.solution['id']) {
@@ -641,6 +648,13 @@ export class AddSolutionComponent
       );
   }
 
+  announcement(message: string, politeness?: AriaLivePoliteness) {
+    this.liveannouncer
+      .announce(message, politeness)
+      .then(x => console.log('announced'))
+      .catch(e => console.error(e));
+  }
+
   searchProblem(event) {
     // console.log("Search Event", event);
     if (event && event.target && event.target.value) {
@@ -656,11 +670,11 @@ export class AddSolutionComponent
           searchResults => {
             this.problemSearchResults = searchResults;
 
-            if (this.problemSearchResults.length) {
-              this.liveannouncer.announce(
-                `Found ${this.problemSearchResults.length} problems`
-              );
-            }
+            this.announcement(
+              `Found ${this.problemSearchResults.length} ${
+                this.problemSearchResults.length < 2 ? 'problem' : 'problems'
+              }`
+            );
             this.setScrollableHeight();
           },
           error => {
@@ -772,7 +786,7 @@ export class AddSolutionComponent
   selectedOwner(event: MatAutocompleteSelectedEvent): void {
     // console.log(event, 'event value');
     const owner = event.option.value;
-    this.liveannouncer.announce(`Added ${owner.value}`);
+    this.announcement(`Added ${owner.value}`);
     this.owners.push(owner);
     this.ownerInput.nativeElement.value = '';
     this.ownersCtrl.setValue(null);
@@ -781,7 +795,7 @@ export class AddSolutionComponent
 
   removeOwner(owner) {
     // console.log(owner, 'remove');
-    this.liveannouncer.announce(`Removed ${owner.value}`);
+    this.announcement(`Removed ${owner.value}`);
     const index = this.owners.indexOf(owner);
     if (index >= 0) {
       this.owners.splice(index, 1);
