@@ -203,20 +203,34 @@ export class WizardContainerComponent
   }
 
   selectedLocation(event) {
+    console.log(event, "selected location");
+    const location = event.option.value.Location;
+    const matchType = event.option.value.MatchLevel;
+
     // this.content.location.push(event.option.value);
 
     const coordinateArray = [
-      event.option.value.DisplayPosition.Latitude,
-      event.option.value.DisplayPosition.Longitude
+      location.DisplayPosition.Latitude,
+      location.DisplayPosition.Longitude
     ];
 
-    const locationData = {
+    let locationData = {
       location: { type: "Point", coordinates: coordinateArray },
-      location_name: event.option.value.Address.Label,
+      location_name: location.Address.Label,
       lat: coordinateArray[0],
-      long: coordinateArray[1]
+      long: coordinateArray[1],
+      type: matchType
     };
-
+    if (location.Address.City) {
+      locationData["city"] = location.Address.City;
+    }
+    if (location.Address.State) {
+      locationData["state"] = location.Address.State;
+    }
+    if (location.Address.Country) {
+      locationData["country"] = location.Address.Country;
+    }
+    console.log(this.selectedLocations, "locations");
     this.selectedLocations.push(locationData);
 
     // //console.log(this.selectedLocations, "selected locations");

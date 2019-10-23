@@ -479,6 +479,10 @@ export class ProblemDetailComponent implements OnInit, OnDestroy {
           location{
             id
             location_name
+            city
+            state
+            country
+            type
             location
             lat
             long
@@ -1014,7 +1018,11 @@ export class ProblemDetailComponent implements OnInit, OnDestroy {
     let locationQuery = {
       location_name: location.location_name,
       latitude: location.lat,
-      longitude: location.long
+      longitude: location.long,
+      city: location.city,
+      country: location.country,
+      state: location.state,
+      type: location.type
     };
 
     this.router.navigate(["/problems"], {

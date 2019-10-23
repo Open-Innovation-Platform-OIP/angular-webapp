@@ -18,7 +18,7 @@
     <mat-autocomplete #locationAuto="matAutocomplete" (optionSelected)="selectDropdown($event)">
       <mat-option (click)="selectDropdown($event)" [value]="null">All</mat-option>
 
-      <mat-option *ngFor="let location of locations" [value]="location.Location">
+      <mat-option *ngFor="let location of locations" [value]="location">
         {{ location.Location.Address.Label }}
       </mat-option>
     </mat-autocomplete>

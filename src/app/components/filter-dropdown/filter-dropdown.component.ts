@@ -66,6 +66,7 @@ export class FilterDropdownComponent implements OnInit {
     // console.log(input, "input tag");
     this.geoService.getAddress(this.selectedLocationName).then(
       result => {
+        console.log(result, "location search result");
         this.locations = <Array<any>>result;
       },
       error => {
@@ -85,19 +86,30 @@ export class FilterDropdownComponent implements OnInit {
   }
 
   selectDropdown(event) {
-    if (
-      event &&
-      event.option &&
-      event.option.value &&
-      event.option.value.Address
-    ) {
-      this.selectedLocationName = event.option.value.Address.Label;
+    if (event && event.option && event.option.value) {
+      let locationData = event.option.value.Location;
+
+      console.log(event, "event");
+      this.selectedLocationName = locationData.Address.Label;
       this.selectedLocation = {
-        location_name: event.option.value.Address.Label,
-        latitude: event.option.value.DisplayPosition.Latitude,
-        longitude: event.option.value.DisplayPosition.Longitude
+        location_name: locationData.Address.Label,
+        latitude: locationData.DisplayPosition.Latitude,
+        longitude: locationData.DisplayPosition.Longitude,
+        type: event.option.value.MatchLevel
       };
+
+      if (locationData.Address.City) {
+        this.selectedLocation["city"] = locationData.Address.City;
+      }
+      if (locationData.Address.State) {
+        this.selectedLocation["state"] = locationData.Address.State;
+      }
+      if (locationData.Address.Country) {
+        this.selectedLocation["country"] = locationData.Address.Country;
+      }
     }
+
+    // console.log(this.selectedLocation, "Selected location 2");
 
     if (!this.selectedLocationName) {
       this.selectedLocation = {};
