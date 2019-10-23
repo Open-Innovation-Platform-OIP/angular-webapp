@@ -525,6 +525,10 @@ export class SolutionDetailComponent implements OnInit {
                           location
                            lat
                            long
+                           city
+                           country
+                           state
+                           type
               }
             }
 
@@ -1568,7 +1572,11 @@ export class SolutionDetailComponent implements OnInit {
     let locationQuery = {
       location_name: location.location_name,
       latitude: location.lat,
-      longitude: location.long
+      longitude: location.long,
+      state: location.state,
+      city: location.city,
+      country: location.country,
+      type: location.type
     };
 
     this.router.navigate(["/solutions"], {
