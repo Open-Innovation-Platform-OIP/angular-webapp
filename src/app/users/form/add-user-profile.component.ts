@@ -4,65 +4,49 @@ import {
   OnChanges,
   ElementRef,
   ViewChild,
-  Input
-} from "@angular/core";
-import { ErrorStateMatcher } from "@angular/material/core";
+  Input,
+  AfterViewInit
+} from '@angular/core';
 
-import { UsersService } from "../../services/users.service";
-import { Apollo } from "apollo-angular";
-import gql from "graphql-tag";
-import { Router, ActivatedRoute } from "@angular/router";
-import { first, finalize, take } from "rxjs/operators";
-import { AuthService } from "../../services/auth.service";
-import { FilesService } from "../../services/files.service";
-import { TagsService } from "../../services/tags.service";
-import { Observable } from "rxjs";
-import { map, startWith } from "rxjs/operators";
-import { COMMA, ENTER } from "@angular/cdk/keycodes";
-import { GeocoderService } from "../../services/geocoder.service";
-
-import {
-  FormControl,
-  FormBuilder,
-  FormGroupDirective,
-  NgForm,
-  Validators,
-  FormGroup
-} from "@angular/forms";
+import { UsersService } from '../../services/users.service';
+import { Apollo } from 'apollo-angular';
+import gql from 'graphql-tag';
+import { Router, ActivatedRoute } from '@angular/router';
+import { first, take } from 'rxjs/operators';
+import { AuthService } from '../../services/auth.service';
+import { FilesService } from '../../services/files.service';
+import { TagsService } from '../../services/tags.service';
+import { Observable } from 'rxjs';
+import { map, startWith } from 'rxjs/operators';
+import { COMMA, ENTER } from '@angular/cdk/keycodes';
+import { GeocoderService } from '../../services/geocoder.service';
+import { FormControl } from '@angular/forms';
 import {
   MatAutocompleteSelectedEvent,
   MatChipInputEvent,
   MatAutocomplete
-} from "@angular/material";
-// declare var H: any;
-// import { GeocoderService } from '../../services/geocoder.service';
-import { filter } from "rxjs-compat/operator/filter";
+} from '@angular/material';
+import {
+  FocusMonitor,
+  LiveAnnouncer,
+  AriaLivePoliteness
+} from '@angular/cdk/a11y';
 
-// export class MyErrorStateMatcher implements ErrorStateMatcher {
-//   isErrorState(
-//     control: FormControl | null,
-//     form: FormGroupDirective | NgForm | null
-//   ): boolean {
-//     const isSubmitted = form && form.submitted;
-//     return !!(
-//       control &&
-//       control.invalid &&
-//       (control.dirty || control.touched || isSubmitted)
-//     );
-//   }
-// }
 @Component({
-  selector: "app-add-user-profile",
-  templateUrl: "./add-user-profile.component.html",
-  styleUrls: ["./add-user-profile.component.css"]
+  selector: 'app-add-user-profile',
+  templateUrl: './add-user-profile.component.html',
+  styleUrls: ['./add-user-profile.component.css']
 })
-export class AddUserProfileComponent implements OnInit, OnChanges {
-  mode = "Add";
+export class AddUserProfileComponent
+  implements OnInit, OnChanges, AfterViewInit {
+  @ViewChild('enterYourDetails') enterYourDetails: ElementRef<HTMLElement>;
+
+  mode = 'Add';
   userId: any;
   visible = true;
   phone_pattern = new RegExp(
-    "(?:(?:\\+|0{0,2})91(\\s*[\\- ]\\s*)?|[0 ]?)?[789]\\d{9}|(\\d[ -]?){10}\\d",
-    "g"
+    '(?:(?:\\+|0{0,2})91(\\s*[\\- ]\\s*)?|[0 ]?)?[789]\\d{9}|(\\d[ -]?){10}\\d',
+    'g'
   );
   selectable = true;
   removable = true;
@@ -92,16 +76,16 @@ export class AddUserProfileComponent implements OnInit, OnChanges {
   prevLocation: any = {};
 
   user: any = {
-    id: "",
-    email: "",
-    password: "",
-    token: "",
+    id: '',
+    email: '',
+    password: '',
+    token: '',
 
-    name: "",
-    organization: "",
-    qualification: "",
+    name: '',
+    organization: '',
+    qualification: '',
     photo_url: {},
-    phone_number: "",
+    phone_number: '',
 
     is_ngo: false,
     is_innovator: false,
@@ -117,8 +101,8 @@ export class AddUserProfileComponent implements OnInit, OnChanges {
     organization_id: null
   };
 
-  @ViewChild("sectorInput") sectorInput: ElementRef<HTMLInputElement>;
-  @ViewChild("auto") matAutocomplete: MatAutocomplete;
+  @ViewChild('sectorInput') sectorInput: ElementRef<HTMLInputElement>;
+  @ViewChild('auto') matAutocomplete: MatAutocomplete;
 
   constructor(
     private userService: UsersService,
@@ -129,7 +113,9 @@ export class AddUserProfileComponent implements OnInit, OnChanges {
     private auth: AuthService,
     private here: GeocoderService,
     private tagService: TagsService,
-    private geoService: GeocoderService
+    private geoService: GeocoderService,
+    private focusMoniter: FocusMonitor,
+    private liveAnnouncer: LiveAnnouncer
   ) {
     this.filteredSectors = this.sectorCtrl.valueChanges.pipe(
       startWith(null),
@@ -141,9 +127,48 @@ export class AddUserProfileComponent implements OnInit, OnChanges {
     );
   }
 
+  ngAfterViewInit() {
+    if (this.enterYourDetails) {
+      this.focusMoniter.focusVia(this.enterYourDetails, 'program');
+    }
+  }
+
+  announcement(message: string, politeness?: AriaLivePoliteness) {
+    this.liveAnnouncer
+      .announce(message, politeness)
+      .then(x => x)
+      .catch(e => console.error(e));
+  }
+
+  checkPersona(persona: string): boolean {
+    const criteriaList = [
+      'id',
+      'email',
+      'token',
+      'password',
+      'name',
+      'organization',
+      'qualification',
+      'photo_url',
+      'phone_number',
+      'location',
+      'notify_email',
+      'notify_sms',
+      'notify_app',
+      'organization_id'
+    ];
+
+    for (const criteria of criteriaList) {
+      if (persona === criteria) {
+        return false;
+      }
+    }
+    return true;
+  }
+
   deleteProfileImage(image) {
     console.log(image);
-    let fileName = image.fileEndpoint.split("/")[1];
+    const fileName = image.fileEndpoint.split('/')[1];
 
     this.filesService.deleteFile(fileName).subscribe(
       result => {
@@ -157,8 +182,6 @@ export class AddUserProfileComponent implements OnInit, OnChanges {
   }
 
   checkPhoneNumber(phone) {
-    console.log("pn>>>> ", phone);
-
     this.isPhoneValid = this.phone_pattern.test(phone);
   }
 
@@ -169,18 +192,19 @@ export class AddUserProfileComponent implements OnInit, OnChanges {
       const input = event.input;
       const value = event.value;
       // Add our sector
-      if ((value || "").trim()) {
+      if ((value || '').trim()) {
         this.sectors.push(value.trim().toUpperCase());
       }
       // Reset the input value
       if (input) {
-        input.value = "";
+        input.value = '';
       }
       this.sectorCtrl.setValue(null);
     }
   }
 
   remove(sector: string): void {
+    this.announcement(`Removed ${sector}`);
     const index = this.sectors.indexOf(sector);
     if (index >= 0) {
       this.sectors.splice(index, 1);
@@ -188,52 +212,18 @@ export class AddUserProfileComponent implements OnInit, OnChanges {
         this.tagService.removeTagRelation(
           this.tagService.allTags[sector].id,
           this.user.id,
-          "users"
+          'users'
         );
       }
-
-      // this.apollo
-      //   .mutate<any>({
-      //     mutation: gql`
-      //       mutation DeleteMutation($where: users_tags_bool_exp!) {
-      //         delete_users_tags(where: $where) {
-      //           affected_rows
-      //           returning {
-      //             tag_id
-      //           }
-      //         }
-      //       }
-      //     `,
-      //     variables: {
-      //       where: {
-      //         tag_id: {
-      //           _eq: this.tagService.allTags[sector].id
-      //         },
-      //         user_id: {
-      //           _eq: this.user.id
-      //         }
-      //       }
-      //     }
-      //   })
-      //   .subscribe(
-      //     ({ data }) => {
-      //       console.log("worked", data);
-      //       // location.reload();
-      //       // location.reload();
-      //       // this.router.navigateByUrl("/problems");
-
-      //       return;
-      //     },
-      //     error => {
-      //       console.log("Could delete due to " + error);
-      //     }
-      //   );
     }
   }
 
   selected(event: MatAutocompleteSelectedEvent): void {
-    this.sectors.push(event.option.viewValue);
-    this.sectorInput.nativeElement.value = "";
+    const sectorName = event.option.viewValue;
+
+    this.announcement(`Added ${sectorName}`);
+    this.sectors.push(sectorName);
+    this.sectorInput.nativeElement.value = '';
     this.sectorCtrl.setValue(null);
   }
 
@@ -245,24 +235,20 @@ export class AddUserProfileComponent implements OnInit, OnChanges {
     );
   }
 
-  ngOnChanges() {
-    // this.platform = new H.service.Platform({
-    //   app_id: "sug0MiMpvxIW4BhoGjcf",
-    //   app_code: "GSl6bG5_ksXDw4sBTnhr_w"
-    // });
-    // this.geocoder = this.platform.getGeocodingService();
-    // this.query = " ";
-    // this.query2 = " ";
-  }
+  ngOnChanges() {}
 
   storeOrganization(event) {
+    this.announcement(`selected ${event.value}`);
     this.user.organization_id = this.userService.allOrgs[this.organization].id;
   }
 
-  getLocation() {
+  getLocation(evt) {
     this.here.getAddress(this.userLocationName).then(
       result => {
         this.locations = <Array<any>>result;
+        if (typeof evt === 'string') {
+          this.announcement(`found ${this.locations.length} locations`);
+        }
       },
       error => {
         console.error(error);
@@ -288,7 +274,7 @@ export class AddUserProfileComponent implements OnInit, OnChanges {
     ];
 
     const location = {
-      location: { type: "Point", coordinates: coordinateArray },
+      location: { type: 'Point', coordinates: coordinateArray },
       location_name: event.option.value.Address.Label,
       lat: coordinateArray[0],
       long: coordinateArray[1]
@@ -296,21 +282,21 @@ export class AddUserProfileComponent implements OnInit, OnChanges {
 
     this.userLocationName = event.option.value.Address.Label;
     this.locationData.push(location);
-    // console.log(this.locationData, "location data");
+    this.announcement(`added ${this.userLocationName}`);
   }
 
   ngOnInit() {
     this.tagService.getTagsFromDB();
 
     Object.entries(this.user).map(persona => {
-      if (typeof persona[1] === "boolean") {
+      if (typeof persona[1] === 'boolean') {
         this.personaArray.push(persona[0]);
       }
     });
 
     this.route.params.pipe(first()).subscribe(params => {
       if (params.id) {
-        this.mode = "Edit";
+        this.mode = 'Edit';
         this.apollo
           .watchQuery<any>({
             query: gql`
@@ -365,7 +351,7 @@ export class AddUserProfileComponent implements OnInit, OnChanges {
            
         `,
 
-            fetchPolicy: "network-only"
+            fetchPolicy: 'network-only'
             // pollInterval: 500
           })
           .valueChanges.pipe(take(1))
@@ -382,13 +368,13 @@ export class AddUserProfileComponent implements OnInit, OnChanges {
                   const userLocationFromDB =
                     data.users[0].user_locations[0].location;
                   delete userLocationFromDB.__typename;
-                  console.log(data.users[0].user_locations, "user locations");
+                  console.log(data.users[0].user_locations, 'user locations');
                   this.userLocationName = userLocationFromDB.location_name;
 
                   this.prevLocation = userLocationFromDB;
 
                   this.locationData.push(userLocationFromDB);
-                  console.log(this.locationData, "location data ng on it");
+                  console.log(this.locationData, 'location data ng on it');
                 }
 
                 if (data.users[0].organizationByOrganizationId) {
@@ -405,7 +391,7 @@ export class AddUserProfileComponent implements OnInit, OnChanges {
               });
             },
             error => {
-              console.log("could not get user due to", error);
+              console.log('could not get user due to', error);
               console.error(JSON.stringify(error));
             }
           );
@@ -426,8 +412,8 @@ export class AddUserProfileComponent implements OnInit, OnChanges {
       if (this.prevLocation.location_name !== this.userLocationName) {
         this.geoService.removeLocationRelation(
           this.prevLocation.id,
-          this.user["id"],
-          "users"
+          this.user['id'],
+          'users'
         );
       }
     }
@@ -453,10 +439,10 @@ export class AddUserProfileComponent implements OnInit, OnChanges {
       result => {
         this.userService.getCurrentUser();
 
-        this.user["id"] = result.data.insert_users.returning[0].id;
+        this.user['id'] = result.data.insert_users.returning[0].id;
         this.router.navigate(
           [`/profiles/${result.data.insert_users.returning[0].id}`],
-          { queryParamsHandling: "preserve" }
+          { queryParamsHandling: 'preserve' }
         );
 
         const tags = [];
@@ -475,7 +461,7 @@ export class AddUserProfileComponent implements OnInit, OnChanges {
                 location_id: this.geoService.allLocations[
                   location.location_name
                 ].id,
-                user_id: this.user["id"]
+                user_id: this.user['id']
               });
             }
           });
@@ -483,17 +469,17 @@ export class AddUserProfileComponent implements OnInit, OnChanges {
 
         if (user_location.size > 0) {
           this.geoService.addRelationToLocations(
-            this.user["id"],
+            this.user['id'],
             user_location,
-            "users"
+            'users'
           );
         }
 
         if (this.locationData.length) {
           this.geoService.addLocationsInDB(
             this.locationData,
-            "users",
-            this.user["id"]
+            'users',
+            this.user['id']
           );
         }
 
@@ -506,12 +492,12 @@ export class AddUserProfileComponent implements OnInit, OnChanges {
           ) {
             users_tags.add({
               tag_id: this.tagService.allTags[sector].id,
-              user_id: this.user["id"]
+              user_id: this.user['id']
             });
           }
         });
 
-        this.tagService.addTagsInDb(tags, "users", this.user["id"]);
+        this.tagService.addTagsInDb(tags, 'users', this.user['id']);
 
         if (users_tags.size > 0) {
           const upsert_users_tags = gql`
@@ -557,23 +543,23 @@ export class AddUserProfileComponent implements OnInit, OnChanges {
     // this.user.personas = personas;
 
     if (this.imageBlob) {
-      console.log("inside image blob");
+      console.log('inside image blob');
 
       // Handle the image name if you want
       this.filesService
-        .fileUpload(this.imageBlob, this.imageBlob["type"])
+        .fileUpload(this.imageBlob, this.imageBlob['type'])
 
         .then(values => {
-          console.log(values, "user values");
+          console.log(values, 'user values');
           this.user.photo_url = {};
-          this.user.photo_url.fileEndpoint = values["fileEndpoint"];
-          this.user.photo_url.mimeType = this.imageBlob["type"];
-          this.user.photo_url.key = values["key"];
+          this.user.photo_url.fileEndpoint = values['fileEndpoint'];
+          this.user.photo_url.mimeType = this.imageBlob['type'];
+          this.user.photo_url.key = values['key'];
 
           this.updateProfileToDb();
         })
         .catch(e => {
-          console.log("Err:: ", e);
+          console.log('Err:: ', e);
           this.updateProfileToDb();
         });
     } else {

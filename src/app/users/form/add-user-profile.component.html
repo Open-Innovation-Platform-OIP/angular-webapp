@@ -5,90 +5,170 @@
         <div class="card card-product">
           <div class="card-header card-header-warning card-header-text">
             <div class="card-text">
-              <h4 class="card-title">Enter Your Details</h4>
+              <h1
+                class="card-title"
+                style="font-size: 1.2rem;"
+                tabindex="-1"
+                #enterYourDetails
+              >
+                Enter Your Details
+              </h1>
             </div>
           </div>
           <div class="card-body">
-            <form class="form-horizontal" #userForm="ngForm">
+            <form autocomplete="off" class="form-horizontal" #userForm="ngForm">
               <div class="form-group">
                 <div class="row">
                   <label class="col-md-2 col-2 col-form-label">Photo</label>
                   <div class="col-md-3 col-sm-4">
-                    <div class="fileinput fileinput-new text-center" data-provides="fileinput">
+                    <div
+                      class="fileinput fileinput-new text-center"
+                      data-provides="fileinput"
+                    >
                       <div class="fileinput-new thumbnail profile_photo_div">
-                        <img src="{{
+                        <img
+                          src="{{
                             user.photo_url && user.photo_url.fileEndpoint
-                              ? filesService.fileAccessUrl+user.photo_url.fileEndpoint
+                              ? filesService.fileAccessUrl +
+                                user.photo_url.fileEndpoint
                               : './assets/img/placeholder.jpg'
-                          }}" alt="..." />
+                          }}"
+                          alt="profile picture"
+                        />
                       </div>
-                      <!-- <div class="photo_div"> -->
-                      <div class="fileinput-preview fileinput-exists thumbnail profile_photo_div ">
-                      </div>
-                      <!-- </div> -->
+                      <div
+                        class="fileinput-preview fileinput-exists thumbnail profile_photo_div "
+                      ></div>
                       <div>
                         <label class="btn btn-round btn-sm btn-rose btn-file">
-                          <span *ngIf="!objectKeys(user.photo_url).length" class="fileinput-new">Add Photo</span>
-                          <span *ngIf="objectKeys(user.photo_url).length" class="fileinput-new">update Photo</span>
-                          <span class="fileinput-exists">Change</span>
-                          <input type="file" name="..." (change)="getBlob($event)" accept="image/*" />
+                          <span
+                            *ngIf="!objectKeys(user.photo_url).length"
+                            class="fileinput-new"
+                            role="button"
+                            >Add Photo</span
+                          >
+                          <span
+                            *ngIf="objectKeys(user.photo_url).length"
+                            class="fileinput-new"
+                            role="button"
+                            >update Photo</span
+                          >
+                          <span class="fileinput-exists" role="button"
+                            >Change</span
+                          >
+                          <input
+                            type="file"
+                            (change)="getBlob($event)"
+                            accept="image/*"
+                          />
                         </label>
-                        <button *ngIf="objectKeys(user.photo_url).length"
+                        <button
+                          *ngIf="objectKeys(user.photo_url).length"
                           class="btn btn-sm btn-danger btn-round fileinput-new"
-                          (click)="deleteProfileImage(user.photo_url)">
-                          <i class="material-icons">
+                          (click)="deleteProfileImage(user.photo_url)"
+                        >
+                          <i class="material-icons" aria-hidden="true">
                             delete_outline
                           </i>
                           Remove
                         </button>
-                        <!-- <br /> -->
-                        <a href="#pablo" class="btn btn-sm btn-danger btn-round fileinput-exists"
-                          data-dismiss="fileinput" (click)="imageBlob = null"><i class="fa fa-times"></i> cancel</a>
+                        <a
+                          href="#pablo"
+                          class="btn btn-sm btn-danger btn-round fileinput-exists"
+                          data-dismiss="fileinput"
+                          (click)="imageBlob = null"
+                          role="button"
+                        >
+                          <i class="fa fa-times" aria-hidden="true"></i>
+                          cancel
+                        </a>
                       </div>
                     </div>
                   </div>
                 </div>
                 <div class="row">
-                  <label class="col-md-2 col-2 col-form-label" [ngStyle]="{
+                  <label
+                    class="col-md-2 col-2 col-form-label"
+                    [ngStyle]="{
                       color: !user.name ? 'red' : '#AAAAAA'
-                    }">Full Name</label>
+                    }"
+                    id="fullname"
+                    >Full Name</label
+                  >
                   <div class="col-md-10 col-9">
                     <mat-form-field class="example-full-width">
-                      <input matInput type="text" name="name" required [(ngModel)]="user.name" #name="ngModel"
-                        ngDefaultControl />
+                      <input
+                        matInput
+                        aria-labelledby="fullname"
+                        type="text"
+                        name="name"
+                        required
+                        [(ngModel)]="user.name"
+                        #name="ngModel"
+                        ngDefaultControl
+                      />
                     </mat-form-field>
-                    <div [hidden]="name.valid || name.pristine" class="text-danger error-msg">
+                    <div
+                      [hidden]="name.valid || name.pristine"
+                      class="text-danger error-msg"
+                    >
                       Name is required
                     </div>
                   </div>
                 </div>
 
-
                 <div class="row">
-                  <label class="col-md-2 col-2 col-form-label">E-mail ID
+                  <label class="col-md-2 col-2 col-form-label" id="emailId"
+                    >E-mail I.D
                   </label>
                   <div class="col-md-10 col-9">
                     <mat-form-field class="example-full-width">
-                      <input matInput type="email" name="email" [(ngModel)]="user.email"
-                        [ngModelOptions]="{ standalone: true }" required readonly />
+                      <input
+                        matInput
+                        type="email"
+                        name="email"
+                        aria-labelledby="emailId"
+                        [(ngModel)]="user.email"
+                        [ngModelOptions]="{ standalone: true }"
+                        required
+                        readonly
+                      />
                     </mat-form-field>
                   </div>
                 </div>
 
                 <div class="row">
-                  <label class="col-md-2 col-2 col-form-label" [ngStyle]="{
-                  color: !user.phone_number ? 'red' : '#AAAAAA'
-                }">Phone number
+                  <label
+                    class="col-md-2 col-2 col-form-label"
+                    [ngStyle]="{
+                      color: !user.phone_number ? 'red' : '#AAAAAA'
+                    }"
+                    id="phoneNum"
+                    >Phone number
                   </label>
                   <div class="col-md-10 col-9">
                     <mat-form-field class="example-full-width">
-                      <input matInput type="tel" name="phone_number" required [(ngModel)]="user.phone_number"
-                        #phone_number="ngModel" (change)="checkPhoneNumber(phone_number.model)" />
+                      <input
+                        matInput
+                        type="tel"
+                        name="phone_number"
+                        required
+                        aria-labelledby="phoneNum"
+                        [(ngModel)]="user.phone_number"
+                        #phone_number="ngModel"
+                        (change)="checkPhoneNumber(phone_number.model)"
+                      />
                     </mat-form-field>
-                    <mat-error [hidden]="phone_number.valid || phone_number.pristine" class="text-danger error-msg">
+                    <mat-error
+                      [hidden]="phone_number.valid || phone_number.pristine"
+                      class="text-danger error-msg"
+                    >
                       Phone number is required
                     </mat-error>
-                    <mat-error *ngIf="user.phone_number && !isPhoneValid" class="text-danger error-msg">
+                    <mat-error
+                      *ngIf="user.phone_number && !isPhoneValid"
+                      class="text-danger error-msg"
+                    >
                       Please enter a valid phone number
                     </mat-error>
                   </div>
@@ -97,17 +177,30 @@
                 <br />
 
                 <div class="row">
-                  <label class="col-md-2 col-2 col-form-label">Organization</label>
+                  <label
+                    class="col-md-2 col-2 col-form-label"
+                    id="organizationLabel"
+                    >Organization</label
+                  >
                   <div class="col-md-10 col-9">
                     <mat-form-field class="example-full-width">
-                      <!-- <input matInput type="text" name="organization" [(ngModel)]="user.organization" /> -->
-                      <mat-select name="organization" placeholder="Select Organization" matInput id="organizations"
-                        [(ngModel)]="organization" (selectionChange)="storeOrganization($event)">
-                        <!-- <mat-option>None</mat-option> -->
-                        <mat-option *ngFor="let org of objectKeys(userService.allOrgs)" value="{{org}}">{{org}}
+                      <mat-select
+                        name="organization"
+                        placeholder="Select Organization"
+                        matInput
+                        aria-labelledby="organizationLabel"
+                        id="organizations"
+                        [(ngModel)]="organization"
+                        role="listbox"
+                        (selectionChange)="storeOrganization($event)"
+                      >
+                        <mat-option
+                          role="option"
+                          *ngFor="let org of objectKeys(userService.allOrgs)"
+                          value="{{ org }}"
+                          >{{ org }}
                         </mat-option>
                       </mat-select>
-
                     </mat-form-field>
                   </div>
                 </div>
@@ -115,25 +208,20 @@
                 <div class="row">
                   <label class="col-sm-2 col-form-label">Persona</label>
                   <div class="col-md-10 col-9">
-                    <div class="form-check" *ngFor="let persona of objectKeys(user)">
-                      <label class="form-check-label" *ngIf="
-                      persona !== 'id' &&
-                      persona !== 'email' &&
-                      persona !== 'token' &&
-                      persona !== 'password' &&
-                      persona !== 'name' &&
-                      persona !== 'organization' &&
-                      persona !== 'qualification' &&
-                      persona !== 'photo_url' &&
-                      persona !== 'phone_number' &&
-                      persona !== 'location' &&
-                      persona !== 'notify_email' &&
-                      persona !== 'notify_sms' &&
-                      persona !== 'notify_app'&&
-                      persona !== 'organization_id'
-                    ">
-                        <input class="form-check-input" type="checkbox" [(ngModel)]="user[persona]"
-                          [ngModelOptions]="{ standalone: true }" />
+                    <div
+                      class="form-check"
+                      *ngFor="let persona of objectKeys(user)"
+                    >
+                      <label
+                        class="form-check-label"
+                        *ngIf="checkPersona(persona)"
+                      >
+                        <input
+                          class="form-check-input"
+                          type="checkbox"
+                          [(ngModel)]="user[persona]"
+                          [ngModelOptions]="{ standalone: true }"
+                        />
                         {{ persona.slice(3).toUpperCase() }}
                         <span class="form-check-sign">
                           <span class="check"></span>
@@ -144,45 +232,80 @@
                 </div>
 
                 <div class="row">
-                  <!-- [ngStyle]="{
-                      color: !locationData.length ? 'red' : '#AAAAAA'
-                    }" -->
-                  <label class="col-md-2 col-2 col-form-label" [ngStyle]="{
-                    color: !userLocationName ? 'red' : '#AAAAAA'
-                  }">Location (Geo)
+                  <label
+                    class="col-md-2 col-2 col-form-label"
+                    [ngStyle]="{
+                      color: !userLocationName ? 'red' : '#AAAAAA'
+                    }"
+                    aria-label="location"
+                    id="locationLabel"
+                    >Location (Geo)
                   </label>
                   <div class="col-md-10 col-9">
                     <mat-form-field class="example-full-width">
-                      <input matInput type="text" name="location" required [matAutocomplete]="locationAuto"
-                        (keyup)="getLocation()" [(ngModel)]="userLocationName" #location="ngModel" />
+                      <input
+                        matInput
+                        type="text"
+                        name="location"
+                        required
+                        aria-labelledby="locationLabel"
+                        [matAutocomplete]="locationAuto"
+                        (ngModelChange)="getLocation($event)"
+                        [(ngModel)]="userLocationName"
+                        #location="ngModel"
+                      />
 
-                      <mat-autocomplete #locationAuto="matAutocomplete" (optionSelected)="storeLocation($event)">
-                        <mat-option *ngFor="let location of locations" [value]="location.Location">
+                      <mat-autocomplete
+                        #locationAuto="matAutocomplete"
+                        (optionSelected)="storeLocation($event)"
+                      >
+                        <mat-option
+                          *ngFor="let location of locations"
+                          [value]="location.Location"
+                        >
                           {{ location.Location.Address.Label }}
                         </mat-option>
                       </mat-autocomplete>
-
-
                     </mat-form-field>
-                    <div [hidden]="location.valid || location.pristine" class="text-danger error-msg">
+                    <div
+                      [hidden]="location.valid || location.pristine"
+                      class="text-danger error-msg"
+                    >
                       Location is required
                     </div>
                   </div>
                 </div>
 
-
                 <div class="row justify-content-center">
-                  <label class="col-md-2 col-2 col-form-label">
-                    Interests</label>
+                  <label
+                    class="col-md-2 col-2 col-form-label"
+                    id="interestsLabel"
+                  >
+                    Interests</label
+                  >
                   <div class="col-md-10 col-9">
                     <div class="input-group ">
                       <mat-form-field class="example-chip-list">
-                        <input placeholder="Sectors" #sectorInput [formControl]="sectorCtrl" [matAutocomplete]="auto"
-                          [matChipInputFor]="chipList" [matChipInputSeparatorKeyCodes]="separatorKeysCodes"
-                          [matChipInputAddOnBlur]="addOnBlur" (matChipInputTokenEnd)="add($event)" />
-                        <mat-chip-list #chipList> </mat-chip-list>
-                        <mat-autocomplete #auto="matAutocomplete" (optionSelected)="selected($event)">
-                          <mat-option *ngFor="let sector of (filteredSectors | async)" [value]="sector">
+                        <input
+                          placeholder="Sectors"
+                          #sectorInput
+                          aria-labelledby="interestsLabel"
+                          [formControl]="sectorCtrl"
+                          [matAutocomplete]="auto"
+                          [matChipInputFor]="chipList"
+                          [matChipInputSeparatorKeyCodes]="separatorKeysCodes"
+                          [matChipInputAddOnBlur]="addOnBlur"
+                          (matChipInputTokenEnd)="add($event)"
+                        />
+                        <mat-chip-list #chipList></mat-chip-list>
+                        <mat-autocomplete
+                          #auto="matAutocomplete"
+                          (optionSelected)="selected($event)"
+                        >
+                          <mat-option
+                            *ngFor="let sector of filteredSectors | async"
+                            [value]="sector"
+                          >
                             {{ sector }}
                           </mat-option>
                         </mat-autocomplete>
@@ -193,26 +316,42 @@
 
                 <div class="row justify-content-center">
                   <label class="col-md-2 col-2 col-form-label"> </label>
-                  <div class="col-md-10 col-9">
-                    <mat-chip *ngFor="let sector of sectors" [selectable]="selectable" [removable]="removable"
-                      (removed)="remove(sector)" style="margin-right:0.3em; margin-bottom: 0.4em;">
+                  <div class="col-md-10 col-9" role="group">
+                    <mat-chip
+                      *ngFor="let sector of sectors"
+                      [selectable]="selectable"
+                      [removable]="removable"
+                      (removed)="remove(sector)"
+                      style="margin-right:0.3em; margin-bottom: 0.4em;"
+                    >
                       {{ sector }}
-                      <mat-icon matChipRemove *ngIf="removable">cancel</mat-icon>
+                      <i
+                        class="material-icons mat-chip-remove mat-chip-trailing-icon mat-icon material-icons ng-star-inserted"
+                        matChipRemove
+                        tabindex="0"
+                        role="button"
+                        aria-label="remove"
+                        *ngIf="removable"
+                        >cancel</i
+                      >
                     </mat-chip>
                   </div>
                 </div>
 
-                <!-- </div> -->
-
-
-
                 <div class="row">
-                  <label class="col-sm-2 col-form-label">External notification preference</label>
+                  <label class="col-sm-2 col-form-label"
+                    >External notification preference</label
+                  >
                   <div class="col-sm-10">
                     <div class="form-check form-check-inline">
                       <label class="form-check-label">
-                        <input class="form-check-input" type="checkbox" [(ngModel)]="user.notify_email"
-                          [ngModelOptions]="{standalone: true}"> E-mail
+                        <input
+                          class="form-check-input"
+                          type="checkbox"
+                          [(ngModel)]="user.notify_email"
+                          [ngModelOptions]="{ standalone: true }"
+                        />
+                        E-mail
                         <span class="form-check-sign">
                           <span class="check"></span>
                         </span>
@@ -220,36 +359,67 @@
                     </div>
                     <div class="form-check form-check-inline">
                       <label class="form-check-label">
-                        <input class="form-check-input" type="checkbox" [(ngModel)]="user.notify_sms"
-                          [ngModelOptions]="{standalone: true}"> SMS
+                        <input
+                          class="form-check-input"
+                          type="checkbox"
+                          [(ngModel)]="user.notify_sms"
+                          [ngModelOptions]="{ standalone: true }"
+                        />
+                        SMS
                         <span class="form-check-sign">
                           <span class="check"></span>
                         </span>
                       </label>
                     </div>
-
                   </div>
                 </div>
-
               </div>
             </form>
           </div>
-          <div class="card-footer row justify-content-center" *ngIf="mode === 'Add'">
+          <div
+            class="card-footer row justify-content-center"
+            *ngIf="mode === 'Add'"
+          >
             <div class="mr-auto">
-              <input type="button" class="btn" onclick="window.history.back()" name="cancel" value="Cancel">
+              <input
+                type="button"
+                class="btn"
+                onclick="window.history.back()"
+                name="cancel"
+                value="Cancel"
+              />
             </div>
-            <button mat-raised-button class="btn btn-warning" type="submit"
-              [disabled]="!userForm.form.valid || !isPhoneValid" (click)="onSubmit()">
+            <button
+              mat-raised-button
+              class="btn btn-warning"
+              type="submit"
+              [disabled]="!userForm.form.valid || !isPhoneValid"
+              (click)="onSubmit()"
+            >
               Save Details
             </button>
           </div>
 
-          <div class="card-footer row justify-content-center" *ngIf="mode === 'Edit'">
+          <div
+            class="card-footer row justify-content-center"
+            *ngIf="mode === 'Edit'"
+          >
             <div class="mr-auto">
-              <input type="button" class="btn" onclick="window.history.back()" name="cancel" value="Cancel">
+              <input
+                type="button"
+                class="btn"
+                onclick="window.history.back()"
+                name="cancel"
+                value="Cancel"
+              />
             </div>
-            <button mat-raised-button class="btn btn-warning" type="submit"
-              [disabled]="!isPhoneValid || !userForm.form.valid" (click)="onSubmit()">
+            <button
+              mat-raised-button
+              class="btn btn-warning"
+              type="submit"
+              [disabled]="!isPhoneValid || !userForm.form.valid"
+              (click)="onSubmit()"
+            >
               Update
             </button>
           </div>
