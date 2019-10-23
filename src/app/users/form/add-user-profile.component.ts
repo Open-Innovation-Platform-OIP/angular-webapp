@@ -280,21 +280,33 @@ export class AddUserProfileComponent implements OnInit, OnChanges {
     // console.log(typeof JSON.parse("{" + filtered.toString() + "}"));
   }
   public storeLocation(event) {
+    const locationData = event.option.value.Location;
+    const matchType = event.option.value.MatchLevel;
     // this.user.location = location.option.value;
     this.locationData = [];
     const coordinateArray = [
-      event.option.value.DisplayPosition.Latitude,
-      event.option.value.DisplayPosition.Longitude
+      locationData.DisplayPosition.Latitude,
+      locationData.DisplayPosition.Longitude
     ];
 
-    const location = {
+    let location = {
       location: { type: "Point", coordinates: coordinateArray },
-      location_name: event.option.value.Address.Label,
+      location_name: locationData.Address.Label,
       lat: coordinateArray[0],
-      long: coordinateArray[1]
+      long: coordinateArray[1],
+      type: matchType
     };
+    if (locationData.Address.City) {
+      location["city"] = locationData.Address.City;
+    }
+    if (locationData.Address.State) {
+      location["state"] = locationData.Address.State;
+    }
+    if (locationData.Address.Country) {
+      location["country"] = locationData.Address.Country;
+    }
 
-    this.userLocationName = event.option.value.Address.Label;
+    this.userLocationName = locationData.Address.Label;
     this.locationData.push(location);
     // console.log(this.locationData, "location data");
   }

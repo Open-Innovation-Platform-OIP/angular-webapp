@@ -157,7 +157,7 @@
                         (keyup)="getLocation()" [(ngModel)]="userLocationName" #location="ngModel" />
 
                       <mat-autocomplete #locationAuto="matAutocomplete" (optionSelected)="storeLocation($event)">
-                        <mat-option *ngFor="let location of locations" [value]="location.Location">
+                        <mat-option *ngFor="let location of locations" [value]="location">
                           {{ location.Location.Address.Label }}
                         </mat-option>
                       </mat-autocomplete>
