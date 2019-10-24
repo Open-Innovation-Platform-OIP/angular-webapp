@@ -5,16 +5,24 @@ import {
   Input,
   ChangeDetectorRef,
   OnDestroy,
-  Inject
-} from "@angular/core";
+  Inject,
+  ViewChild,
+  ElementRef,
+  AfterViewInit
+} from '@angular/core';
 import {
   Location,
   LocationStrategy,
   PathLocationStrategy
-} from "@angular/common";
-import { Router, ActivatedRoute, ParamMap } from "@angular/router";
-import { Observable, Subscription, interval } from "rxjs";
-import { NgxUiLoaderService } from "ngx-ui-loader";
+} from '@angular/common';
+import {
+  Router,
+  ActivatedRoute,
+  ParamMap,
+  NavigationEnd
+} from '@angular/router';
+import { Observable, Subscription, interval } from 'rxjs';
+import { NgxUiLoaderService } from 'ngx-ui-loader';
 // import { FilesService } from "../../services/files.service";
 import {
   first,
@@ -23,29 +31,30 @@ import {
   take,
   map,
   switchMap
-} from "rxjs/operators";
+} from 'rxjs/operators';
 
-import { domain } from "../../../environments/environment";
+import { domain } from '../../../environments/environment';
 
-import { ProblemService } from "../../services/problem.service";
-import { AuthService } from "../../services/auth.service";
-import { UsersService } from "../../services/users.service";
+import { ProblemService } from '../../services/problem.service';
+import { AuthService } from '../../services/auth.service';
+import { UsersService } from '../../services/users.service';
 
-import { Apollo, QueryRef } from "apollo-angular";
-import gql from "graphql-tag";
-import swal from "sweetalert2";
-import { NgForm } from "@angular/forms";
-import { NguCarouselConfig } from "@ngu/carousel";
-import { slider } from "./problem-detail.animation";
-import { DiscussionsService } from "src/app/services/discussions.service";
-import { FilesService } from "src/app/services/files.service";
-import { CollaborationService } from "src/app/services/collaboration.service";
-import { ValidationService } from "src/app/services/validation.service";
-import { EnrichmentService } from "src/app/services/enrichment.service";
-import { fileUploadVariables } from "../../../environments/environment";
-import { sharing } from "../../globalconfig";
-import { reject } from "q";
-var Buffer = require("buffer/").Buffer;
+import { Apollo, QueryRef } from 'apollo-angular';
+import gql from 'graphql-tag';
+import swal from 'sweetalert2';
+import { NgForm } from '@angular/forms';
+import { NguCarouselConfig } from '@ngu/carousel';
+import { slider } from './problem-detail.animation';
+import { DiscussionsService } from 'src/app/services/discussions.service';
+import { FilesService } from 'src/app/services/files.service';
+import { CollaborationService } from 'src/app/services/collaboration.service';
+import { ValidationService } from 'src/app/services/validation.service';
+import { EnrichmentService } from 'src/app/services/enrichment.service';
+import { fileUploadVariables } from '../../../environments/environment';
+import { sharing } from '../../globalconfig';
+import { FocusMonitor } from '@angular/cdk/a11y';
+import { filter } from 'rxjs/operators';
+const Buffer = require('buffer/').Buffer;
 
 const misc: any = {
   navbar_menu_visible: 0,
@@ -66,17 +75,20 @@ interface queryString {
 // const domain = "https://app.socialalpha.jaagalabs.com";
 
 @Component({
-  selector: "app-problem-detail",
+  selector: 'app-problem-detail',
   providers: [
     Location,
     { provide: LocationStrategy, useClass: PathLocationStrategy }
   ],
-  templateUrl: "./problem-detail.component.html",
-  styleUrls: ["./problem-detail.component.css"],
+  templateUrl: './problem-detail.component.html',
+  styleUrls: ['./problem-detail.component.css'],
   animations: [slider],
   changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class ProblemDetailComponent implements OnInit, OnDestroy {
+export class ProblemDetailComponent
+  implements OnInit, OnDestroy, AfterViewInit {
+  @ViewChild('problemDataTitle') problemDataTitle: ElementRef<HTMLElement>;
+
   channels = sharing;
   // filesService.fileAccessUrl: string = "";
   // chartData: any;
@@ -91,51 +103,51 @@ export class ProblemDetailComponent implements OnInit, OnDestroy {
   count: any = 0;
 
   problemDataSubcription: any;
-  objectValues = Object["values"];
+  objectValues = Object['values'];
   discussions = [];
   replyingTo = 0;
   showReplyBox = false;
   showCommentBox = false;
   numOfComments = 5;
   enrichmentData: any = {
-    description: "",
+    description: '',
     location: [],
-    organization: "",
-    resources_needed: "",
+    organization: '',
+    resources_needed: '',
     image_urls: [],
     attachments: [],
     video_urls: [],
-    impact: "",
+    impact: '',
     min_population: 0,
     max_population: 0,
-    extent: "",
-    beneficiary_attributes: "",
-    voted_by: "{}",
-    featured_url: "",
+    extent: '',
+    beneficiary_attributes: '',
+    voted_by: '{}',
+    featured_url: '',
     embed_urls: [],
-    featured_type: ""
+    featured_type: ''
   };
 
   problemData: any = {
-    id: "",
-    title: "",
-    description: "",
-    organization: "",
-    impact: "",
-    extent: "",
+    id: '',
+    title: '',
+    description: '',
+    organization: '',
+    impact: '',
+    extent: '',
 
     min_population: 0,
     max_population: 0,
-    beneficiary_attributes: "",
-    resources_needed: "",
+    beneficiary_attributes: '',
+    resources_needed: '',
     image_urls: [],
     video_urls: [],
-    featured_url: "",
+    featured_url: '',
     embed_urls: [],
-    featured_type: "",
-    voted_by: "",
-    user_id: "",
-    is_draft: "",
+    featured_type: '',
+    voted_by: '',
+    user_id: '',
+    is_draft: '',
     attachments: []
   };
 
@@ -192,8 +204,8 @@ export class ProblemDetailComponent implements OnInit, OnDestroy {
   popularDiscussions: any = [];
   popular: boolean;
   collaboratorIntent: any;
-  pageUrl = "";
-  mailToLink = "";
+  pageUrl = '';
+  mailToLink = '';
 
   fabTogglerState: boolean = false;
 
@@ -222,6 +234,7 @@ export class ProblemDetailComponent implements OnInit, OnDestroy {
   collaboratorDataToEdit: any;
   interval = null;
   qs: queryString = { commentId: 0 };
+  imageAlt = 'default image';
 
   public carouselTileItemsEnrichment$: Observable<number[]>;
   public carouselTileItemsValid$: Observable<number[]>;
@@ -259,15 +272,22 @@ export class ProblemDetailComponent implements OnInit, OnDestroy {
     private validationService: ValidationService,
     private enrichmentService: EnrichmentService,
     public ngLocation: Location,
-    private ngxService: NgxUiLoaderService
+    private ngxService: NgxUiLoaderService,
+    private focusMonitor: FocusMonitor
   ) {
     this.startInterval();
     this.pageUrl = domain + ngLocation.path();
-    const subject = encodeURI("Can you help solve this problem?");
+    const subject = encodeURI('Can you help solve this problem?');
     const body = encodeURI(
       `Hello,\n\nCheck out this link on Social Alpha's Open Innovation platform - ${this.pageUrl}\n\nRegards,`
     );
     this.mailToLink = `mailto:?subject=${subject}&body=${body}`;
+  }
+
+  ngAfterViewInit() {
+    setTimeout(() => {
+      this.focusMonitor.focusVia(this.problemDataTitle, 'program');
+    }, 100);
   }
 
   startInterval() {
@@ -281,7 +301,6 @@ export class ProblemDetailComponent implements OnInit, OnDestroy {
       query: gql`
           {
             users(where: { id: { _eq: ${id} } }) {
-              
               is_ngo
               is_innovator
               is_expert
@@ -298,9 +317,8 @@ export class ProblemDetailComponent implements OnInit, OnDestroy {
             }
             }
         }
-            
         `,
-      fetchPolicy: "network-only",
+      fetchPolicy: 'network-only',
       pollInterval: 1000
     });
 
@@ -392,7 +410,7 @@ export class ProblemDetailComponent implements OnInit, OnDestroy {
     this.userId = Number(this.auth.currentUserValue.id);
 
     // this.filesService.fileAccessUrl = fileUploadVariables.accessUrl + "/";
-    console.log(this.auth.currentUserValue, "current user value");
+    console.log(this.auth.currentUserValue, 'current user value');
 
     this.getUserData(Number(this.auth.currentUserValue.id));
 
@@ -409,7 +427,7 @@ export class ProblemDetailComponent implements OnInit, OnDestroy {
 
     this.problemDataSubcription = this.route.paramMap.pipe(
       switchMap((params: ParamMap) => {
-        return this.getProblemData(params.get("id"));
+        return this.getProblemData(params.get('id'));
       })
     );
     this.problemDataSubcription.subscribe(
@@ -437,14 +455,12 @@ export class ProblemDetailComponent implements OnInit, OnDestroy {
           title
           description
           organization
-          
           resources_needed
           is_draft
           user_id
           edited_at
           updated_at
           image_urls
-         
           featured_url
           featured_type
           video_urls
@@ -625,7 +641,7 @@ export class ProblemDetailComponent implements OnInit, OnDestroy {
         
     `,
       pollInterval: 1000,
-      fetchPolicy: "network-only"
+      fetchPolicy: 'network-only'
     });
     // this.chartQuery.valueChanges.subscribe
     return this.problemDataQuery.valueChanges;
@@ -634,53 +650,53 @@ export class ProblemDetailComponent implements OnInit, OnDestroy {
 
   fbShare() {
     window.open(
-      "https://www.facebook.com/sharer/sharer.php?u=" + this.pageUrl,
-      "facebook-popup",
-      "height=350,width=600"
+      'https://www.facebook.com/sharer/sharer.php?u=' + this.pageUrl,
+      'facebook-popup',
+      'height=350,width=600'
     );
   }
 
   twitterShare() {
     window.open(
-      "https://twitter.com/share?url=" + this.pageUrl,
-      "twitter-popup",
-      "height=350,width=600"
+      'https://twitter.com/share?url=' + this.pageUrl,
+      'twitter-popup',
+      'height=350,width=600'
     );
   }
 
   linkedInShare() {
     window.open(
-      "https://www.linkedin.com/shareArticle?mini=true&url=" + this.pageUrl,
-      "linkedin-popup",
-      "height=350,width=600"
+      'https://www.linkedin.com/shareArticle?mini=true&url=' + this.pageUrl,
+      'linkedin-popup',
+      'height=350,width=600'
     );
   }
 
   mailShare() {
     // not a great approach as the popup doesn't autoclose. Better to use href on button click.
-    const subject = encodeURI("Can you help solve this problem?");
+    const subject = encodeURI('Can you help solve this problem?');
     const body = encodeURI(
       `Hello,\n\nCheck out this link on Social Alpha's Open Innovation platform - ${this.pageUrl}\n\nRegards,`
     );
     const href = `mailto:?subject=${subject}&body=${body}`;
-    this.popup = window.open(href, "email-popup", "height=350,width=600");
+    this.popup = window.open(href, 'email-popup', 'height=350,width=600');
   }
 
   smsShare() {
-    const url = "https://sms.socialalpha.jaagalabs.com/send";
+    const url = 'https://sms.socialalpha.jaagalabs.com/send';
     const data = {
       text: `Can you help solve this problem? ${this.pageUrl}`,
-      numbers: prompt("Enter phone numbers separated by commas.").split(",")
+      numbers: prompt('Enter phone numbers separated by commas.').split(',')
     };
     // Default options are marked with *
     return fetch(url, {
-      method: "POST", // *GET, POST, PUT, DELETE, etc.
+      method: 'POST', // *GET, POST, PUT, DELETE, etc.
       // mode: "cors", // no-cors, cors, *same-origin
       // cache: "no-cache", // *default, no-cache, reload, force-cache, only-if-cached
       // credentials: "same-origin", // include, *same-origin, omit
       headers: {
-        "Content-Type": "application/json",
-        "x-api-key": "socialalpha"
+        'Content-Type': 'application/json',
+        'x-api-key': 'socialalpha'
       },
       // redirect: "follow", // manual, *follow, error
       // referrer: "no-referrer", // no-referrer, *client
@@ -688,10 +704,10 @@ export class ProblemDetailComponent implements OnInit, OnDestroy {
     })
       .then(response => {
         // //console.log(response.json());
-        alert("Your message has been sent");
+        alert('Your message has been sent');
       }) // parses JSON response into native Javascript objects
       .catch(e => {
-        console.error("SMS error", e);
+        console.error('SMS error', e);
       });
   }
 
@@ -699,19 +715,19 @@ export class ProblemDetailComponent implements OnInit, OnDestroy {
     this.pageUrl += `?commentId=${shareObj.id}`;
 
     switch (shareObj.platform) {
-      case "linkedin":
+      case 'linkedin':
         this.linkedInShare();
         break;
-      case "facebook":
+      case 'facebook':
         this.fbShare();
         break;
-      case "twitter":
+      case 'twitter':
         this.twitterShare();
         break;
-      case "email":
+      case 'email':
         this.mailShare();
         break;
-      case "sms":
+      case 'sms':
         this.smsShare();
         break;
 
@@ -727,12 +743,9 @@ export class ProblemDetailComponent implements OnInit, OnDestroy {
   parseProblem(problem) {
     this.count++;
     if (problem.title && this.count < 2) {
-      //console.log("Message", problem.title);
       this.message = problem.title;
-      this.showNotification("bottom", "right", this.message);
+      this.showNotification('bottom', 'right', this.message);
     }
-
-    //console.log(problem, "problem");
 
     // map core keys
     Object.keys(this.problemData).map(key => {
@@ -795,7 +808,7 @@ export class ProblemDetailComponent implements OnInit, OnDestroy {
         });
       }
       Object.keys(this.problemData).map(key => {
-        if (problem[key] && key !== "problems_tags") {
+        if (problem[key] && key !== 'problems_tags') {
           this.problemData[key] = problem[key];
         }
       });
@@ -833,9 +846,9 @@ export class ProblemDetailComponent implements OnInit, OnDestroy {
 
       // combining the video_urls and image_urls
       this.problem_attachments = [
-        ...this.problemData["image_urls"],
-        ...this.problemData["video_urls"],
-        ...this.problemData["attachments"],
+        ...this.problemData['image_urls'],
+        ...this.problemData['video_urls'],
+        ...this.problemData['attachments'],
         ...embedded_urls_arr
       ];
 
@@ -986,8 +999,8 @@ export class ProblemDetailComponent implements OnInit, OnDestroy {
   }
 
   checkUrlIsImg(url) {
-    var arr = ["jpeg", "jpg", "gif", "png"];
-    var ext = url.substring(url.lastIndexOf(".") + 1);
+    var arr = ['jpeg', 'jpg', 'gif', 'png'];
+    var ext = url.substring(url.lastIndexOf('.') + 1);
     if (arr.indexOf(ext) > -1) {
       return true;
     } else {
@@ -997,9 +1010,9 @@ export class ProblemDetailComponent implements OnInit, OnDestroy {
 
   sectorSelected(sector) {
     // //console.log(sector,"sector");
-    this.router.navigate(["/problems"], {
-      queryParams: { [sector.name]: "sectorFilter" },
-      queryParamsHandling: "merge"
+    this.router.navigate(['/problems'], {
+      queryParams: { [sector.name]: 'sectorFilter' },
+      queryParamsHandling: 'merge'
     });
   }
 
@@ -1010,9 +1023,9 @@ export class ProblemDetailComponent implements OnInit, OnDestroy {
       longitude: location.long
     };
 
-    this.router.navigate(["/problems"], {
-      queryParams: { ["filterLocation"]: JSON.stringify(locationQuery) },
-      queryParamsHandling: "merge"
+    this.router.navigate(['/problems'], {
+      queryParams: { ['filterLocation']: JSON.stringify(locationQuery) },
+      queryParamsHandling: 'merge'
     });
   }
 
@@ -1034,24 +1047,24 @@ export class ProblemDetailComponent implements OnInit, OnDestroy {
   }
 
   showSwal(type) {
-    if (type == "input-field") {
+    if (type == 'input-field') {
       swal({
-        title: "Validate Problem",
+        title: 'Validate Problem',
         html:
           '<div class="form-group">' +
           '<input id="input-field" type="text" placeholder="Enter your text here" class="form-control" />' +
-          "</div>",
+          '</div>',
         showCancelButton: true,
-        confirmButtonClass: "btn btn-success",
-        cancelButtonClass: "btn btn-danger",
+        confirmButtonClass: 'btn btn-success',
+        cancelButtonClass: 'btn btn-danger',
         buttonsStyling: false
       })
         .then(function(result) {
           swal({
-            type: "success",
+            type: 'success',
             html:
-              "You entered: <strong>" + $("#input-field").val() + "</strong>",
-            confirmButtonClass: "btn btn-success",
+              'You entered: <strong>' + $('#input-field').val() + '</strong>',
+            confirmButtonClass: 'btn btn-success',
             buttonsStyling: false
           });
         })
@@ -1065,26 +1078,26 @@ export class ProblemDetailComponent implements OnInit, OnDestroy {
 
   toggleVideoSrc(actionBtn: String) {
     if (
-      actionBtn === "next" &&
+      actionBtn === 'next' &&
       this.videoUrlIndex < this.problemData.video_urls.length - 1
     ) {
       this.videoUrlIndex++;
       this.modalVideoSrc = this.problemData.video_urls[this.videoUrlIndex].url;
-    } else if (actionBtn === "prev" && this.videoUrlIndex > 0) {
+    } else if (actionBtn === 'prev' && this.videoUrlIndex > 0) {
       this.videoUrlIndex--;
       this.modalVideoSrc = this.problemData.video_urls[this.videoUrlIndex].url;
     }
   }
 
   minimizeSidebar() {
-    const body = document.getElementsByTagName("body")[0];
+    const body = document.getElementsByTagName('body')[0];
 
     if (misc.sidebar_mini_active === true) {
-      body.classList.remove("sidebar-mini");
+      body.classList.remove('sidebar-mini');
       misc.sidebar_mini_active = false;
     } else {
       setTimeout(function() {
-        body.classList.add("sidebar-mini");
+        body.classList.add('sidebar-mini');
 
         misc.sidebar_mini_active = true;
       }, 300);
@@ -1092,7 +1105,7 @@ export class ProblemDetailComponent implements OnInit, OnDestroy {
 
     // we simulate the window Resize so the charts will get updated in realtime.
     const simulateWindowResize = setInterval(function() {
-      window.dispatchEvent(new Event("resize"));
+      window.dispatchEvent(new Event('resize'));
     }, 180);
 
     // we stop the simulation of Window Resize after the animations are completed
@@ -1102,31 +1115,31 @@ export class ProblemDetailComponent implements OnInit, OnDestroy {
   }
 
   dimissVideoModal(e) {
-    if (e.type === "click") {
+    if (e.type === 'click') {
       let problemVideoTag: HTMLMediaElement = document.querySelector(
-        "#problemVideoID"
+        '#problemVideoID'
       );
       problemVideoTag.pause();
     }
   }
 
   sidebarClose() {
-    var $toggle = document.getElementsByClassName("navbar-toggler")[0];
-    const body = document.getElementsByTagName("body")[0];
-    this.toggleButton.classList.remove("toggled");
-    var $layer = document.createElement("div");
-    $layer.setAttribute("class", "close-layer");
+    var $toggle = document.getElementsByClassName('navbar-toggler')[0];
+    const body = document.getElementsByTagName('body')[0];
+    this.toggleButton.classList.remove('toggled');
+    var $layer = document.createElement('div');
+    $layer.setAttribute('class', 'close-layer');
 
     this.sidebarVisible = false;
-    body.classList.remove("nav-open");
+    body.classList.remove('nav-open');
     // $('html').removeClass('nav-open');
-    body.classList.remove("nav-open");
+    body.classList.remove('nav-open');
     if ($layer) {
       $layer.remove();
     }
 
     setTimeout(function() {
-      $toggle.classList.remove("toggled");
+      $toggle.classList.remove('toggled');
     }, 400);
 
     this.mobile_menu_visible = 0;
@@ -1278,10 +1291,10 @@ export class ProblemDetailComponent implements OnInit, OnDestroy {
             err => {
               console.error(JSON.stringify(err));
               swal({
-                title: "Error",
-                text: "Try Again",
-                type: "error",
-                confirmButtonClass: "btn btn-info",
+                title: 'Error',
+                text: 'Try Again',
+                type: 'error',
+                confirmButtonClass: 'btn btn-info',
                 buttonsStyling: false
               }).catch(swal.noop);
             }
@@ -1299,15 +1312,15 @@ export class ProblemDetailComponent implements OnInit, OnDestroy {
 
     enrichmentData.problem_id = this.problemData.id;
 
-    if (typeof enrichmentData.voted_by === "string") {
+    if (typeof enrichmentData.voted_by === 'string') {
       // this.submitted.emit(this.enrichmentData);
       this.enrichmentService.submitEnrichmentToDB(enrichmentData);
     } else {
       enrichmentData.voted_by = enrichmentData.voted_by = JSON.stringify(
         enrichmentData.voted_by
       )
-        .replace("[", "{")
-        .replace("]", "}");
+        .replace('[', '{')
+        .replace(']', '}');
 
       this.enrichmentService.submitEnrichmentToDB(enrichmentData);
     }
@@ -1316,13 +1329,13 @@ export class ProblemDetailComponent implements OnInit, OnDestroy {
   deleteEnrichment(id) {
     this.enrichmentService.deleteEnrichment(id).subscribe(
       ({ data }) => {
-        $("#enrichModal").modal("hide");
+        $('#enrichModal').modal('hide');
         this.disableEnrichButton = false;
         swal({
-          title: "Deleted!",
+          title: 'Deleted!',
           // text: "Your file has been deleted.",
-          type: "success",
-          confirmButtonClass: "btn btn-success",
+          type: 'success',
+          confirmButtonClass: 'btn btn-success',
           buttonsStyling: false
         });
         // alert("deleted");
@@ -1332,10 +1345,10 @@ export class ProblemDetailComponent implements OnInit, OnDestroy {
       error => {
         //console.log("Could not delete due to " + error);
         swal({
-          title: "Error",
-          text: "Try Again",
-          type: "error",
-          confirmButtonClass: "btn btn-info",
+          title: 'Error',
+          text: 'Try Again',
+          type: 'error',
+          confirmButtonClass: 'btn btn-info',
           buttonsStyling: false
         }).catch(swal.noop);
       }
@@ -1370,13 +1383,13 @@ export class ProblemDetailComponent implements OnInit, OnDestroy {
   deleteValidation(validationData) {
     this.validationService.deleteValidation(validationData).subscribe(
       ({ data }) => {
-        $("#validModal").modal("hide");
+        $('#validModal').modal('hide');
         this.disableValidateButton = false;
         swal({
-          title: "Deleted!",
+          title: 'Deleted!',
           // text: "Your file has been deleted.",
-          type: "success",
-          confirmButtonClass: "btn btn-success",
+          type: 'success',
+          confirmButtonClass: 'btn btn-success',
           buttonsStyling: false
         });
 
@@ -1385,10 +1398,10 @@ export class ProblemDetailComponent implements OnInit, OnDestroy {
       error => {
         //console.log("Could not delete due to " + error);
         swal({
-          title: "Error",
-          text: "Try Again",
-          type: "error",
-          confirmButtonClass: "btn btn-info",
+          title: 'Error',
+          text: 'Try Again',
+          type: 'error',
+          confirmButtonClass: 'btn btn-info',
           buttonsStyling: false
         }).catch(swal.noop);
       }
@@ -1398,16 +1411,16 @@ export class ProblemDetailComponent implements OnInit, OnDestroy {
   deleteCollaboration(collaborationData) {
     this.collaborationService.deleteCollaboration(collaborationData).subscribe(
       ({ data }) => {
-        $("#collaboratorModal").modal("hide");
+        $('#collaboratorModal').modal('hide');
         this.disableCollaborateButton = false;
       },
       error => {
         //console.log("Could delete due to " + error);
         swal({
-          title: "Error",
-          text: "Try Again",
-          type: "error",
-          confirmButtonClass: "btn btn-info",
+          title: 'Error',
+          text: 'Try Again',
+          type: 'error',
+          confirmButtonClass: 'btn btn-info',
           buttonsStyling: false
         }).catch(swal.noop);
       }
@@ -1429,12 +1442,12 @@ export class ProblemDetailComponent implements OnInit, OnDestroy {
   handleValidationEditMode(validationData) {
     this.validationDataToEdit = validationData;
     // this.openModal("#EditValidationModal");
-    $("#EditValidationModal").modal({
-      backdrop: "static",
+    $('#EditValidationModal').modal({
+      backdrop: 'static',
       keyboard: false
     });
 
-    $("#EditValidationModal").modal("show");
+    $('#EditValidationModal').modal('show');
   }
 
   handleCollaborationEditMode(collaborationData) {
@@ -1451,7 +1464,7 @@ export class ProblemDetailComponent implements OnInit, OnDestroy {
     let all_promise = await attachments.map(file => {
       //console.log(file, "comment file");
       return new Promise((resolve, reject) => {
-        if (typeof FileReader !== "undefined") {
+        if (typeof FileReader !== 'undefined') {
           const reader = new FileReader();
 
           reader.onload = (e: any) => {
@@ -1511,16 +1524,16 @@ export class ProblemDetailComponent implements OnInit, OnDestroy {
   submitComment(content, mentions, attachments?, comment_id?) {
     let comment = {
       user_id: this.auth.currentUserValue.id,
-      problem_id: this.problemData["id"],
+      problem_id: this.problemData['id'],
       text: content,
       attachments: attachments // overwriting the incoming blobs
     };
     if (comment_id) {
-      comment["linked_comment_id"] = comment_id;
+      comment['linked_comment_id'] = comment_id;
     }
     // //console.log(content, mentions);
     if (this.showReplyBox) {
-      comment["linked_comment_id"] = this.replyingTo;
+      comment['linked_comment_id'] = this.replyingTo;
       this.replyingTo = 0;
       this.showReplyBox = false;
     }
@@ -1566,22 +1579,22 @@ export class ProblemDetailComponent implements OnInit, OnDestroy {
   dismiss() {
     if (this.collaboratorIntent) {
       swal({
-        title: "Are you sure you want to leave?",
+        title: 'Are you sure you want to leave?',
         // text: "You won't be able to revert this!",
-        type: "warning",
+        type: 'warning',
         showCancelButton: true,
-        confirmButtonClass: "btn btn-success",
-        cancelButtonClass: "btn btn-danger",
-        confirmButtonText: "Yes",
+        confirmButtonClass: 'btn btn-success',
+        cancelButtonClass: 'btn btn-danger',
+        confirmButtonText: 'Yes',
         buttonsStyling: false
       }).then(result => {
         if (result.value) {
           //console.log("Received result", result);
-          $("#collaboratorModal").modal("hide");
+          $('#collaboratorModal').modal('hide');
         }
       });
     } else {
-      $("#collaboratorModal").modal("hide");
+      $('#collaboratorModal').modal('hide');
     }
   }
 
@@ -1591,19 +1604,19 @@ export class ProblemDetailComponent implements OnInit, OnDestroy {
 
     clearInterval(this.interval);
     /* opening modal */
-    $("#enlargeView").modal({
-      backdrop: "static",
+    $('#enlargeView').modal({
+      backdrop: 'static',
       keyboard: false
     });
 
-    $("#enlargeView").modal("show");
+    $('#enlargeView').modal('show');
   }
 
   closeModal(e) {
     // //console.log(e, "e");
-    if (e.type === "click") {
+    if (e.type === 'click') {
       let problemVideoTag: HTMLMediaElement = document.querySelector(
-        "#modalVideo"
+        '#modalVideo'
       );
 
       this.startInterval();
@@ -1616,13 +1629,13 @@ export class ProblemDetailComponent implements OnInit, OnDestroy {
   toggleFileSrc(dir: boolean) {
     if (
       dir &&
-      this.sources["index"] < this.sources["attachmentObj"].length - 1
+      this.sources['index'] < this.sources['attachmentObj'].length - 1
     ) {
-      this.sources["index"]++;
-      this.modalSrc = this.sources["attachmentObj"][this.sources["index"]];
-    } else if (!dir && this.sources["index"] > 0) {
-      this.sources["index"]--;
-      this.modalSrc = this.sources["attachmentObj"][this.sources["index"]];
+      this.sources['index']++;
+      this.modalSrc = this.sources['attachmentObj'][this.sources['index']];
+    } else if (!dir && this.sources['index'] > 0) {
+      this.sources['index']--;
+      this.modalSrc = this.sources['attachmentObj'][this.sources['index']];
     }
   }
 
@@ -1631,37 +1644,37 @@ export class ProblemDetailComponent implements OnInit, OnDestroy {
 
     /* opening modal */
     $(id).modal({
-      backdrop: "static",
+      backdrop: 'static',
       keyboard: false
     });
 
-    $(id).modal("show");
+    $(id).modal('show');
   }
 
   showPopularDiscussions(id) {
-    if (id == "popular") {
+    if (id == 'popular') {
       this.popular = true;
-    } else if (id == "latest") {
+    } else if (id == 'latest') {
       this.popular = false;
     }
   }
 
   showNotification(from: any, align: any, title: any) {
     const type = [
-      "",
-      "info",
-      "success",
-      "warning",
-      "danger",
-      "rose",
-      "primary"
+      '',
+      'info',
+      'success',
+      'warning',
+      'danger',
+      'rose',
+      'primary'
     ];
 
     const color = Math.floor(Math.random() * 6 + 1);
 
     $.notify(
       {
-        icon: "picture_in_picture_alt",
+        icon: 'picture_in_picture_alt',
         message: title
       },
       {
@@ -1674,15 +1687,17 @@ export class ProblemDetailComponent implements OnInit, OnDestroy {
         },
         template:
           '<div data-notify="container" id="alert" class="col-xs-11 col-sm-3 alert alert-{0}" role="alert">' +
-          '<button mat-raised-button type="button" aria-hidden="true" class="close" data-notify="dismiss">  <i class="material-icons">close</i></button>' +
+          '<button mat-raised-button type="button" aria-hidden="true" class="close" data-notify="dismiss">' +
+          '<i class="material-icons">close</i></button>' +
           '<i class="material-icons" data-notify="icon">notifications</i> ' +
           '<span data-notify="title">{1}</span> ' +
           '<span data-notify="message">{2}</span>' +
           '<div class="progress" data-notify="progressbar">' +
-          '<div class="progress-bar progress-bar-{0}" role="progressbar" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100" style="width: 0%;"></div>' +
-          "</div>" +
+          '<div class="progress-bar progress-bar-{0}" role="progressbar" \
+          aria-valuenow="0" aria-valuemin="0" aria-valuemax="100" style="width: 0%;"></div>' +
+          '</div>' +
           '<a href="{3}" target="{4}" data-notify="url"></a>' +
-          "</div>"
+          '</div>'
       }
     );
   }
@@ -1690,7 +1705,7 @@ export class ProblemDetailComponent implements OnInit, OnDestroy {
   ngOnDestroy() {
     this.problemDataQuery.stopPolling();
     this.problemDataSubcription.unsubscribe();
-    $(".alert").remove();
+    $('.alert').remove();
     this.userDataQuery.stopPolling();
   }
 }

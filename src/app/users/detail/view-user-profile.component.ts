@@ -50,9 +50,7 @@ export class ViewUserProfileComponent
   }
 
   ngAfterViewInit() {
-    setTimeout(() => {
-      this.focusMonitor.focusVia(this.profileTitle, 'program');
-    }, 1000);
+    this.focusMonitor.focusVia(this.profileTitle, 'program');
   }
 
   ngOnInit() {
@@ -169,7 +167,6 @@ export class ViewUserProfileComponent
 
   ngOnDestroy() {
     this.userDataQuery.stopPolling();
-    this.focusMonitor.stopMonitoring(this.profileTitle);
     // this.user.unsubscribe();
   }
 }
