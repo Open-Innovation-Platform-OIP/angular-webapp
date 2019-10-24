@@ -27,7 +27,11 @@ import {
   MatAutocomplete
 } from '@angular/material';
 import { Apollo } from 'apollo-angular';
-import { LiveAnnouncer, FocusMonitor } from '@angular/cdk/a11y';
+import {
+  LiveAnnouncer,
+  FocusMonitor,
+  AriaLivePoliteness
+} from '@angular/cdk/a11y';
 import gql from 'graphql-tag';
 import swal from 'sweetalert2';
 
@@ -934,11 +938,9 @@ export class WizardComponent
           searchResults => {
             this.searchResults = searchResults;
 
-            if (this.searchResults.length) {
-              this.liveAnouncer.announce(
-                `Found ${this.searchResults.length} similar problems.`
-              );
-            }
+            this.announcement(
+              `Found ${this.searchResults.length} similar problems.`
+            );
 
             this.setScrollableHeight();
           },
@@ -1028,6 +1030,13 @@ export class WizardComponent
     } else {
       this.searchResults = [];
     }
+  }
+
+  announcement(message: string, politeness?: AriaLivePoliteness) {
+    this.liveAnouncer
+      .announce(message, politeness)
+      .then(x => x)
+      .catch(e => console.error(e));
   }
 
   isComplete() {

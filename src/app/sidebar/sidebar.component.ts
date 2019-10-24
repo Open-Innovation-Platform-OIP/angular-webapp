@@ -7,7 +7,7 @@ import { GeocoderService } from '../services/geocoder.service';
 
 declare const $: any;
 
-//Metadata
+// Metadata
 export interface RouteInfo {
   path: string;
   title: string;
@@ -24,7 +24,7 @@ export interface ChildrenItems {
   type?: string;
 }
 
-//Menu Items
+// Menu Items
 export const ROUTES: RouteInfo[] = [
   {
     path: '/dashboard',
@@ -100,16 +100,12 @@ export class SidebarComponent implements OnInit {
     }
     return bool;
   }
-  // logout() {
-  //   this.auth.logout();
-  //   this.router.navigate(["/auth/login"]);
-  // }
 
   sidebarClose() {
-    var $toggle = document.getElementsByClassName('navbar-toggler')[0];
+    const $toggle = document.getElementsByClassName('navbar-toggler')[0];
     const body = document.getElementsByTagName('body')[0];
     // this.toggleButton.classList.remove("toggled");
-    var $layer = document.createElement('div');
+    const $layer = document.createElement('div');
     $layer.setAttribute('class', 'close-layer');
 
     this.sidebarVisible = false;

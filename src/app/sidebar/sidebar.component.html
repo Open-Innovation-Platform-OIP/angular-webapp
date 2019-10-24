@@ -2,64 +2,25 @@
   <div class="logo">
     <a class="simple-text logo-mini">
       <div class="logo-img">
-        <img src="/assets/img/social-alpha-logo-250.png" />
+        <img
+          src="/assets/img/social-alpha-logo-250.png"
+          alt="social alpha logo"
+        />
       </div>
     </a>
-    <!-- <a href="" class="simple-text logo-normal" style="font-size: 0.8em;">
-        Solve Together
-      </a> -->
     <i
       class="material-icons"
       (click)="sidebarClose()"
-      aria-label="close"
+      aria-hidden="true"
       style="cursor: pointer; margin-top: 0.1em;margin-left: 9em;"
     >
       clear
     </i>
   </div>
 
-  <!-- <div class="user"> -->
-  <!-- <div class="photo">
-      <img class="img"
-        src="{{(usersService.currentUser.photo_url && usersService.currentUser.photo_url.url) ? usersService.currentUser.photo_url.url : './assets/img/default-avatar.png'}}" />
-    </div>
-    <div class="user-info" *ngIf="auth.currentUserValue">
-      <a data-toggle="collapse" href="#collapseExample" class="collapsed">
-        <span>
-          {{usersService.currentUser.name || usersService.currentUser.email}}
-          <b class="caret"></b>
-        </span>
-      </a>
-      <div class="collapse" id="collapseExample">
-        <ul class="nav">
-          <li class="nav-item">
-            <a [routerLink]="'/users/'+auth.currentUserValue.id" class="nav-link">
-              <span class="sidebar-mini">MP</span>
-              <span class="sidebar-normal">My Profile</span>
-            </a>
-          </li> -->
-  <!-- <li class="nav-item">
-            <a [routerLink]="'/users/'+auth.currentUserValue.id+'/edit'" class="nav-link">
-              <span class="sidebar-mini">EP</span>
-              <span class="sidebar-normal">Edit Profile</span>
-            </a>
-          </li> -->
-  <!-- </ul>
-      </div>
-    </div>-->
-  <!-- </div> -->
-
   <div>
     <form class="navbar-form">
-      <span class="bmd-form-group">
-        <!-- <div class="input-group no-border"> -->
-        <!-- <input type="text" value="" class="form-control" placeholder="Search...">
-          <button mat-raised-button type="submit" class="btn btn-white btn-round btn-just-icon">
-            <i class="material-icons">search</i>
-            <div class="ripple-container"></div>
-          </button> -->
-        <!-- </div> -->
-      </span>
+      <span class="bmd-form-group"> </span>
     </form>
     <ul class="nav navbar-nav nav-mobile-menu">
       <li class="nav-item">
@@ -68,7 +29,7 @@
           [routerLink]="'/search'"
           queryParamsHandling="merge"
         >
-          <i class="material-icons">search</i>
+          <i class="material-icons" aria-hidden="true">search</i>
           <p>
             <span class="d-lg-none d-md-block">Search</span>
           </p>
@@ -80,7 +41,7 @@
           [routerLink]="'/users/' + authService.currentUserValue.id"
           queryParamsHandling="merge"
         >
-          <i class="material-icons">notifications</i>
+          <i class="material-icons" aria-hidden="true">notifications</i>
           <p>
             <span class="d-lg-none d-md-block">Notifications</span>
           </p>
@@ -92,46 +53,12 @@
           [routerLink]="'/users/' + authService.currentUserValue.id"
           queryParamsHandling="merge"
         >
-          <i class="material-icons">person</i>
+          <i class="material-icons" aria-hidden="true">person</i>
           <p>
             <span class="d-lg-none d-md-block">My Profile</span>
           </p>
         </a>
       </li>
-
-      <!-- <li class="nav-item">
-        <a class="nav-link" href="#pablo">
-          <i class="material-icons">dashboard</i>
-          <p>
-            <span class="d-lg-none d-md-block">Stats</span>
-          </p>
-        </a>
-      </li> -->
-      <!-- <li class="nav-item dropdown">
-        <a class="nav-link" href="#pablo" id="navbarDropdownMenuLink" data-toggle="dropdown" aria-haspopup="true"
-          aria-expanded="false">
-          <i class="material-icons">notifications</i>
-          <span class="notification">5</span>
-          <p>
-            <span class="d-lg-none d-md-block">Some Actions</span>
-          </p>
-        </a>
-        <div class="dropdown-menu dropdown-menu-right" aria-labelledby="navbarDropdownMenuLink">
-          <a class="dropdown-item" href="#">Mike John responded to your email</a>
-          <a class="dropdown-item" href="#">You have 5 new tasks</a>
-          <a class="dropdown-item" href="#">You're now friend with Andrew</a>
-          <a class="dropdown-item" href="#">Another Notification</a>
-          <a class="dropdown-item" href="#">Another One</a>
-        </div>
-      </li> -->
-      <!-- <li class="nav-item">
-        <a class="nav-link" href="#pablo">
-          <i class="material-icons">person</i>
-          <p>
-            <span class="d-lg-none d-md-block">Account</span>
-          </p>
-        </a>
-      </li> -->
     </ul>
   </div>
   <ul class="nav">
@@ -150,7 +77,7 @@
         "
         class="nav-link"
       >
-        <i class="material-icons">{{ menuitem.icontype }}</i>
+        <i class="material-icons" aria-hidden="true">{{ menuitem.icontype }}</i>
         <p>{{ menuitem.title }}</p>
       </a>
       <!--If is a single link-->
@@ -160,7 +87,7 @@
         *ngIf="menuitem.type === 'link' && menuitem.title != 'Dashboard'"
         class="nav-link"
       >
-        <i class="material-icons">{{ menuitem.icontype }}</i>
+        <i class="material-icons" aria-hidden="true">{{ menuitem.icontype }}</i>
         <p>{{ menuitem.title }}</p>
       </a>
       <!--If it have a submenu-->
@@ -171,7 +98,7 @@
         (click)="updatePS()"
         class="nav-link"
       >
-        <i class="material-icons">{{ menuitem.icontype }}</i>
+        <i class="material-icons" aria-hidden="true">{{ menuitem.icontype }}</i>
         <p>{{ menuitem.title }}<b class="caret"></b></p>
       </a>
 
@@ -207,7 +134,7 @@
       "
     >
       <a class="nav-link" [routerLink]="'/admin'" queryParamsHandling="merge">
-        <i class="material-icons">supervised_user_circle</i>
+        <i class="material-icons" aria-hidden="true">supervised_user_circle</i>
         <p>
           <span class="d-lg-none d-md-block">Admin</span>
         </p>
@@ -222,7 +149,7 @@
         tabindex="-1"
         aria-label="register"
       >
-        <i class="material-icons">person</i>
+        <i class="material-icons" aria-hidden="true">person</i>
         <p>
           Register
           <!-- <span class="d-lg-none d-md-block">Register</span> -->
@@ -237,17 +164,11 @@
         aria-label="login"
         queryParamsHandling="merge"
       >
-        <i class="material-icons">person</i>
+        <i class="material-icons" aria-hidden="true">person</i>
         <p>
           <span class="d-lg-none d-md-block">Login</span>
         </p>
       </a>
     </li>
-    <!-- <li routerLinkActive="active" class="nav-item">
-        <a class="nav-link" href="" (click)="logout()">
-          <i class="material-icons">input</i>
-          <p>Log Out</p>
-        </a>
-      </li> -->
   </ul>
 </div>

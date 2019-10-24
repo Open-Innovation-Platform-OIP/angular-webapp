@@ -1,27 +1,23 @@
 <div class="wrapper">
-    <div class="sidebar" data-color="white" *ngIf="isMobileMenu()" data-background-color="black"
-        data-image="./assets/img/sidebar-1.jpg">
-        <app-sidebar-cmp></app-sidebar-cmp>
-        <div class="sidebar-background" style="background-image: url(assets/img/sidebar-1.jpg)"></div>
-    </div>
+  <div
+    class="sidebar"
+    data-color="white"
+    *ngIf="isMobileMenu()"
+    data-background-color="black"
+    data-image="./assets/img/sidebar-1.jpg"
+  >
+    <app-sidebar-cmp></app-sidebar-cmp>
+    <div
+      class="sidebar-background"
+      style="background-image: url(assets/img/sidebar-1.jpg)"
+    ></div>
+  </div>
 
-    <!-- <div class="main-panel" *ngIf="isMobileMenu()"></div> -->
+  <app-navbar-cmp></app-navbar-cmp>
 
-    <!-- <app-sidebar-cmp *ngIf="!isMobileMenu()"></app-sidebar-cmp> -->
+  <div class="main-panel">
+    <router-outlet></router-outlet>
+  </div>
 
-    <!-- <div class="sidebar-background" style="background-image: url(assets/img/sidebar-1.jpg)"></div> -->
-    <!-- </div> -->
-    <!-- <div class="main-panel"> -->
-    <!-- <app-test></app-test> -->
-    <app-navbar-cmp></app-navbar-cmp>
-    <!--  -->
-    <div class="main-panel">
-        <router-outlet></router-outlet>
-    </div>
-
-    <!-- <div *ngIf="!isMap()">
-            <app-footer-cmp></app-footer-cmp>
-         </div> -->
-
-    <app-fixedplugin *ngIf="showButton()"></app-fixedplugin>
+  <app-fixedplugin *ngIf="showButton()"></app-fixedplugin>
 </div>
