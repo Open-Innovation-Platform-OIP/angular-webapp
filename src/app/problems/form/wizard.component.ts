@@ -926,6 +926,7 @@ export class WizardComponent
             //console.log(this.searchResults, "wizard smart search");
           },
           error => {
+            console.log(error);
             //console.log(error);
           }
         );
