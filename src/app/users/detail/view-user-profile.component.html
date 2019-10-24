@@ -6,31 +6,46 @@
       <div class="col-md-4">
         <div class="card card-profile">
           <div class="card-avatar photo_div">
-            <!-- <a href=""> -->
-            <img class="img profile_photo"
-              src="{{(userData.photo_url && userData.photo_url.fileEndpoint) ? filesService.fileAccessUrl+userData.photo_url.fileEndpoint : './assets/img/default-avatar.png'}}" />
-            <!-- </a> -->
+            <img
+              class="img profile_photo"
+              alt="profile photo"
+              src="{{
+                userData.photo_url && userData.photo_url.fileEndpoint
+                  ? filesService.fileAccessUrl + userData.photo_url.fileEndpoint
+                  : './assets/img/default-avatar.png'
+              }}"
+            />
           </div>
           <div class="card-body">
-            <!-- <h6 class="card-category text-gray">CEO / Co-Founder</h6> -->
-            <h4 class="card-title">{{userData.name}}</h4>
+            <h2 style="font-size: 1.2rem;" class="card-title">
+              {{ userData.name }}
+            </h2>
             <div
-              *ngIf="(userData.problemsByUser&& userData.problemsByUser.length)||(userData.user_collaborators&& userData.user_collaborators.length)||(userData.user_validations&& userData.user_validations.length)||(userData.enrichmentssBycreatedBy&& userData.enrichmentssBycreatedBy.length)">
+              *ngIf="
+                (userData.problemsByUser && userData.problemsByUser.length) ||
+                (userData.user_collaborators &&
+                  userData.user_collaborators.length) ||
+                (userData.user_validations &&
+                  userData.user_validations.length) ||
+                (userData.enrichmentssBycreatedBy &&
+                  userData.enrichmentssBycreatedBy.length)
+              "
+            >
               <h6>Contributions</h6>
-              <p *ngIf="userData.problemsByUser.length">Added {{userData.problemsByUser.length}} problem(s)</p>
-              <p *ngIf="userData.user_collaborators.length"> {{userData.user_collaborators.length}} collaboration(s)</p>
-              <p *ngIf="userData.user_validations.length">{{userData.user_validations.length}} validation(s) </p>
-              <p *ngIf="userData.enrichmentssBycreatedBy.length">{{userData.enrichmentssBycreatedBy.length}}
+              <p *ngIf="userData.problemsByUser.length">
+                Added {{ userData.problemsByUser.length }} problem(s)
+              </p>
+              <p *ngIf="userData.user_collaborators.length">
+                {{ userData.user_collaborators.length }} collaboration(s)
+              </p>
+              <p *ngIf="userData.user_validations.length">
+                {{ userData.user_validations.length }} validation(s)
+              </p>
+              <p *ngIf="userData.enrichmentssBycreatedBy.length">
+                {{ userData.enrichmentssBycreatedBy.length }}
                 enrichment(s)
               </p>
-
-
-
             </div>
-            <!-- <p class="card-description">
-                Don't be scared of the truth because we need to restart the human foundation in truth And I love you like
-                Kanye loves Kanye I love Rick Owens’ bed design but the back is...
-              </p> -->
           </div>
         </div>
       </div>
@@ -38,89 +53,94 @@
         <div class="card card-product">
           <div class="card-header card-header-icon card-header-warning">
             <div class="card-icon">
-              <i class="material-icons">perm_identity</i>
+              <i class="material-icons" aria-hidden="true">perm_identity</i>
             </div>
-            <h4 class="card-title" style="text-align:left;">
-              {{userData.id===userId?"My Profile":"Profile"}}
+            <h1
+              class="card-title"
+              style="text-align:left;font-size: 1.3rem;"
+              tabindex="-1"
+              #profileTitle
+            >
+              {{ userData.id === userId ? 'My Profile' : 'Profile' }}
               <!-- <small class="category">Complete your profile</small> -->
-            </h4>
+            </h1>
           </div>
           <div class="card-body">
             <div>
-              <strong>E-mail</strong>
-              <p class="description">{{userData.email}}</p>
-
+              <strong role="heading" aria-level="3">E-mail</strong>
+              <p class="description">{{ userData.email }}</p>
             </div>
-
 
             <div *ngIf="loggedInUsersProfile && userData.phone_number">
-              <strong>Phone Number</strong>
-              <p class="description" *ngIf="userData.id==auth.currentUserValue.id">{{userData.phone_number}}</p>
-
+              <strong role="heading" aria-level="3">Phone Number</strong>
+              <p
+                class="description"
+                *ngIf="userData.id == auth.currentUserValue.id"
+              >
+                {{ userData.phone_number }}
+              </p>
             </div>
-
 
             <div *ngIf="organizationName">
-              <strong>Organization</strong>
-              <p class="description">{{organizationName}}</p>
-
+              <strong role="heading" aria-level="3">Organization</strong>
+              <p class="description">{{ organizationName }}</p>
             </div>
 
-            <div *ngIf="personas&&personas.length">
-
-              <strong>Persona</strong>
+            <div *ngIf="personas && personas.length">
+              <strong role="heading" aria-level="3">Persona</strong>
               <div>
-                <span *ngFor="let persona of personas" class="badge badge-warning"
-                  style="margin-right: 0.3em;">{{persona.slice(3)}}</span>
-                <span>&nbsp;</span>
+                <span
+                  *ngFor="let persona of personas"
+                  class="badge badge-warning"
+                  style="margin-right: 0.3em;"
+                >
+                  {{ persona.slice(3) }}
+                </span>
               </div>
-
-
             </div>
 
-
-
-            <!-- <strong *ngIf="userData.qualification">Qualification</strong> -->
-            <!-- <p class="description">{{userData.qualification}}</p> -->
-            <!-- <strong>Phone number</strong>
-            <p class="description">{{userData.organization}}</p> -->
-
-
-            <div *ngIf="userData&&userData.user_locations&&userData.user_locations.length">
-              <strong>Location</strong>
+            <div
+              class="mt-3"
+              *ngIf="
+                userData &&
+                userData.user_locations &&
+                userData.user_locations.length
+              "
+            >
+              <strong role="heading" aria-level="3">Location</strong>
               <p class="description">
-                {{userData.user_locations[0].location.location_name}}</p>
+                {{ userData.user_locations[0].location.location_name }}
+              </p>
             </div>
 
             <div *ngIf="interests.length">
-
-              <strong>Interests</strong>
+              <strong role="heading" aria-level="3">Interests</strong>
               <div>
-                <span class="badge badge-warning" *ngFor="let interest of interests"
-                  style="margin-right: 0.3em;">{{interest }} </span>
-                <span>&nbsp;</span>
+                <span
+                  class="badge badge-warning"
+                  *ngFor="let interest of interests"
+                  style="margin-right: 0.3em;"
+                >
+                  {{ interest }}
+                </span>
               </div>
-
             </div>
-
-
           </div>
           <div class="card-footer">
-            <div [routerLink]="'/users/'+ userData.id+'/edit'" queryParamsHandling="merge"
-              *ngIf="userData.id==auth.currentUserValue.id">
-              <button mat-raised-button class="btn btn-info pull-right">Edit</button>
+            <div
+              [routerLink]="'/users/' + userData.id + '/edit'"
+              queryParamsHandling="merge"
+              *ngIf="userData.id == auth.currentUserValue.id"
+            >
+              <button mat-raised-button class="btn btn-info pull-right">
+                Edit
+              </button>
             </div>
-            <!-- <button mat-raised-button type="submit" class="btn btn-rose pull-right">Update Profile</button> -->
           </div>
         </div>
       </div>
     </div>
-
-
-
   </div>
 </div>
-
-
 
 <!--REWRITE-->

@@ -1,27 +1,34 @@
-import { Component, OnInit, OnDestroy } from "@angular/core";
+import {
+  Component,
+  OnInit,
+  OnDestroy,
+  ViewChild,
+  AfterViewInit,
+  ElementRef
+} from '@angular/core';
+import { Router, ActivatedRoute, ParamMap } from '@angular/router';
+import { switchMap } from 'rxjs/operators';
 
-import { Router, ActivatedRoute, ParamMap } from "@angular/router";
-import { Observable, Subscription } from "rxjs";
-import { first, finalize, switchMap } from "rxjs/operators";
-
-import { Apollo, QueryRef } from "apollo-angular";
-import gql from "graphql-tag";
-import { AuthService } from "../../services/auth.service";
-import { FilesService } from "../../services/files.service";
+import { Apollo, QueryRef } from 'apollo-angular';
+import gql from 'graphql-tag';
+import { AuthService } from '../../services/auth.service';
+import { FilesService } from '../../services/files.service';
+import { FocusMonitor } from '@angular/cdk/a11y';
 
 @Component({
-  selector: "app-view-user-profile",
-  templateUrl: "./view-user-profile.component.html",
-  styleUrls: ["./view-user-profile.component.css"]
+  selector: 'app-view-user-profile',
+  templateUrl: './view-user-profile.component.html',
+  styleUrls: ['./view-user-profile.component.css']
 })
-export class ViewUserProfileComponent implements OnInit, OnDestroy {
+export class ViewUserProfileComponent
+  implements OnInit, OnDestroy, AfterViewInit {
+  @ViewChild('profileTitle') profileTitle: ElementRef<HTMLElement>;
   user: any;
   userData: any = {};
   userDataQuery: QueryRef<any>;
 
-
   interests: any[] = [];
-  loggedInUsersProfile: boolean = false;
+  loggedInUsersProfile = false;
   objectEntries = Object.entries;
   personas: any = [];
   userId: any;
@@ -31,7 +38,8 @@ export class ViewUserProfileComponent implements OnInit, OnDestroy {
     private route: ActivatedRoute,
     private apollo: Apollo,
     private auth: AuthService,
-    private filesService: FilesService
+    private filesService: FilesService,
+    private focusMonitor: FocusMonitor
   ) {
     // this.route.params.pipe(first()).subscribe(params => {
     //   console.log(params.id, "params id");
@@ -41,26 +49,30 @@ export class ViewUserProfileComponent implements OnInit, OnDestroy {
     // });
   }
 
-  ngOnInit() {
-   
+  ngAfterViewInit() {
+    setTimeout(() => {
+      this.focusMonitor.focusVia(this.profileTitle, 'program');
+    }, 1000);
+  }
 
-    console.log("init on user profile");
+  ngOnInit() {
+    console.log('init on user profile');
     this.user = this.route.paramMap.pipe(
       switchMap((params: ParamMap) => {
-        console.log("result");
+        console.log('result');
 
-        return this.getProfile(params.get("id"));
+        return this.getProfile(params.get('id'));
       })
     );
     this.user.subscribe(
       result => {
         this.interests = [];
         this.personas = [];
-        console.log(result, "result");
+        console.log(result, 'result');
         if (result.data.users[0]) {
           this.userData = result.data.users[0];
           Object.entries(this.userData).map(data => {
-            if (typeof data[1] === "boolean" && data[1]) {
+            if (typeof data[1] === 'boolean' && data[1]) {
               this.personas.push(data[0]);
             }
           });
@@ -74,12 +86,6 @@ export class ViewUserProfileComponent implements OnInit, OnDestroy {
               return tagArray.tag.name;
             });
           }
-
-          console.log(this.userData, "userData");
-          // if (this.userData.id === Number(this.auth.currentUserValue.id)) {
-          //   this.loggedInUsersProfile = true;
-          // }
-          // console.log(this.problemService.problem, "problem");
         }
       },
       error => {
@@ -98,7 +104,6 @@ export class ViewUserProfileComponent implements OnInit, OnDestroy {
               name
               qualification
               photo_url
-            
               email
               phone_number
               is_ngo
@@ -112,11 +117,9 @@ export class ViewUserProfileComponent implements OnInit, OnDestroy {
               user_locations{
                 location{
                   location_name
-              
                 }
 
               }
-              
 
               problems(where: { is_draft: { _eq: false } }){
                 id
@@ -150,10 +153,8 @@ export class ViewUserProfileComponent implements OnInit, OnDestroy {
             }
             }
         }
-              
-           
         `,
-      fetchPolicy: "no-cache",
+      fetchPolicy: 'no-cache',
 
       pollInterval: 1000
     });
@@ -162,12 +163,13 @@ export class ViewUserProfileComponent implements OnInit, OnDestroy {
   }
 
   adminSelection(event, row) {
-    console.log(event, "event");
-    console.log(row, "row");
+    console.log(event, 'event');
+    console.log(row, 'row');
   }
 
   ngOnDestroy() {
     this.userDataQuery.stopPolling();
+    this.focusMonitor.stopMonitoring(this.profileTitle);
     // this.user.unsubscribe();
   }
 }
