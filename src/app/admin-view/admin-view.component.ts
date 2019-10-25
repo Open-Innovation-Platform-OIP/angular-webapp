@@ -17,6 +17,7 @@ import { FormGroup, FormControl, Validators } from "@angular/forms";
 export class AdminViewComponent implements OnInit, OnDestroy {
   public userDataTable: TableData;
   public unapprovedUserDataTable: TableData;
+  public invitedUsersDataTable: TableData;
 
   objectKeys = Object.keys;
 
@@ -26,8 +27,10 @@ export class AdminViewComponent implements OnInit, OnDestroy {
   inviteeEmail: String = "";
 
   usersQuery: QueryRef<any>;
+  invitedUsersQuery: QueryRef<any>;
 
   usersSubscription: Subscription;
+  invitedUsersSubscription: Subscription;
 
   userInviteForm: FormGroup;
 
@@ -39,6 +42,7 @@ export class AdminViewComponent implements OnInit, OnDestroy {
 
   ngOnInit() {
     this.getUsersFromDB();
+    this.getInvitedUsersFromDB();
 
     this.userInviteForm = new FormGroup({
       email: new FormControl("", [Validators.email])
@@ -83,6 +87,54 @@ export class AdminViewComponent implements OnInit, OnDestroy {
       headerRow: userHeaderRow,
       dataRows: userDataRow
     };
+  }
+
+  generateInvitedUsersDataTable(invitedUserData) {
+    const userHeaderRow = ["Invitee Email", "Status", "Invited By"];
+    let userDataRow = [];
+    invitedUserData.map(user => {
+      // console.log(user, "gnerate user table");
+      userDataRow.push([
+        user["email"],
+        user["accepted"] ? "Accepted" : "Pending",
+        user["admin_invited"] ? "Admin" : "User"
+      ]);
+    });
+    this.invitedUsersDataTable = {
+      headerRow: userHeaderRow,
+      dataRows: userDataRow
+    };
+  }
+
+  getInvitedUsersFromDB() {
+    this.invitedUsersQuery = this.apollo.watchQuery<any>({
+      query: gql`
+        query {
+          invited_users {
+            email
+            accepted
+            admin_invited
+            id
+          }
+        }
+      `,
+
+      pollInterval: 2000,
+
+      fetchPolicy: "network-only"
+    });
+
+    this.invitedUsersSubscription = this.invitedUsersQuery.valueChanges.subscribe(
+      ({ data }) => {
+        console.log(data, "invited users data");
+        if (data.invited_users.length > 0) {
+          this.generateInvitedUsersDataTable(data.invited_users);
+        }
+      },
+      error => {
+        console.log(error);
+      }
+    );
   }
 
   getUsersFromDB() {
@@ -364,7 +416,9 @@ export class AdminViewComponent implements OnInit, OnDestroy {
 
   ngOnDestroy() {
     this.usersQuery.stopPolling();
+    this.invitedUsersQuery.stopPolling();
 
     this.usersSubscription.unsubscribe();
+    this.invitedUsersSubscription.unsubscribe();
   }
 }

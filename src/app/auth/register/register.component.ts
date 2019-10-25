@@ -57,11 +57,19 @@ export class RegisterComponent implements OnInit, OnDestroy {
     this.loading = true;
     this.auth.register(this.user).subscribe(
       res => {
-        console.log(res);
+        // console.log(res, "signup response");
         // this.router.navigateByUrl('/auth/verify');
-        this.router.navigateByUrl(
-          `/auth/verify?email=${this.user.email}&step=1`
-        );
+        if (res["is_invited"] && res["admin_invited"]) {
+          alert("Please login ");
+          this.router.navigateByUrl(`/auth/login`);
+        } else if (res["is_invited"] && !res["admin_invited"]) {
+          alert("User created.Please wait for admin approval ");
+          this.router.navigateByUrl(`/landing-page`);
+        } else {
+          this.router.navigateByUrl(
+            `/auth/verify?email=${this.user.email}&step=1`
+          );
+        }
       },
       err => {
         console.error(err.error);

@@ -914,6 +914,8 @@ export class WizardComponent
 
     if (searchKey.length >= 3) {
       this.searchResults = [];
+      console.log(searchKey, "search key");
+      console.log(this.filterService.sector_filter_query, "filter query");
 
       this.http
         .post(
@@ -923,7 +925,7 @@ export class WizardComponent
         .subscribe(
           searchResults => {
             this.searchResults = searchResults;
-            //console.log(this.searchResults, "wizard smart search");
+            // console.log(searchResults, "wizard smart search");
           },
           error => {
             console.log(error);
@@ -1024,7 +1026,7 @@ export class WizardComponent
     );
   }
   updateProblem(updatedProblem) {
-    console.log(updatedProblem, "updated problem");
+    // console.log(updatedProblem, "updated problem");
     this.problem = updatedProblem;
   }
   removeDuplicates(array) {

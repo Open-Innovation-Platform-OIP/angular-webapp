@@ -31,7 +31,7 @@ export class FilterService {
   };
   sectorsArray = [];
   sectorFilterArray: any[] = [];
-  sector_filter_query: string = ``;
+  sector_filter_query: string = `_nin:[0]`;
   location_filter_query: string = ``;
   solution_location_filter_query: string = ``;
   range: number = 0.2;
@@ -124,22 +124,27 @@ export class FilterService {
       coordinates = [parsedQuery.latitude, parsedQuery.longitude];
 
       console.log(parsedQuery, "parsed query");
-      if (parsedQuery.type === "city") {
-        this.location_filter_query = `{problem_locations:{_or:[{location:{location: {_st_d_within: {distance: ${this.range}, from: $point}}}},{location:{city:{_eq:"${parsedQuery.city}"}}}]}}`;
-        this.solution_location_filter_query = `{problems_solutions:{problem:{problem_locations:{_or:[{location:{location: {_st_d_within: {distance: ${this.range}, from: $point}}}},{location:{city:{_eq:"${parsedQuery.city}"}}}]}}}}`;
-      } else if (parsedQuery.type === "state") {
-        this.location_filter_query = `{problem_locations:{_or:[{location:{location: {_st_d_within: {distance: ${this.range}, from: $point}}}},{location:{state:{_eq:"${parsedQuery.state}"}}}]}}`;
-        this.solution_location_filter_query = `{problems_solutions:{problem:{problem_locations:{_or:[{location:{location: {_st_d_within: {distance: ${this.range}, from: $point}}}},{location:{state:{_eq:"${parsedQuery.state}"}}}]}}}}`;
-      } else if (parsedQuery.type === "country") {
-        this.location_filter_query = `{problem_locations:{_or:[{location:{location: {_st_d_within: {distance: ${this.range}, from: $point}}}},{location:{country:{_eq:"${parsedQuery.country}"}}}]}}`;
-        this.solution_location_filter_query = `{problems_solutions:{problem:{problem_locations:{_or:[{location:{location: {_st_d_within: {distance: ${this.range}, from: $point}}}},{location:{country:{_eq:"${parsedQuery.country}"}}}]}}}}`;
+
+      if (
+        parsedQuery.type === "city" ||
+        parsedQuery.type === "state" ||
+        parsedQuery.type === "country"
+      ) {
+        this.location_filter_query = `{problem_locations:{_or:[{location:{location: {_st_d_within: {distance: ${
+          this.range
+        }, from: $point}}}},{location:{${parsedQuery.type}:{_eq:"${
+          parsedQuery[parsedQuery.type]
+        }"}}}]}}`;
+        this.solution_location_filter_query = `{problems_solutions:{problem:{problem_locations:{_or:[{location:{location: {_st_d_within: {distance: ${
+          this.range
+        }, from: $point}}}},{location:{${parsedQuery.type}:{_eq:"${
+          parsedQuery[parsedQuery.type]
+        }"}}}]}}}}`;
       } else {
         this.location_filter_query = `{problem_locations:{ location:{location: {_st_d_within: {distance: ${this.range}, from: $point}}}}}`;
         this.solution_location_filter_query = `{problems_solutions:{problem:{problem_locations:{location:{location: {_st_d_within: {distance:${this.range}, from: $point}}}}}}}`;
       }
-      console.log(this.location_filter_query, "location filter query");
 
-      // this.solution_location_filter_query = `{problems_solutions:{problem:{problem_locations:{location:{location: {_st_d_within: {distance:${this.range}, from: $point}}}}}}}`;
       this.queryVariable = {
         point: {
           type: "Point",

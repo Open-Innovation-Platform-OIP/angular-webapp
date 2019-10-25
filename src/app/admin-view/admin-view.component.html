@@ -101,5 +101,46 @@
 
     </div>
 
+
+
+    <div class="row mt-4">
+
+
+
+      <div class="card" *ngIf="invitedUsersDataTable&&invitedUsersDataTable.dataRows">
+        <div class="card-header card-header-icon card-header-rose">
+          <div class="card-icon">
+            <i class="material-icons">group</i>
+          </div>
+          <h4 class="card-title ">Invited Users</h4>
+        </div>
+        <div class="card-body">
+          <div class="table-responsive">
+            <table class="table">
+              <thead class="text-primary">
+                <tr>
+                  <th *ngFor="let cell of invitedUsersDataTable.headerRow">{{ cell }}</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr *ngFor="let row of invitedUsersDataTable.dataRows">
+                  <td>{{row[0]}}</td>
+                  <td>{{row[1]}}</td>
+                  <td>{{row[2]}}</td>
+
+
+
+
+
+                </tr>
+              </tbody>
+            </table>
+
+          </div>
+        </div>
+      </div>
+
+    </div>
+
   </div>
 </div>

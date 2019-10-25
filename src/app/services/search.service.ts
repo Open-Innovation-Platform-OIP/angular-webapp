@@ -15,6 +15,7 @@ export class SearchService {
   ) {}
 
   globalSearch(keyword) {
+    console.log(this.filterService.sector_filter_query, "sector filter");
     return this.http.post(
       "https://elasticsearch-microservice.dev.jaagalabs.com/global_search",
       { keyword: keyword, filter: this.filterService.sector_filter_query }

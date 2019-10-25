@@ -746,13 +746,13 @@ export class WizardContainerComponent
   }
 
   sendDataBack(event) {
-    console.log("keyup event", event.srcElement.id);
-    if (
-      event.srcElement &&
-      event.srcElement.id &&
-      !(event.srcElement.id === "title")
-    )
-      this.fieldsPopulated.emit(this.content);
+    // console.log("keyup event", event.srcElement.id);
+    // if (
+    //   event.srcElement &&
+    //   event.srcElement.id &&
+    //   !(event.srcElement.id === "title")
+    // )
+    this.fieldsPopulated.emit(this.content);
   }
 
   ngAfterViewInit() {
