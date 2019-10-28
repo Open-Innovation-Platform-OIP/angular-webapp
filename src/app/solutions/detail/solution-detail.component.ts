@@ -309,7 +309,7 @@ export class SolutionDetailComponent implements OnInit {
       pollInterval: 1000
     });
 
-    this.userDataQuery.valueChanges.subscribe(
+    this.userDataQuery.valueChanges.pipe(take(1)).subscribe(
       result => {
         // console.log("PERSONAS", result);
         if (result.data.users[0]) {
@@ -744,12 +744,12 @@ export class SolutionDetailComponent implements OnInit {
     // console.log(problem.is_draft, "is draft");
     // if (problem.user) {
     //   this.problemOwner = problem.user.name;
-    //   problem.problems_tags.map(tags => {
-    //     if (this.userInterests[tags.tag.name]) {
-    //       this.sectorMatched = true;
-    //       // console.log(this.sectorMatched, "sector matched");
-    //     }
-    //   });
+    solution.solutions_tags.map(tags => {
+      if (this.userInterests[tags.tag.name]) {
+        this.sectorMatched = true;
+        // console.log(this.sectorMatched, "sector matched");
+      }
+    });
     // if (problem.problems_tags) {
     //   this.tags = problem.problems_tags.map(tagArray => {
     //     // console.log(tagArray, "work");

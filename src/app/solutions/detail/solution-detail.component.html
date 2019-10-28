@@ -208,7 +208,7 @@
           </a> -->
           <button mat-raised-button class="btn btn-rose btn-round" data-toggle="modal" data-target="#validatorModal"
             matTooltip="Click to validate solution" [matTooltipPosition]="'below'"
-            [disabled]="disableValidateButton || userId == solutionData.user_id || !auth.currentUserValue.id "
+            [disabled]="disableValidateButton || userId == solutionData.user_id || !auth.currentUserValue.id||!sectorMatched||!userPersonas.is_expert"
             *ngIf="auth.currentUserValue.id">Validate</button>
           <!-- <a mat-button>
             <i class="material-icons">

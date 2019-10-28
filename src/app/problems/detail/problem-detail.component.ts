@@ -311,7 +311,7 @@ export class ProblemDetailComponent implements OnInit, OnDestroy {
       pollInterval: 1000
     });
 
-    this.userDataQuery.valueChanges.subscribe(
+    this.userDataQuery.valueChanges.pipe(take(1)).subscribe(
       result => {
         // //console.log("PERSONAS", result);
         if (result.data.users[0]) {
