@@ -1,25 +1,38 @@
 .material-icons.orange600 {
-    color: var(--pink);
+  color: var(--pink);
 }
 
 .mat-option:hover {
-    box-shadow: 0 4px 20px 0px rgba(0, 0, 0, 0.14), 0 7px 10px -5px rgba(241, 150, 31, 0.4);
-    background: var(--orange) !important;
-    color: #fff !important;
+  box-shadow: 0 4px 20px 0px rgba(0, 0, 0, 0.14),
+    0 7px 10px -5px rgba(241, 150, 31, 0.4);
+  background: var(--orange) !important;
+  color: #fff !important;
 }
 
 .test {
-    background-color: grey;
+  background-color: grey;
 }
 
 /* For Firefox */
 input[type='number'] {
-    -moz-appearance: textfield;
+  -moz-appearance: textfield;
 }
 
 /* Webkit browsers like Safari and Chrome */
-input[type=number]::-webkit-inner-spin-button,
-input[type=number]::-webkit-outer-spin-button {
-    -webkit-appearance: none;
-    margin: 0;
+input[type='number']::-webkit-inner-spin-button,
+input[type='number']::-webkit-outer-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+
+.page-heading {
+  font-size: 1.6625rem;
+  line-height: 1.4em;
+}
+
+@media only screen and (min-width: 768px) {
+  /* For desktop: */
+  .left3rem {
+    margin-left: 3rem !important;
+  }
 }

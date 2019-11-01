@@ -1,27 +1,36 @@
-import { Component, OnInit, OnDestroy } from "@angular/core";
+import {
+  Component,
+  OnInit,
+  OnDestroy,
+  ViewChild,
+  ElementRef,
+  AfterViewInit
+} from "@angular/core";
 
 import { Apollo, QueryRef } from "apollo-angular";
 import gql from "graphql-tag";
-import { Observable, Subscription } from "rxjs";
-import { P } from "@angular/cdk/keycodes";
+import { Subscription } from "rxjs";
 import { AuthService } from "../../services/auth.service";
 import { Router, ActivatedRoute } from "@angular/router";
 import { TagsService } from "../../services/tags.service";
 import { FilterService } from "../../services/filter.service";
+import { FocusMonitor } from "@angular/cdk/a11y";
 
 @Component({
   selector: "app-solutions-view",
   templateUrl: "./solutions-view.component.html",
   styleUrls: ["./solutions-view.component.css"]
 })
-export class SolutionsViewComponent implements OnInit {
+export class SolutionsViewComponent
+  implements OnInit, OnDestroy, AfterViewInit {
+  @ViewChild("solutionWorthSharing") solutionWorthSharing: ElementRef;
+
   userSolutions = [];
   solutions = [];
   userSolutionViewQuery: QueryRef<any>;
   userSolutionViewSubscription: Subscription;
   solutionViewQuery: QueryRef<any>;
   solutionViewSubscription: Subscription;
-
   selectedSectors: any = [];
 
   constructor(
@@ -30,7 +39,8 @@ export class SolutionsViewComponent implements OnInit {
     private router: Router,
     private activatedRoute: ActivatedRoute,
     private tagsService: TagsService,
-    private filterService: FilterService
+    private filterService: FilterService,
+    private focusMonitor: FocusMonitor
   ) {}
 
   ngOnInit() {
@@ -43,14 +53,6 @@ export class SolutionsViewComponent implements OnInit {
       this.filterService.selectedLocation = this.filterService.filterLocation(
         params
       );
-
-      // solutions_tags(
-      //   where: {
-      //     tag_id: { ${this.filterService.sector_filter_query} }
-      //     solution: { is_draft: { _eq: false } }
-      //   }
-      //   order_by: { solution: { updated_at: desc } }
-      // )
 
       this.solutionViewQuery = this.apollo.watchQuery<any>({
         query: gql`
@@ -65,7 +67,7 @@ export class SolutionsViewComponent implements OnInit {
                
                 is_draft: { _eq: false } 
               }
-              order_by: { updated_at: desc } 
+              order_by: { updated_at: desc }
             ){
               id
               title
@@ -74,7 +76,6 @@ export class SolutionsViewComponent implements OnInit {
               impact
               website_url
               deployment
-              
               image_urls
               edited_at
               updated_at
@@ -119,7 +120,6 @@ export class SolutionsViewComponent implements OnInit {
                   }
             }
             }
-          
         `,
         variables: this.filterService.queryVariable,
         pollInterval: 500,
@@ -141,9 +141,14 @@ export class SolutionsViewComponent implements OnInit {
     });
   }
 
+  ngAfterViewInit() {
+    // delay needed because *ngIf makes viewchild undefined
+    setTimeout(() => {
+      this.focusMonitor.focusVia(this.solutionWorthSharing, "program");
+    }, 1000);
+  }
+
   ngOnDestroy() {
-    // this.userProblemViewQuery.stopPolling();
-    // this.userProblemViewSubscription.unsubscribe();
     this.solutionViewQuery.stopPolling();
     this.solutionViewSubscription.unsubscribe();
   }

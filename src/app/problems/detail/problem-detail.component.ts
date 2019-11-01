@@ -5,7 +5,10 @@ import {
   Input,
   ChangeDetectorRef,
   OnDestroy,
-  Inject
+  Inject,
+  ViewChild,
+  ElementRef,
+  AfterViewInit
 } from "@angular/core";
 import {
   Location,
@@ -51,6 +54,8 @@ import { fileUploadVariables } from "../../../environments/environment";
 import { sharing } from "../../globalconfig";
 import { reject } from "q";
 import { ModalComponent } from "src/app/components/modal/modal.component";
+import { FocusMonitor } from "@angular/cdk/a11y";
+import { filter } from "rxjs/operators";
 var Buffer = require("buffer/").Buffer;
 
 const misc: any = {
@@ -82,7 +87,10 @@ interface queryString {
   animations: [slider],
   changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class ProblemDetailComponent implements OnInit, OnDestroy {
+export class ProblemDetailComponent
+  implements OnInit, OnDestroy, AfterViewInit {
+  @ViewChild("problemDataTitle") problemDataTitle: ElementRef<HTMLElement>;
+
   channels = sharing;
   // filesService.fileAccessUrl: string = "";
   // chartData: any;
@@ -228,6 +236,7 @@ export class ProblemDetailComponent implements OnInit, OnDestroy {
   collaboratorDataToEdit: any;
   interval = null;
   qs: queryString = { commentId: 0 };
+  imageAlt = "default image";
 
   public carouselTileItemsEnrichment$: Observable<number[]>;
   public carouselTileItemsValid$: Observable<number[]>;
@@ -266,7 +275,8 @@ export class ProblemDetailComponent implements OnInit, OnDestroy {
     private enrichmentService: EnrichmentService,
     public ngLocation: Location,
     private ngxService: NgxUiLoaderService,
-    public dialog: MatDialog
+    public dialog: MatDialog,
+    private focusMonitor: FocusMonitor
   ) {
     this.startInterval();
     this.pageUrl = domain + ngLocation.path();
@@ -275,6 +285,12 @@ export class ProblemDetailComponent implements OnInit, OnDestroy {
       `Hello,\n\nCheck out this link on Social Alpha's Open Innovation platform - ${this.pageUrl}\n\nRegards,`
     );
     this.mailToLink = `mailto:?subject=${subject}&body=${body}`;
+  }
+
+  ngAfterViewInit() {
+    setTimeout(() => {
+      this.focusMonitor.focusVia(this.problemDataTitle, "program");
+    }, 100);
   }
 
   startInterval() {
@@ -288,7 +304,6 @@ export class ProblemDetailComponent implements OnInit, OnDestroy {
       query: gql`
           {
             users(where: { id: { _eq: ${id} } }) {
-              
               is_ngo
               is_innovator
               is_expert
@@ -305,7 +320,6 @@ export class ProblemDetailComponent implements OnInit, OnDestroy {
             }
             }
         }
-            
         `,
       fetchPolicy: "network-only",
       pollInterval: 1000
@@ -444,14 +458,12 @@ export class ProblemDetailComponent implements OnInit, OnDestroy {
           title
           description
           organization
-          
           resources_needed
           is_draft
           user_id
           edited_at
           updated_at
           image_urls
-         
           featured_url
           featured_type
           video_urls
@@ -738,12 +750,9 @@ export class ProblemDetailComponent implements OnInit, OnDestroy {
   parseProblem(problem) {
     this.count++;
     if (problem.title && this.count < 2) {
-      //console.log("Message", problem.title);
       this.message = problem.title;
       this.showNotification("bottom", "right", this.message);
     }
-
-    //console.log(problem, "problem");
 
     // map core keys
     Object.keys(this.problemData).map(key => {
@@ -1689,12 +1698,14 @@ export class ProblemDetailComponent implements OnInit, OnDestroy {
         },
         template:
           '<div data-notify="container" id="alert" class="col-xs-11 col-sm-3 alert alert-{0}" role="alert">' +
-          '<button mat-raised-button type="button" aria-hidden="true" class="close" data-notify="dismiss">  <i class="material-icons">close</i></button>' +
+          '<button mat-raised-button type="button" aria-hidden="true" class="close" data-notify="dismiss">' +
+          '<i class="material-icons">close</i></button>' +
           '<i class="material-icons" data-notify="icon">notifications</i> ' +
           '<span data-notify="title">{1}</span> ' +
           '<span data-notify="message">{2}</span>' +
           '<div class="progress" data-notify="progressbar">' +
-          '<div class="progress-bar progress-bar-{0}" role="progressbar" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100" style="width: 0%;"></div>' +
+          '<div class="progress-bar progress-bar-{0}" role="progressbar" \
+          aria-valuenow="0" aria-valuemin="0" aria-valuemax="100" style="width: 0%;"></div>' +
           "</div>" +
           '<a href="{3}" target="{4}" data-notify="url"></a>' +
           "</div>"

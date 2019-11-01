@@ -5,50 +5,50 @@ import {
   Input,
   Output,
   EventEmitter
-} from "@angular/core";
-import * as Quill from "quill/dist/quill.js";
-import ImageResize from "quill-image-resize-module";
-import { AuthService } from "../../services/auth.service";
+} from '@angular/core';
+import * as Quill from 'quill/dist/quill.js';
+import ImageResize from 'quill-image-resize-module';
+import { AuthService } from '../../services/auth.service';
 // import {ImageDrop} from 'quill-image-drop-module';
-Quill.register("modules/imageResize", ImageResize);
+Quill.register('modules/imageResize', ImageResize);
 // Quill.register('modules/imageDrop', ImageDrop);
-import "quill-mention";
-import { QuillEditorComponent } from "ngx-quill";
-import { FilesService } from "src/app/services/files.service";
-import { NgxUiLoaderService } from "ngx-ui-loader";
-import { type } from "os";
+import 'quill-mention';
+import { QuillEditorComponent } from 'ngx-quill';
+import { FilesService } from 'src/app/services/files.service';
+import { NgxUiLoaderService } from 'ngx-ui-loader';
+import { type } from 'os';
 @Component({
-  selector: "app-submit-comment",
-  templateUrl: "./submitcomment.component.html",
-  styleUrls: ["./submitcomment.component.css"]
+  selector: 'app-submit-comment',
+  templateUrl: './submitcomment.component.html',
+  styleUrls: ['./submitcomment.component.css']
 })
 export class CommentSubmitComponent implements OnInit {
   @ViewChild(QuillEditorComponent) editor: QuillEditorComponent;
-  @Input() actionText = "Comment";
+  @Input() actionText = 'Comment';
   @Input() cancelShown = false;
   @Input() id;
   @Input() users;
   @Input() pageType;
   @Output() submit = new EventEmitter();
   @Output() cancel = new EventEmitter();
-  content = "";
+  content = '';
   blankSpace: Boolean = true;
   mentions = [];
   attachments: Blob[] = [];
   file_types = [
-    "application/msword",
-    " application/vnd.ms-excel",
-    " application/vnd.ms-powerpoint",
-    "text/plain",
-    " application/pdf",
-    " image/*",
-    "video/*"
+    'application/msword',
+    ' application/vnd.ms-excel',
+    ' application/vnd.ms-powerpoint',
+    'text/plain',
+    ' application/pdf',
+    ' image/*',
+    'video/*'
   ];
   modules = {
     mention: {
-      listItemClass: "ql-mention-list-item",
-      mentionListClass: "ql-mention-list",
-      mentionContainerClass: "ql-mention-list-container custom",
+      listItemClass: 'ql-mention-list-item',
+      mentionListClass: 'ql-mention-list',
+      mentionContainerClass: 'ql-mention-list-container custom',
       allowedChars: /^[A-Za-z\sÅÄÖåäö]*$/,
       contenteditable: false,
       isolateCharacter: true,
@@ -57,7 +57,7 @@ export class CommentSubmitComponent implements OnInit {
         insertItem(item);
         this.mentions.push(Number(item.id));
         // necessary because quill-mention triggers changes as 'api' instead of 'user'
-        editor.insertText(editor.getLength() - 1, "", "user");
+        editor.insertText(editor.getLength() - 1, '', 'user');
       },
 
       source: (searchTerm, renderList) => {
@@ -78,15 +78,15 @@ export class CommentSubmitComponent implements OnInit {
     },
     // imageDrop: true,
     imageResize: {
-      modules: ["Resize", "DisplaySize", "Toolbar"],
+      modules: ['Resize', 'DisplaySize', 'Toolbar'],
       handleStyles: {
-        backgroundColor: "black",
-        border: "none",
-        color: "white"
+        backgroundColor: 'black',
+        border: 'none',
+        color: 'white'
         // other camelCase styles for size display
       }
     },
-    toolbar: [["bold", "italic", "blockquote"], ["link"]]
+    toolbar: [['bold', 'italic', 'blockquote'], ['link']]
   };
 
   constructor(
@@ -105,27 +105,27 @@ export class CommentSubmitComponent implements OnInit {
     this.fileService.fileinput_id = `fileInput-${this.id}`;
     this.submit.emit([this.content, this.mentions, this.attachments]);
     this.showLoader();
-    this.content = "";
+    this.content = '';
     this.mentions = [];
     this.attachments = [];
   }
 
   checkForSpaces(input) {
-    console.log("checking for spaces", input.target.innerText.length);
+    console.log('checking for spaces', input.target.innerText.length);
     if (input.target.innerText.length > 0) {
       let value = input.target.innerText.trim();
-      console.log(value.length, value, "trim value");
+      console.log(value.length, value, 'trim value');
       if (value.length) {
         this.blankSpace = false;
       } else {
         this.blankSpace = true;
       }
-      console.log(this.blankSpace, "blankspace");
+      console.log(this.blankSpace, 'blankspace');
     }
   }
 
   ngOnInit() {
-    console.log("discussion type", this.pageType);
+    console.log('discussion type', this.pageType);
   }
 
   onFileSelected(attach_files) {
@@ -144,7 +144,7 @@ export class CommentSubmitComponent implements OnInit {
 
   isFileDuplicate(file) {
     let found = this.attachments.find(attachment => {
-      return attachment["name"] === file.name;
+      return attachment['name'] === file.name;
     });
 
     return this.attachments.includes(found);
@@ -159,11 +159,11 @@ export class CommentSubmitComponent implements OnInit {
   }
 
   showLoader() {
-    this.ngxService.start("submitComment");
+    this.ngxService.start('submitComment');
 
     // Stop the foreground loading after 5s
     setTimeout(() => {
-      this.ngxService.stop("submitComment");
+      this.ngxService.stop('submitComment');
     }, 2000);
   }
 }

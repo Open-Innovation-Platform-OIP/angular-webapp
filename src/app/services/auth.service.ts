@@ -13,14 +13,14 @@ interface User {
   token: string;
 }
 
-interface resetDetails {
+interface ResetDetails {
   email: string;
   password: string;
   confirmPassword: string;
   otp: string;
 }
 
-interface verificationDetails {
+interface VerificationDetails {
   email: string;
   otp: string;
 }
@@ -63,7 +63,9 @@ export class AuthService {
   isExpired(jwt) {
     if (jwt) {
       return this.jwtHelper.isTokenExpired(jwt);
-    } else return true;
+    } else {
+      return true;
+    }
   }
 
   logout() {
@@ -156,7 +158,7 @@ export class AuthService {
     );
   }
 
-  completeVerification(payload: verificationDetails) {
+  completeVerification(payload: VerificationDetails) {
     const httpOptions = {
       headers: new HttpHeaders({
         "Content-Type": "application/json"
@@ -185,7 +187,7 @@ export class AuthService {
     );
   }
 
-  resetPassword(payload: resetDetails) {
+  resetPassword(payload: ResetDetails) {
     // console.log(resetDetails);
     const httpOptions = {
       headers: new HttpHeaders({

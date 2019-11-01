@@ -1,26 +1,34 @@
-import { Component, OnInit, OnDestroy } from "@angular/core";
-
+import {
+  Component,
+  OnInit,
+  OnDestroy,
+  ViewChild,
+  AfterViewInit,
+  ElementRef
+} from "@angular/core";
 import { Router, ActivatedRoute, ParamMap } from "@angular/router";
-import { Observable, Subscription } from "rxjs";
-import { first, finalize, switchMap } from "rxjs/operators";
+import { switchMap } from "rxjs/operators";
 
 import { Apollo, QueryRef } from "apollo-angular";
 import gql from "graphql-tag";
 import { AuthService } from "../../services/auth.service";
 import { FilesService } from "../../services/files.service";
+import { FocusMonitor } from "@angular/cdk/a11y";
 
 @Component({
   selector: "app-view-user-profile",
   templateUrl: "./view-user-profile.component.html",
   styleUrls: ["./view-user-profile.component.css"]
 })
-export class ViewUserProfileComponent implements OnInit, OnDestroy {
+export class ViewUserProfileComponent
+  implements OnInit, OnDestroy, AfterViewInit {
+  @ViewChild("profileTitle") profileTitle: ElementRef<HTMLElement>;
   user: any;
   userData: any = {};
   userDataQuery: QueryRef<any>;
 
   interests: any[] = [];
-  loggedInUsersProfile: boolean = false;
+  loggedInUsersProfile = false;
   objectEntries = Object.entries;
   personas: any = [];
   userId: any;
@@ -30,7 +38,8 @@ export class ViewUserProfileComponent implements OnInit, OnDestroy {
     private route: ActivatedRoute,
     private apollo: Apollo,
     private auth: AuthService,
-    private filesService: FilesService
+    private filesService: FilesService,
+    private focusMonitor: FocusMonitor
   ) {
     // this.route.params.pipe(first()).subscribe(params => {
     //   console.log(params.id, "params id");
@@ -38,6 +47,10 @@ export class ViewUserProfileComponent implements OnInit, OnDestroy {
     //     this.getProfile(params.id);
     //   }
     // });
+  }
+
+  ngAfterViewInit() {
+    this.focusMonitor.focusVia(this.profileTitle, "program");
   }
 
   ngOnInit() {
@@ -104,7 +117,6 @@ export class ViewUserProfileComponent implements OnInit, OnDestroy {
               name
               qualification
               photo_url
-            
               email
               phone_number
               is_ngo
@@ -124,11 +136,9 @@ export class ViewUserProfileComponent implements OnInit, OnDestroy {
               user_locations{
                 location{
                   location_name
-              
                 }
 
               }
-              
 
               problems(where: { is_draft: { _eq: false } }){
                 id
@@ -162,8 +172,6 @@ export class ViewUserProfileComponent implements OnInit, OnDestroy {
             }
             }
         }
-              
-           
         `,
       fetchPolicy: "no-cache",
 

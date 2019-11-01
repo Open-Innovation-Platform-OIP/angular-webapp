@@ -1,24 +1,26 @@
-import { Component, OnInit, Input } from "@angular/core";
-import { FilesService } from "../../services/files.service";
+import { Component, OnInit, Input } from '@angular/core';
+import { FilesService } from '../../services/files.service';
 
 @Component({
-  selector: "app-solution-card",
-  templateUrl: "./solution-card.component.html",
-  styleUrls: ["./solution-card.component.css"]
+  selector: 'app-solution-card',
+  templateUrl: './solution-card.component.html',
+  styleUrls: ['./solution-card.component.css']
 })
 export class SolutionCardComponent implements OnInit {
   @Input() solutionData: any;
+  @Input() index: number;
 
   numOfVotes: Number = 0;
   numOfWatchers: Number = 0;
   numOfValidations: Number = 0;
   validated: Boolean = false;
-  link = "";
+  link = '';
+  imageAlt = 'default image';
 
   constructor(private filesService: FilesService) {}
 
   ngOnInit() {
-    console.log(this.solutionData, "solution data");
+    console.log(this.solutionData, 'solution data');
     // console.log(this.solutionData.is_draft, "solution card");
     if (this.solutionData.is_draft) {
       this.link += `/solutions/${this.solutionData.id}/edit`;
@@ -50,8 +52,8 @@ export class SolutionCardComponent implements OnInit {
   }
 
   checkUrlIsImg(url) {
-    var arr = ["jpeg", "jpg", "gif", "png"];
-    var ext = url.substring(url.lastIndexOf(".") + 1);
+    var arr = ['jpeg', 'jpg', 'gif', 'png'];
+    var ext = url.substring(url.lastIndexOf('.') + 1);
     if (arr.indexOf(ext) > -1) {
       return true;
     } else {

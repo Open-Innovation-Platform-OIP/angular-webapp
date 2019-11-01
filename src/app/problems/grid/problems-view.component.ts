@@ -1,9 +1,14 @@
-import { Component, OnInit, OnDestroy } from "@angular/core";
-
+import {
+  Component,
+  OnInit,
+  OnDestroy,
+  ViewChild,
+  ElementRef,
+  AfterViewInit
+} from "@angular/core";
 import { Apollo, QueryRef } from "apollo-angular";
 import gql from "graphql-tag";
-import { Observable, Subscription } from "rxjs";
-import { P } from "@angular/cdk/keycodes";
+import { Subscription } from "rxjs";
 import { AuthService } from "../../services/auth.service";
 import { ActivatedRoute, Router, ParamMap } from "@angular/router";
 import { TagsService } from "../../services/tags.service";
@@ -11,13 +16,16 @@ import { take, switchMap } from "rxjs/operators";
 import { FilterService } from "../../services/filter.service";
 import { GeocoderService } from "src/app/services/geocoder.service";
 import { HttpClient, HttpHeaders } from "@angular/common/http";
+import { FocusMonitor } from "@angular/cdk/a11y";
 
 @Component({
   selector: "app-problems-view",
   templateUrl: "./problems-view.component.html",
   styleUrls: ["./problems-view.component.css"]
 })
-export class ProblemsViewComponent implements OnInit, OnDestroy {
+export class ProblemsViewComponent implements OnInit, OnDestroy, AfterViewInit {
+  @ViewChild("problemWorthSolving") problemWorthSolving: ElementRef;
+
   userProblems = [];
   problems = [];
   file_types = [
@@ -29,7 +37,6 @@ export class ProblemsViewComponent implements OnInit, OnDestroy {
     " image/*",
     "video/*"
   ];
-  // test: Observable<any>;
   userProblemViewQuery: QueryRef<any>;
   userProblemViewSubscription: Subscription;
   problemViewQuery: QueryRef<any>;
@@ -43,9 +50,9 @@ export class ProblemsViewComponent implements OnInit, OnDestroy {
     private filterService: FilterService,
     private route: ActivatedRoute,
     private geoService: GeocoderService,
-    private http: HttpClient
+    private http: HttpClient,
+    private focusMonitor: FocusMonitor
   ) {
-    // this.tagsService.getTagsFromDB();
     this.tagsService
       .getTagsFromDB()
       .then(result => {
@@ -61,6 +68,12 @@ export class ProblemsViewComponent implements OnInit, OnDestroy {
     this.getProblems();
   }
 
+  ngAfterViewInit() {
+    setTimeout(() => {
+      this.focusMonitor.focusVia(this.problemWorthSolving, "program");
+    }, 1000);
+  }
+
   getProblems() {
     this.activatedRoute.queryParams.subscribe(params => {
       this.filterService.selectedSectors = this.filterService.filterSector(
@@ -70,20 +83,8 @@ export class ProblemsViewComponent implements OnInit, OnDestroy {
         params
       );
 
-      // console.log(
-      //   this.filterService.location_filter_header,
-      //   "location filter header",
-      //   this.filterService.sector_filter_query
-      // );
-
-      // console.log(
-      //   this.filterService.sector_filter_query,
-      //   "sector filter query"
-      // );
-
       this.problemViewQuery = this.apollo.watchQuery<any>({
         query: gql`
-      
           query table${this.filterService.location_filter_header}{ 
             problems(where:{is_draft: { _eq: false },_and:[{problems_tags:{tag_id:{${this.filterService.sector_filter_query}}}},${this.filterService.location_filter_query}]}order_by: {  updated_at: desc } )
             
@@ -92,14 +93,11 @@ export class ProblemsViewComponent implements OnInit, OnDestroy {
             id
             title
             description
-            
             resources_needed
             image_urls
             edited_at
             updated_at
-
             featured_url
-
             is_deleted
             problem_voters {
               problem_id
@@ -139,10 +137,8 @@ export class ProblemsViewComponent implements OnInit, OnDestroy {
               problem_id
               edited_at
             }
-              
           }
         }
-      
     `,
         variables: this.filterService.queryVariable,
         pollInterval: 500,
@@ -150,7 +146,7 @@ export class ProblemsViewComponent implements OnInit, OnDestroy {
       });
 
       this.problemViewSubscription = this.route.paramMap.pipe(
-        switchMap((params: ParamMap) => {
+        switchMap((routeParams: ParamMap) => {
           return this.problemViewQuery.valueChanges;
         })
       );
@@ -159,10 +155,7 @@ export class ProblemsViewComponent implements OnInit, OnDestroy {
         result => {
           console.log(result, "results");
           if (result.data.problems.length > 0) {
-            // console.log("PROBLEMS", result.data.problems_tags);
-
             this.problems = result.data.problems;
-            // console.log("PROBLEMS in Component", this.problems);
           } else {
             this.problems = [];
           }

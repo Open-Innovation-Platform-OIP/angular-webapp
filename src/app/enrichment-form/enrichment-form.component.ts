@@ -1,47 +1,56 @@
-import { Component, OnInit, OnDestroy } from "@angular/core";
-import { Router, ActivatedRoute } from "@angular/router";
-import { AuthService } from "../services/auth.service";
-import { EnrichmentService } from "../services/enrichment.service";
-import { map, startWith } from "rxjs/operators";
-import { first } from "rxjs/operators";
-import { Apollo } from "apollo-angular";
-import gql from "graphql-tag";
-import { take } from "rxjs/operators";
-import { GeocoderService } from "../services/geocoder.service";
-import { Subscription } from "rxjs";
-import swal from "sweetalert2";
+import {
+  Component,
+  OnInit,
+  OnDestroy,
+  ElementRef,
+  ViewChild
+} from '@angular/core';
+import { Router, ActivatedRoute } from '@angular/router';
+import { AuthService } from '../services/auth.service';
+import { EnrichmentService } from '../services/enrichment.service';
+import { map, startWith } from 'rxjs/operators';
+import { first } from 'rxjs/operators';
+import { Apollo } from 'apollo-angular';
+import gql from 'graphql-tag';
+import { take } from 'rxjs/operators';
+import { GeocoderService } from '../services/geocoder.service';
+import { Subscription } from 'rxjs';
+import swal from 'sweetalert2';
+import { FocusMonitor, FocusOrigin } from '@angular/cdk/a11y';
 // import { Router, ActivatedRoute } from "@angular/router";
 
 @Component({
-  selector: "app-enrichment-form",
-  templateUrl: "./enrichment-form.component.html",
-  styleUrls: ["./enrichment-form.component.css"]
+  selector: 'app-enrichment-form',
+  templateUrl: './enrichment-form.component.html',
+  styleUrls: ['./enrichment-form.component.css']
 })
 export class EnrichmentFormComponent implements OnInit, OnDestroy {
+  @ViewChild('cardHeading') cardHeader: ElementRef<HTMLElement>;
   private problemId: Number;
   private problemData: any;
   enrichmentLocations: any = [];
   private enrichmentData: any = {
-    user_id: "",
+    user_id: '',
 
-    description: "",
+    description: '',
 
-    organization: "",
-    resources_needed: "",
+    organization: '',
+    resources_needed: '',
     image_urls: [],
     video_urls: [],
-    impact: "",
+    impact: '',
     min_population: 0,
-    max_population: "",
-    extent: "",
-    beneficiary_attributes: "",
+    max_population: '',
+    extent: '',
+    beneficiary_attributes: '',
 
-    featured_url: "",
+    featured_url: '',
     embed_urls: [],
-    featured_type: "",
+    featured_type: '',
     attachments: []
   };
   submitEnrichmentSub: Subscription;
+  moveFocusBack = false;
 
   constructor(
     private route: ActivatedRoute,
@@ -49,12 +58,14 @@ export class EnrichmentFormComponent implements OnInit, OnDestroy {
     private enrichmentService: EnrichmentService,
     private apollo: Apollo,
     private geoService: GeocoderService,
-    private router: Router
+    private router: Router,
+    private elementRef: ElementRef,
+    private focusMonitor: FocusMonitor
   ) {}
 
   ngOnInit() {
     // console.log(this.route.snapshot.paramMap.get("problemId"), "problemid");
-    this.problemId = Number(this.route.snapshot.paramMap.get("problemId"));
+    this.problemId = Number(this.route.snapshot.paramMap.get('problemId'));
 
     if (this.problemId) {
       this.apollo
@@ -113,7 +124,7 @@ export class EnrichmentFormComponent implements OnInit, OnDestroy {
         .valueChanges.pipe(take(1))
         .subscribe(
           result => {
-            console.log(result, "result");
+            console.log(result, 'result');
             if (
               result.data.problems.length >= 1 &&
               result.data.problems[0].id
@@ -129,11 +140,11 @@ export class EnrichmentFormComponent implements OnInit, OnDestroy {
 
               this.problemData = result.data.problems[0];
 
-              console.log(this.problemData, "problemData");
+              console.log(this.problemData, 'problemData');
             }
           },
           err => {
-            console.log("error", err);
+            console.log('error', err);
             console.error(JSON.stringify(err));
           }
         );
@@ -141,7 +152,7 @@ export class EnrichmentFormComponent implements OnInit, OnDestroy {
 
     this.route.params.pipe(first()).subscribe(params => {
       if (params.id) {
-        console.log(params.id, "params id in enrichment");
+        console.log(params.id, 'params id in enrichment');
         this.apollo
           .watchQuery<any>({
             query: gql`
@@ -227,19 +238,19 @@ export class EnrichmentFormComponent implements OnInit, OnDestroy {
                             }
                         }
                         `,
-            fetchPolicy: "network-only"
+            fetchPolicy: 'network-only'
             // pollInterval: 500
           })
           .valueChanges.pipe(take(1))
           .subscribe(
             result => {
-              console.log(result, "result");
+              console.log(result, 'result');
               if (
                 result.data.enrichments.length >= 1 &&
                 result.data.enrichments[0].id
               ) {
                 // this.enrichmentData = result.data.enrichments[0];
-                this.enrichmentData["id"] = result.data.enrichments[0].id;
+                this.enrichmentData['id'] = result.data.enrichments[0].id;
                 Object.keys(this.enrichmentData).map(key => {
                   // console.log(key, result.data.problems[0][key]);
                   if (result.data.enrichments[0][key]) {
@@ -250,20 +261,21 @@ export class EnrichmentFormComponent implements OnInit, OnDestroy {
                 if (result.data.enrichments[0].enrichment_locations) {
                   this.enrichmentLocations = result.data.enrichments[0].enrichment_locations.map(
                     locations => {
-                      if (locations.location.__typename)
+                      if (locations.location.__typename) {
                         delete locations.location.__typename;
-                      return locations.location;
+                        return locations.location;
+                      }
                     }
                   );
                 }
 
                 this.problemData =
                   result.data.enrichments[0].problemsByproblemId;
-                console.log(this.problemData, "on edit problme data");
+                console.log(this.problemData, 'on edit problme data');
               }
             },
             err => {
-              console.log("error", err);
+              console.log('error', err);
               console.error(JSON.stringify(err));
             }
           );
@@ -273,11 +285,11 @@ export class EnrichmentFormComponent implements OnInit, OnDestroy {
 
   addLocation(locations) {
     this.enrichmentLocations = locations;
-    console.log(this.geoService.allLocations, "all locations");
+    console.log(this.geoService.allLocations, 'all locations');
   }
 
   removeLocation(removedLocation) {
-    console.log(this.enrichmentLocations, "removed location");
+    console.log(this.enrichmentLocations, 'removed location');
 
     this.enrichmentLocations = this.enrichmentLocations.filter(location => {
       if (location.location_name !== removedLocation.location_name) {
@@ -287,18 +299,18 @@ export class EnrichmentFormComponent implements OnInit, OnDestroy {
 
     if (
       this.geoService.allLocations[removedLocation.location_name] &&
-      this.enrichmentData["id"]
+      this.enrichmentData['id']
     ) {
       this.geoService.removeLocationRelation(
         removedLocation.id,
-        this.enrichmentData["id"],
-        "enrichments"
+        this.enrichmentData['id'],
+        'enrichments'
       );
     } else if (removedLocation.id) {
       this.geoService.removeLocationRelation(
         removedLocation.id,
-        this.enrichmentData["id"],
-        "enrichments"
+        this.enrichmentData['id'],
+        'enrichments'
       );
     }
   }
@@ -367,7 +379,7 @@ export class EnrichmentFormComponent implements OnInit, OnDestroy {
       })
       .subscribe(
         data => {
-          console.log(data, "enrichment submit data");
+          console.log(data, 'enrichment submit data');
           let enrichmentId = data.data.insert_enrichments.returning[0].id;
           // this.enrichmentData
           const enrichment_locations = new Set();
@@ -389,42 +401,42 @@ export class EnrichmentFormComponent implements OnInit, OnDestroy {
             this.geoService.addRelationToLocations(
               enrichmentId,
               enrichment_locations,
-              "enrichments"
+              'enrichments'
             );
           }
 
           if (this.enrichmentLocations) {
             this.geoService.addLocationsInDB(
               this.enrichmentLocations,
-              "enrichments",
+              'enrichments',
               enrichmentId
             );
           }
 
-          console.log(data, "enrichment added");
+          console.log(data, 'enrichment added');
           swal({
-            type: "success",
-            title: "Thank you for enriching!",
+            type: 'success',
+            title: 'Thank you for enriching!',
             timer: 4000,
             showConfirmButton: false
           }).catch(swal.noop);
           // location.reload();
           this.router.navigate(
-            ["problems", data.data.insert_enrichments.returning[0].problem_id],
-            { queryParamsHandling: "preserve" }
+            ['problems', data.data.insert_enrichments.returning[0].problem_id],
+            { queryParamsHandling: 'preserve' }
           );
           this.submitEnrichmentSub.unsubscribe();
         },
         err => {
-          console.log(err, "error");
+          console.log(err, 'error');
           console.error(JSON.stringify(err));
           this.submitEnrichmentSub.unsubscribe();
 
           swal({
-            title: "Error",
-            text: "Try Again",
-            type: "error",
-            confirmButtonClass: "btn btn-info",
+            title: 'Error',
+            text: 'Try Again',
+            type: 'error',
+            confirmButtonClass: 'btn btn-info',
             buttonsStyling: false
           }).catch(swal.noop);
         }
@@ -432,5 +444,22 @@ export class EnrichmentFormComponent implements OnInit, OnDestroy {
     // }
   }
 
-  ngOnDestroy() {}
+  ngOnDestroy() {
+    this.focusMonitor.stopMonitoring(this.cardHeader);
+  }
+
+  focusToProblemDetails(status: boolean) {
+    if (status) {
+      this.moveFocusToCardHeading();
+      this.moveFocusBack = false;
+    }
+  }
+
+  moveFocusToCardHeading() {
+    this.focusMonitor.focusVia(this.cardHeader, 'program');
+  }
+
+  revertFocus() {
+    this.moveFocusBack = true;
+  }
 }

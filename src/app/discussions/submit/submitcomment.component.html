@@ -1,37 +1,84 @@
 <!-- <div ngIf="auth.currentUserValue.id"> -->
-<ngx-ui-loader id="submitComment" fgsColor="#ff9800" fgsPosition="bottom-right" overlayColor=rgba(40,40,40,.1)
-  fgsType="rectangle-bounce">
+<ngx-ui-loader
+  id="submitComment"
+  fgsColor="#ff9800"
+  fgsPosition="bottom-right"
+  overlayColor="rgba(40,40,40,.1)"
+  fgsType="rectangle-bounce"
+>
 </ngx-ui-loader>
 
-
-<quill-editor [style]="{height: '100px'}" *ngIf="auth.currentUserValue.id" [(ngModel)]="content" [sanitize]="false"
-  [modules]="modules" (keyup)="checkForSpaces($event)" (onEditorCreated)="setFocus($event)">
+<quill-editor
+  [style]="{ height: '100px' }"
+  *ngIf="auth.currentUserValue.id"
+  [(ngModel)]="content"
+  [sanitize]="false"
+  [modules]="modules"
+  (keyup)="checkForSpaces($event)"
+  (onEditorCreated)="setFocus($event)"
+>
 </quill-editor>
 <div class="stats">
-  <button mat-raised-button *ngIf="auth.currentUserValue.id" class="btn btn-sm btn-round"
-    [ngClass]="{'btn-warning': !pageType, 'btn-rose': pageType == 'solution'}" matTooltip="Click to add comment"
-    [matTooltipPosition]="'below'" [disabled]="blankSpace" (click)="submitComment()">{{actionText}}</button>
-  <button *ngIf="auth.currentUserValue.id && cancelShown" [disabled]="blankSpace" mat-raised-button
-    class="btn btn-danger btn-sm btn-round" matTooltip="Click to close comment box" [matTooltipPosition]="'below'"
-    (click)="cancel.emit()">Cancel</button>
+  <button
+    mat-raised-button
+    *ngIf="auth.currentUserValue.id"
+    class="btn btn-sm btn-round"
+    [ngClass]="{ 'btn-warning': !pageType, 'btn-rose': pageType == 'solution' }"
+    matTooltip="Click to add comment"
+    [matTooltipPosition]="'below'"
+    [disabled]="blankSpace"
+    (click)="submitComment()"
+  >
+    {{ actionText }}
+  </button>
+  <button
+    *ngIf="auth.currentUserValue.id && cancelShown"
+    [disabled]="blankSpace"
+    mat-raised-button
+    class="btn btn-danger btn-sm btn-round"
+    matTooltip="Click to close comment box"
+    [matTooltipPosition]="'below'"
+    (click)="cancel.emit()"
+  >
+    Cancel
+  </button>
 
-  <label for="fileInput-{{id}}" *ngIf="auth.currentUserValue.id"
-    [ngStyle]="{ 'cursor' : (!content) ? 'default' : 'pointer' }" class="btn btn-secondary btn-sm btn-round right">
-    <i class="material-icons">
+  <label
+    role="button"
+    [attr.aria-disabled]="[!content ? true : false]"
+    for="fileInput-{{ id }}"
+    *ngIf="auth.currentUserValue.id"
+    [ngStyle]="{ cursor: !content ? 'default' : 'pointer' }"
+    class="btn btn-secondary btn-sm btn-round right"
+  >
+    <i class="material-icons" aria-hidden="true">
       attach_file
     </i>
     <span>Attach File</span>
   </label>
 
-  <input type="file" [disabled]="!content" style="display: none" id="fileInput-{{id}}" (change)="onFileSelected($event)"
-    name="..." multiple accept="{{file_types.join(',')}}" />
+  <input
+    type="file"
+    [disabled]="!content"
+    style="display: none"
+    id="fileInput-{{ id }}"
+    (change)="onFileSelected($event)"
+    name="..."
+    multiple
+    accept="{{ file_types.join(',') }}"
+  />
 </div>
 <!-- Displaying list of selected file -->
-<div *ngFor="let attachment of attachments; let i=index;">
+<div *ngFor="let attachment of attachments; let i = index">
   <div>
-    {{attachment.name}}
-    &nbsp;
-    <i class="fa fa-close" style="cursor:pointer" (click)="removeFile(i)"></i>
+    {{ attachment.name }}
+
+    <i
+      class="fa fa-close mx-1"
+      style="cursor:pointer"
+      (click)="removeFile(i)"
+      aria-hidden="true"
+    ></i>
   </div>
 </div>
 <!-- </div> -->

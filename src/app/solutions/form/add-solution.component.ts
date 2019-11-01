@@ -10,44 +10,49 @@ import {
   EventEmitter,
   ElementRef,
   ViewChild
-} from "@angular/core";
+} from '@angular/core';
 import {
   FormControl,
   FormGroupDirective,
   NgForm,
   Validators,
   FormGroup
-} from "@angular/forms";
-import { ErrorStateMatcher } from "@angular/material/core";
-import { TagsService } from "../../services/tags.service";
-import { FilesService } from "../../services/files.service";
-import { UsersService } from "../../services/users.service";
-import { AuthService } from "../../services/auth.service";
-import { Router, ActivatedRoute } from "@angular/router";
-import { map, startWith } from "rxjs/operators";
-import { Observable, Subscription } from "rxjs";
-import { GeocoderService } from "../../services/geocoder.service";
-import swal from "sweetalert2";
-var Buffer = require("buffer/").Buffer;
-import { FormBuilder } from "@angular/forms";
-import { take } from "rxjs/operators";
-import { HttpClient } from "@angular/common/http";
-import { FilterService } from "../../services/filter.service";
-import { Content } from "@angular/compiler/src/render3/r3_ast";
+} from '@angular/forms';
+import { ErrorStateMatcher } from '@angular/material/core';
+import { TagsService } from '../../services/tags.service';
+import { FilesService } from '../../services/files.service';
+import { UsersService } from '../../services/users.service';
+import { AuthService } from '../../services/auth.service';
+import { Router, ActivatedRoute } from '@angular/router';
+import { map, startWith } from 'rxjs/operators';
+import { Observable, Subscription } from 'rxjs';
+import { GeocoderService } from '../../services/geocoder.service';
+import swal from 'sweetalert2';
+var Buffer = require('buffer/').Buffer;
+import { FormBuilder } from '@angular/forms';
+import { take } from 'rxjs/operators';
+import { HttpClient } from '@angular/common/http';
+import { FilterService } from '../../services/filter.service';
+import { Content } from '@angular/compiler/src/render3/r3_ast';
 
-import { COMMA, ENTER } from "@angular/cdk/keycodes";
+import { COMMA, ENTER } from '@angular/cdk/keycodes';
 import {
   MatAutocompleteSelectedEvent,
   MatChipInputEvent,
   MatAutocomplete
-} from "@angular/material";
+} from '@angular/material';
 
-import { Apollo } from "apollo-angular";
-import gql from "graphql-tag";
-import { first } from "rxjs/operators";
-import { SearchService } from "../../services/search.service";
-import { SolutionCardComponent } from "src/app/components/solution-card/solution-card.component";
-import { DataRowOutlet } from "@angular/cdk/table";
+import { Apollo } from 'apollo-angular';
+import gql from 'graphql-tag';
+import { first } from 'rxjs/operators';
+import { SearchService } from '../../services/search.service';
+import { SolutionCardComponent } from 'src/app/components/solution-card/solution-card.component';
+import { DataRowOutlet } from '@angular/cdk/table';
+import {
+  FocusMonitor,
+  LiveAnnouncer,
+  AriaLivePoliteness
+} from '@angular/cdk/a11y';
 
 declare var H: any;
 declare const $: any;
@@ -79,24 +84,31 @@ export class MyErrorStateMatcher implements ErrorStateMatcher {
 }
 
 @Component({
-  selector: "app-add-solution",
-  templateUrl: "./add-solution.component.html",
-  styleUrls: ["./add-solution.component.css"]
+  selector: 'app-add-solution',
+  templateUrl: './add-solution.component.html',
+  styleUrls: ['./add-solution.component.css']
 })
 export class AddSolutionComponent
   implements OnInit, OnChanges, OnDestroy, AfterViewInit {
+  @ViewChild('heading') pageHeading: ElementRef<HTMLElement>;
+  @ViewChild('foundProblems') foundProblemHeading: ElementRef<HTMLElement>;
+  @ViewChild('foundSolutions') foundSolutionHeading: ElementRef<HTMLElement>;
+  @ViewChild('wizardContainer') wizardContainer: ElementRef<HTMLElement>;
+  @ViewChild('mediaLink') mediaLink: ElementRef<HTMLElement>;
+  @ViewChild('nextBtn') nextBtn: ElementRef<HTMLElement>;
+  @ViewChild('textLink') textLink: ElementRef<HTMLElement>;
   // @Input() sectors: string[] = [];
 
   owners: any[] = [];
 
   file_types = [
-    "application/msword",
-    " application/vnd.ms-excel",
-    " application/vnd.ms-powerpoint",
-    "text/plain",
-    " application/pdf",
-    " image/*",
-    "video/*"
+    'application/msword',
+    ' application/vnd.ms-excel',
+    ' application/vnd.ms-powerpoint',
+    'text/plain',
+    ' application/pdf',
+    ' image/*',
+    'video/*'
   ];
 
   objectKeys = Object.keys;
@@ -113,11 +125,11 @@ export class AddSolutionComponent
   showProblemBeneficiaryAttributes: Boolean = false;
 
   populationValue: Number;
-  media_url = "";
+  media_url = '';
   autosaveInterval: any;
   locations: any = [];
   locationInputValue: any;
-  input_pattern = new RegExp("^s*");
+  input_pattern = new RegExp('^s*');
 
   filteredSectors: Observable<any[]>;
   sectors: any = [];
@@ -141,27 +153,29 @@ export class AddSolutionComponent
   tags = [];
   removable = true;
   sizes = [
-    { value: 100, viewValue: "<100" },
-    { value: 1000, viewValue: "<1000" },
-    { value: 10000, viewValue: "<10000" },
-    { value: 100000, viewValue: "<100,000" },
-    { value: Number.MAX_VALUE, viewValue: ">100,000" }
+    { value: 100, viewValue: '<100' },
+    { value: 1000, viewValue: '<1000' },
+    { value: 10000, viewValue: '<10000' },
+    { value: 100000, viewValue: '<100,000' },
+    { value: Number.MAX_VALUE, viewValue: '>100,000' }
   ];
   touch: boolean;
   hide: boolean = false;
+  sideScrollHeight;
 
-  @ViewChild("problemInput") problemInput: ElementRef<HTMLInputElement>;
-  @ViewChild("locationInput") locationInput: ElementRef<HTMLInputElement>;
-  @ViewChild("ownerInput") ownerInput: ElementRef<HTMLInputElement>;
+  @ViewChild('problemInput') problemInput: ElementRef<HTMLInputElement>;
+  @ViewChild('title') titleInput: ElementRef<HTMLInputElement>;
+  @ViewChild('locationInput') locationInput: ElementRef<HTMLInputElement>;
+  @ViewChild('ownerInput') ownerInput: ElementRef<HTMLInputElement>;
 
-  @ViewChild("auto") matAutocomplete: MatAutocomplete;
-  @ViewChild("autoSector") matAutocompleteSector: MatAutocomplete;
+  @ViewChild('auto') matAutocomplete: MatAutocomplete;
+  @ViewChild('autoSector') matAutocompleteSector: MatAutocomplete;
 
-  objectValues = Object["values"];
+  objectValues = Object['values'];
   visible = true;
   selectable = true;
   addOnBlur = true;
-  options: string[] = ["One", "Two", "Three"];
+  options: string[] = ['One', 'Two', 'Three'];
   filteredOptions: Observable<string[]>;
   problemId: Number;
 
@@ -171,32 +185,32 @@ export class AddSolutionComponent
   watched_by = [];
 
   solution = {
-    title: "",
-    description: "",
-    technology: "",
-    resources: "",
-    impact: "",
-    timeline: "",
-    pilots: "",
-    website_url: "",
+    title: '',
+    description: '',
+    technology: '',
+    resources: '',
+    impact: '',
+    timeline: '',
+    pilots: '',
+    website_url: '',
     deployment: 0,
 
-    budget_title: "",
+    budget_title: '',
     min_budget: 0,
     max_budget: 0,
-    extent: "",
-    beneficiary_attributes: "",
+    extent: '',
+    beneficiary_attributes: '',
     image_urls: [],
     video_urls: [],
-    featured_url: "",
+    featured_url: '',
     embed_urls: [],
-    featured_type: "",
+    featured_type: '',
     user_id: Number(this.auth.currentUserValue.id),
     is_draft: true,
     attachments: []
   };
 
-  @ViewChild("sectorInput") sectorInput: ElementRef<HTMLInputElement>;
+  @ViewChild('sectorInput') sectorInput: ElementRef<HTMLInputElement>;
 
   // autoCompleteTags: any[] = [];
 
@@ -212,10 +226,16 @@ export class AddSolutionComponent
     private here: GeocoderService,
     private apollo: Apollo,
     private http: HttpClient,
-    private filterService: FilterService
+    private filterService: FilterService,
+    private focusMonitor: FocusMonitor,
+    private element: ElementRef,
+    private liveannouncer: LiveAnnouncer
   ) {
     this.type = this.formBuilder.group({
-      // To add a validator, we must first convert the string value into an array. The first item in the array is the default value if any, then the next item in the array is the validator. Here we are adding a required validator meaning that the firstName attribute must have a value in it.
+      // To add a validator, we must first convert the string value into an array.
+      // The first item in the array is the default value if any,
+      // then the next item in the array is the validator.
+      // Here we are adding a required validator meaning that the firstName attribute must have a value in it.
       title: [null, Validators.required],
       description: [null, Validators.required],
       technology: [null, null],
@@ -250,13 +270,32 @@ export class AddSolutionComponent
     );
   }
 
+  moveFocus(forHeading: string) {
+    if (this.foundProblemHeading && forHeading === 'solutions') {
+      this.focusMonitor.focusVia(this.foundProblemHeading, 'program');
+    }
+
+    if (this.foundSolutionHeading && forHeading === 'problems') {
+      this.focusMonitor.focusVia(this.foundSolutionHeading, 'program');
+    }
+  }
+
+  focusBack(place: string) {
+    if (this.problemInput && place === 'selectProblem') {
+      this.focusMonitor.focusVia(this.problemInput, 'program');
+    }
+    if (this.titleInput && place === 'title') {
+      this.focusMonitor.focusVia(this.titleInput, 'program');
+    }
+  }
+
   isFieldValid(form: FormGroup, field: string) {
     return !form.get(field).valid && form.get(field).touched;
   }
 
   showSuccessSwal(title) {
     swal({
-      type: "success",
+      type: 'success',
       title: title,
       timer: 3000,
       showConfirmButton: false
@@ -264,9 +303,9 @@ export class AddSolutionComponent
   }
 
   hideProblems(id) {
-    if (id == "problem") {
+    if (id == 'problem') {
       this.hide = true;
-    } else if (id == "solution") {
+    } else if (id == 'solution') {
       this.hide = false;
     }
   }
@@ -280,10 +319,12 @@ export class AddSolutionComponent
   }
 
   sectorSelected(event: MatAutocompleteSelectedEvent): void {
-    console.log("event.option.viewValue", event);
-    this.sectors.push(event.option.value);
-    this.sectorInput.nativeElement.value = "";
+    // console.log('event.option.viewValue', event);
+    const sectorValue = event.option.value;
+    this.sectors.push(sectorValue);
+    this.sectorInput.nativeElement.value = '';
     this.sectorCtrl.setValue(null);
+    this.announcement(`Added ${sectorValue}`);
     // this.addedSectors.emit(this.sectors);
   }
 
@@ -292,12 +333,12 @@ export class AddSolutionComponent
       const input = event.input;
       const value = event.value;
 
-      if ((value || "").trim()) {
+      if ((value || '').trim()) {
         this.sectors.push(value.trim().toUpperCase());
       }
 
       if (input) {
-        input.value = "";
+        input.value = '';
       }
       this.sectorCtrl.setValue(null);
     }
@@ -305,47 +346,51 @@ export class AddSolutionComponent
 
   removeSector(sector: string): void {
     const index = this.sectors.indexOf(sector);
+    this.announcement(`removed ${sector}`);
     if (index >= 0) {
       this.sectors.splice(index, 1);
     }
-    if (this.tagService.allTags[sector] && this.solution["id"]) {
+    if (this.tagService.allTags[sector] && this.solution['id']) {
       this.tagService.removeTagRelation(
         this.tagService.allTags[sector].id,
-        this.solution["id"],
-        "solutions"
+        this.solution['id'],
+        'solutions'
       );
     }
   }
 
   displayFieldCss(form: FormGroup, field: string) {
     return {
-      "has-error": this.isFieldValid(form, field),
-      "has-feedback": this.isFieldValid(form, field)
+      'has-error': this.isFieldValid(form, field),
+      'has-feedback': this.isFieldValid(form, field)
     };
   }
 
   selected(event: MatAutocompleteSelectedEvent): void {
-    let selectedProblem = event.option.value;
+    const selectedProblem = event.option.value;
     this.getProblemData(selectedProblem.id);
 
     this.selectedProblems[selectedProblem.id] = selectedProblem;
-    // console.log(this.selectedProblems, "problem set");
+    // console.log(selectedProblem['title'], 'problem set');
 
-    this.problemInput.nativeElement.value = "";
+    this.problemInput.nativeElement.value = '';
     this.problemCtrl.setValue(null);
+    this.problemSearchResults = [];
+    this.announcement(`Added ${selectedProblem['title']}`);
     // this.getProblemData(selectedProblem.id);
     // delete this.searchResults[selectedProblem.id];
   }
   selectProblem(problem) {
-    console.log(problem, "====smart card problem selected");
+    console.log(problem, '====smart card problem selected');
     this.selectedProblems[problem.id] = problem;
     this.getProblemData(problem.id);
+    this.announcement(`Added ${problem.title}`);
     // console.log(this.selectedProblems, "selected problem set");
     // delete this.searchResults[problem.id];
   }
 
   getProblemData(id) {
-    console.log(id, "id");
+    console.log(id, 'id');
     // this.searchResultsObservable.unsubscribe();
     this.apollo
       .watchQuery<any>({
@@ -375,12 +420,12 @@ export class AddSolutionComponent
                   }
                   `,
         // pollInterval: 500,
-        fetchPolicy: "network-only"
+        fetchPolicy: 'network-only'
       })
       .valueChanges.pipe(take(1))
       .subscribe(
         result => {
-          let problemData = result.data.problems[0];
+          const problemData = result.data.problems[0];
           // console.log(problemData, "problem data from db");
           if (problemData.problems_tags.length && this.solution.is_draft) {
             problemData.problems_tags.map(tags => {
@@ -392,7 +437,7 @@ export class AddSolutionComponent
           this.selectedProblemsData[problemData.id] = problemData;
           console.log(
             this.selectedProblemsData,
-            " selected problems in solutions"
+            ' selected problems in solutions'
           );
         },
         error => {
@@ -408,7 +453,7 @@ export class AddSolutionComponent
 
       this.http
         .post(
-          "https://elasticsearch-microservice.dev.jaagalabs.com/search_solutions",
+          'https://elasticsearch-microservice.dev.jaagalabs.com/search_solutions',
           {
             keyword: solutionSearchInput,
             filter: this.filterService.sector_filter_query
@@ -417,6 +462,12 @@ export class AddSolutionComponent
         .subscribe(
           searchResults => {
             this.solutionSearchResults = searchResults;
+
+            this.announcement(
+              `Found ${this.solutionSearchResults.length} ${
+                this.solutionSearchResults.length < 2 ? 'solution' : 'solutions'
+              }`
+            );
           },
           error => {
             console.log(error);
@@ -437,17 +488,17 @@ export class AddSolutionComponent
   }
 
   focusOnField(event) {
-    if (event.target.id === "impact") {
+    if (event.target.id === 'impact') {
       this.showProblemImpacts = true;
       // this.showProblemResourcesNeeded = ;
     }
-    if (event.target.id === "resources_needed") {
+    if (event.target.id === 'resources_needed') {
       this.showProblemResourcesNeeded = true;
     }
-    if (event.target.id === "extent") {
+    if (event.target.id === 'extent') {
       this.showProblemExtent = true;
     }
-    if (event.target.id === "beneficiary_attributes") {
+    if (event.target.id === 'beneficiary_attributes') {
       this.showProblemBeneficiaryAttributes = true;
     }
   }
@@ -460,14 +511,11 @@ export class AddSolutionComponent
   }
 
   remove(problem): void {
-    console.log(problem, "remove");
-    // const index = this.selectedProblems.indexOf(problem);
-    // if (index >= 0) {
-    //   this.selectedProblems.splice(index, 1);
-    // }
+    // console.log(problem, 'remove');
+    this.announcement(`removed ${problem['title']}`);
     delete this.selectedProblems[problem.id];
     delete this.selectedProblemsData[problem.id];
-    if (this.solution["id"]) {
+    if (this.solution['id']) {
       this.apollo
         .mutate<any>({
           mutation: gql`
@@ -486,7 +534,7 @@ export class AddSolutionComponent
                 _eq: problem.id
               },
               solution_id: {
-                _eq: this.solution["id"]
+                _eq: this.solution['id']
               }
             }
           }
@@ -494,7 +542,7 @@ export class AddSolutionComponent
         .pipe(take(1))
         .subscribe(
           ({ data }) => {
-            console.log("worked", data);
+            console.log('worked', data);
             // location.reload();
             // location.reload();
             // this.router.navigateByUrl("/problems");
@@ -502,7 +550,7 @@ export class AddSolutionComponent
             return;
           },
           error => {
-            console.log("Could not delete due to " + error);
+            console.log('Could not delete due to ' + error);
           }
         );
     }
@@ -549,7 +597,7 @@ export class AddSolutionComponent
       .pipe(take(1))
       .subscribe(
         data => {
-          console.log("problem adddition worked");
+          console.log('problem adddition worked');
         },
         error => {
           console.error(JSON.stringify(error));
@@ -581,7 +629,7 @@ export class AddSolutionComponent
         }
       }
     `;
-    console.log(owners, "owners added");
+    console.log(owners, 'owners added');
     this.apollo
       .mutate({
         mutation: upsert_solution_owners,
@@ -592,12 +640,19 @@ export class AddSolutionComponent
       .pipe(take(1))
       .subscribe(
         data => {
-          console.log("owner adddition worked");
+          console.log('owner adddition worked');
         },
         error => {
           console.error(JSON.stringify(error));
         }
       );
+  }
+
+  announcement(message: string, politeness?: AriaLivePoliteness) {
+    this.liveannouncer
+      .announce(message, politeness)
+      .then(x => console.log('announced'))
+      .catch(e => console.error(e));
   }
 
   searchProblem(event) {
@@ -608,12 +663,19 @@ export class AddSolutionComponent
 
       this.http
         .post(
-          "https://elasticsearch-microservice.dev.jaagalabs.com/search_problems",
+          'https://elasticsearch-microservice.dev.jaagalabs.com/search_problems',
           { keyword: keyword, filter: this.filterService.sector_filter_query }
         )
         .subscribe(
           searchResults => {
             this.problemSearchResults = searchResults;
+
+            this.announcement(
+              `Found ${this.problemSearchResults.length} ${
+                this.problemSearchResults.length < 2 ? 'problem' : 'problems'
+              }`
+            );
+            this.setScrollableHeight();
           },
           error => {
             console.log(error);
@@ -707,14 +769,14 @@ export class AddSolutionComponent
   //   }).valueChanges;
   // }
   filterOwners(value: String): any[] {
-    if (typeof value === "string") {
-      console.log(value, "value in filtered owners");
+    if (typeof value === 'string') {
+      console.log(value, 'value in filtered owners');
       const filterValue = value.toLowerCase();
-      console.log(filterValue, "value from filter");
+      console.log(filterValue, 'value from filter');
 
       return Object.values(this.usersService.allUsers).filter(owner => {
-        if (owner["value"].toLowerCase().indexOf(filterValue) === 0) {
-          console.log(owner, "owner", filterValue);
+        if (owner['value'].toLowerCase().indexOf(filterValue) === 0) {
+          console.log(owner, 'owner', filterValue);
           return owner;
         }
       });
@@ -722,21 +784,24 @@ export class AddSolutionComponent
   }
 
   selectedOwner(event: MatAutocompleteSelectedEvent): void {
-    // console.log(event.option, "event value");
-    this.owners.push(event.option.value);
-    this.ownerInput.nativeElement.value = "";
+    // console.log(event, 'event value');
+    const owner = event.option.value;
+    this.announcement(`Added ${owner.value}`);
+    this.owners.push(owner);
+    this.ownerInput.nativeElement.value = '';
     this.ownersCtrl.setValue(null);
     // this.addedOwners.emit(this.owners);
   }
 
   removeOwner(owner) {
-    console.log(owner, "remove");
+    // console.log(owner, 'remove');
+    this.announcement(`Removed ${owner.value}`);
     const index = this.owners.indexOf(owner);
     if (index >= 0) {
       this.owners.splice(index, 1);
       // this.removedOwners.emit(owner);
     }
-    if (this.solution["id"]) {
+    if (this.solution['id']) {
       this.apollo
         .mutate<any>({
           mutation: gql`
@@ -755,7 +820,7 @@ export class AddSolutionComponent
                 _eq: owner.id
               },
               solution_id: {
-                _eq: this.solution["id"]
+                _eq: this.solution['id']
               }
             }
           }
@@ -763,7 +828,7 @@ export class AddSolutionComponent
         .pipe(take(1))
         .subscribe(
           ({ data }) => {
-            console.log("worked", data);
+            console.log('worked', data);
             // location.reload();
             // location.reload();
             // this.router.navigateByUrl("/problems");
@@ -771,23 +836,23 @@ export class AddSolutionComponent
             return;
           },
           error => {
-            console.log("Could not delete due to " + error);
+            console.log('Could not delete due to ' + error);
           }
         );
     }
-    console.log(this.owners, "removed in container");
+    console.log(this.owners, 'removed in container');
   }
 
   addOwner(event) {
-    console.log(event, "event");
+    console.log(event, 'event');
   }
 
   ngOnInit() {
-    console.log("solution wizard ng on in it");
+    console.log('solution wizard ng on in it');
     this.tagService.getTagsFromDB();
 
-    this.problemId = Number(this.route.snapshot.paramMap.get("problemId"));
-    console.log(this.route.snapshot.paramMap, "problem param");
+    this.problemId = Number(this.route.snapshot.paramMap.get('problemId'));
+    console.log(this.route.snapshot.paramMap, 'problem param');
     if (this.problemId) {
       // this.selectedProblems.add({ id: this.problemId });
       this.selectedProblems[Number(this.problemId)] = this.problemId;
@@ -795,7 +860,7 @@ export class AddSolutionComponent
     this.autosaveInterval = setInterval(() => {
       this.autoSave();
     }, 10000);
-    console.log(this.selectedProblems, "selected problems set ");
+    console.log(this.selectedProblems, 'selected problems set ');
 
     if (Object.values(this.selectedProblems).length) {
       Object.values(this.selectedProblems).forEach(problemId => {
@@ -805,10 +870,10 @@ export class AddSolutionComponent
     }
 
     this.route.params.pipe(first()).subscribe(params => {
-      console.log(params, "params id");
+      console.log(params, 'params id');
 
       if (params.id) {
-        console.log(params.id, "id");
+        console.log(params.id, 'id');
         this.apollo
           .watchQuery<any>({
             query: gql`
@@ -865,7 +930,7 @@ export class AddSolutionComponent
           .valueChanges.pipe(take(1))
           .subscribe(
             result => {
-              this.solution["id"] = result.data.solutions[0].id;
+              this.solution['id'] = result.data.solutions[0].id;
               this.is_edit = true;
               Object.keys(this.solution).map(key => {
                 // console.log(key, result.data.problems[0][key]);
@@ -889,7 +954,7 @@ export class AddSolutionComponent
 
                 this.getProblemData(problem.problem.id);
               });
-              console.log(this.selectedProblems, "SOLUTIONS");
+              console.log(this.selectedProblems, 'SOLUTIONS');
               if (result.data.solutions[0].solution_owners) {
                 this.owners = this.removeDuplicates(this.owners);
                 result.data.solutions[0].solution_owners.forEach(ownerArray => {
@@ -924,8 +989,9 @@ export class AddSolutionComponent
       min_budget: [null, Validators.required],
       max_budget: [null, Validators.required]
     });
+
     // Code for the Validator
-    const $validator = $(".card-wizard form").validate({
+    const $validator = $('.card-wizard form').validate({
       rules: {
         title: {
           required: true,
@@ -944,15 +1010,15 @@ export class AddSolutionComponent
 
       highlight: function(element) {
         $(element)
-          .closest(".form-group")
-          .removeClass("has-success")
-          .addClass("has-danger");
+          .closest('.form-group')
+          .removeClass('has-success')
+          .addClass('has-danger');
       },
       success: function(element) {
         $(element)
-          .closest(".form-group")
-          .removeClass("has-danger")
-          .addClass("has-success");
+          .closest('.form-group')
+          .removeClass('has-danger')
+          .addClass('has-success');
       },
       errorPlacement: function(error, element) {
         $(element).append(error);
@@ -960,15 +1026,15 @@ export class AddSolutionComponent
     });
 
     // Wizard Initialization
-    $(".card-wizard").bootstrapWizard({
-      tabClass: "nav nav-pills",
-      nextSelector: ".btn-next",
-      previousSelector: ".btn-previous",
+    $('.card-wizard').bootstrapWizard({
+      tabClass: 'nav nav-pills',
+      nextSelector: '.btn-next',
+      previousSelector: '.btn-previous',
 
       onNext: function(tab, navigation, index) {
         window.scroll(0, 0);
 
-        var $valid = $(".card-wizard form").valid();
+        var $valid = $('.card-wizard form').valid();
         if (!$valid) {
           $validator.focusInvalid();
           return false;
@@ -977,17 +1043,17 @@ export class AddSolutionComponent
 
       onInit: function(tab: any, navigation: any, index: any) {
         // check number of tabs and fill the entire row
-        let $total = navigation.find("li").length;
-        let $wizard = navigation.closest(".card-wizard");
+        let $total = navigation.find('li').length;
+        let $wizard = navigation.closest('.card-wizard');
 
-        let $first_li = navigation.find("li:first-child a").html();
-        let $moving_div = $('<div class="moving-tab">' + $first_li + "</div>");
-        $(".card-wizard .wizard-navigation").append($moving_div);
+        let $first_li = navigation.find('li:first-child a').html();
+        let $moving_div = $('<div class="moving-tab">' + $first_li + '</div>');
+        $('.card-wizard .wizard-navigation').append($moving_div);
 
-        $total = $wizard.find(".nav li").length;
+        $total = $wizard.find('.nav li').length;
         let $li_width = 100 / $total;
 
-        let total_steps = $wizard.find(".nav li").length;
+        let total_steps = $wizard.find('.nav li').length;
         let move_distance = $wizard.width() / total_steps;
         let index_temp = index;
         let vertical_level = 0;
@@ -1000,7 +1066,7 @@ export class AddSolutionComponent
           $li_width = 50;
         }
 
-        $wizard.find(".nav li").css("width", $li_width + "%");
+        $wizard.find('.nav li').css('width', $li_width + '%');
 
         let step_width = move_distance;
         move_distance = move_distance * index_temp;
@@ -1022,19 +1088,19 @@ export class AddSolutionComponent
           vertical_level = vertical_level * 38;
         }
 
-        $wizard.find(".moving-tab").css("width", step_width);
-        $(".moving-tab").css({
+        $wizard.find('.moving-tab').css('width', step_width);
+        $('.moving-tab').css({
           transform:
-            "translate3d(" + move_distance + "px, " + vertical_level + "px, 0)",
-          transition: "all 0.5s cubic-bezier(0.29, 1.42, 0.79, 1)"
+            'translate3d(' + move_distance + 'px, ' + vertical_level + 'px, 0)',
+          transition: 'all 0.5s cubic-bezier(0.29, 1.42, 0.79, 1)'
         });
-        $(".moving-tab").css("transition", "transform 0s");
+        $('.moving-tab').css('transition', 'transform 0s');
       },
 
       onTabClick: function(tab: any, navigation: any, index: any) {
         return true;
 
-        const $valid = $(".card-wizard form").valid();
+        const $valid = $('.card-wizard form').valid();
 
         if (!$valid) {
           return false;
@@ -1044,54 +1110,54 @@ export class AddSolutionComponent
       },
 
       onTabShow: function(tab: any, navigation: any, index: any) {
-        let $total = navigation.find("li").length;
+        let $total = navigation.find('li').length;
         let $current = index + 1;
 
-        const $wizard = navigation.closest(".card-wizard");
+        const $wizard = navigation.closest('.card-wizard');
 
         // If it's the last tab then hide the last button and show the finish instead
         if ($current >= $total) {
           $($wizard)
-            .find(".btn-next")
+            .find('.btn-next')
             .hide();
           $($wizard)
-            .find(".btn-finish")
+            .find('.btn-finish')
             .show();
         } else {
           $($wizard)
-            .find(".btn-next")
+            .find('.btn-next')
             .show();
           $($wizard)
-            .find(".btn-finish")
+            .find('.btn-finish')
             .hide();
         }
 
         const button_text = navigation
-          .find("li:nth-child(" + $current + ") a")
+          .find('li:nth-child(' + $current + ') a')
           .html();
 
         setTimeout(function() {
-          $(".moving-tab").text(button_text);
+          $('.moving-tab').text(button_text);
         }, 150);
 
-        const checkbox = $(".footer-checkbox");
+        const checkbox = $('.footer-checkbox');
 
         if (index !== 0) {
           $(checkbox).css({
-            opacity: "0",
-            visibility: "hidden",
-            position: "absolute"
+            opacity: '0',
+            visibility: 'hidden',
+            position: 'absolute'
           });
         } else {
           $(checkbox).css({
-            opacity: "1",
-            visibility: "visible"
+            opacity: '1',
+            visibility: 'visible'
           });
         }
-        $total = $wizard.find(".nav li").length;
+        $total = $wizard.find('.nav li').length;
         let $li_width = 100 / $total;
 
-        let total_steps = $wizard.find(".nav li").length;
+        let total_steps = $wizard.find('.nav li').length;
         let move_distance = $wizard.width() / total_steps;
         let index_temp = index;
         let vertical_level = 0;
@@ -1104,7 +1170,7 @@ export class AddSolutionComponent
           $li_width = 50;
         }
 
-        $wizard.find(".nav li").css("width", $li_width + "%");
+        $wizard.find('.nav li').css('width', $li_width + '%');
 
         let step_width = move_distance;
         move_distance = move_distance * index_temp;
@@ -1126,58 +1192,71 @@ export class AddSolutionComponent
           vertical_level = vertical_level * 38;
         }
 
-        $wizard.find(".moving-tab").css("width", step_width);
-        $(".moving-tab").css({
+        $wizard.find('.moving-tab').css('width', step_width);
+        $('.moving-tab').css({
           transform:
-            "translate3d(" + move_distance + "px, " + vertical_level + "px, 0)",
-          transition: "all 0.5s cubic-bezier(0.29, 1.42, 0.79, 1)"
+            'translate3d(' + move_distance + 'px, ' + vertical_level + 'px, 0)',
+          transition: 'all 0.5s cubic-bezier(0.29, 1.42, 0.79, 1)'
         });
       }
     });
 
     // Prepare the preview for profile picture
-    $("#wizard-picture").change(function() {
+    $('#wizard-picture').change(function() {
       const input = $(this);
 
       if (input[0].files && input[0].files[0]) {
         const reader = new FileReader();
 
         reader.onload = function(e: any) {
-          $("#wizardPicturePreview")
-            .attr("src", e.target.result)
-            .fadeIn("slow");
+          $('#wizardPicturePreview')
+            .attr('src', e.target.result)
+            .fadeIn('slow');
         };
         reader.readAsDataURL(input[0].files[0]);
       }
     });
 
     $('[data-toggle="wizard-radio"]').click(function() {
-      const wizard = $(this).closest(".card-wizard");
-      wizard.find('[data-toggle="wizard-radio"]').removeClass("active");
-      $(this).addClass("active");
+      const wizard = $(this).closest('.card-wizard');
+      wizard.find('[data-toggle="wizard-radio"]').removeClass('active');
+      $(this).addClass('active');
       $(wizard)
         .find('[type="radio"]')
-        .removeAttr("checked");
+        .removeAttr('checked');
       $(this)
         .find('[type="radio"]')
-        .attr("checked", "true");
+        .attr('checked', 'true');
     });
 
     $('[data-toggle="wizard-checkbox"]').click(function() {
-      if ($(this).hasClass("active")) {
-        $(this).removeClass("active");
+      if ($(this).hasClass('active')) {
+        $(this).removeClass('active');
         $(this)
           .find('[type="checkbox"]')
-          .removeAttr("checked");
+          .removeAttr('checked');
       } else {
-        $(this).addClass("active");
+        $(this).addClass('active');
         $(this)
           .find('[type="checkbox"]')
-          .attr("checked", "true");
+          .attr('checked', 'true');
       }
     });
 
-    $(".set-full-height").css("height", "auto");
+    $('.set-full-height').css('height', 'auto');
+  }
+
+  setScrollableHeight() {
+    // setting search result div height
+    let wizardHeight = 0;
+    const oneRemInPx = 16;
+    const totalRemVal = 4;
+
+    if (this.wizardContainer) {
+      wizardHeight = this.wizardContainer.nativeElement.clientHeight;
+    }
+
+    this.sideScrollHeight = wizardHeight - oneRemInPx * totalRemVal;
   }
 
   ngOnChanges(changes: SimpleChanges) {
@@ -1187,9 +1266,9 @@ export class AddSolutionComponent
       const reader: any = new FileReader();
 
       reader.onload = function(e: any) {
-        $("#wizardPicturePreview")
-          .attr("src", e.target.result)
-          .fadeIn("slow");
+        $('#wizardPicturePreview')
+          .attr('src', e.target.result)
+          .fadeIn('slow');
       };
       reader.readAsDataURL(input[0].files[0]);
     }
@@ -1205,8 +1284,8 @@ export class AddSolutionComponent
     if (index >= 0) {
       this.owners.splice(index, 1);
     }
-    console.log(this.owners, "removed from wizard");
-    if (this.solution["id"]) {
+    console.log(this.owners, 'removed from wizard');
+    if (this.solution['id']) {
       this.apollo
         .mutate<any>({
           mutation: gql`
@@ -1225,7 +1304,7 @@ export class AddSolutionComponent
                 _eq: owner.id
               },
               solution_id: {
-                _eq: this.solution["id"]
+                _eq: this.solution['id']
               }
             }
           }
@@ -1233,7 +1312,7 @@ export class AddSolutionComponent
         .pipe(take(1))
         .subscribe(
           ({ data }) => {
-            console.log("worked", data);
+            console.log('worked', data);
             // location.reload();
             // location.reload();
             // this.router.navigateByUrl("/problems");
@@ -1241,7 +1320,7 @@ export class AddSolutionComponent
             return;
           },
           error => {
-            console.log("Could not delete due to " + error);
+            console.log('Could not delete due to ' + error);
           }
         );
     }
@@ -1290,18 +1369,18 @@ export class AddSolutionComponent
           solution.embed_urls.length))
     ) {
       swal({
-        title: "Are you sure you want to publish the solution?",
+        title: 'Are you sure you want to publish the solution?',
         // text: "You won't be able to revert this!",
-        type: "warning",
+        type: 'warning',
         showCancelButton: true,
-        confirmButtonClass: "btn btn-success",
-        cancelButtonClass: "btn btn-warning",
-        confirmButtonText: "Yes",
+        confirmButtonClass: 'btn btn-success',
+        cancelButtonClass: 'btn btn-warning',
+        confirmButtonText: 'Yes',
         buttonsStyling: false
       }).then(result => {
         if (result.value) {
-          this.solution["created_at"] = new Date();
-          this.showSuccessSwal("Solution Added");
+          this.solution['created_at'] = new Date();
+          this.showSuccessSwal('Solution Added');
 
           this.solution.is_draft = false;
           this.submitSolutionToDB();
@@ -1320,25 +1399,25 @@ export class AddSolutionComponent
     ) {
       swal({
         title:
-          "Are you sure you want to publish the solution without adding media content?",
+          'Are you sure you want to publish the solution without adding media content?',
         // text: "You won't be able to revert this!",
-        type: "warning",
+        type: 'warning',
         showCancelButton: true,
-        confirmButtonClass: "btn btn-success",
-        cancelButtonClass: "btn btn-warning",
-        confirmButtonText: "Yes",
+        confirmButtonClass: 'btn btn-success',
+        cancelButtonClass: 'btn btn-warning',
+        confirmButtonText: 'Yes',
         buttonsStyling: false
       }).then(result => {
         if (result.value) {
           solution.created_at = new Date();
-          this.showSuccessSwal("Solution Added");
+          this.showSuccessSwal('Solution Added');
 
           solution.is_draft = false;
           this.submitSolutionToDB();
         }
       });
     } else {
-      this.showSuccessSwal("Solution Updated");
+      this.showSuccessSwal('Solution Updated');
 
       solution.is_draft = false;
       this.submitSolutionToDB();
@@ -1375,30 +1454,30 @@ export class AddSolutionComponent
 
   delete() {
     swal({
-      title: "Are you sure you want to delete this draft?",
+      title: 'Are you sure you want to delete this draft?',
       // text: "You won't be able to revert this!",
-      type: "warning",
+      type: 'warning',
       showCancelButton: true,
-      confirmButtonClass: "btn btn-success",
-      cancelButtonClass: "btn btn-danger",
-      confirmButtonText: "Yes, delete it!",
+      confirmButtonClass: 'btn btn-success',
+      cancelButtonClass: 'btn btn-danger',
+      confirmButtonText: 'Yes, delete it!',
       buttonsStyling: false
     }).then(result => {
       if (result.value) {
-        this.deleteSolution(this.solution["id"]).subscribe(
+        this.deleteSolution(this.solution['id']).subscribe(
           ({ data }) => {
             swal({
-              title: "Deleted!",
+              title: 'Deleted!',
               // text: "Your file has been deleted.",
-              type: "success",
-              confirmButtonClass: "btn btn-success",
+              type: 'success',
+              confirmButtonClass: 'btn btn-success',
               buttonsStyling: false
             });
             window.history.back();
             // this.router.navigateByUrl("/dashboard");
           },
           error => {
-            console.log("Could delete due to " + error);
+            console.log('Could delete due to ' + error);
             console.error(JSON.stringify(error));
           }
         );
@@ -1426,10 +1505,10 @@ export class AddSolutionComponent
       }
     `;
     const solution_problem_object = {
-      solution_id: this.solution["id"],
+      solution_id: this.solution['id'],
       problem_id: this.problemId
     };
-    console.log(solution_problem_object, "solution_problem");
+    console.log(solution_problem_object, 'solution_problem');
 
     return this.apollo.mutate({
       mutation: upsert_solutions_problems,
@@ -1442,7 +1521,7 @@ export class AddSolutionComponent
   autoSave() {
     // console.log(this.problem, "problem data");
     // console.log("trying to auto save");
-    console.log("solution draft status==", this.solution.is_draft);
+    console.log('solution draft status==', this.solution.is_draft);
     if (this.solution.is_draft) {
       if (this.solution.title) {
         this.submitSolutionToDB();
@@ -1495,7 +1574,7 @@ export class AddSolutionComponent
         }
       }
     `;
-    console.log("SOLUTION", this.solution);
+    console.log('SOLUTION', this.solution);
     this.sectors = this.removeDuplicates(this.sectors);
 
     this.apollo
@@ -1510,30 +1589,30 @@ export class AddSolutionComponent
         result => {
           if (result.data.insert_solutions.returning.length > 0) {
             let updatedSolutionData = result.data.insert_solutions.returning[0];
-            this.solution["id"] = result.data.insert_solutions.returning[0].id;
+            this.solution['id'] = result.data.insert_solutions.returning[0].id;
 
             this.saveProblemsInDB(
-              this.solution["id"],
+              this.solution['id'],
               this.selectedProblemsData
             );
-            this.saveOwnersInDB(this.solution["id"], this.owners);
+            this.saveOwnersInDB(this.solution['id'], this.owners);
             this.saveSectorsInDB();
 
-            console.log(this.solution.is_draft, "draft", this.is_edit);
+            console.log(this.solution.is_draft, 'draft', this.is_edit);
 
             if (this.is_edit && !this.solution.is_draft) {
-              this.router.navigate(["solutions", this.solution["id"]], {
-                queryParamsHandling: "preserve"
+              this.router.navigate(['solutions', this.solution['id']], {
+                queryParamsHandling: 'preserve'
               });
             } else if (!this.is_edit && !this.solution.is_draft) {
-              this.showSuccessSwal("Solution Added");
-              this.router.navigate(["solutions", this.solution["id"]], {
-                queryParamsHandling: "preserve"
+              this.showSuccessSwal('Solution Added');
+              this.router.navigate(['solutions', this.solution['id']], {
+                queryParamsHandling: 'preserve'
               });
             } else if (this.is_edit && !updatedSolutionData.is_draft) {
-              this.showSuccessSwal("Solution Added");
-              this.router.navigate(["solutions", this.solution["id"]], {
-                queryParamsHandling: "preserve"
+              this.showSuccessSwal('Solution Added');
+              this.router.navigate(['solutions', this.solution['id']], {
+                queryParamsHandling: 'preserve'
               });
             }
             // else if (this.is_edit && this.solution.is_draft) {
@@ -1564,12 +1643,12 @@ export class AddSolutionComponent
       ) {
         solution_tags.add({
           tag_id: this.tagService.allTags[sector].id,
-          solution_id: this.solution["id"]
+          solution_id: this.solution['id']
         });
       }
     });
 
-    this.tagService.addTagsInDb(tags, "solutions", this.solution["id"]);
+    this.tagService.addTagsInDb(tags, 'solutions', this.solution['id']);
 
     if (solution_tags.size > 0) {
       const upsert_solution_tags = gql`
@@ -1602,7 +1681,7 @@ export class AddSolutionComponent
         .subscribe(
           data => {},
           err => {
-            console.error("Error uploading tags", err);
+            console.error('Error uploading tags', err);
           }
         );
     }
@@ -1610,13 +1689,13 @@ export class AddSolutionComponent
 
   ngAfterViewInit() {
     $(window).resize(() => {
-      $(".card-wizard").each(function() {
+      $('.card-wizard').each(function() {
         const $wizard = $(this);
-        const index = $wizard.bootstrapWizard("currentIndex");
-        let $total = $wizard.find(".nav li").length;
+        const index = $wizard.bootstrapWizard('currentIndex');
+        let $total = $wizard.find('.nav li').length;
         let $li_width = 100 / $total;
 
-        let total_steps = $wizard.find(".nav li").length;
+        let total_steps = $wizard.find('.nav li').length;
         let move_distance = $wizard.width() / total_steps;
         let index_temp = index;
         let vertical_level = 0;
@@ -1629,7 +1708,7 @@ export class AddSolutionComponent
           $li_width = 50;
         }
 
-        $wizard.find(".nav li").css("width", $li_width + "%");
+        $wizard.find('.nav li').css('width', $li_width + '%');
 
         let step_width = move_distance;
         move_distance = move_distance * index_temp;
@@ -1651,33 +1730,40 @@ export class AddSolutionComponent
           vertical_level = vertical_level * 38;
         }
 
-        $wizard.find(".moving-tab").css("width", step_width);
-        $(".moving-tab").css({
+        $wizard.find('.moving-tab').css('width', step_width);
+        $('.moving-tab').css({
           transform:
-            "translate3d(" + move_distance + "px, " + vertical_level + "px, 0)",
-          transition: "all 0.5s cubic-bezier(0.29, 1.42, 0.79, 1)"
+            'translate3d(' + move_distance + 'px, ' + vertical_level + 'px, 0)',
+          transition: 'all 0.5s cubic-bezier(0.29, 1.42, 0.79, 1)'
         });
 
-        $(".moving-tab").css({
-          transition: "transform 0s"
+        $('.moving-tab').css({
+          transition: 'transform 0s'
         });
       });
     });
+
+    // setting focus to the page heading
+    if (this.pageHeading) {
+      this.focusMonitor.focusVia(this.pageHeading, 'program');
+    }
+
+    this.setScrollableHeight();
   }
 
   removeSelectedItem(type: string, index: number) {
-    console.log("delete index,", index, this.solution);
+    console.log('delete index,', index, this.solution);
     let fileName;
     switch (type) {
-      case "image":
+      case 'image':
         if (
           this.solution.image_urls[index].fileEndpoint ===
           this.solution.featured_url
         ) {
-          this.solution.featured_url = "";
-          this.solution.featured_type = "";
+          this.solution.featured_url = '';
+          this.solution.featured_type = '';
         }
-        fileName = this.solution.image_urls[index].fileEndpoint.split("/")[1];
+        fileName = this.solution.image_urls[index].fileEndpoint.split('/')[1];
         this.solution.image_urls.splice(index, 1);
 
         this.filesService.deleteFile(fileName).subscribe(
@@ -1690,15 +1776,15 @@ export class AddSolutionComponent
         this.setDefaultFeaturedImage();
         break;
 
-      case "video":
+      case 'video':
         if (
           this.solution.video_urls[index].fileEndpoint ===
           this.solution.featured_url
         ) {
-          this.solution.featured_url = "";
-          this.solution.featured_type = "";
+          this.solution.featured_url = '';
+          this.solution.featured_type = '';
         }
-        fileName = this.solution.video_urls[index].fileEndpoint.split("/")[1];
+        fileName = this.solution.video_urls[index].fileEndpoint.split('/')[1];
         this.solution.video_urls.splice(index, 1);
 
         this.filesService.deleteFile(fileName).subscribe(
@@ -1709,17 +1795,17 @@ export class AddSolutionComponent
         );
         break;
 
-      case "embed":
+      case 'embed':
         if (this.solution.embed_urls[index] === this.solution.featured_url) {
-          this.solution.featured_url = "";
-          this.solution.featured_type = "";
+          this.solution.featured_url = '';
+          this.solution.featured_type = '';
         }
         this.solution.embed_urls.splice(index, 1);
 
         break;
 
-      case "link":
-        fileName = this.solution.attachments[index].fileEndpoint.split("/")[1];
+      case 'link':
+        fileName = this.solution.attachments[index].fileEndpoint.split('/')[1];
         this.solution.attachments.splice(index, 1);
 
         this.filesService.deleteFile(fileName).subscribe(
@@ -1731,7 +1817,7 @@ export class AddSolutionComponent
         break;
 
       default:
-        console.log("remove item default case");
+        console.log('remove item default case');
         break;
     }
   }
@@ -1739,15 +1825,15 @@ export class AddSolutionComponent
   setDefaultFeaturedImage() {
     if (!this.solution.featured_url && this.solution.image_urls.length) {
       this.solution.featured_url = this.solution.image_urls[0].url;
-      this.solution.featured_type = "image";
+      this.solution.featured_type = 'image';
     }
   }
 
   checkIfExist(data: string) {
     let problem_attachments = [
-      ...this.solution["image_urls"],
-      ...this.solution["video_urls"],
-      ...this.solution["attachments"]
+      ...this.solution['image_urls'],
+      ...this.solution['video_urls'],
+      ...this.solution['attachments']
     ];
 
     let checked = problem_attachments.filter(attachmentObj => {
@@ -1766,18 +1852,18 @@ export class AddSolutionComponent
   onFileSelected(event) {
     for (let i = 0; i < event.target.files.length; i++) {
       const file = event.target.files[i];
-      const type = event.target.files[i].type.split("/")[0];
+      const type = event.target.files[i].type.split('/')[0];
       const mimeType = event.target.files[i].type;
       const size = file.size;
 
       if (size > 5e6) {
-        alert("File size exceeds the 5MB limit");
+        alert('File size exceeds the 5MB limit');
         return;
       }
 
       switch (type) {
-        case "image": {
-          if (typeof FileReader !== "undefined") {
+        case 'image': {
+          if (typeof FileReader !== 'undefined') {
             const reader = new FileReader();
 
             reader.onload = (e: any) => {
@@ -1786,55 +1872,55 @@ export class AddSolutionComponent
                 .fileUpload(file, mimeType)
                 .then(values => {
                   this.solution.image_urls.push({
-                    fileEndpoint: values["fileEndpoint"],
+                    fileEndpoint: values['fileEndpoint'],
                     mimeType: event.target.files[i].type,
-                    key: values["key"]
+                    key: values['key']
                   });
                   if (!this.solution.featured_url) {
                     this.solution.featured_url = this.solution.image_urls[0].fileEndpoint;
-                    this.solution.featured_type = "image";
+                    this.solution.featured_type = 'image';
                   }
                 })
-                .catch(e => console.log("Err:: ", e));
+                .catch(e => console.log('Err:: ', e));
             };
             reader.readAsArrayBuffer(file);
           }
           break;
         }
-        case "video": {
+        case 'video': {
           const video = event.target.files[i];
           this.filesService
             .fileUpload(video, mimeType)
 
             .then(values => {
               this.solution.video_urls.push({
-                fileEndpoint: values["fileEndpoint"],
+                fileEndpoint: values['fileEndpoint'],
                 mimeType: event.target.files[i].type,
-                key: values["key"]
+                key: values['key']
               });
             })
-            .catch(e => console.log("Err:: ", e));
+            .catch(e => console.log('Err:: ', e));
           break;
         }
-        case "application":
-        case "text": {
+        case 'application':
+        case 'text': {
           const doc = event.target.files[i];
           this.filesService
             .fileUpload(doc, mimeType)
 
             .then(values => {
               this.solution.attachments.push({
-                fileEndpoint: values["fileEndpoint"],
+                fileEndpoint: values['fileEndpoint'],
                 mimeType: event.target.files[i].type,
-                key: values["key"]
+                key: values['key']
               });
             })
-            .catch(e => console.log("Err:: ", e));
+            .catch(e => console.log('Err:: ', e));
           break;
         }
         default: {
-          console.log("unknown file type");
-          alert("Unknown file type.");
+          console.log('unknown file type');
+          alert('Unknown file type.');
           break;
         }
       }
@@ -1843,6 +1929,16 @@ export class AddSolutionComponent
 
   nextSelected() {
     window.scroll(0, 0);
+    this.focusMonitor.focusVia(this.mediaLink, 'program');
+  }
+
+  clickPreviousBtn() {
+    const isBtnDisabled = this.nextBtn.nativeElement['disabled'];
+    if (isBtnDisabled) {
+      this.focusMonitor.focusVia(this.textLink, 'program');
+    } else {
+      this.focusMonitor.focusVia(this.nextBtn, 'program');
+    }
   }
 
   isComplete() {
@@ -1859,14 +1955,14 @@ export class AddSolutionComponent
   }
   setFeatured(type, index) {
     // console.log(type, index);
-    if (type === "image") {
-      this.solution.featured_type = "image";
+    if (type === 'image') {
+      this.solution.featured_type = 'image';
       this.solution.featured_url = this.solution.image_urls[index].fileEndpoint;
-    } else if (type === "video") {
-      this.solution.featured_type = "video";
+    } else if (type === 'video') {
+      this.solution.featured_type = 'video';
       this.solution.featured_url = this.solution.video_urls[index].fileEndpoint;
-    } else if (type === "embed") {
-      this.solution.featured_type = "embed";
+    } else if (type === 'embed') {
+      this.solution.featured_type = 'embed';
       this.solution.featured_url = this.solution.embed_urls[index];
     }
   }
@@ -1876,19 +1972,19 @@ export class AddSolutionComponent
 
     if (this.media_url && !duplicate) {
       this.solution.embed_urls.push(this.media_url);
-      this.media_url = "";
+      this.media_url = '';
       if (!this.solution.featured_url) {
         this.solution.featured_url = this.media_url;
-        this.solution.featured_type = "embed";
+        this.solution.featured_type = 'embed';
       }
     }
     if (duplicate) {
-      alert("Link already exist.");
+      alert('Link already exist.');
     }
   }
 
   checkMedialUrl(url: string) {
-    if (!url.startsWith("http")) {
+    if (!url.startsWith('http')) {
       return false;
     }
 

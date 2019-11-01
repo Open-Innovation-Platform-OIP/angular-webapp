@@ -4,15 +4,15 @@ import {
   OnChanges,
   ElementRef,
   ViewChild,
-  Input
+  Input,
+  AfterViewInit
 } from "@angular/core";
-import { ErrorStateMatcher } from "@angular/material/core";
 
 import { UsersService } from "../../services/users.service";
 import { Apollo } from "apollo-angular";
 import gql from "graphql-tag";
 import { Router, ActivatedRoute } from "@angular/router";
-import { first, finalize, take } from "rxjs/operators";
+import { first, take } from "rxjs/operators";
 import { AuthService } from "../../services/auth.service";
 import { FilesService } from "../../services/files.service";
 import { TagsService } from "../../services/tags.service";
@@ -20,43 +20,27 @@ import { Observable } from "rxjs";
 import { map, startWith } from "rxjs/operators";
 import { COMMA, ENTER } from "@angular/cdk/keycodes";
 import { GeocoderService } from "../../services/geocoder.service";
-
-import {
-  FormControl,
-  FormBuilder,
-  FormGroupDirective,
-  NgForm,
-  Validators,
-  FormGroup
-} from "@angular/forms";
+import { FormControl } from "@angular/forms";
 import {
   MatAutocompleteSelectedEvent,
   MatChipInputEvent,
   MatAutocomplete
 } from "@angular/material";
-// declare var H: any;
-// import { GeocoderService } from '../../services/geocoder.service';
-import { filter } from "rxjs-compat/operator/filter";
+import {
+  FocusMonitor,
+  LiveAnnouncer,
+  AriaLivePoliteness
+} from "@angular/cdk/a11y";
 
-// export class MyErrorStateMatcher implements ErrorStateMatcher {
-//   isErrorState(
-//     control: FormControl | null,
-//     form: FormGroupDirective | NgForm | null
-//   ): boolean {
-//     const isSubmitted = form && form.submitted;
-//     return !!(
-//       control &&
-//       control.invalid &&
-//       (control.dirty || control.touched || isSubmitted)
-//     );
-//   }
-// }
 @Component({
   selector: "app-add-user-profile",
   templateUrl: "./add-user-profile.component.html",
   styleUrls: ["./add-user-profile.component.css"]
 })
-export class AddUserProfileComponent implements OnInit, OnChanges {
+export class AddUserProfileComponent
+  implements OnInit, OnChanges, AfterViewInit {
+  @ViewChild("enterYourDetails") enterYourDetails: ElementRef<HTMLElement>;
+
   mode = "Add";
   userId: any;
   visible = true;
@@ -135,7 +119,9 @@ export class AddUserProfileComponent implements OnInit, OnChanges {
     private auth: AuthService,
     private here: GeocoderService,
     private tagService: TagsService,
-    private geoService: GeocoderService
+    private geoService: GeocoderService,
+    private focusMoniter: FocusMonitor,
+    private liveAnnouncer: LiveAnnouncer
   ) {
     this.filteredSectors = this.sectorCtrl.valueChanges.pipe(
       startWith(null),
@@ -147,9 +133,48 @@ export class AddUserProfileComponent implements OnInit, OnChanges {
     );
   }
 
+  ngAfterViewInit() {
+    if (this.enterYourDetails) {
+      this.focusMoniter.focusVia(this.enterYourDetails, "program");
+    }
+  }
+
+  announcement(message: string, politeness?: AriaLivePoliteness) {
+    this.liveAnnouncer
+      .announce(message, politeness)
+      .then(x => x)
+      .catch(e => console.error(e));
+  }
+
+  checkPersona(persona: string): boolean {
+    const criteriaList = [
+      "id",
+      "email",
+      "token",
+      "password",
+      "name",
+      "organization",
+      "qualification",
+      "photo_url",
+      "phone_number",
+      "location",
+      "notify_email",
+      "notify_sms",
+      "notify_app",
+      "organization_id"
+    ];
+
+    for (const criteria of criteriaList) {
+      if (persona === criteria) {
+        return false;
+      }
+    }
+    return true;
+  }
+
   deleteProfileImage(image) {
     console.log(image);
-    let fileName = image.fileEndpoint.split("/")[1];
+    const fileName = image.fileEndpoint.split("/")[1];
 
     this.filesService.deleteFile(fileName).subscribe(
       result => {
@@ -163,8 +188,6 @@ export class AddUserProfileComponent implements OnInit, OnChanges {
   }
 
   checkPhoneNumber(phone) {
-    console.log("pn>>>> ", phone);
-
     this.isPhoneValid = this.phone_pattern.test(phone);
   }
 
@@ -187,6 +210,7 @@ export class AddUserProfileComponent implements OnInit, OnChanges {
   }
 
   remove(sector: string): void {
+    this.announcement(`Removed ${sector}`);
     const index = this.sectors.indexOf(sector);
     if (index >= 0) {
       this.sectors.splice(index, 1);
@@ -197,48 +221,14 @@ export class AddUserProfileComponent implements OnInit, OnChanges {
           "users"
         );
       }
-
-      // this.apollo
-      //   .mutate<any>({
-      //     mutation: gql`
-      //       mutation DeleteMutation($where: users_tags_bool_exp!) {
-      //         delete_users_tags(where: $where) {
-      //           affected_rows
-      //           returning {
-      //             tag_id
-      //           }
-      //         }
-      //       }
-      //     `,
-      //     variables: {
-      //       where: {
-      //         tag_id: {
-      //           _eq: this.tagService.allTags[sector].id
-      //         },
-      //         user_id: {
-      //           _eq: this.user.id
-      //         }
-      //       }
-      //     }
-      //   })
-      //   .subscribe(
-      //     ({ data }) => {
-      //       console.log("worked", data);
-      //       // location.reload();
-      //       // location.reload();
-      //       // this.router.navigateByUrl("/problems");
-
-      //       return;
-      //     },
-      //     error => {
-      //       console.log("Could delete due to " + error);
-      //     }
-      //   );
     }
   }
 
   selected(event: MatAutocompleteSelectedEvent): void {
-    this.sectors.push(event.option.viewValue);
+    const sectorName = event.option.viewValue;
+
+    this.announcement(`Added ${sectorName}`);
+    this.sectors.push(sectorName);
     this.sectorInput.nativeElement.value = "";
     this.sectorCtrl.setValue(null);
   }
@@ -251,24 +241,20 @@ export class AddUserProfileComponent implements OnInit, OnChanges {
     );
   }
 
-  ngOnChanges() {
-    // this.platform = new H.service.Platform({
-    //   app_id: "sug0MiMpvxIW4BhoGjcf",
-    //   app_code: "GSl6bG5_ksXDw4sBTnhr_w"
-    // });
-    // this.geocoder = this.platform.getGeocodingService();
-    // this.query = " ";
-    // this.query2 = " ";
-  }
+  ngOnChanges() {}
 
   storeOrganization(event) {
+    this.announcement(`selected ${event.value}`);
     this.user.organization_id = this.userService.allOrgs[this.organization].id;
   }
 
-  getLocation() {
+  getLocation(evt) {
     this.here.getAddress(this.userLocationName).then(
       result => {
         this.locations = <Array<any>>result;
+        if (typeof evt === "string") {
+          this.announcement(`found ${this.locations.length} locations`);
+        }
       },
       error => {
         console.error(error);
@@ -314,7 +300,7 @@ export class AddUserProfileComponent implements OnInit, OnChanges {
 
     this.userLocationName = locationData.Address.Label;
     this.locationData.push(location);
-    // console.log(this.locationData, "location data");
+    this.announcement(`added ${this.userLocationName}`);
   }
 
   ngOnInit() {

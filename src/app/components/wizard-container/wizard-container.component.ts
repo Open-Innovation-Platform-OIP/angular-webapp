@@ -22,7 +22,7 @@ import { Observable } from "rxjs";
 import { GeocoderService } from "../../services/geocoder.service";
 // import { fileUploadVariables } from "../../../environments/environment";
 import swal from "sweetalert2";
-var Buffer = require("buffer/").Buffer;
+// var Buffer = require('buffer/').Buffer;
 
 import {
   FormControl,
@@ -40,6 +40,11 @@ import {
   MatChipInputEvent,
   MatAutocomplete
 } from "@angular/material";
+import {
+  FocusMonitor,
+  LiveAnnouncer,
+  AriaLivePoliteness
+} from "@angular/cdk/a11y";
 declare const $: any;
 
 let canProceed: boolean;
@@ -77,15 +82,17 @@ export class WizardContainerComponent
   implements OnInit, OnChanges, AfterViewInit {
   accessUrl: string;
   @Input() content;
-
+  @Input() searchedResults: any[] = [];
   @Input() sectors: string[] = [];
   @Input() contentType: any;
   @Input() owners: any[] = [];
   @Input() selectedLocations = [];
+  @Input() revertFocus = false;
 
   // @Input() canProceed: any = true;
   @Output() fieldsPopulated = new EventEmitter();
   @Output() smartSearchInput = new EventEmitter();
+  @Output() changeFocus = new EventEmitter();
   @Output() tagAdded = new EventEmitter();
   @Output() tagRemoved = new EventEmitter();
   @Output() contentSubmitted = new EventEmitter();
@@ -154,7 +161,10 @@ export class WizardContainerComponent
     private tagService: TagsService,
     private usersService: UsersService,
     private auth: AuthService,
-    private here: GeocoderService
+    private here: GeocoderService,
+    private elementRef: ElementRef,
+    private focusMonitor: FocusMonitor,
+    private liveAnnouncer: LiveAnnouncer
   ) {
     this.filteredSectors = this.sectorCtrl.valueChanges.pipe(
       startWith(null),
@@ -170,19 +180,26 @@ export class WizardContainerComponent
       map((owner: string | null) => (owner ? this.filterOwners(owner) : []))
     );
 
-    this.type = this.formBuilder.group({
-      title: [null, Validators.required],
-      description: [null, Validators.required],
-      location: [null, Validators.required],
-      population: [null, Validators.required],
-      organization: [null, Validators.required],
-      impact: [null, null],
-      extent: [null, null],
-      beneficiary: [null, null],
-      resources: [null, null],
-      sectors: [null, null],
-      media_url: [null, null]
-    });
+    // this.type = this.formBuilder.group({
+    //   title: [null, Validators.required],
+    //   description: [null, Validators.required],
+    //   location: [null, Validators.required],
+    //   population: [null, Validators.required],
+    //   organization: [null, Validators.required],
+    //   impact: [null, null],
+    //   extent: [null, null],
+    //   beneficiary: [null, null],
+    //   resources: [null, null],
+    //   sectors: [null, null],
+    //   media_url: [null, null]
+    // });
+  }
+
+  announcement(message: string, politeness?: AriaLivePoliteness) {
+    this.liveAnnouncer
+      .announce(message, politeness)
+      .then(x => console.log("announced"))
+      .catch(e => console.error(e));
   }
 
   add(event: MatChipInputEvent): void {
@@ -232,6 +249,7 @@ export class WizardContainerComponent
     }
     console.log(this.selectedLocations, "locations");
     this.selectedLocations.push(locationData);
+    this.announcement(`Added ${locationData.location_name}`);
 
     // //console.log(this.selectedLocations, "selected locations");
 
@@ -261,7 +279,7 @@ export class WizardContainerComponent
   }
 
   removeLocation(removedLocation) {
-    //console.log(location, "removed location");
+    // console.log(removedLocation, 'removed location');
     this.selectedLocations = this.selectedLocations.filter(location => {
       if (
         location.location.coordinates[0] !==
@@ -279,6 +297,7 @@ export class WizardContainerComponent
     // //console.log(this.selectedLocations, "selected locations after removal");
 
     this.locationRemoved.emit(removedLocation);
+    this.announcement(`Remove ${removedLocation.location_name}`);
   }
 
   deleteClicked() {
@@ -286,19 +305,23 @@ export class WizardContainerComponent
   }
 
   remove(sector: string): void {
+    console.log(sector, this.localSectors);
     const index = this.localSectors.indexOf(sector);
     if (index >= 0) {
       this.localSectors.splice(index, 1);
     }
 
     this.tagRemoved.emit(sector);
+
+    this.announcement(`Removed ${sector}`);
   }
 
-  getLocation(input) {
-    if (this.locationInputValue != "Unknown") {
+  getLocation() {
+    if (this.locationInputValue !== "Unknown") {
       this.here.getAddress(this.locationInputValue).then(
         result => {
           this.locations = <Array<any>>result;
+          this.announcement(`Found ${this.locations.length} locations`);
         },
         error => {
           console.error(error);
@@ -312,6 +335,7 @@ export class WizardContainerComponent
     this.localSectors.push(event.option.viewValue);
     this.sectorInput.nativeElement.value = "";
     this.sectorCtrl.setValue(null);
+    this.announcement(`Added ${event.option.viewValue}`);
     this.tagAdded.emit(this.localSectors);
   }
 
@@ -339,21 +363,20 @@ export class WizardContainerComponent
   }
 
   selectedOwner(event: MatAutocompleteSelectedEvent): void {
-    //console.log(event.option, "event value");
     this.owners.push(event.option.value);
     this.ownerInput.nativeElement.value = "";
     this.ownersCtrl.setValue(null);
     this.addedOwners.emit(this.owners);
+    this.announcement(`Added ${event.option.value.value}`);
   }
 
   removeOwner(owner) {
-    //console.log(owner, "remove");
     const index = this.owners.indexOf(owner);
     if (index >= 0) {
       this.owners.splice(index, 1);
       this.removedOwners.emit(owner);
+      this.announcement(`Removed ${owner.value || owner.name}`);
     }
-    //console.log(this.owners, "removed in container");
   }
 
   addOwner(event) {
@@ -395,9 +418,9 @@ export class WizardContainerComponent
       this.usersService.currentUser.organization
     ) {
       this.content.organization = this.usersService.currentUser.organization;
-      //console.log(this.content.organization, "test orgs on user");
+      // console.log(this.content.organization, "test orgs on user");
     } else {
-      this.content.organization = "None";
+      this.content.organization = "none";
     }
 
     clearInterval(this.autosaveInterval);
@@ -423,6 +446,7 @@ export class WizardContainerComponent
       sectors: [null, null],
       media_url: [null, null]
     });
+
     // Code for the Validator
     const $validator = $(".card-wizard form").validate({
       rules: {
@@ -702,8 +726,15 @@ export class WizardContainerComponent
   }
 
   ngOnChanges(changes: SimpleChanges) {
+    // Revert focus
+    if (this.contentType === "problem" && this.revertFocus) {
+      this.setFocus('input[name="title"]');
+    } else if (this.contentType === "enrichment" && this.revertFocus) {
+      this.setFocus('textarea[name="description"]');
+    }
+
     if (this.localSectors.length <= this.sectors.length) {
-      //console.log(this.localSectors, ">>>>> local sectors ");
+      // console.log(this.localSectors, ">>>>> local sectors ");
       this.localSectors = this.sectors;
       // //console.log(
       //   this.localSectors,
@@ -810,6 +841,18 @@ export class WizardContainerComponent
         });
       });
     });
+
+    setTimeout(() => {
+      this.setFocus("h1.card-title");
+    }, 1000);
+  }
+
+  setFocus(elemId) {
+    const elm = this.elementRef.nativeElement.querySelector(elemId);
+
+    if (elm) {
+      this.focusMonitor.focusVia(elm, "program");
+    }
   }
 
   removeSelectedItem(type: string, index: number) {
@@ -939,7 +982,7 @@ export class WizardContainerComponent
                     this.content.featured_type = "image";
                   }
                 })
-                .catch(e => {}); //console.log("Err:: ", e));
+                .catch(e => {});
             };
             reader.readAsArrayBuffer(file);
           }
@@ -957,9 +1000,7 @@ export class WizardContainerComponent
                 key: values["key"]
               });
             })
-            .catch((
-              e //console.log("Err:: ", e));
-            ) => {});
+            .catch(e => {});
           break;
         }
         case "application":
@@ -975,11 +1016,11 @@ export class WizardContainerComponent
                 key: values["key"]
               });
             })
-            .catch(e => {}); //console.log("Err:: ", e));
+            .catch(e => {});
           break;
         }
         default: {
-          //console.log("unknown file type");
+          // console.log('unknown file type');
           alert("Unknown file type.");
           break;
         }
@@ -988,7 +1029,27 @@ export class WizardContainerComponent
   }
 
   nextSelected() {
+    const tabUpload = this.elementRef.nativeElement.querySelector(
+      '[href="#media"]'
+    );
+
+    this.focusMonitor.focusVia(tabUpload, "program");
     this.nextTab.emit(true);
+  }
+
+  prevSelected() {
+    const nextBtn = this.elementRef.nativeElement.querySelector(
+      "input.btn-next"
+    );
+
+    if (!nextBtn.disabled) {
+      setTimeout(() => {
+        this.focusMonitor.focusVia(nextBtn, "program");
+      }, 1000);
+    } else {
+      const tab = this.elementRef.nativeElement.querySelector('[href="#text"]');
+      this.focusMonitor.focusVia(tab, "program");
+    }
   }
 
   isComplete() {
@@ -1055,5 +1116,9 @@ export class WizardContainerComponent
     } else {
       return false;
     }
+  }
+
+  moveFocus() {
+    this.changeFocus.emit(true);
   }
 }

@@ -1,4 +1,4 @@
-import { BrowserModule } from "@angular/platform-browser";
+import { BrowserModule, Title } from "@angular/platform-browser";
 import { NgModule, ErrorHandler, Injectable } from "@angular/core";
 import { BrowserAnimationsModule } from "@angular/platform-browser/animations";
 import { RouterModule } from "@angular/router";
@@ -104,7 +104,7 @@ import { AuthInterceptor } from "./services/auth-interceptor";
     // WizardComponent
   ]
 })
-export class MaterialModule {}
+export class MaterialModule { }
 
 // Sentry.init({
 //   dsn: "https://aa3877830cee4ba6b6999be089316f57@sentry.io/1408858"
@@ -138,8 +138,9 @@ export class MaterialModule {}
   ],
   declarations: [AppComponent, AdminLayoutComponent, AuthLayoutComponent],
   providers: [
+    Title,
     // { provide: ErrorHandler, useClass: SentryErrorHandler }
   ],
   bootstrap: [AppComponent]
 })
-export class AppModule {}
+export class AppModule { }
