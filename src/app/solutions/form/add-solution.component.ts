@@ -160,7 +160,7 @@ export class AddSolutionComponent
     { value: Number.MAX_VALUE, viewValue: '>100,000' }
   ];
   touch: boolean;
-  hide: boolean = false;
+  hide = false;
   sideScrollHeight;
 
   @ViewChild('problemInput') problemInput: ElementRef<HTMLInputElement>;
