@@ -46,27 +46,27 @@
             </h4>
           </div>
           <div class="card-body">
-            <div>
+            <div *ngIf="loggedInUsersProfile || !userData.email_private">
               <strong>E-mail</strong>
               <p class="description">{{userData.email}}</p>
 
             </div>
 
 
-            <div *ngIf="loggedInUsersProfile && userData.phone_number">
+            <div *ngIf="loggedInUsersProfile && userData.phone_number && !userData.number_private">
               <strong>Phone Number</strong>
               <p class="description" *ngIf="userData.id==auth.currentUserValue.id">{{userData.phone_number}}</p>
 
             </div>
 
 
-            <div *ngIf="organizationName">
+            <div *ngIf="organizationName && (loggedInUsersProfile || !userData.organization_private)">
               <strong>Organization</strong>
               <p class="description">{{organizationName}}</p>
 
             </div>
 
-            <div *ngIf="personas&&personas.length">
+            <div *ngIf="personas&&personas.length && (loggedInUsersProfile || !userData.persona_private) ">
 
               <strong>Persona</strong>
               <div>
@@ -86,18 +86,19 @@
             <p class="description">{{userData.organization}}</p> -->
 
 
-            <div *ngIf="userData&&userData.user_locations&&userData.user_locations.length">
+            <div
+              *ngIf="userData&&userData.user_locations&&userData.user_locations.length && (loggedInUsersProfile || !userData.location_private)">
               <strong>Location</strong>
               <p class="description">
                 {{userData.user_locations[0].location.location_name}}</p>
             </div>
 
-            <div *ngIf="interests.length">
+            <div *ngIf="interests.length && (loggedInUsersProfile || !userData.interests_private)">
 
               <strong>Interests</strong>
               <div>
-                <span class="badge badge-warning" *ngFor="let interest of interests"
-                  style="margin-right: 0.3em;">{{interest }} </span>
+                <span class=" badge badge-warning" *ngFor="let interest of interests" style="margin-right: 0.3em;">
+                  {{interest }} </span>
                 <span>&nbsp;</span>
               </div>
 

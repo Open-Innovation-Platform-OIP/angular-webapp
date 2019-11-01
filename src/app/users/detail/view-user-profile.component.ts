@@ -19,7 +19,6 @@ export class ViewUserProfileComponent implements OnInit, OnDestroy {
   userData: any = {};
   userDataQuery: QueryRef<any>;
 
-
   interests: any[] = [];
   loggedInUsersProfile: boolean = false;
   objectEntries = Object.entries;
@@ -42,8 +41,6 @@ export class ViewUserProfileComponent implements OnInit, OnDestroy {
   }
 
   ngOnInit() {
-   
-
     console.log("init on user profile");
     this.user = this.route.paramMap.pipe(
       switchMap((params: ParamMap) => {
@@ -60,7 +57,16 @@ export class ViewUserProfileComponent implements OnInit, OnDestroy {
         if (result.data.users[0]) {
           this.userData = result.data.users[0];
           Object.entries(this.userData).map(data => {
-            if (typeof data[1] === "boolean" && data[1]) {
+            if (
+              (data[0] == "is_ngo" && data[1]) ||
+              (data[0] == "is_innovator" && data[1]) ||
+              (data[0] == "is_entrepreneur" && data[1]) ||
+              (data[0] == "is_expert" && data[1]) ||
+              (data[0] == "is_incubator" && data[1]) ||
+              (data[0] == "is_funder" && data[1]) ||
+              (data[0] == "is_government" && data[1]) ||
+              (data[0] == "is_beneficiary" && data[1])
+            ) {
               this.personas.push(data[0]);
             }
           });
@@ -76,9 +82,9 @@ export class ViewUserProfileComponent implements OnInit, OnDestroy {
           }
 
           console.log(this.userData, "userData");
-          // if (this.userData.id === Number(this.auth.currentUserValue.id)) {
-          //   this.loggedInUsersProfile = true;
-          // }
+          if (this.userData.id === Number(this.auth.currentUserValue.id)) {
+            this.loggedInUsersProfile = true;
+          }
           // console.log(this.problemService.problem, "problem");
         }
       },
@@ -108,7 +114,13 @@ export class ViewUserProfileComponent implements OnInit, OnDestroy {
               is_incubator
               is_funder
               is_government
-              is_beneficiary 
+              is_beneficiary
+              email_private
+                number_private
+                organization_private
+                interests_private
+                location_private
+                persona_private
               user_locations{
                 location{
                   location_name

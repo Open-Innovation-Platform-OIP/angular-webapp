@@ -196,6 +196,12 @@ export class UsersService {
                 notify_sms
                 notify_app
                 organization_id
+                email_private
+                number_private
+                organization_private
+                interests_private
+                location_private
+                persona_private
               ]
             }
           ) {

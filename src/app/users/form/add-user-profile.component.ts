@@ -114,7 +114,13 @@ export class AddUserProfileComponent implements OnInit, OnChanges {
     notify_email: false,
     notify_sms: false,
     notify_app: true,
-    organization_id: null
+    organization_id: null,
+    email_private: false,
+    number_private: false,
+    organization_private: false,
+    interests_private: false,
+    location_private: false,
+    persona_private: false
   };
 
   @ViewChild("sectorInput") sectorInput: ElementRef<HTMLInputElement>;
@@ -360,6 +366,12 @@ export class AddUserProfileComponent implements OnInit, OnChanges {
               notify_sms
               notify_app
               organization_id
+              email_private
+              number_private
+              organization_private
+              interests_private
+              location_private
+              persona_private
               organizationByOrganizationId{
                 id
                 name
@@ -389,6 +401,7 @@ export class AddUserProfileComponent implements OnInit, OnChanges {
                     this.user[key] = data.users[0][key];
                   }
                 });
+                console.log(this.user, "user data");
 
                 if (data.users[0].user_locations.length) {
                   const userLocationFromDB =
@@ -431,6 +444,11 @@ export class AddUserProfileComponent implements OnInit, OnChanges {
 
   removeDuplicates(array) {
     return Array.from(new Set(array));
+  }
+
+  onValChange(event, type) {
+    console.log(this.user[`${type}_private`], "private toggle data", this.user);
+    this.user[`${type}_private`] = event.checked;
   }
 
   updateProfileToDb() {

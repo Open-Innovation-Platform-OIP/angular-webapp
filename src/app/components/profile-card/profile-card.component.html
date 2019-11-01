@@ -35,7 +35,8 @@
   </div>
   <div class="card-body">
     <h4 class="card-title">{{userData.name}}</h4>
-    <h6 class="card-category text-gray">{{userData.organization}}</h6>
+    <h6 class="card-category text-gray" *ngIf="userData.organizationByOrganizationId">
+      {{userData.organizationByOrganizationId.name}}</h6>
     <div *ngIf="userData.users_tags&& userData.users_tags.length">
       <span *ngFor="let interest of userData.users_tags; let i=index;" class="badge badge-warning"
         style="margin-right: 0.3em;"><span *ngIf="i<2">{{interest.tag.name}}</span></span>
