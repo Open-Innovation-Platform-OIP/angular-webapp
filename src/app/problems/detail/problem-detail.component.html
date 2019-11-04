@@ -1,234 +1,132 @@
+<!-- discuss image and video modal ends -->
+
+<!--REWRITE-->
+
+
+<!--REWRITE-->
+
 
 
 <div class="main-content">
   <div class="container-fluid">
     <div class="row">
 
+      <!--Problem Details-->
       <div class="col-md-8">
         <div class="card card-product">
           <div class="card-header card-header-warning">
-            <h1
-              class="card-title"
-              style="font-size: 2rem;"
-              tabindex="-1"
-              #problemDataTitle
-            >
-              {{ problemData.title }}
-            </h1>
-            <p class="card-category">
-              <b
-                >Created By :
-                {{
-                  auth.currentUserValue.id == problemData.user_id
-                    ? 'You'
-                    : problemOwner
-                }}</b
-              >
-            </p>
+            <h4 class="card-title">{{problemData.title}}</h4>
+            <p class="card-category"><b>Created By :
+                {{ (auth.currentUserValue.id == problemData.user_id) ? 'You' : problemOwner }}</b></p>
           </div>
           <div class="card-body">
             <div class="row">
               <div class="col-md-4">
                 <div class="picture text-center">
                   <img
-                    src="{{
-                      problemData.featured_url &&
-                      checkUrlIsImg(
-                        filesService.fileAccessUrl + problemData.featured_url
-                      )
-                        ? filesService.fileAccessUrl + problemData.featured_url
-                        : './assets/img/image_placeholder.jpg'
-                    }}"
-                    [attr.alt]="[imageAlt]"
-                    class="rounded img-fluid"
-                  />
+                    src="{{(problemData.featured_url && checkUrlIsImg(filesService.fileAccessUrl+problemData.featured_url)) ? filesService.fileAccessUrl+problemData.featured_url : './assets/img/image_placeholder.jpg'}}"
+                    alt="Thumbnail Image" class="rounded img-fluid">
                   <div>
-                    <button
-                      mat-raised-button
-                      *ngIf="problem_attachments.length > 0"
-                      class="btn btn-raised btn-info btn-sm"
-                      data-toggle="modal"
-                      (click)="openModal('#viewMoreImgModal')"
-                    >
-                      view media ({{ problem_attachments.length }})
+                    <button mat-raised-button *ngIf="problem_attachments.length > 0"
+                      class="btn btn-raised btn-info btn-sm" data-toggle="modal"
+                      (click)="openModal('#viewMoreImgModal')">
+                      view media ({{problem_attachments.length}})
                     </button>
                   </div>
                 </div>
               </div>
               <div class="col-md-8">
-                <div *ngIf="problemData.description">
-                  <strong aria-level="3" role="heading">Description</strong>
-                  <p class="description" style="white-space: pre-wrap;">
-                    {{ problemData.description }}
-                  </p>
-                </div>
+                <strong *ngIf="problemData.description">Description</strong>
+                <p class="description" style="white-space: pre-wrap;">{{problemData.description}}</p>
 
-                <div *ngIf="problemData.organization">
-                  <strong aria-level="3" role="heading">Organization</strong>
-                  <p class="description">{{ problemData.organization }}</p>
-                </div>
+                <strong *ngIf="problemData.organization">Organization</strong>
+                <p class="description">{{problemData.organization}}</p>
 
-                <div>
-                  <strong aria-level="3" role="heading"
-                    >Population Affected</strong
-                  >
-                  <p
-                    class="description"
-                    *ngIf="problemData.min_population === 0"
-                  >
-                    Between {{ problemData.min_population }} and
-                    {{ problemData.max_population }}
-                  </p>
-                  <p
-                    class="description"
-                    *ngIf="problemData.min_population !== 0"
-                  >
-                    More than {{ problemData.min_population }}
-                  </p>
-                </div>
+                <strong>Population Affected</strong>
+                <p class="description" *ngIf="problemData.min_population===0">Between {{problemData.min_population}}
+                  and {{problemData.max_population}}</p>
+                <p class="description" *ngIf="problemData.min_population!==0">More than
+                  {{problemData.min_population}}</p>
 
-                <div *ngIf="problemData.beneficiary_attributes">
-                  <strong aria-level="3" role="heading"
-                    >Beneficiary Attributes</strong
-                  >
-                  <p class="description" style="white-space: pre-wrap;">
-                    {{ problemData.beneficiary_attributes }}
-                  </p>
-                </div>
+                <strong *ngIf="problemData.beneficiary_attributes">Beneficiary Attributes</strong>
+                <p class="description" style="white-space: pre-wrap;">{{problemData.beneficiary_attributes}}</p>
 
-                <div *ngIf="problemData.resources_needed">
-                  <strong aria-level="3" role="heading"
-                    >Resources Needed</strong
-                  >
-                  <p class="description" style="white-space: pre-wrap;">
-                    {{ problemData.resources_needed }}
-                  </p>
-                </div>
+                <strong *ngIf="problemData.resources_needed">Resources Needed</strong>
+                <p class="description" style="white-space: pre-wrap;">{{problemData.resources_needed}}</p>
 
+                <strong *ngIf="tags.length">Sectors</strong>
                 <div *ngIf="tags.length">
-                  <strong aria-level="3" role="heading">Sectors</strong>
-                  <div>
-                    <span
-                      *ngFor="let tag of tags"
-                      (click)="sectorSelected(tag)"
-                      class="badge badge-warning actions"
-                      style="margin-right: 0.3em;"
-                      >{{ tag.name }}</span
-                    >
-                  </div>
+                  <span *ngFor="let tag of tags" (click)="sectorSelected(tag)" class="badge badge-warning actions"
+                    style="margin-right: 0.3em;">{{tag.name}}</span>
+                  <span>&nbsp;</span>
                 </div>
 
-                <div *ngIf="problemData.impact">
-                  <strong aria-level="3" role="heading">Impact</strong>
-                  <p class="description" style="white-space: pre-wrap;">
-                    {{ problemData.impact }}
-                  </p>
+                <br />
+
+                <strong *ngIf="problemData.impact">Impact</strong>
+                <p class="description" style="white-space: pre-wrap;">{{problemData.impact}}</p>
+
+                <strong *ngIf="problemData.extent">Extent</strong>
+                <p class="description" style="white-space: pre-wrap;">{{problemData.extent}}</p>
+
+                <strong>Location(s)</strong>
+                <div *ngIf="problemLocations.length">
+                  <div *ngFor="let location of problemLocations" (click)="locationSelected(location)" class="actions"
+                    style="margin-right: 0.3em; ">
+                    {{location.location_name}}</div>
+                  <span>&nbsp;</span>
                 </div>
 
-                <div *ngIf="problemData.extent">
-                  <strong aria-level="3" role="heading">Extent</strong>
-                  <p class="description" style="white-space: pre-wrap;">
-                    {{ problemData.extent }}
-                  </p>
+                <br />
+
+                <strong *ngIf="ownerData.length">Owner(s)</strong>
+                <div>
+                  <a [routerLink]="'/profiles/'+owner.id" queryParamsHandling="merge" *ngFor="let owner of ownerData"
+                    style="margin-right: 0.6em;">{{owner.name}}</a>
+                  <span>&nbsp;</span>
                 </div>
 
-                <div *ngIf="problemLocations.length" class="mt-3">
-                  <strong aria-level="3" role="heading">Location(s)</strong>
-                  <div>
-                    <div
-                      *ngFor="let location of problemLocations"
-                      (click)="locationSelected(location)"
-                      class="actions"
-                      style="margin-right: 0.3em; "
-                    >
-                      {{ location.location_name }}
-                    </div>
-                  </div>
+                <br />
+
+                <strong *ngIf="solutions.length">Solutions</strong>
+                <div *ngFor="let solution of solutions">
+                  <a [routerLink]="'/solutions/'+solution.id" queryParamsHandling="merge"
+                    style="margin-right: 0.3em;">{{solution.title}}</a>
+                  <!-- <span>&nbsp;</span> -->
                 </div>
 
-                <div *ngIf="ownerData.length" class="mb-3">
-                  <strong aria-level="3" role="heading">Owner(s)</strong>
-                  <div>
-                    <a
-                      [routerLink]="'/profiles/' + owner.id"
-                      queryParamsHandling="merge"
-                      *ngFor="let owner of ownerData"
-                      style="margin-right: 0.6em;"
-                      >{{ owner.name }}</a
-                    >
-                  </div>
-                </div>
+                <br />
 
-                <div class="mb-3" *ngIf="solutions.length">
-                  <strong aria-level="3" role="heading">Solutions</strong>
-                  <div *ngFor="let solution of solutions">
-                    <a
-                      [routerLink]="'/solutions/' + solution.id"
-                      queryParamsHandling="merge"
-                      style="margin-right: 0.3em;"
-                      >{{ solution.title }}</a
-                    >
-                  </div>
-                </div>
               </div>
             </div>
           </div>
           <div class="card-footer">
-            <div class="stats">
-              <a
-                href="javascript:void(0)"
-                (click)="toggleVoteProblem()"
-                role="button"
-                [attr.aria-pressed]="voters.has(userId)"
-                aria-label="number of likes"
-              >
-                <i
-                  class="material-icons actions"
-                  [ngStyle]="{
-                    color: voters.has(userId) ? '#1E90FF' : 'black'
-                  }"
-                  aria-hidden="true"
-                >
-                  thumb_up
-                </i>
-                <span>{{ voters.size }}</span>
-              </a>
 
-              <a
-                class="mx-2"
-                href="javascript:void(0)"
-                (click)="toggleWatchProblem()"
-                role="button"
-                [attr.aria-pressed]="watchers.has(userId)"
-                aria-label="problem watched"
-              >
-                <i
-                  class="material-icons actions"
-                  [ngStyle]="{
-                    color: watchers.has(userId) ? '#1E90FF' : 'black'
-                  }"
-                  aria-hidden="true"
-                >
-                  visibility
-                </i>
-                <span>{{ watchers.size }}</span>
-              </a>
+
+            <div class="stats">
+              <i class="material-icons actions" (click)="toggleVoteProblem()"
+                [ngStyle]="{'color':voters.has(userId) ? '#1E90FF' : 'black' }">
+                thumb_up
+              </i>
+              <span>{{voters.size}}</span>
+              <i class="material-icons actions col-md-3" (click)="toggleWatchProblem()"
+                [ngStyle]="{'color':watchers.has(userId) ? '#1E90FF' : 'black' }">
+                visibility
+              </i>
+              <span> {{watchers.size}}</span>
+              <!-- <i *ngIf="userId===problemData.user_id" [routerLink]="
+                '/problems/'+ problemData.id+'/edit'" class="material-icons actions">
+                create
+              </i> -->
             </div>
 
-            <!-- <div class="dropdown">
-              <button
-                *ngIf="userId === problemData.user_id || owners.has(userId)"
-                [routerLink]="'/problems/' + problemData.id + '/edit'"
-                queryParamsHandling="merge"
-                [disabled]="
-                  this.collaborators.length ||
-                  this.enrichment.length ||
-                  this.validation.length
-                "
-                class="btn btn-sm btn-warning mr-2"
-                aria-expanded="true"
-              >
-                <i class="material-icons actions" aria-hidden="true">
+            <!--  -->
+            <div class="dropdown">
+              <button *ngIf="(userId===problemData.user_id) || owners.has(userId)" [routerLink]="
+                '/problems/'+ problemData.id+'/edit'" queryParamsHandling="merge"
+                [disabled]="this.collaborators.length || this.enrichment.length || this.validation.length"
+                class="btn btn-sm btn-warning" aria-expanded="true">
+                <i class="material-icons actions">
                   create
                 </i>
               </button>
@@ -256,127 +154,47 @@
                 </i>
               </button>
 
-            </div> -->
-
-              <div class="dropdown">
-                <button
-                  class="btn btn-sm btn-warning"
-                  type="button"
-                  id="shareBtnDropdown"
-                  data-toggle="dropdown"
-                  aria-haspopup="true"
-                  aria-expanded="false"
-                  aria-label="share"
-                >
-                  <i class="material-icons actions" aria-hidden="true">
-                    share
-                  </i>
-                </button>
-                <div class="dropdown-menu" aria-labelledby="shareBtnDropdown">
-                  <ng-container *ngIf="channels.linkedin">
-                    <a
-                      class="dropdown-item"
-                      href="javscript:void(0);"
-                      (click)="linkedInShare()"
-                      >LinkedIn</a
-                    >
-                  </ng-container>
-                  <ng-container *ngIf="channels.facebook">
-                    <a
-                      class="dropdown-item"
-                      href="javscript:void(0);"
-                      (click)="fbShare()"
-                      >Facebook</a
-                    >
-                  </ng-container>
-                  <ng-container *ngIf="channels.twitter">
-                    <a
-                      class="dropdown-item"
-                      href="javscript:void(0);"
-                      (click)="twitterShare()"
-                      >Twitter</a
-                    >
-                  </ng-container>
-                  <ng-container *ngIf="channels.email">
-                    <a
-                      class="dropdown-item"
-                      href="javscript:void(0);"
-                      (click)="mailShare()"
-                      >Email</a
-                    >
-                  </ng-container>
-                  <ng-container *ngIf="channels.sms">
-                    <a
-                      class="dropdown-item"
-                      href="javscript:void(0);"
-                      (click)="smsShare()"
-                      >SMS</a
-                    >
-                  </ng-container>
-              </div>
             </div>
-          </div>
-         
 
-       
+          </div>
+        </div>
+
+        <!-- <button mat-raised-button (click)="openDialog()">Pick one</button> -->
+        <!--Problem Details-->
+
+        <!-- <h2 *ngIf="collaborators[0].intent">{{collaborators[0].intent}}</h2> -->
+
+
+        <!--Show more images and videos-->
 
         <!-- ----------------------------- problem attachments modal start----------------------------- -->
-        <div
-          class="modal fade"
-          id="viewMoreImgModal"
-          tabindex="-1"
-          role="dialog"
-          aria-labelledby="myModalLabel"
-          aria-hidden="true"
-        >
+        <div class="modal fade" id="viewMoreImgModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel"
+          aria-hidden="true">
           <div class="modal-dialog modal-dialog-centered modal-lg">
             <div class="modal-content">
               <div class="modal-header">
-                <button
-                  type="button"
-                  class="close"
-                  data-dismiss="modal"
-                  aria-hidden="true"
-                  (click)="closeModal($event)"
-                >
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true"
+                  (click)="closeModal($event)">
                   <i class="material-icons">close</i>
                 </button>
               </div>
               <div class="modal-body">
-                <app-display-modal
-                  *ngIf="problem_attachments_src"
-                  [source]="problem_attachments[problem_attachments_index]"
-                >
+                <app-display-modal *ngIf="problem_attachments_src "
+                  [source]="problem_attachments[problem_attachments_index]">
                 </app-display-modal>
               </div>
-              <div
-                class="modal-footer justify-content-center"
-                *ngIf="this.problem_attachments.length > 1"
-              >
-                <button
-                  mat-raised-button
-                  type="button"
-                  [disabled]="problem_attachments_index < 1"
-                  (click)="toggleProblemAttachmentsIndex(false)"
-                  class="btn btn-link btn-round btn-twitter"
-                >
-                  <i class="material-icons" style="zoom:2;">
+              <div class="modal-footer justify-content-center" *ngIf="this.problem_attachments.length > 1">
+                <button mat-raised-button type="button" [disabled]="problem_attachments_index < 1"
+                  (click)="toggleProblemAttachmentsIndex(false)" class="btn btn-link btn-round btn-twitter"><i
+                    class="material-icons" style="zoom:2;">
                     keyboard_arrow_left
                   </i>
                 </button>
-                <div class="col-3 text-center">
-                  <strong>{{ problem_attachments_index + 1 }}</strong>
-                </div>
-                <button
-                  mat-raised-button
-                  type="button"
-                  [disabled]="
-                    problem_attachments_index === problem_attachments.length - 1
-                  "
-                  class="btn btn-link btn-round btn-twitter"
-                  (click)="toggleProblemAttachmentsIndex(true)"
-                >
-                  <i class="material-icons" style="zoom:2;">
+                <div class="col-3 text-center"><strong>{{problem_attachments_index + 1}}</strong></div>
+                <button mat-raised-button type="button"
+                  [disabled]="problem_attachments_index === problem_attachments.length - 1"
+                  class="btn btn-link btn-round btn-twitter" (click)="toggleProblemAttachmentsIndex(true)"><i
+                    class="material-icons" style="zoom:2;">
                     keyboard_arrow_right
                   </i>
                 </button>
@@ -386,68 +204,59 @@
         </div>
         <!-- ----------------------------- problem attachments modal ends----------------------------- -->
 
-        <hr />
+        <hr>
 
-        
+        <!--Enrichment-->
+
+        <!--Enrichment divider-->
         <div class="row justify-content-center">
-         
-          <button
-            mat-raised-button
-            *ngIf="auth.currentUserValue.id"
-            class="btn btn-warning btn-round"
-            matTooltip="Click to add enrichment"
-            [matTooltipPosition]="'below'"
+          <!-- <a mat-button NguCarouselPrev class="leftRs">
+              <i class="material-icons">
+                keyboard_arrow_left
+              </i>
+            </a> -->
+          <button mat-raised-button *ngIf="auth.currentUserValue.id" class="btn btn-warning btn-round"
+            matTooltip="Click to add enrichment" [matTooltipPosition]="'below'"
             [disabled]="disableEnrichButton || !auth.currentUserValue.id"
-            [routerLink]="['/enrichment/add', { problemId: problemData.id }]"
-            queryParamsHandling="merge"
-          >
-            Enrich
-          </button>
+            [routerLink]="['/enrichment/add',{problemId:problemData.id}]" queryParamsHandling="merge">Enrich</button>
           <p *ngIf="!auth.currentUserValue.id">Login to enrich the problem</p>
-         
+          <!-- <a mat-button NguCarouselNext class="rightRs">
+              <i class="material-icons">
+                keyboard_arrow_right
+              </i>
+            </a> -->
         </div>
         <!--Enrichment divider-->
 
-        <ngu-carousel
-          #enrichCarousel
-          [inputs]="carouselTileConfig"
-          [dataSource]="carouselTileItemsEnrichment$ | async"
-          *ngIf="enrichment[0]"
-        >
-          <ngu-tile
-            *nguCarouselDef="let enrichment; let i = index; let ani = animate"
-            data-toggle="modal"
-            (click)="openModal('#enrichModal')"
-          >
-            <app-enrichment-card
-              [enrichmentData]="enrichment"
-              (clicked)="handleEnrichCardClicked($event)"
-            >
+        <ngu-carousel #enrichCarousel [inputs]="carouselTileConfig" [dataSource]="carouselTileItemsEnrichment$ | async"
+          *ngIf="enrichment[0]">
+          <ngu-tile *nguCarouselDef="let enrichment; let i = index; let ani = animate" data-toggle="modal"
+            (click)="openModal('#enrichModal')">
+
+            <app-enrichment-card [enrichmentData]="enrichment" (clicked)=handleEnrichCardClicked($event)>
             </app-enrichment-card>
           </ngu-tile>
 
+          <!-- <button NguCarouselPrev class="btn btn-default leftRs" [style.opacity]="enrichCarousel.isFirst ? 0.5:1">&lt;</button> -->
+          <!-- <button NguCarouselNext class="btn btn-default rightRs" [style.opacity]="enrichCarousel.isLast ? 0.5:1">&gt;</button> -->
 
-          <a
-            mat-button
-            NguCarouselPrev
-            class="btn btn-white btn-just-icon btn-round leftRs"
-            *ngIf="enrichment[0] && enrichment.length > 2"
-          >
+          <!-- <div class="row justify-content-center"> -->
+          <a mat-button NguCarouselPrev class="btn btn-white btn-just-icon btn-round leftRs"
+            *ngIf="enrichment[0]&&enrichment.length>2">
             <i class="material-icons">
               keyboard_arrow_left
             </i>
           </a>
-
-          <a
-            mat-button
-            NguCarouselNext
-            class="btn btn-white btn-just-icon btn-round rightRs"
-            *ngIf="enrichment[0] && enrichment.length > 2"
-          >
+          <!-- <button mat-raised-button class="btn btn-warning btn-round" data-toggle="modal" data-target="#enrichmentModal" -->
+          <!-- matTooltip="Click to add enrichment" [matTooltipPosition]="'below'">Enrich</button> -->
+          <a mat-button NguCarouselNext class="btn btn-white btn-just-icon btn-round rightRs"
+            *ngIf="enrichment[0]&&enrichment.length>2">
             <i class="material-icons">
               keyboard_arrow_right
             </i>
           </a>
+          <!-- </div> -->
+
 
         </ngu-carousel>
 
@@ -459,32 +268,22 @@
 
         <!--Add Enrichment Modal-->
 
-        <div
-          class="modal fade "
-          id="enrichmentModal"
-          tabindex="-1"
-          role="dialog"
-          aria-labelledby="myModalLabel"
-          aria-hidden="true"
-        >
+        <div class="modal fade " id="enrichmentModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel"
+          aria-hidden="true">
           <div class="modal-dialog modal-notice modal-lg">
             <div class="modal-content">
               <div class="modal-header">
-                <h5 class="modal-title" id="myModalLabel">
-                  Add New Enrichment
-                </h5>
-                <button
-                  mat-button
-                  type="button"
-                  class="close"
-                  data-dismiss="modal"
-                  aria-hidden="true"
-                >
+                <h5 class="modal-title" id="myModalLabel">Add New Enrichment</h5>
+                <button mat-button type="button" class="close" data-dismiss="modal" aria-hidden="true">
                   <i class="material-icons">close</i>
                 </button>
               </div>
               <div class="modal-body">
-              
+                <!-- <app-add-enrichment (submitted)="onEnrichmentSubmit($event)"></app-add-enrichment> -->
+                <!-- <app-wizard-cmp></app-wizard-cmp> -->
+                <!-- <app-wizard-container></app-wizard-container> -->
+                <!-- <app-wizard-container [content]="enrichmentData" [contentType]="'enrichment'" (contentSubmitted)="onEnrichmentSubmit($event)"></app-wizard-container> -->
+
               </div>
             </div>
           </div>
@@ -494,38 +293,27 @@
 
         <!--View Enrichment Modal-->
 
-        <div
-          class="modal fade"
-          id="enrichModal"
-          tabindex="-1"
-          role="dialog"
-          aria-labelledby="myModalLabel"
-          aria-hidden="true"
-        >
+        <div class="modal fade" id="enrichModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel"
+          aria-hidden="true">
           <div class="modal-dialog modal-notice modal-lg">
             <div class="modal-content">
               <div class="modal-header">
                 <h5 class="modal-title" id="myModalLabel">Enrichment Detail</h5>
-                <button
-                  mat-button
-                  class="close"
-                  data-dismiss="modal"
-                  aria-hidden="true"
-                  (click)="closeModal($event)"
-                >
+                <button mat-button class="close" data-dismiss="modal" aria-hidden="true" (click)="closeModal($event)">
                   <i class="material-icons">close</i>
                 </button>
               </div>
               <div class="modal-body">
-                <app-view-enrichment
-                  *ngIf="enrichmentDataToView"
-                  [enrichmentData]="enrichmentDataToView"
-                  (editClicked)="handleEnrichEditMode($event)"
-                  (deleteClicked)="deleteEnrichment($event)"
-                  (voteClicked)="voteEnrichment($event)"
-                ></app-view-enrichment>
+                <app-view-enrichment *ngIf="enrichmentDataToView" [enrichmentData]="enrichmentDataToView"
+                  (editClicked)="handleEnrichEditMode($event)" (deleteClicked)="deleteEnrichment($event)"
+                  (voteClicked)="voteEnrichment($event)"></app-view-enrichment>
               </div>
-            
+              <!-- <div class="card-footer"> -->
+              <!-- <div class="text-center"> -->
+              <!-- <button mat-button type="button" class="btn btn-warning" aria-hidden="true" data-dismiss="modal"
+                      data-toggle="modal" data-target="#EditEnrichModal">Edit</button> -->
+              <!-- </div> -->
+              <!-- </div> -->
             </div>
           </div>
         </div>
@@ -534,30 +322,20 @@
 
         <!--Edit Enrichment Modal-->
 
-        <div
-          class="modal fade editModal"
-          id="EditEnrichModal"
-          tabindex="-1"
-          role="dialog"
-          aria-labelledby="EditEnrichModalLabel"
-          aria-hidden="true"
-        >
+        <div class="modal fade editModal" id="EditEnrichModal" tabindex="-1" role="dialog"
+          aria-labelledby="EditEnrichModalLabel" aria-hidden="true">
           <div class="modal-dialog modal-notice modal-lg">
             <div class="modal-content">
               <div class="modal-header">
                 <h5 class="modal-title" id="myModalLabel">Edit Enrichment</h5>
-                <button
-                  mat-button
-                  type="button"
-                  class="close"
-                  data-dismiss="modal"
-                  aria-hidden="true"
-                >
+                <button mat-button type="button" class="close" data-dismiss="modal" aria-hidden="true">
                   <i class="material-icons">close</i>
                 </button>
               </div>
               <div class="modal-body">
-               
+                <!-- <app-add-enrichment *ngIf="enrichDataToEdit" [enrichmentData]="enrichDataToEdit" (submitted)="onEnrichmentSubmit($event)"></app-add-enrichment> -->
+                <!-- <app-wizard-container [content]="enrichmentData" [contentType]="'enrichment'" (contentSubmitted)="onEnrichmentSubmit($event)"></app-wizard-container> -->
+
               </div>
             </div>
           </div>
@@ -565,125 +343,88 @@
 
         <!--Edit Enrichment Modal-->
 
-        <hr />
+        <hr>
 
         <!--Validate-->
 
         <!--Validate divider-->
         <div class="row justify-content-center">
-        
-          <button
-            mat-raised-button
-            class="btn btn-warning btn-round"
-            data-toggle="modal"
-            data-target="#validatorModal"
-            matTooltip="Click to validate problem"
-            [matTooltipPosition]="'below'"
+          <!-- <a mat-button>
+              <i class="material-icons">
+                keyboard_arrow_left
+              </i>
+            </a> -->
+          <button mat-raised-button class="btn btn-warning btn-round" data-toggle="modal" data-target="#validatorModal"
+            matTooltip="Click to validate problem" [matTooltipPosition]="'below'"
             *ngIf="problemData.id && auth.currentUserValue.id"
-            [disabled]="
-              disableValidateButton ||
-              !userPersonas.is_expert ||
-              userId == problemData.user_id ||
-              !sectorMatched ||
-              !auth.currentUserValue.id
-            "
-          >
-            Validate
-          </button>
-        
-
+            [disabled]="disableValidateButton || !userPersonas.is_expert || userId == problemData.user_id ||!sectorMatched || !auth.currentUserValue.id ">Validate</button>
+          <!-- <a mat-button>
+              <i class="material-icons">
+                keyboard_arrow_right
+              </i>
+            </a> -->
         </div>
         <!--Validate divider-->
 
-        <ngu-carousel
-          #ValidCarousel
-          [inputs]="carouselTileConfig"
-          [dataSource]="carouselTileItemsValid$ | async"
-          *ngIf="validation[0]"
-        >
-          <ngu-tile
-            *nguCarouselDef="let validation; let i = index; let ani = animate"
-            data-toggle="modal"
-            data-target="#validModal"
-          >
-            <app-validate-card
-              *ngIf="!validation.is_deleted"
-              [validationData]="validation"
-              (clicked)="handleValidationCardClicked($event)"
-            ></app-validate-card>
+        <ngu-carousel #ValidCarousel [inputs]="carouselTileConfig" [dataSource]="carouselTileItemsValid$ | async"
+          *ngIf="validation[0] ">
+          <ngu-tile *nguCarouselDef="let validation; let i = index; let ani = animate" data-toggle="modal"
+            data-target="#validModal">
+            <app-validate-card *ngIf="!validation.is_deleted" [validationData]="validation"
+              (clicked)="handleValidationCardClicked($event)"></app-validate-card>
           </ngu-tile>
 
-       
+          <!-- <button NguCarouselPrev class="btn btn-default leftRs" [style.opacity]="ValidCarousel.isFirst ? 0.5:1">&lt;</button> -->
+          <!-- <button NguCarouselNext class="btn btn-default rightRs" [style.opacity]="ValidCarousel.isLast ? 0.5:1">&gt;</button> -->
 
-          <a
-            mat-button
-            NguCarouselPrev
-            class="btn btn-white btn-just-icon btn-round leftRs"
-            *ngIf="validation[0] && validation.length > 2"
-          >
+
+          <a mat-button NguCarouselPrev class="btn btn-white btn-just-icon btn-round leftRs"
+            *ngIf="validation[0]&&validation.length>2">
             <i class="material-icons">
               keyboard_arrow_left
             </i>
           </a>
-      
-          <a
-            mat-button
-            NguCarouselNext
-            class="btn btn-white btn-just-icon btn-round rightRs"
-            *ngIf="validation[0] && validation.length > 2"
-          >
+          <!-- <button mat-raised-button class="btn btn-warning btn-round" data-toggle="modal" data-target="#validatorModal" -->
+          <!-- matTooltip="Click to validate problem" [matTooltipPosition]="'below'">Validate</button> -->
+          <a mat-button NguCarouselNext class="btn btn-white btn-just-icon btn-round rightRs"
+            *ngIf="validation[0]&&validation.length>2">
             <i class="material-icons">
               keyboard_arrow_right
             </i>
           </a>
+
         </ngu-carousel>
         <div class="row justify-content-center" *ngIf="!validation[0]">
-
+          <!-- <p *ngIf="userPersonas.is_expert">No validations yet. Be the first to validate.</p> -->
           <p>No validations yet.</p>
+
         </div>
 
         <div class="row justify-content-center">
+
           <p
-            *ngIf="
-              !(userId == problemData.user_id) &&
-              userPersonas.is_expert &&
-              !sectorMatched &&
-              !disableValidateButton
-            "
-          >
-            Please ensure that your interests match with the problem sectors in
-            order to validate
-          </p>
+            *ngIf="!(userId == problemData.user_id) && userPersonas.is_expert && !sectorMatched && !disableValidateButton">
+            Please ensure that
+            your interests match with the problem
+            sectors in order to validate</p>
+
         </div>
 
+
         <!--Validate Modal-->
-        <div
-          class="modal fade"
-          id="validatorModal"
-          tabindex="-1"
-          role="dialog"
-          aria-labelledby="myModalLabel"
-          aria-hidden="true"
-        >
+        <div class="modal fade" id="validatorModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel"
+          aria-hidden="true">
           <div class="modal-dialog modal-notice">
             <div class="modal-content">
               <div class="modal-header">
                 <h5 class="modal-title" id="myModalLabel">Validate Problem</h5>
-                <button
-                  mat-button
-                  type="button"
-                  class="close"
-                  data-dismiss="modal"
-                  aria-hidden="true"
-                >
+                <button mat-button type="button" class="close" data-dismiss="modal" aria-hidden="true">
                   <i class="material-icons">close</i>
                 </button>
               </div>
               <div class="modal-body">
-                <app-add-validation
-                  (submitted)="onValidationSubmit($event)"
-                ></app-add-validation>
-              <!-- </div> -->
+                <app-add-validation (submitted)="onValidationSubmit($event)"></app-add-validation>
+              </div>
             </div>
           </div>
         </div>
@@ -691,36 +432,19 @@
 
         <!--View Validation Modal-->
 
-        <div
-          class="modal fade"
-          id="validModal"
-          tabindex="-1"
-          role="dialog"
-          aria-labelledby="ModalLabel"
-          aria-hidden="true"
-        >
+        <div class="modal fade" id="validModal" tabindex="-1" role="dialog" aria-labelledby="ModalLabel"
+          aria-hidden="true">
           <div class="modal-dialog modal-notice">
             <div class="modal-content">
               <div class="modal-header">
-                <h5 class="modal-title" id="myModalLabel">
-                  Validation Details
-                </h5>
-                <button
-                  mat-button
-                  type="button"
-                  class="close"
-                  data-dismiss="modal"
-                  aria-hidden="true"
-                >
+                <h5 class="modal-title" id="myModalLabel">Validation Details</h5>
+                <button mat-button type="button" class="close" data-dismiss="modal" aria-hidden="true">
                   <i class="material-icons">close</i>
                 </button>
               </div>
               <div class="modal-body">
-                <app-detailed-validate-view
-                  [validationData]="validationDataToView"
-                  (deleteClicked)="deleteValidation($event)"
-                  (editClicked)="handleValidationEditMode($event)"
-                >
+                <app-detailed-validate-view [validationData]="validationDataToView"
+                  (deleteClicked)="deleteValidation($event)" (editClicked)="handleValidationEditMode($event)">
                 </app-detailed-validate-view>
               </div>
             </div>
@@ -730,35 +454,20 @@
         <!--View Validation Modal-->
 
         <!--Edit Validation Modal-->
-        <div
-          class="modal fade editModal"
-          id="EditValidationModal"
-          tabindex="-1"
-          role="dialog"
-          aria-labelledby="myModalLabel"
-          aria-hidden="true"
-        >
+        <div class="modal fade editModal" id="EditValidationModal" tabindex="-1" role="dialog"
+          aria-labelledby="myModalLabel" aria-hidden="true">
           <div class="modal-dialog modal-notice">
             <div class="modal-content">
               <div class="modal-header">
                 <h5 class="modal-title" id="myModalLabel">Edit Validation</h5>
-                <button
-                  mat-button
-                  type="button"
-                  class="close"
-                  data-dismiss="modal"
-                  aria-hidden="true"
-                  (click)="closeModal($event)"
-                >
+                <button mat-button type="button" class="close" data-dismiss="modal" aria-hidden="true"
+                  (click)="closeModal($event)">
                   <i class="material-icons">close</i>
                 </button>
               </div>
               <div class="modal-body">
-                <app-add-validation
-                  *ngIf="validationDataToEdit"
-                  [validationData]="validationDataToEdit"
-                  (submitted)="onValidationSubmit($event)"
-                ></app-add-validation>
+                <app-add-validation *ngIf="validationDataToEdit" [validationData]="validationDataToEdit"
+                  (submitted)="onValidationSubmit($event)"></app-add-validation>
               </div>
             </div>
           </div>
@@ -767,40 +476,26 @@
 
         <!--Validate-->
 
-        <hr />
+        <hr>
 
         <!--Collaborate-->
 
-        <div
-          class="modal fade editModal"
-          id="EditCollaborateModal"
-          tabindex="-1"
-          role="dialog"
-          aria-labelledby="myModalLabel"
-          aria-hidden="true"
-        >
+        <div class="modal fade editModal" id="EditCollaborateModal" tabindex="-1" role="dialog"
+          aria-labelledby="myModalLabel" aria-hidden="true">
           <div class="modal-dialog modal-notice modal-lg">
             <div class="modal-content">
               <div class="modal-header">
-                <h5 class="modal-title" id="myModalLabel">
-                  Edit collaboration
-                </h5>
-                <button
-                  mat-button
-                  type="button"
-                  class="close"
-                  data-dismiss="modal"
-                  aria-hidden="true"
-                >
+                <h5 class="modal-title" id="myModalLabel">Edit collaboration</h5>
+                <button mat-button type="button" class="close" data-dismiss="modal" aria-hidden="true">
                   <i class="material-icons">close</i>
                 </button>
               </div>
               <div class="modal-body">
-                <app-add-collaborator
-                  *ngIf="collaboratorDataToEdit"
-                  [collaborator]="collaboratorDataToEdit"
-                  (submitted)="onCollaborationSubmit($event)"
-                >
+
+
+                <app-add-collaborator *ngIf="collaboratorDataToEdit" [collaborator]="collaboratorDataToEdit"
+                  (submitted)="onCollaborationSubmit($event)">
+
                 </app-add-collaborator>
               </div>
             </div>
@@ -809,110 +504,111 @@
 
         <!--Collaborate divider-->
         <div class="row justify-content-center">
-          
-          <button
-            mat-raised-button
-            *ngIf="auth.currentUserValue.id"
-            class="btn btn-warning btn-round"
-            data-toggle="modal"
-            data-target="#collaboratorModal"
-            matTooltip="Click to collaborate"
+          <!-- <a mat-button>
+              <i class="material-icons">
+                keyboard_arrow_left
+              </i>
+            </a> -->
+          <button mat-raised-button *ngIf="auth.currentUserValue.id" class="btn btn-warning btn-round"
+            data-toggle="modal" data-target="#collaboratorModal" matTooltip="Click to collaborate"
             [matTooltipPosition]="'below'"
-            [disabled]="
-              disableCollaborateButton ||
-              userId == problemData.user_id ||
-              !auth.currentUserValue.id
-            "
-          >
-            Collaborate
-          </button>
-          <p *ngIf="!auth.currentUserValue.id">
-            Login to collaborate on this problem
-          </p>
-          
+            [disabled]="disableCollaborateButton || userId == problemData.user_id || !auth.currentUserValue.id">Collaborate</button>
+          <p *ngIf="!auth.currentUserValue.id">Login to collaborate on this problem</p>
+          <!-- <a mat-button>
+              <i class="material-icons">
+                keyboard_arrow_right
+              </i>
+            </a> -->
         </div>
         <!--Collaborate divider-->
 
-        <ngu-carousel
-          #CollabCarousel
-          [inputs]="carouselTileConfig"
-          [dataSource]="carouselTileItemsCollab$ | async"
-          *ngIf="collaborators[0]"
-        >
-          <ngu-tile
-            *nguCarouselDef="let collaborator; let i = index; let ani = animate"
-          >
-            <app-collaborator-card
-              *ngIf="collaborator"
-              [collaboratorData]="collaborator"
-              (editClicked)="handleCollaborationEditMode($event)"
-              (deleteClicked)="deleteCollaboration($event)"
-            >
+        <ngu-carousel #CollabCarousel [inputs]="carouselTileConfig" [dataSource]="carouselTileItemsCollab$ | async"
+          *ngIf="collaborators[0]">
+          <ngu-tile *nguCarouselDef="let collaborator; let i = index; let ani = animate">
+            <app-collaborator-card *ngIf="collaborator" [collaboratorData]="collaborator"
+              (editClicked)="handleCollaborationEditMode($event)" (deleteClicked)="deleteCollaboration($event)">
             </app-collaborator-card>
           </ngu-tile>
 
-          <a
-            mat-button
-            NguCarouselPrev
-            class="btn btn-white btn-just-icon btn-round leftRs"
-            *ngIf="collaborators[0] && collaborators.length > 2"
-          >
+
+
+          <a mat-button NguCarouselPrev class="btn btn-white btn-just-icon btn-round leftRs"
+            *ngIf="collaborators[0]&&collaborators.length>2">
             <i class="material-icons">
               keyboard_arrow_left
             </i>
           </a>
 
-          <a
-            mat-button
-            NguCarouselNext
-            class="btn btn-white btn-just-icon btn-round rightRs"
-            *ngIf="collaborators[0] && collaborators.length > 2"
-          >
+          <a mat-button NguCarouselNext class="btn btn-white btn-just-icon btn-round rightRs"
+            *ngIf="collaborators[0]&&collaborators.length>2">
             <i class="material-icons">
               keyboard_arrow_right
             </i>
           </a>
         </ngu-carousel>
         <div class="row justify-content-center">
-
+          <!-- <p *ngIf="!collaborators[0]">No collaborators yet.</p> -->
 
           <p *ngIf="!collaborators[0]">No collaborators yet.</p>
+          <!-- <ng-template #notUser>&nbsp; No collaborators yet.</ng-template> -->
 
         </div>
-        <hr />
+        <hr>
 
-       
+
+
+        <!--solution carousel start-->
+        <!-- <div class="row justify-content-center">
+        
+          <h4 *ngIf="solutions[0]">Solutions</h4>
+        
+        </div>
+
+
+        <ngu-carousel #solutionCarousel [inputs]="carouselTileConfig" [dataSource]="carouselTileItemSolution$ | async"
+          *ngIf="solutions[0]">
+          <ngu-tile *nguCarouselDef="let solution; let i = index; let ani = animate" data-toggle="modal"
+            (click)="openModal('#enrichModal')">
+
+            <app-solution-card [solutionData]="solution" (clicked)=handleEnrichCardClicked($event)>
+            </app-solution-card>
+          </ngu-tile>
+
+         
+          <a mat-button NguCarouselPrev class="btn btn-white btn-just-icon btn-round leftRs"
+            *ngIf="solutions[0]&&solutions.length>2">
+            <i class="material-icons">
+              keyboard_arrow_left
+            </i>
+          </a>
+         
+          <a mat-button NguCarouselNext class="btn btn-white btn-just-icon btn-round rightRs"
+            *ngIf="solutions[0]&&solutions.length>2">
+            <i class="material-icons">
+              keyboard_arrow_right
+            </i>
+          </a>
+
+
+
+        </ngu-carousel>
+
+        -->
+
         <!--Add Collaborator Modal-->
-        <div
-          class="modal fade"
-          id="collaboratorModal"
-          tabindex="-1"
-          role="dialog"
-          aria-labelledby="myModalLabel"
-          aria-hidden="true"
-        >
+        <div class="modal fade" id="collaboratorModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel"
+          aria-hidden="true">
           <div class="modal-dialog modal-notice modal-lg">
             <div class="modal-content">
               <div class="modal-header">
-                <h5 class="modal-title" id="myModalLabel">
-                  How do I collaborate
-                </h5>
-                <button
-                  mat-button
-                  type="button"
-                  class="close"
-                  aria-hidden="true"
-                  (click)="dismiss()"
-                >
+                <h5 class="modal-title" id="myModalLabel">How do I collaborate</h5>
+                <button mat-button type="button" class="close" aria-hidden="true" (click)="dismiss()">
                   <i class="material-icons">close</i>
                 </button>
               </div>
               <div class="modal-body">
-                <app-add-collaborator
-                  (submitted)="onCollaborationSubmit($event)"
-                  (intentValue)="checkIntent($event)"
-                  (edit)="onCollaorationUpdate($event)"
-                >
+                <app-add-collaborator (submitted)="onCollaborationSubmit($event)" (intentValue)="checkIntent($event)"
+                  (edit)=onCollaorationUpdate($event)>
                 </app-add-collaborator>
               </div>
             </div>
@@ -921,132 +617,85 @@
         <!--Add Collaborator Modal-->
 
         <!--Collaborate-->
-      </div>
 
-
+      </div> <!-- COL - 8-->
       <div class="col-md-4">
         <div class="card" *ngIf="auth.currentUserValue.id">
           <div class="card-header">
-            <div class="row justify-content-center ">
-              <i class="material-icons mx-2" aria-hidden="true">
+            <div class="row justify-content-center">
+              <i class="material-icons">
                 highlight
               </i>
-
-              <h2 class="mx-2 " style="font-size: 1.1rem;">
-                Do you have a solution?
-                <a
-                  [routerLink]="[
-                    '/solutions/add',
-                    { problemId: problemData.id }
-                  ]"
-                  queryParamsHandling="merge"
-                  >click here</a
-                >
-              </h2>
+              <span>&nbsp;</span>
+              <span>&nbsp;</span>
+              <span>&nbsp;</span>
+              <span>&nbsp;</span>
+              <h5>Do you have a solution? <a [routerLink]="['/solutions/add',{problemId:problemData.id}]"
+                  queryParamsHandling="merge">click
+                  here</a>
+              </h5>
             </div>
           </div>
         </div>
         <div class="card">
           <div class="card-header card-header-icon card-header-warning">
             <div class="card-icon">
-              <i class="material-icons" aria-hidden="true">forum</i>
+              <i class="material-icons">forum</i>
             </div>
-            <h2 style="font-size: 1.2rem;" class="card-title">Discussions</h2>
+            <h4 class="card-title">Discussions</h4>
           </div>
           <div class="card-body" *ngIf="!auth.currentUserValue.id">
             <p>Login to join discussion for this problem</p>
           </div>
           <div class="card-body" *ngIf="auth.currentUserValue.id">
-            <button
-              mat-raised-button
-              class="btn btn-warning btn-sm"
-              (click)="showPopularDiscussions('latest')"
-              *ngIf="objectValues(comments).length"
-            >
-              Latest
-            </button>
-            <button
-              mat-raised-button
-              class="btn btn-warning btn-sm"
-              *ngIf="objectValues(comments).length"
-              (click)="showPopularDiscussions('popular')"
-            >
-              Popular
-            </button>
+            <button mat-raised-button class="btn btn-warning btn-sm" (click)="showPopularDiscussions('latest')"
+              *ngIf="objectValues(comments).length">Latest</button>
+            <button mat-raised-button class="btn btn-warning btn-sm" *ngIf="objectValues(comments).length"
+              (click)="showPopularDiscussions('popular')">Popular</button>
 
-            <div id="accordion">
+            <div id="accordion" role="tablist">
               <div class="card-collapse">
-                <div class="card-header" id="headingOne">
-                  <div class="mb-0">
-                    <a
-                      data-toggle="collapse"
-                      href="#newComment"
-                      *ngIf="auth.currentUserValue.id"
-                      aria-expanded=" true"
-                      aria-controls="newComment"
-                      class="collapsed"
-                      role="button"
-                    >
+                <div class="card-header" role="tab" id="headingOne">
+                  <h5 class="mb-0">
+                    <a data-toggle="collapse" href="#newComment" *ngIf="auth.currentUserValue.id" aria-expanded=" true"
+                      aria-controls="newComment" class="collapsed">
                       Join Discussion
-                      <i class="material-icons" aria-hidden="true">keyboard_arrow_down</i>
+                      <i class="material-icons">keyboard_arrow_down</i>
                     </a>
-                  </div>
+                  </h5>
                 </div>
-                <div
-                  id="newComment"
-                  class="collapse show"
-                  role="tabpanel"
-                  aria-labelledby="headingOne"
-                  data-target="#newComment"
-                >
-                  <app-submit-comment
-                    [users]="objectValues(usersService.allUsers)"
-                    [actionText]="'Comment'"
-                    (submit)="onCommentSubmit($event)"
-                  ></app-submit-comment>
+                <div id="newComment" class="collapse show" role="tabpanel" aria-labelledby="headingOne"
+                  data-target="#newComment">
+                  <app-submit-comment [users]="objectValues(usersService.allUsers)" [actionText]="'Comment'"
+                    (submit)="onCommentSubmit($event)"></app-submit-comment>
                 </div>
               </div>
 
+
               <div *ngIf="!popular">
-                <app-display-comment
-                  [users]="objectValues(usersService.allUsers)"
-                  [comment]="comment"
-                  [replies]="replies[comment.id]"
-                  (reply)="onCommentSubmit($event, comment.id)"
-                  (commentToDelete)="deleteComment($event)"
-                  (shareCommentId)="shareComment($event)"
-                  (fileClicked)="displayModal($event)"
-                  *ngFor="let comment of sortComments(objectValues(comments))"
-                >
+                <app-display-comment [users]="objectValues(usersService.allUsers)" [comment]="comment"
+                  [replies]="replies[comment.id]" (reply)="onCommentSubmit($event, comment.id)"
+                  (commentToDelete)="deleteComment($event)" (shareCommentId)="shareComment($event)"
+                  (fileClicked)="displayModal($event)" *ngFor="let comment of sortComments(objectValues(comments))">
                 </app-display-comment>
               </div>
 
               <!--Popular-->
 
               <div *ngIf="popular">
-                <app-display-comment
-                  [users]="objectValues(usersService.allUsers)"
-                  [comment]="popularDiscussion"
-                  [replies]="replies[popularDiscussion.id]"
-                  (reply)="onCommentSubmit($event, popularDiscussion.id)"
-                  (fileClicked)="displayModal($event)"
-                  *ngFor="let popularDiscussion of popularDiscussions"
-                >
+                <app-display-comment [users]="objectValues(usersService.allUsers)" [comment]="popularDiscussion"
+                  [replies]="replies[popularDiscussion.id]" (reply)="onCommentSubmit($event, popularDiscussion.id)"
+                  (fileClicked)="displayModal($event)" *ngFor="let popularDiscussion of popularDiscussions">
                 </app-display-comment>
               </div>
 
               <!--Popular-->
+
             </div>
-            <hr />
-            <a
-              class="viewMoreComments"
-              href="javascript:void(0);"
-              *ngIf="
-                objectValues(comments).length > 5 &&
-                numOfComments < objectValues(comments).length
-              "
-              (click)="showMoreComments()"
-            >
+            <hr>
+            <a class="viewMoreComments" href="javascript:void(0)"
+              *ngIf="objectValues(comments).length > 5 && numOfComments < objectValues(comments).length"
+              (click)="showMoreComments()">
               View more comments
             </a>
           </div>
@@ -1056,58 +705,30 @@
   </div>
 </div>
 
-
-
-
-  
-
 <!-- discuss image and video modal starts -->
 <div class="modal fade" id="enlargeView" style="display: none;">
   <div class="modal-dialog modal-lg">
     <div class="modal-content">
       <div class="modal-header">
-        <button
-          type="button"
-          class="close"
-          data-dismiss="modal"
-          aria-hidden="true"
-          (click)="closeModal($event)"
-        >
+        <button type="button" class="close" data-dismiss="modal" aria-hidden="true" (click)="closeModal($event)">
           <i class="material-icons">close</i>
         </button>
       </div>
       <div class="modal-body">
-        <app-display-modal *ngIf="modalSrc" [source]="modalSrc">
+        <app-display-modal *ngIf="modalSrc " [source]="modalSrc">
         </app-display-modal>
       </div>
-      <div
-        class="modal-footer justify-content-center"
-        *ngIf="sources && sources['attachmentObj'].length > 1"
-      >
-        <button
-          mat-raised-button
-          type="button"
-          [disabled]="sources['index'] < 1"
-          (click)="toggleFileSrc(false)"
-          class="btn btn-info btn-round"
-        >
-          <span class="carousel-control-prev-icon" aria-hidden="true"></span>
-        </button>
+      <div class="modal-footer justify-content-center" *ngIf="sources && sources['attachmentObj'].length > 1">
+        <button mat-raised-button type="button" [disabled]="sources['index'] < 1" (click)="toggleFileSrc(false)"
+          class="btn btn-info btn-round"><span class="carousel-control-prev-icon" aria-hidden="true"></span></button>
         <div class="col-3"></div>
-        <button
-          mat-raised-button
-          type="button"
-          [disabled]="sources['index'] == sources['attachmentObj'].length - 1"
-          class="btn btn-info btn-round"
-          (click)="toggleFileSrc(true)"
-        >
-          <span class="carousel-control-next-icon" aria-hidden="true"></span>
-        </button>
+        <button mat-raised-button type="button" [disabled]="sources['index'] == sources['attachmentObj'].length-1"
+          class="btn btn-info btn-round" (click)="toggleFileSrc(true)"><span class="carousel-control-next-icon"
+            aria-hidden="true"></span></button>
       </div>
     </div>
   </div>
- </div>
-
+</div>
 <!-- discuss image and video modal ends -->
 
 <!--REWRITE-->
