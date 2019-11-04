@@ -1,13 +1,9 @@
-<!-- discuss image and video modal ends -->
 
-<!--REWRITE-->
-
-<!--REWRITE-->
 
 <div class="main-content">
   <div class="container-fluid">
     <div class="row">
-      <!--Problem Details-->
+
       <div class="col-md-8">
         <div class="card card-product">
           <div class="card-header card-header-warning">
@@ -219,7 +215,7 @@
               </a>
             </div>
 
-            <div class="dropdown">
+            <!-- <div class="dropdown">
               <button
                 *ngIf="userId === problemData.user_id || owners.has(userId)"
                 [routerLink]="'/problems/' + problemData.id + '/edit'"
@@ -260,7 +256,7 @@
                 </i>
               </button>
 
-            </div>
+            </div> -->
 
               <div class="dropdown">
                 <button
@@ -317,18 +313,12 @@
                       >SMS</a
                     >
                   </ng-container>
-                </div>
               </div>
             </div>
           </div>
-        </div>
+         
 
-        <!-- <button mat-raised-button (click)="openDialog()">Pick one</button> -->
-        <!--Problem Details-->
-
-        <!-- <h2 *ngIf="collaborators[0].intent">{{collaborators[0].intent}}</h2> -->
-
-        <!--Show more images and videos-->
+       
 
         <!-- ----------------------------- problem attachments modal start----------------------------- -->
         <div
@@ -398,15 +388,9 @@
 
         <hr />
 
-        <!--Enrichment-->
-
-        <!--Enrichment divider-->
+        
         <div class="row justify-content-center">
-          <!-- <a mat-button NguCarouselPrev class="leftRs">
-              <i class="material-icons">
-                keyboard_arrow_left
-              </i>
-            </a> -->
+         
           <button
             mat-raised-button
             *ngIf="auth.currentUserValue.id"
@@ -420,11 +404,7 @@
             Enrich
           </button>
           <p *ngIf="!auth.currentUserValue.id">Login to enrich the problem</p>
-          <!-- <a mat-button NguCarouselNext class="rightRs">
-              <i class="material-icons">
-                keyboard_arrow_right
-              </i>
-            </a> -->
+         
         </div>
         <!--Enrichment divider-->
 
@@ -446,10 +426,7 @@
             </app-enrichment-card>
           </ngu-tile>
 
-          <!-- <button NguCarouselPrev class="btn btn-default leftRs" [style.opacity]="enrichCarousel.isFirst ? 0.5:1">&lt;</button> -->
-          <!-- <button NguCarouselNext class="btn btn-default rightRs" [style.opacity]="enrichCarousel.isLast ? 0.5:1">&gt;</button> -->
 
-          <!-- <div class="row justify-content-center"> -->
           <a
             mat-button
             NguCarouselPrev
@@ -460,8 +437,7 @@
               keyboard_arrow_left
             </i>
           </a>
-          <!-- <button mat-raised-button class="btn btn-warning btn-round" data-toggle="modal" data-target="#enrichmentModal" -->
-          <!-- matTooltip="Click to add enrichment" [matTooltipPosition]="'below'">Enrich</button> -->
+
           <a
             mat-button
             NguCarouselNext
@@ -472,7 +448,7 @@
               keyboard_arrow_right
             </i>
           </a>
-          <!-- </div> -->
+
         </ngu-carousel>
 
         <div class="row justify-content-center" *ngIf="!enrichment[0]">
@@ -508,10 +484,7 @@
                 </button>
               </div>
               <div class="modal-body">
-                <!-- <app-add-enrichment (submitted)="onEnrichmentSubmit($event)"></app-add-enrichment> -->
-                <!-- <app-wizard-cmp></app-wizard-cmp> -->
-                <!-- <app-wizard-container></app-wizard-container> -->
-                <!-- <app-wizard-container [content]="enrichmentData" [contentType]="'enrichment'" (contentSubmitted)="onEnrichmentSubmit($event)"></app-wizard-container> -->
+              
               </div>
             </div>
           </div>
@@ -552,12 +525,7 @@
                   (voteClicked)="voteEnrichment($event)"
                 ></app-view-enrichment>
               </div>
-              <!-- <div class="card-footer"> -->
-              <!-- <div class="text-center"> -->
-              <!-- <button mat-button type="button" class="btn btn-warning" aria-hidden="true" data-dismiss="modal"
-                      data-toggle="modal" data-target="#EditEnrichModal">Edit</button> -->
-              <!-- </div> -->
-              <!-- </div> -->
+            
             </div>
           </div>
         </div>
@@ -589,8 +557,7 @@
                 </button>
               </div>
               <div class="modal-body">
-                <!-- <app-add-enrichment *ngIf="enrichDataToEdit" [enrichmentData]="enrichDataToEdit" (submitted)="onEnrichmentSubmit($event)"></app-add-enrichment> -->
-                <!-- <app-wizard-container [content]="enrichmentData" [contentType]="'enrichment'" (contentSubmitted)="onEnrichmentSubmit($event)"></app-wizard-container> -->
+               
               </div>
             </div>
           </div>
@@ -604,11 +571,7 @@
 
         <!--Validate divider-->
         <div class="row justify-content-center">
-          <!-- <a mat-button>
-              <i class="material-icons">
-                keyboard_arrow_left
-              </i>
-            </a> -->
+        
           <button
             mat-raised-button
             class="btn btn-warning btn-round"
@@ -627,11 +590,8 @@
           >
             Validate
           </button>
-          <!-- <a mat-button>
-              <i class="material-icons">
-                keyboard_arrow_right
-              </i>
-            </a> -->
+        
+
         </div>
         <!--Validate divider-->
 
@@ -653,8 +613,7 @@
             ></app-validate-card>
           </ngu-tile>
 
-          <!-- <button NguCarouselPrev class="btn btn-default leftRs" [style.opacity]="ValidCarousel.isFirst ? 0.5:1">&lt;</button> -->
-          <!-- <button NguCarouselNext class="btn btn-default rightRs" [style.opacity]="ValidCarousel.isLast ? 0.5:1">&gt;</button> -->
+       
 
           <a
             mat-button
@@ -666,8 +625,7 @@
               keyboard_arrow_left
             </i>
           </a>
-          <!-- <button mat-raised-button class="btn btn-warning btn-round" data-toggle="modal" data-target="#validatorModal" -->
-          <!-- matTooltip="Click to validate problem" [matTooltipPosition]="'below'">Validate</button> -->
+      
           <a
             mat-button
             NguCarouselNext
@@ -680,7 +638,7 @@
           </a>
         </ngu-carousel>
         <div class="row justify-content-center" *ngIf="!validation[0]">
-          <!-- <p *ngIf="userPersonas.is_expert">No validations yet. Be the first to validate.</p> -->
+
           <p>No validations yet.</p>
         </div>
 
@@ -725,7 +683,7 @@
                 <app-add-validation
                   (submitted)="onValidationSubmit($event)"
                 ></app-add-validation>
-              </div>
+              <!-- </div> -->
             </div>
           </div>
         </div>
@@ -851,11 +809,7 @@
 
         <!--Collaborate divider-->
         <div class="row justify-content-center">
-          <!-- <a mat-button>
-              <i class="material-icons">
-                keyboard_arrow_left
-              </i>
-            </a> -->
+          
           <button
             mat-raised-button
             *ngIf="auth.currentUserValue.id"
@@ -875,11 +829,7 @@
           <p *ngIf="!auth.currentUserValue.id">
             Login to collaborate on this problem
           </p>
-          <!-- <a mat-button>
-              <i class="material-icons">
-                keyboard_arrow_right
-              </i>
-            </a> -->
+          
         </div>
         <!--Collaborate divider-->
 
@@ -924,51 +874,14 @@
           </a>
         </ngu-carousel>
         <div class="row justify-content-center">
-          <!-- <p *ngIf="!collaborators[0]">No collaborators yet.</p> -->
+
 
           <p *ngIf="!collaborators[0]">No collaborators yet.</p>
-          <!-- <ng-template #notUser>&nbsp; No collaborators yet.</ng-template> -->
+
         </div>
         <hr />
 
-        <!--solution carousel start-->
-        <!-- <div class="row justify-content-center">
-        
-          <h4 *ngIf="solutions[0]">Solutions</h4>
-        
-        </div>
-
-
-        <ngu-carousel #solutionCarousel [inputs]="carouselTileConfig" [dataSource]="carouselTileItemSolution$ | async"
-          *ngIf="solutions[0]">
-          <ngu-tile *nguCarouselDef="let solution; let i = index; let ani = animate" data-toggle="modal"
-            (click)="openModal('#enrichModal')">
-
-            <app-solution-card [solutionData]="solution" (clicked)=handleEnrichCardClicked($event)>
-            </app-solution-card>
-          </ngu-tile>
-
-         
-          <a mat-button NguCarouselPrev class="btn btn-white btn-just-icon btn-round leftRs"
-            *ngIf="solutions[0]&&solutions.length>2">
-            <i class="material-icons">
-              keyboard_arrow_left
-            </i>
-          </a>
-         
-          <a mat-button NguCarouselNext class="btn btn-white btn-just-icon btn-round rightRs"
-            *ngIf="solutions[0]&&solutions.length>2">
-            <i class="material-icons">
-              keyboard_arrow_right
-            </i>
-          </a>
-
-
-
-        </ngu-carousel>
-
-        -->
-
+       
         <!--Add Collaborator Modal-->
         <div
           class="modal fade"
@@ -1009,7 +922,8 @@
 
         <!--Collaborate-->
       </div>
-      <!-- COL - 8-->
+
+
       <div class="col-md-4">
         <div class="card" *ngIf="auth.currentUserValue.id">
           <div class="card-header">
@@ -1139,8 +1053,13 @@
         </div>
       </div>
     </div>
-  <!-- </div> -->
+  </div>
 </div>
+
+
+
+
+  
 
 <!-- discuss image and video modal starts -->
 <div class="modal fade" id="enlargeView" style="display: none;">
@@ -1187,7 +1106,8 @@
       </div>
     </div>
   </div>
-</div>
+ </div>
+
 <!-- discuss image and video modal ends -->
 
 <!--REWRITE-->
