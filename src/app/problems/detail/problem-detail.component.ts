@@ -9,7 +9,7 @@ import {
   ViewChild,
   ElementRef,
   AfterViewInit
-} from "@angular/core";
+} from '@angular/core';
 import {
   Location,
   LocationStrategy,
@@ -31,32 +31,32 @@ import {
   take,
   map,
   switchMap
-} from "rxjs/operators";
+} from 'rxjs/operators';
 
-import { domain } from "../../../environments/environment";
+import { domain } from '../../../environments/environment';
 
-import { ProblemService } from "../../services/problem.service";
-import { AuthService } from "../../services/auth.service";
-import { UsersService } from "../../services/users.service";
+import { ProblemService } from '../../services/problem.service';
+import { AuthService } from '../../services/auth.service';
+import { UsersService } from '../../services/users.service';
 
-import { Apollo, QueryRef } from "apollo-angular";
-import gql from "graphql-tag";
-import swal from "sweetalert2";
-import { NgForm } from "@angular/forms";
-import { NguCarouselConfig } from "@ngu/carousel";
-import { slider } from "./problem-detail.animation";
-import { DiscussionsService } from "src/app/services/discussions.service";
-import { FilesService } from "src/app/services/files.service";
-import { CollaborationService } from "src/app/services/collaboration.service";
-import { ValidationService } from "src/app/services/validation.service";
-import { EnrichmentService } from "src/app/services/enrichment.service";
-import { fileUploadVariables } from "../../../environments/environment";
-import { sharing } from "../../globalconfig";
-import { reject } from "q";
-import { ModalComponent } from "src/app/components/modal/modal.component";
-import { FocusMonitor } from "@angular/cdk/a11y";
-import { filter } from "rxjs/operators";
-var Buffer = require("buffer/").Buffer;
+import { Apollo, QueryRef } from 'apollo-angular';
+import gql from 'graphql-tag';
+import swal from 'sweetalert2';
+import { NgForm } from '@angular/forms';
+import { NguCarouselConfig } from '@ngu/carousel';
+import { slider } from './problem-detail.animation';
+import { DiscussionsService } from 'src/app/services/discussions.service';
+import { FilesService } from 'src/app/services/files.service';
+import { CollaborationService } from 'src/app/services/collaboration.service';
+import { ValidationService } from 'src/app/services/validation.service';
+import { EnrichmentService } from 'src/app/services/enrichment.service';
+import { fileUploadVariables } from '../../../environments/environment';
+import { sharing } from '../../globalconfig';
+import { reject } from 'q';
+import { ModalComponent } from 'src/app/components/modal/modal.component';
+import { FocusMonitor } from '@angular/cdk/a11y';
+import { filter } from 'rxjs/operators';
+var Buffer = require('buffer/').Buffer;
 
 const misc: any = {
   navbar_menu_visible: 0,
@@ -89,7 +89,7 @@ interface queryString {
 })
 export class ProblemDetailComponent
   implements OnInit, OnDestroy, AfterViewInit {
-  @ViewChild("problemDataTitle") problemDataTitle: ElementRef<HTMLElement>;
+  @ViewChild('problemDataTitle') problemDataTitle: ElementRef<HTMLElement>;
 
   channels = sharing;
   // filesService.fileAccessUrl: string = "";
@@ -236,7 +236,7 @@ export class ProblemDetailComponent
   collaboratorDataToEdit: any;
   interval = null;
   qs: queryString = { commentId: 0 };
-  imageAlt = "default image";
+  imageAlt = 'default image';
 
   public carouselTileItemsEnrichment$: Observable<number[]>;
   public carouselTileItemsValid$: Observable<number[]>;
@@ -289,7 +289,7 @@ export class ProblemDetailComponent
 
   ngAfterViewInit() {
     setTimeout(() => {
-      this.focusMonitor.focusVia(this.problemDataTitle, "program");
+      this.focusMonitor.focusVia(this.problemDataTitle, 'program');
     }, 100);
   }
 
@@ -1704,14 +1704,9 @@ export class ProblemDetailComponent
           '<span data-notify="title">{1}</span> ' +
           '<span data-notify="message">{2}</span>' +
           '<div class="progress" data-notify="progressbar">' +
-<<<<<<< HEAD
           '<div class="progress-bar progress-bar-{0}" role="progressbar" \
           aria-valuenow="0" aria-valuemin="0" aria-valuemax="100" style="width: 0%;"></div>' +
-          "</div>" +
-=======
-          '<div class="progress-bar progress-bar-{0}" role="progressbar" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100" style="width: 0%;"></div>' +
           '</div>' +
->>>>>>> dev
           '<a href="{3}" target="{4}" data-notify="url"></a>' +
           '</div>'
       }
