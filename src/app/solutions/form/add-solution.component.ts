@@ -157,7 +157,7 @@ export class AddSolutionComponent
     { value: 1000, viewValue: '<1000' },
     { value: 10000, viewValue: '<10000' },
     { value: 100000, viewValue: '<100,000' },
-    { value: Number.MAX_VALUE, viewValue: '>100,000' }
+    { value: 1000001, viewValue: '>100,000' }
   ];
   touch: boolean;
   hide = false;
