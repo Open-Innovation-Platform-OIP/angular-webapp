@@ -1,24 +1,24 @@
-import { Component, OnInit, OnDestroy } from "@angular/core";
-import { Apollo, QueryRef } from "apollo-angular";
-import gql from "graphql-tag";
-import { Observable, Subscription } from "rxjs";
-import { AuthService } from "../services/auth.service";
-import { ProblemService } from "../services/problem.service";
-import { isArray } from "util";
-import { NgxUiLoaderService } from "ngx-ui-loader";
-import { UsersService } from "../services/users.service";
-import { FilterService } from "../services/filter.service";
-import { ActivatedRoute } from "@angular/router";
+import { Component, OnInit, OnDestroy } from '@angular/core';
+import { Apollo, QueryRef } from 'apollo-angular';
+import gql from 'graphql-tag';
+import { Observable, Subscription } from 'rxjs';
+import { AuthService } from '../services/auth.service';
+import { ProblemService } from '../services/problem.service';
+import { isArray } from 'util';
+import { NgxUiLoaderService } from 'ngx-ui-loader';
+import { UsersService } from '../services/users.service';
+import { FilterService } from '../services/filter.service';
+import { ActivatedRoute } from '@angular/router';
 
 declare const $: any;
 
 @Component({
-  selector: "app-dashboard",
-  templateUrl: "./dashboard.component.html"
+  selector: 'app-dashboard',
+  templateUrl: './dashboard.component.html'
 })
 export class DashboardComponent implements OnInit, OnDestroy {
-  objectValues = Object["values"];
-  objectKeys = Object["keys"];
+  objectValues = Object['values'];
+  objectKeys = Object['keys'];
   drafts = [];
   userProblems = [];
   userSolutions = [];
@@ -95,6 +95,13 @@ export class DashboardComponent implements OnInit, OnDestroy {
          long
         }
       }
+
+      email_private
+                number_private
+                organization_private
+                interests_private
+                location_private
+                persona_private
       
 
       problems(where: { is_draft: { _eq: false } }){
@@ -131,7 +138,7 @@ export class DashboardComponent implements OnInit, OnDestroy {
   ngOnInit() {
     // start loader
     this.ngxService.start();
-    console.log(this.auth.currentUserValue, "current user value");
+    console.log(this.auth.currentUserValue, 'current user value');
     // console.log('on init')
     this.getDrafts();
     this.getUsersProblems();
@@ -177,7 +184,7 @@ export class DashboardComponent implements OnInit, OnDestroy {
     this.draftsQueryRef = this.apollo.watchQuery({
       query: draftsQuery,
       pollInterval: 1000,
-      fetchPolicy: "network-only"
+      fetchPolicy: 'network-only'
     });
 
     // this.draftsObs = this.draftsQueryRef.valueChanges;
@@ -248,7 +255,7 @@ export class DashboardComponent implements OnInit, OnDestroy {
     this.userProblemsQueryRef = this.apollo.watchQuery({
       query: userProblemsQuery,
       pollInterval: 1000,
-      fetchPolicy: "network-only"
+      fetchPolicy: 'network-only'
     });
     this.userProblemsQuerySub = this.userProblemsQueryRef.valueChanges.subscribe(
       ({ data }) => {
@@ -275,7 +282,7 @@ export class DashboardComponent implements OnInit, OnDestroy {
     this.userSolutionsQueryRef = this.apollo.watchQuery({
       query: userSolutionQuery,
       pollInterval: 1000,
-      fetchPolicy: "network-only"
+      fetchPolicy: 'network-only'
     });
     this.userSolutionsQuerySub = this.userSolutionsQueryRef.valueChanges.subscribe(
       ({ data }) => {
@@ -321,7 +328,7 @@ export class DashboardComponent implements OnInit, OnDestroy {
     this.contributionsQueryRef = this.apollo.watchQuery({
       query: contributionsQuery,
       pollInterval: 1000,
-      fetchPolicy: "network-only"
+      fetchPolicy: 'network-only'
     });
     this.contributionsSub = this.contributionsQueryRef.valueChanges.subscribe(
       ({ data }) => {
@@ -333,12 +340,12 @@ export class DashboardComponent implements OnInit, OnDestroy {
               // console.log(p, "p");
               const problem = p.problem || p.problemsByproblemId;
               // console.log(problem, "problem");
-              if (problem["id"]) {
-                this.contributions[problem["id"]] = problem;
+              if (problem['id']) {
+                this.contributions[problem['id']] = problem;
                 // console.log(this.contributions, "contributions");
 
                 this.userService.dashboardContributions[
-                  problem["id"]
+                  problem['id']
                 ] = problem;
                 // console.log(
                 //   "test contributions",
@@ -348,12 +355,12 @@ export class DashboardComponent implements OnInit, OnDestroy {
             } else if (p.solution) {
               const solution = p.solution;
               // console.log(problem, "problem");
-              if (solution["id"]) {
-                this.contributions[solution["id"]] = solution;
+              if (solution['id']) {
+                this.contributions[solution['id']] = solution;
                 // console.log(this.contributions, "contributions");
 
                 this.userService.dashboardSolutionContributions[
-                  solution["id"]
+                  solution['id']
                 ] = solution;
                 // console.log(
                 //   "test contributions",
@@ -451,13 +458,13 @@ export class DashboardComponent implements OnInit, OnDestroy {
       this.recommendedProblemsQueryRef = this.apollo.watchQuery({
         query: recoProblemsQuery,
         pollInterval: 1000,
-        fetchPolicy: "network-only"
+        fetchPolicy: 'network-only'
       });
       this.recommendedProblemsSub = this.recommendedProblemsQueryRef.valueChanges.subscribe(
         ({ data }) => {
           if (data.users_tags.length > 0) {
             data.users_tags.map(tagData => {
-              console.log(tagData, "tag data");
+              console.log(tagData, 'tag data');
               if (tagData.tag && tagData.tag.problems_tags.length > 0) {
                 tagData.tag.problems_tags.map(p => {
                   if (p && p.problem && p.problem.id) {
@@ -469,9 +476,9 @@ export class DashboardComponent implements OnInit, OnDestroy {
                     //   "user id ==",
                     //   this.auth.currentUserValue.id
                     // );
-                    this.recommendedProblems[problem["id"]] = problem;
+                    this.recommendedProblems[problem['id']] = problem;
                     this.userService.dashboardRecommendations[
-                      problem["id"]
+                      problem['id']
                     ] = problem;
                   }
                   // this.recommendedProblems.add(problem.problem);
@@ -507,7 +514,7 @@ export class DashboardComponent implements OnInit, OnDestroy {
     this.recommendedUsersQueryRef = this.apollo.watchQuery({
       query: recommendedUsersQuery,
       pollInterval: 1000,
-      fetchPolicy: "network-only"
+      fetchPolicy: 'network-only'
     });
     this.recommendedUsersSub = this.recommendedUsersQueryRef.valueChanges.subscribe(
       ({ data }) => {
@@ -532,8 +539,8 @@ export class DashboardComponent implements OnInit, OnDestroy {
             ) {
               org.organizationByOrganizationId.users.map(user => {
                 if (user && user.id) {
-                  this.recommendedUsers[user["id"]] = user;
-                  this.userService.dashboardUsers[user["id"]] = user;
+                  this.recommendedUsers[user['id']] = user;
+                  this.userService.dashboardUsers[user['id']] = user;
                 }
                 // this.recommendedUsers.add(user);
               });

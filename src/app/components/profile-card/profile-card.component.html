@@ -35,9 +35,11 @@
   </div>
   <div class="card-body">
     <h4 class="card-title">{{userData.name}}</h4>
-    <h6 class="card-category text-gray" *ngIf="userData.organizationByOrganizationId">
+    <h6 class="card-category text-gray"
+      *ngIf="userData.organizationByOrganizationId && (userData.id == authService.currentUserValue.id || !userData.organization_private)">
       {{userData.organizationByOrganizationId.name}}</h6>
-    <div *ngIf="userData.users_tags&& userData.users_tags.length">
+    <div
+      *ngIf="userData.users_tags && userData.users_tags.length && (userData.id == authService.currentUserValue.id || !userData.interests_private)">
       <span *ngFor="let interest of userData.users_tags; let i=index;" class="badge badge-warning"
         style="margin-right: 0.3em;"><span *ngIf="i<2">{{interest.tag.name}}</span></span>
       <span>&nbsp;</span>
