@@ -1,10 +1,11 @@
-import { Injectable } from "@angular/core";
-import { Apollo } from "apollo-angular";
-import gql from "graphql-tag";
-import { Subscription, Observable } from "rxjs";
-import { take } from "rxjs/operators";
+import { Injectable } from '@angular/core';
+import { Apollo } from 'apollo-angular';
+import gql from 'graphql-tag';
+import { Subscription, Observable } from 'rxjs';
+import { take } from 'rxjs/operators';
+
 @Injectable({
-  providedIn: "root"
+  providedIn: 'root'
 })
 export class TagsService {
   // getTagsSub: Subscription;
@@ -19,21 +20,19 @@ export class TagsService {
 
   // public upsert_tags = ;
 
-  constructor(private apollo: Apollo) {
-    this.getTagsFromDB();
-  }
-  getTagsFromDB() {
+  constructor(private apollo: Apollo) {}
+  getTagsFromDB(filter) {
     this.allTagsArray = [];
     this.test = this.apollo.watchQuery<any>({
       query: gql`
         query {
-          tags {
+          tags${filter} {
             id
             name
           }
         }
       `,
-      fetchPolicy: "network-only"
+      fetchPolicy: 'network-only'
       // pollInterval: 500
     }).valueChanges;
 
@@ -51,7 +50,7 @@ export class TagsService {
   }
   addTagsInDb(tags, tableName, tableId?) {
     let trimmedTableName = tableName.slice(0, tableName.length - 1);
-    console.log(tags, "check for tag");
+    console.log(tags, 'check for tag');
     this.apollo
       .mutate({
         mutation: gql`
@@ -112,14 +111,14 @@ export class TagsService {
               .pipe(take(1))
               .subscribe(
                 data => {
-                  console.log("worked", data);
+                  console.log('worked', data);
                 },
                 err => {
                   console.log(err, "couldn't add tags");
                 }
               );
 
-            console.log("worked", data);
+            console.log('worked', data);
           }
         },
         err => {
@@ -171,7 +170,7 @@ export class TagsService {
     // });
   }
   addRelationToTags(tableId, tagId, tableName) {
-    console.log(tableId, tagId, tableName, "tableId", "tagId", "tableName");
+    console.log(tableId, tagId, tableName, 'tableId', 'tagId', 'tableName');
     let table = tableName.slice(0, tableName.length - 1);
     this.apollo
       .mutate<any>({
@@ -194,10 +193,10 @@ export class TagsService {
       .pipe(take(1))
       .subscribe(
         data => {
-          console.log(data, "tag addition");
+          console.log(data, 'tag addition');
         },
         error => {
-          console.log("error", error);
+          console.log('error', error);
         }
       );
   }
@@ -230,7 +229,7 @@ export class TagsService {
       .pipe(take(1))
       .subscribe(
         ({ data }) => {
-          console.log("worked", data);
+          console.log('worked', data);
           // location.reload();
           // location.reload();
           // this.router.navigateByUrl("/problems");
@@ -238,7 +237,7 @@ export class TagsService {
           return;
         },
         error => {
-          console.log("Could delete due to " + error);
+          console.log('Could delete due to ' + error);
         }
       );
   }

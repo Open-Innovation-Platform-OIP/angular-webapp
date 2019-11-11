@@ -1,12 +1,12 @@
-import { Injectable } from "@angular/core";
-import { TagsService } from "./tags.service";
-import { GeocoderService } from "./geocoder.service";
-import { Apollo } from "apollo-angular";
+import { Injectable } from '@angular/core';
+import { TagsService } from './tags.service';
+import { GeocoderService } from './geocoder.service';
+import { Apollo } from 'apollo-angular';
 
-import gql from "graphql-tag";
+import gql from 'graphql-tag';
 
 @Injectable({
-  providedIn: "root"
+  providedIn: 'root'
 })
 export class FilterService {
   test = {
@@ -38,8 +38,9 @@ export class FilterService {
   queryVariable = {};
   location_filter_header: any = ``;
   selectedSectors: any[] = [];
-  selectedLocation: any = "";
+  selectedLocation: any = '';
   is_domain_filter_mode: boolean = false;
+  domain_tags_query = '';
 
   constructor(
     private tagsService: TagsService,
@@ -51,14 +52,14 @@ export class FilterService {
     if (!this.is_domain_filter_mode) {
       if (
         !Object.keys(queryParams).filter(
-          param => param !== "filterLocation" && param !== "locationRange"
+          param => param !== 'filterLocation' && param !== 'locationRange'
         ).length
       ) {
         this.sector_filter_query = `_nin:[0]`;
         return [];
       } else {
         this.sectorsArray = Object.keys(queryParams).filter(
-          param => param !== "filterLocation" && param !== "locationRange"
+          param => param !== 'filterLocation' && param !== 'locationRange'
         );
         this.sectorFilterArray = this.sectorsArray.map(sector => {
           if (sector && this.tagsService.allTags[sector]) {
@@ -70,48 +71,78 @@ export class FilterService {
         if (this.sectorFilterArray.length) {
           this.sector_filter_query = `_in:[${this.sectorFilterArray}]`;
         }
+        // console.log(
+        //   this.sector_filter_query,
+        //   '=== test for sector filter query'
+        // );
         return this.sectorsArray;
+      }
+    } else {
+      if (
+        Object.keys(queryParams).filter(
+          param => param !== 'filterLocation' && param !== 'locationRange'
+        ).length
+      ) {
+        this.sectorsArray = Object.keys(queryParams).filter(
+          param => param !== 'filterLocation' && param !== 'locationRange'
+        );
+        this.sectorFilterArray = this.sectorsArray.map(sector => {
+          if (sector && this.tagsService.allTags[sector]) {
+            return this.tagsService.allTags[sector].id;
+          }
+        });
+
+        // console.log(this.sectorFilterArray, "tag array");
+        if (this.sectorFilterArray.length) {
+          this.sector_filter_query = `_in:[${this.sectorFilterArray}]`;
+        }
+        // console.log(
+        //   this.sector_filter_query,
+        //   '=== test for sector filter query'
+        // );
+        return this.sectorsArray;
+      } else {
+        return [];
       }
     }
   }
 
-  filterSectorByDomain(domain: string) {
+  async filterSectorByDomain(domain: string) {
     let sectorIdArray = [];
-    this.test.data.domains[0].domain_tags.map(tags => {
-      sectorIdArray.push(tags.tag.id);
-    });
 
-    console.log(sectorIdArray, "sectorid array");
-    if (sectorIdArray.length) {
-      this.is_domain_filter_mode = true;
-      this.sector_filter_query = `_in:[${sectorIdArray}]`;
-    }
+    console.log(this.sector_filter_query, 'filter service sector filter query');
+    await this.apollo
+      .watchQuery<any>({
+        query: gql`
+          {
+            domains(where: { url: { _eq: "${domain}" } }) {
+              domain_tags {
+                tag {
+                  id
+                }
+              }
+            }
+          }
+        `
+      })
+      .valueChanges.subscribe(
+        ({ data }) => {
+          console.log(data, ' domain filter result');
+          data.domains[0].domain_tags.map(tags => {
+            sectorIdArray.push(tags.tag.id);
+          });
 
-    console.log(this.sector_filter_query, "filter service sector filter query");
-    // this.apollo
-    //   .watchQuery<any>({
-    //     query: gql`
-    //               {
-    //                   domains(where: { url: { _eq: ${domain} } }) {
-    //                     domain_tags{
-    //                       tag{
-    //                         id
-    //                       }
-    //                     }
+          console.log(sectorIdArray, 'sector id array');
 
-    //                   }
-
-    //               }
-    //               `
-    //   })
-    //   .valueChanges.subscribe(
-    //     result => {
-    //       console.log(result, " domain filter result");
-    //     },
-    //     error => {
-    //       console.error(JSON.stringify(error));
-    //     }
-    //   );
+          this.is_domain_filter_mode = true;
+          this.sector_filter_query = `_in:[${sectorIdArray}]`;
+          this.domain_tags_query = `(where:{domain_tags:{domain:{url:{_eq:"${domain}"}}
+        }})`;
+        },
+        error => {
+          console.error(JSON.stringify(error));
+        }
+      );
   }
 
   filterLocation(queryParams) {
@@ -123,12 +154,12 @@ export class FilterService {
 
       coordinates = [parsedQuery.latitude, parsedQuery.longitude];
 
-      console.log(parsedQuery, "parsed query");
+      console.log(parsedQuery, 'parsed query');
 
       if (
-        parsedQuery.type === "city" ||
-        parsedQuery.type === "state" ||
-        parsedQuery.type === "country"
+        parsedQuery.type === 'city' ||
+        parsedQuery.type === 'state' ||
+        parsedQuery.type === 'country'
       ) {
         this.location_filter_query = `{problem_locations:{_or:[{location:{location: {_st_d_within: {distance: ${
           this.range
@@ -147,7 +178,7 @@ export class FilterService {
 
       this.queryVariable = {
         point: {
-          type: "Point",
+          type: 'Point',
           coordinates: coordinates
         }
       };

@@ -21,6 +21,7 @@ import { map, startWith } from 'rxjs/operators';
 import { COMMA, ENTER } from '@angular/cdk/keycodes';
 import { GeocoderService } from '../../services/geocoder.service';
 import { FormControl } from '@angular/forms';
+import { FilterService } from '../../services/filter.service';
 import {
   MatAutocompleteSelectedEvent,
   MatChipInputEvent,
@@ -121,7 +122,8 @@ export class AddUserProfileComponent
     private tagService: TagsService,
     private geoService: GeocoderService,
     private focusMoniter: FocusMonitor,
-    private liveAnnouncer: LiveAnnouncer
+    private liveAnnouncer: LiveAnnouncer,
+    private filterService: FilterService
   ) {
     this.filteredSectors = this.sectorCtrl.valueChanges.pipe(
       startWith(null),
@@ -304,7 +306,7 @@ export class AddUserProfileComponent
   }
 
   ngOnInit() {
-    this.tagService.getTagsFromDB();
+    this.tagService.getTagsFromDB(this.filterService.domain_tags_query);
 
     Object.entries(this.user).map(persona => {
       if (typeof persona[1] === 'boolean') {

@@ -5,37 +5,37 @@ import {
   ViewChild,
   ElementRef,
   AfterViewInit
-} from "@angular/core";
-import { Apollo, QueryRef } from "apollo-angular";
-import gql from "graphql-tag";
-import { Subscription } from "rxjs";
-import { AuthService } from "../../services/auth.service";
-import { ActivatedRoute, Router, ParamMap } from "@angular/router";
-import { TagsService } from "../../services/tags.service";
-import { take, switchMap } from "rxjs/operators";
-import { FilterService } from "../../services/filter.service";
-import { GeocoderService } from "src/app/services/geocoder.service";
-import { HttpClient, HttpHeaders } from "@angular/common/http";
-import { FocusMonitor } from "@angular/cdk/a11y";
+} from '@angular/core';
+import { Apollo, QueryRef } from 'apollo-angular';
+import gql from 'graphql-tag';
+import { Subscription } from 'rxjs';
+import { AuthService } from '../../services/auth.service';
+import { ActivatedRoute, Router, ParamMap } from '@angular/router';
+import { TagsService } from '../../services/tags.service';
+import { take, switchMap } from 'rxjs/operators';
+import { FilterService } from '../../services/filter.service';
+import { GeocoderService } from 'src/app/services/geocoder.service';
+import { HttpClient, HttpHeaders } from '@angular/common/http';
+import { FocusMonitor } from '@angular/cdk/a11y';
 
 @Component({
-  selector: "app-problems-view",
-  templateUrl: "./problems-view.component.html",
-  styleUrls: ["./problems-view.component.css"]
+  selector: 'app-problems-view',
+  templateUrl: './problems-view.component.html',
+  styleUrls: ['./problems-view.component.css']
 })
 export class ProblemsViewComponent implements OnInit, OnDestroy, AfterViewInit {
-  @ViewChild("problemWorthSolving") problemWorthSolving: ElementRef;
+  @ViewChild('problemWorthSolving') problemWorthSolving: ElementRef;
 
   userProblems = [];
   problems = [];
   file_types = [
-    "application/msword",
-    " application/vnd.ms-excel",
-    " application/vnd.ms-powerpoint",
-    "text/plain",
-    " application/pdf",
-    " image/*",
-    "video/*"
+    'application/msword',
+    ' application/vnd.ms-excel',
+    ' application/vnd.ms-powerpoint',
+    'text/plain',
+    ' application/pdf',
+    ' image/*',
+    'video/*'
   ];
   userProblemViewQuery: QueryRef<any>;
   userProblemViewSubscription: Subscription;
@@ -54,14 +54,14 @@ export class ProblemsViewComponent implements OnInit, OnDestroy, AfterViewInit {
     private focusMonitor: FocusMonitor
   ) {
     this.tagsService
-      .getTagsFromDB()
+      .getTagsFromDB(this.filterService.domain_tags_query)
       .then(result => {
         return this.geoService.getLocationsFromDB();
       })
       .then(result => {
         this.getProblems();
       })
-      .catch(err => console.log(err, "error"));
+      .catch(err => console.log(err, 'error'));
   }
 
   ngOnInit() {
@@ -70,7 +70,7 @@ export class ProblemsViewComponent implements OnInit, OnDestroy, AfterViewInit {
 
   ngAfterViewInit() {
     setTimeout(() => {
-      this.focusMonitor.focusVia(this.problemWorthSolving, "program");
+      this.focusMonitor.focusVia(this.problemWorthSolving, 'program');
     }, 1000);
   }
 
@@ -142,7 +142,7 @@ export class ProblemsViewComponent implements OnInit, OnDestroy, AfterViewInit {
     `,
         variables: this.filterService.queryVariable,
         pollInterval: 500,
-        fetchPolicy: "network-only"
+        fetchPolicy: 'network-only'
       });
 
       this.problemViewSubscription = this.route.paramMap.pipe(
@@ -153,7 +153,7 @@ export class ProblemsViewComponent implements OnInit, OnDestroy, AfterViewInit {
 
       this.problemViewSubscription.subscribe(
         result => {
-          console.log(result, "results");
+          console.log(result, 'results');
           if (result.data.problems.length > 0) {
             this.problems = result.data.problems;
           } else {

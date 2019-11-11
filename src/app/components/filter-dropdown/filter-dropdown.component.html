@@ -1,5 +1,5 @@
 <div class="d-flex justify-content-end">
-  <mat-form-field class="dropDown" *ngIf="!filterService.is_domain_filter_mode">
+  <mat-form-field class="dropDown">
     <mat-select multiple placeholder="Sectors" [(ngModel)]="selectedSectors" role="listbox">
       <mat-option (click)="selectDropdown($event)" *ngFor="let sector of objectValues(sectors)" [value]="sector.name"
         role="option">

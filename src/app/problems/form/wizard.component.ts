@@ -9,7 +9,7 @@ import {
   OnDestroy,
   AfterViewInit,
   SimpleChanges
-} from "@angular/core";
+} from '@angular/core';
 import {
   FormControl,
   FormBuilder,
@@ -17,36 +17,36 @@ import {
   NgForm,
   Validators,
   FormGroup
-} from "@angular/forms";
-import { Router, ActivatedRoute } from "@angular/router";
-import { ErrorStateMatcher } from "@angular/material/core";
-import { COMMA, ENTER } from "@angular/cdk/keycodes";
+} from '@angular/forms';
+import { Router, ActivatedRoute } from '@angular/router';
+import { ErrorStateMatcher } from '@angular/material/core';
+import { COMMA, ENTER } from '@angular/cdk/keycodes';
 import {
   MatAutocompleteSelectedEvent,
   MatChipInputEvent,
   MatAutocomplete
-} from "@angular/material";
-import { Apollo } from "apollo-angular";
+} from '@angular/material';
+import { Apollo } from 'apollo-angular';
 import {
   LiveAnnouncer,
   FocusMonitor,
   AriaLivePoliteness
-} from "@angular/cdk/a11y";
-import gql from "graphql-tag";
-import swal from "sweetalert2";
+} from '@angular/cdk/a11y';
+import gql from 'graphql-tag';
+import swal from 'sweetalert2';
 
-import { TagsService } from "../../services/tags.service";
-import { FilesService } from "../../services/files.service";
-import { UsersService } from "../../services/users.service";
-import { AuthService } from "../../services/auth.service";
+import { TagsService } from '../../services/tags.service';
+import { FilesService } from '../../services/files.service';
+import { UsersService } from '../../services/users.service';
+import { AuthService } from '../../services/auth.service';
 // import { GeocoderService } from '../../services/geocoder.service';
-import { Observable, Subscription } from "rxjs";
-import { map, startWith } from "rxjs/operators";
-import { first, take } from "rxjs/operators";
-import { ProblemService } from "../../services/problem.service";
-import { GeocoderService } from "../../services/geocoder.service";
-import { HttpClient } from "@angular/common/http";
-import { FilterService } from "../../services/filter.service";
+import { Observable, Subscription } from 'rxjs';
+import { map, startWith } from 'rxjs/operators';
+import { first, take } from 'rxjs/operators';
+import { ProblemService } from '../../services/problem.service';
+import { GeocoderService } from '../../services/geocoder.service';
+import { HttpClient } from '@angular/common/http';
+import { FilterService } from '../../services/filter.service';
 
 declare var H: any;
 declare const $: any;
@@ -79,13 +79,13 @@ export class MyErrorStateMatcher implements ErrorStateMatcher {
 }
 
 @Component({
-  selector: "app-wizard-cmp",
-  templateUrl: "wizard.component.html",
-  styleUrls: ["wizard.component.css"]
+  selector: 'app-wizard-cmp',
+  templateUrl: 'wizard.component.html',
+  styleUrls: ['wizard.component.css']
 })
 export class WizardComponent
   implements OnInit, OnChanges, OnDestroy, AfterViewInit {
-  objectValues = Object["values"];
+  objectValues = Object['values'];
   visible = true;
   selectable = true;
   removable = true;
@@ -93,27 +93,27 @@ export class WizardComponent
   owners: any[] = [];
   readonly separatorKeysCodes: number[] = [ENTER, COMMA];
   is_edit = false;
-  media_url = "";
+  media_url = '';
   // canProceed: Boolean;
   // owners = [];
   voted_by = [];
   watched_by = [];
   problemLocations: any[] = [];
   problem = {
-    title: "",
-    description: "",
-    organization: "",
-    impact: "",
-    extent: "",
+    title: '',
+    description: '',
+    organization: '',
+    impact: '',
+    extent: '',
     min_population: 0,
     max_population: 0,
-    beneficiary_attributes: "",
-    resources_needed: "",
+    beneficiary_attributes: '',
+    resources_needed: '',
     image_urls: [],
     video_urls: [],
-    featured_url: "",
+    featured_url: '',
     embed_urls: [],
-    featured_type: "",
+    featured_type: '',
     organization_id: 1,
 
     user_id: Number(this.auth.currentUserValue.id),
@@ -131,19 +131,19 @@ export class WizardComponent
   autosaveInterval: any;
   type: FormGroup;
   sizes = [
-    { value: 100, viewValue: ">100" },
-    { value: 1000, viewValue: ">1000" },
-    { value: 10000, viewValue: ">10000" },
-    { value: 100000, viewValue: ">100,000" }
+    { value: 100, viewValue: '>100' },
+    { value: 1000, viewValue: '>1000' },
+    { value: 10000, viewValue: '>10000' },
+    { value: 100000, viewValue: '>100,000' }
   ];
   file_types = [
-    "application/msword",
-    " application/vnd.ms-excel",
-    " application/vnd.ms-powerpoint",
-    "text/plain",
-    " application/pdf",
-    " image/*",
-    "video/*"
+    'application/msword',
+    ' application/vnd.ms-excel',
+    ' application/vnd.ms-powerpoint',
+    'text/plain',
+    ' application/pdf',
+    ' image/*',
+    'video/*'
   ];
   goToTitle = false;
   wizardHeight;
@@ -157,8 +157,8 @@ export class WizardComponent
   // deleteProblemSub: Subscription;
   // addTagsSub: Subscription;
 
-  @ViewChild("sectorInput") sectorInput: ElementRef<HTMLInputElement>;
-  @ViewChild("auto") matAutocomplete: MatAutocomplete;
+  @ViewChild('sectorInput') sectorInput: ElementRef<HTMLInputElement>;
+  @ViewChild('auto') matAutocomplete: MatAutocomplete;
   constructor(
     private router: Router,
     private route: ActivatedRoute,
@@ -178,7 +178,7 @@ export class WizardComponent
   ) {
     canProceed = true;
 
-    this.problem.organization = "Social Alpha";
+    this.problem.organization = 'Social Alpha';
     this.filteredSectors = this.sectorCtrl.valueChanges.pipe(
       startWith(null),
       map((sector: string | null) =>
@@ -197,12 +197,12 @@ export class WizardComponent
       const input = event.input;
       const value = event.value;
       // Add our sector
-      if ((value || "").trim()) {
+      if ((value || '').trim()) {
         this.sectors.push(value.trim());
       }
       // Reset the input value
       if (input) {
-        input.value = "";
+        input.value = '';
       }
       this.sectorCtrl.setValue(null);
     }
@@ -218,11 +218,11 @@ export class WizardComponent
     if (index >= 0) {
       this.sectors.splice(index, 1);
     }
-    if (this.tagService.allTags[sector] && this.problem["id"]) {
+    if (this.tagService.allTags[sector] && this.problem['id']) {
       this.tagService.removeTagRelation(
         this.tagService.allTags[sector].id,
-        this.problem["id"],
-        "problems"
+        this.problem['id'],
+        'problems'
       );
     }
   }
@@ -238,7 +238,7 @@ export class WizardComponent
       this.owners.splice(index, 1);
     }
 
-    if (this.problem["id"]) {
+    if (this.problem['id']) {
       this.apollo
         .mutate<any>({
           mutation: gql`
@@ -257,7 +257,7 @@ export class WizardComponent
                 _eq: owner.id
               },
               problem_id: {
-                _eq: this.problem["id"]
+                _eq: this.problem['id']
               }
             }
           }
@@ -274,7 +274,7 @@ export class WizardComponent
 
   selected(event: MatAutocompleteSelectedEvent): void {
     this.sectors.push(event.option.viewValue);
-    this.sectorInput.nativeElement.value = "";
+    this.sectorInput.nativeElement.value = '';
     this.sectorCtrl.setValue(null);
   }
 
@@ -292,8 +292,8 @@ export class WizardComponent
 
   displayFieldCss(form: FormGroup, field: string) {
     return {
-      "has-error": this.isFieldValid(form, field),
-      "has-feedback": this.isFieldValid(form, field)
+      'has-error': this.isFieldValid(form, field),
+      'has-feedback': this.isFieldValid(form, field)
     };
   }
 
@@ -309,7 +309,7 @@ export class WizardComponent
   }
   ngOnInit() {
     // console.log('wizard on in it');
-    this.tagService.getTagsFromDB();
+    this.tagService.getTagsFromDB(this.filterService.domain_tags_query);
     this.geoService.getLocationsFromDB();
 
     // //console.log("wizard ng on in it",this.auth.currentUserValue.);
@@ -372,14 +372,14 @@ export class WizardComponent
           })
           .valueChanges.pipe(take(1))
           .subscribe(result => {
-            console.log(result, "result");
+            console.log(result, 'result');
             // //console.log(result, "pppp>>>>>>>>");
             if (
               result.data.problems.length >= 1 &&
               result.data.problems[0].id
             ) {
               canProceed = true;
-              this.problem["id"] = result.data.problems[0].id;
+              this.problem['id'] = result.data.problems[0].id;
               Object.keys(this.problem).map(key => {
                 // //console.log(key, result.data.problems[0][key]);
                 if (result.data.problems[0][key]) {
@@ -419,14 +419,14 @@ export class WizardComponent
 
               this.is_edit = true;
             } else {
-              this.router.navigate(["problems/add"], {
-                queryParamsHandling: "preserve"
+              this.router.navigate(['problems/add'], {
+                queryParamsHandling: 'preserve'
               });
             }
           });
       }
     });
-    this.tagService.getTagsFromDB();
+    this.tagService.getTagsFromDB(this.filterService.domain_tags_query);
     this.usersService.getOrgsFromDB();
     this.type = this.formBuilder.group({
       // To add a validator, we must first convert the string value into an array.
@@ -446,7 +446,7 @@ export class WizardComponent
       media_url: [null, null]
     });
     // Code for the Validator
-    const $validator = $(".card-wizard form").validate({
+    const $validator = $('.card-wizard form').validate({
       rules: {
         title: {
           required: true,
@@ -468,15 +468,15 @@ export class WizardComponent
 
       highlight: function(element) {
         $(element)
-          .closest(".form-group")
-          .removeClass("has-success")
-          .addClass("has-danger");
+          .closest('.form-group')
+          .removeClass('has-success')
+          .addClass('has-danger');
       },
       success: function(element) {
         $(element)
-          .closest(".form-group")
-          .removeClass("has-danger")
-          .addClass("has-success");
+          .closest('.form-group')
+          .removeClass('has-danger')
+          .addClass('has-success');
       },
       errorPlacement: function(error, element) {
         $(element).append(error);
@@ -484,10 +484,10 @@ export class WizardComponent
     });
 
     // Wizard Initialization
-    $(".card-wizard").bootstrapWizard({
-      tabClass: "nav nav-pills",
-      nextSelector: ".btn-next",
-      previousSelector: ".btn-previous",
+    $('.card-wizard').bootstrapWizard({
+      tabClass: 'nav nav-pills',
+      nextSelector: '.btn-next',
+      previousSelector: '.btn-previous',
 
       // onNext: function(tab, navigation, index) {
       //   const $valid = $(".card-wizard form").valid();
@@ -510,19 +510,19 @@ export class WizardComponent
 
       onInit: function(tab: any, navigation: any, index: any) {
         // check number of tabs and fill the entire row
-        let $total = navigation.find("li").length;
-        const $wizard = navigation.closest(".card-wizard");
+        let $total = navigation.find('li').length;
+        const $wizard = navigation.closest('.card-wizard');
 
-        const $first_li = navigation.find("li:first-child a").html();
+        const $first_li = navigation.find('li:first-child a').html();
         const $moving_div = $(
-          '<div class="moving-tab">' + $first_li + "</div>"
+          '<div class="moving-tab">' + $first_li + '</div>'
         );
-        $(".card-wizard .wizard-navigation").append($moving_div);
+        $('.card-wizard .wizard-navigation').append($moving_div);
 
-        $total = $wizard.find(".nav li").length;
+        $total = $wizard.find('.nav li').length;
         let $li_width = 100 / $total;
 
-        const total_steps = $wizard.find(".nav li").length;
+        const total_steps = $wizard.find('.nav li').length;
         let move_distance = $wizard.width() / total_steps;
         let index_temp = index;
         let vertical_level = 0;
@@ -535,7 +535,7 @@ export class WizardComponent
           $li_width = 50;
         }
 
-        $wizard.find(".nav li").css("width", $li_width + "%");
+        $wizard.find('.nav li').css('width', $li_width + '%');
 
         const step_width = move_distance;
         move_distance = move_distance * index_temp;
@@ -557,18 +557,18 @@ export class WizardComponent
           vertical_level = vertical_level * 38;
         }
 
-        $wizard.find(".moving-tab").css("width", step_width);
-        $(".moving-tab").css({
+        $wizard.find('.moving-tab').css('width', step_width);
+        $('.moving-tab').css({
           transform:
-            "translate3d(" + move_distance + "px, " + vertical_level + "px, 0)",
-          transition: "all 0.5s cubic-bezier(0.29, 1.42, 0.79, 1)"
+            'translate3d(' + move_distance + 'px, ' + vertical_level + 'px, 0)',
+          transition: 'all 0.5s cubic-bezier(0.29, 1.42, 0.79, 1)'
         });
-        $(".moving-tab").css("transition", "transform 0s");
+        $('.moving-tab').css('transition', 'transform 0s');
       },
 
       onTabClick: function(tab: any, navigation: any, index: any) {
         return true;
-        const $valid = $(".card-wizard form").valid();
+        const $valid = $('.card-wizard form').valid();
 
         if (!$valid) {
           return false;
@@ -578,54 +578,54 @@ export class WizardComponent
       },
 
       onTabShow: function(tab: any, navigation: any, index: any) {
-        let $total = navigation.find("li").length;
+        let $total = navigation.find('li').length;
         let $current = index + 1;
 
-        const $wizard = navigation.closest(".card-wizard");
+        const $wizard = navigation.closest('.card-wizard');
 
         // If it's the last tab then hide the last button and show the finish instead
         if ($current >= $total) {
           $($wizard)
-            .find(".btn-next")
+            .find('.btn-next')
             .hide();
           $($wizard)
-            .find(".btn-finish")
+            .find('.btn-finish')
             .show();
         } else {
           $($wizard)
-            .find(".btn-next")
+            .find('.btn-next')
             .show();
           $($wizard)
-            .find(".btn-finish")
+            .find('.btn-finish')
             .hide();
         }
 
         const button_text = navigation
-          .find("li:nth-child(" + $current + ") a")
+          .find('li:nth-child(' + $current + ') a')
           .html();
 
         setTimeout(function() {
-          $(".moving-tab").text(button_text);
+          $('.moving-tab').text(button_text);
         }, 150);
 
-        const checkbox = $(".footer-checkbox");
+        const checkbox = $('.footer-checkbox');
 
         if (index !== 0) {
           $(checkbox).css({
-            opacity: "0",
-            visibility: "hidden",
-            position: "absolute"
+            opacity: '0',
+            visibility: 'hidden',
+            position: 'absolute'
           });
         } else {
           $(checkbox).css({
-            opacity: "1",
-            visibility: "visible"
+            opacity: '1',
+            visibility: 'visible'
           });
         }
-        $total = $wizard.find(".nav li").length;
+        $total = $wizard.find('.nav li').length;
         let $li_width = 100 / $total;
 
-        const total_steps = $wizard.find(".nav li").length;
+        const total_steps = $wizard.find('.nav li').length;
         let move_distance = $wizard.width() / total_steps;
         let index_temp = index;
         let vertical_level = 0;
@@ -638,7 +638,7 @@ export class WizardComponent
           $li_width = 50;
         }
 
-        $wizard.find(".nav li").css("width", $li_width + "%");
+        $wizard.find('.nav li').css('width', $li_width + '%');
 
         const step_width = move_distance;
         move_distance = move_distance * index_temp;
@@ -660,85 +660,85 @@ export class WizardComponent
           vertical_level = vertical_level * 38;
         }
 
-        $wizard.find(".moving-tab").css("width", step_width);
-        $(".moving-tab").css({
+        $wizard.find('.moving-tab').css('width', step_width);
+        $('.moving-tab').css({
           transform:
-            "translate3d(" + move_distance + "px, " + vertical_level + "px, 0)",
-          transition: "all 0.5s cubic-bezier(0.29, 1.42, 0.79, 1)"
+            'translate3d(' + move_distance + 'px, ' + vertical_level + 'px, 0)',
+          transition: 'all 0.5s cubic-bezier(0.29, 1.42, 0.79, 1)'
         });
       }
     });
 
     // Prepare the preview for profile picture
-    $("#wizard-picture").change(function() {
+    $('#wizard-picture').change(function() {
       const input = $(this);
 
       if (input[0].files && input[0].files[0]) {
         const reader = new FileReader();
 
         reader.onload = function(e: any) {
-          $("#wizardPicturePreview")
-            .attr("src", e.target.result)
-            .fadeIn("slow");
+          $('#wizardPicturePreview')
+            .attr('src', e.target.result)
+            .fadeIn('slow');
         };
         reader.readAsDataURL(input[0].files[0]);
       }
     });
 
     $('[data-toggle="wizard-radio"]').click(function() {
-      const wizard = $(this).closest(".card-wizard");
-      wizard.find('[data-toggle="wizard-radio"]').removeClass("active");
-      $(this).addClass("active");
+      const wizard = $(this).closest('.card-wizard');
+      wizard.find('[data-toggle="wizard-radio"]').removeClass('active');
+      $(this).addClass('active');
       $(wizard)
         .find('[type="radio"]')
-        .removeAttr("checked");
+        .removeAttr('checked');
       $(this)
         .find('[type="radio"]')
-        .attr("checked", "true");
+        .attr('checked', 'true');
     });
 
     $('[data-toggle="wizard-checkbox"]').click(function() {
-      if ($(this).hasClass("active")) {
-        $(this).removeClass("active");
+      if ($(this).hasClass('active')) {
+        $(this).removeClass('active');
         $(this)
           .find('[type="checkbox"]')
-          .removeAttr("checked");
+          .removeAttr('checked');
       } else {
-        $(this).addClass("active");
+        $(this).addClass('active');
         $(this)
           .find('[type="checkbox"]')
-          .attr("checked", "true");
+          .attr('checked', 'true');
       }
     });
-    $(".set-full-height").css("height", "auto");
+    $('.set-full-height').css('height', 'auto');
   }
 
   ngOnChanges() {
-    console.log(">>>>>>>>>>>>>>>>>>>");
+    console.log('>>>>>>>>>>>>>>>>>>>');
 
     const input = $(this);
     if (input[0].files && input[0].files[0]) {
       const reader: any = new FileReader();
       reader.onload = function(e: any) {
-        $("#wizardPicturePreview")
-          .attr("src", e.target.result)
-          .fadeIn("slow");
+        $('#wizardPicturePreview')
+          .attr('src', e.target.result)
+          .fadeIn('slow');
       };
       reader.readAsDataURL(input[0].files[0]);
     }
 
-    console.log("search result: ", this.searchResults.length);
+    console.log('search result: ', this.searchResults.length);
   }
 
   ngAfterViewInit() {
     $(window).resize(() => {
-      $(".card-wizard").each(function() {
+      $('.card-wizard').each(function() {
         const $wizard = $(this);
-        const index = $wizard.bootstrapWizard("currentIndex");
-        const $total = $wizard.find(".nav li").length;
+        const index = $wizard.bootstrapWizard('currentIndex');
+        const $total = $wizard.find('.nav li').length;
         let $li_width = 100 / $total;
 
-        const total_steps = $wizard.find(".nav li").length;
+        const total_steps = $wizard.find('.nav li').length;
         let move_distance = $wizard.width() / total_steps;
         let index_temp = index;
         let vertical_level = 0;
@@ -751,7 +751,7 @@ export class WizardComponent
           $li_width = 50;
         }
 
-        $wizard.find(".nav li").css("width", $li_width + "%");
+        $wizard.find('.nav li').css('width', $li_width + '%');
 
         const step_width = move_distance;
         move_distance = move_distance * index_temp;
@@ -773,15 +773,15 @@ export class WizardComponent
           vertical_level = vertical_level * 38;
         }
 
-        $wizard.find(".moving-tab").css("width", step_width);
-        $(".moving-tab").css({
+        $wizard.find('.moving-tab').css('width', step_width);
+        $('.moving-tab').css({
           transform:
-            "translate3d(" + move_distance + "px, " + vertical_level + "px, 0)",
-          transition: "all 0.5s cubic-bezier(0.29, 1.42, 0.79, 1)"
+            'translate3d(' + move_distance + 'px, ' + vertical_level + 'px, 0)',
+          transition: 'all 0.5s cubic-bezier(0.29, 1.42, 0.79, 1)'
         });
 
-        $(".moving-tab").css({
-          transition: "transform 0s"
+        $('.moving-tab').css({
+          transition: 'transform 0s'
         });
       });
     });
@@ -794,14 +794,14 @@ export class WizardComponent
     setTimeout(() => {
       if (this.searchResults.length) {
         this.headingHeight =
-          this.elementRef.nativeElement.querySelector("h2#resultsList")
+          this.elementRef.nativeElement.querySelector('h2#resultsList')
             .clientHeight || 0;
       } else {
         this.headingHeight = 0;
       }
 
       this.wizardHeight = this.elementRef.nativeElement.querySelector(
-        "div.card.card-wizard"
+        'div.card.card-wizard'
       ).clientHeight;
 
       this.wizardHeight -= this.headingHeight;
@@ -923,17 +923,17 @@ export class WizardComponent
   // }
 
   smartSearch() {
-    let searchKey = this.problem.title + " " + this.problem.description;
-    searchKey = searchKey.replace(/[^a-zA-Z ]/g, "");
+    let searchKey = this.problem.title + ' ' + this.problem.description;
+    searchKey = searchKey.replace(/[^a-zA-Z ]/g, '');
 
     if (searchKey.length >= 3) {
       this.searchResults = [];
-      console.log(searchKey, "search key");
-      console.log(this.filterService.sector_filter_query, "filter query");
+      console.log(searchKey, 'search key');
+      console.log(this.filterService.sector_filter_query, 'filter query');
 
       this.http
         .post(
-          "https://elasticsearch-microservice.dev.jaagalabs.com/search_problems",
+          'https://elasticsearch-microservice.dev.jaagalabs.com/search_problems',
           { keyword: searchKey, filter: this.filterService.sector_filter_query }
         )
         .subscribe(
@@ -1077,7 +1077,7 @@ export class WizardComponent
   // }
   showSuccessSwal(title) {
     swal({
-      type: "success",
+      type: 'success',
       title: title,
       timer: 3000,
       showConfirmButton: false
@@ -1099,7 +1099,7 @@ export class WizardComponent
   // }
 
   publishProblem(problem) {
-    console.log(problem, " publish problem");
+    console.log(problem, ' publish problem');
     clearInterval(this.autosaveInterval);
 
     if (
@@ -1114,18 +1114,18 @@ export class WizardComponent
           problem.embed_urls.length))
     ) {
       swal({
-        title: "Are you sure you want to publish the problem?",
+        title: 'Are you sure you want to publish the problem?',
         // text: "You won't be able to revert this!",
-        type: "warning",
+        type: 'warning',
         showCancelButton: true,
-        confirmButtonClass: "btn btn-success",
-        cancelButtonClass: "btn btn-warning",
-        confirmButtonText: "Yes",
+        confirmButtonClass: 'btn btn-success',
+        cancelButtonClass: 'btn btn-warning',
+        confirmButtonText: 'Yes',
         buttonsStyling: false
       }).then(result => {
         if (result.value) {
           problem.created_at = new Date();
-          this.showSuccessSwal("Problem Added");
+          this.showSuccessSwal('Problem Added');
 
           problem.is_draft = false;
           this.submitProblemToDB(problem);
@@ -1144,25 +1144,25 @@ export class WizardComponent
     ) {
       swal({
         title:
-          "Are you sure you want to publish the problem without adding media content?",
+          'Are you sure you want to publish the problem without adding media content?',
         // text: "You won't be able to revert this!",
-        type: "warning",
+        type: 'warning',
         showCancelButton: true,
-        confirmButtonClass: "btn btn-success",
-        cancelButtonClass: "btn btn-warning",
-        confirmButtonText: "Yes",
+        confirmButtonClass: 'btn btn-success',
+        cancelButtonClass: 'btn btn-warning',
+        confirmButtonText: 'Yes',
         buttonsStyling: false
       }).then(result => {
         if (result.value) {
           problem.created_at = new Date();
-          this.showSuccessSwal("Problem Added");
+          this.showSuccessSwal('Problem Added');
 
           problem.is_draft = false;
           this.submitProblemToDB(problem);
         }
       });
     } else {
-      this.showSuccessSwal("Problem Updated");
+      this.showSuccessSwal('Problem Updated');
 
       problem.is_draft = false;
       this.submitProblemToDB(problem);
@@ -1172,23 +1172,23 @@ export class WizardComponent
 
   deleteDraft(id) {
     swal({
-      title: "Are you sure you want to delete this draft?",
+      title: 'Are you sure you want to delete this draft?',
       // text: "You won't be able to revert this!",
-      type: "warning",
+      type: 'warning',
       showCancelButton: true,
-      confirmButtonClass: "btn btn-success",
-      cancelButtonClass: "btn btn-danger",
-      confirmButtonText: "Yes, delete it!",
+      confirmButtonClass: 'btn btn-success',
+      cancelButtonClass: 'btn btn-danger',
+      confirmButtonText: 'Yes, delete it!',
       buttonsStyling: false
     }).then(result => {
       if (result.value) {
         this.problemService.deleteProblem(id).subscribe(
           ({ data }) => {
             swal({
-              title: "Deleted!",
+              title: 'Deleted!',
               // text: "Your file has been deleted.",
-              type: "success",
-              confirmButtonClass: "btn btn-success",
+              type: 'success',
+              confirmButtonClass: 'btn btn-success',
               buttonsStyling: false
             });
             window.history.back();
@@ -1254,7 +1254,7 @@ export class WizardComponent
       .subscribe(
         result => {
           if (result.data.insert_problems.returning.length > 0) {
-            this.problem["id"] = result.data.insert_problems.returning[0].id;
+            this.problem['id'] = result.data.insert_problems.returning[0].id;
             const upsert_tags = gql`
               mutation upsert_tags($tags: [tags_insert_input!]!) {
                 insert_tags(
@@ -1270,7 +1270,7 @@ export class WizardComponent
               }
             `;
 
-            this.saveOwnersInDB(this.problem["id"], this.owners);
+            this.saveOwnersInDB(this.problem['id'], this.owners);
 
             // this.saveLocationsInDB(this.problem["id"], this.problemLocations);
 
@@ -1289,12 +1289,12 @@ export class WizardComponent
               ) {
                 problems_tags.add({
                   tag_id: this.tagService.allTags[sector].id,
-                  problem_id: this.problem["id"]
+                  problem_id: this.problem['id']
                 });
               }
             });
 
-            this.tagService.addTagsInDb(tags, "problems", this.problem["id"]);
+            this.tagService.addTagsInDb(tags, 'problems', this.problem['id']);
 
             this.problemLocations.map(location => {
               // const locationUniqueId =
@@ -1307,24 +1307,24 @@ export class WizardComponent
                   location_id: this.geoService.allLocations[
                     location.location_name
                   ].id,
-                  problem_id: this.problem["id"]
+                  problem_id: this.problem['id']
                 });
               }
             });
 
             if (problem_locations.size > 0) {
               this.geoService.addRelationToLocations(
-                this.problem["id"],
+                this.problem['id'],
                 problem_locations,
-                "problems"
+                'problems'
               );
             }
 
             if (this.problemLocations) {
               this.geoService.addLocationsInDB(
                 this.problemLocations,
-                "problems",
-                this.problem["id"]
+                'problems',
+                this.problem['id']
               );
             }
 
@@ -1363,7 +1363,7 @@ export class WizardComponent
                     }
                   },
                   err => {
-                    console.error("Error uploading tags", err);
+                    console.error('Error uploading tags', err);
                     console.error(JSON.stringify(err));
                     if (!this.problem.is_draft) {
                       this.confirmSubmission();
@@ -1380,10 +1380,10 @@ export class WizardComponent
         err => {
           console.error(JSON.stringify(err));
           swal({
-            title: "Error",
-            text: "Try Again",
-            type: "error",
-            confirmButtonClass: "btn btn-info",
+            title: 'Error',
+            text: 'Try Again',
+            type: 'error',
+            confirmButtonClass: 'btn btn-info',
             buttonsStyling: false
           }).catch(swal.noop);
         }
@@ -1391,7 +1391,7 @@ export class WizardComponent
   }
 
   saveOwnersInDB(problemId, ownersArray) {
-    console.log(ownersArray, "owners array");
+    console.log(ownersArray, 'owners array');
     let owners = [];
     owners = ownersArray.map(owner => {
       return {
@@ -1439,17 +1439,17 @@ export class WizardComponent
     //   this.showSuccessSwal("Problem Added");
     // }
 
-    this.router.navigate(["problems", this.problem["id"]], {
-      queryParamsHandling: "preserve"
+    this.router.navigate(['problems', this.problem['id']], {
+      queryParamsHandling: 'preserve'
     });
   }
 
   deleteProblem() {
-    if (confirm("Are you sure you want to delete this problem?")) {
+    if (confirm('Are you sure you want to delete this problem?')) {
       const delete_problem = gql`
                 mutation delete_problem {
                     update_problems(
-                    where: {sku: {_eq: ${this.problem["id"]}}},
+                    where: {sku: {_eq: ${this.problem['id']}}},
                     _set: {
                         is_deleted: true
                     }
@@ -1469,8 +1469,8 @@ export class WizardComponent
         .pipe(take(1))
         .subscribe(
           data => {
-            this.router.navigate(["problems"], {
-              queryParamsHandling: "preserve"
+            this.router.navigate(['problems'], {
+              queryParamsHandling: 'preserve'
             });
           },
           err => {
@@ -1480,8 +1480,8 @@ export class WizardComponent
     }
   }
   setFeatured(type, index) {
-    if (type === "image") {
-      this.problem.featured_type = "image";
+    if (type === 'image') {
+      this.problem.featured_type = 'image';
       this.problem.featured_url = this.problem.image_urls[index].url;
     }
     /* else if (type === "video") {
@@ -1498,7 +1498,7 @@ export class WizardComponent
       this.problem.embed_urls.push(this.media_url);
       if (!this.problem.featured_url) {
         this.problem.featured_url = this.media_url;
-        this.problem.featured_type = "embed";
+        this.problem.featured_type = 'embed';
       }
     }
   }
@@ -1523,31 +1523,31 @@ export class WizardComponent
     // }
     if (
       this.geoService.allLocations[removedLocation.location_name] &&
-      this.problem["id"]
+      this.problem['id']
     ) {
       this.geoService.removeLocationRelation(
         removedLocation.id,
-        this.problem["id"],
-        "problems"
+        this.problem['id'],
+        'problems'
       );
     } else if (removedLocation.id) {
       this.geoService.removeLocationRelation(
         removedLocation.id,
-        this.problem["id"],
-        "problems"
+        this.problem['id'],
+        'problems'
       );
     }
     // this.problemLocations = locations;
   }
 
   moveFocusSearchHeading() {
-    this.setFocus("h2.h2_heading");
+    this.setFocus('h2.h2_heading');
     this.goToTitle = false;
   }
 
   setFocus(elemId: string): void {
     const element = this.elementRef.nativeElement.querySelector(elemId);
-    this.focusMonitor.focusVia(element, "program");
+    this.focusMonitor.focusVia(element, 'program');
   }
 
   focusBackToTitle() {

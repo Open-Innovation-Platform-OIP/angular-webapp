@@ -849,7 +849,7 @@ export class AddSolutionComponent
 
   ngOnInit() {
     console.log('solution wizard ng on in it');
-    this.tagService.getTagsFromDB();
+    this.tagService.getTagsFromDB(this.filterService.domain_tags_query);
 
     this.problemId = Number(this.route.snapshot.paramMap.get('problemId'));
     console.log(this.route.snapshot.paramMap, 'problem param');

@@ -5,25 +5,25 @@ import {
   ViewChild,
   ElementRef,
   AfterViewInit
-} from "@angular/core";
+} from '@angular/core';
 
-import { Apollo, QueryRef } from "apollo-angular";
-import gql from "graphql-tag";
-import { Subscription } from "rxjs";
-import { AuthService } from "../../services/auth.service";
-import { Router, ActivatedRoute } from "@angular/router";
-import { TagsService } from "../../services/tags.service";
-import { FilterService } from "../../services/filter.service";
-import { FocusMonitor } from "@angular/cdk/a11y";
+import { Apollo, QueryRef } from 'apollo-angular';
+import gql from 'graphql-tag';
+import { Subscription } from 'rxjs';
+import { AuthService } from '../../services/auth.service';
+import { Router, ActivatedRoute } from '@angular/router';
+import { TagsService } from '../../services/tags.service';
+import { FilterService } from '../../services/filter.service';
+import { FocusMonitor } from '@angular/cdk/a11y';
 
 @Component({
-  selector: "app-solutions-view",
-  templateUrl: "./solutions-view.component.html",
-  styleUrls: ["./solutions-view.component.css"]
+  selector: 'app-solutions-view',
+  templateUrl: './solutions-view.component.html',
+  styleUrls: ['./solutions-view.component.css']
 })
 export class SolutionsViewComponent
   implements OnInit, OnDestroy, AfterViewInit {
-  @ViewChild("solutionWorthSharing") solutionWorthSharing: ElementRef;
+  @ViewChild('solutionWorthSharing') solutionWorthSharing: ElementRef;
 
   userSolutions = [];
   solutions = [];
@@ -44,7 +44,7 @@ export class SolutionsViewComponent
   ) {}
 
   ngOnInit() {
-    this.tagsService.getTagsFromDB();
+    this.tagsService.getTagsFromDB(this.filterService.domain_tags_query);
 
     this.activatedRoute.queryParams.subscribe(params => {
       this.filterService.selectedSectors = this.filterService.filterSector(
@@ -123,11 +123,11 @@ export class SolutionsViewComponent
         `,
         variables: this.filterService.queryVariable,
         pollInterval: 500,
-        fetchPolicy: "network-only"
+        fetchPolicy: 'network-only'
       });
       this.solutionViewSubscription = this.solutionViewQuery.valueChanges.subscribe(
         result => {
-          console.log(result, "solution view result");
+          console.log(result, 'solution view result');
           if (result.data.solutions.length > 0) {
             this.solutions = result.data.solutions;
           } else {
@@ -144,7 +144,7 @@ export class SolutionsViewComponent
   ngAfterViewInit() {
     // delay needed because *ngIf makes viewchild undefined
     setTimeout(() => {
-      this.focusMonitor.focusVia(this.solutionWorthSharing, "program");
+      this.focusMonitor.focusVia(this.solutionWorthSharing, 'program');
     }, 1000);
   }
 
