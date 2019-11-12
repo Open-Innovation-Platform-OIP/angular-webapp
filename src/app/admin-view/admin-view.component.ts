@@ -1,18 +1,24 @@
-import { Component, OnInit, OnDestroy } from "@angular/core";
-import { TableData } from "../md/md-table/md-table.component";
-import { Apollo, QueryRef } from "apollo-angular";
-import gql from "graphql-tag";
-import { take } from "rxjs/operators";
-import { AuthService } from "../services/auth.service";
-import swal from "sweetalert2";
-import { Subscription } from "rxjs";
-import { HttpClient } from "@angular/common/http";
-import { FormGroup, FormControl, Validators } from "@angular/forms";
+import { Component, OnInit, OnDestroy } from '@angular/core';
+import { TableData } from '../md/md-table/md-table.component';
+import { Apollo, QueryRef } from 'apollo-angular';
+import gql from 'graphql-tag';
+import { take } from 'rxjs/operators';
+import { AuthService } from '../services/auth.service';
+import swal from 'sweetalert2';
+import { Subscription } from 'rxjs';
+import { HttpClient } from '@angular/common/http';
+import { FormGroup, FormControl, Validators } from '@angular/forms';
+import { DomainAddModalComponent } from '../components/domain-add-modal/domain-add-modal.component';
+import {
+  MatDialog,
+  MatDialogRef,
+  MAT_DIALOG_DATA
+} from '@angular/material/dialog';
 
 @Component({
-  selector: "app-admin-view",
-  templateUrl: "./admin-view.component.html",
-  styleUrls: ["./admin-view.component.css"]
+  selector: 'app-admin-view',
+  templateUrl: './admin-view.component.html',
+  styleUrls: ['./admin-view.component.css']
 })
 export class AdminViewComponent implements OnInit, OnDestroy {
   public userDataTable: TableData;
@@ -24,7 +30,7 @@ export class AdminViewComponent implements OnInit, OnDestroy {
   allUsers = {};
   allUnapprovedUsers = {};
 
-  inviteeEmail: String = "";
+  inviteeEmail: String = '';
 
   usersQuery: QueryRef<any>;
   invitedUsersQuery: QueryRef<any>;
@@ -37,7 +43,8 @@ export class AdminViewComponent implements OnInit, OnDestroy {
   constructor(
     private apollo: Apollo,
     private authService: AuthService,
-    private http: HttpClient
+    private http: HttpClient,
+    public dialog: MatDialog
   ) {}
 
   ngOnInit() {
@@ -45,29 +52,41 @@ export class AdminViewComponent implements OnInit, OnDestroy {
     this.getInvitedUsersFromDB();
 
     this.userInviteForm = new FormGroup({
-      email: new FormControl("", [Validators.email])
+      email: new FormControl('', [Validators.email])
+    });
+  }
+
+  openDomainAddModal(): void {
+    const domainAddRef = this.dialog.open(DomainAddModalComponent, {
+      width: '500px',
+      data: {}
+    });
+
+    domainAddRef.afterClosed().subscribe(result => {
+      console.log('The dialog was closed');
+      // this.animal = result;
     });
   }
 
   generateUserTable(userData) {
     const userHeaderRow = [
-      "Email",
-      "Name",
-      "Organization",
-      "Admin",
-      "Approval Status"
+      'Email',
+      'Name',
+      'Organization',
+      'Admin',
+      'Approval Status'
     ];
     let userDataRow = [];
     Object.values(userData).map(user => {
       // console.log(user, "gnerate user table");
       userDataRow.push([
-        user["email"],
-        user["name"].toUpperCase(),
-        user["organization"].toUpperCase(),
-        user["is_admin"],
+        user['email'],
+        user['name'].toUpperCase(),
+        user['organization'].toUpperCase(),
+        user['is_admin'],
 
-        user["is_approved"],
-        user["id"]
+        user['is_approved'],
+        user['id']
       ]);
     });
     this.userDataTable = {
@@ -77,11 +96,11 @@ export class AdminViewComponent implements OnInit, OnDestroy {
   }
 
   generateUnapprovedUserTable(userData) {
-    const userHeaderRow = ["Email", "Approve"];
+    const userHeaderRow = ['Email', 'Approve'];
     let userDataRow = [];
     Object.values(userData).map(user => {
       // console.log(user, "gnerate user table");
-      userDataRow.push([user["email"], user["is_approved"], user["id"]]);
+      userDataRow.push([user['email'], user['is_approved'], user['id']]);
     });
     this.unapprovedUserDataTable = {
       headerRow: userHeaderRow,
@@ -90,14 +109,14 @@ export class AdminViewComponent implements OnInit, OnDestroy {
   }
 
   generateInvitedUsersDataTable(invitedUserData) {
-    const userHeaderRow = ["Invitee Email", "Status", "Invited By"];
+    const userHeaderRow = ['Invitee Email', 'Status', 'Invited By'];
     let userDataRow = [];
     invitedUserData.map(user => {
       // console.log(user, "gnerate user table");
       userDataRow.push([
-        user["email"],
-        user["accepted"] ? "Accepted" : "Pending",
-        user["admin_invited"] ? "Admin" : "User"
+        user['email'],
+        user['accepted'] ? 'Accepted' : 'Pending',
+        user['admin_invited'] ? 'Admin' : 'User'
       ]);
     });
     this.invitedUsersDataTable = {
@@ -121,12 +140,12 @@ export class AdminViewComponent implements OnInit, OnDestroy {
 
       pollInterval: 2000,
 
-      fetchPolicy: "network-only"
+      fetchPolicy: 'network-only'
     });
 
     this.invitedUsersSubscription = this.invitedUsersQuery.valueChanges.subscribe(
       ({ data }) => {
-        console.log(data, "invited users data");
+        console.log(data, 'invited users data');
         if (data.invited_users.length > 0) {
           this.generateInvitedUsersDataTable(data.invited_users);
         }
@@ -157,7 +176,7 @@ export class AdminViewComponent implements OnInit, OnDestroy {
 
       pollInterval: 2000,
 
-      fetchPolicy: "network-only"
+      fetchPolicy: 'network-only'
     });
 
     this.usersSubscription = this.usersQuery.valueChanges.subscribe(
@@ -173,7 +192,7 @@ export class AdminViewComponent implements OnInit, OnDestroy {
                   name: user.name,
                   email: user.email,
                   is_admin: user.is_admin,
-                  organization: "Nil",
+                  organization: 'Nil',
                   is_approved: user.is_approved
                 };
               }
@@ -192,7 +211,7 @@ export class AdminViewComponent implements OnInit, OnDestroy {
               }
             }
           });
-          console.log(this.allUsers, "all approved");
+          console.log(this.allUsers, 'all approved');
 
           this.generateUserTable(this.allUsers);
           this.generateUnapprovedUserTable(this.allUnapprovedUsers);
@@ -237,11 +256,11 @@ export class AdminViewComponent implements OnInit, OnDestroy {
       .subscribe(
         data => {
           let user = data.data.update_users.returning[0];
-          console.log(user, "data");
+          console.log(user, 'data');
 
           if (user.is_admin) {
             swal({
-              type: "success",
+              type: 'success',
               title: `${user.name} is now an admin.`,
               timer: 1500,
               showConfirmButton: false
@@ -261,22 +280,22 @@ export class AdminViewComponent implements OnInit, OnDestroy {
       return;
     }
     let email = this.userInviteForm.value.email;
-    console.log(email, "email");
+    console.log(email, 'email');
     this.http
       .post(
-        "https://invite-flow-microservice-test.dev.jaagalabs.com/invite_user",
+        'https://invite-flow-microservice-test.dev.jaagalabs.com/invite_user',
         {
           email: email,
-          sender_id: this.authService.currentUserValue["id"],
-          sender_email: this.authService.currentUserValue["email"],
-          url: ""
+          sender_id: this.authService.currentUserValue['id'],
+          sender_email: this.authService.currentUserValue['email'],
+          url: ''
         }
       )
       .subscribe(
         data => {
           console.log(data);
           swal({
-            type: "success",
+            type: 'success',
             title: `Invite sent`,
             timer: 1500,
             showConfirmButton: false
@@ -292,7 +311,7 @@ export class AdminViewComponent implements OnInit, OnDestroy {
     const userId = user[5];
     const isApproved = event.checked;
 
-    console.log(user, "user id");
+    console.log(user, 'user id');
     this.apollo
       .mutate({
         mutation: gql`
@@ -321,12 +340,12 @@ export class AdminViewComponent implements OnInit, OnDestroy {
       .subscribe(
         data => {
           let user = data.data.update_users.returning[0];
-          console.log(user, "data");
+          console.log(user, 'data');
           // this.getUnapprovedUsersFromDB();
 
           if (user.is_approved) {
             swal({
-              type: "success",
+              type: 'success',
               title: `${user.email} is approved.`,
               timer: 1500,
               showConfirmButton: false
@@ -344,7 +363,7 @@ export class AdminViewComponent implements OnInit, OnDestroy {
   sendEmailToApprovedUser(email) {
     this.http
       .post(
-        "https://invite-flow-microservice-test.dev.jaagalabs.com/user_approved",
+        'https://invite-flow-microservice-test.dev.jaagalabs.com/user_approved',
         {
           email: email
         }
@@ -363,7 +382,7 @@ export class AdminViewComponent implements OnInit, OnDestroy {
     const userId = user[2];
     const isApproved = event.checked;
 
-    console.log(user, "user id");
+    console.log(user, 'user id');
     this.apollo
       .mutate({
         mutation: gql`
@@ -392,14 +411,14 @@ export class AdminViewComponent implements OnInit, OnDestroy {
       .subscribe(
         data => {
           let user = data.data.update_users.returning[0];
-          console.log(user, "data");
+          console.log(user, 'data');
           // this.getUnapprovedUsersFromDB();
 
           if (user.is_approved) {
             this.sendEmailToApprovedUser(user.email);
 
             swal({
-              type: "success",
+              type: 'success',
               title: `${user.email} is approved.`,
               timer: 1500,
               showConfirmButton: false

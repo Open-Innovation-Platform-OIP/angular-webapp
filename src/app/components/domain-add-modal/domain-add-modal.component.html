@@ -1,0 +1,38 @@
+<div class="main-content">
+  <div class="container-fluid">
+
+    <h3>Add url</h3>
+
+    <form class="example-form">
+      <mat-form-field class="example-full-width">
+        <input matInput placeholder="Add url">
+        <input matInput placeholder="Add colour">
+
+
+      </mat-form-field>
+      <mat-form-field class="example-full-width">
+
+        <input matInput placeholder="Add colour">
+      </mat-form-field>
+
+      <mat-form-field class="example-chip-list">
+        <mat-chip-list #chipList>
+          <input placeholder="Sectors" #tagsInput [formControl]="tagsCtrl" [matAutocomplete]="auto"
+            [matChipInputFor]="chipList" [matChipInputSeparatorKeyCodes]="separatorKeysCodes"
+            [matChipInputAddOnBlur]="addOnBlur" (matChipInputTokenEnd)="addTag($event)">
+        </mat-chip-list>
+        <mat-autocomplete #auto="matAutocomplete" (optionSelected)="selectedTag($event)">
+          <mat-option *ngFor="let tag of filteredTags | async" [value]="tag">
+            {{tag}}
+          </mat-option>
+        </mat-autocomplete>
+      </mat-form-field>
+
+      <button (click)="inviteUser()" mat-raised-button class="btn btn-rose">Add</button>
+
+
+
+    </form>
+
+  </div>
+</div>
