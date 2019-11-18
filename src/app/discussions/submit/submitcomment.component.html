@@ -45,6 +45,7 @@
 
   <label
     role="button"
+    [attr.tabindex]="[!content ? -1 : 0]"
     [attr.aria-disabled]="[!content ? true : false]"
     for="fileInput-{{ id }}"
     *ngIf="auth.currentUserValue.id"

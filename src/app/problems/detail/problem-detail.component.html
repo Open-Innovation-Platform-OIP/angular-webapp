@@ -231,7 +231,8 @@
                   this.validation.length
                 "
                 class="btn btn-sm btn-warning mr-2"
-                aria-expanded="true"
+                aria-label="edit problem"
+
               >
                 <i class="material-icons actions" aria-hidden="true">
                   create
@@ -242,9 +243,10 @@
                 *ngIf="userId === problemData.user_id || owners.has(userId)"
                 (click)="openInviteModal()"
                 class="btn btn-sm btn-warning"
-                aria-expanded="true"
+                aria-haspopup="true"
+                aria-label="invite people"
               >
-                <i class="material-icons actions">
+                <i class="material-icons actions" aria-hidden="true">
                   person_add
                 </i>
               </button>

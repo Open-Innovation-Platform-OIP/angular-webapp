@@ -76,6 +76,7 @@ export class CommentSubmitComponent implements OnInit {
         }
       }
     },
+    keyboard: { bindings: { tab: false } },
     // imageDrop: true,
     imageResize: {
       modules: ['Resize', 'DisplaySize', 'Toolbar'],
