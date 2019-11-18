@@ -58,12 +58,10 @@
           },
           "configurations": {
             "production": {
-              "fileReplacements": [
-                {
-                  "replace": "src/environments/environment.ts",
-                  "with": "src/environments/environment.prod.ts"
-                }
-              ],
+              "fileReplacements": [{
+                "replace": "src/environments/environment.ts",
+                "with": "src/environments/environment.prod.ts"
+              }],
               "optimization": true,
               "outputHashing": "all",
               "sourceMap": false,
@@ -106,6 +104,8 @@
               "node_modules/sweetalert2/src/sweetalert2.scss",
               "src/assets/css/demo.css",
               "src/assets/scss/material-dashboard.scss"
+
+
             ],
             "scripts": [
               "node_modules/jquery/dist/jquery.js",

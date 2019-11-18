@@ -1,0 +1,63 @@
+<div class="main-content" style="margin-top: 10%;">
+  <div class="container-fluid">
+
+
+    <div class="card">
+      <form [formGroup]="userInviteForm">
+        <div class="card-header card-header-rose card-header-icon">
+          <div class="card-icon">
+            <i class="material-icons">mail_outline</i>
+          </div>
+          <h4 class="card-title">Register Form</h4>
+        </div>
+        <div class="card-body">
+
+          <mat-form-field class="example-full-width ">
+            <input type="name" matInput id="name" required placeholder="Name" formControlName="name">
+            <mat-error *ngIf="userInviteForm.get('name').hasError('required')">
+              Please enter a name
+            </mat-error>
+
+          </mat-form-field>
+          <mat-form-field class="example-full-width">
+            <input type="email" matInput placeholder="Email Address
+            *" formControlName="email">
+            <mat-error *ngIf="userInviteForm.get('email').hasError('email')">
+              Please enter a valid email address
+            </mat-error>
+
+          </mat-form-field>
+
+          <mat-form-field class="example-chip-list">
+            <mat-chip-list #chipList>
+              <input placeholder="Org" name="org" #orgsInput [formControl]="orgsCtrl" input="test"
+                [matAutocomplete]="auto" [matChipInputFor]="chipList"
+                [matChipInputSeparatorKeyCodes]="separatorKeysCodes" [matChipInputAddOnBlur]="addOnBlur"
+                (matChipInputTokenEnd)="addOrg($event)">
+            </mat-chip-list>
+            <mat-autocomplete #auto="matAutocomplete" (optionSelected)="selectedOrg($event)">
+
+
+              <mat-option *ngFor="let org of filteredOrgs | async" [value]="org">
+                {{org}}
+              </mat-option>
+
+
+            </mat-autocomplete>
+          </mat-form-field>
+
+
+
+
+        </div>
+        <div class="card-footer text-right">
+
+          <button (click)="inviteUser()" mat-raised-button class="btn btn-rose">Send invite</button>
+
+        </div>
+      </form>
+    </div>
+
+
+  </div>
+</div>

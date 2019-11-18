@@ -1,16 +1,26 @@
-import { Routes } from "@angular/router";
+import { Routes } from '@angular/router';
 
 // import { DashboardComponent } from "./dashboard.component";
 // import { ViewAllComponent } from "../view-all/view-all.component";
-import { AdminViewComponent } from "./admin-view.component";
+import { AdminViewComponent } from './admin-view.component';
+import { DomainsComponent } from './domains/domains.component';
+import { InviteUserComponent } from './invite-user/invite-user.component';
 
 export const AdminViewRoutes: Routes = [
   {
-    path: "",
+    path: '',
     children: [
       {
-        path: "",
+        path: '',
         component: AdminViewComponent
+      },
+      {
+        path: 'domains',
+        component: DomainsComponent
+      },
+      {
+        path: 'invite-user',
+        component: InviteUserComponent
       }
     ]
   }

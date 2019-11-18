@@ -22,9 +22,13 @@
             [matChipInputAddOnBlur]="addOnBlur" (matChipInputTokenEnd)="addTag($event)">
         </mat-chip-list>
         <mat-autocomplete #auto="matAutocomplete" (optionSelected)="selectedTag($event)">
+
+
           <mat-option *ngFor="let tag of filteredTags | async" [value]="tag">
             {{tag}}
           </mat-option>
+
+
         </mat-autocomplete>
       </mat-form-field>
 

@@ -267,7 +267,7 @@ export class WizardContainerComponent
 
       // Add our sector
       if ((value || '').trim()) {
-        //console.log(value, "value location");
+        console.log(value, 'value location');
         // this.content.location.push(value);
       }
       // Reset the input value

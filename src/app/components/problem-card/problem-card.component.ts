@@ -1,7 +1,7 @@
-import { Component, OnInit, Input, Output, EventEmitter } from "@angular/core";
-import { Router, ActivatedRoute } from "@angular/router";
+import { Component, OnInit, Input, Output, EventEmitter } from '@angular/core';
+import { Router, ActivatedRoute } from '@angular/router';
 // import { fileUploadVariables } from "../../../environments/environment";
-import { FilesService } from "../../services/files.service";
+import { FilesService } from '../../services/files.service';
 
 const misc: any = {
   navbar_menu_visible: 0,
@@ -10,9 +10,9 @@ const misc: any = {
 };
 
 @Component({
-  selector: "app-problem-card",
-  templateUrl: "./problem-card.component.html",
-  styleUrls: ["./problem-card.component.css"]
+  selector: 'app-problem-card',
+  templateUrl: './problem-card.component.html',
+  styleUrls: ['./problem-card.component.css']
 })
 export class ProblemCardComponent implements OnInit {
   @Input() problemData: any;
@@ -32,7 +32,7 @@ export class ProblemCardComponent implements OnInit {
   // modifiedAt: any;
   // sectors: any[] = [];
 
-  constructor(private router: Router, private filesService: FilesService) { }
+  constructor(private router: Router, private filesService: FilesService) {}
 
   ngOnInit() {
     // this.filesService.fileAccessUrl = fileUploadVariables.accessUrl + "/";
@@ -71,9 +71,9 @@ export class ProblemCardComponent implements OnInit {
   }
   navigation() {
     if (!this.usedInSmartSearch) {
-      this.router.navigate([this.link], { queryParamsHandling: "preserve" });
+      this.router.navigate([this.link], { queryParamsHandling: 'preserve' });
     } else {
-      window.open(this.link, "_blank");
+      window.open(this.link, '_blank');
     }
   }
   selectProblem() {
@@ -84,8 +84,8 @@ export class ProblemCardComponent implements OnInit {
   }
 
   checkUrlIsImg(url) {
-    var arr = ["jpeg", "jpg", "gif", "png"];
-    var ext = url.substring(url.lastIndexOf(".") + 1);
+    var arr = ['jpeg', 'jpg', 'gif', 'png'];
+    var ext = url.substring(url.lastIndexOf('.') + 1);
     if (arr.indexOf(ext) > -1) {
       return true;
     } else {

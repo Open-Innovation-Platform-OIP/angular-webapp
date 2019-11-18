@@ -6,6 +6,12 @@ quill-editor {
     border: 1px dashed red;
 }
 
+
+/* .cdk-global-overlay-wrapper,
+.cdk-overlay-container {
+    z-index: 9999 !important;
+} */
+
 /* Set default font-family */
 
 [quill-editor-element] {
