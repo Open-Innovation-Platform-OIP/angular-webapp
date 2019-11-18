@@ -185,6 +185,7 @@
                 role="button"
                 [attr.aria-pressed]="voters.has(userId)"
                 aria-label="number of likes"
+                class="d-flex"
               >
                 <i
                   class="material-icons actions"
@@ -199,7 +200,7 @@
               </a>
 
               <a
-                class="mx-2"
+                class="mx-2 d-flex"
                 href="javascript:void(0)"
                 (click)="toggleWatchProblem()"
                 role="button"
@@ -219,7 +220,7 @@
               </a>
             </div>
 
-            <div class="dropdown">
+            <div class="input-group justify-content-end">
               <button
                 *ngIf="userId === problemData.user_id || owners.has(userId)"
                 [routerLink]="'/problems/' + problemData.id + '/edit'"
@@ -237,7 +238,18 @@
                 </i>
               </button>
 
-              <div class="dropdown">
+              <button
+                *ngIf="userId === problemData.user_id || owners.has(userId)"
+                (click)="openInviteModal()"
+                class="btn btn-sm btn-warning"
+                aria-expanded="true"
+              >
+                <i class="material-icons actions">
+                  person_add
+                </i>
+              </button>
+
+              <div class="dropdown ml-2">
                 <button
                   class="btn btn-sm btn-warning"
                   type="button"
@@ -251,18 +263,6 @@
                     share
                   </i>
                 </button>
-                <!-- <span>&nbsp;</span>
-              <span>&nbsp;</span> -->
-            <div class="dropdown">
-               
-
-            <button *ngIf="(userId===problemData.user_id) || owners.has(userId)" (click)="openInviteModal()"
-              class="btn btn-sm btn-warning" aria-expanded="true">
-              <i class="material-icons actions">
-                person_add
-              </i>
-            </button>
-
                 <div class="dropdown-menu" aria-labelledby="shareBtnDropdown">
                   <ng-container *ngIf="channels.linkedin">
                     <a
@@ -309,7 +309,6 @@
             </div>
           </div>
         </div>
-      </div>
 
         <!--Problem Details-->
 
@@ -1061,7 +1060,9 @@
                       role="button"
                     >
                       Join Discussion
-                      <i class="material-icons" aria-hidden="true">keyboard_arrow_down</i>
+                      <i class="material-icons" aria-hidden="true"
+                        >keyboard_arrow_down</i
+                      >
                     </a>
                   </div>
                 </div>
