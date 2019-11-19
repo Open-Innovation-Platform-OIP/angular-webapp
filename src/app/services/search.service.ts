@@ -1,11 +1,11 @@
-import { Injectable } from "@angular/core";
-import { Apollo } from "apollo-angular";
-import gql from "graphql-tag";
-import { HttpClient } from "@angular/common/http";
-import { FilterService } from "../services/filter.service";
+import { Injectable } from '@angular/core';
+import { Apollo } from 'apollo-angular';
+import gql from 'graphql-tag';
+import { HttpClient } from '@angular/common/http';
+import { FilterService } from '../services/filter.service';
 
 @Injectable({
-  providedIn: "root"
+  providedIn: 'root'
 })
 export class SearchService {
   constructor(
@@ -15,9 +15,9 @@ export class SearchService {
   ) {}
 
   globalSearch(keyword) {
-    console.log(this.filterService.sector_filter_query, "sector filter");
+    console.log(this.filterService.sector_filter_query, 'sector filter');
     return this.http.post(
-      "https://elasticsearch-microservice.dev.jaagalabs.com/global_search",
+      'https://elasticsearch-microservice.dev.jaagalabs.com/global_search',
       { keyword: keyword, filter: this.filterService.sector_filter_query }
     );
 

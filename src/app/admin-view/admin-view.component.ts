@@ -114,7 +114,10 @@ export class AdminViewComponent implements OnInit, OnDestroy {
     invitedUserData.map(user => {
       // console.log(user, "gnerate user table");
       userDataRow.push([
+        user['name'],
         user['email'],
+        user['organizationByOrganization']['name'],
+
         user['accepted'] ? 'Accepted' : 'Pending',
         user['admin_invited'] ? 'Admin' : 'User'
       ]);
@@ -133,6 +136,10 @@ export class AdminViewComponent implements OnInit, OnDestroy {
             email
             accepted
             admin_invited
+            name
+            organizationByOrganization {
+              name
+            }
             id
           }
         }

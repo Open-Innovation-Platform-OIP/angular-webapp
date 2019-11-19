@@ -28,13 +28,26 @@
 
           </mat-form-field>
 
+          <!-- </form> -->
+
+          <!-- <form class="form-horizontal"> -->
           <mat-form-field class="example-chip-list">
             <mat-chip-list #chipList>
               <input placeholder="Org" name="org" #orgsInput [formControl]="orgsCtrl" input="test"
                 [matAutocomplete]="auto" [matChipInputFor]="chipList"
                 [matChipInputSeparatorKeyCodes]="separatorKeysCodes" [matChipInputAddOnBlur]="addOnBlur"
                 (matChipInputTokenEnd)="addOrg($event)">
+
+
+
+              <!-- <input placeholder="Org" matInput type="text" #orgsInput name="org" required [matAutocomplete]="auto"
+                (ngModelChange)="getOrg($event)" [ngModelOptions]="{standalone: true}" [(ngModel)]="orgName" /> -->
             </mat-chip-list>
+            <mat-chip *ngFor="let org of orgs" [selectable]="selectable" [removable]="removable"
+              (removed)="removeOrg(org)" style="margin-right:0.3em; margin-bottom: 0.4em;">
+              {{ org }}
+              <i class="material-icons mat-chip-remove" matChipRemove *ngIf="removable">cancel</i>
+            </mat-chip>
             <mat-autocomplete #auto="matAutocomplete" (optionSelected)="selectedOrg($event)">
 
 
@@ -43,8 +56,13 @@
               </mat-option>
 
 
+
+
+
             </mat-autocomplete>
           </mat-form-field>
+
+          <!-- </form> -->
 
 
 
@@ -56,6 +74,52 @@
 
         </div>
       </form>
+    </div>
+
+
+
+    <div class="row mt-4">
+
+
+
+      <div class="card" *ngIf="invitedUsersDataTable&&invitedUsersDataTable.dataRows">
+        <div class="card-header card-header-icon card-header-rose">
+          <div class="card-icon">
+            <i class="material-icons">group</i>
+          </div>
+          <h4 class="card-title ">Invited Users</h4>
+        </div>
+        <div class="card-body">
+          <div class="table-responsive">
+            <table class="table">
+              <thead class="text-primary">
+                <tr>
+                  <th *ngFor="let cell of invitedUsersDataTable.headerRow">{{ cell }}</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr *ngFor="let row of invitedUsersDataTable.dataRows">
+                  <td>{{row[0]}}</td>
+                  <td>{{row[1]}}</td>
+                  <td>{{row[2]}}</td>
+                  <td>{{row[3]}}</td>
+                  <td>{{row[4]}}</td>
+
+
+
+
+
+
+
+
+                </tr>
+              </tbody>
+            </table>
+
+          </div>
+        </div>
+      </div>
+
     </div>
 
 

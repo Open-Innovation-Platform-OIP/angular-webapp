@@ -44,24 +44,24 @@
 
     </div>
 
-    <h3>Invite User</h3>
+    <!-- <h3>Invite User</h3> -->
 
-    <form class="example-form" [formGroup]="userInviteForm">
+    <!-- <form class="example-form" [formGroup]="userInviteForm">
       <mat-form-field class="example-full-width">
         <input matInput placeholder="Invitee email" formControlName="email">
         <mat-error *ngIf="userInviteForm.get('email').hasError('email')">
           Please enter a valid email address
         </mat-error>
-      </mat-form-field>
+      </mat-form-field> -->
 
 
-      <button (click)="inviteUser()" mat-raised-button class="btn btn-rose">Send invite</button>
-      <button [routerLink]="'/admin/invite-user'" mat-raised-button class="btn btn-rose">Add a Domain</button>
+    <button [routerLink]="'/admin/invite-user'" mat-raised-button class="btn btn-rose">Invite a User</button>
+    <button [routerLink]="'/admin/domains'" mat-raised-button class="btn btn-rose">Add a Domain </button>
 
 
 
 
-    </form>
+    <!-- </form> -->
 
     <h3 *ngIf="objectKeys(allUnapprovedUsers).length">Users to be approved</h3>
     <div class="row mt-4">
@@ -105,7 +105,7 @@
 
 
 
-    <div class="row mt-4">
+    <!-- <div class="row mt-4">
 
 
 
@@ -129,6 +129,11 @@
                   <td>{{row[0]}}</td>
                   <td>{{row[1]}}</td>
                   <td>{{row[2]}}</td>
+                  <td>{{row[3]}}</td>
+                  <td>{{row[4]}}</td>
+
+
+
 
 
 
@@ -142,7 +147,7 @@
         </div>
       </div>
 
-    </div>
+    </div> -->
 
   </div>
 </div>
