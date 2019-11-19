@@ -16,7 +16,7 @@ import {
   PathLocationStrategy
 } from '@angular/common';
 import { Router, ActivatedRoute, ParamMap } from '@angular/router';
-import { Observable, Subscription, interval } from 'rxjs';
+import { Observable, Subscription, interval, Subject, fromEvent } from 'rxjs';
 import { NgxUiLoaderService } from 'ngx-ui-loader';
 import {
   MatDialog,
@@ -92,6 +92,8 @@ export class ProblemDetailComponent
   @ViewChild('problemDataTitle') problemDataTitle: ElementRef<HTMLElement>;
 
   channels = sharing;
+  discussionContext: string;
+  lastContext = new Subject();
   // filesService.fileAccessUrl: string = "";
   // chartData: any;
   message: any;
@@ -1609,9 +1611,24 @@ export class ProblemDetailComponent
     }
   }
 
-  displayModal(files: { attachmentObj: attachment_object; index: number }) {
+  displayModal(files: {
+    attachmentObj: attachment_object;
+    index: number;
+    context: string;
+  }) {
     this.sources = files;
     this.modalSrc = files.attachmentObj[files.index];
+    this.discussionContext = files.context;
+
+    const waitForTag = setInterval(() => {
+      const modalBtnTag: HTMLElement = document.querySelector(
+        '#discussionModalNextBtn'
+      );
+      if (modalBtnTag) {
+        this.focusMonitor.focusVia(modalBtnTag, 'program');
+        clearInterval(waitForTag);
+      }
+    }, 500);
 
     clearInterval(this.interval);
     /* opening modal */
@@ -1624,7 +1641,6 @@ export class ProblemDetailComponent
   }
 
   closeModal(e) {
-    // //console.log(e, "e");
     if (e.type === 'click') {
       let problemVideoTag: HTMLMediaElement = document.querySelector(
         '#modalVideo'
@@ -1635,6 +1651,8 @@ export class ProblemDetailComponent
         problemVideoTag.pause();
       }
     }
+
+    this.lastContext.next(this.discussionContext);
   }
 
   toggleFileSrc(dir: boolean) {

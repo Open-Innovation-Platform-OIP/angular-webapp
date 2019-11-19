@@ -5,28 +5,34 @@ import {
   Input,
   Output,
   EventEmitter,
-  OnDestroy
-} from "@angular/core";
-import swal from "sweetalert2";
-import { Comment } from "../../services/discussions.service";
-import { Apollo, QueryRef } from "apollo-angular";
-import { AuthService } from "../../services/auth.service";
-import { Subscription } from "rxjs";
-import { take } from "rxjs/operators";
-import { FilesService } from "../../services/files.service";
+  OnDestroy,
+  OnChanges,
+  ElementRef,
+  NgZone,
+  Renderer2
+} from '@angular/core';
+import swal from 'sweetalert2';
+import { Comment } from '../../services/discussions.service';
+import { Apollo, QueryRef } from 'apollo-angular';
+import { AuthService } from '../../services/auth.service';
+import { Subscription } from 'rxjs';
+import { take } from 'rxjs/operators';
+import { FilesService } from '../../services/files.service';
 
-import gql from "graphql-tag";
+import gql from 'graphql-tag';
+import { Renderer3 } from '@angular/core/src/render3/interfaces/renderer';
+import { FocusMonitor } from '@angular/cdk/a11y';
 @Component({
-  selector: "app-display-comment",
-  templateUrl: "./displaycomment.component.html",
-  styleUrls: ["./displaycomment.component.css"]
+  selector: 'app-display-comment',
+  templateUrl: './displaycomment.component.html',
+  styleUrls: ['./displaycomment.component.css']
 })
-export class CommentDisplayComponent implements OnInit, OnDestroy {
-  objectValues = Object["values"];
+export class CommentDisplayComponent implements OnInit, OnDestroy, OnChanges {
+  objectValues = Object['values'];
   @Input() comment;
   @Input() replies;
   @Input() users;
-  @Input() pageType;
+  @Input() focusContext;
   @Output() reply = new EventEmitter();
   @Output() fileClicked = new EventEmitter();
   @Output() commentToDelete = new EventEmitter();
@@ -45,13 +51,26 @@ export class CommentDisplayComponent implements OnInit, OnDestroy {
   constructor(
     private apollo: Apollo,
     private auth: AuthService,
-    private filesService: FilesService
+    private filesService: FilesService,
+    private ele: ElementRef,
+    private focusMonitor: FocusMonitor
   ) {}
   ngOnInit() {
     this.comment.discussion_voters.map(voter => {
       this.voters.add(voter.user_id);
     });
     this.userId = Number(this.auth.currentUserValue.id);
+
+    this.focusContext.subscribe(v => {
+      const commentTag: HTMLElement = document.querySelector(`[href='#${v}']`);
+      try {
+        this.focusMonitor.focusVia(commentTag, 'program');
+      } catch (error) {}
+    });
+  }
+
+  ngOnChanges() {
+    // console.log(this.focusContext);
   }
 
   sortReplies(replies) {
@@ -103,9 +122,9 @@ export class CommentDisplayComponent implements OnInit, OnDestroy {
     }
   }
 
-  assignUrl(files: any[], index: number) {
-    // console.log("modal src: ", attachmentObj.length, index);
-    this.fileClicked.emit({ attachmentObj: files, index: index });
+  assignUrl(files: any[], index: number, context: string) {
+    console.log('modal src: ', files, index, context);
+    this.fileClicked.emit({ attachmentObj: files, index, context });
   }
 
   compareDateForSort(a, b) {
@@ -124,11 +143,11 @@ export class CommentDisplayComponent implements OnInit, OnDestroy {
   idToDelete(commentId) {
     // console.log("you clicked delete!", commentId);
     swal({
-      title: "Are you sure?",
+      title: 'Are you sure?',
       text: "You won't be able to revert this!",
       buttonsStyling: false,
-      confirmButtonClass: "btn btn-warning",
-      confirmButtonText: "Yes, delete it!"
+      confirmButtonClass: 'btn btn-warning',
+      confirmButtonText: 'Yes, delete it!'
     })
       .then(result => {
         if (result.value === true) {
@@ -146,7 +165,7 @@ export class CommentDisplayComponent implements OnInit, OnDestroy {
   }
 
   toggleVoteDiscussions() {
-    console.log(this.comment, "comment", this.userId, "user id");
+    console.log(this.comment, 'comment', this.userId, 'user id');
     // console.log('toggling watch flag');
     // if (!(this.userId == this.comment.user_id)) {
     if (!this.voters.has(this.userId)) {
@@ -224,9 +243,9 @@ export class CommentDisplayComponent implements OnInit, OnDestroy {
     // let allowed;
     if (
       type &&
-      !type.startsWith("video") &&
-      !type.startsWith("image") &&
-      !type.endsWith("pdf")
+      !type.startsWith('video') &&
+      !type.startsWith('image') &&
+      !type.endsWith('pdf')
     ) {
       return true;
     } else {

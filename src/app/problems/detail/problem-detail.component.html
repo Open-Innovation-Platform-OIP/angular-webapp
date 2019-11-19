@@ -232,7 +232,6 @@
                 "
                 class="btn btn-sm btn-warning mr-2"
                 aria-label="edit problem"
-
               >
                 <i class="material-icons actions" aria-hidden="true">
                   create
@@ -1020,7 +1019,7 @@
             </div>
           </div>
         </div>
-        <div class="card">
+        <div class="card" role="region" aria-label="discussion">
           <div class="card-header card-header-icon card-header-warning">
             <div class="card-icon">
               <i class="material-icons" aria-hidden="true">forum</i>
@@ -1087,6 +1086,7 @@
                 <app-display-comment
                   [users]="objectValues(usersService.allUsers)"
                   [comment]="comment"
+                  [focusContext]="lastContext"
                   [replies]="replies[comment.id]"
                   (reply)="onCommentSubmit($event, comment.id)"
                   (commentToDelete)="deleteComment($event)"
@@ -1103,6 +1103,7 @@
                 <app-display-comment
                   [users]="objectValues(usersService.allUsers)"
                   [comment]="popularDiscussion"
+                  [focusContext]="lastContext"
                   [replies]="replies[popularDiscussion.id]"
                   (reply)="onCommentSubmit($event, popularDiscussion.id)"
                   (fileClicked)="displayModal($event)"
@@ -1133,7 +1134,7 @@
 </div>
 
 <!-- discuss image and video modal starts -->
-<div class="modal fade" id="enlargeView" style="display: none;">
+<div class="modal fade" id="enlargeView" style="display: none;" cdkTrapFocus>
   <div class="modal-dialog modal-lg">
     <div class="modal-content">
       <div class="modal-header">
@@ -1161,6 +1162,7 @@
           [disabled]="sources['index'] < 1"
           (click)="toggleFileSrc(false)"
           class="btn btn-info btn-round"
+          aria-label="previous"
         >
           <span class="carousel-control-prev-icon" aria-hidden="true"></span>
         </button>
@@ -1171,6 +1173,8 @@
           [disabled]="sources['index'] == sources['attachmentObj'].length - 1"
           class="btn btn-info btn-round"
           (click)="toggleFileSrc(true)"
+          aria-label="next"
+          id="discussionModalNextBtn"
         >
           <span class="carousel-control-next-icon" aria-hidden="true"></span>
         </button>
