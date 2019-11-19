@@ -65,7 +65,9 @@ export class DomainsComponent implements OnInit {
     );
   }
 
-  ngOnInit() {}
+  ngOnInit() {
+    this.getDomains();
+  }
 
   remove(sector: string): void {
     console.log(sector, this.sectors);
@@ -137,12 +139,18 @@ export class DomainsComponent implements OnInit {
       );
   }
 
-  generateInvitedUsersDataTable(domainData) {
+  generateDomainsTable(domainData) {
+    console.log(domainData, 'domain Data');
     const domainHeaderRow = ['Url', 'Colour', 'Sectors'];
     let domainDataRow = [];
     domainData.map(domain => {
       // console.log(user, "gnerate user table");
-      domainDataRow.push([domain['url'], domain['colour']]);
+      console.log(domain['domain_tags'], 'domain tags');
+      domainDataRow.push([
+        domain['url'],
+        domain['colour'],
+        domain['domain_tags']
+      ]);
     });
     this.domainDataTable = {
       headerRow: domainHeaderRow,
@@ -150,40 +158,40 @@ export class DomainsComponent implements OnInit {
     };
   }
 
-  // getInvitedUsersFromDB() {
-  //   this.domainsQuery = this.apollo.watchQuery<any>({
-  //     query: gql`
-  //       query {
-  //         invited_users {
-  //           email
-  //           accepted
-  //           admin_invited
-  //           name
-  //           organizationByOrganization {
-  //             name
-  //           }
-  //           id
-  //         }
-  //       }
-  //     `,
+  getDomains() {
+    this.domainsQuery = this.apollo.watchQuery<any>({
+      query: gql`
+        query {
+          domains {
+            url
+            colour
+            id
+            domain_tags {
+              tag {
+                name
+              }
+            }
+          }
+        }
+      `,
 
-  //     pollInterval: 2000,
+      pollInterval: 2000,
 
-  //     fetchPolicy: 'network-only'
-  //   });
+      fetchPolicy: 'network-only'
+    });
 
-  //   this.invitedUsersSubscription = this.invitedUsersQuery.valueChanges.subscribe(
-  //     ({ data }) => {
-  //       console.log(data, 'invited users data');
-  //       if (data.invited_users.length > 0) {
-  //         this.generateInvitedUsersDataTable(data.invited_users);
-  //       }
-  //     },
-  //     error => {
-  //       console.log(error);
-  //     }
-  //   );
-  // }
+    this.domainsSubscription = this.domainsQuery.valueChanges.subscribe(
+      ({ data }) => {
+        // console.log(data, 'invited users data');
+        if (data.domains.length > 0) {
+          this.generateDomainsTable(data.domains);
+        }
+      },
+      error => {
+        console.log(error);
+      }
+    );
+  }
 
   addSectorRelationship(domainId) {
     const domainSectors = new Set();

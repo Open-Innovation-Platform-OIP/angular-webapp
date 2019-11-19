@@ -21,7 +21,7 @@
 
           </mat-form-field>
           <mat-form-field class="example-full-width">
-            <input type="colour" matInput placeholder="colour" formControlName="colour">
+            <input type="colour" matInput placeholder="Colour" required formControlName="colour">
             <!-- <mat-error *ngIf="userInviteForm.get('colour').hasError('email')">
                 Please enter a valid email address
               </mat-error>
@@ -107,45 +107,49 @@
 
 
 
-    <!-- <div class="row mt-4">
+    <div class="row mt-4">
 
 
 
-      <div class="card">
+      <div class="card" *ngIf="domainDataTable&&domainDataTable.dataRows">
         <div class="card-header card-header-rose card-header-icon">
           <div class="card-icon">
             <i class="material-icons">assignment</i>
           </div>
-          <h4 class="card-title">Simple Table</h4>
+          <h4 class="card-title">Domains</h4>
         </div>
         <div class="card-body">
           <div class="table-responsive">
             <table class="table">
               <thead>
                 <tr>
-                  <th class="text-center">{{ domainDataTable.headerRow[0] }}</th>
+                  <th>{{ domainDataTable.headerRow[0] }}</th>
                   <th>{{ domainDataTable.headerRow[1] }}</th>
                   <th>{{ domainDataTable.headerRow[2] }}</th>
 
                   <th class="text-right">{{ domainDataTable.headerRow[3] }}</th>
+                  <th class="text-right">{{ domainDataTable.headerRow[4] }}</th>
+
 
                 </tr>
               </thead>
               <tbody>
                 <tr *ngFor="let row of domainDataTable.dataRows">
-                  <td class="text-center">{{row[0]}}</td>
+                  <td>{{row[0]}}</td>
                   <td>{{row[1]}}</td>
-                  <td>{{row[2]}}</td>
+                  <td>
+                    <p class="badge badge-warning actions" style="margin-right: 0.3em;" *ngFor="let tag of row[2]">
+                      {{tag.tag.name}}</p>
+                  </td>
+
 
 
                   <td class="td-actions text-right">
-                    <button mat-raised-button type="button" class="btn btn-info {{row[5]}}">
-                      <i class="material-icons">person</i>
-                    </button>
-                    <button mat-raised-button type="button" class="btn btn-success {{row[5]}}">
+
+                    <button mat-raised-button type="button" class="btn btn-success {{row[3]}}">
                       <i class="material-icons">edit</i>
                     </button>
-                    <button mat-raised-button type="button" class="btn btn-danger {{row[5]}}">
+                    <button mat-raised-button type="button" class="btn btn-danger {{row[4]}}">
                       <i class="material-icons">close</i>
                     </button>
                   </td>
@@ -154,10 +158,10 @@
             </table>
           </div>
         </div>
-      </div> -->
+      </div>
 
 
-    <!-- 
+      <!-- 
 
 
                 
