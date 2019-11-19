@@ -304,6 +304,7 @@ export class InviteUserComponent implements OnInit, OnDestroy {
           data => {
             console.log(data, 'data');
             let organizationId = data.data.insert_organizations.returning[0].id;
+            this.usersService.getOrgsFromDB();
 
             this.apollo
               .mutate({
