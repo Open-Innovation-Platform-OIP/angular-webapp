@@ -1,5 +1,5 @@
 <div class="card-collapse">
-  <div class="card-header" id="headingTwo">
+  <div class="card-header" id="commentHeading">
     <h5 class="mb-0">
       <a
         class="collapsed"
@@ -19,7 +19,7 @@
     id="comment-{{ comment.id }}"
     class="collapse show"
     role="group"
-    aria-labelledby="headingTwo"
+    aria-labelledby="commentHeading"
     attr.data-target="#comment-{{ comment.id }}"
   >
     <div class="card-body">
@@ -72,43 +72,58 @@
           class="discussion_thumbnail"
         >
           <ng-container *ngIf="attachment.mimeType">
-            <img
+            <a
+              href="javascript:void(0);"
               *ngIf="
                 attachment.mimeType.startsWith('image') && i < attachmentToShow
               "
-              src="{{
-                filesService.fileAccessUrl + attachment['fileEndpoint']
-              }}"
               (click)="assignUrl(comment.attachments, i)"
-            />
+            >
+              <img
+                src="{{
+                  filesService.fileAccessUrl + attachment['fileEndpoint']
+                }}"
+                [alt]="['attachment', i + 1]"
+              />
+            </a>
 
             <!-- icon in case url is of video -->
-            <img
-              src="../../../assets/img/video_icon.png"
-              alt="video"
+            <a
+              href="javascript:void(0);"
               *ngIf="
                 attachment.mimeType &&
                 attachment.mimeType.startsWith('video') &&
                 i < attachmentToShow
               "
               (click)="assignUrl(comment.attachments, i)"
-            />
+              ><img
+                src="../../../assets/img/video_icon.png"
+                [alt]="['attachment', i + 1]"
+              />
+            </a>
+
             <!-- <p>{{testMimeType(attachment.mimeType)}}</p> -->
-            <img
-              src="../../../assets/img/document_icon.png"
-              alt="document"
+            <a
+              href="javascript:void(0);"
               *ngIf="testMimeType(attachment.mimeType) && i < attachmentToShow"
               (click)="assignUrl(comment.attachments, i)"
-            />
+              ><img
+                src="../../../assets/img/document_icon.png"
+                [alt]="['attachment', i + 1]"
+              />
+            </a>
 
-            <img
-              src="../../../assets/img/pdf_icon.png"
-              alt="document"
+            <a
+              href="javascript:void(0);"
               *ngIf="
                 attachment.mimeType.endsWith('pdf') && i < attachmentToShow
               "
               (click)="assignUrl(comment.attachments, i)"
-            />
+              ><img
+                src="../../../assets/img/pdf_icon.png"
+                [alt]="['attachment', i + 1]"
+              />
+            </a>
           </ng-container>
         </span>
 
@@ -152,7 +167,6 @@
           [attr.aria-pressed]="voters.has(userId)"
           [ngStyle]="{ color: voters.has(userId) ? '#1E90FF' : 'black' }"
           style="padding: 0 7px;"
-          aria-label="upvote"
         >
           <i class="material-icons actions" aria-hidden="true">
             thumb_up
@@ -233,7 +247,7 @@
       >
       </app-submit-comment>
       <div class="card-collapse" *ngFor="let reply of sortReplies(replies)">
-        <div class="card-header" role="tab" id="headingTwo">
+        <div class="card-header" id="replyHeading">
           <h5 class="mb-0">
             <a
               class="collapsed"
@@ -253,8 +267,7 @@
         <div
           id="reply-{{ reply.id }}"
           class="collapse show"
-          role="group"
-          aria-labelledby="headingTwo"
+          aria-labelledby="replyHeading"
           attr.data-target="#reply-{{ reply.id }}"
         >
           <div class="card-body">
@@ -309,47 +322,64 @@
                 *ngFor="let attachment of reply.attachments; let i = index"
                 class="discussion_thumbnail"
               >
-                <img
+                <a
+                  href="javascript:void(0);"
                   *ngIf="
                     attachment.mimeType.startsWith('image') &&
                     i < repliesAttachmentNum
                   "
                   (click)="assignUrl(reply.attachments, i)"
-                  src="{{
-                    filesService.fileAccessUrl + attachment['fileEndpoint']
-                  }}"
-                />
+                >
+                  <img
+                    [alt]="['attachment', i + 1]"
+                    src="{{
+                      filesService.fileAccessUrl + attachment['fileEndpoint']
+                    }}"
+                  />
+                </a>
 
                 <!-- icon in case url is of video -->
-                <img
-                  src="../../../assets/img/video_icon.png"
-                  alt="video"
+                <a
+                  href="javascript:void(0);"
                   *ngIf="
                     attachment.mimeType.startsWith('video') &&
                     i < repliesAttachmentNum
                   "
                   (click)="assignUrl(reply.attachments, i)"
-                />
+                >
+                  <img
+                    src="../../../assets/img/video_icon.png"
+                    [alt]="['attachment', i + 1]"
+                  />
+                </a>
 
-                <img
-                  src="../../../assets/img/document_icon.png"
-                  alt="document"
+                <a
+                  href="javascript:void(0);"
                   *ngIf="
                     testMimeType(attachment.mimeType) &&
                     i < repliesAttachmentNum
                   "
                   (click)="assignUrl(reply.attachments, i)"
-                />
+                >
+                  <img
+                    src="../../../assets/img/document_icon.png"
+                    [alt]="['attachment', i + 1]"
+                  />
+                </a>
 
-                <img
-                  src="../../../assets/img/pdf_icon.png"
-                  alt="document"
+                <a
+                  href="javascript:void(0);"
                   *ngIf="
                     attachment.mimeType.endsWith('pdf') &&
                     i < repliesAttachmentNum
                   "
                   (click)="assignUrl(reply.attachments, i)"
-                />
+                >
+                  <img
+                    src="../../../assets/img/pdf_icon.png"
+                    [alt]="['attachment', i + 1]"
+                  />
+                </a>
               </span>
               <!-- Show more for replies -->
               <i
@@ -382,11 +412,6 @@
                 arrow_back_ios
               </i>
             </p>
-
-            <!-- <button mat-raised-button class="btn btn-warning btn-round btn-sm" matTooltip="Click to reply" [matTooltipPosition]="'below'" *ngIf="!(showReplyBox && replyingTo === reply.id)"
-        (click)="replyTo(reply.id)">Reply</button>
-        <app-submit-comment *ngIf="showReplyBox && replyingTo === reply.id" [users]="objectValues(usersService.allUsers)"
-        [actionText]="'Reply'" [cancelShown]="true" (cancel)="showReplyBox=false" (submit)="onCommentSubmit($event)"></app-submit-comment> -->
           </div>
         </div>
       </div>
