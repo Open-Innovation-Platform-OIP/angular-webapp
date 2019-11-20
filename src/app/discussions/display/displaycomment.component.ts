@@ -123,7 +123,7 @@ export class CommentDisplayComponent implements OnInit, OnDestroy, OnChanges {
   }
 
   assignUrl(files: any[], index: number, context: string) {
-    console.log('modal src: ', files, index, context);
+    // console.log('modal src: ', files, index, context);
     this.fileClicked.emit({ attachmentObj: files, index, context });
   }
 

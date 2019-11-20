@@ -1624,8 +1624,16 @@ export class ProblemDetailComponent
       const modalBtnTag: HTMLElement = document.querySelector(
         '#discussionModalNextBtn'
       );
+      const closeBtn: HTMLElement = document.querySelector(
+        '#discussionModalNextBtn'
+      );
+
       if (modalBtnTag) {
         this.focusMonitor.focusVia(modalBtnTag, 'program');
+        clearInterval(waitForTag);
+      }
+      if (closeBtn) {
+        this.focusMonitor.focusVia(closeBtn, 'program');
         clearInterval(waitForTag);
       }
     }, 500);
