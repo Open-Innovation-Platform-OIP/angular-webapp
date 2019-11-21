@@ -5,191 +5,354 @@
       <div class="col-md-8">
         <div class="card card-product">
           <div class="card-header card-header-rose fixed-top">
-            <h4 class="card-title">{{solutionData.title}}</h4>
-            <p class="card-category"><b>Created By :
-                {{ (auth.currentUserValue.id == solutionData.user_id) ? 'You' : solutionOwner }}</b></p>
+            <h1
+              class="card-title"
+              style="font-size: 2rem;"
+              class="card-title"
+              tabindex="-1"
+              #solutionTitle
+            >
+              {{ solutionData.title }}
+            </h1>
+            <p class="card-category">
+              <b
+                >Created By :
+                {{
+                  auth.currentUserValue.id == solutionData.user_id
+                    ? 'You'
+                    : solutionOwner
+                }}</b
+              >
+            </p>
           </div>
           <div class="card-body">
             <div class="row">
               <div class="col-md-4">
                 <div class="picture text-center">
                   <img
-                    src="{{(solutionData.featured_url && checkUrlIsImg(filesService.fileAccessUrl+solutionData.featured_url)) ? filesService.fileAccessUrl+solutionData.featured_url : './assets/img/image_placeholder.jpg'}}"
-                    alt="Thumbnail Image" class="rounded img-fluid">
+                    src="{{
+                      solutionData.featured_url &&
+                      checkUrlIsImg(
+                        filesService.fileAccessUrl + solutionData.featured_url
+                      )
+                        ? filesService.fileAccessUrl + solutionData.featured_url
+                        : './assets/img/image_placeholder.jpg'
+                    }}"
+                    [attr.alt]="[imageAlt]"
+                    class="rounded img-fluid"
+                  />
                   <div>
-                    <button mat-raised-button *ngIf="solution_attachments && solution_attachments.length > 0"
-                      class="btn btn-raised btn-info btn-sm" data-toggle="modal"
-                      (click)="openModal('#viewMoreImgModal')">
-                      view media ({{solution_attachments.length}})
+                    <button
+                      mat-raised-button
+                      *ngIf="
+                        solution_attachments && solution_attachments.length > 0
+                      "
+                      class="btn btn-raised btn-info btn-sm"
+                      data-toggle="modal"
+                      (click)="openModal('#viewMoreImgModal')"
+                    >
+                      view media ({{ solution_attachments.length }})
                     </button>
                   </div>
                 </div>
               </div>
               <div class="col-md-8">
-                <strong *ngIf="solutionData.description">Description</strong>
-                <p class="description" style="white-space: pre-wrap;">{{solutionData.description}}</p>
-
-                <strong *ngIf="solutionData.organization">Organization</strong>
-                <p class="description">{{solutionData.organization}}</p>
-
-                <strong *ngIf="solutionData.technology">Innovation</strong>
-                <p class="description" style="white-space: pre-wrap;">{{solutionData.technology}}</p>
-
-                <strong *ngIf="solutionData.resources">Resources Needed</strong>
-                <p class="description" style="white-space: pre-wrap;">{{solutionData.resources}}</p>
-
-                <strong *ngIf="solutionData.impact">Impact</strong>
-                <p class="description" style="white-space: pre-wrap;">{{solutionData.impact}}</p>
-
-                <strong *ngIf="solutionData.timeline">Timeline</strong>
-                <p class="description" style="white-space: pre-wrap;">{{solutionData.timeline}}</p>
-
-                <strong *ngIf="solutionData.pilots">Pilots</strong>
-                <p class="description" style="white-space: pre-wrap;">{{solutionData.pilots}}</p>
-
-                <strong *ngIf="solutionData.website_url">Website</strong>
-                <p class="description" style="white-space: pre-wrap;">{{solutionData.website_url}}</p>
-
-                <strong *ngIf="solutionData.deployment">Deployments</strong>
-                <p class="description" style="white-space: pre-wrap;">{{solutionData.deployment}}</p>
-
-                <strong *ngIf="tags.length">Sectors</strong>
-                <div>
-                  <span *ngFor="let tag of tags" (click)="sectorSelected(tag)" class="badge badge-rose actions"
-                    style="margin-right: 0.3em;">{{tag.name}}</span>
-                  <span>&nbsp;</span>
+                <div *ngIf="solutionData.description">
+                  <strong aria-level="3" role="heading">Description</strong>
+                  <p class="description" style="white-space: pre-wrap;">
+                    {{ solutionData.description }}
+                  </p>
                 </div>
 
-                <br />
+                <div *ngIf="solutionData.organization">
+                  <strong aria-level="3" role="heading">Organization</strong>
+                  <p class="description">{{ solutionData.organization }}</p>
+                </div>
 
-                <strong>Budget</strong>
-                <div class="row">
-                  <div class="col-md-12">
-                    <p class="description" style="white-space: pre-wrap;">{{solutionData.budget_title}}
-                      (Rs.{{solutionData.min_budget}} - Rs.{{solutionData.max_budget}})</p>
+                <div *ngIf="solutionData.technology">
+                  <strong aria-level="3" role="heading">Innovation</strong>
+                  <p class="description" style="white-space: pre-wrap;">
+                    {{ solutionData.technology }}
+                  </p>
+                </div>
+
+                <div *ngIf="solutionData.resources">
+                  <strong aria-level="3" role="heading"
+                    >Resources Needed</strong
+                  >
+                  <p class="description" style="white-space: pre-wrap;">
+                    {{ solutionData.resources }}
+                  </p>
+                </div>
+
+                <div *ngIf="solutionData.impact">
+                  <strong aria-level="3" role="heading">Impact</strong>
+                  <p class="description" style="white-space: pre-wrap;">
+                    {{ solutionData.impact }}
+                  </p>
+                </div>
+
+                <div *ngIf="solutionData.timeline">
+                  <strong aria-level="3" role="heading">Timeline</strong>
+                  <p class="description" style="white-space: pre-wrap;">
+                    {{ solutionData.timeline }}
+                  </p>
+                </div>
+
+                <div *ngIf="solutionData.pilots">
+                  <strong aria-level="3" role="heading">Pilots</strong>
+                  <p class="description" style="white-space: pre-wrap;">
+                    {{ solutionData.pilots }}
+                  </p>
+                </div>
+
+                <div *ngIf="solutionData.website_url">
+                  <strong aria-level="3" role="heading">Website</strong>
+                  <p class="description" style="white-space: pre-wrap;">
+                    {{ solutionData.website_url }}
+                  </p>
+                </div>
+
+                <div *ngIf="solutionData.deployment">
+                  <strong aria-level="3" role="heading">Deployments</strong>
+                  <p class="description" style="white-space: pre-wrap;">
+                    {{ solutionData.deployment }}
+                  </p>
+                </div>
+
+                <div *ngIf="tags.length">
+                  <strong aria-level="3" role="heading">Sectors</strong>
+                  <div role="group">
+                    <div
+                      *ngFor="let tag of tags"
+                      (click)="sectorSelected(tag)"
+                      class="badge badge-rose actions"
+                      style="margin-right: 0.3em;"
+                    >
+                      {{ tag.name }}
                   </div>
-                  <!-- <span>-</span>
-                  <div class="col-md-5">
-                    <p class="description" style="white-space: pre-wrap;">{{solutionData.budget.cost}}</p>
-                  </div> -->
-                </div>
-
-                <strong>Location(s)</strong>
-                <div *ngIf="solutionLocations.length">
-                  <div *ngFor="let location of solutionLocations" (click)="locationSelected(location)" class="actions"
-                    style="margin-right: 0.3em; ">
-                    {{location.location_name}}</div>
-                  <span>&nbsp;</span>
-                </div>
-
-                <!-- <br /> -->
-
-                <strong *ngIf="ownerData.length">Solver Team</strong>
-                <div *ngIf="ownerData.length">
-                  <a [routerLink]="'/profiles/'+owner.id" queryParamsHandling="merge" *ngFor="let owner of ownerData"
-                    style="margin-right: 0.3em;">{{owner.name}}</a>
-                  <span>&nbsp;</span>
+                  </div>
                 </div>
 
                 <br />
 
-                <strong *ngIf="problems.length">Problems</strong>
-                <div *ngFor="let problem of problems">
-                  <a [routerLink]="'/problems/'+problem.id" queryParamsHandling="merge"
-                    style="margin-right: 0.3em;cursor: pointer;">{{problem.title}}</a>
-                  <!-- <span>&nbsp;</span> -->
+                <div>
+                  <strong aria-level="3" role="heading">Budget</strong>
+                  <div class="row">
+                    <div class="col-md-12">
+                      <p class="description" style="white-space: pre-wrap;">
+                        {{ solutionData.budget_title }} (Rs.{{
+                          solutionData.min_budget
+                        }}
+                        - Rs.{{ solutionData.max_budget }})
+                      </p>
+                    </div>
+                  </div>
                 </div>
 
+                <div *ngIf="solutionLocations.length">
+                  <strong aria-level="3" role="heading">Location(s)</strong>
+
+                  <div
+                    *ngFor="let location of solutionLocations"
+                    (click)="locationSelected(location)"
+                    class="actions"
+                    style="margin-right: 0.3em; "
+                  >
+                    {{ location.location_name }}
+                  </div>
+                </div>
+                <br />
+
+                <div *ngIf="ownerData.length">
+                  <strong aria-level="3" role="heading">Solver Team</strong>
+
+                  <div>
+                    <a
+                      [routerLink]="'/profiles/' + owner.id"
+                      href="javascript:void(0);"
+                      queryParamsHandling="merge"
+                      *ngFor="let owner of ownerData"
+                      style="margin-right: 0.3em;"
+                      >{{ owner.name }}</a
+                    >
+                  </div>
+                </div>
+                <br />
+
+                <div *ngIf="problems.length">
+                  <strong aria-level="3" role="heading">Problems</strong>
+                  <div *ngFor="let problem of problems">
+                    <a
+                      href="javascript:void(0);"
+                      [routerLink]="'/problems/' + problem.id"
+                      queryParamsHandling="merge"
+                      style="margin-right: 0.3em;cursor: pointer;"
+                      >{{ problem.title }}</a
+                    >
+                  </div>
+                </div>
                 <br />
               </div>
             </div>
           </div>
           <div class="card-footer">
             <div class="stats">
-              <i class="material-icons actions" (click)="toggleVoteSolution()"
-                [ngStyle]="{'color':voters.has(userId) ? '#1E90FF' : 'black' }">
-                thumb_up
-              </i>
-              <span>{{voters.size}}</span>
-              <i class="material-icons actions col-md-3" (click)="toggleWatchSolution()"
-                [ngStyle]="{'color':watchers.has(userId) ? '#1E90FF' : 'black' }">
-                visibility
-              </i>
-              <span> {{watchers.size}}</span>
-              <!-- <i *ngIf="userId===solutionData.user_id" [routerLink]="
-                '/problems/'+ solutionData.id+'/edit'" class="material-icons actions">
-                create
-              </i> -->
+              <a
+                href="javascript:void(0);"
+                (click)="toggleVoteSolution()"
+                role="button"
+                [attr.aria-pressed]="voters.has(userId)"
+                [attr.aria-label]="['likes', voters.size]"
+              >
+                <i
+                  class="material-icons"
+                  [ngStyle]="{
+                    color: voters.has(userId) ? '#1E90FF' : 'black'
+                  }"
+                  aria-hidden="true"
+                >
+                  thumb_up
+                </i>
+                <span>{{ voters.size }}</span>
+              </a>
+
+              <a
+                href="javascript:void(0);"
+                (click)="toggleWatchSolution()"
+                role="button"
+                [attr.aria-pressed]="watchers.has(userId)"
+                [attr.aria-label]="['Watch problem', watchers.size]"
+              >
+                <i
+                  class="material-icons actions col-md-3"
+                  [ngStyle]="{
+                    color: watchers.has(userId) ? '#1E90FF' : 'black'
+                  }"
+                  aria-hidden="true"
+                >
+                  visibility
+                </i>
+                <span> {{ watchers.size }}</span>
+              </a>
             </div>
 
-            <!--  -->
             <div class="dropdown">
-              <button *ngIf="userId===solutionData.user_id || owners.has(userId)" [routerLink]="
-                '/solutions/'+ solutionData.id+'/edit'" queryParamsHandling="merge" class="btn btn-sm btn-rose"
-                aria-expanded="true">
-                <i class="material-icons actions">
+              <button
+                *ngIf="userId === solutionData.user_id || owners.has(userId)"
+                [routerLink]="'/solutions/' + solutionData.id + '/edit'"
+                queryParamsHandling="merge"
+                class="btn btn-sm btn-rose"
+                aria-label="edit problem"
+              >
+                <i class="material-icons actions" aria-hidden="true">
                   create
                 </i>
               </button>
-              <span>&nbsp;</span>
-              <span>&nbsp;</span>
-              <button href="#" class="btn btn-sm btn-rose" data-toggle="dropdown" aria-expanded="true">
-                <i class="material-icons actions">
+
+              <button
+                href="#"
+                class="btn btn-sm btn-rose ml-2"
+                data-toggle="dropdown"
+                aria-expanded="false"
+                aria-label="share"
+              >
+                <i class="material-icons actions" aria-hidden="true">
                   share
                 </i>
               </button>
+
               <ul class="dropdown-menu">
-                <li *ngIf="channels.linkedin"><a (click)="linkedInShare()">LinkedIn</a></li>
-                <li *ngIf="channels.facebook"><a (click)="fbShare()">Facebook</a></li>
-                <li *ngIf="channels.twitter"><a (click)="twitterShare()">Twitter</a></li>
-                <li *ngIf="channels.email"><a (click)="mailShare()">Email</a></li>
+                <li *ngIf="channels.linkedin">
+                  <a (click)="linkedInShare()">LinkedIn</a>
+                </li>
+                <li *ngIf="channels.facebook">
+                  <a (click)="fbShare()">Facebook</a>
+                </li>
+                <li *ngIf="channels.twitter">
+                  <a (click)="twitterShare()">Twitter</a>
+                </li>
+                <li *ngIf="channels.email">
+                  <a (click)="mailShare()">Email</a>
+                </li>
                 <li *ngIf="channels.sms"><a (click)="smsShare()">SMS</a></li>
               </ul>
-              <span>&nbsp;</span>
-              <span>&nbsp;</span>
-              <button *ngIf="(userId===solutionData.user_id) || owners.has(userId)" (click)="openInviteModal()"
-                class="btn btn-sm btn-rose" aria-expanded="true">
-                <i class="material-icons actions">
+
+              <button
+                *ngIf="userId === solutionData.user_id || owners.has(userId)"
+                (click)="openInviteModal()"
+                class="btn btn-sm btn-rose ml-2"
+                aria-label="invite people"
+                aria-haspopup="true"
+              >
+                <i class="material-icons actions" aria-hidden="true">
                   person_add
                 </i>
               </button>
             </div>
-
           </div>
         </div>
-
-
 
         <!--Show more images and videos-->
 
         <!-- ----------------------------- solution attachments modal start----------------------------- -->
-        <div class="modal fade" id="viewMoreImgModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel"
-          aria-hidden="true">
+        <div
+          class="modal fade"
+          id="viewMoreImgModal"
+          tabindex="-1"
+          role="dialog"
+          aria-labelledby="myModalLabel"
+          aria-hidden="true"
+        >
           <div class="modal-dialog modal-dialog-centered modal-lg">
             <div class="modal-content">
               <div class="modal-header">
-                <button type="button" class="close" data-dismiss="modal" aria-hidden="true"
-                  (click)="closeModal($event)">
+                <button
+                  type="button"
+                  class="close"
+                  data-dismiss="modal"
+                  aria-hidden="true"
+                  (click)="closeModal($event)"
+                >
                   <i class="material-icons">close</i>
                 </button>
               </div>
               <div class="modal-body">
-                <app-display-modal *ngIf="solution_attachments_src "
-                  [source]="solution_attachments[solution_attachments_index]">
+                <app-display-modal
+                  *ngIf="solution_attachments_src"
+                  [source]="solution_attachments[solution_attachments_index]"
+                >
                 </app-display-modal>
               </div>
-              <div class="modal-footer justify-content-center" *ngIf="this.solution_attachments.length > 1">
-                <button mat-raised-button type="button" [disabled]="solution_attachments_index < 1"
-                  (click)="toggleSolutionAttachmentsIndex(false)" class="btn btn-link btn-round btn-twitter"><i
-                    class="material-icons" style="zoom:2;">
+              <div
+                class="modal-footer justify-content-center"
+                *ngIf="this.solution_attachments.length > 1"
+              >
+                <button
+                  mat-raised-button
+                  type="button"
+                  [disabled]="solution_attachments_index < 1"
+                  (click)="toggleSolutionAttachmentsIndex(false)"
+                  class="btn btn-link btn-round btn-twitter"
+                >
+                  <i class="material-icons" style="zoom:2;">
                     keyboard_arrow_left
                   </i>
                 </button>
-                <div class="col-3 text-center"><strong>{{solution_attachments_index + 1}}</strong></div>
-                <button mat-raised-button type="button"
-                  [disabled]="solution_attachments_index === solution_attachments.length - 1"
-                  class="btn btn-link btn-round btn-twitter" (click)="toggleSolutionAttachmentsIndex(true)"><i
-                    class="material-icons" style="zoom:2;">
+                <div class="col-3 text-center">
+                  <strong>{{ solution_attachments_index + 1 }}</strong>
+                </div>
+                <button
+                  mat-raised-button
+                  type="button"
+                  [disabled]="
+                    solution_attachments_index ===
+                    solution_attachments.length - 1
+                  "
+                  class="btn btn-link btn-round btn-twitter"
+                  (click)="toggleSolutionAttachmentsIndex(true)"
+                >
+                  <i class="material-icons" style="zoom:2;">
                     keyboard_arrow_right
                   </i>
                 </button>
@@ -199,17 +362,30 @@
         </div>
         <!-- ----------------------------- solution attachments modal ends----------------------------- -->
 
-
         <div class="row justify-content-center">
           <!-- <a mat-button>
             <i class="material-icons">
               keyboard_arrow_left
             </i>
           </a> -->
-          <button mat-raised-button class="btn btn-rose btn-round" data-toggle="modal" data-target="#validatorModal"
-            matTooltip="Click to validate solution" [matTooltipPosition]="'below'"
-            [disabled]="disableValidateButton || userId == solutionData.user_id || !auth.currentUserValue.id||!sectorMatched||!userPersonas.is_expert"
-            *ngIf="auth.currentUserValue.id">Validate</button>
+          <button
+            mat-raised-button
+            class="btn btn-rose btn-round"
+            data-toggle="modal"
+            data-target="#validatorModal"
+            matTooltip="Click to validate solution"
+            [matTooltipPosition]="'below'"
+            [disabled]="
+              disableValidateButton ||
+              userId == solutionData.user_id ||
+              !auth.currentUserValue.id ||
+              !sectorMatched ||
+              !userPersonas.is_expert
+            "
+            *ngIf="auth.currentUserValue.id"
+          >
+            Validate
+          </button>
           <!-- <a mat-button>
             <i class="material-icons">
               keyboard_arrow_right
@@ -218,64 +394,82 @@
         </div>
         <!--Validate divider-->
 
-        <ngu-carousel #ValidCarousel [inputs]="carouselTileConfig" [dataSource]="carouselTileItemsValid$ | async"
-          *ngIf="validation[0] ">
-          <ngu-tile *nguCarouselDef="let validation; let i = index; let ani = animate" data-toggle="modal"
-            data-target="#validModal">
-            <app-validate-card *ngIf="!validation.is_deleted" [validationData]="validation"
-              (clicked)="handleValidationCardClicked($event)"></app-validate-card>
+        <ngu-carousel
+          #ValidCarousel
+          [inputs]="carouselTileConfig"
+          [dataSource]="carouselTileItemsValid$ | async"
+          *ngIf="validation[0]"
+          role="region"
+          aria-label="validation cards"
+        >
+          <ngu-tile
+            *nguCarouselDef="let validation; let i = index; let ani = animate"
+            data-toggle="modal"
+            data-target="#validModal"
+          >
+            <app-validate-card
+              *ngIf="!validation.is_deleted"
+              [validationData]="validation"
+              (clicked)="handleValidationCardClicked($event)"
+            >
+            </app-validate-card>
           </ngu-tile>
 
-          <!-- <button NguCarouselPrev class="btn btn-default leftRs" [style.opacity]="ValidCarousel.isFirst ? 0.5:1">&lt;</button> -->
-          <!-- <button NguCarouselNext class="btn btn-default rightRs" [style.opacity]="ValidCarousel.isLast ? 0.5:1">&gt;</button> -->
-
-
-          <a mat-button NguCarouselPrev class="btn btn-white btn-just-icon btn-round leftRs"
-            *ngIf="validation[0]&&validation.length>2">
-            <i class="material-icons">
+          <a
+            mat-button
+            NguCarouselPrev
+            class="btn btn-white btn-just-icon btn-round leftRs"
+            *ngIf="validation[0] && validation.length > 2"
+            aria-label="scroll left"
+          >
+            <i class="material-icons" aria-hidden="true">
               keyboard_arrow_left
             </i>
           </a>
-          <!-- <button mat-raised-button class="btn btn-warning btn-round" data-toggle="modal" data-target="#validatorModal" -->
-          <!-- matTooltip="Click to validate problem" [matTooltipPosition]="'below'">Validate</button> -->
-          <a mat-button NguCarouselNext class="btn btn-white btn-just-icon btn-round rightRs"
-            *ngIf="validation[0]&&validation.length>2">
-            <i class="material-icons">
+          <a
+            mat-button
+            NguCarouselNext
+            class="btn btn-white btn-just-icon btn-round rightRs"
+            *ngIf="validation[0] && validation.length > 2"
+            aria-label="scroll right"
+          >
+            <i class="material-icons" aria-hidden="true">
               keyboard_arrow_right
             </i>
           </a>
-
         </ngu-carousel>
+
         <div class="row justify-content-center" *ngIf="!validation[0]">
-          <!-- <p *ngIf="userPersonas.is_expert">No validations yet. Be the first to validate.</p> -->
           <p>No validations yet.</p>
-
         </div>
-
-        <div class="row justify-content-center">
-          <!-- 
-        <p
-          *ngIf="!(userId == solutionData.user_id) && userPersonas.is_expert && !sectorMatched && !disableValidateButton">
-          Please ensure that
-          your interests match with the problem
-          sectors in order to validate</p> -->
-
-        </div>
-
 
         <!--Validate Modal-->
-        <div class="modal fade" id="validatorModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel"
-          aria-hidden="true">
+        <div
+          class="modal fade"
+          id="validatorModal"
+          tabindex="-1"
+          role="dialog"
+          aria-labelledby="myModalLabel"
+          aria-hidden="true"
+        >
           <div class="modal-dialog modal-notice">
             <div class="modal-content">
               <div class="modal-header">
                 <h5 class="modal-title" id="myModalLabel">Validate Solution</h5>
-                <button mat-button type="button" class="close" data-dismiss="modal" aria-hidden="true">
+                <button
+                  mat-button
+                  type="button"
+                  class="close"
+                  data-dismiss="modal"
+                  aria-hidden="true"
+                >
                   <i class="material-icons">close</i>
                 </button>
               </div>
               <div class="modal-body">
-                <app-add-validation (submitted)="onValidationSubmit($event)"></app-add-validation>
+                <app-add-validation
+                  (submitted)="onValidationSubmit($event)"
+                ></app-add-validation>
               </div>
             </div>
           </div>
@@ -284,19 +478,36 @@
 
         <!--View Validation Modal-->
 
-        <div class="modal fade" id="validModal" tabindex="-1" role="dialog" aria-labelledby="ModalLabel"
-          aria-hidden="true">
+        <div
+          class="modal fade"
+          id="validModal"
+          tabindex="-1"
+          role="dialog"
+          aria-labelledby="ModalLabel"
+          aria-hidden="true"
+        >
           <div class="modal-dialog modal-notice">
             <div class="modal-content">
               <div class="modal-header">
-                <h5 class="modal-title" id="myModalLabel">Validation Details</h5>
-                <button mat-button type="button" class="close" data-dismiss="modal" aria-hidden="true">
+                <h5 class="modal-title" id="myModalLabel">
+                  Validation Details
+                </h5>
+                <button
+                  mat-button
+                  type="button"
+                  class="close"
+                  data-dismiss="modal"
+                  aria-hidden="true"
+                >
                   <i class="material-icons">close</i>
                 </button>
               </div>
               <div class="modal-body">
-                <app-detailed-validate-view [validationData]="validationDataToView"
-                  (deleteClicked)="deleteValidation($event)" (editClicked)="handleValidationEditMode($event)">
+                <app-detailed-validate-view
+                  [validationData]="validationDataToView"
+                  (deleteClicked)="deleteValidation($event)"
+                  (editClicked)="handleValidationEditMode($event)"
+                >
                 </app-detailed-validate-view>
               </div>
             </div>
@@ -306,20 +517,35 @@
         <!--View Validation Modal-->
 
         <!--Edit Validation Modal-->
-        <div class="modal fade editModal" id="EditValidationModal" tabindex="-1" role="dialog"
-          aria-labelledby="myModalLabel" aria-hidden="true">
+        <div
+          class="modal fade editModal"
+          id="EditValidationModal"
+          tabindex="-1"
+          role="dialog"
+          aria-labelledby="myModalLabel"
+          aria-hidden="true"
+        >
           <div class="modal-dialog modal-notice">
             <div class="modal-content">
               <div class="modal-header">
                 <h5 class="modal-title" id="myModalLabel">Edit Validation</h5>
-                <button mat-button type="button" class="close" data-dismiss="modal" aria-hidden="true"
-                  (click)="closeModal($event)">
+                <button
+                  mat-button
+                  type="button"
+                  class="close"
+                  data-dismiss="modal"
+                  aria-hidden="true"
+                  (click)="closeModal($event)"
+                >
                   <i class="material-icons">close</i>
                 </button>
               </div>
               <div class="modal-body">
-                <app-add-validation *ngIf="validationDataToEdit" [validationData]="validationDataToEdit"
-                  (submitted)="onValidationSubmit($event)"></app-add-validation>
+                <app-add-validation
+                  *ngIf="validationDataToEdit"
+                  [validationData]="validationDataToEdit"
+                  (submitted)="onValidationSubmit($event)"
+                ></app-add-validation>
               </div>
             </div>
           </div>
@@ -328,26 +554,40 @@
 
         <!--Validate-->
 
-        <hr>
+        <hr />
 
         <!--Collaborate-->
 
-        <div class="modal fade editModal" id="EditCollaborateModal" tabindex="-1" role="dialog"
-          aria-labelledby="myModalLabel" aria-hidden="true">
+        <div
+          class="modal fade editModal"
+          id="EditCollaborateModal"
+          tabindex="-1"
+          role="dialog"
+          aria-labelledby="myModalLabel"
+          aria-hidden="true"
+        >
           <div class="modal-dialog modal-notice modal-lg">
             <div class="modal-content">
               <div class="modal-header">
-                <h5 class="modal-title" id="myModalLabel">Edit collaboration</h5>
-                <button mat-button type="button" class="close" data-dismiss="modal" aria-hidden="true">
+                <h5 class="modal-title" id="myModalLabel">
+                  Edit collaboration
+                </h5>
+                <button
+                  mat-button
+                  type="button"
+                  class="close"
+                  data-dismiss="modal"
+                  aria-hidden="true"
+                >
                   <i class="material-icons">close</i>
                 </button>
               </div>
               <div class="modal-body">
-
-
-                <app-add-collaborator *ngIf="collaboratorDataToEdit" [collaborator]="collaboratorDataToEdit"
-                  (submitted)="onCollaborationSubmit($event)">
-
+                <app-add-collaborator
+                  *ngIf="collaboratorDataToEdit"
+                  [collaborator]="collaboratorDataToEdit"
+                  (submitted)="onCollaborationSubmit($event)"
+                >
                 </app-add-collaborator>
               </div>
             </div>
@@ -361,11 +601,25 @@
               keyboard_arrow_left
             </i>
           </a> -->
-          <button mat-raised-button *ngIf="auth.currentUserValue.id" class="btn btn-rose btn-round" data-toggle="modal"
-            data-target="#collaboratorModal" matTooltip="Click to collaborate"
-            [disabled]="disableCollaborateButton || userId == solutionData.user_id || !auth.currentUserValue.id "
-            [matTooltipPosition]="'below'">Collaborate</button>
-          <p *ngIf="!auth.currentUserValue.id">Login to collaborate on this solution</p>
+          <button
+            mat-raised-button
+            *ngIf="auth.currentUserValue.id"
+            class="btn btn-rose btn-round"
+            data-toggle="modal"
+            data-target="#collaboratorModal"
+            matTooltip="Click to collaborate"
+            [disabled]="
+              disableCollaborateButton ||
+              userId == solutionData.user_id ||
+              !auth.currentUserValue.id
+            "
+            [matTooltipPosition]="'below'"
+          >
+            Collaborate
+          </button>
+          <p *ngIf="!auth.currentUserValue.id">
+            Login to collaborate on this solution
+          </p>
           <!-- <a mat-button>
             <i class="material-icons">
               keyboard_arrow_right
@@ -374,93 +628,88 @@
         </div>
         <!--Collaborate divider-->
 
-        <ngu-carousel #CollabCarousel [inputs]="carouselTileConfig" [dataSource]="carouselTileItemCollab$ | async"
-          *ngIf="collaborators[0]">
-          <ngu-tile *nguCarouselDef="let collaborator; let i = index; let ani = animate">
-            <app-collaborator-card *ngIf="collaborator" [collaboratorData]="collaborator"
-              (editClicked)="handleCollaborationEditMode($event)" (deleteClicked)="deleteCollaboration($event)">
+        <ngu-carousel
+          #CollabCarousel
+          [inputs]="carouselTileConfig"
+          [dataSource]="carouselTileItemCollab$ | async"
+          *ngIf="collaborators[0]"
+          role="region"
+          aria-label="collaborators"
+        >
+          <ngu-tile
+            *nguCarouselDef="let collaborator; let i = index; let ani = animate"
+          >
+            <app-collaborator-card
+              *ngIf="collaborator"
+              [collaboratorData]="collaborator"
+              (editClicked)="handleCollaborationEditMode($event)"
+              (deleteClicked)="deleteCollaboration($event)"
+            >
             </app-collaborator-card>
           </ngu-tile>
 
-
-
-          <a mat-button NguCarouselPrev class="btn btn-white btn-just-icon btn-round leftRs"
-            *ngIf="collaborators[0]&&collaborators.length>2">
-            <i class="material-icons">
+          <a
+            mat-button
+            NguCarouselPrev
+            class="btn btn-white btn-just-icon btn-round leftRs"
+            *ngIf="collaborators[0] && collaborators.length > 2"
+            aria-label="scroll left"
+          >
+            <i class="material-icons" aria-hidden="true">
               keyboard_arrow_left
             </i>
           </a>
 
-          <a mat-button NguCarouselNext class="btn btn-white btn-just-icon btn-round rightRs"
-            *ngIf="collaborators[0]&&collaborators.length>2">
-            <i class="material-icons">
+          <a
+            mat-button
+            NguCarouselNext
+            class="btn btn-white btn-just-icon btn-round rightRs"
+            *ngIf="collaborators[0] && collaborators.length > 2"
+            aria-label="scroll right"
+          >
+            <i class="material-icons" aria-hidden="true">
               keyboard_arrow_right
             </i>
           </a>
         </ngu-carousel>
+
         <div class="row justify-content-center">
-          <!-- <p *ngIf="!collaborators[0]">No collaborators yet.</p> -->
-
           <p *ngIf="!collaborators[0]">No collaborators yet.</p>
-          <!-- <ng-template #notUser>&nbsp; No collaborators yet.</ng-template> -->
-
         </div>
 
-        <hr>
-
-
-
-        <!--solution carousel start-->
-        <!-- <div class="row justify-content-center">
-          
-          <h4 *ngIf="problems[0]">Problems</h4>
-         
-        </div>
-
-
-        <ngu-carousel #problemCarousel [inputs]="carouselTileConfig" [dataSource]="carouselTileItemProblems$ | async"
-          *ngIf="problems[0]">
-          <ngu-tile *nguCarouselDef="let problem; let i = index; let ani = animate" data-toggle="modal"
-            (click)="openModal('#enrichModal')">
-
-            <app-problem-card [problemData]="problem">
-            </app-problem-card>
-          </ngu-tile>
-
-          <a mat-button NguCarouselPrev class="btn btn-white btn-just-icon btn-round leftRs"
-            *ngIf="problems[0]&&problems.length>2">
-            <i class="material-icons">
-              keyboard_arrow_left
-            </i>
-          </a>
-         
-          <a mat-button NguCarouselNext class="btn btn-white btn-just-icon btn-round rightRs"
-            *ngIf="problems[0]&&problems.length>2">
-            <i class="material-icons">
-              keyboard_arrow_right
-            </i>
-          </a>
-
-
-
-        </ngu-carousel>
-
- -->
+        <hr />
 
         <!--Add Collaborator Modal-->
-        <div class="modal fade" id="collaboratorModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel"
-          aria-hidden="true">
+        <div
+          class="modal fade"
+          id="collaboratorModal"
+          tabindex="-1"
+          role="dialog"
+          aria-labelledby="myModalLabel"
+          aria-hidden="true"
+        >
           <div class="modal-dialog modal-notice modal-lg">
             <div class="modal-content">
               <div class="modal-header">
-                <h5 class="modal-title" id="myModalLabel">How do I collaborate</h5>
-                <button mat-button type="button" class="close" aria-hidden="true" (click)="dismiss()">
+                <h5 class="modal-title" id="myModalLabel">
+                  How do I collaborate
+                </h5>
+                <button
+                  mat-button
+                  type="button"
+                  class="close"
+                  aria-hidden="true"
+                  (click)="dismiss()"
+                >
                   <i class="material-icons">close</i>
                 </button>
               </div>
               <div class="modal-body">
-                <app-add-collaborator (submitted)="onCollaborationSubmit($event)" (intentValue)="checkIntent($event)"
-                  (edit)=onCollaorationUpdate($event)>
+                <app-add-collaborator
+                  (submitted)="onCollaborationSubmit($event)"
+                  (intentValue)="checkIntent($event)"
+                  (edit)="onCollaorationUpdate($event)"
+                >
                 </app-add-collaborator>
               </div>
             </div>
@@ -469,94 +718,121 @@
         <!--Add Collaborator Modal-->
 
         <!--Collaborate-->
-
-        <!-- </div> -->
-
       </div>
 
-      <div class="col-md-4">
-        <!-- <div class="card" *ngIf="auth.currentUserValue.id"> -->
-        <!-- <div class="card-header"> -->
-        <!-- <div class="row justify-content-center">
-              <i class="material-icons">
-                highlight
-              </i>
-              <span>&nbsp;</span>
-              <span>&nbsp;</span>
-              <span>&nbsp;</span>
-              <span>&nbsp;</span>
-              <h5>Do you have a solution? <a [routerLink]="['/solutions/add',{problemId:problemData.id}]">click here</a>
-              </h5>
-            </div>
-          </div> -->
-        <!-- </div> -->
+      <div class="col-md-4" role="region" aria-label="discussion">
         <div class="card">
           <div class="card-header card-header-icon card-header-rose">
             <div class="card-icon">
-              <i class="material-icons">forum</i>
+              <i class="material-icons" aria-hidden="true">forum</i>
             </div>
-            <h4 class="card-title">Discussions</h4>
+            <h2 style="font-size: 1.2rem;" class="card-title">Discussions</h2>
           </div>
+
           <div class="card-body" *ngIf="!auth.currentUserValue.id">
             <p>Login to join discussion for this solution</p>
           </div>
-          <div class="card-body" *ngIf="auth.currentUserValue.id">
-            <button mat-raised-button class="btn btn-rose btn-sm" (click)="showPopularDiscussions('latest')"
-              *ngIf="objectValues(comments).length">Latest</button>
-            <button mat-raised-button class="btn btn-rose btn-sm" *ngIf="objectValues(comments).length"
-              (click)="showPopularDiscussions('popular')">Popular</button>
 
-            <div id="accordion" role="tablist">
+          <div class="card-body" *ngIf="auth.currentUserValue.id">
+            <button
+              mat-raised-button
+              class="btn btn-rose btn-sm"
+              (click)="showPopularDiscussions('latest')"
+              *ngIf="objectValues(comments).length"
+            >
+              Latest
+            </button>
+            <button
+              mat-raised-button
+              class="btn btn-rose btn-sm"
+              *ngIf="objectValues(comments).length"
+              (click)="showPopularDiscussions('popular')"
+            >
+              Popular
+            </button>
+
+            <div id="accordion">
               <div class="card-collapse">
-                <div class="card-header" role="tab" id="headingOne">
-                  <h5 class="mb-0">
-                    <a data-toggle="collapse" href="#newComment" *ngIf="auth.currentUserValue.id" aria-expanded=" true"
-                      aria-controls="newComment" class="collapsed">
+                <div class="card-header" id="headingOne">
+                  <div class="mb-0">
+                    <a
+                      data-toggle="collapse"
+                      href="#newComment"
+                      *ngIf="auth.currentUserValue.id"
+                      aria-expanded=" true"
+                      aria-controls="newComment"
+                      class="collapsed"
+                    >
                       Join Discussion
-                      <i class="material-icons">keyboard_arrow_down</i>
+                      <i class="material-icons" aria-hidden="true">keyboard_arrow_down</i>
                     </a>
-                  </h5>
+                  </div>
                 </div>
-                <div id="newComment" class="collapse show" role="tabpanel" aria-labelledby="headingOne"
-                  data-target="#newComment">
-                  <app-submit-comment [users]="objectValues(usersService.allUsers)" [actionText]="'Comment'"
-                    (submit)="onCommentSubmit($event)" [pageType]="'solution'"></app-submit-comment>
+                <div
+                  id="newComment"
+                  class="collapse show"
+                  aria-labelledby="headingOne"
+                  data-target="#newComment"
+                >
+                  <app-submit-comment
+                    [users]="objectValues(usersService.allUsers)"
+                    [actionText]="'Comment'"
+                    (submit)="onCommentSubmit($event)"
+                    [pageType]="'solution'"
+                  ></app-submit-comment>
                 </div>
               </div>
 
-
               <div *ngIf="!popular">
-                <app-display-comment [users]="objectValues(usersService.allUsers)" [comment]="comment"
-                  [replies]="replies[comment.id]" [pageType]="'solution'" (reply)="onCommentSubmit($event, comment.id)"
-                  (commentToDelete)="deleteComment($event)" (shareCommentId)="shareComment($event)"
-                  (fileClicked)="displayModal($event)" *ngFor="let comment of sortComments(objectValues(comments))">
+                <app-display-comment
+                  [users]="objectValues(usersService.allUsers)"
+                  [comment]="comment"
+                  [focusContext]="lastContext"
+                  [replies]="replies[comment.id]"
+                  [pageType]="'solution'"
+                  (reply)="onCommentSubmit($event, comment.id)"
+                  (commentToDelete)="deleteComment($event)"
+                  (shareCommentId)="shareComment($event)"
+                  (fileClicked)="displayModal($event)"
+                  *ngFor="let comment of sortComments(objectValues(comments))"
+                >
                 </app-display-comment>
               </div>
 
               <!--Popular-->
 
               <div *ngIf="popular">
-                <app-display-comment [users]="objectValues(usersService.allUsers)" [comment]="popularDiscussion"
-                  [replies]="replies[popularDiscussion.id]" [pageType]="'solution'"
-                  (reply)="onCommentSubmit($event, popularDiscussion.id)" (fileClicked)="displayModal($event)"
-                  *ngFor="let popularDiscussion of popularDiscussions">
+                <app-display-comment
+                  [users]="objectValues(usersService.allUsers)"
+                  [comment]="popularDiscussion"
+                  [focusContext]="lastContext"
+                  [replies]="replies[popularDiscussion.id]"
+                  [pageType]="'solution'"
+                  (reply)="onCommentSubmit($event, popularDiscussion.id)"
+                  (fileClicked)="displayModal($event)"
+                  *ngFor="let popularDiscussion of popularDiscussions"
+                >
                 </app-display-comment>
               </div>
 
               <!--Popular-->
-
             </div>
-            <hr>
-            <a class="viewMoreComments" href="javascript:void(0)"
-              *ngIf="objectValues(comments).length > 5 && numOfComments < objectValues(comments).length"
-              (click)="showMoreComments()">
+            <hr *ngIf="objectValues(comments).length" aria-hidden="true" />
+            <a
+              class="viewMoreComments"
+              href="javascript:void(0);"
+              role="button"
+              *ngIf="
+                objectValues(comments).length > 5 &&
+                numOfComments < objectValues(comments).length
+              "
+              (click)="showMoreComments()"
+            >
               View more comments
             </a>
           </div>
         </div>
       </div>
-
-
     </div>
   </div>
 </div>
@@ -567,21 +843,46 @@
   <div class="modal-dialog modal-lg">
     <div class="modal-content">
       <div class="modal-header">
-        <button type="button" class="close" data-dismiss="modal" aria-hidden="true" (click)="closeModal($event)">
-          <i class="material-icons">close</i>
+        <button
+          type="button"
+          class="close"
+          data-dismiss="modal"
+          aria-hidden="true"
+          (click)="closeModal($event)"
+          id="discussionModalCloseBtn"
+        >
+          <i class="material-icons" aria-hidden="true">close</i>
         </button>
       </div>
       <div class="modal-body">
         <app-display-modal *ngIf="modalSrc" [source]="modalSrc">
         </app-display-modal>
       </div>
-      <div class="modal-footer justify-content-center" *ngIf="sources && sources['attachmentObj'].length > 1">
-        <button mat-raised-button type="button" [disabled]="sources['index'] < 1" (click)="toggleFileSrc(false)"
-          class="btn btn-info btn-round"><span class="carousel-control-prev-icon" aria-hidden="true"></span></button>
+      <div
+        class="modal-footer justify-content-center"
+        *ngIf="sources && sources['attachmentObj'].length > 1"
+      >
+        <button
+          mat-raised-button
+          type="button"
+          [disabled]="sources['index'] < 1"
+          (click)="toggleFileSrc(false)"
+          class="btn btn-info btn-round"
+        >
+          <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+        </button>
         <div class="col-3"></div>
-        <button mat-raised-button type="button" [disabled]="sources['index'] == sources['attachmentObj'].length-1"
-          class="btn btn-info btn-round" (click)="toggleFileSrc(true)"><span class="carousel-control-next-icon"
-            aria-hidden="true"></span></button>
+        <button
+          mat-raised-button
+          type="button"
+          [disabled]="sources['index'] == sources['attachmentObj'].length - 1"
+          class="btn btn-info btn-round"
+          (click)="toggleFileSrc(true)"
+          id="discussionModalNextBtn"
+        >
+          <span class="carousel-control-next-icon" aria-hidden="true"></span>
+        </button>
       </div>
     </div>
   </div>
+</div>

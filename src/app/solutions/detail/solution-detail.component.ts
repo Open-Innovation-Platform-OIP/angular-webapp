@@ -6,7 +6,9 @@ import {
   OnChanges,
   ChangeDetectorRef,
   OnDestroy,
-  Inject
+  Inject,
+  ViewChild,
+  ElementRef
 } from '@angular/core';
 import {
   Location,
@@ -14,7 +16,7 @@ import {
   PathLocationStrategy
 } from '@angular/common';
 import { Router, ActivatedRoute, ParamMap } from '@angular/router';
-import { Observable, Subscription, interval } from 'rxjs';
+import { Observable, Subscription, interval, Subject } from 'rxjs';
 import { NgxUiLoaderService } from 'ngx-ui-loader';
 import { domain } from '../../../environments/environment';
 import { ModalComponent } from 'src/app/components/modal/modal.component';
@@ -52,7 +54,7 @@ import { CollaborationService } from 'src/app/services/collaboration.service';
 import { ValidationService } from 'src/app/services/validation.service';
 import { EnrichmentService } from 'src/app/services/enrichment.service';
 import { sharing } from '../../globalconfig';
-import { reject } from 'q';
+import { FocusMonitor } from '@angular/cdk/a11y';
 var Buffer = require('buffer/').Buffer;
 
 const misc: any = {
@@ -85,7 +87,11 @@ interface queryString {
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class SolutionDetailComponent implements OnInit {
+  @ViewChild('solutionTitle') solutionTitle: ElementRef<HTMLElement>;
+
   channels = sharing;
+  imageAlt: string = 'Default image';
+  lastContext = new Subject();
   // chartData: any;
   message: any;
   popup: any;
@@ -264,7 +270,8 @@ export class SolutionDetailComponent implements OnInit {
     private enrichmentService: EnrichmentService,
     public ngLocation: Location,
     private ngxService: NgxUiLoaderService,
-    public dialog: MatDialog
+    public dialog: MatDialog,
+    private focusMonitor: FocusMonitor
   ) {
     this.startInterval();
     this.pageUrl = domain + ngLocation.path();
@@ -273,6 +280,12 @@ export class SolutionDetailComponent implements OnInit {
       `Hello,\n\nCheck out this link on Social Alpha's Open Innovation platform - ${this.pageUrl}\n\nRegards,`
     );
     this.mailToLink = `mailto:?subject=${subject}&body=${body}`;
+  }
+
+  ngAfterViewInit() {
+    setTimeout(() => {
+      this.focusMonitor.focusVia(this.solutionTitle, 'program');
+    }, 100);
   }
 
   startInterval() {
@@ -1459,6 +1472,24 @@ export class SolutionDetailComponent implements OnInit {
       keyboard: false
     });
 
+    const waitForTag = setInterval(() => {
+      const modalBtnTag: HTMLElement = document.querySelector(
+        '#discussionModalNextBtn'
+      );
+      const closeBtn: HTMLElement = document.querySelector(
+        '#discussionModalNextBtn'
+      );
+
+      if (modalBtnTag) {
+        this.focusMonitor.focusVia(modalBtnTag, 'program');
+        clearInterval(waitForTag);
+      }
+      if (closeBtn) {
+        this.focusMonitor.focusVia(closeBtn, 'program');
+        clearInterval(waitForTag);
+      }
+    }, 500);
+
     $('#enlargeView').modal('show');
   }
 
@@ -1474,6 +1505,8 @@ export class SolutionDetailComponent implements OnInit {
         solutionVideoTag.pause();
       }
     }
+
+    this.lastContext.next(this.discussionContext);
   }
 
   toggleFileSrc(dir: boolean) {

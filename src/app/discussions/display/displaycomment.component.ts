@@ -32,6 +32,7 @@ export class CommentDisplayComponent implements OnInit, OnDestroy, OnChanges {
   @Input() comment;
   @Input() replies;
   @Input() users;
+  @Input() pageType;
   @Input() focusContext;
   @Output() reply = new EventEmitter();
   @Output() fileClicked = new EventEmitter();

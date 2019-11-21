@@ -180,7 +180,7 @@
           <div class="card-footer">
             <div class="stats">
               <a
-                href="javascript:void(0)"
+                href="javascript:void(0);"
                 (click)="toggleVoteProblem()"
                 role="button"
                 [attr.aria-pressed]="voters.has(userId)"
@@ -201,7 +201,7 @@
 
               <a
                 class="mx-2 d-flex"
-                href="javascript:void(0)"
+                href="javascript:void(0);"
                 (click)="toggleWatchProblem()"
                 role="button"
                 [attr.aria-pressed]="watchers.has(userId)"
@@ -256,7 +256,6 @@
                   type="button"
                   id="shareBtnDropdown"
                   data-toggle="dropdown"
-                  aria-haspopup="true"
                   aria-expanded="false"
                   aria-label="share"
                 >
@@ -861,8 +860,9 @@
             NguCarouselPrev
             class="btn btn-white btn-just-icon btn-round leftRs"
             *ngIf="collaborators[0] && collaborators.length > 2"
+            aria-label="scroll left"
           >
-            <i class="material-icons">
+            <i class="material-icons" aria-hidden="true">
               keyboard_arrow_left
             </i>
           </a>
@@ -872,8 +872,9 @@
             NguCarouselNext
             class="btn btn-white btn-just-icon btn-round rightRs"
             *ngIf="collaborators[0] && collaborators.length > 2"
+            aria-label="scroll right"
           >
-            <i class="material-icons">
+            <i class="material-icons" aria-hidden="true">
               keyboard_arrow_right
             </i>
           </a>
@@ -994,9 +995,11 @@
             </div>
             <h2 style="font-size: 1.2rem;" class="card-title">Discussions</h2>
           </div>
+
           <div class="card-body" *ngIf="!auth.currentUserValue.id">
             <p>Login to join discussion for this problem</p>
           </div>
+
           <div class="card-body" *ngIf="auth.currentUserValue.id">
             <button
               mat-raised-button
@@ -1026,19 +1029,17 @@
                       aria-expanded=" true"
                       aria-controls="newComment"
                       class="collapsed"
-                      role="button"
                     >
                       Join Discussion
-                      <i class="material-icons" aria-hidden="true"
-                        >keyboard_arrow_down</i
-                      >
+                      <i class="material-icons" aria-hidden="true">
+                        keyboard_arrow_down
+                      </i>
                     </a>
                   </div>
                 </div>
                 <div
                   id="newComment"
                   class="collapse show"
-                  role="tabpanel"
                   aria-labelledby="headingOne"
                   data-target="#newComment"
                 >
