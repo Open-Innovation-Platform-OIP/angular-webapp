@@ -184,7 +184,7 @@
                 (click)="toggleVoteProblem()"
                 role="button"
                 [attr.aria-pressed]="voters.has(userId)"
-                aria-label="number of likes"
+                [attr.aria-label]="['likes', voters.size]"
                 class="d-flex"
               >
                 <i
@@ -205,7 +205,7 @@
                 (click)="toggleWatchProblem()"
                 role="button"
                 [attr.aria-pressed]="watchers.has(userId)"
-                aria-label="problem watched"
+                [attr.aria-label]="['Watch problem', watchers.size]"
               >
                 <i
                   class="material-icons actions"
@@ -420,6 +420,8 @@
           [inputs]="carouselTileConfig"
           [dataSource]="carouselTileItemsEnrichment$ | async"
           *ngIf="enrichment[0]"
+          role="region"
+          aria-label="Enrichment cards"
         >
           <ngu-tile
             *nguCarouselDef="let enrichment; let i = index; let ani = animate"
@@ -433,33 +435,28 @@
             </app-enrichment-card>
           </ngu-tile>
 
-          <!-- <button NguCarouselPrev class="btn btn-default leftRs" [style.opacity]="enrichCarousel.isFirst ? 0.5:1">&lt;</button> -->
-          <!-- <button NguCarouselNext class="btn btn-default rightRs" [style.opacity]="enrichCarousel.isLast ? 0.5:1">&gt;</button> -->
-
-          <!-- <div class="row justify-content-center"> -->
           <a
             mat-button
             NguCarouselPrev
             class="btn btn-white btn-just-icon btn-round leftRs"
             *ngIf="enrichment[0] && enrichment.length > 2"
+            aria-label="scroll left"
           >
-            <i class="material-icons">
+            <i class="material-icons" aria-hidden="true">
               keyboard_arrow_left
             </i>
           </a>
-          <!-- <button mat-raised-button class="btn btn-warning btn-round" data-toggle="modal" data-target="#enrichmentModal" -->
-          <!-- matTooltip="Click to add enrichment" [matTooltipPosition]="'below'">Enrich</button> -->
           <a
             mat-button
             NguCarouselNext
             class="btn btn-white btn-just-icon btn-round rightRs"
             *ngIf="enrichment[0] && enrichment.length > 2"
+            aria-label="scroll right"
           >
-            <i class="material-icons">
+            <i class="material-icons" aria-hidden="true">
               keyboard_arrow_right
             </i>
           </a>
-          <!-- </div> -->
         </ngu-carousel>
 
         <div class="row justify-content-center" *ngIf="!enrichment[0]">
@@ -494,12 +491,7 @@
                   <i class="material-icons">close</i>
                 </button>
               </div>
-              <div class="modal-body">
-                <!-- <app-add-enrichment (submitted)="onEnrichmentSubmit($event)"></app-add-enrichment> -->
-                <!-- <app-wizard-cmp></app-wizard-cmp> -->
-                <!-- <app-wizard-container></app-wizard-container> -->
-                <!-- <app-wizard-container [content]="enrichmentData" [contentType]="'enrichment'" (contentSubmitted)="onEnrichmentSubmit($event)"></app-wizard-container> -->
-              </div>
+              <div class="modal-body"></div>
             </div>
           </div>
         </div>
@@ -539,12 +531,6 @@
                   (voteClicked)="voteEnrichment($event)"
                 ></app-view-enrichment>
               </div>
-              <!-- <div class="card-footer"> -->
-              <!-- <div class="text-center"> -->
-              <!-- <button mat-button type="button" class="btn btn-warning" aria-hidden="true" data-dismiss="modal"
-                      data-toggle="modal" data-target="#EditEnrichModal">Edit</button> -->
-              <!-- </div> -->
-              <!-- </div> -->
             </div>
           </div>
         </div>
@@ -575,10 +561,7 @@
                   <i class="material-icons">close</i>
                 </button>
               </div>
-              <div class="modal-body">
-                <!-- <app-add-enrichment *ngIf="enrichDataToEdit" [enrichmentData]="enrichDataToEdit" (submitted)="onEnrichmentSubmit($event)"></app-add-enrichment> -->
-                <!-- <app-wizard-container [content]="enrichmentData" [contentType]="'enrichment'" (contentSubmitted)="onEnrichmentSubmit($event)"></app-wizard-container> -->
-              </div>
+              <div class="modal-body"></div>
             </div>
           </div>
         </div>
@@ -591,11 +574,6 @@
 
         <!--Validate divider-->
         <div class="row justify-content-center">
-          <!-- <a mat-button>
-              <i class="material-icons">
-                keyboard_arrow_left
-              </i>
-            </a> -->
           <button
             mat-raised-button
             class="btn btn-warning btn-round"
@@ -614,11 +592,6 @@
           >
             Validate
           </button>
-          <!-- <a mat-button>
-              <i class="material-icons">
-                keyboard_arrow_right
-              </i>
-            </a> -->
         </div>
         <!--Validate divider-->
 
@@ -627,6 +600,8 @@
           [inputs]="carouselTileConfig"
           [dataSource]="carouselTileItemsValid$ | async"
           *ngIf="validation[0]"
+          role="region"
+          aria-label="validation cards"
         >
           <ngu-tile
             *nguCarouselDef="let validation; let i = index; let ani = animate"
@@ -640,34 +615,30 @@
             ></app-validate-card>
           </ngu-tile>
 
-          <!-- <button NguCarouselPrev class="btn btn-default leftRs" [style.opacity]="ValidCarousel.isFirst ? 0.5:1">&lt;</button> -->
-          <!-- <button NguCarouselNext class="btn btn-default rightRs" [style.opacity]="ValidCarousel.isLast ? 0.5:1">&gt;</button> -->
-
           <a
             mat-button
             NguCarouselPrev
             class="btn btn-white btn-just-icon btn-round leftRs"
             *ngIf="validation[0] && validation.length > 2"
+            aria-label="scroll-left"
           >
-            <i class="material-icons">
+            <i class="material-icons" aria-hidden="true">
               keyboard_arrow_left
             </i>
           </a>
-          <!-- <button mat-raised-button class="btn btn-warning btn-round" data-toggle="modal" data-target="#validatorModal" -->
-          <!-- matTooltip="Click to validate problem" [matTooltipPosition]="'below'">Validate</button> -->
           <a
             mat-button
             NguCarouselNext
             class="btn btn-white btn-just-icon btn-round rightRs"
             *ngIf="validation[0] && validation.length > 2"
+            aria-label="scroll right"
           >
-            <i class="material-icons">
+            <i class="material-icons" aria-hidden="true">
               keyboard_arrow_right
             </i>
           </a>
         </ngu-carousel>
         <div class="row justify-content-center" *ngIf="!validation[0]">
-          <!-- <p *ngIf="userPersonas.is_expert">No validations yet. Be the first to validate.</p> -->
           <p>No validations yet.</p>
         </div>
 
@@ -862,11 +833,6 @@
           <p *ngIf="!auth.currentUserValue.id">
             Login to collaborate on this problem
           </p>
-          <!-- <a mat-button>
-              <i class="material-icons">
-                keyboard_arrow_right
-              </i>
-            </a> -->
         </div>
         <!--Collaborate divider-->
 
@@ -875,6 +841,8 @@
           [inputs]="carouselTileConfig"
           [dataSource]="carouselTileItemsCollab$ | async"
           *ngIf="collaborators[0]"
+          role="region"
+          aria-label="collaborators"
         >
           <ngu-tile
             *nguCarouselDef="let collaborator; let i = index; let ani = animate"
@@ -1175,7 +1143,6 @@
           class="btn btn-info btn-round"
           (click)="toggleFileSrc(true)"
           aria-label="next"
-          
           id="discussionModalNextBtn"
         >
           <span class="carousel-control-next-icon" aria-hidden="true"></span>

@@ -178,6 +178,7 @@
           [attr.aria-pressed]="voters.has(userId)"
           [ngStyle]="{ color: voters.has(userId) ? '#1E90FF' : 'black' }"
           style="padding: 0 7px;"
+          [attr.aria-label]="['likes', voters.size]"
         >
           <i class="material-icons actions" aria-hidden="true">
             thumb_up

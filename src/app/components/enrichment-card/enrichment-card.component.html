@@ -1,70 +1,58 @@
-<!-- <div class="col-md-4 clearfix d-none d-md-block"> -->
-<!-- <button (click)="cardClicked()"> -->
+<div
+  class="card card-product enrich-card"
+  (click)="cardClicked()"
+  *ngIf="enrichmentData.description"
+  style="cursor: pointer;"
+  role="group"
+>
+  <a href="javascript:void(0);" (click)="cardClicked()">
+    <img
+      class="card-img-top"
+      style="object-fit:cover;"
+      src="{{
+        this.enrichmentData.featured_url &&
+        checkUrlIsImg(filesService.fileAccessUrl + enrichmentData.featured_url)
+          ? filesService.fileAccessUrl + this.enrichmentData.featured_url
+          : './assets/img/image_placeholder.jpg'
+      }}"
+      alt="enrichment card image"
+      width="150px"
+      height="140px"
+    />
+  </a>
 
-
-<div class="card card-product enrich-card" (click)="cardClicked()" *ngIf="enrichmentData.description">
-  <img class="card-img-top" style="object-fit:cover;"
-    src="{{ (this.enrichmentData.featured_url && checkUrlIsImg(filesService.fileAccessUrl+enrichmentData.featured_url)) ? filesService.fileAccessUrl+this.enrichmentData.featured_url : './assets/img/image_placeholder.jpg' }}"
-    alt="Card image cap" width="150px" height="140px">
   <div class="card-body">
     <div class="description">
-      <strong>Description</strong>
-      <p *ngIf="enrichmentData.description" style="white-space: pre-wrap;">{{enrichmentData.description}}</p>
-    </div>
-    <strong>Location(s)</strong>
-    <!-- <p class="description" *ngIf="enrichmentData.location">{{enrichmentData.location}}</p>
-     -->
-    <!-- <div *ngFor="let location of enrichmentData.location; let i=index;">
-      <div *ngIf="location && location.address &&  location.address.Label ">
-        <span *ngIf="location.Address.Label && i < 2">{{location.Address.Label}}</span>
-        <span *ngIf="i<2">&nbsp;</span>
-      </div>
-    </div> -->
-
-    <div *ngFor="let location of enrichmentData.enrichment_locations; let i=index;">
-      <p *ngIf=" i<1">{{location.location.location_name}}</p>
+      <strong role="heading" aria-level="3">Description</strong>
+      <p *ngIf="enrichmentData.description" style="white-space: pre-wrap;">
+        {{ enrichmentData.description }}
+      </p>
     </div>
 
-    <!-- <h4 class="card-title">Description :</h4> -->
-    <!-- <p class="card-text">{{enrichmentData.description}}</p> -->
-    <!-- <h5 class="card-title">Extent</h5> -->
-    <!-- <p class="card-text">{{enrichmentData.extent}}</p> -->
-    <!-- <h5 class="card-title">Impact :</h5> -->
-    <!-- <p class="card-text">Impact: {{enrichmentData.impact}}</p> -->
-    <!-- <h5 class="card-title">Population Affected :</h5> -->
-    <!-- <p class="card-text">Population Affected: {{enrichmentData.population_affected}}</p> -->
-    <!-- <a class="btn btn-primary">Button</a> -->
-    <!-- "https://mdbootstrap.com/img/Photos/Horizontal/Nature/4-col/img%20(34).jpg" -->
+    <strong role="heading" aria-level="3">Location(s)</strong>
+    <div
+      *ngFor="
+        let location of enrichmentData.enrichment_locations;
+        let i = index
+      "
+    >
+      <p *ngIf="i < 1">{{ location.location.location_name }}</p>
+    </div>
   </div>
   <div class="card-footer">
-    <div class="stats">
-      <i class="material-icons">
+    <div class="stats" [attr.aria-label]="['likes', voters.size]">
+      <i class="material-icons" aria-hidden="true">
         thumb_up
       </i>
-      {{voters.size}}
+      {{ voters.size }}
     </div>
-    <p>Added by :
-      {{ (auth.currentUserValue.id == enrichmentData.user_id) ? 'You' : enrichmentData.user.name}}
+    <p>
+      Added by :
+      {{
+        auth.currentUserValue.id == enrichmentData.user_id
+          ? 'You'
+          : enrichmentData.user.name
+      }}
     </p>
-
   </div>
 </div>
-
-<!-- <div class="row justify-content-center" *ngIf="enrichmentData===false"> -->
-
-<!-- <p>No enrichments yet. Be the first to enrich this problem.</p> -->
-<!-- <img class="card-img-top" alt="Card image cap"> -->
-<!-- <div class="card-body"> -->
-<!-- <h4 class="card-title">{{enrichmentData.description}}</h4>
-      <p class="card-text">Some quick example text to build on the card title and make up the bulk of
-        the card's content.</p>
-      <a class="btn btn-primary">Button</a>
-      "https://mdbootstrap.com/img/Photos/Horizontal/Nature/4-col/img%20(34).jpg" -->
-<!-- <i class="material-icons">
-      add
-    </i> -->
-<!-- <h2>+</h2> -->
-<!-- </div> -->
-<!-- </div> -->
-<!-- </button> -->
-<!-- </div> -->

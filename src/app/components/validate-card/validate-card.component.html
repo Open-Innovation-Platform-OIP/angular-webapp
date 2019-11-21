@@ -1,34 +1,81 @@
 <!--REWRITE-->
 
-<div class="card card-product validate-card" (click)="cardClicked()" *ngIf="validationData">
+<div
+  class="card card-product validate-card"
+  (click)="cardClicked()"
+  *ngIf="validationData"
+  style="cursor: pointer;"
+  role="group"
+>
+  <a href="javascript:void(0);" (click)="cardClicked()" class="sr-only">
+    open validate card
+  </a>
   <div class="card-body">
-    <strong>Comment</strong>
-    <p class="description" *ngIf="validationData.comment" style="white-space: pre-wrap;">{{validationData.comment}}</p>
+    <strong role="heading" aria-level="3">Comment</strong>
+    <p
+      class="description"
+      *ngIf="validationData.comment"
+      style="white-space: pre-wrap;"
+    >
+      {{ validationData.comment }}
+    </p>
 
-    <strong>Status</strong>
+    <strong role="heading" aria-level="3">Status</strong>
     <div class="row">
       <div class="col-md-3">
-        <p class="description">{{(validationData.agree)?"Agree":"Disagree"}}</p>
+        <p class="description">
+          {{ validationData.agree ? 'Agree' : 'Disagree' }}
+        </p>
       </div>
       <div class="col-md-1" style="margin-left: -10%;">
-        <i class="material-icons" *ngIf="validationData.agree" style="color: green;font-size: 2em;">
+        <i
+          class="material-icons"
+          *ngIf="validationData.agree"
+          style="color: green;font-size: 2em;"
+          aria-hidden="true"
+        >
           check_circle_outline
         </i>
-        <i class="material-icons" *ngIf="validationData.agree == false" style="color: grey;font-size: 2em;">
+        <i
+          class="material-icons"
+          *ngIf="validationData.agree == false"
+          style="color: grey;font-size: 2em;"
+          aria-hidden="true"
+        >
           highlight_off
         </i>
       </div>
     </div>
 
-    <strong *ngIf="validationData && validationData.files && validationData.files.length">Attachment</strong>
-    <p class="description" *ngIf="validationData && validationData.files && validationData.files.length > 0">
-      {{validationData.files.length}} File(s)</p>
+    <strong
+      role="heading"
+      aria-level="3"
+      *ngIf="
+        validationData && validationData.files && validationData.files.length
+      "
+      >Attachment</strong
+    >
+    <p
+      class="description"
+      *ngIf="
+        validationData &&
+        validationData.files &&
+        validationData.files.length > 0
+      "
+    >
+      {{ validationData.files.length }} File(s)
+    </p>
   </div>
   <div class="card-footer">
-    <p *ngIf="validationData&&validationData.user">Validated by :
-      {{ (auth.currentUserValue.id == validationData.user_id) ? 'You' : validationData.user.name}}</p>
+    <p *ngIf="validationData && validationData.user">
+      Validated by :
+      {{
+        auth.currentUserValue.id == validationData.user_id
+          ? 'You'
+          : validationData.user.name
+      }}
+    </p>
   </div>
 </div>
-
 
 <!--REWRITE-->
