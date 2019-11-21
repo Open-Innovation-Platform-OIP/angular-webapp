@@ -91,6 +91,7 @@ export class SolutionDetailComponent implements OnInit {
 
   channels = sharing;
   imageAlt: string = 'Default image';
+  discussionContext: string;
   lastContext = new Subject();
   // chartData: any;
   message: any;
@@ -1461,9 +1462,14 @@ export class SolutionDetailComponent implements OnInit {
     }
   }
 
-  displayModal(files: { attachmentObj: attachment_object; index: number }) {
+  displayModal(files: {
+    attachmentObj: attachment_object;
+    index: number;
+    context: string;
+  }) {
     this.sources = files;
     this.modalSrc = files.attachmentObj[files.index];
+    this.discussionContext = files.context;
 
     clearInterval(this.interval);
     /* opening modal */

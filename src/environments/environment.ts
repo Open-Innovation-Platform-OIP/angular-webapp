@@ -3,22 +3,24 @@
 // `ng build --env=prod` then `environment.prod.ts` will be used instead.
 // The list of which env maps to which file can be found in `.angular-cli.json`.
 
-export const environment = {
+const environment = {
   production: false
 };
 
-export const digitalocean = {
-  accessKeyId: "XYWXQG6AIL2ALTADBF53",
-  secretAccessKey: "j93g467IKFw7xHPeLa1QjPflfMHT30/OtwJghVA6qRA",
-  region: "sgp1" // Singapore region
+const digitalocean = {
+  accessKeyId: 'XYWXQG6AIL2ALTADBF53',
+  secretAccessKey: 'j93g467IKFw7xHPeLa1QjPflfMHT30/OtwJghVA6qRA',
+  region: 'sgp1' // Singapore region
 };
 
-export const domain = "https://oip-dev.dev.jaagalabs.com";
+const domain = 'https://oip-dev.dev.jaagalabs.com';
 
-export const fileUploadVariables = {
+const fileUploadVariables = {
   UploadUrlEndpoint:
-    "https://minio-microservice.dev.jaagalabs.com/create_presigned_url",
-  bucketName: "test",
-  accessUrl: "https://minio-storage.dev.jaagalabs.com",
-  deleteEndpoint: "https://minio-microservice.dev.jaagalabs.com/delete_file"
+    'https://minio-microservice.dev.jaagalabs.com/create_presigned_url',
+  bucketName: 'test',
+  accessUrl: 'https://minio-storage.dev.jaagalabs.com',
+  deleteEndpoint: 'https://minio-microservice.dev.jaagalabs.com/delete_file'
 };
+
+export { environment, digitalocean, domain, fileUploadVariables };
