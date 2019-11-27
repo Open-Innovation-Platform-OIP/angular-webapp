@@ -1,52 +1,66 @@
-<!-- <div class="card card-product actions" [routerLink]="'/profile/'+userData.id">
-  <div class="card-header card-header-image">
-    <a>
-      <img style="object-fit: cover;" class="img" src="{{(userData.photo_url && userData.photo_url.url) ? userData.photo_url.url : './assets/img/image_placeholder.jpg'}}">
-    </a>
-  </div>
-  <div class="card-body">
-    <h4 class="card-title">
-      <a>{{userData.name}}</a>
-    </h4>
-    <div class="card-description">
-      <div>
-
-      </div>
-      <div>
-
-      </div>
-    </div>
-  </div>
-  <div class="card-footer">
-    <div class="stats">
-      <p class="card-category"><i class="material-icons">place</i> {{userData.location}}</p>
-    </div>
-  </div>
-</div> -->
-
 <!--FIX-->
 
-<div class="card card-profile actions profile-card" [routerLink]="'/users/'+ userData.id" queryParamsHandling="merge">
+<div
+  class="card card-profile actions profile-card"
+  [routerLink]="'/users/' + userData.id"
+  queryParamsHandling="merge"
+  role="group"
+  [attr.aria-label]="['profile', index + 1]"
+>
   <div class="card-avatar photo_div">
     <a>
-      <img class="img profile_photo" style="object-fit: cover;"
-        src="{{(userData.photo_url && userData.photo_url.fileEndpoint) ? filesService.fileAccessUrl+userData.photo_url.fileEndpoint : './assets/img/default-avatar.png'}}" />
+      <img
+        class="img profile_photo"
+        style="object-fit: cover;"
+        src="{{
+          userData.photo_url && userData.photo_url.fileEndpoint
+            ? filesService.fileAccessUrl + userData.photo_url.fileEndpoint
+            : './assets/img/default-avatar.png'
+        }}"
+        alt="profile photo"
+      />
     </a>
   </div>
   <div class="card-body">
-    <h4 class="card-title">{{userData.name}}</h4>
-    <h6 class="card-category text-gray"
-      *ngIf="userData.organizationByOrganizationId && (userData.id == authService.currentUserValue.id || !userData.organization_private)">
-      {{userData.organizationByOrganizationId.name}}</h6>
+    <h3 class="card-title" style="font-size: 1.3rem;">{{ userData.name }}</h3>
+    <h6
+      class="card-category text-gray"
+      *ngIf="
+        userData.organizationByOrganizationId &&
+        (userData.id == authService.currentUserValue.id ||
+          !userData.organization_private)
+      "
+    >
+      {{ userData.organizationByOrganizationId.name }}
+    </h6>
     <div
-      *ngIf="userData.users_tags && userData.users_tags.length && (userData.id == authService.currentUserValue.id || !userData.interests_private)">
-      <span *ngFor="let interest of userData.users_tags; let i=index;" class="badge badge-warning"
-        style="margin-right: 0.3em;"><span *ngIf="i<2">{{interest.tag.name}}</span></span>
-      <span>&nbsp;</span>
+      *ngIf="
+        userData.users_tags &&
+        userData.users_tags.length &&
+        (userData.id == authService.currentUserValue.id ||
+          !userData.interests_private)
+      "
+      role="group"
+      aria-label="interest"
+    >
+      <p
+        *ngFor="let interest of userData.users_tags; let i = index"
+        class="badge badge-warning"
+        style="margin-right: 0.3em;"
+      >
+        <span *ngIf="i < 2">{{ interest.tag.name }}</span>
+      </p>
     </div>
     <br />
     <div
-      *ngIf="(userData.problemsByUser&& userData.problemsByUser.length)||(userData.user_collaborators&& userData.user_collaborators.length)||(userData.user_validations&& userData.user_validations.length)||(userData.enrichmentssBycreatedBy&& userData.enrichmentssBycreatedBy.length)">
+      *ngIf="
+        (userData.problemsByUser && userData.problemsByUser.length) ||
+        (userData.user_collaborators && userData.user_collaborators.length) ||
+        (userData.user_validations && userData.user_validations.length) ||
+        (userData.enrichmentssBycreatedBy &&
+          userData.enrichmentssBycreatedBy.length)
+      "
+    >
       <!-- <p *ngIf="userData.problemsByUser.length">Added {{userData.problemsByUser.length}} problem(s)</p>
       <p *ngIf="userData.user_collaborators.length"> {{userData.user_collaborators.length}} collaboration(s)</p>
       <p *ngIf="userData.user_validations.length">{{userData.user_validations.length}} validation(s) </p>
@@ -54,11 +68,14 @@
       </p> -->
 
       <p>
-        {{userData.problemsByUser.length+userData.user_collaborators.length+userData.user_validations.length+userData.enrichmentssBycreatedBy.length}}
+        {{
+          userData.problemsByUser.length +
+            userData.user_collaborators.length +
+            userData.user_validations.length +
+            userData.enrichmentssBycreatedBy.length
+        }}
         contribution(s)
       </p>
-
-
     </div>
     <!-- <p class="card-description">
       
@@ -68,8 +85,13 @@
     <div class="price">
       <!-- <h4>$459/night</h4> -->
     </div>
-    <div class="stats" *ngIf="userData.user_locations && userData.user_locations.location">
-      <p class="card-category"><i class="material-icons">place</i> {{userData.user_locations.location.location_name}}
+    <div
+      class="stats"
+      *ngIf="userData.user_locations && userData.user_locations.location"
+    >
+      <p class="card-category">
+        <i class="material-icons">place</i>
+        {{ userData.user_locations.location.location_name }}
       </p>
     </div>
   </div>

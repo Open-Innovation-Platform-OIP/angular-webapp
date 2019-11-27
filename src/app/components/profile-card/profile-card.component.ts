@@ -9,6 +9,7 @@ import { AuthService } from '../../services/auth.service';
 })
 export class ProfileCardComponent implements OnInit {
   @Input() userData: any;
+  @Input() index: number = 0;
 
   constructor(
     private filesService: FilesService,
