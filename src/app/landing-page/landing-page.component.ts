@@ -1,15 +1,16 @@
-import { Component, OnInit, OnDestroy } from "@angular/core";
-import { Apollo } from "apollo-angular";
-import gql from "graphql-tag";
-import { Router, ActivatedRoute } from "@angular/router";
-import { NgxUiLoaderService } from "ngx-ui-loader";
-import { SearchService } from "../services/search.service";
-import { take } from "rxjs/operators";
+import { Component, OnInit, OnDestroy } from '@angular/core';
+import { Apollo } from 'apollo-angular';
+import gql from 'graphql-tag';
+import { Router, ActivatedRoute } from '@angular/router';
+import { NgxUiLoaderService } from 'ngx-ui-loader';
+import { SearchService } from '../services/search.service';
+import { take } from 'rxjs/operators';
+import { LiveAnnouncer, AriaLivePoliteness } from '@angular/cdk/a11y';
 
 @Component({
-  selector: "app-landing-page",
-  templateUrl: "./landing-page.component.html",
-  styleUrls: ["./landing-page.component.css"]
+  selector: 'app-landing-page',
+  templateUrl: './landing-page.component.html',
+  styleUrls: ['./landing-page.component.css']
 })
 export class LandingPageComponent implements OnInit, OnDestroy {
   landingPageSearchResults = [];
@@ -24,7 +25,8 @@ export class LandingPageComponent implements OnInit, OnDestroy {
     private route: ActivatedRoute,
     private router: Router,
     private ngxService: NgxUiLoaderService,
-    private searchService: SearchService
+    private searchService: SearchService,
+    private liveAnnouncer: LiveAnnouncer
   ) {}
 
   ngOnInit() {
@@ -88,21 +90,30 @@ export class LandingPageComponent implements OnInit, OnDestroy {
           }
         `,
 
-        fetchPolicy: "network-only"
+        fetchPolicy: 'network-only'
       })
       .valueChanges.pipe(take(1))
       .subscribe(
         result => {
           if (result.data.problems.length > 0) {
             this.problems = result.data.problems;
-            // console.log(this.problems, "problem card data", result.data.problems);
           }
-          // console.log("PROBLEMS", this.problems);
         },
         error => {
           console.error(JSON.stringify(error));
         }
       );
+  }
+
+  getNavHeight(): number {
+    return document.querySelector('nav').clientHeight;
+  }
+
+  announcement(message: string, politeness?: AriaLivePoliteness) {
+    this.liveAnnouncer
+      .announce(message, politeness)
+      .then(x => x)
+      .catch(e => console.error(e));
   }
 
   showAll() {
@@ -129,15 +140,15 @@ export class LandingPageComponent implements OnInit, OnDestroy {
       this.searchService.problemSearch(searchInput).subscribe(
         value => {
           this.landingPageSearchResults = value.data.search_problems_multiword;
+          let num = this.landingPageSearchResults.length;
+          this.announcement(`Found ${num} ${num > 1 ? 'results' : 'result'}`);
         },
         error => {
-          // console.log(error);
           console.error(JSON.stringify(error));
         }
       );
     } else {
       this.landingPageSearchResults = [];
-      // this.numberToBeShown = 8;
     }
   }
   ngOnDestroy() {

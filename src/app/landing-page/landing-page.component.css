@@ -1,10 +1,14 @@
 /* Centered text */
 .centered {
-    position: absolute;
-    top: 175px;
-    left: 50%;
-    transform: translate(-50%, -50%);
-    color: white;
-    z-index: 1;
-    font-size: 3em;
+  position: absolute;
+  top: 175px;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  color: white;
+  z-index: 1;
+  font-size: 3em;
+}
+
+.poster {
+  background-image: url('./../../assets/img/register.jpg');
 }
