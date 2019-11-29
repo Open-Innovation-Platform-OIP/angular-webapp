@@ -1,25 +1,27 @@
-import { Component, OnInit, Input, OnChanges } from "@angular/core";
-import { Router, ActivatedRoute, NavigationEnd } from "@angular/router";
-import { first, finalize, startWith, take, map } from "rxjs/operators";
-import { SearchService } from "../services/search.service";
+import { Component, OnInit, Input, OnChanges, OnDestroy } from '@angular/core';
+import { Router, ActivatedRoute, NavigationEnd } from '@angular/router';
+import { first, finalize, startWith, take, map } from 'rxjs/operators';
+import { SearchService } from '../services/search.service';
 
-import { Apollo } from "apollo-angular";
-import gql from "graphql-tag";
-import { AuthService } from "../services/auth.service";
+import { Apollo } from 'apollo-angular';
+import gql from 'graphql-tag';
+import { AuthService } from '../services/auth.service';
+import { LiveAnnouncer, AriaLivePoliteness } from '@angular/cdk/a11y';
 
 declare var $: any;
 
 @Component({
-  selector: "app-global-search-view",
-  templateUrl: "./global-search-view.component.html",
-  styleUrls: ["./global-search-view.component.css"]
+  selector: 'app-global-search-view',
+  templateUrl: './global-search-view.component.html',
+  styleUrls: ['./global-search-view.component.css']
 })
 export class GlobalSearchViewComponent implements OnInit, OnChanges {
   @Input() problemData: any;
   @Input() userData: any;
   @Input() solutionData: any;
+  newAnnoucement: Promise<void>;
 
-  noResult: string = "No Search Results";
+  noResult: string = 'No Search Results';
   problemSearchResults: any = [];
   userSearchResults: any = [];
   solutionSearchResults: any = [];
@@ -30,7 +32,8 @@ export class GlobalSearchViewComponent implements OnInit, OnChanges {
     private apollo: Apollo,
     private auth: AuthService,
     private router: Router,
-    private searchService: SearchService
+    private searchService: SearchService,
+    private liveAnnouncer: LiveAnnouncer
   ) {}
 
   ngOnInit() {
@@ -47,8 +50,15 @@ export class GlobalSearchViewComponent implements OnInit, OnChanges {
 
   ngOnChanges() {
     this.route.params.pipe(first()).subscribe(params => {
-      console.log("testing=", params);
+      console.log('testing=', params);
     });
+  }
+
+  annoucement(message: string, tone: AriaLivePoliteness) {
+    this.liveAnnouncer
+      .announce(message, tone)
+      .then(x => x)
+      .catch(e => console.error(e));
   }
 
   globalSearch(searchInput: string) {
@@ -60,43 +70,22 @@ export class GlobalSearchViewComponent implements OnInit, OnChanges {
 
       this.searchService.globalSearch(searchInput).subscribe(
         searchData => {
-          this.globalProblemSearchResults = searchData["problems"];
-          this.userSearchResults = searchData["users"];
-          this.solutionSearchResults = searchData["solutions"];
-          console.log(searchData, "search data");
+          this.globalProblemSearchResults = searchData['problems'];
+          this.userSearchResults = searchData['users'];
+          this.solutionSearchResults = searchData['solutions'];
+          console.log(searchData, 'search data');
+          this.annoucement(
+            `Found 
+            ${this.globalProblemSearchResults.length} Problems,
+            ${this.solutionSearchResults.length} Solutions,
+            ${this.userSearchResults.length} Contributors`,
+            'polite'
+          );
         },
         error => {
           console.error(JSON.stringify(error));
         }
       );
-      // this.searchResults = [];
-      // this.searchService.problemSearch(searchInput).subscribe(
-      //   value => {
-      //     this.globalProblemSearchResults =
-      //       value.data.search_problems_multiword;
-      //   },
-      //   error => {
-      //     console.error(JSON.stringify(error));
-      //   }
-      // );
-
-      // this.searchService.userSearch(searchInput).subscribe(
-      //   value => {
-      //     this.userSearchResults = value.data.search_users;
-      //   },
-      //   error => {
-      //     console.error(JSON.stringify(error));
-      //   }
-      // );
-
-      // this.searchService.solutionSearch(searchInput).subscribe(
-      //   value => {
-      //     this.solutionSearchResults = value.data.search_solutions_v2;
-      //   },
-      //   error => {
-      //     console.log(JSON.stringify(error));
-      //   }
-      // );
     } else {
       this.globalProblemSearchResults = [];
       this.userSearchResults = [];
