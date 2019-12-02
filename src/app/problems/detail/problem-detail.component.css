@@ -106,3 +106,7 @@ label {
   background-color: var(--orange);
   color: #ffffff;
 }
+
+.h1-font {
+  font-size: 1.8rem;
+}

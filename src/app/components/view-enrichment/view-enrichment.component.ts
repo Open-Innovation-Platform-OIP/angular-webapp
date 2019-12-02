@@ -6,30 +6,30 @@ import {
   OnDestroy,
   Output,
   EventEmitter
-} from "@angular/core";
+} from '@angular/core';
 
-import gql from "graphql-tag";
+import gql from 'graphql-tag';
 
-import { take } from "rxjs/operators";
+import { take } from 'rxjs/operators';
 
 // import { Router, ActivatedRoute } from "@angular/router";
 
-import { AuthService } from "../../services/auth.service";
-import swal from "sweetalert2";
-import { Apollo, QueryRef } from "apollo-angular";
-import { FilesService } from "../../services/files.service";
+import { AuthService } from '../../services/auth.service';
+import swal from 'sweetalert2';
+import { Apollo, QueryRef } from 'apollo-angular';
+import { FilesService } from '../../services/files.service';
 
 @Component({
-  selector: "app-view-enrichment",
-  templateUrl: "./view-enrichment.component.html",
-  styleUrls: ["./view-enrichment.component.css"]
+  selector: 'app-view-enrichment',
+  templateUrl: './view-enrichment.component.html',
+  styleUrls: ['./view-enrichment.component.css']
 })
 export class ViewEnrichmentComponent implements OnInit, OnChanges, OnDestroy {
   @Output() editClicked = new EventEmitter();
   @Output() voteClicked = new EventEmitter();
   @Output() deleteClicked = new EventEmitter();
-
   @Input() enrichmentData: any;
+
   enrichmentVoted = false;
   showModal = false;
   combinedImgAndVideo: any[] = [];
@@ -44,12 +44,12 @@ export class ViewEnrichmentComponent implements OnInit, OnChanges, OnDestroy {
     private apollo: Apollo,
     private filesService: FilesService
   ) {
-    console.log("aswewrwe");
+    console.log('aswewrwe');
     this.enrichmentVoted = false;
   }
 
   ngOnInit() {
-    console.log("on in it");
+    console.log('on in it', this.enrichmentData);
     let embedded_url_arr = this.enrichmentData.embed_urls.map(url => {
       return { url: url };
     });
@@ -72,7 +72,7 @@ export class ViewEnrichmentComponent implements OnInit, OnChanges, OnDestroy {
       this.voters.add(voter.user_id);
     });
 
-    console.log("ng on change", this.enrichmentVoted);
+    console.log('ng on change', this.enrichmentVoted);
     let embedded_url_arr = this.enrichmentData.embed_urls.map(url => {
       return { url: url };
     });
@@ -252,19 +252,19 @@ export class ViewEnrichmentComponent implements OnInit, OnChanges, OnDestroy {
   }
 
   editEnrichment() {
-    console.log("edit clicked");
+    console.log('edit clicked');
     this.editClicked.emit(this.enrichmentData);
   }
 
   deleteEnrichment() {
     swal({
-      title: "Are you sure you want to delete enrichment?",
+      title: 'Are you sure you want to delete enrichment?',
       // text: "You won't be able to revert this!",
-      type: "warning",
+      type: 'warning',
       showCancelButton: true,
-      confirmButtonClass: "btn btn-success",
-      cancelButtonClass: "btn btn-danger",
-      confirmButtonText: "Yes, delete it!",
+      confirmButtonClass: 'btn btn-success',
+      cancelButtonClass: 'btn btn-danger',
+      confirmButtonText: 'Yes, delete it!',
       buttonsStyling: false
     }).then(result => {
       if (result.value) {
@@ -284,8 +284,8 @@ export class ViewEnrichmentComponent implements OnInit, OnChanges, OnDestroy {
   }
 
   checkUrlIsImg(url) {
-    var arr = ["jpeg", "jpg", "gif", "png"];
-    var ext = url.substring(url.lastIndexOf(".") + 1);
+    var arr = ['jpeg', 'jpg', 'gif', 'png'];
+    var ext = url.substring(url.lastIndexOf('.') + 1);
     if (arr.indexOf(ext) > -1) {
       return true;
     } else {
@@ -294,9 +294,9 @@ export class ViewEnrichmentComponent implements OnInit, OnChanges, OnDestroy {
   }
 
   toggleView(e) {
-    if (e.type === "click") {
+    if (e.type === 'click') {
       let problemVideoTag: HTMLMediaElement = document.querySelector(
-        "#modalVideo"
+        '#modalVideo'
       );
       this.showModal = false;
       if (problemVideoTag) {

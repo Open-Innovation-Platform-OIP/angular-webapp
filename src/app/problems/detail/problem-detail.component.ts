@@ -90,6 +90,7 @@ interface queryString {
 export class ProblemDetailComponent
   implements OnInit, OnDestroy, AfterViewInit {
   @ViewChild('problemDataTitle') problemDataTitle: ElementRef<HTMLElement>;
+  @ViewChild('enrichmentDetail') enrichmentDetail: ElementRef<HTMLElement>;
 
   channels = sharing;
   discussionContext: string;
@@ -1676,6 +1677,10 @@ export class ProblemDetailComponent
     }
   }
 
+  moveFocusToElement(elem: ElementRef): void {
+    this.focusMonitor.focusVia(elem, 'program');
+  }
+
   openModal(id) {
     clearInterval(this.interval);
 
@@ -1686,6 +1691,12 @@ export class ProblemDetailComponent
     });
 
     $(id).modal('show');
+
+    if (id === '#enrichModal') {
+      setTimeout(() => {
+        this.moveFocusToElement(this.enrichmentDetail);
+      }, 500);
+    }
   }
 
   showPopularDiscussions(id) {

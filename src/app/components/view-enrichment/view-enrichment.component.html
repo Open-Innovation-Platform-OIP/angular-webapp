@@ -3,67 +3,141 @@
 <div *ngIf="!showModal">
   <div class="row">
     <div class="col-md-4">
-      <!-- <div class="picture"> -->
       <img
-        src="{{ (enrichmentData.featured_url && checkUrlIsImg(filesService.fileAccessUrl+enrichmentData.featured_url)) ? (filesService.fileAccessUrl+enrichmentData.featured_url) :'./assets/img/image_placeholder.jpg'}}"
-        alt="Thumbnail Image" class="rounded img-fluid" width="250px" height="200px" style="object-fit: cover;">
-      <!-- </div> -->
-      <div class="row justify-content-center" *ngIf="combinedImgAndVideo.length > 0">
-        <button mat-raised-button class="btn btn-raised btn-info btn-sm" (click)="toggleViewForImgNView()">
-          view media ({{combinedImgAndVideo.length}})
+        src="{{
+          enrichmentData.featured_url &&
+          checkUrlIsImg(
+            filesService.fileAccessUrl + enrichmentData.featured_url
+          )
+            ? filesService.fileAccessUrl + enrichmentData.featured_url
+            : './assets/img/image_placeholder.jpg'
+        }}"
+        alt="Enrichment Image"
+        class="rounded img-fluid"
+        width="250px"
+        height="200px"
+        style="object-fit: cover;"
+      />
+
+      <div
+        class="row justify-content-center"
+        *ngIf="combinedImgAndVideo.length > 0"
+      >
+        <button
+          mat-raised-button
+          class="btn btn-raised btn-info btn-sm"
+          (click)="toggleViewForImgNView()"
+        >
+          view media ({{ combinedImgAndVideo.length }})
         </button>
       </div>
     </div>
     <div class="col-md-8">
-      <strong>Description :</strong>
-      <p class="description" style="white-space: pre-wrap;">{{enrichmentData.description}}</p>
-      <strong *ngIf="enrichmentData.organization">Organization :</strong>
-      <p class="description">{{enrichmentData.organization}}</p>
+      <div *ngIf="enrichmentData.description">
+        <strong role="heading" aria-level="2">Description :</strong>
+        <p class="description" style="white-space: pre-wrap;">
+          {{ enrichmentData.description }}
+        </p>
+      </div>
 
-      <strong>Population Affected</strong>
-      <p class="description" *ngIf="enrichmentData.min_population===0">Between {{enrichmentData.min_population}}
-        and {{enrichmentData.max_population}}</p>
-      <p class="description" *ngIf="enrichmentData.min_population!==0">More than
-        {{enrichmentData.min_population}}</p>
+      <div *ngIf="enrichmentData.organization">
+        <strong
+          role="heading"
+          aria-level="2"
+          *ngIf="enrichmentData.organization"
+          >Organization :</strong
+        >
+        <p class="description">{{ enrichmentData.organization }}</p>
+      </div>
 
+      <div *ngIf="enrichmentData.min_population">
+        <strong role="heading" aria-level="2">Population Affected</strong>
+        <p class="description" *ngIf="enrichmentData.min_population === 0">
+          Between {{ enrichmentData.min_population }} and
+          {{ enrichmentData.max_population }}
+        </p>
+        <p class="description" *ngIf="enrichmentData.min_population !== 0">
+          More than {{ enrichmentData.min_population }}
+        </p>
+      </div>
 
-      <strong *ngIf="enrichmentData.impact">Impact :</strong>
-      <p class="description" style="white-space: pre-wrap;">{{enrichmentData.impact}}</p>
-      <strong *ngIf="enrichmentData.extent">Extent :</strong>
-      <p class="description" style="white-space: pre-wrap;">{{enrichmentData.extent}}</p>
+      <div *ngIf="enrichmentData.impact">
+        <strong role="heading" aria-level="2" *ngIf="enrichmentData.impact"
+          >Impact :</strong
+        >
+        <p class="description" style="white-space: pre-wrap;">
+          {{ enrichmentData.impact }}
+        </p>
+      </div>
 
+      <div *ngIf="enrichmentData.extent">
+        <strong role="heading" aria-level="2" *ngIf="enrichmentData.extent"
+          >Extent :</strong
+        >
+        <p class="description" style="white-space: pre-wrap;">
+          {{ enrichmentData.extent }}
+        </p>
+      </div>
 
-      <strong>Location(s) :</strong>
-      <div *ngFor="let location of enrichmentData.enrichment_locations">
-        <span class="badge badge-warning">{{location.location.location_name}}</span>
-        <span>&nbsp;</span>
+      <div *ngIf="enrichmentData.enrichment_locations.length">
+        <strong role="heading" aria-level="2" id="enrichLocations"
+          >Location(s) :</strong
+        >
+        <div
+          role="group"
+          tabindex="-1"
+          aria-labelledby="enrichLocations"
+          class="d-flex"
+        >
+          <div
+            class="ml-1"
+            *ngFor="let location of enrichmentData.enrichment_locations"
+          >
+            <p class="badge badge-warning">
+              {{ location.location.location_name }}
+            </p>
+          </div>
+        </div>
       </div>
 
       <br />
-      <!-- <p class="description">{{enrichmentData.location}}</p> -->
-      <!-- <div>
-        <span class="badge badge-warning"
-          *ngFor="let location of enrichmentData.location">{{location.Address.Label}}</span>
-        <span>&nbsp;</span>
-      </div> -->
 
-      <!-- <strong>Population Affected :</strong> -->
-      <!-- <p class="description">{{enrichmentData.population_affected}}</p> -->
+      <div *ngIf="enrichmentData.beneficiary_attributes">
+        <strong
+          role="heading"
+          aria-level="2"
+          *ngIf="enrichmentData.beneficiary_attributes"
+          >Beneficiary Attributes :</strong
+        >
+        <p class="description" style="white-space: pre-wrap;">
+          {{ enrichmentData.beneficiary_attributes }}
+        </p>
+      </div>
 
-
-      <strong *ngIf="enrichmentData.beneficiary_attributes">Beneficiary Attributes :</strong>
-      <p class="description" style="white-space: pre-wrap;">{{enrichmentData.beneficiary_attributes}}</p>
-      <strong *ngIf="enrichmentData.resources_needed">Resources needed :</strong>
-      <p class="description" style="white-space: pre-wrap;">{{enrichmentData.resources_needed}}</p>
+      <div *ngIf="enrichmentData.resources_needed">
+        <strong
+          role="heading"
+          aria-level="2"
+          *ngIf="enrichmentData.resources_needed"
+          >Resources needed :</strong
+        >
+        <p class="description" style="white-space: pre-wrap;">
+          {{ enrichmentData.resources_needed }}
+        </p>
+      </div>
     </div>
   </div>
 </div>
 
-
-
 <div *ngIf="showModal">
   <div class="modal-header">
-    <button type="button" class="close" data-dismiss="modal" aria-hidden="true" (click)="toggleView($event)">
+    <button
+      type="button"
+      class="close"
+      data-dismiss="modal"
+      aria-hidden="true"
+      (click)="toggleView($event)"
+    >
       <i class="material-icons">close</i>
     </button>
   </div>
@@ -73,72 +147,85 @@
     </app-display-modal>
   </div>
 
-  <div class="modal-footer justify-content-center" *ngIf="combinedImgAndVideo.length > 1">
-    <button mat-raised-button type="button" [disabled]="index < 1" (click)="toggleFileSrc(false)"
-      class="btn btn-link btn-round btn-twitter">
-      <i class="material-icons" style="zoom:2;">
+  <div
+    class="modal-footer justify-content-center"
+    *ngIf="combinedImgAndVideo.length > 1"
+  >
+    <button
+      mat-raised-button
+      type="button"
+      [disabled]="index < 1"
+      (click)="toggleFileSrc(false)"
+      class="btn btn-link btn-round btn-twitter"
+    >
+      <i class="material-icons" aria-hidden="true" style="zoom:2;">
         keyboard_arrow_left
       </i>
     </button>
     <div class="col-3"></div>
-    <button mat-raised-button type="button" [disabled]="index === combinedImgAndVideo.length -1"
-      class="btn btn-link btn-round btn-twitter" (click)="toggleFileSrc(true)">
-      <i class="material-icons" style="zoom:2;">
+    <button
+      mat-raised-button
+      type="button"
+      [disabled]="index === combinedImgAndVideo.length - 1"
+      class="btn btn-link btn-round btn-twitter"
+      (click)="toggleFileSrc(true)"
+    >
+      <i class="material-icons" aria-hidden="true" style="zoom:2;">
         keyboard_arrow_right
       </i>
     </button>
   </div>
 </div>
 
-
-
-<!-- <div class="card-footer">
-          <div>
-            <i class="material-icons actions" (click)="voteEnrichment()" [ngStyle]="{'color':enrichmentVoted ? '#1E90FF' : 'black' }">
-              thumb_up
-            </i>
-            <span>67</span>
-          </div>
-          <div>
-            <i class="material-icons actions" (click)="editEnrichment()">
-              create
-            </i>
-            <i class="material-icons actions col-md-3" style="color:red;">
-              delete
-            </i>
-          </div>
-        </div>
-      </div> -->
-
 <div class="card-footer" *ngIf="!showModal">
-  <!-- <div> -->
-  <i class="
-    material-icons actions" (click)="voteEnrichment()"
-    [ngStyle]="{'color':voters.has(auth.currentUserValue.id) ? '#1E90FF' : 'black' }">
-    thumb_up
-  </i>
-  <span>{{voters.size}}</span>
-  <!-- </div> -->
-  <!-- <div class="text-center"> -->
-  <button mat-button type="button" (click)="editEnrichment()" class="btn btn-warning pull-right" aria-hidden="true"
-    *ngIf="enrichmentData.user_id===auth.currentUserValue.id && !showModal"
-    [routerLink]="'/enrichment/'+ enrichmentData.id+'/edit'" queryParamsHandling="merge">
-    <i class="material-icons actions">
+  <a
+    href="javascript:void(0);"
+    (click)="voteEnrichment()"
+    role="button"
+    [attr.aria-label]="['likes', voters.size]"
+    [attr.aria-pressed]="voters.has(auth.currentUserValue.id)"
+  >
+    <i
+      class="material-icons"
+      aria-hidden="true"
+      [ngStyle]="{
+        color: voters.has(auth.currentUserValue.id) ? '#1E90FF' : 'black'
+      }"
+    >
+      thumb_up
+    </i>
+
+    <span>{{ voters.size }}</span>
+  </a>
+
+  <button
+    mat-button
+    type="button"
+    (click)="editEnrichment()"
+    class="btn btn-warning pull-right"
+    aria-hidden="true"
+    *ngIf="enrichmentData.user_id === auth.currentUserValue.id && !showModal"
+    [routerLink]="'/enrichment/' + enrichmentData.id + '/edit'"
+    queryParamsHandling="merge"
+    aria-label="create"
+  >
+    <i class="material-icons actions" aria-hidden="true">
       create
     </i>
   </button>
 
-  <button mat-button type="button" class="btn btn-danger pull-right" (click)="deleteEnrichment()"
-    *ngIf="enrichmentData.user_id===auth.currentUserValue.id && !showModal">
-    <i class="material-icons actions">
+  <button
+    mat-button
+    type="button"
+    class="btn btn-danger pull-right"
+    (click)="deleteEnrichment()"
+    *ngIf="enrichmentData.user_id === auth.currentUserValue.id && !showModal"
+    aria-label="delete"
+  >
+    <i class="material-icons actions" aria-hidden="true">
       delete
     </i>
   </button>
-
-  <!-- </div> -->
 </div>
-
-
-
 
 <!--REWRITE-->

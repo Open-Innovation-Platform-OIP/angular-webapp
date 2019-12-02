@@ -16,6 +16,7 @@
               style="font-size: 2rem;"
               tabindex="-1"
               #problemDataTitle
+              id="problemTitle"
             >
               {{ problemData.title }}
             </h1>
@@ -62,7 +63,7 @@
               <div class="col-md-8">
                 <div *ngIf="problemData.description">
                   <strong aria-level="3" role="heading">Description</strong>
-                  <p class="description" style="white-space: pre-wrap;">
+                  <p class="description" style="white-space: pre-wrap;" id="problemDescription">
                     {{ problemData.description }}
                   </p>
                 </div>
@@ -188,7 +189,7 @@
                 class="d-flex"
               >
                 <i
-                  class="material-icons actions"
+                  class="material-icons "
                   [ngStyle]="{
                     color: voters.has(userId) ? '#1E90FF' : 'black'
                   }"
@@ -208,7 +209,7 @@
                 [attr.aria-label]="['Watch problem', watchers.size]"
               >
                 <i
-                  class="material-icons actions"
+                  class="material-icons "
                   [ngStyle]="{
                     color: watchers.has(userId) ? '#1E90FF' : 'black'
                   }"
@@ -233,7 +234,7 @@
                 class="btn btn-sm btn-warning mr-2"
                 aria-label="edit problem"
               >
-                <i class="material-icons actions" aria-hidden="true">
+                <i class="material-icons " aria-hidden="true">
                   create
                 </i>
               </button>
@@ -245,7 +246,7 @@
                 aria-haspopup="true"
                 aria-label="invite people"
               >
-                <i class="material-icons actions" aria-hidden="true">
+                <i class="material-icons " aria-hidden="true">
                   person_add
                 </i>
               </button>
@@ -259,7 +260,7 @@
                   aria-expanded="false"
                   aria-label="share"
                 >
-                  <i class="material-icons actions" aria-hidden="true">
+                  <i class="material-icons " aria-hidden="true">
                     share
                   </i>
                 </button>
@@ -427,6 +428,7 @@
             data-toggle="modal"
             (click)="openModal('#enrichModal')"
           >
+          
             <app-enrichment-card
               [enrichmentData]="enrichment"
               (clicked)="handleEnrichCardClicked($event)"
@@ -441,6 +443,7 @@
             class="btn btn-white btn-just-icon btn-round leftRs"
             *ngIf="enrichment[0] && enrichment.length > 2"
             aria-label="scroll left"
+            role="button"
           >
             <i class="material-icons" aria-hidden="true">
               keyboard_arrow_left
@@ -452,6 +455,7 @@
             class="btn btn-white btn-just-icon btn-round rightRs"
             *ngIf="enrichment[0] && enrichment.length > 2"
             aria-label="scroll right"
+            role="button"
           >
             <i class="material-icons" aria-hidden="true">
               keyboard_arrow_right
@@ -505,13 +509,14 @@
           id="enrichModal"
           tabindex="-1"
           role="dialog"
-          aria-labelledby="myModalLabel"
+          aria-labelledby="problemTitle"
           aria-hidden="true"
+          cdkTrapFocus
         >
           <div class="modal-dialog modal-notice modal-lg">
             <div class="modal-content">
               <div class="modal-header">
-                <h5 class="modal-title" id="myModalLabel">Enrichment Detail</h5>
+                <h1 class="modal-title h1-font" #enrichmentDetail tabindex="-1" id="myModalLabel">Enrichment Detail</h1>
                 <button
                   mat-button
                   class="close"

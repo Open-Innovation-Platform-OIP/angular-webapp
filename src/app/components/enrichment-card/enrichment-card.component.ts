@@ -20,6 +20,7 @@ export class EnrichmentCardComponent implements OnInit {
     // if (this.enrichmentData && this.enrichmentData.voted_by) {
     //   this.numberOfVotes = this.enrichmentData.voted_by.length;
     // }
+    console.log('>>>> ', this.index);
 
     this.enrichmentData.enrichment_voters.map(voter => {
       this.voters.add(voter.user_id);
