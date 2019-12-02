@@ -41,6 +41,7 @@ export class FilterService {
   selectedLocation: any = '';
   is_domain_filter_mode: boolean = false;
   domain_tags_query = '';
+  isPrimaryDomain: Boolean;
 
   constructor(
     private tagsService: TagsService,
@@ -116,6 +117,7 @@ export class FilterService {
         query: gql`
           {
             domains(where: { url: { _eq: "${domain}" } }) {
+              is_primary
               domain_tags {
                 tag {
                   id
@@ -128,6 +130,11 @@ export class FilterService {
       .valueChanges.subscribe(
         ({ data }) => {
           console.log(data, ' domain filter result');
+          if (data.domains[0].is_primary) {
+            this.isPrimaryDomain = true;
+          } else {
+            this.isPrimaryDomain = false;
+          }
           data.domains[0].domain_tags.map(tags => {
             sectorIdArray.push(tags.tag.id);
           });

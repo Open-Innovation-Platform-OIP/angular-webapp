@@ -13,8 +13,10 @@ export class AppComponent implements OnInit {
   constructor(private router: Router, private filterService: FilterService) {}
 
   ngOnInit() {
-    console.log(window.location.href, 'router url');
-    this.filterService.filterSectorByDomain('oip-dev.dev.jaagalabs.com');
+    const parser = document.createElement('a');
+    parser.href = window.location.href;
+
+    this.filterService.filterSectorByDomain(parser.hostname);
 
     this._router = this.router.events
       .filter(event => event instanceof NavigationEnd)

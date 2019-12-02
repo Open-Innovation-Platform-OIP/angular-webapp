@@ -35,6 +35,7 @@ export class DomainsComponent implements OnInit {
   sectorCtrl = new FormControl();
   filteredSectors: Observable<string[]>;
   sectors = [];
+  allTags = {};
   public removable = true;
 
   public domainDataTable: TableData;
@@ -55,18 +56,25 @@ export class DomainsComponent implements OnInit {
       colour: new FormControl('', [Validators.required])
     });
 
+    this.getTagsForAdmin();
+  }
+
+  async getTagsForAdmin() {
+    this.allTags = await this.tagService.getTagsFromDBForAdmin();
+
     this.filteredSectors = this.sectorCtrl.valueChanges.pipe(
       startWith(null),
       map((sector: string | null) =>
-        sector
-          ? this._filter(sector)
-          : Object.keys(this.tagService.allTags).slice()
+        sector ? this._filter(sector) : Object.keys(this.allTags).slice()
       )
     );
   }
 
   ngOnInit() {
     this.getDomains();
+    const parser = document.createElement('a');
+    parser.href = window.location.href;
+    console.log(parser.hostname);
   }
 
   remove(sector: string): void {
@@ -89,7 +97,7 @@ export class DomainsComponent implements OnInit {
   private _filter(value: string): string[] {
     const filterValue = value.toLowerCase();
 
-    return Object.keys(this.tagService.allTags).filter(
+    return Object.keys(this.allTags).filter(
       sector => sector.toLowerCase().indexOf(filterValue) === 0
     );
   }

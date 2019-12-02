@@ -5,6 +5,7 @@ import { Routes } from '@angular/router';
 import { AdminViewComponent } from './admin-view.component';
 import { DomainsComponent } from './domains/domains.component';
 import { InviteUserComponent } from './invite-user/invite-user.component';
+import { DomainAddService } from '../services/domain-add.service';
 
 export const AdminViewRoutes: Routes = [
   {
@@ -16,7 +17,8 @@ export const AdminViewRoutes: Routes = [
       },
       {
         path: 'domains',
-        component: DomainsComponent
+        component: DomainsComponent,
+        canActivate: [DomainAddService]
       },
       {
         path: 'invite-user',

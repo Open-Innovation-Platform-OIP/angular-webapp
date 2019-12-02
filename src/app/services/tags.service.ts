@@ -48,6 +48,35 @@ export class TagsService {
       });
     });
   }
+
+  getTagsFromDBForAdmin() {
+    const tags = {};
+    const getTags = this.apollo.watchQuery<any>({
+      query: gql`
+        query {
+          tags {
+            id
+            name
+          }
+        }
+      `,
+      fetchPolicy: 'network-only'
+      // pollInterval: 500
+    }).valueChanges;
+
+    return new Promise((resolve, reject) => {
+      getTags.pipe(take(1)).subscribe(({ data }) => {
+        if (data.tags.length > 0) {
+          data.tags.map(tag => {
+            tags[tag.name] = tag;
+            // this.allTagsArray.push(tag.id);
+          });
+        }
+        resolve(tags);
+      });
+    });
+  }
+
   addTagsInDb(tags, tableName, tableId?) {
     let trimmedTableName = tableName.slice(0, tableName.length - 1);
     console.log(tags, 'check for tag');
