@@ -91,8 +91,6 @@ export class DomainsComponent implements OnInit, OnDestroy {
     }
   }
 
-  add(event) {}
-
   selected(event: MatAutocompleteSelectedEvent): void {
     // //console.log(this.sectors, "test for sector");
     this.sectors.push(event.option.viewValue);

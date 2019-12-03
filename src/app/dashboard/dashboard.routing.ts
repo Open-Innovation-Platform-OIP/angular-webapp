@@ -1,38 +1,38 @@
-import { Routes } from "@angular/router";
+import { Routes } from '@angular/router';
 
-import { DashboardComponent } from "./dashboard.component";
-import { ViewAllComponent } from "../view-all/view-all.component";
+import { DashboardComponent } from './dashboard.component';
+import { ViewAllComponent } from './view-all/view-all.component';
 
 export const DashboardRoutes: Routes = [
   {
-    path: "",
+    path: '',
     children: [
       {
-        path: "",
+        path: '',
         component: DashboardComponent
       },
       {
-        path: "drafts",
+        path: 'drafts',
         component: ViewAllComponent
       },
       {
-        path: "solutions",
+        path: 'solutions',
         component: ViewAllComponent
       },
       {
-        path: "problems",
+        path: 'problems',
         component: ViewAllComponent
       },
       {
-        path: "contributions",
+        path: 'contributions',
         component: ViewAllComponent
       },
       {
-        path: "interests",
+        path: 'interests',
         component: ViewAllComponent
       },
       {
-        path: "recommended-users",
+        path: 'recommended-users',
         component: ViewAllComponent
       }
     ]

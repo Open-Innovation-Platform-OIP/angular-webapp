@@ -1,0 +1,54 @@
+<div class="main-content">
+  <div class="container-fluid">
+    <div class="row actions" *ngIf="dashboardData.length" [routerLink]="['/dashboard']" queryParamsHandling="merge"
+      style="padding-top: 1%;">
+      <i class="material-icons">
+        keyboard_arrow_left
+      </i>
+      <span><b>Back to Dashboard</b></span>
+    </div>
+    <div class="row">
+      <div class="col-md-12">
+        <h3 *ngIf="dashboardData.length" class="card-title text-center">
+          {{ title }}
+        </h3>
+      </div>
+    </div>
+    <br />
+    <div class="row  " *ngIf="!displayUsers && viewProblemsAndSolutions">
+      <div class="col text-right">
+        <button mat-raised-button class="btn btn-warning btn-sm" (click)="showProblems(true)">Problems</button>
+        <button mat-raised-button class="btn btn-warning btn-sm" (click)="showProblems(false)">Solutions</button>
+
+
+      </div>
+    </div>
+    <br />
+    <div class="row justify-content-center" *ngIf="!displayUsers && viewProblemsAndSolutions">
+      <h4>{{viewProblems?"Problems":"Solutions"}}</h4>
+
+    </div>
+    <br />
+    <div class="row" *ngIf="!displayUsers && viewProblems && !viewSolutions ">
+      <div class="col-md-3" *ngFor="let problem of dashboardData">
+        <app-problem-card [problemData]="problem"></app-problem-card>
+      </div>
+    </div>
+    <div class="row" *ngIf="!displayUsers && !viewProblems">
+      <div class="col-md-3" *ngFor="let solution of solutions">
+        <app-solution-card [solutionData]="solution"></app-solution-card>
+      </div>
+    </div>
+
+    <div class="row" *ngIf="!displayUsers && viewSolutions">
+      <div class="col-md-3" *ngFor="let solution of dashboardData">
+        <app-solution-card [solutionData]="solution"></app-solution-card>
+      </div>
+    </div>
+    <div class="row" *ngIf="displayUsers">
+      <div class="col-md-3" *ngFor="let user of dashboardData">
+        <app-profile-card [userData]="user"></app-profile-card>
+      </div>
+    </div>
+  </div>
+</div>

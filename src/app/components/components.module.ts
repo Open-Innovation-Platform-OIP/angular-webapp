@@ -24,7 +24,7 @@ import { CollaboratorCardComponent } from './collaborator-card/collaborator-card
 import { ProblemCardComponent } from './problem-card/problem-card.component';
 import { DisplayModalComponent } from './display-modal/display-modal.component';
 import { WizardContainerComponent } from './wizard-container/wizard-container.component';
-// import { GlobalSearchCardsComponent } from "./global-search-cards/global-search-cards.component";
+import { GlobalSearchCardsComponent } from './global-search-cards/global-search-cards.component';
 import { ShareAutofocusModule } from '../share-autofocus/share-autofocus.module';
 import { SolutionCardComponent } from './solution-card/solution-card.component';
 import { FilterDropdownComponent } from './filter-dropdown/filter-dropdown.component';
@@ -63,7 +63,8 @@ import { DomainAddModalComponent } from './domain-add-modal/domain-add-modal.com
     SolutionCardComponent,
     FilterDropdownComponent,
     ModalComponent,
-    DomainAddModalComponent
+    DomainAddModalComponent,
+    GlobalSearchCardsComponent
   ],
   exports: [
     AddEnrichmentComponent,
@@ -86,7 +87,8 @@ import { DomainAddModalComponent } from './domain-add-modal/domain-add-modal.com
     WizardContainerComponent,
     FilterDropdownComponent,
     ModalComponent,
-    DomainAddModalComponent
+    DomainAddModalComponent,
+    GlobalSearchCardsComponent
   ],
   providers: [
     {
