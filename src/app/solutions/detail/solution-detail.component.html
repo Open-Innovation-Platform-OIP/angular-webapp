@@ -55,8 +55,9 @@
 
                 <strong *ngIf="tags.length">Sectors</strong>
                 <div>
-                  <span *ngFor="let tag of tags" (click)="sectorSelected(tag)" class="badge badge-rose actions"
-                    style="margin-right: 0.3em;">{{tag.name}}</span>
+                  <button *ngFor="let tag of tags" (click)="sectorSelected(tag)"
+                    [disabled]="filterService.is_domain_filter_mode && !tagsService.allTags[tag.name] "
+                    class="badge badge-rose actions" style="margin-right: 0.3em;border: none;">{{tag.name}}</button>
                   <span>&nbsp;</span>
                 </div>
 

@@ -112,7 +112,7 @@ export class FilterService {
     let sectorIdArray = [];
 
     console.log(this.sector_filter_query, 'filter service sector filter query');
-    await this.apollo
+    this.apollo
       .watchQuery<any>({
         query: gql`
           {
@@ -128,23 +128,34 @@ export class FilterService {
         `
       })
       .valueChanges.subscribe(
-        ({ data }) => {
+        async ({ data }) => {
           console.log(data, ' domain filter result');
           if (data.domains[0].is_primary) {
             this.isPrimaryDomain = true;
           } else {
             this.isPrimaryDomain = false;
           }
-          data.domains[0].domain_tags.map(tags => {
-            sectorIdArray.push(tags.tag.id);
-          });
+          if (data.domains[0].domain_tags.length) {
+            data.domains[0].domain_tags.map(tags => {
+              if (tags && tags.tag) {
+                sectorIdArray.push(tags.tag.id);
+              }
+            });
+
+            this.is_domain_filter_mode = true;
+            this.sector_filter_query = `_in:[${sectorIdArray}]`;
+          } else {
+            this.is_domain_filter_mode = false;
+            this.sector_filter_query = `_nin:[0]`;
+          }
 
           console.log(sectorIdArray, 'sector id array');
 
-          this.is_domain_filter_mode = true;
-          this.sector_filter_query = `_in:[${sectorIdArray}]`;
           this.domain_tags_query = `(where:{domain_tags:{domain:{url:{_eq:"${domain}"}}
+          
         }})`;
+
+          await this.tagsService.getTagsFromDB(this.domain_tags_query);
         },
         error => {
           console.error(JSON.stringify(error));

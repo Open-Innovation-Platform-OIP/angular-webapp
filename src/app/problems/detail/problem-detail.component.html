@@ -112,12 +112,13 @@
                 <div *ngIf="tags.length">
                   <strong aria-level="3" role="heading">Sectors</strong>
                   <div>
-                    <span
+                    <button
                       *ngFor="let tag of tags"
+                      [disabled]="filterService.is_domain_filter_mode && !tagsService.allTags[tag.name] "
                       (click)="sectorSelected(tag)"
                       class="badge badge-warning actions"
-                      style="margin-right: 0.3em;"
-                      >{{ tag.name }}</span
+                      style="margin-right: 0.3em;border: none;"
+                      >{{ tag.name }}</button
                     >
                   </div>
                 </div>

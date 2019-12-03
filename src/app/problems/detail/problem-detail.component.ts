@@ -47,6 +47,9 @@ import { NguCarouselConfig } from '@ngu/carousel';
 import { slider } from './problem-detail.animation';
 import { DiscussionsService } from 'src/app/services/discussions.service';
 import { FilesService } from 'src/app/services/files.service';
+import { FilterService } from 'src/app/services/filter.service';
+import { TagsService } from 'src/app/services/tags.service';
+
 import { CollaborationService } from 'src/app/services/collaboration.service';
 import { ValidationService } from 'src/app/services/validation.service';
 import { EnrichmentService } from 'src/app/services/enrichment.service';
@@ -276,7 +279,9 @@ export class ProblemDetailComponent
     public ngLocation: Location,
     private ngxService: NgxUiLoaderService,
     public dialog: MatDialog,
-    private focusMonitor: FocusMonitor
+    private focusMonitor: FocusMonitor,
+    private filterService: FilterService,
+    private tagsService:TagsService
   ) {
     this.startInterval();
     this.pageUrl = domain + ngLocation.path();

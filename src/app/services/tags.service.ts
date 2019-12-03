@@ -24,6 +24,7 @@ export class TagsService {
   constructor(private apollo: Apollo) {
     this.getTagsFromDBForAdmin();
   }
+
   getTagsFromDB(filter) {
     this.allTagsArray = [];
     this.test = this.apollo.watchQuery<any>({

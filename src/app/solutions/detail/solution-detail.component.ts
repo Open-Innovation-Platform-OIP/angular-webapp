@@ -18,6 +18,8 @@ import { Observable, Subscription, interval } from 'rxjs';
 import { NgxUiLoaderService } from 'ngx-ui-loader';
 import { domain } from '../../../environments/environment';
 import { ModalComponent } from 'src/app/components/modal/modal.component';
+import { FilterService } from '../../services/filter.service';
+import { TagsService } from '../../services/tags.service';
 
 import {
   MatDialog,
@@ -264,7 +266,9 @@ export class SolutionDetailComponent implements OnInit {
     private enrichmentService: EnrichmentService,
     public ngLocation: Location,
     private ngxService: NgxUiLoaderService,
-    public dialog: MatDialog
+    public dialog: MatDialog,
+    private filterService: FilterService,
+    private tagsService: TagsService
   ) {
     this.startInterval();
     this.pageUrl = domain + ngLocation.path();
