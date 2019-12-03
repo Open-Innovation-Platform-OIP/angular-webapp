@@ -12,7 +12,7 @@ import { FilterService } from './filter.service';
 @Injectable({
   providedIn: 'root'
 })
-export class DomainAddService implements CanActivate {
+export class DomainAddGuard implements CanActivate {
   constructor(
     private authService: AuthService,
     private router: Router,

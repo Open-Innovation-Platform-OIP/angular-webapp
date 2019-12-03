@@ -56,7 +56,8 @@
 
 
     <button [routerLink]="'/admin/invite-user'" mat-raised-button class="btn btn-rose">Invite a User</button>
-    <button [routerLink]="'/admin/domains'" mat-raised-button class="btn btn-rose">Add a Domain </button>
+    <button *ngIf="filterService.isPrimaryDomain" [routerLink]="'/admin/domains'" mat-raised-button
+      class="btn btn-rose">Add a Domain </button>
 
 
 

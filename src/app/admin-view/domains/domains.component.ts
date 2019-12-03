@@ -1,4 +1,10 @@
-import { Component, OnInit, ElementRef, ViewChild } from '@angular/core';
+import {
+  Component,
+  OnInit,
+  ElementRef,
+  ViewChild,
+  OnDestroy
+} from '@angular/core';
 import { FormBuilder, AbstractControl } from '@angular/forms';
 import { Apollo, QueryRef } from 'apollo-angular';
 import gql from 'graphql-tag';
@@ -24,13 +30,14 @@ import {
 import { COMMA, ENTER } from '@angular/cdk/keycodes';
 import { map, startWith } from 'rxjs/operators';
 import { Observable } from 'rxjs';
+import { of } from 'rxjs/observable/of';
 
 @Component({
   selector: 'app-domains',
   templateUrl: './domains.component.html',
   styleUrls: ['./domains.component.css']
 })
-export class DomainsComponent implements OnInit {
+export class DomainsComponent implements OnInit, OnDestroy {
   domainForm: FormGroup;
   sectorCtrl = new FormControl();
   filteredSectors: Observable<string[]>;
@@ -56,6 +63,8 @@ export class DomainsComponent implements OnInit {
       colour: new FormControl('', [Validators.required])
     });
 
+    this.filteredSectors = of(['']);
+
     this.getTagsForAdmin();
   }
 
@@ -72,9 +81,6 @@ export class DomainsComponent implements OnInit {
 
   ngOnInit() {
     this.getDomains();
-    const parser = document.createElement('a');
-    parser.href = window.location.href;
-    console.log(parser.hostname);
   }
 
   remove(sector: string): void {
@@ -204,15 +210,10 @@ export class DomainsComponent implements OnInit {
   addSectorRelationship(domainId) {
     const domainSectors = new Set();
     this.sectors.map(sector => {
-      if (
-        this.tagService.allTags[sector] &&
-        this.tagService.allTags[sector].id
-      ) {
-        domainSectors.add({
-          tag_id: this.tagService.allTags[sector].id,
-          domain_id: domainId
-        });
-      }
+      domainSectors.add({
+        tag_id: this.tagService.adminDomainAdditionTags[sector].id,
+        domain_id: domainId
+      });
     });
 
     const insert_domain_tags = gql`
@@ -256,5 +257,10 @@ export class DomainsComponent implements OnInit {
           console.error(error);
         }
       );
+  }
+
+  ngOnDestroy() {
+    this.domainsQuery.stopPolling();
+    this.domainsSubscription.unsubscribe();
   }
 }

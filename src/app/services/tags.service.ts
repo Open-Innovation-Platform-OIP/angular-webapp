@@ -14,13 +14,16 @@ export class TagsService {
   test: Observable<any>;
 
   public allTags = {};
+  public adminDomainAdditionTags = {};
   public allTagsArray: any[] = [];
   public sectorFilterArray = [];
   public allTagsSubscription = Subscription;
 
   // public upsert_tags = ;
 
-  constructor(private apollo: Apollo) {}
+  constructor(private apollo: Apollo) {
+    this.getTagsFromDBForAdmin();
+  }
   getTagsFromDB(filter) {
     this.allTagsArray = [];
     this.test = this.apollo.watchQuery<any>({
@@ -50,7 +53,6 @@ export class TagsService {
   }
 
   getTagsFromDBForAdmin() {
-    const tags = {};
     const getTags = this.apollo.watchQuery<any>({
       query: gql`
         query {
@@ -68,11 +70,11 @@ export class TagsService {
       getTags.pipe(take(1)).subscribe(({ data }) => {
         if (data.tags.length > 0) {
           data.tags.map(tag => {
-            tags[tag.name] = tag;
+            this.adminDomainAdditionTags[tag.name] = tag;
             // this.allTagsArray.push(tag.id);
           });
         }
-        resolve(tags);
+        resolve(this.adminDomainAdditionTags);
       });
     });
   }

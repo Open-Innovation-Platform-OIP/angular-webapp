@@ -9,6 +9,7 @@ import { Subscription } from 'rxjs';
 import { HttpClient } from '@angular/common/http';
 import { FormGroup, FormControl, Validators } from '@angular/forms';
 import { DomainAddModalComponent } from '../components/domain-add-modal/domain-add-modal.component';
+import { FilterService } from '../services/filter.service';
 import {
   MatDialog,
   MatDialogRef,
@@ -44,7 +45,8 @@ export class AdminViewComponent implements OnInit, OnDestroy {
     private apollo: Apollo,
     private authService: AuthService,
     private http: HttpClient,
-    public dialog: MatDialog
+    public dialog: MatDialog,
+    private filterService: FilterService
   ) {}
 
   ngOnInit() {
