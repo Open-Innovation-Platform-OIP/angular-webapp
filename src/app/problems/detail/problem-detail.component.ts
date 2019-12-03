@@ -92,6 +92,10 @@ export class ProblemDetailComponent
   @ViewChild('problemDataTitle') problemDataTitle: ElementRef<HTMLElement>;
   @ViewChild('enrichmentDetail') enrichmentDetail: ElementRef<HTMLElement>;
 
+  enrichmentModalContext = {
+    index: 0
+  };
+
   channels = sharing;
   discussionContext: string;
   lastContext = new Subject();
@@ -1649,11 +1653,24 @@ export class ProblemDetailComponent
     $('#enlargeView').modal('show');
   }
 
-  closeModal(e) {
+  closeModal(e, context?: { from: string; index: number }) {
     if (e.type === 'click') {
       let problemVideoTag: HTMLMediaElement = document.querySelector(
         '#modalVideo'
       );
+
+      if (context.from === 'enrichment') {
+        let enrichmentCard: HTMLElement = document.querySelector(
+          `[aria-label='${context.from},${context.index + 1}']>a`
+        );
+
+        if (enrichmentCard) {
+          setTimeout(() => {
+            this.focusMonitor.focusVia(enrichmentCard, 'program');
+            console.log('done.', enrichmentCard);
+          }, 1000);
+        }
+      }
 
       this.startInterval();
       if (problemVideoTag) {
@@ -1681,7 +1698,7 @@ export class ProblemDetailComponent
     this.focusMonitor.focusVia(elem, 'program');
   }
 
-  openModal(id) {
+  openModal(id, index?) {
     clearInterval(this.interval);
 
     /* opening modal */
@@ -1695,6 +1712,7 @@ export class ProblemDetailComponent
     if (id === '#enrichModal') {
       setTimeout(() => {
         this.moveFocusToElement(this.enrichmentDetail);
+        this.enrichmentModalContext['index'] = index;
       }, 500);
     }
   }

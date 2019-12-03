@@ -426,13 +426,14 @@
           <ngu-tile
             *nguCarouselDef="let enrichment; let i = index; let ani = animate"
             data-toggle="modal"
-            (click)="openModal('#enrichModal')"
+            (click)="openModal('#enrichModal',i)"
           >
           
             <app-enrichment-card
               [enrichmentData]="enrichment"
               (clicked)="handleEnrichCardClicked($event)"
               [index]="i"
+              tabindex="-1"
             >
             </app-enrichment-card>
           </ngu-tile>
@@ -471,7 +472,7 @@
 
         <!--Add Enrichment Modal-->
 
-        <div
+        <!-- <div
           class="modal fade "
           id="enrichmentModal"
           tabindex="-1"
@@ -498,7 +499,7 @@
               <div class="modal-body"></div>
             </div>
           </div>
-        </div>
+        </div> -->
 
         <!--Add Enrichment Modal-->
 
@@ -521,10 +522,10 @@
                   mat-button
                   class="close"
                   data-dismiss="modal"
-                  aria-hidden="true"
-                  (click)="closeModal($event)"
+                  (click)="closeModal($event,{from:'enrichment',index: enrichmentModalContext.index})"
+                  aria-label="close"
                 >
-                  <i class="material-icons">close</i>
+                  <i class="material-icons" aria-hidden="true">close</i>
                 </button>
               </div>
               <div class="modal-body">
@@ -544,7 +545,7 @@
 
         <!--Edit Enrichment Modal-->
 
-        <div
+        <!-- <div
           class="modal fade editModal"
           id="EditEnrichModal"
           tabindex="-1"
@@ -569,7 +570,7 @@
               <div class="modal-body"></div>
             </div>
           </div>
-        </div>
+        </div> -->
 
         <!--Edit Enrichment Modal-->
 
@@ -643,6 +644,7 @@
             </i>
           </a>
         </ngu-carousel>
+
         <div class="row justify-content-center" *ngIf="!validation[0]">
           <p>No validations yet.</p>
         </div>
