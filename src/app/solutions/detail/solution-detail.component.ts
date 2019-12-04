@@ -373,7 +373,6 @@ export class SolutionDetailComponent implements OnInit {
     this.loadCarousels();
 
     this.route.queryParams.subscribe(params => {
-      console.log('params ', params, this.qs);
       if (params.commentId) {
         this.qs.commentId = params.commentId;
       }
@@ -409,6 +408,11 @@ export class SolutionDetailComponent implements OnInit {
     title
     description
     user_id
+    resources
+    timeline
+    pilots
+    beneficiary_attributes
+
   
     impact
     technology
@@ -659,7 +663,6 @@ export class SolutionDetailComponent implements OnInit {
 
   parseSolution(solution) {
     if (solution.title) {
-      console.log('Message', solution.title);
       this.message = solution.title;
     }
 
@@ -667,6 +670,7 @@ export class SolutionDetailComponent implements OnInit {
     Object.keys(this.solutionData).map(key => {
       this.solutionData[key] = solution[key];
     });
+
     this.solutionOwner = solution.user.name;
 
     if (solution.problems_solutions) {
@@ -1228,7 +1232,6 @@ export class SolutionDetailComponent implements OnInit {
   }
 
   handleCollaborationEditMode(collaborationData) {
-    console.log('edit collab', collaborationData);
     this.collaboratorDataToEdit = collaborationData;
   }
 
