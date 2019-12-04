@@ -1,9 +1,9 @@
-import { Injectable } from "@angular/core";
-import { Apollo } from "apollo-angular";
-import gql from "graphql-tag";
-import { Timestamp } from "aws-sdk/clients/workspaces";
-import swal from "sweetalert2";
-import { take } from "rxjs/operators";
+import { Injectable } from '@angular/core';
+import { Apollo } from 'apollo-angular';
+import gql from 'graphql-tag';
+import { Timestamp } from 'aws-sdk/clients/workspaces';
+import swal from 'sweetalert2';
+import { take } from 'rxjs/operators';
 
 export interface validation {
   comment: String;
@@ -17,16 +17,12 @@ export interface validation {
 }
 
 @Injectable({
-  providedIn: "root"
+  providedIn: 'root'
 })
 export class ValidationService {
-  constructor(private apollo: Apollo) {
-    console.log("test2");
-  }
+  constructor(private apollo: Apollo) {}
 
   submitProblemValidationToDB(validationData: validation) {
-    console.log(validationData, "validation data on submit");
-
     this.apollo
       .mutate({
         mutation: gql`
@@ -53,19 +49,15 @@ export class ValidationService {
       })
       .pipe(take(1))
       .subscribe(
-        data => {
-          console.log(data);
-          // location.reload();
-        },
+        data => {},
         err => {
-          // console.log(err, "error");
           console.error(JSON.stringify(err));
 
           swal({
-            title: "Error",
-            text: "Try Again",
-            type: "error",
-            confirmButtonClass: "btn btn-info",
+            title: 'Error',
+            text: 'Try Again',
+            type: 'error',
+            confirmButtonClass: 'btn btn-info',
             buttonsStyling: false
           }).catch(swal.noop);
         }
@@ -73,8 +65,6 @@ export class ValidationService {
   }
 
   deleteValidation(validationData: validation) {
-    console.log(validationData, "delete validation");
-    // console.log(id, "ID");
     return this.apollo.mutate<any>({
       mutation: gql`
         mutation DeleteMutation($where: problem_validations_bool_exp!) {
@@ -100,8 +90,6 @@ export class ValidationService {
   }
 
   submitSolutionValidationToDB(validationData) {
-    console.log(validationData, "validation data on submit");
-
     this.apollo
       .mutate({
         mutation: gql`
@@ -128,19 +116,15 @@ export class ValidationService {
       })
       .pipe(take(1))
       .subscribe(
-        data => {
-          console.log(data);
-          // location.reload();
-        },
+        data => {},
         err => {
-          console.log(err, "error");
           console.error(JSON.stringify(err));
 
           swal({
-            title: "Error",
-            text: "Try Again",
-            type: "error",
-            confirmButtonClass: "btn btn-info",
+            title: 'Error',
+            text: 'Try Again',
+            type: 'error',
+            confirmButtonClass: 'btn btn-info',
             buttonsStyling: false
           }).catch(swal.noop);
         }
@@ -148,8 +132,6 @@ export class ValidationService {
   }
 
   deleteSolutionValidation(validationData) {
-    console.log(validationData, "delete validation");
-    // console.log(id, "ID");
     return this.apollo.mutate<any>({
       mutation: gql`
         mutation DeleteMutation($where: solution_validations_bool_exp!) {

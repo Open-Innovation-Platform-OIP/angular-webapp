@@ -1,6 +1,6 @@
 import { Component, OnInit, Input, Output, EventEmitter } from '@angular/core';
 import { Router, ActivatedRoute } from '@angular/router';
-// import { fileUploadVariables } from "../../../environments/environment";
+
 import { FilesService } from '../../services/files.service';
 
 const misc: any = {
@@ -19,7 +19,6 @@ export class ProblemCardComponent implements OnInit {
   @Input() index: number = null;
   @Input() usedInSmartSearch: Boolean = false;
   @Input() showAddButton: Boolean = false;
-  // filesService.fileAccessUrl: string = "";
 
   @Output() selected = new EventEmitter();
 
@@ -29,15 +28,10 @@ export class ProblemCardComponent implements OnInit {
   validated: Boolean = false;
   link = '';
   imageAlt = 'default image';
-  // modifiedAt: any;
-  // sectors: any[] = [];
 
-  constructor(private router: Router, private filesService: FilesService) {}
+  constructor(public router: Router, public filesService: FilesService) {}
 
   ngOnInit() {
-    // this.filesService.fileAccessUrl = fileUploadVariables.accessUrl + "/";
-    // console.log("problem card", this.problemData);
-    // console.log(this.usedIn, "used");
     if (this.problemData.is_draft) {
       this.link += `/problems/${this.problemData.id}/edit`;
     } else {
@@ -62,12 +56,6 @@ export class ProblemCardComponent implements OnInit {
       this.numOfValidations = this.problemData.problem_validations.length;
       this.validated = true;
     }
-
-    // this.sectors = Object.keys(this.problemData.sectors).filter((sector) => {
-    //   if (this.problemData.sectors[sector]) {
-    //     return sector;
-    //   };
-    // })
   }
   navigation() {
     if (!this.usedInSmartSearch) {
@@ -84,8 +72,8 @@ export class ProblemCardComponent implements OnInit {
   }
 
   checkUrlIsImg(url) {
-    var arr = ['jpeg', 'jpg', 'gif', 'png'];
-    var ext = url.substring(url.lastIndexOf('.') + 1);
+    const arr = ['jpeg', 'jpg', 'gif', 'png'];
+    const ext = url.substring(url.lastIndexOf('.') + 1);
     if (arr.indexOf(ext) > -1) {
       return true;
     } else {

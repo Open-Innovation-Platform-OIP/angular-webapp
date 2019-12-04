@@ -1,5 +1,3 @@
-<!--REWRITE-->
-
 <div class="main-content" style="margin-top: 10%;">
   <div class="container-fluid">
     <div class="row mt-4">
@@ -51,38 +49,11 @@
             </div>
             <h1 class="card-title" style="text-align:left;font-size: 1.3rem;" tabindex="-1" #profileTitle>
               {{ userData.id === userId ? 'My Profile' : 'Profile' }}
-              <!-- <small class="category">Complete your profile</small> -->
+
             </h1>
           </div>
           <div class="card-body">
-            <!-- start -->
-            <!-- <div *ngIf="loggedInUsersProfile || !userData.email_private">
-              <strong>E-mail</strong>
-              <p class="description">{{userData.email}}</p>
 
-            </div> -->
-
-
-            <!-- <div *ngIf="loggedInUsersProfile && userData.phone_number && !userData.number_private">
-              <strong>Phone Number</strong>
-              <p class="description" *ngIf="userData.id==auth.currentUserValue.id">{{userData.phone_number}}</p>
-
-            </div> -->
-
-
-            <!-- <div *ngIf="organizationName && (loggedInUsersProfile || !userData.organization_private)">
-              <strong>Organization</strong>
-              <p class="description">{{organizationName}}</p>
-
-            </div> -->
-
-            <!-- <div *ngIf="personas&&personas.length && (loggedInUsersProfile || !userData.persona_private) ">
-
-              <strong>Persona</strong> -->
-
-
-
-            <!-- end -->
             <div *ngIf="loggedInUsersProfile || !userData.email_private">
               <strong role="heading" aria-level="3">E-mail</strong>
               <p class="description">{{ userData.email }}</p>
@@ -139,5 +110,3 @@
     </div>
   </div>
 </div>
-
-<!--REWRITE-->

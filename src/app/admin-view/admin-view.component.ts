@@ -46,7 +46,7 @@ export class AdminViewComponent implements OnInit, OnDestroy {
     private authService: AuthService,
     private http: HttpClient,
     public dialog: MatDialog,
-    private filterService: FilterService
+    public filterService: FilterService
   ) {}
 
   ngOnInit() {
@@ -66,7 +66,6 @@ export class AdminViewComponent implements OnInit, OnDestroy {
 
     domainAddRef.afterClosed().subscribe(result => {
       console.log('The dialog was closed');
-      // this.animal = result;
     });
   }
 
@@ -78,9 +77,8 @@ export class AdminViewComponent implements OnInit, OnDestroy {
       'Admin',
       'Approval Status'
     ];
-    let userDataRow = [];
+    const userDataRow = [];
     Object.values(userData).map(user => {
-      // console.log(user, "gnerate user table");
       userDataRow.push([
         user['email'],
         user['name'].toUpperCase(),
@@ -99,9 +97,8 @@ export class AdminViewComponent implements OnInit, OnDestroy {
 
   generateUnapprovedUserTable(userData) {
     const userHeaderRow = ['Email', 'Approve'];
-    let userDataRow = [];
+    const userDataRow = [];
     Object.values(userData).map(user => {
-      // console.log(user, "gnerate user table");
       userDataRow.push([user['email'], user['is_approved'], user['id']]);
     });
     this.unapprovedUserDataTable = {
@@ -112,9 +109,8 @@ export class AdminViewComponent implements OnInit, OnDestroy {
 
   generateInvitedUsersDataTable(invitedUserData) {
     const userHeaderRow = ['Invitee Email', 'Status', 'Invited By'];
-    let userDataRow = [];
+    const userDataRow = [];
     invitedUserData.map(user => {
-      // console.log(user, "gnerate user table");
       userDataRow.push([
         user['name'],
         user['email'],
@@ -154,13 +150,12 @@ export class AdminViewComponent implements OnInit, OnDestroy {
 
     this.invitedUsersSubscription = this.invitedUsersQuery.valueChanges.subscribe(
       ({ data }) => {
-        console.log(data, 'invited users data');
         if (data.invited_users.length > 0) {
           this.generateInvitedUsersDataTable(data.invited_users);
         }
       },
       error => {
-        console.log(error);
+        console.error(error);
       }
     );
   }
@@ -220,14 +215,13 @@ export class AdminViewComponent implements OnInit, OnDestroy {
               }
             }
           });
-          console.log(this.allUsers, 'all approved');
 
           this.generateUserTable(this.allUsers);
           this.generateUnapprovedUserTable(this.allUnapprovedUsers);
         }
       },
       error => {
-        console.log(error);
+        console.error(error);
       }
     );
   }
@@ -254,18 +248,17 @@ export class AdminViewComponent implements OnInit, OnDestroy {
                 id
                 is_admin
                 name
-                
+
               }
             }
-            
+
           }
         `
       })
       .pipe(take(1))
       .subscribe(
         data => {
-          let user = data.data.update_users.returning[0];
-          console.log(user, 'data');
+          const user = data.data.update_users.returning[0];
 
           if (user.is_admin) {
             swal({
@@ -275,11 +268,9 @@ export class AdminViewComponent implements OnInit, OnDestroy {
               showConfirmButton: false
             }).catch(swal.noop);
           }
-
-          // console.log(data);
         },
         error => {
-          console.log(error);
+          console.error(error);
         }
       );
   }
@@ -288,8 +279,8 @@ export class AdminViewComponent implements OnInit, OnDestroy {
     if (!this.userInviteForm.valid) {
       return;
     }
-    let email = this.userInviteForm.value.email;
-    console.log(email, 'email');
+    const email = this.userInviteForm.value.email;
+
     this.http
       .post(
         'https://invite-flow-microservice-test.dev.jaagalabs.com/invite_user',
@@ -302,7 +293,6 @@ export class AdminViewComponent implements OnInit, OnDestroy {
       )
       .subscribe(
         data => {
-          console.log(data);
           swal({
             type: 'success',
             title: `Invite sent`,
@@ -311,7 +301,7 @@ export class AdminViewComponent implements OnInit, OnDestroy {
           }).catch(swal.noop);
         },
         error => {
-          console.log(error);
+          console.error(error);
         }
       );
   }
@@ -320,7 +310,6 @@ export class AdminViewComponent implements OnInit, OnDestroy {
     const userId = user[5];
     const isApproved = event.checked;
 
-    console.log(user, 'user id');
     this.apollo
       .mutate({
         mutation: gql`
@@ -338,19 +327,17 @@ export class AdminViewComponent implements OnInit, OnDestroy {
                 email
                 name
                 is_approved
-                
+
               }
             }
-            
+
           }
         `
       })
       .pipe(take(1))
       .subscribe(
         data => {
-          let user = data.data.update_users.returning[0];
-          console.log(user, 'data');
-          // this.getUnapprovedUsersFromDB();
+          const user = data.data.update_users.returning[0];
 
           if (user.is_approved) {
             swal({
@@ -360,11 +347,9 @@ export class AdminViewComponent implements OnInit, OnDestroy {
               showConfirmButton: false
             }).catch(swal.noop);
           }
-
-          // console.log(data);
         },
         error => {
-          console.log(error);
+          console.error(error);
         }
       );
   }
@@ -378,11 +363,9 @@ export class AdminViewComponent implements OnInit, OnDestroy {
         }
       )
       .subscribe(
-        data => {
-          console.log(data);
-        },
+        data => {},
         error => {
-          console.log(error);
+          console.error(error);
         }
       );
   }
@@ -391,7 +374,6 @@ export class AdminViewComponent implements OnInit, OnDestroy {
     const userId = user[2];
     const isApproved = event.checked;
 
-    console.log(user, 'user id');
     this.apollo
       .mutate({
         mutation: gql`
@@ -409,19 +391,17 @@ export class AdminViewComponent implements OnInit, OnDestroy {
                 email
                 name
                 is_approved
-                
+
               }
             }
-            
+
           }
         `
       })
       .pipe(take(1))
       .subscribe(
         data => {
-          let user = data.data.update_users.returning[0];
-          console.log(user, 'data');
-          // this.getUnapprovedUsersFromDB();
+          const user = data.data.update_users.returning[0];
 
           if (user.is_approved) {
             this.sendEmailToApprovedUser(user.email);
@@ -433,11 +413,9 @@ export class AdminViewComponent implements OnInit, OnDestroy {
               showConfirmButton: false
             }).catch(swal.noop);
           }
-
-          // console.log(data);
         },
         error => {
-          console.log(error);
+          console.error(error);
         }
       );
   }

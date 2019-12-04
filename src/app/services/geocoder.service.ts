@@ -1,13 +1,13 @@
-import { Injectable } from "@angular/core";
-import { Apollo } from "apollo-angular";
-import { take } from "rxjs/operators";
-import { Subscription, Observable } from "rxjs";
+import { Injectable } from '@angular/core';
+import { Apollo } from 'apollo-angular';
+import { take } from 'rxjs/operators';
+import { Subscription, Observable } from 'rxjs';
 
-import gql from "graphql-tag";
+import gql from 'graphql-tag';
 declare var H: any;
 
 @Injectable({
-  providedIn: "root"
+  providedIn: 'root'
 })
 export class GeocoderService {
   public platform: any;
@@ -20,38 +20,30 @@ export class GeocoderService {
 
   constructor(private apollo: Apollo) {
     this.platform = new H.service.Platform({
-      app_id: "sug0MiMpvxIW4BhoGjcf",
-      app_code: "GSl6bG5_ksXDw4sBTnhr_w",
+      app_id: 'sug0MiMpvxIW4BhoGjcf',
+      app_code: 'GSl6bG5_ksXDw4sBTnhr_w',
       useHTTPS: true
     });
     this.geocodingParameters = {
-      country: "IND"
+      country: 'IND'
     };
     this.geocoder = this.platform.getGeocodingService();
     this.getLocationsFromDB();
-    // this.geocoder.geocode(this.geocodingParameters);
-    // console.log(this.geocoder, "coder");
   }
 
   public getAddress(query2: string) {
-    console.log(this.geocoder, "geo");
-
     return new Promise((resolve, reject) => {
       this.geocoder.geocode(
-        { searchText: query2, country: "IND" },
+        { searchText: query2, country: 'IND' },
         result => {
           if (result.Response.View.length > 0) {
             if (result.Response.View[0].Result.length > 0) {
-              console.log(
-                result.Response.View[0].Result,
-                "result Response here maps"
-              );
               resolve(result.Response.View[0].Result);
             } else {
-              reject({ message: "no results found" });
+              reject({ message: 'no results found' });
             }
           } else {
-            reject({ message: "no results found" });
+            reject({ message: 'no results found' });
           }
         },
         error => {
@@ -61,11 +53,10 @@ export class GeocoderService {
     });
   }
   public error(error) {
-    console.log("error", error);
+    console.error('error', error);
   }
 
   getLocationsFromDB() {
-    // this.all
     this.allLocationObservable = this.apollo.watchQuery<any>({
       query: gql`
         query {
@@ -77,19 +68,10 @@ export class GeocoderService {
           }
         }
       `,
-      fetchPolicy: "network-only"
-      // pollInterval: 500
+      fetchPolicy: 'network-only'
     }).valueChanges;
 
     return new Promise((resolve, reject) => {
-      // this.test.pipe(take(1)).subscribe(({ data }) => {
-      //   if (data.tags.length > 0) {
-      //     data.tags.map(tag => {
-      //       this.allTags[tag.name] = tag;
-      //       this.allTagsArray.push(tag.id);
-      //     });
-      //   }
-      // });
       this.allLocationObservable.pipe(take(1)).subscribe(
         ({ data }) => {
           if (data.locations.length > 0) {
@@ -100,7 +82,7 @@ export class GeocoderService {
           resolve(data);
         },
         err => {
-          console.log(err);
+          console.error(err);
           reject(err);
         }
       );
@@ -109,11 +91,9 @@ export class GeocoderService {
 
   public addLocationsInDB(locations, tableName, tableId?) {
     let locationData = [];
-    let test = `location_name`;
-    console.log(locations, "locations in add geocoder");
+    const test = `location_name`;
+
     locationData = locations.map(location => {
-      // location.lat = location.location.coordinates[0];
-      // location.long = location.location.coordinates[1];
       return location;
     });
     const upsert_locations = gql`
@@ -143,11 +123,10 @@ export class GeocoderService {
       .pipe(take(1))
       .subscribe(
         data => {
-          console.log("owner adddition worked");
           this.getLocationsFromDB();
 
-          let locationsToBeLinked = [];
-          let trimmedTableName = tableName.slice(0, tableName.length - 1);
+          const locationsToBeLinked = [];
+          const trimmedTableName = tableName.slice(0, tableName.length - 1);
 
           if (data.data.insert_locations.returning) {
             data.data.insert_locations.returning.map(location => {
@@ -184,32 +163,21 @@ export class GeocoderService {
               })
               .pipe(take(1))
               .subscribe(
-                data => {
-                  console.log("worked", data);
-                },
+                data => {},
                 err => {
-                  console.log(err, "couldn't add locations");
+                  console.error(err, 'couldn\'t add locations');
                 }
               );
-
-            console.log("worked", data);
           }
         },
         err => {
-          console.log(err, "couldn't add locations");
           console.error(JSON.stringify(err));
         }
       );
-
-    //   },
-    //   error => {
-    //     console.error(JSON.stringify(error));
-    //   }
-    // );
   }
 
   addRelationToLocations(tableId, locations, tableName) {
-    let table = tableName.slice(0, tableName.length - 1);
+    const table = tableName.slice(0, tableName.length - 1);
 
     const upsert_locations = gql`
                 mutation upsert_${table}_locations(
@@ -241,43 +209,14 @@ export class GeocoderService {
       .subscribe(
         data => {},
         err => {
-          console.error("Error uploading tags", err);
+          console.error('Error uploading tags', err);
           console.error(JSON.stringify(err));
         }
       );
-    // }
-
-    // this.apollo
-    //   .mutate<any>({
-    //     mutation: gql`mutation insert_${table}_locations {
-    //     insert_${table}_locations(
-    //       objects: [
-    //         { ${table}_id:"${tableId}",
-    //           location_id:"${locationId}"
-    //       },
-
-    //       ]
-    //     ) {
-    //       returning {
-    //         location_id
-
-    //       }
-    //     }
-    //   }`
-    //   })
-    //   .pipe(take(1))
-    //   .subscribe(
-    //     data => {
-    //       console.log(data, "location addition");
-    //     },
-    //     error => {
-    //       console.log("error", error);
-    //     }
-    //   );
   }
 
   removeLocationRelation(locationId, tableId, tableName) {
-    let trimmedTableName = tableName.slice(0, tableName.length - 1);
+    const trimmedTableName = tableName.slice(0, tableName.length - 1);
     this.apollo
       .mutate<any>({
         mutation: gql`
@@ -304,15 +243,10 @@ export class GeocoderService {
       .pipe(take(1))
       .subscribe(
         ({ data }) => {
-          console.log("worked", data);
-          // location.reload();
-          // location.reload();
-          // this.router.navigateByUrl("/problems");
-
           return;
         },
         error => {
-          console.log("Could delete due to " + error);
+          console.error('Could delete due to ' + error);
         }
       );
   }

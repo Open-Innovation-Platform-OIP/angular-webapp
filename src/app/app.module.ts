@@ -9,7 +9,6 @@ import { APP_BASE_HREF } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { QuillModule } from 'ngx-quill';
 import { CommonModule } from '@angular/common';
-// import { NgxUiLoaderModule } from 'ngx-ui-loader';
 
 import {
   MatAutocompleteModule,
@@ -58,13 +57,7 @@ import { AppRoutes } from './app.routing';
 import { GraphQLModule } from './services/graphql.module';
 import { EmbedVideo } from 'ngx-embed-video';
 import { AuthInterceptor } from './services/auth-interceptor';
-// import { AdminViewComponent } from "./admin-view/admin-view.component";
-// import { WizardComponent } from './solution/form/wizard/wizard.component';
-// import { LandingPageComponent } from './landing-page/landing-page.component';
-// import { AutofocusDirective } from './autofocus.directive';
-// import { EnrichmentFormComponent } from './enrichment/enrichment-form/enrichment-form.component';
-// import { EnrichmentComponent } from './enrichment/enrichment.component';
-// import { GlobalSearchViewModule } from "./global-search-view/global-search-view.module";
+
 @NgModule({
   exports: [
     MatAutocompleteModule,
@@ -100,28 +93,12 @@ import { AuthInterceptor } from './services/auth-interceptor';
     MatTooltipModule
   ],
   imports: [GraphQLModule, HttpClientModule, QuillModule, EmbedVideo.forRoot()],
-  declarations: [
-    // WizardComponent
-  ]
+  declarations: []
 })
 export class MaterialModule {}
 
-// Sentry.init({
-//   dsn: "https://aa3877830cee4ba6b6999be089316f57@sentry.io/1408858"
-// });
-
-// @Injectable()
-// export class SentryErrorHandler implements ErrorHandler {
-//   constructor() {}
-//   handleError(error) {
-//     Sentry.captureException(error.originalError || error);
-//     throw error;
-//   }
-// }
-
 @NgModule({
   imports: [
-    // BrowserModule,
     CommonModule,
     BrowserAnimationsModule,
     FormsModule,
@@ -136,14 +113,9 @@ export class MaterialModule {}
     NavbarModule,
     FooterModule,
     FixedpluginModule
-    // NgxUiLoaderModule,
-    // GlobalSearchViewModule
   ],
   declarations: [AppComponent, AdminLayoutComponent, AuthLayoutComponent],
-  providers: [
-    Title
-    // { provide: ErrorHandler, useClass: SentryErrorHandler }
-  ],
+  providers: [Title],
   bootstrap: [AppComponent]
 })
 export class AppModule {}

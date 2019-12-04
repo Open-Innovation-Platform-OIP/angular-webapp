@@ -31,15 +31,15 @@ export class FilterService {
   };
   sectorsArray = [];
   sectorFilterArray: any[] = [];
-  sector_filter_query: string = `_nin:[0]`;
-  location_filter_query: string = ``;
-  solution_location_filter_query: string = ``;
-  range: number = 0.2;
+  sector_filter_query = `_nin:[0]`;
+  location_filter_query = ``;
+  solution_location_filter_query = ``;
+  range = 0.2;
   queryVariable = {};
   location_filter_header: any = ``;
   selectedSectors: any[] = [];
   selectedLocation: any = '';
-  is_domain_filter_mode: boolean = false;
+  is_domain_filter_mode = false;
   domain_tags_query = '';
   isPrimaryDomain: Boolean;
 
@@ -68,14 +68,10 @@ export class FilterService {
           }
         });
 
-        // console.log(this.sectorFilterArray, "tag array");
         if (this.sectorFilterArray.length) {
           this.sector_filter_query = `_in:[${this.sectorFilterArray}]`;
         }
-        // console.log(
-        //   this.sector_filter_query,
-        //   '=== test for sector filter query'
-        // );
+
         return this.sectorsArray;
       }
     } else {
@@ -93,14 +89,10 @@ export class FilterService {
           }
         });
 
-        // console.log(this.sectorFilterArray, "tag array");
         if (this.sectorFilterArray.length) {
           this.sector_filter_query = `_in:[${this.sectorFilterArray}]`;
         }
-        // console.log(
-        //   this.sector_filter_query,
-        //   '=== test for sector filter query'
-        // );
+
         return this.sectorsArray;
       } else {
         return [];
@@ -109,9 +101,8 @@ export class FilterService {
   }
 
   async filterSectorByDomain(domain: string) {
-    let sectorIdArray = [];
+    const sectorIdArray = [];
 
-    console.log(this.sector_filter_query, 'filter service sector filter query');
     this.apollo
       .watchQuery<any>({
         query: gql`
@@ -129,7 +120,6 @@ export class FilterService {
       })
       .valueChanges.subscribe(
         async ({ data }) => {
-          console.log(data, ' domain filter result');
           if (data.domains[0].is_primary) {
             this.isPrimaryDomain = true;
           } else {
@@ -145,15 +135,12 @@ export class FilterService {
             this.is_domain_filter_mode = true;
             this.sector_filter_query = `_in:[${sectorIdArray}]`;
             this.domain_tags_query = `(where:{domain_tags:{domain:{url:{_eq:"${domain}"}}
-          
         }})`;
           } else {
             this.is_domain_filter_mode = false;
             this.sector_filter_query = `_nin:[0]`;
             this.domain_tags_query = ``;
           }
-
-          console.log(sectorIdArray, 'sector id array');
 
           await this.tagsService.getTagsFromDB(this.domain_tags_query);
         },
@@ -171,8 +158,6 @@ export class FilterService {
       parsedQuery = JSON.parse(queryParams.filterLocation);
 
       coordinates = [parsedQuery.latitude, parsedQuery.longitude];
-
-      console.log(parsedQuery, 'parsed query');
 
       if (
         parsedQuery.type === 'city' ||
@@ -201,19 +186,12 @@ export class FilterService {
         }
       };
 
-      // this.queryVariable = {
-      //   point: {
-      //     type: "Point",
-      //     coordinates: [12.2, 17.12]
-      //   }
-      // };
-
       this.location_filter_header = `($point:geometry!)`;
 
       return parsedQuery;
     } else {
       this.location_filter_query = ``;
-      // console.log(location)
+
       this.solution_location_filter_query = ``;
       return {};
     }

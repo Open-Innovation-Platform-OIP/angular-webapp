@@ -28,7 +28,7 @@ import { map, startWith } from 'rxjs/operators';
 import { Observable, Subscription } from 'rxjs';
 import { GeocoderService } from '../../services/geocoder.service';
 import swal from 'sweetalert2';
-var Buffer = require('buffer/').Buffer;
+const Buffer = require('buffer/').Buffer;
 import { FormBuilder } from '@angular/forms';
 import { take } from 'rxjs/operators';
 import { HttpClient } from '@angular/common/http';
@@ -97,7 +97,6 @@ export class AddSolutionComponent
   @ViewChild('mediaLink') mediaLink: ElementRef<HTMLElement>;
   @ViewChild('nextBtn') nextBtn: ElementRef<HTMLElement>;
   @ViewChild('textLink') textLink: ElementRef<HTMLElement>;
-  // @Input() sectors: string[] = [];
 
   owners: any[] = [];
 
@@ -137,17 +136,15 @@ export class AddSolutionComponent
   readonly separatorKeysCodes: number[] = [ENTER, COMMA];
   problemSearchResults: any = [];
   solutionSearchResults: any = [];
-  // searchResults = [];
-  // smartSearchResults = [];
+
   problemCtrl = new FormControl();
   ownersCtrl = new FormControl();
   locationCtrl = new FormControl();
   sectorCtrl = new FormControl();
   filteredProblems: Observable<any>;
-  // searchResultsObservable: Subscription;
 
   selectedProblemsData: any = {};
-  // filteredProblems = [];
+
   filteredOwners: Observable<any[]>;
   is_edit: Boolean = false;
   tags = [];
@@ -179,8 +176,6 @@ export class AddSolutionComponent
   filteredOptions: Observable<string[]>;
   problemId: Number;
 
-  // canProceed: Boolean;
-  // owners = [];
   voted_by = [];
   watched_by = [];
 
@@ -211,8 +206,6 @@ export class AddSolutionComponent
   };
 
   @ViewChild('sectorInput') sectorInput: ElementRef<HTMLInputElement>;
-
-  // autoCompleteTags: any[] = [];
 
   constructor(
     private router: Router,
@@ -261,8 +254,6 @@ export class AddSolutionComponent
       startWith(null),
       map((sector: string | null) => (sector ? this._filter(sector) : []))
     );
-
-    // this.problem.organization = "Social Alpha";
 
     this.filteredOwners = this.ownersCtrl.valueChanges.pipe(
       startWith(null),
@@ -319,13 +310,11 @@ export class AddSolutionComponent
   }
 
   sectorSelected(event: MatAutocompleteSelectedEvent): void {
-    // console.log('event.option.viewValue', event);
     const sectorValue = event.option.value;
     this.sectors.push(sectorValue);
     this.sectorInput.nativeElement.value = '';
     this.sectorCtrl.setValue(null);
     this.announcement(`Added ${sectorValue}`);
-    // this.addedSectors.emit(this.sectors);
   }
 
   addSector(event: MatChipInputEvent): void {
@@ -371,27 +360,19 @@ export class AddSolutionComponent
     this.getProblemData(selectedProblem.id);
 
     this.selectedProblems[selectedProblem.id] = selectedProblem;
-    // console.log(selectedProblem['title'], 'problem set');
 
     this.problemInput.nativeElement.value = '';
     this.problemCtrl.setValue(null);
     this.problemSearchResults = [];
     this.announcement(`Added ${selectedProblem['title']}`);
-    // this.getProblemData(selectedProblem.id);
-    // delete this.searchResults[selectedProblem.id];
   }
   selectProblem(problem) {
-    console.log(problem, '====smart card problem selected');
     this.selectedProblems[problem.id] = problem;
     this.getProblemData(problem.id);
     this.announcement(`Added ${problem.title}`);
-    // console.log(this.selectedProblems, "selected problem set");
-    // delete this.searchResults[problem.id];
   }
 
   getProblemData(id) {
-    console.log(id, 'id');
-    // this.searchResultsObservable.unsubscribe();
     this.apollo
       .watchQuery<any>({
         query: gql`
@@ -399,7 +380,7 @@ export class AddSolutionComponent
                       problems(where: { id: { _eq: ${id} } }) {
                       id
                       title
-                     
+
                       impact
                       extent
                       min_population
@@ -409,24 +390,24 @@ export class AddSolutionComponent
                           name
                         }
                       }
-                      
-                      
+
+
                       max_population
                       beneficiary_attributes
                       resources_needed
-                     
-                                  
+
+
                       }
                   }
                   `,
-        // pollInterval: 500,
+
         fetchPolicy: 'network-only'
       })
       .valueChanges.pipe(take(1))
       .subscribe(
         result => {
           const problemData = result.data.problems[0];
-          // console.log(problemData, "problem data from db");
+
           if (problemData.problems_tags.length && this.solution.is_draft) {
             problemData.problems_tags.map(tags => {
               this.sectors.push(tags.tag.name);
@@ -435,13 +416,8 @@ export class AddSolutionComponent
           }
 
           this.selectedProblemsData[problemData.id] = problemData;
-          console.log(
-            this.selectedProblemsData,
-            ' selected problems in solutions'
-          );
         },
         error => {
-          console.log(error);
           console.error(JSON.stringify(error));
         }
       );
@@ -470,18 +446,9 @@ export class AddSolutionComponent
             );
           },
           error => {
-            console.log(error);
+            console.error(error);
           }
         );
-      // this.searchService.solutionSearch(solutionSearchInput).subscribe(
-      //   value => {
-      //     this.solutionSearchResults = value.data.search_solutions_v2;
-      //     // console.log("Solution title search", this.solutionSearchResults);
-      //   },
-      //   error => {
-      //     console.log(JSON.stringify(error));
-      //   }
-      // );
     } else {
       this.solutionSearchResults = [];
     }
@@ -490,7 +457,6 @@ export class AddSolutionComponent
   focusOnField(event) {
     if (event.target.id === 'impact') {
       this.showProblemImpacts = true;
-      // this.showProblemResourcesNeeded = ;
     }
     if (event.target.id === 'resources_needed') {
       this.showProblemResourcesNeeded = true;
@@ -511,7 +477,6 @@ export class AddSolutionComponent
   }
 
   remove(problem): void {
-    // console.log(problem, 'remove');
     this.announcement(`removed ${problem['title']}`);
     delete this.selectedProblems[problem.id];
     delete this.selectedProblemsData[problem.id];
@@ -542,20 +507,13 @@ export class AddSolutionComponent
         .pipe(take(1))
         .subscribe(
           ({ data }) => {
-            console.log('worked', data);
-            // location.reload();
-            // location.reload();
-            // this.router.navigateByUrl("/problems");
-
             return;
           },
           error => {
-            console.log('Could not delete due to ' + error);
+            console.error('Could not delete due to ' + error);
           }
         );
     }
-
-    // this.tagRemoved.emit(sector);
   }
 
   saveProblemsInDB(solutionId, problemsArray) {
@@ -586,7 +544,7 @@ export class AddSolutionComponent
         }
       }
     `;
-    // console.log(problems, "problem added");
+
     this.apollo
       .mutate({
         mutation: upsert_problems_solutions,
@@ -596,9 +554,7 @@ export class AddSolutionComponent
       })
       .pipe(take(1))
       .subscribe(
-        data => {
-          console.log('problem adddition worked');
-        },
+        data => {},
         error => {
           console.error(JSON.stringify(error));
         }
@@ -629,7 +585,7 @@ export class AddSolutionComponent
         }
       }
     `;
-    console.log(owners, 'owners added');
+
     this.apollo
       .mutate({
         mutation: upsert_solution_owners,
@@ -639,9 +595,7 @@ export class AddSolutionComponent
       })
       .pipe(take(1))
       .subscribe(
-        data => {
-          console.log('owner adddition worked');
-        },
+        data => {},
         error => {
           console.error(JSON.stringify(error));
         }
@@ -656,7 +610,6 @@ export class AddSolutionComponent
   }
 
   searchProblem(event) {
-    // console.log("Search Event", event);
     if (event && event.target && event.target.value) {
       const keyword = event.target.value;
       this.problemSearchResults = [];
@@ -678,105 +631,18 @@ export class AddSolutionComponent
             this.setScrollableHeight();
           },
           error => {
-            console.log(error);
+            console.error(error);
           }
         );
     }
-    // this.searchResultsObservable = this.smartSearch(event.target.value);
-    // console.log("Search Event ==", event);
-
-    //   this.searchResultsObservable = this.smartSearch(
-    //     event.target.value
-    //   ).subscribe(
-    //     result => {
-    //       // console.log(result, "result from search");
-    //       if (result.data.search_problems_v2.length > 0) {
-    //         // this.smartSearchResults = [];
-    //         // this.searchResults = [];
-    //         this.searchResults = {};
-
-    //         result.data.search_problems_v2.map(problem => {
-    //           this.searchResults[problem["id"]] = problem;
-    //         });
-    //         console.log(this.searchResults, "search results");
-    //       }
-    //     },
-    //     err => {
-    //       console.error(JSON.stringify(err));
-    //     }
-    //   );
-    // }
   }
 
-  // smartSearch(searchKey) {
-  //   return this.apollo.watchQuery<any>({
-  //     query: gql`query {
-  //                   search_problems_v2(
-  //                   args: {search: "${searchKey.toLowerCase()}"},where: { is_draft: { _eq: false } }
-  //                   ){
-  //                   id
-  //                   title
-  //                   description
-  //                   edited_at
-  //                   updated_at
-  //                   image_urls
-  //                   featured_url
-  //                   problem_locations{
-  //                     location{
-  //                       id
-  //                       location_name
-  //                       location
-  //                       lat
-  //                       long
-  //                     }
-  //                   }
-
-  //                   problem_voters{
-  //                     problem_id
-  //                     user_id
-  //                   }
-  //                   problem_watchers{
-  //                     problem_id
-  //                     user_id
-
-  //                   }
-  //                   problems_tags {
-  //                       tag {
-  //                           name
-  //                       }
-  //                   }
-
-  //                   problem_validations{
-  //                     comment
-  //                     agree
-  //                     created_at
-  //                     files
-  //                     user_id
-  //                     edited_at
-  //                     is_deleted
-
-  //                     problem_id
-  //                     user {
-  //                       id
-  //                       name
-  //                     }
-
-  //                   }
-  //                   }
-  //                   }`,
-  //     fetchPolicy: "no-cache"
-  //     // pollInterval: 200
-  //   }).valueChanges;
-  // }
   filterOwners(value: String): any[] {
     if (typeof value === 'string') {
-      console.log(value, 'value in filtered owners');
       const filterValue = value.toLowerCase();
-      console.log(filterValue, 'value from filter');
 
       return Object.values(this.usersService.allUsers).filter(owner => {
         if (owner['value'].toLowerCase().indexOf(filterValue) === 0) {
-          console.log(owner, 'owner', filterValue);
           return owner;
         }
       });
@@ -784,22 +650,18 @@ export class AddSolutionComponent
   }
 
   selectedOwner(event: MatAutocompleteSelectedEvent): void {
-    // console.log(event, 'event value');
     const owner = event.option.value;
     this.announcement(`Added ${owner.value}`);
     this.owners.push(owner);
     this.ownerInput.nativeElement.value = '';
     this.ownersCtrl.setValue(null);
-    // this.addedOwners.emit(this.owners);
   }
 
   removeOwner(owner) {
-    // console.log(owner, 'remove');
     this.announcement(`Removed ${owner.value}`);
     const index = this.owners.indexOf(owner);
     if (index >= 0) {
       this.owners.splice(index, 1);
-      // this.removedOwners.emit(owner);
     }
     if (this.solution['id']) {
       this.apollo
@@ -828,52 +690,37 @@ export class AddSolutionComponent
         .pipe(take(1))
         .subscribe(
           ({ data }) => {
-            console.log('worked', data);
-            // location.reload();
-            // location.reload();
-            // this.router.navigateByUrl("/problems");
-
             return;
           },
           error => {
-            console.log('Could not delete due to ' + error);
+            console.error('Could not delete due to ' + error);
           }
         );
     }
-    console.log(this.owners, 'removed in container');
   }
 
-  addOwner(event) {
-    console.log(event, 'event');
-  }
+  addOwner(event) {}
 
   ngOnInit() {
-    console.log('solution wizard ng on in it');
     this.tagService.getTagsFromDB(this.filterService.domain_tags_query);
 
     this.problemId = Number(this.route.snapshot.paramMap.get('problemId'));
-    console.log(this.route.snapshot.paramMap, 'problem param');
+
     if (this.problemId) {
-      // this.selectedProblems.add({ id: this.problemId });
       this.selectedProblems[Number(this.problemId)] = this.problemId;
     }
     this.autosaveInterval = setInterval(() => {
       this.autoSave();
     }, 10000);
-    console.log(this.selectedProblems, 'selected problems set ');
 
     if (Object.values(this.selectedProblems).length) {
       Object.values(this.selectedProblems).forEach(problemId => {
-        // console.log("selected problems on ngoninit", problem);
         this.getProblemData(problemId);
       });
     }
 
     this.route.params.pipe(first()).subscribe(params => {
-      console.log(params, 'params id');
-
       if (params.id) {
-        console.log(params.id, 'id');
         this.apollo
           .watchQuery<any>({
             query: gql`
@@ -883,11 +730,11 @@ export class AddSolutionComponent
                             title
                             user_id
                             technology
-                            resources                            
+                            resources
                             description
                             website_url
                             deployment
-                            
+
                             budget_title
                             min_budget
                             max_budget
@@ -921,11 +768,10 @@ export class AddSolutionComponent
                                 name
                               }
                             }
-                            
+
                             }
                         }
                         `
-            // pollInterval: 500,
           })
           .valueChanges.pipe(take(1))
           .subscribe(
@@ -933,11 +779,7 @@ export class AddSolutionComponent
               this.solution['id'] = result.data.solutions[0].id;
               this.is_edit = true;
               Object.keys(this.solution).map(key => {
-                // console.log(key, result.data.problems[0][key]);
-
                 this.solution[key] = result.data.solutions[0][key];
-
-                // this.solution.is_draft = result.data.problems[0].is_draft;
               });
 
               if (result.data.solutions[0].solutions_tags) {
@@ -949,12 +791,11 @@ export class AddSolutionComponent
               }
 
               result.data.solutions[0].problems_solutions.map(problem => {
-                // this.selectedProblems.add(problem.problem);
                 this.selectedProblems[problem.problem.id] = problem.problem;
 
                 this.getProblemData(problem.problem.id);
               });
-              console.log(this.selectedProblems, 'SOLUTIONS');
+
               if (result.data.solutions[0].solution_owners) {
                 this.owners = this.removeDuplicates(this.owners);
                 result.data.solutions[0].solution_owners.forEach(ownerArray => {
@@ -1034,7 +875,7 @@ export class AddSolutionComponent
       onNext: function(tab, navigation, index) {
         window.scroll(0, 0);
 
-        var $valid = $('.card-wizard form').valid();
+        const $valid = $('.card-wizard form').valid();
         if (!$valid) {
           $validator.focusInvalid();
           return false;
@@ -1044,21 +885,21 @@ export class AddSolutionComponent
       onInit: function(tab: any, navigation: any, index: any) {
         // check number of tabs and fill the entire row
         let $total = navigation.find('li').length;
-        let $wizard = navigation.closest('.card-wizard');
+        const $wizard = navigation.closest('.card-wizard');
 
-        let $first_li = navigation.find('li:first-child a').html();
-        let $moving_div = $('<div class="moving-tab">' + $first_li + '</div>');
+        const $first_li = navigation.find('li:first-child a').html();
+        const $moving_div = $('<div class="moving-tab">' + $first_li + '</div>');
         $('.card-wizard .wizard-navigation').append($moving_div);
 
         $total = $wizard.find('.nav li').length;
         let $li_width = 100 / $total;
 
-        let total_steps = $wizard.find('.nav li').length;
+        const total_steps = $wizard.find('.nav li').length;
         let move_distance = $wizard.width() / total_steps;
         let index_temp = index;
         let vertical_level = 0;
 
-        let mobile_device = $(document).width() < 600 && $total > 3;
+        const mobile_device = $(document).width() < 600 && $total > 3;
 
         if (mobile_device) {
           move_distance = $wizard.width() / 2;
@@ -1068,10 +909,10 @@ export class AddSolutionComponent
 
         $wizard.find('.nav li').css('width', $li_width + '%');
 
-        let step_width = move_distance;
+        const step_width = move_distance;
         move_distance = move_distance * index_temp;
 
-        let $current = index + 1;
+        const $current = index + 1;
 
         if ($current == 1 || (mobile_device == true && index % 2 == 0)) {
           move_distance -= 8;
@@ -1083,7 +924,7 @@ export class AddSolutionComponent
         }
 
         if (mobile_device) {
-          let x: any = index / 2;
+          const x: any = index / 2;
           vertical_level = parseInt(x);
           vertical_level = vertical_level * 38;
         }
@@ -1157,12 +998,12 @@ export class AddSolutionComponent
         $total = $wizard.find('.nav li').length;
         let $li_width = 100 / $total;
 
-        let total_steps = $wizard.find('.nav li').length;
+        const total_steps = $wizard.find('.nav li').length;
         let move_distance = $wizard.width() / total_steps;
         let index_temp = index;
         let vertical_level = 0;
 
-        let mobile_device = $(document).width() < 600 && $total > 3;
+        const mobile_device = $(document).width() < 600 && $total > 3;
 
         if (mobile_device) {
           move_distance = $wizard.width() / 2;
@@ -1172,7 +1013,7 @@ export class AddSolutionComponent
 
         $wizard.find('.nav li').css('width', $li_width + '%');
 
-        let step_width = move_distance;
+        const step_width = move_distance;
         move_distance = move_distance * index_temp;
 
         $current = index + 1;
@@ -1187,7 +1028,7 @@ export class AddSolutionComponent
         }
 
         if (mobile_device) {
-          let x: any = index / 2;
+          const x: any = index / 2;
           vertical_level = parseInt(x);
           vertical_level = vertical_level * 38;
         }
@@ -1275,7 +1116,6 @@ export class AddSolutionComponent
   }
 
   addOwners(event) {
-    // event = this.removeDuplicates(event);
     this.owners = event;
   }
 
@@ -1284,7 +1124,7 @@ export class AddSolutionComponent
     if (index >= 0) {
       this.owners.splice(index, 1);
     }
-    console.log(this.owners, 'removed from wizard');
+
     if (this.solution['id']) {
       this.apollo
         .mutate<any>({
@@ -1312,49 +1152,14 @@ export class AddSolutionComponent
         .pipe(take(1))
         .subscribe(
           ({ data }) => {
-            console.log('worked', data);
-            // location.reload();
-            // location.reload();
-            // this.router.navigateByUrl("/problems");
-
             return;
           },
           error => {
-            console.log('Could not delete due to ' + error);
+            console.error('Could not delete due to ' + error);
           }
         );
     }
   }
-
-  // publishSolution() {
-  //   if (
-  //     (!this.is_edit && this.solution.is_draft) ||
-  //     (this.is_edit && this.solution.is_draft)
-  //   ) {
-  //     swal({
-  //       title: "Are you sure you want to publish the Solution",
-  //       // text: "You won't be able to revert this!",
-  //       type: "warning",
-  //       showCancelButton: true,
-  //       confirmButtonClass: "btn btn-success",
-  //       cancelButtonClass: "btn btn-warning",
-  //       confirmButtonText: "Yes",
-  //       buttonsStyling: false
-  //     }).then(result => {
-  //       this.showSuccessSwal("Solution Added");
-
-  //       this.solution.is_draft = false;
-
-  //       this.submitSolutionToDB();
-  //     });
-  //   } else {
-  //     this.showSuccessSwal("Solution Updated");
-
-  //     this.solution.is_draft = false;
-
-  //     this.submitSolutionToDB();
-  //   }
-  // }
 
   publishSolution(solution) {
     if (
@@ -1370,7 +1175,7 @@ export class AddSolutionComponent
     ) {
       swal({
         title: 'Are you sure you want to publish the solution?',
-        // text: "You won't be able to revert this!",
+
         type: 'warning',
         showCancelButton: true,
         confirmButtonClass: 'btn btn-success',
@@ -1400,7 +1205,7 @@ export class AddSolutionComponent
       swal({
         title:
           'Are you sure you want to publish the solution without adding media content?',
-        // text: "You won't be able to revert this!",
+
         type: 'warning',
         showCancelButton: true,
         confirmButtonClass: 'btn btn-success',
@@ -1455,7 +1260,7 @@ export class AddSolutionComponent
   delete() {
     swal({
       title: 'Are you sure you want to delete this draft?',
-      // text: "You won't be able to revert this!",
+
       type: 'warning',
       showCancelButton: true,
       confirmButtonClass: 'btn btn-success',
@@ -1468,16 +1273,14 @@ export class AddSolutionComponent
           ({ data }) => {
             swal({
               title: 'Deleted!',
-              // text: "Your file has been deleted.",
+
               type: 'success',
               confirmButtonClass: 'btn btn-success',
               buttonsStyling: false
             });
             window.history.back();
-            // this.router.navigateByUrl("/dashboard");
           },
           error => {
-            console.log('Could delete due to ' + error);
             console.error(JSON.stringify(error));
           }
         );
@@ -1508,7 +1311,6 @@ export class AddSolutionComponent
       solution_id: this.solution['id'],
       problem_id: this.problemId
     };
-    console.log(solution_problem_object, 'solution_problem');
 
     return this.apollo.mutate({
       mutation: upsert_solutions_problems,
@@ -1519,9 +1321,6 @@ export class AddSolutionComponent
   }
 
   autoSave() {
-    // console.log(this.problem, "problem data");
-    // console.log("trying to auto save");
-    console.log('solution draft status==', this.solution.is_draft);
     if (this.solution.is_draft) {
       if (this.solution.title) {
         this.submitSolutionToDB();
@@ -1533,7 +1332,6 @@ export class AddSolutionComponent
   }
 
   submitSolutionToDB() {
-    // console.log(problem, "submitted");
     const upsert_solution = gql`
       mutation upsert_solutions($solutions: [solutions_insert_input!]!) {
         insert_solutions(
@@ -1574,7 +1372,7 @@ export class AddSolutionComponent
         }
       }
     `;
-    console.log('SOLUTION', this.solution);
+
     this.sectors = this.removeDuplicates(this.sectors);
 
     this.apollo
@@ -1588,7 +1386,7 @@ export class AddSolutionComponent
       .subscribe(
         result => {
           if (result.data.insert_solutions.returning.length > 0) {
-            let updatedSolutionData = result.data.insert_solutions.returning[0];
+            const updatedSolutionData = result.data.insert_solutions.returning[0];
             this.solution['id'] = result.data.insert_solutions.returning[0].id;
 
             this.saveProblemsInDB(
@@ -1597,8 +1395,6 @@ export class AddSolutionComponent
             );
             this.saveOwnersInDB(this.solution['id'], this.owners);
             this.saveSectorsInDB();
-
-            console.log(this.solution.is_draft, 'draft', this.is_edit);
 
             if (this.is_edit && !this.solution.is_draft) {
               this.router.navigate(['solutions', this.solution['id']], {
@@ -1615,11 +1411,6 @@ export class AddSolutionComponent
                 queryParamsHandling: 'preserve'
               });
             }
-            // else if (this.is_edit && this.solution.is_draft) {
-            //   this.router.navigate(["solutions", this.solution["id"]]);
-            // }
-
-            // this.router.navigate(["solutions", this.solution["id"]]);
           }
         },
         err => {
@@ -1632,7 +1423,6 @@ export class AddSolutionComponent
     const tags = [];
 
     const solution_tags = new Set();
-    // console.log(this.sectors, "sectors");
 
     this.sectors.map(sector => {
       tags.push({ name: sector });
@@ -1692,15 +1482,15 @@ export class AddSolutionComponent
       $('.card-wizard').each(function() {
         const $wizard = $(this);
         const index = $wizard.bootstrapWizard('currentIndex');
-        let $total = $wizard.find('.nav li').length;
+        const $total = $wizard.find('.nav li').length;
         let $li_width = 100 / $total;
 
-        let total_steps = $wizard.find('.nav li').length;
+        const total_steps = $wizard.find('.nav li').length;
         let move_distance = $wizard.width() / total_steps;
         let index_temp = index;
         let vertical_level = 0;
 
-        let mobile_device = $(document).width() < 600 && $total > 3;
+        const mobile_device = $(document).width() < 600 && $total > 3;
 
         if (mobile_device) {
           move_distance = $wizard.width() / 2;
@@ -1710,10 +1500,10 @@ export class AddSolutionComponent
 
         $wizard.find('.nav li').css('width', $li_width + '%');
 
-        let step_width = move_distance;
+        const step_width = move_distance;
         move_distance = move_distance * index_temp;
 
-        let $current = index + 1;
+        const $current = index + 1;
 
         if ($current == 1 || (mobile_device == true && index % 2 == 0)) {
           move_distance -= 8;
@@ -1725,7 +1515,7 @@ export class AddSolutionComponent
         }
 
         if (mobile_device) {
-          let x: any = index / 2;
+          const x: any = index / 2;
           vertical_level = parseInt(x);
           vertical_level = vertical_level * 38;
         }
@@ -1752,7 +1542,6 @@ export class AddSolutionComponent
   }
 
   removeSelectedItem(type: string, index: number) {
-    console.log('delete index,', index, this.solution);
     let fileName;
     switch (type) {
       case 'image':
@@ -1769,7 +1558,7 @@ export class AddSolutionComponent
         this.filesService.deleteFile(fileName).subscribe(
           result => console.log(result),
           error => {
-            console.log(error);
+            console.error(error);
           }
         );
 
@@ -1790,7 +1579,7 @@ export class AddSolutionComponent
         this.filesService.deleteFile(fileName).subscribe(
           result => console.log(result),
           error => {
-            console.log(error);
+            console.error(error);
           }
         );
         break;
@@ -1811,7 +1600,7 @@ export class AddSolutionComponent
         this.filesService.deleteFile(fileName).subscribe(
           result => console.log(result),
           error => {
-            console.log(error);
+            console.error(error);
           }
         );
         break;
@@ -1830,13 +1619,13 @@ export class AddSolutionComponent
   }
 
   checkIfExist(data: string) {
-    let problem_attachments = [
+    const problem_attachments = [
       ...this.solution['image_urls'],
       ...this.solution['video_urls'],
       ...this.solution['attachments']
     ];
 
-    let checked = problem_attachments.filter(attachmentObj => {
+    const checked = problem_attachments.filter(attachmentObj => {
       return attachmentObj.key === data;
     });
 
@@ -1881,7 +1670,7 @@ export class AddSolutionComponent
                     this.solution.featured_type = 'image';
                   }
                 })
-                .catch(e => console.log('Err:: ', e));
+                .catch(e => console.error('Err:: ', e));
             };
             reader.readAsArrayBuffer(file);
           }
@@ -1899,7 +1688,7 @@ export class AddSolutionComponent
                 key: values['key']
               });
             })
-            .catch(e => console.log('Err:: ', e));
+            .catch(e => console.error('Err:: ', e));
           break;
         }
         case 'application':
@@ -1915,7 +1704,7 @@ export class AddSolutionComponent
                 key: values['key']
               });
             })
-            .catch(e => console.log('Err:: ', e));
+            .catch(e => console.error('Err:: ', e));
           break;
         }
         default: {
@@ -1954,7 +1743,6 @@ export class AddSolutionComponent
     );
   }
   setFeatured(type, index) {
-    // console.log(type, index);
     if (type === 'image') {
       this.solution.featured_type = 'image';
       this.solution.featured_url = this.solution.image_urls[index].fileEndpoint;
@@ -1968,7 +1756,7 @@ export class AddSolutionComponent
   }
 
   addMediaUrl() {
-    let duplicate = this.checkIfExist(this.media_url);
+    const duplicate = this.checkIfExist(this.media_url);
 
     if (this.media_url && !duplicate) {
       this.solution.embed_urls.push(this.media_url);

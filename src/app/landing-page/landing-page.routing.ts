@@ -1,13 +1,13 @@
-import { Routes } from "@angular/router";
+import { Routes } from '@angular/router';
 
-import { LandingPageComponent } from "./landing-page.component";
+import { LandingPageComponent } from './landing-page.component';
 
 export const LandingPageRoutes: Routes = [
   {
-    path: "",
+    path: '',
     children: [
       {
-        path: "",
+        path: '',
         component: LandingPageComponent
       }
     ]

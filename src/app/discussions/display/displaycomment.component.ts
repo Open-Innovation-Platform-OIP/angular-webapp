@@ -51,7 +51,7 @@ export class CommentDisplayComponent implements OnInit, OnDestroy, OnChanges {
 
   constructor(
     private apollo: Apollo,
-    private auth: AuthService,
+    public auth: AuthService,
     private filesService: FilesService,
     private ele: ElementRef,
     private focusMonitor: FocusMonitor
@@ -70,9 +70,7 @@ export class CommentDisplayComponent implements OnInit, OnDestroy, OnChanges {
     });
   }
 
-  ngOnChanges() {
-    // console.log(this.focusContext);
-  }
+  ngOnChanges() {}
 
   sortReplies(replies) {
     if (replies && replies.length) {
@@ -83,21 +81,10 @@ export class CommentDisplayComponent implements OnInit, OnDestroy, OnChanges {
   replyTo(commentId) {
     this.showReplyBox = true;
     this.replyingTo = commentId;
-    console.log(commentId);
   }
   async onCommentSubmit(event) {
     const [content, mentions, attachments] = event;
 
-    // let comment = {
-    //   user_id: 0,
-    //   problem_id: 0,
-    //   text: content,
-    //   attachments: attachments,
-    //   mentions: JSON.stringify(mentions)
-    //     .replace("[", "{")
-    //     .replace("]", "}"),
-    //   linked_comment_id: this.replyingTo
-    // };
     this.reply.emit(event);
     this.replyingTo = 0;
     this.showReplyBox = false;
@@ -124,13 +111,12 @@ export class CommentDisplayComponent implements OnInit, OnDestroy, OnChanges {
   }
 
   assignUrl(files: any[], index: number, context: string) {
-    // console.log('modal src: ', files, index, context);
     this.fileClicked.emit({ attachmentObj: files, index, context });
   }
 
   compareDateForSort(a, b) {
-    var dateA = a.edited_at;
-    var dateB = b.edited_at;
+    const dateA = a.edited_at;
+    const dateB = b.edited_at;
     if (dateA < dateB) {
       return 1;
     }
@@ -142,10 +128,9 @@ export class CommentDisplayComponent implements OnInit, OnDestroy, OnChanges {
   }
 
   idToDelete(commentId) {
-    // console.log("you clicked delete!", commentId);
     swal({
       title: 'Are you sure?',
-      text: "You won't be able to revert this!",
+      text: 'You won\'t be able to revert this!',
       buttonsStyling: false,
       confirmButtonClass: 'btn btn-warning',
       confirmButtonText: 'Yes, delete it!'
@@ -166,12 +151,7 @@ export class CommentDisplayComponent implements OnInit, OnDestroy, OnChanges {
   }
 
   toggleVoteDiscussions() {
-    console.log(this.comment, 'comment', this.userId, 'user id');
-    // console.log('toggling watch flag');
-    // if (!(this.userId == this.comment.user_id)) {
     if (!this.voters.has(this.userId)) {
-      // user is not currently watching this problem
-      // let's add them
       this.voters.add(this.userId);
       const add_voter = gql`
         mutation insert_discussion_voter {
@@ -199,7 +179,6 @@ export class CommentDisplayComponent implements OnInit, OnDestroy, OnChanges {
         .subscribe(
           result => {
             if (result.data) {
-              // console.log(result.data);
             }
           },
           err => {
@@ -207,8 +186,6 @@ export class CommentDisplayComponent implements OnInit, OnDestroy, OnChanges {
           }
         );
     } else {
-      // user is currently not watching this problem
-      // let's remove them
       this.voters.delete(this.userId);
       const delete_voter = gql`
         mutation delete_discussion_voter {
@@ -229,7 +206,6 @@ export class CommentDisplayComponent implements OnInit, OnDestroy, OnChanges {
         .subscribe(
           result => {
             if (result.data) {
-              // console.log(result.data);
             }
           },
           err => {
@@ -237,11 +213,9 @@ export class CommentDisplayComponent implements OnInit, OnDestroy, OnChanges {
           }
         );
     }
-    // }
   }
 
   testMimeType(type) {
-    // let allowed;
     if (
       type &&
       !type.startsWith('video') &&

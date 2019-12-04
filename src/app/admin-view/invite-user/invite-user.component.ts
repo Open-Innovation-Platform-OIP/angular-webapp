@@ -45,6 +45,7 @@ export class InviteUserComponent implements OnInit, OnDestroy {
   public invitedUsersDataTable: TableData;
   public invitedUsersQuery: QueryRef<any>;
   public invitedUsersSubscription: Subscription;
+  addOnBlur = true;
 
   @ViewChild('orgsInput') orgsInput: ElementRef<HTMLInputElement>;
 
@@ -94,9 +95,8 @@ export class InviteUserComponent implements OnInit, OnDestroy {
       'Status',
       'Invited By'
     ];
-    let userDataRow = [];
+    const userDataRow = [];
     invitedUserData.map(user => {
-      // console.log(user, "gnerate user table");
       userDataRow.push([
         user['name'],
         user['email'],
@@ -138,13 +138,12 @@ export class InviteUserComponent implements OnInit, OnDestroy {
 
     this.invitedUsersSubscription = this.invitedUsersQuery.valueChanges.subscribe(
       ({ data }) => {
-        console.log(data, 'invited users data');
         if (data.invited_users.length > 0) {
           this.generateInvitedUsersDataTable(data.invited_users);
         }
       },
       error => {
-        console.log(error);
+        console.error(error);
       }
     );
   }
@@ -175,10 +174,7 @@ export class InviteUserComponent implements OnInit, OnDestroy {
       this.orgs.push(event.option.value);
       this.orgsInput.nativeElement.value = '';
       this.orgsCtrl.setValue(null);
-      console.log(this.orgs, 'orgs');
     }
-
-    // this.announcement(`Added ${event.option.value.value}`);
   }
 
   private _filter(value: string): string[] {
@@ -193,25 +189,17 @@ export class InviteUserComponent implements OnInit, OnDestroy {
     const index = this.orgs.indexOf(org);
     if (index >= 0) {
       this.orgs.splice(index, 1);
-      // this.removed.emit(owner);
-      // this.announcement(`Removed ${owner.value || owner.name}`);
     }
   }
-
-  // inviteUser() {
-  //   if (!this.userInviteForm.valid) {
-  //     return;
-  //   }
-  // }
 
   inviteUser() {
     if (!this.userInviteForm.valid || !this.orgs.length) {
       return;
     }
-    console.log(this.usersService.allOrgs, 'orgs');
-    let email = this.userInviteForm.value.email;
-    let name = this.userInviteForm.value.name;
-    console.log(email, 'email');
+
+    const email = this.userInviteForm.value.email;
+    const name = this.userInviteForm.value.name;
+
     this.http
       .post(
         'https://invite-flow-microservice-test.dev.jaagalabs.com/invite_user',
@@ -224,19 +212,17 @@ export class InviteUserComponent implements OnInit, OnDestroy {
       )
       .subscribe(
         data => {
-          console.log(data);
-
           this.updateInvitedUser(this.orgs, email, name);
         },
         error => {
-          console.log(error);
+          console.error(error);
         }
       );
   }
 
   updateInvitedUser(orgArray, email, name) {
     if (this.usersService.allOrgs[orgArray[0]]) {
-      let orgId = this.usersService.allOrgs[orgArray[0]].id;
+      const orgId = this.usersService.allOrgs[orgArray[0]].id;
       this.apollo
         .mutate({
           mutation: gql`
@@ -246,14 +232,14 @@ export class InviteUserComponent implements OnInit, OnDestroy {
                 _set: {
                   name: "${name}"
                   organization: ${orgId}
-                 
+
                 }
               ) {
                 affected_rows
                 returning {
                   id
                   name
-                 
+
                 }
               }
             }
@@ -272,7 +258,7 @@ export class InviteUserComponent implements OnInit, OnDestroy {
             }).catch(swal.noop);
           },
           err => {
-            console.log(err, "couldn't add tags");
+            console.error(err, 'couldn\'t add tags');
           }
         );
     } else {
@@ -283,9 +269,9 @@ export class InviteUserComponent implements OnInit, OnDestroy {
               insert_organizations(
                 objects: [
                   {
-                    
+
                     name: "${orgArray[0]}",
-                  
+
                   }
                 ]
               ) {
@@ -293,7 +279,7 @@ export class InviteUserComponent implements OnInit, OnDestroy {
                 returning {
                   id
                   name
-                 
+
                 }
               }
             }
@@ -302,8 +288,7 @@ export class InviteUserComponent implements OnInit, OnDestroy {
         .pipe(take(1))
         .subscribe(
           data => {
-            console.log(data, 'data');
-            let organizationId = data.data.insert_organizations.returning[0].id;
+            const organizationId = data.data.insert_organizations.returning[0].id;
             this.usersService.getOrgsFromDB();
 
             this.apollo
@@ -341,12 +326,12 @@ export class InviteUserComponent implements OnInit, OnDestroy {
                   }).catch(swal.noop);
                 },
                 err => {
-                  console.log(err, "couldn't add tags");
+                  console.error(err, 'couldn\'t add tags');
                 }
               );
           },
           err => {
-            console.log(err, "couldn't add tags");
+            console.error(err, 'couldn\'t add tags');
           }
         );
     }
@@ -358,4 +343,3 @@ export class InviteUserComponent implements OnInit, OnDestroy {
     this.invitedUsersSubscription.unsubscribe();
   }
 }
-// }

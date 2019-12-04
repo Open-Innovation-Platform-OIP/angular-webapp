@@ -14,9 +14,9 @@ import {
   LiveAnnouncer,
   AriaLivePoliteness
 } from '@angular/cdk/a11y';
-// import {ImageDrop} from 'quill-image-drop-module';
+
 Quill.register('modules/imageResize', ImageResize);
-// Quill.register('modules/imageDrop', ImageDrop);
+
 import 'quill-mention';
 import { QuillEditorComponent } from 'ngx-quill';
 import { FilesService } from 'src/app/services/files.service';
@@ -82,7 +82,7 @@ export class CommentSubmitComponent implements OnInit {
       }
     },
     keyboard: { bindings: { tab: false } },
-    // imageDrop: true,
+
     imageResize: {
       modules: ['Resize', 'DisplaySize', 'Toolbar'],
       handleStyles: {
@@ -96,7 +96,7 @@ export class CommentSubmitComponent implements OnInit {
   };
 
   constructor(
-    private auth: AuthService,
+    public auth: AuthService,
     public fileService: FilesService,
     private ngxService: NgxUiLoaderService,
     private focusMonitor: FocusMonitor,
@@ -104,8 +104,6 @@ export class CommentSubmitComponent implements OnInit {
   ) {}
 
   setFocus(event) {
-    // tslint:disable-next-line:no-console
-    // console.log(event);
     event.focus();
   }
 
@@ -127,22 +125,18 @@ export class CommentSubmitComponent implements OnInit {
   }
 
   checkForSpaces(input) {
-    console.log('checking for spaces', input.target.innerText.length);
     if (input.target.innerText.length > 0) {
-      let value = input.target.innerText.trim();
-      console.log(value.length, value, 'trim value');
+      const value = input.target.innerText.trim();
+
       if (value.length) {
         this.blankSpace = false;
       } else {
         this.blankSpace = true;
       }
-      console.log(this.blankSpace, 'blankspace');
     }
   }
 
-  ngOnInit() {
-    console.log('discussion type', this.pageType);
-  }
+  ngOnInit() {}
 
   onFileSelected(attach_files) {
     if (attach_files && attach_files.target.files) {
@@ -159,7 +153,7 @@ export class CommentSubmitComponent implements OnInit {
   }
 
   isFileDuplicate(file) {
-    let found = this.attachments.find(attachment => {
+    const found = this.attachments.find(attachment => {
       return attachment['name'] === file.name;
     });
 

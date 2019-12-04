@@ -5,20 +5,20 @@ import {
   Output,
   OnChanges,
   EventEmitter
-} from "@angular/core";
-import { AuthService } from "../../services/auth.service";
-import swal from "sweetalert2";
+} from '@angular/core';
+import { AuthService } from '../../services/auth.service';
+import swal from 'sweetalert2';
 
 declare var $: any;
 
 @Component({
-  selector: "app-add-collaborator",
-  templateUrl: "./add-collaborator.component.html",
-  styleUrls: ["./add-collaborator.component.css"]
+  selector: 'app-add-collaborator',
+  templateUrl: './add-collaborator.component.html',
+  styleUrls: ['./add-collaborator.component.css']
 })
 export class AddCollaboratorComponent implements OnInit, OnChanges {
   @Input() collaborator: any = {
-    intent: "",
+    intent: '',
     is_ngo: false,
     is_innovator: false,
     is_expert: false,
@@ -33,29 +33,25 @@ export class AddCollaboratorComponent implements OnInit, OnChanges {
   @Output() intentValue = new EventEmitter();
 
   objectKeys = Object.keys;
-  mode = "Add";
+  mode = 'Add';
   blankSpace: boolean;
 
   constructor(private auth: AuthService) {}
 
-  ngOnInit() {
-    console.log(this.collaborator, "collaborator on ngonit");
-  }
+  ngOnInit() {}
 
   ngOnChanges() {
     if (this.collaborator) {
-      this.mode = "Edit";
+      this.mode = 'Edit';
     }
   }
 
   collaborate() {
-    console.log("working");
     this.submitted.emit(this.collaborator);
   }
 
   checkForSpaces(event) {
-    console.log("checking for spaces");
-    let value = this.collaborator.intent.trim();
+    const value = this.collaborator.intent.trim();
     if (value) {
       this.blankSpace = false;
     } else {
@@ -67,22 +63,21 @@ export class AddCollaboratorComponent implements OnInit, OnChanges {
   confirmCancellation() {
     if (this.collaborator.intent) {
       swal({
-        title: "Are you sure you want to leave?",
-        // text: "You won't be able to revert this!",
-        type: "warning",
+        title: 'Are you sure you want to leave?',
+
+        type: 'warning',
         showCancelButton: true,
-        confirmButtonClass: "btn btn-success",
-        cancelButtonClass: "btn btn-danger",
-        confirmButtonText: "Yes",
+        confirmButtonClass: 'btn btn-success',
+        cancelButtonClass: 'btn btn-danger',
+        confirmButtonText: 'Yes',
         buttonsStyling: false
       }).then(result => {
         if (result.value) {
-          console.log("Received result", result);
-          $("#collaboratorModal").modal("hide");
+          $('#collaboratorModal').modal('hide');
         }
       });
     } else {
-      $("#collaboratorModal").modal("hide");
+      $('#collaboratorModal').modal('hide');
     }
   }
 }

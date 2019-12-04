@@ -22,7 +22,7 @@ export class DomainAddGuard implements CanActivate {
     next: ActivatedRouteSnapshot,
     state: RouterStateSnapshot
   ): Observable<boolean> | Promise<boolean> | boolean {
-    let isAdmin = false;
+    const isAdmin = false;
     const parser = document.createElement('a');
     parser.href = window.location.href;
     if (this.filterService.isPrimaryDomain) {
@@ -30,11 +30,7 @@ export class DomainAddGuard implements CanActivate {
     } else {
       this.router.navigate(['/dashboard']);
 
-      // alert('wrong');
-
       return false;
     }
-
-    // return isAdmin;
   }
 }

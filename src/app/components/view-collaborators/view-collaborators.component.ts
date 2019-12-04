@@ -1,9 +1,9 @@
-import { Component, OnInit, Input } from "@angular/core";
+import { Component, OnInit, Input } from '@angular/core';
 
 @Component({
-  selector: "app-view-collaborators",
-  templateUrl: "./view-collaborators.component.html",
-  styleUrls: ["./view-collaborators.component.css"]
+  selector: 'app-view-collaborators',
+  templateUrl: './view-collaborators.component.html',
+  styleUrls: ['./view-collaborators.component.css']
 })
 export class ViewCollaboratorsComponent implements OnInit {
   @Input() problemData: any;

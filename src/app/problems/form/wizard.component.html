@@ -2,42 +2,18 @@
   <div class="container-fluid">
     <div class="row">
       <div class="col-md-9">
-        <!--      Wizard container        -->
-        <!-- <button mat-raised-button class="btn btn-danger" router>Danger</button> -->
 
-        <app-wizard-container
-          [content]="problem"
-          (smartSearchInput)="smartSearch($event)"
-          (fieldsPopulated)="updateProblem($event)"
-          [searchedResults]="searchResults"
-          (tagAdded)="addTags($event)"
-          (tagRemoved)="remove($event)"
-          (contentSubmitted)="publishProblem(problem)"
-          [owners]="owners"
-          (deleteDraft)="deleteDraft($event)"
-          (addedOwners)="addOwners($event)"
-          (removedOwners)="removeOwners($event)"
-          [sectors]="sectors"
-          [contentType]="'problem'"
-          [selectedLocations]="problemLocations"
-          (locationSelected)="addLocation($event)"
-          (locationRemoved)="removeLocation($event)"
-          (nextTab)="scrollUp($event)"
-          (changeFocus)="moveFocusSearchHeading($event)"
-          [revertFocus]="goToTitle"
-        >
+
+        <app-wizard-container [content]="problem" (smartSearchInput)="smartSearch()"
+          (fieldsPopulated)="updateProblem($event)" [searchedResults]="searchResults" (tagAdded)="addTags($event)"
+          (tagRemoved)="remove($event)" (contentSubmitted)="publishProblem(problem)" [owners]="owners"
+          (deleteDraft)="deleteDraft($event)" (addedOwners)="addOwners($event)" (removedOwners)="removeOwners($event)"
+          [sectors]="sectors" [contentType]="'problem'" [selectedLocations]="problemLocations"
+          (locationSelected)="addLocation($event)" (locationRemoved)="removeLocation($event)"
+          (nextTab)="scrollUp($event)" (changeFocus)="moveFocusSearchHeading()" [revertFocus]="goToTitle">
         </app-wizard-container>
 
-        <!-- <app-wizard-container *ngIf="is_edit && problemLocations.length" [content]="problem"
-          (smartSearchInput)="smartSearch($event)" (fieldsPopulated)="updateProblem($event)"
-          (tagAdded)="addTags($event)" (tagRemoved)="remove($event)" (contentSubmitted)="publishProblem(problem)"
-          [owners]="owners" (deleteDraft)="deleteDraft($event)" (addedOwners)="addOwners($event)"
-          (removedOwners)="removeOwners($event)" [sectors]="sectors" [contentType]="'problem'"
-          (locationsFromParent)="problemLocations" (locationSelected)="addLocation($event)"
-          (locationRemoved)="removeLocation($event)">
-        </app-wizard-container> -->
 
-        <!-- wizard container -->
       </div>
       <div class="col-md-3">
         <ng-container *ngIf="searchResults.length > 0">
@@ -50,31 +26,15 @@
             </div>
           </div>
           <div class="row">
-            <div
-              class="col-sm-12"
-              style="overflow-y: scroll;"
-              role="region"
-              aria-label="problem cards"
-              [style.height]="wizardHeight ? wizardHeight + 'px' : null"
-            >
-              <div
-                *ngFor="let result of searchResults; let i = index"
-                id="searchedResult"
-              >
-                <app-problem-card
-                  *ngIf="problem"
-                  [index]="i"
-                  [problemData]="result"
-                >
+            <div class="col-sm-12" style="overflow-y: scroll;" role="region" aria-label="problem cards"
+              [style.height]="wizardHeight ? wizardHeight + 'px' : null">
+              <div *ngFor="let result of searchResults; let i = index" id="searchedResult">
+                <app-problem-card *ngIf="problem" [index]="i" [problemData]="result">
                 </app-problem-card>
               </div>
             </div>
             <div class="col-sm-12 text-right">
-              <a
-                class="cdk-visually-hidden"
-                href="javascript:void(0);"
-                (click)="focusBackToTitle()"
-              >
+              <a class="cdk-visually-hidden" href="javascript:void(0);" (click)="focusBackToTitle()">
                 Back to title
               </a>
             </div>

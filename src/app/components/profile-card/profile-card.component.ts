@@ -9,14 +9,12 @@ import { AuthService } from '../../services/auth.service';
 })
 export class ProfileCardComponent implements OnInit {
   @Input() userData: any;
-  @Input() index: number = 0;
+  @Input() index = 0;
 
   constructor(
-    private filesService: FilesService,
-    private authService: AuthService
+    public filesService: FilesService,
+    public authService: AuthService
   ) {}
 
-  ngOnInit() {
-    // console.log(this.userData, "in card");
-  }
+  ngOnInit() {}
 }

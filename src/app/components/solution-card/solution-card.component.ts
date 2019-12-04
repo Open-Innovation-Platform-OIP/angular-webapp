@@ -17,18 +17,14 @@ export class SolutionCardComponent implements OnInit {
   link = '';
   imageAlt = 'default image';
 
-  constructor(private filesService: FilesService) {}
+  constructor(public filesService: FilesService) {}
 
   ngOnInit() {
-    // console.log(this.solutionData, 'solution data');
-    // console.log(this.solutionData.is_draft, "solution card");
     if (this.solutionData.is_draft) {
       this.link += `/solutions/${this.solutionData.id}/edit`;
     } else {
       this.link += `/solutions/${this.solutionData.id}`;
     }
-    // console.log("Solution Data", this.solutionData);
-    // this.link += `/solutions/${this.solutionData.id}`;
 
     if (
       this.solutionData.solution_voters &&
@@ -52,8 +48,8 @@ export class SolutionCardComponent implements OnInit {
   }
 
   checkUrlIsImg(url) {
-    var arr = ['jpeg', 'jpg', 'gif', 'png'];
-    var ext = url.substring(url.lastIndexOf('.') + 1);
+    const arr = ['jpeg', 'jpg', 'gif', 'png'];
+    const ext = url.substring(url.lastIndexOf('.') + 1);
     if (arr.indexOf(ext) > -1) {
       return true;
     } else {

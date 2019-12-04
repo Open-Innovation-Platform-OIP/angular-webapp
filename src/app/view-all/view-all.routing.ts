@@ -1,13 +1,13 @@
-import { Routes } from "@angular/router";
+import { Routes } from '@angular/router';
 
-import { ViewAllComponent } from "./view-all.component";
+import { ViewAllComponent } from './view-all.component';
 
 export const ViewAllRoutes: Routes = [
   {
-    path: "",
+    path: '',
     children: [
       {
-        path: "",
+        path: '',
         component: ViewAllComponent
       }
     ]

@@ -85,7 +85,6 @@ export class DomainsComponent implements OnInit, OnDestroy {
   }
 
   remove(sector: string): void {
-    console.log(sector, this.sectors);
     const index = this.sectors.indexOf(sector);
     if (index >= 0) {
       this.sectors.splice(index, 1);
@@ -93,7 +92,6 @@ export class DomainsComponent implements OnInit, OnDestroy {
   }
 
   selected(event: MatAutocompleteSelectedEvent): void {
-    // //console.log(this.sectors, "test for sector");
     this.sectors.push(event.option.viewValue);
     this.sectorInput.nativeElement.value = '';
     this.sectorCtrl.setValue(null);
@@ -112,10 +110,8 @@ export class DomainsComponent implements OnInit, OnDestroy {
       return;
     }
 
-    console.log(this.domainForm, 'domain form');
-
-    let domainUrl = this.domainForm.value.domainUrl;
-    let colour = this.domainForm.value.colour;
+    const domainUrl = this.domainForm.value.domainUrl;
+    const colour = this.domainForm.value.colour;
 
     this.apollo
       .mutate({
@@ -143,7 +139,6 @@ export class DomainsComponent implements OnInit, OnDestroy {
       .pipe(take(1))
       .subscribe(
         data => {
-          console.log(data, 'domain added');
           const domainId = data.data.insert_domains.returning[0].id;
           this.addSectorRelationship(domainId);
         },
@@ -154,12 +149,9 @@ export class DomainsComponent implements OnInit, OnDestroy {
   }
 
   generateDomainsTable(domainData) {
-    console.log(domainData, 'domain Data');
     const domainHeaderRow = ['Url', 'Colour', 'Sectors'];
-    let domainDataRow = [];
+    const domainDataRow = [];
     domainData.map(domain => {
-      // console.log(user, "gnerate user table");
-      console.log(domain['domain_tags'], 'domain tags');
       domainDataRow.push([
         domain['url'],
         domain['colour'],
@@ -174,7 +166,6 @@ export class DomainsComponent implements OnInit, OnDestroy {
   }
 
   editDomain(domainData) {
-    // console.log(domain, 'domain edit');
     this.showDomainForm = true;
     const url = domainData[0];
     const colour = domainData[1];
@@ -186,6 +177,7 @@ export class DomainsComponent implements OnInit, OnDestroy {
 
     this.domainForm.value.domainUrl = url;
     this.domainForm.value.colour = colour;
+    this.domainForm.patchValue({ domainUrl: url, colour: colour });
   }
 
   getDomains() {
@@ -213,13 +205,12 @@ export class DomainsComponent implements OnInit, OnDestroy {
 
     this.domainsSubscription = this.domainsQuery.valueChanges.subscribe(
       ({ data }) => {
-        // console.log(data, 'invited users data');
         if (data.domains.length > 0) {
           this.generateDomainsTable(data.domains);
         }
       },
       error => {
-        console.log(error);
+        console.error(error);
       }
     );
   }

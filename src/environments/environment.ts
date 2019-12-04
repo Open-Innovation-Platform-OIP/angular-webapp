@@ -7,12 +7,6 @@ const environment = {
   production: false
 };
 
-const digitalocean = {
-  accessKeyId: 'XYWXQG6AIL2ALTADBF53',
-  secretAccessKey: 'j93g467IKFw7xHPeLa1QjPflfMHT30/OtwJghVA6qRA',
-  region: 'sgp1' // Singapore region
-};
-
 const domain = 'https://oip-dev.dev.jaagalabs.com';
 
 const fileUploadVariables = {
@@ -23,4 +17,4 @@ const fileUploadVariables = {
   deleteEndpoint: 'https://minio-microservice.dev.jaagalabs.com/delete_file'
 };
 
-export { environment, digitalocean, domain, fileUploadVariables };
+export { environment, domain, fileUploadVariables };

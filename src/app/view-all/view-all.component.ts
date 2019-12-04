@@ -28,7 +28,7 @@ export class ViewAllComponent implements OnInit, AfterViewInit {
   viewProblemsAndSolutions: Boolean = false;
   dashboardData: any;
   title: string;
-  displayUsers: boolean = false;
+  displayUsers = false;
   solutions: any[] = [];
   solutionContributions = [];
 

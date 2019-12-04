@@ -1,27 +1,27 @@
-import { Routes } from "@angular/router";
+import { Routes } from '@angular/router';
 
-import { WizardComponent } from "./form/wizard.component";
-import { ProblemDetailComponent } from "./detail/problem-detail.component";
-import { ProblemsViewComponent } from "./grid/problems-view.component";
+import { WizardComponent } from './form/wizard.component';
+import { ProblemDetailComponent } from './detail/problem-detail.component';
+import { ProblemsViewComponent } from './grid/problems-view.component';
 
 export const ProblemsRoutes: Routes = [
   {
-    path: "",
+    path: '',
     children: [
       {
-        path: "",
+        path: '',
         component: ProblemsViewComponent
       },
       {
-        path: "add",
+        path: 'add',
         component: WizardComponent
       },
       {
-        path: ":id",
+        path: ':id',
         component: ProblemDetailComponent
       },
       {
-        path: ":id/edit",
+        path: ':id/edit',
         component: WizardComponent
       }
     ]

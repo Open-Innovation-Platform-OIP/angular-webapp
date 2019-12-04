@@ -1,5 +1,5 @@
 <div class="card-body ">
-  <form method="get" action="/" class="form-horizontal" (ngSubmit)="onSubmit()" #enrichmentForm="ngForm">
+  <form method="get" action="/" class="form-horizontal" #enrichmentForm="ngForm">
     <div class="form-group">
       <div class="row">
         <label class="col-sm-3 col-form-label"
@@ -50,19 +50,10 @@
           <mat-form-field class="example-full-width">
             <input matInput type="text" name="organization" required [(ngModel)]="enrichmentData.organization">
           </mat-form-field>
-          <!-- <div [hidden]="organization.valid || organization.pristine" class="text-danger error-msg">
-            Organization is required
-          </div> -->
+
         </div>
       </div>
-      <!-- <div class="row">
-        <label class="col-sm-3 col-form-label">Organization</label>
-        <div class="col-sm-9">
-          <mat-form-field class="example-full-width">
-            <input matInput type="text" name="organization" [(ngModel)]="enrichmentData.organization">
-          </mat-form-field>
-        </div>
-      </div> -->
+
 
       <div class="row">
         <label class="col-sm-3 col-form-label">Resources needed</label>
@@ -106,21 +97,7 @@
         </div>
       </div>
 
-      <!-- <div class="row">
-            <div class="row">
-      
-                <label class="col-sm-3 col-form-label" [ngStyle]="{ 'color' : (!enrichmentData.population_affected) ? 'red' : 'grey' }">Population
-                  Affected *</label>
-                <div class="col-sm-9">
-                  <mat-form-field class="example-full-width">
-                    <input matInput type="text" name="population_affected" required [(ngModel)]="enrichmentData.population_affected"
-                      #population_affected="ngModel">
-                  </mat-form-field>
-                  <div [hidden]="population_affected.valid || population_affected.pristine" class="text-danger error-msg">
-                    Population Affected is required
-                  </div>
-                </div>
-              </div> -->
+
 
       <div class="row">
         <label class="col-sm-3 col-form-label">Beneficiary Attributes</label>
@@ -132,122 +109,7 @@
         </div>
       </div>
     </div>
-    <!-- <div class="row">
-              <label class="col-sm-2 col-form-label">sdsd</label>
-              <div class="col-sm-10">
-                <mat-form-field class="example-full-width">
-                  <input matInput type="text" name="title" [(ngModel)]="problem.title">
-                </mat-form-field>
-              </div>
-            </div>
-            <div class="row">
-              <label class="col-sm-2 col-form-label">Description</label>
-              <div class="col-sm-10">
-                <mat-form-field class="example-full-width">
-                  <input matInput type="text" name="description" [(ngModel)]="problem.description">
-                </mat-form-field>
-              </div>
-            </div>
-            <div class="row">
-              <label class="col-sm-2 col-form-label">Location</label>
-              <div class="col-sm-10">
-                <mat-form-field class="example-full-width">
-                  <input matInput type="text" name="location" [(ngModel)]="problem.location">
-                </mat-form-field>
-              </div>
-            </div> -->
 
-
-    <!-- <div class="row">
-            <label class="col-sm-2 col-form-label">Static control</label>
-            <div class="col-sm-10">
-              <div class="form-group">
-                <p class="form-control-static">hello@creative-tim.com</p>
-              </div>
-            </div>
-          </div> -->
-
-
-    <!-- <div class="row">
-            <label class="col-sm-2 col-form-label">Sectors</label>
-            <div class="col-sm-10 checkbox-radios">
-              <div class="form-check">
-                <label class="form-check-label">
-                  <input class="form-check-input" type="checkbox" value="Water" [(ngModel)]="enrichmentData.sectors.water"
-                    [ngModelOptions]="{standalone: true}">
-                  Water
-                  <span class="form-check-sign">
-                    <span class="check"></span>
-                  </span>
-                </label>
-              </div>
-      
-      
-              <div class="form-check">
-                <label class="form-check-label">
-                  <input class="form-check-input" type="checkbox" value="Sanitation" [(ngModel)]="enrichmentData.sectors.sanitation"
-                    [ngModelOptions]="{standalone: true}">
-                  Sanitation
-                  <span class="form-check-sign">
-                    <span class="check"></span>
-                  </span>
-                </label>
-              </div>
-      
-              <div class="form-check">
-                <label class="form-check-label">
-                  <input class="form-check-input" type="checkbox" value="Health" [(ngModel)]="enrichmentData.sectors.health"
-                    [ngModelOptions]="{standalone: true}">
-                  Health
-                  <span class="form-check-sign">
-                    <span class="check"></span>
-                  </span>
-                </label>
-              </div>
-              <div class="form-check">
-                <label class="form-check-label">
-                  <input class="form-check-input" type="checkbox" value="Agriculture" [(ngModel)]="enrichmentData.sectors.agriculture"
-                    [ngModelOptions]="{standalone: true}">
-                  Agriculture
-                  <span class="form-check-sign">
-                    <span class="check"></span>
-                  </span>
-                </label>
-              </div>
-              <div class="form-check">
-                <label class="form-check-label">
-                  <input class="form-check-input" type="checkbox" value="Energy" [(ngModel)]="enrichmentData.sectors.energy"
-                    [ngModelOptions]="{standalone: true}">
-                  Energy
-                  <span class="form-check-sign">
-                    <span class="check"></span>
-                  </span>
-                </label>
-              </div>
-              <div class="form-check">
-                <label class="form-check-label">
-                  <input class="form-check-input" type="checkbox" value="Environment" [(ngModel)]="enrichmentData.sectors.environment"
-                    [ngModelOptions]="{standalone: true}">
-                  Environment
-                  <span class="form-check-sign">
-                    <span class="check"></span>
-                  </span>
-                </label>
-              </div>
-              <div class="form-check">
-                <label class="form-check-label">
-                  <input class="form-check-input" type="checkbox" value="Disabilities" [(ngModel)]="enrichmentData.sectors.disabilities"
-                    [ngModelOptions]="{standalone: true}">
-                  Disabilities
-                  <span class="form-check-sign">
-                    <span class="check"></span>
-                  </span>
-                </label>
-              </div>
-      
-            </div>
-          </div> -->
-    <!-- </div> -->
   </form>
   <div class="row">
     <label class="col-sm-3 col-form-label">Problem Image</label>
@@ -258,10 +120,9 @@
           <span class="btn btn-file">
             <span class="fileinput-new">Select image</span>
             <span class="fileinput-exists">Add more</span>
-            <input type="file" name="..." (change)="onEnrichImgSelect($event)" multiple accept="image/*" />
+            <input type="file" name="..." multiple accept="image/*" />
           </span>
-          <!-- <a href="#pablo" class="btn btn-danger fileinput-exists" data-dismiss="fileinput"><i class="fa fa-times"></i>
-                  Remove</a> -->
+
         </div>
         <div class="fileinput-new thumbnail">
           <img src="./assets/img/image_placeholder.jpg" alt="...">
@@ -287,7 +148,7 @@
         <span class="btn btn-default btn-file">
           <span class="fileinput-new">Select video </span>
           <span class="fileinput-exists">Add More</span>
-          <input type="file" (change)="onEnrichVideoSelect($event)" name="..." multiple accept="video/*">
+          <input type="file" name="..." multiple accept="video/*">
         </span>
         <div *ngFor="let video of  enrichmentData.video_urls; let i=index">
           <span>{{video.key}}</span>
@@ -297,7 +158,7 @@
     </div>
   </div>
 </div>
-<!-- <hr> -->
+
 
 <div class="card-footer justify-content-center">
   <div class="row justify-content-center" *ngIf="mode==='Add'">
@@ -312,8 +173,3 @@
       Update</button>
   </div>
 </div>
-<!-- </div> -->
-<!-- </div> -->
-<!-- </div> -->
-<!-- </div> -->
-<!-- </div> -->

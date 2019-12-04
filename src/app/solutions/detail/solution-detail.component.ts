@@ -29,8 +29,6 @@ import {
   MAT_DIALOG_DATA
 } from '@angular/material/dialog';
 
-// import { FilesService } from "../../services/files.service";
-
 import {
   first,
   finalize,
@@ -57,7 +55,7 @@ import { ValidationService } from 'src/app/services/validation.service';
 import { EnrichmentService } from 'src/app/services/enrichment.service';
 import { sharing } from '../../globalconfig';
 import { FocusMonitor } from '@angular/cdk/a11y';
-var Buffer = require('buffer/').Buffer;
+const Buffer = require('buffer/').Buffer;
 
 const misc: any = {
   navbar_menu_visible: 0,
@@ -75,8 +73,6 @@ interface queryString {
   commentId: number;
 }
 
-// const domain = "https://social-alpha-open-innovation.firebaseapp.com";
-
 @Component({
   selector: 'app-solution-detail',
   providers: [
@@ -92,7 +88,7 @@ export class SolutionDetailComponent implements OnInit {
   @ViewChild('solutionTitle') solutionTitle: ElementRef<HTMLElement>;
 
   channels = sharing;
-  imageAlt: string = 'Default image';
+  imageAlt = 'Default image';
   discussionContext: string;
   lastContext = new Subject();
   // chartData: any;
@@ -135,7 +131,11 @@ export class SolutionDetailComponent implements OnInit {
     featured_type: '',
     user_id: 0,
     is_draft: true,
-    attachments: []
+    attachments: [],
+    organization: '',
+    resources: '',
+    timeline: '',
+    pilots: ''
   };
 
   problemData: any = {
@@ -165,7 +165,7 @@ export class SolutionDetailComponent implements OnInit {
 
   enrichDataToEdit: any;
   tags: any = [];
-  sectorMatched: boolean = false;
+  sectorMatched = false;
   enrichDataArray: any[];
   validationArray: any[];
   sectors: any[] = [];
@@ -181,21 +181,21 @@ export class SolutionDetailComponent implements OnInit {
     is_incubator: false,
     is_entrepreneur: false
   };
-  // enrich: number[] = [1, 2, 3, 4, 5];
+
   modalImgSrc: String;
   modalVideoSrc: String;
   solution_attachments: any[] = [];
-  solution_attachments_index: number = 0;
+  solution_attachments_index = 0;
   solution_attachments_src: any;
   modalSrc: any;
   sources: any;
-  singleImg: boolean = false;
-  // modalBtnTxt: string;
-  imgUrlIndex: number = 0;
-  videoUrlIndex: number = 0;
-  disableEnrichButton: boolean = false;
-  disableValidateButton: boolean = false;
-  disableCollaborateButton: boolean = false;
+  singleImg = false;
+
+  imgUrlIndex = 0;
+  videoUrlIndex = 0;
+  disableEnrichButton = false;
+  disableValidateButton = false;
+  disableCollaborateButton = false;
 
   private listTitles: any[];
   location: Location;
@@ -206,7 +206,7 @@ export class SolutionDetailComponent implements OnInit {
   private _router: Subscription;
   displayEnrichForm: boolean;
   showCollaborators: boolean;
-  hideProblemDetail: boolean = true;
+  hideProblemDetail = true;
   collaboratorProfileInfo: any;
   comments = {};
   replies = {};
@@ -216,19 +216,7 @@ export class SolutionDetailComponent implements OnInit {
   pageUrl = '';
   mailToLink = '';
 
-  fabTogglerState: boolean = false;
-
-  // openform: any;
-  // reply: any;
-  // index: any;
-  // form = {
-  //   comment: null,
-  //   user_id: 1,
-  //   problem_id: 3
-  // };
-  // data: any;
-  // putReply: any;
-  // netReply: any;
+  fabTogglerState = false;
 
   // Carousel
   @Input() name: string;
@@ -245,7 +233,7 @@ export class SolutionDetailComponent implements OnInit {
   public carouselTileItems$: Observable<any>;
   public carouselTileItemsValid$: Observable<number[]>;
   public carouselTileItemCollab$: Observable<number[]>;
-  // public carouselTileItemProblems$: Observable<number[]>;
+
   public carouselTileConfig: NguCarouselConfig = {
     grid: { xs: 2, sm: 2, md: 2, lg: 2, all: 0 },
 
@@ -264,7 +252,7 @@ export class SolutionDetailComponent implements OnInit {
     private problemService: ProblemService,
     private apollo: Apollo,
     private cdr: ChangeDetectorRef,
-    private auth: AuthService,
+    public auth: AuthService,
     public usersService: UsersService,
     public filesService: FilesService,
     private discussionsService: DiscussionsService,
@@ -304,7 +292,7 @@ export class SolutionDetailComponent implements OnInit {
       query: gql`
           {
             users(where: { id: { _eq: ${id} } }) {
-              
+
               is_ngo
               is_innovator
               is_expert
@@ -321,7 +309,7 @@ export class SolutionDetailComponent implements OnInit {
             }
             }
         }
-            
+
         `,
       fetchPolicy: 'network-only',
       pollInterval: 1000
@@ -329,16 +317,14 @@ export class SolutionDetailComponent implements OnInit {
 
     this.userDataQuery.valueChanges.pipe(take(1)).subscribe(
       result => {
-        // console.log("PERSONAS", result);
         if (result.data.users[0]) {
           Object.keys(result.data.users[0]).map(persona => {
             this.userPersonas[persona] = result.data.users[0][persona];
           });
-          // console.log("persona assignment", result.data.users[0]);
+
           result.data.users[0].users_tags.map(tag => {
             this.userInterests[tag.tag.name] = tag.tag;
           });
-          // console.log(this.userInterests, "user interests");
         }
       },
       error => {
@@ -360,7 +346,6 @@ export class SolutionDetailComponent implements OnInit {
           data = this.validation;
           return data;
         }
-        // return data;
       })
     );
 
@@ -387,10 +372,7 @@ export class SolutionDetailComponent implements OnInit {
 
     this.loadCarousels();
 
-    // this.minimizeSidebar();
-
     this.route.queryParams.subscribe(params => {
-      console.log('params ', params, this.qs);
       if (params.commentId) {
         this.qs.commentId = params.commentId;
       }
@@ -404,19 +386,16 @@ export class SolutionDetailComponent implements OnInit {
     this.solutionDataSubcription.subscribe(
       result => {
         if (result.data.solutions.length >= 1 && result.data.solutions[0].id) {
-          let solutionData = result.data.solutions[0];
-          console.log(solutionData, 'solution data');
+          const solutionData = result.data.solutions[0];
+
           this.parseSolution(solutionData);
         }
       },
 
       error => {
-        console.log('error', error);
         console.error(JSON.stringify(error));
       }
     );
-
-    console.log('check title', this.problemData.title);
   }
 
   getSolutionData(id) {
@@ -425,16 +404,21 @@ export class SolutionDetailComponent implements OnInit {
       {
         solutions(where: { id: { _eq: ${id} } }) {
           id
-          
+
     title
     description
     user_id
-  
+    resources
+    timeline
+    pilots
+    beneficiary_attributes
+
+
     impact
     technology
     website_url
     deployment
-    
+
     budget_title
     min_budget
     max_budget
@@ -463,7 +447,7 @@ export class SolutionDetailComponent implements OnInit {
       agree
       created_at
       files
-      
+
       edited_at
       is_deleted
 
@@ -471,8 +455,8 @@ export class SolutionDetailComponent implements OnInit {
       user {
         id
         name
-      } 
-      
+      }
+
     }
 
     solution_collaborators(order_by:{edited_at: desc}){
@@ -490,8 +474,8 @@ export class SolutionDetailComponent implements OnInit {
         id
         name
         photo_url
-      } 
-      
+      }
+
     }
 
     solution_owners {
@@ -526,7 +510,7 @@ export class SolutionDetailComponent implements OnInit {
         id
             title
             description
-            
+
             resources_needed
             image_urls
             edited_at
@@ -561,20 +545,20 @@ export class SolutionDetailComponent implements OnInit {
             problem_validations {
               user_id
             }
-          
+
       }
-     
+
     }
 
 
-    
-    
+
+
     attachments
     user{
       name
     }
 
-       
+
     }
   }
 
@@ -582,9 +566,8 @@ export class SolutionDetailComponent implements OnInit {
       pollInterval: 1000,
       fetchPolicy: 'network-only'
     });
-    // this.chartQuery.valueChanges.subscribe
+
     return this.solutionDataQuery.valueChanges;
-    // return problemDataSubcription;
   }
 
   fbShare() {
@@ -642,7 +625,6 @@ export class SolutionDetailComponent implements OnInit {
       body: JSON.stringify(data) // body data type must match "Content-Type" header
     })
       .then(response => {
-        // console.log(response.json());
         alert('Your message has been sent');
       }) // parses JSON response into native Javascript objects
       .catch(e => {
@@ -680,49 +662,29 @@ export class SolutionDetailComponent implements OnInit {
   //
 
   parseSolution(solution) {
-    // console.log(solution, "solution parsed");
     if (solution.title) {
-      console.log('Message', solution.title);
       this.message = solution.title;
     }
 
-    // this.showNotification("bottom", "right", this.message);
-
     // map core keys
     Object.keys(this.solutionData).map(key => {
-      // console.log(key, result.data.problems[0][key]);
-
       this.solutionData[key] = solution[key];
     });
+
     this.solutionOwner = solution.user.name;
 
-    // problem.problem_validations.map(validation => {
-    //   // console.log(validation.user_id, "test55");
-    //   if (validation.user_id === Number(this.auth.currentUserValue.id)) {
-    //     this.disableValidateButton = true;
-    //   }
-    // });
-    // this.validation = problem.problem_validations;
-
-    // problem.problem_collaborators.map(collaborator => {
-    //   if (collaborator.user_id === Number(this.auth.currentUserValue.id)) {
-    //     this.disableCollaborateButton = true;
-    //   }
-    // });
     if (solution.problems_solutions) {
       this.solutionLocations = [];
 
       solution.problems_solutions.map(problems => {
-        let locations = problems.problem.problem_locations.map(location => {
+        const locations = problems.problem.problem_locations.map(location => {
           this.solutionLocations.push(location.location);
         });
       });
-      console.log(this.solutionLocations, 'solution locations');
     }
 
     if (solution.solutions_tags) {
       this.tags = solution.solutions_tags.map(tagArray => {
-        // console.log(tagArray, "work");
         return tagArray.tag;
       });
     }
@@ -734,7 +696,6 @@ export class SolutionDetailComponent implements OnInit {
     });
 
     solution.solution_validations.map(validation => {
-      // console.log(validation.user_id, "test55");
       if (validation.user_id === Number(this.auth.currentUserValue.id)) {
         this.disableValidateButton = true;
       }
@@ -753,50 +714,23 @@ export class SolutionDetailComponent implements OnInit {
 
     this.collaborators = solution.solution_collaborators;
 
-    // this.collaborators = problem.problem_collaborators;
-    console.log(this.collaborators, 'collaborators refresh');
-
     this.loadCarousels();
 
-    // console.log(this.problemData, "result from nested queries");
-    // console.log(problem.is_draft, "is draft");
-    // if (problem.user) {
-    //   this.problemOwner = problem.user.name;
     solution.solutions_tags.map(tags => {
       if (this.userInterests[tags.tag.name]) {
         this.sectorMatched = true;
-        // console.log(this.sectorMatched, "sector matched");
       }
     });
-    // if (problem.problems_tags) {
-    //   this.tags = problem.problems_tags.map(tagArray => {
-    //     // console.log(tagArray, "work");
-    //     return tagArray.tag.name;
-    //   });
-    // }
-    // Object.keys(this.problemData).map(key => {
-    //   if (problem[key] && key !== "problems_tags") {
-    //     this.problemData[key] = problem[key];
-    //   }
-    // });
-    // problem.problem_watchers.map(watcher => {
-    //   this.watchers.add(watcher.user_id);
-    // });
-
-    // problem.problem_voters.map(voter => {
-    //   this.voters.add(voter.user_id);
-    // });
 
     this.ownerData = solution.solution_owners.map(owner => {
       this.owners.add(owner.user_id);
-      // this.ownerNames.push(owner.user.name);
+
       return owner.user;
     });
-    console.log(this.ownerData, 'ownerData');
 
     // adding embed urls
 
-    let embedded_urls_arr = this.solutionData.embed_urls.map(url => {
+    const embedded_urls_arr = this.solutionData.embed_urls.map(url => {
       return { url: url };
     });
 
@@ -812,10 +746,8 @@ export class SolutionDetailComponent implements OnInit {
       this.solution_attachments_index
     ];
 
-    // console.log(problem.discussions);
     solution.discussions.map(comment => {
       if (comment.linked_comment_id) {
-        // console.log(comment);
         // this comment is a reply - add it to the replies object
         if (!this.replies[comment.linked_comment_id]) {
           // create reply object so we can add reply
@@ -830,7 +762,7 @@ export class SolutionDetailComponent implements OnInit {
       } else {
         // this comment is a parent comment - add it to the comments object
         // comment object does not exist
-        // console.log("COMMENT ID", comment.id);
+
         this.comments[comment.id] = comment;
         if (!this.replies[comment.id]) {
           this.replies[comment.id] = []; // create an empty array for replies to this comment
@@ -840,12 +772,14 @@ export class SolutionDetailComponent implements OnInit {
 
     this.popularDiscussions = Object.keys(this.replies)
       .sort((a, b) => {
+        let dateA;
+        let dateB;
         // sorting by date
         if (this.comments[a]) {
-          var dateA = this.comments[a].edited_at;
+          dateA = this.comments[a].edited_at;
         }
         if (this.comments[b]) {
-          var dateB = this.comments[b].edited_at;
+          dateB = this.comments[b].edited_at;
         }
         if (dateA < dateB) {
           return 1;
@@ -862,10 +796,6 @@ export class SolutionDetailComponent implements OnInit {
       })
       .filter(commentId => this.comments[commentId]) // to avoid undefined
       .map(commentId => this.comments[commentId]); //mapping the sorted array
-
-    console.log('REPLIES', this.replies);
-    console.log('COMMENTS', this.comments);
-    console.log('POPULAR', this.popularDiscussions);
   }
 
   removeDuplicateReplies(_replies: any[]) {
@@ -875,15 +805,14 @@ export class SolutionDetailComponent implements OnInit {
   }
 
   sortComments(comments) {
-    // console.log("comments>>>>> ", comments);
-    let sortByDate = comments.sort(this.compareDateForSort);
-    let sharedComment = comments.filter(comment => {
+    const sortByDate = comments.sort(this.compareDateForSort);
+    const sharedComment = comments.filter(comment => {
       if (this.qs.commentId) {
         return comment.id === Number(this.qs.commentId);
       }
     });
 
-    let sortedComments = this.removeDuplicateReplies([
+    const sortedComments = this.removeDuplicateReplies([
       ...sharedComment,
       ...sortByDate
     ]);
@@ -896,11 +825,9 @@ export class SolutionDetailComponent implements OnInit {
   }
 
   deleteComment(comment) {
-    let deleteResp = this.discussionsService.deleteCommentsFromDB(comment.id);
+    const deleteResp = this.discussionsService.deleteCommentsFromDB(comment.id);
     deleteResp.subscribe(
       result => {
-        console.log(result, 'delete worked');
-        // location.reload();
         if (
           this.comments.hasOwnProperty(comment.id) &&
           !this.comments[comment.id].linked_comment_id
@@ -933,8 +860,8 @@ export class SolutionDetailComponent implements OnInit {
   }
 
   compareDateForSort(a, b) {
-    var dateA = a.edited_at;
-    var dateB = b.edited_at;
+    const dateA = a.edited_at;
+    const dateB = b.edited_at;
     if (dateA < dateB) {
       return 1;
     }
@@ -948,12 +875,11 @@ export class SolutionDetailComponent implements OnInit {
   replyTo(discussionId) {
     this.showReplyBox = true;
     this.replyingTo = discussionId;
-    console.log(discussionId);
   }
 
   checkUrlIsImg(url) {
-    var arr = ['jpeg', 'jpg', 'gif', 'png'];
-    var ext = url.substring(url.lastIndexOf('.') + 1);
+    const arr = ['jpeg', 'jpg', 'gif', 'png'];
+    const ext = url.substring(url.lastIndexOf('.') + 1);
     if (arr.indexOf(ext) > -1) {
       return true;
     } else {
@@ -1048,7 +974,7 @@ export class SolutionDetailComponent implements OnInit {
 
   dimissVideoModal(e) {
     if (e.type === 'click') {
-      let problemVideoTag: HTMLMediaElement = document.querySelector(
+      const problemVideoTag: HTMLMediaElement = document.querySelector(
         '#problemVideoID'
       );
       problemVideoTag.pause();
@@ -1056,15 +982,15 @@ export class SolutionDetailComponent implements OnInit {
   }
 
   sidebarClose() {
-    var $toggle = document.getElementsByClassName('navbar-toggler')[0];
+    const $toggle = document.getElementsByClassName('navbar-toggler')[0];
     const body = document.getElementsByTagName('body')[0];
     this.toggleButton.classList.remove('toggled');
-    var $layer = document.createElement('div');
+    const $layer = document.createElement('div');
     $layer.setAttribute('class', 'close-layer');
 
     this.sidebarVisible = false;
     body.classList.remove('nav-open');
-    // $('html').removeClass('nav-open');
+
     body.classList.remove('nav-open');
     if ($layer) {
       $layer.remove();
@@ -1077,7 +1003,6 @@ export class SolutionDetailComponent implements OnInit {
     this.mobile_menu_visible = 0;
   }
   toggleWatchSolution() {
-    // console.log('toggling watch flag');
     if (
       !(this.userId == this.solutionData.user_id) &&
       this.auth.currentUserValue.id
@@ -1098,7 +1023,7 @@ export class SolutionDetailComponent implements OnInit {
           ) {
             returning {
               user_id
-              
+
             }
           }
         }
@@ -1111,7 +1036,6 @@ export class SolutionDetailComponent implements OnInit {
           .subscribe(
             result => {
               if (result.data) {
-                // console.log(result.data);
               }
             },
             err => {
@@ -1141,7 +1065,6 @@ export class SolutionDetailComponent implements OnInit {
           .subscribe(
             result => {
               if (result.data) {
-                // console.log(result.data);
               }
             },
             err => {
@@ -1153,7 +1076,6 @@ export class SolutionDetailComponent implements OnInit {
   }
 
   toggleVoteSolution() {
-    // console.log('toggling watch flag');
     if (
       !(this.userId == this.solutionData.user_id) &&
       this.auth.currentUserValue.id
@@ -1174,7 +1096,7 @@ export class SolutionDetailComponent implements OnInit {
           ) {
             returning {
               user_id
-              solution_id    
+              solution_id
             }
           }
         }
@@ -1187,7 +1109,6 @@ export class SolutionDetailComponent implements OnInit {
           .subscribe(
             result => {
               if (result.data) {
-                // console.log(result.data);
               }
             },
             err => {
@@ -1217,7 +1138,6 @@ export class SolutionDetailComponent implements OnInit {
           .subscribe(
             result => {
               if (result.data) {
-                // console.log(result.data);
               }
             },
             err => {
@@ -1236,13 +1156,12 @@ export class SolutionDetailComponent implements OnInit {
   }
 
   onCollaborationSubmit(collaborationData) {
-    console.log(collaborationData, 'collaboration data');
     collaborationData.user_id = Number(this.auth.currentUserValue.id);
 
     collaborationData.solution_id = this.solutionData.id;
 
     this.collaborationService.submitSolutionCollaboratorToDB(collaborationData);
-    console.log(event, 'from problem details collab');
+
     // close modal
     // send to db
   }
@@ -1251,8 +1170,6 @@ export class SolutionDetailComponent implements OnInit {
     validationData.user_id = Number(this.auth.currentUserValue.id);
 
     validationData.solution_id = this.solutionData.id;
-
-    console.log(validationData, 'validation data solution');
 
     this.validationService.submitSolutionValidationToDB(validationData);
     this.startInterval();
@@ -1267,7 +1184,7 @@ export class SolutionDetailComponent implements OnInit {
         return;
       },
       error => {
-        console.log('Could delete due to ' + error);
+        console.error('Could delete due to ' + error);
         swal({
           title: 'Error',
           text: 'Try Again',
@@ -1280,7 +1197,6 @@ export class SolutionDetailComponent implements OnInit {
   }
 
   deleteCollaboration(collaborationData) {
-    console.log('asas');
     this.collaborationService
       .deleteSolutionCollaboration(collaborationData)
       .subscribe(
@@ -1289,7 +1205,6 @@ export class SolutionDetailComponent implements OnInit {
           this.disableCollaborateButton = false;
         },
         error => {
-          // console.log("Could delete due to " + error);
           console.error(JSON.stringify(error));
 
           swal({
@@ -1309,7 +1224,7 @@ export class SolutionDetailComponent implements OnInit {
 
   handleValidationEditMode(validationData) {
     this.validationDataToEdit = validationData;
-    // this.openModal("#EditValidationModal");
+
     $('#EditValidationModal').modal({
       backdrop: 'static',
       keyboard: false
@@ -1319,49 +1234,39 @@ export class SolutionDetailComponent implements OnInit {
   }
 
   handleCollaborationEditMode(collaborationData) {
-    console.log('edit collab', collaborationData);
     this.collaboratorDataToEdit = collaborationData;
   }
 
   async onCommentSubmit(event, comment_id?) {
     const [content, mentions, attachments] = event;
-    // console.log(event);
+
     let file_links: attachment_object[];
     let _links = []; //local array
 
-    let all_promise = await attachments.map(file => {
-      console.log(file, 'comment file');
+    const all_promise = await attachments.map(file => {
       return new Promise((resolve, reject) => {
         if (typeof FileReader !== 'undefined') {
           const reader = new FileReader();
 
           reader.onload = (e: any) => {
-            let buffer = Buffer.from(e.target.result);
+            const buffer = Buffer.from(e.target.result);
             resolve(this.filesService.fileUpload(file, file.type));
           };
           reader.readAsArrayBuffer(file);
         }
       });
-      // return this.fileService.uploadFile(file, file.name).promise();
     });
 
     try {
       _links = await Promise.all(all_promise);
     } catch (error) {
-      console.log('Err while uploading reply files', error);
+      console.error('Err while uploading reply files', error);
     }
 
     if (_links.length) {
       file_links = [];
 
       _links.forEach((link, i) => {
-        console.log(link, 'link');
-        // additional check
-        // if (!link["Location"].startsWith("https")) {
-        //   link["Location"] = `https://${link["Location"]}`;
-        // }
-        console.log(attachments[i], 'attachments');
-
         file_links.push({
           key: attachments[i].name,
           fileEndpoint: link.fileEndpoint,
@@ -1370,27 +1275,11 @@ export class SolutionDetailComponent implements OnInit {
       });
     }
 
-    console.log(mentions, 'mentions of discussions');
-    // let comment = {
-    //   user_id: this.auth.currentUserValue.id,
-    //   problem_id: this.problemData["id"],
-    //   text: content,
-    //   attachments: file_links, // overwriting the incoming blobs
-    // };
-    // // console.log(content, mentions);
-    // if (comment_id) {
-    //   comment["linked_comment_id"] = comment_id;
-    //   // this.replyingTo = 0;
-    //   // this.showReplyBox = false;
-    // }
-
-    // this.discussionsService.submitCommentToDB(comment, mentions);
-
     this.submitComment(content, mentions, file_links, comment_id);
   }
 
   submitComment(content, mentions, attachments?, comment_id?) {
-    let comment = {
+    const comment = {
       user_id: this.auth.currentUserValue.id,
       solution_id: this.solutionData['id'],
       text: content,
@@ -1399,7 +1288,7 @@ export class SolutionDetailComponent implements OnInit {
     if (comment_id) {
       comment['linked_comment_id'] = comment_id;
     }
-    // console.log(content, mentions);
+
     if (this.showReplyBox) {
       comment['linked_comment_id'] = this.replyingTo;
       this.replyingTo = 0;
@@ -1409,37 +1298,6 @@ export class SolutionDetailComponent implements OnInit {
     this.discussionsService.submitCommentToDB(comment, mentions);
   }
 
-  // async onReplySubmit(comment) {
-  //   let file_links: attachment_object[];
-  //   let _links = []; // local array
-
-  //   let all_promise = await comment.attachments.map(file => {
-  //     return this.fileService.uploadFile(file, file.name).promise();
-  //   });
-
-  //   try {
-  //     _links = await Promise.all(all_promise);
-  //   } catch (error) {
-  //     console.log("Err while uploading reply files");
-  //   }
-
-  //   if (_links.length) {
-  //     file_links = [];
-  //     _links.map((link, i) => {
-  //       file_links.push({
-  //         key: link["key"],
-  //         url: link["Location"],
-  //         mimeType: comment.attachments[i].type
-  //       });
-  //     });
-  //   }
-
-  //   comment["user_id"] = this.auth.currentUserValue.id;
-  //   comment["problem_id"] = this.problemData["id"];
-  //   comment["attachments"] = file_links; // overwriting the incoming blobs
-  //   this.discussionsService.submitCommentToDB(comment);
-  // }
-
   checkIntent(event) {
     this.collaboratorIntent = event;
   }
@@ -1448,7 +1306,7 @@ export class SolutionDetailComponent implements OnInit {
     if (this.collaboratorIntent) {
       swal({
         title: 'Are you sure you want to leave?',
-        // text: "You won't be able to revert this!",
+
         type: 'warning',
         showCancelButton: true,
         confirmButtonClass: 'btn btn-success',
@@ -1457,7 +1315,6 @@ export class SolutionDetailComponent implements OnInit {
         buttonsStyling: false
       }).then(result => {
         if (result.value) {
-          console.log('Received result', result);
           $('#collaboratorModal').modal('hide');
         }
       });
@@ -1504,9 +1361,8 @@ export class SolutionDetailComponent implements OnInit {
   }
 
   closeModal(e) {
-    // console.log(e, "e");
     if (e.type === 'click') {
-      let solutionVideoTag: HTMLMediaElement = document.querySelector(
+      const solutionVideoTag: HTMLMediaElement = document.querySelector(
         '#modalVideo'
       );
 
@@ -1593,7 +1449,6 @@ export class SolutionDetailComponent implements OnInit {
   }
 
   sectorSelected(sector) {
-    // console.log(sector,"sector");
     this.router.navigate(['/solutions'], {
       queryParams: { [sector.name]: 'sectorFilter' },
       queryParamsHandling: 'merge'
@@ -1605,14 +1460,11 @@ export class SolutionDetailComponent implements OnInit {
       data: {}
     });
 
-    inviteModalRef.afterClosed().subscribe(result => {
-      console.log('The dialog was closed');
-      // this.animal = result;
-    });
+    inviteModalRef.afterClosed().subscribe(result => {});
   }
 
   locationSelected(location) {
-    let locationQuery = {
+    const locationQuery = {
       location_name: location.location_name,
       latitude: location.lat,
       longitude: location.long,
@@ -1631,7 +1483,7 @@ export class SolutionDetailComponent implements OnInit {
   ngOnDestroy() {
     this.solutionDataQuery.stopPolling();
     this.solutionDataSubcription.unsubscribe();
-    // this.cdr.detach();
+
     this.userDataQuery.stopPolling();
   }
 }

@@ -10,7 +10,7 @@ declare var $: any;
 })
 export class AuthLayoutComponent implements OnInit {
   private toggleButton: any;
-  private sidebarVisible: boolean;
+  public sidebarVisible: boolean;
   mobile_menu_visible: any = 0;
   private _router: Subscription;
   customTabindex = -1;
@@ -22,10 +22,12 @@ export class AuthLayoutComponent implements OnInit {
     const navbar: HTMLElement = this.element.nativeElement;
 
     this.toggleButton = navbar.getElementsByClassName('navbar-toggler')[0];
-    this._router = this.router.events.filter(event => event instanceof NavigationEnd).subscribe((event: NavigationEnd) => {
-      this.customTabindex = -1;
-      this.sidebarClose();
-    });
+    this._router = this.router.events
+      .filter(event => event instanceof NavigationEnd)
+      .subscribe((event: NavigationEnd) => {
+        this.customTabindex = -1;
+        this.sidebarClose();
+      });
   }
 
   isMobileMenu() {
@@ -38,7 +40,7 @@ export class AuthLayoutComponent implements OnInit {
   sidebarOpen() {
     const toggleButton = this.toggleButton;
     const body = document.getElementsByTagName('body')[0];
-    setTimeout(function () {
+    setTimeout(function() {
       toggleButton.classList.add('toggled');
     }, 500);
     body.classList.add('nav-open');
@@ -55,17 +57,22 @@ export class AuthLayoutComponent implements OnInit {
     const body = document.getElementsByTagName('body')[0];
     if (this.sidebarVisible === false) {
       this.sidebarOpen();
-      let $layer = document.createElement('div');
+      const $layer = document.createElement('div');
       $layer.setAttribute('class', 'close-layer');
       if (body.querySelectorAll('.wrapper-full-page')) {
-        document.getElementsByClassName('wrapper-full-page')[0].appendChild($layer);
+        document
+          .getElementsByClassName('wrapper-full-page')[0]
+          .appendChild($layer);
       } else if (body.classList.contains('off-canvas-sidebar')) {
-        document.getElementsByClassName('wrapper-full-page')[0].appendChild($layer);
+        document
+          .getElementsByClassName('wrapper-full-page')[0]
+          .appendChild($layer);
       }
-      setTimeout(function () {
+      setTimeout(function() {
         $layer.classList.add('visible');
       }, 100);
-      $layer.onclick = function () { //asign a function
+      $layer.onclick = function() {
+        //asign a function
         body.classList.remove('nav-open');
         this.mobile_menu_visible = 0;
         $layer.classList.remove('visible');
@@ -75,13 +82,11 @@ export class AuthLayoutComponent implements OnInit {
       body.classList.add('nav-open');
       this.customTabindex = 0;
       console.log('menu open: ', this.customTabindex);
-
     } else {
       document.getElementsByClassName('close-layer')[0].remove();
       this.sidebarClose();
       this.customTabindex = -1;
       console.log('menu close: ', this.customTabindex);
-
     }
   }
 }

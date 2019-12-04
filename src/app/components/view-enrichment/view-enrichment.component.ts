@@ -12,8 +12,6 @@ import gql from 'graphql-tag';
 
 import { take } from 'rxjs/operators';
 
-// import { Router, ActivatedRoute } from "@angular/router";
-
 import { AuthService } from '../../services/auth.service';
 import swal from 'sweetalert2';
 import { Apollo, QueryRef } from 'apollo-angular';
@@ -44,13 +42,11 @@ export class ViewEnrichmentComponent implements OnInit, OnChanges, OnDestroy {
     private apollo: Apollo,
     private filesService: FilesService
   ) {
-    console.log('aswewrwe');
     this.enrichmentVoted = false;
   }
 
   ngOnInit() {
-    console.log('on in it', this.enrichmentData);
-    let embedded_url_arr = this.enrichmentData.embed_urls.map(url => {
+    const embedded_url_arr = this.enrichmentData.embed_urls.map(url => {
       return { url: url };
     });
 
@@ -72,8 +68,7 @@ export class ViewEnrichmentComponent implements OnInit, OnChanges, OnDestroy {
       this.voters.add(voter.user_id);
     });
 
-    console.log('ng on change', this.enrichmentVoted);
-    let embedded_url_arr = this.enrichmentData.embed_urls.map(url => {
+    const embedded_url_arr = this.enrichmentData.embed_urls.map(url => {
       return { url: url };
     });
 
@@ -85,31 +80,6 @@ export class ViewEnrichmentComponent implements OnInit, OnChanges, OnDestroy {
     ];
 
     this.modalSrc = this.combinedImgAndVideo[this.index];
-
-    // remove the duplicates
-    // this.enrichmentData.voted_by = Array.from(
-    //   new Set(this.enrichmentData.voted_by)
-    // );
-
-    // if (this.enrichmentData.voted_by.length) {
-    //   console.log(this.enrichmentData.voted_by, "enrich voted by");
-
-    //   this.enrichmentData.voted_by.forEach(userId => {
-    //     if (Number(userId) === Number(this.auth.currentUserValue.id)) {
-    //       console.log(
-    //         Number(userId),
-    //         "voted by array",
-    //         Number(this.auth.currentUserValue.id)
-    //       );
-    //       this.enrichmentVoted = true;
-    //     }
-    //   });
-    // } else {
-    //   this.enrichmentVoted = false;
-    // }
-    // this.enrichmentData.enrichment_voters.map(voter => {
-    //   this.voters.add(voter.user_id);
-    // });
   }
 
   voteEnrichment() {
@@ -117,12 +87,7 @@ export class ViewEnrichmentComponent implements OnInit, OnChanges, OnDestroy {
       if (
         !(this.enrichmentData.user_id === Number(this.auth.currentUserValue.id))
       ) {
-        // console.log(this.comment, "comment", this.userId, "user id");
-        // console.log('toggling watch flag');
-        // if (!(this.userId == this.comment.user_id)) {
         if (!this.voters.has(this.auth.currentUserValue.id)) {
-          // user is not currently watching this problem
-          // let's add them
           this.voters.add(this.auth.currentUserValue.id);
           const add_voter = gql`
             mutation insert_enrichment_voters {
@@ -135,9 +100,9 @@ export class ViewEnrichmentComponent implements OnInit, OnChanges, OnDestroy {
                 ]
               ) {
                 returning {
-                 
+
                   user_id
-    
+
                 }
               }
             }
@@ -150,7 +115,6 @@ export class ViewEnrichmentComponent implements OnInit, OnChanges, OnDestroy {
             .subscribe(
               result => {
                 if (result.data) {
-                  // console.log(result.data);
                 }
               },
               err => {
@@ -180,7 +144,6 @@ export class ViewEnrichmentComponent implements OnInit, OnChanges, OnDestroy {
             .subscribe(
               result => {
                 if (result.data) {
-                  // console.log(result.data);
                 }
               },
               err => {
@@ -188,51 +151,11 @@ export class ViewEnrichmentComponent implements OnInit, OnChanges, OnDestroy {
               }
             );
         }
-
-        // let index = this.enrichmentData.voted_by.indexOf(
-        //   Number(this.auth.currentUserValue.id)
-        // );
-        // this.enrichmentVoted = !this.enrichmentVoted;
-        // console.log("clicked");
-        // if (this.enrichmentVoted && index < 0) {
-        //   this.enrichmentData.voted_by.push(
-        //     Number(this.auth.currentUserValue.id)
-        //   );
-
-        //   // remove the duplicates
-        //   this.enrichmentData.voted_by = Array.from(
-        //     new Set(this.enrichmentData.voted_by)
-        //   );
-
-        //   this.enrichmentData.voted_by = JSON.stringify(
-        //     this.enrichmentData.voted_by
-        //   )
-        //     .replace("[", "{")
-        //     .replace("]", "}");
-
-        //   this.voteClicked.emit(this.enrichmentData);
-        //   this.enrichmentData.voted_by = JSON.parse(
-        //     this.enrichmentData.voted_by.replace("{", "[").replace("}", "]")
-        //   );
-        // } else {
-        //   this.enrichmentData.voted_by.splice(index, 1);
-        //   this.enrichmentData.voted_by = JSON.stringify(
-        //     this.enrichmentData.voted_by
-        //   )
-        //     .replace("[", "{")
-        //     .replace("]", "}");
-
-        //   this.voteClicked.emit(this.enrichmentData);
-        //   this.enrichmentData.voted_by = JSON.parse(
-        //     this.enrichmentData.voted_by.replace("{", "[").replace("}", "]")
-        //   );
-        // }
       }
     }
   }
 
   ngOnDestroy() {
-    // console.log("destroy");
     this.voters = new Set();
   }
 
@@ -252,14 +175,13 @@ export class ViewEnrichmentComponent implements OnInit, OnChanges, OnDestroy {
   }
 
   editEnrichment() {
-    console.log('edit clicked');
     this.editClicked.emit(this.enrichmentData);
   }
 
   deleteEnrichment() {
     swal({
       title: 'Are you sure you want to delete enrichment?',
-      // text: "You won't be able to revert this!",
+
       type: 'warning',
       showCancelButton: true,
       confirmButtonClass: 'btn btn-success',
@@ -269,23 +191,13 @@ export class ViewEnrichmentComponent implements OnInit, OnChanges, OnDestroy {
     }).then(result => {
       if (result.value) {
         this.deleteClicked.emit(this.enrichmentData.id);
-
-        // swal({
-        //   title: "Deleted!",
-        //   // text: "Your file has been deleted.",
-        //   type: "success",
-        //   confirmButtonClass: "btn btn-success",
-        //   buttonsStyling: false
-        // });
       }
     });
-    // this.Vali
-    // this.enrichmentHandlerService.deleteEnrichment(this.enrichmentData.id);
   }
 
   checkUrlIsImg(url) {
-    var arr = ['jpeg', 'jpg', 'gif', 'png'];
-    var ext = url.substring(url.lastIndexOf('.') + 1);
+    const arr = ['jpeg', 'jpg', 'gif', 'png'];
+    const ext = url.substring(url.lastIndexOf('.') + 1);
     if (arr.indexOf(ext) > -1) {
       return true;
     } else {
@@ -295,7 +207,7 @@ export class ViewEnrichmentComponent implements OnInit, OnChanges, OnDestroy {
 
   toggleView(e) {
     if (e.type === 'click') {
-      let problemVideoTag: HTMLMediaElement = document.querySelector(
+      const problemVideoTag: HTMLMediaElement = document.querySelector(
         '#modalVideo'
       );
       this.showModal = false;

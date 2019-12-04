@@ -83,7 +83,7 @@
                               (input)="searchProblem($event)"
                               (focus)="hideProblems('problem')"
                             />
-                            <!-- <mat-chip-list #chipList> </mat-chip-list> -->
+
                             <mat-autocomplete
                               #auto="matAutocomplete"
                               (optionSelected)="selected($event)"
@@ -131,9 +131,9 @@
                             queryParamsHandling="merge"
                             style="max-width: 95%;" class="text-truncate"
                           >
-                            <!-- <span > -->
+
                               {{ problem.title }}
-                            <!-- </span> -->
+
                           </a>
                           <i
                             class="material-icons mat-chip-remove mat-chip-trailing-icon mat-icon material-icons ng-star-inserted"
@@ -627,7 +627,7 @@
                               (matChipInputTokenEnd)="addSector($event)"
                               
                             />
-                            <!-- <mat-chip-list #chipList> </mat-chip-list> -->
+
                             <mat-autocomplete
                               #autoSector="matAutocomplete"
                               (optionSelected)="sectorSelected($event)"
@@ -959,9 +959,7 @@
                           >
                             Add Video By URL
                           </button>
-                          <!-- <input type="button" class="btn btn-finish btn-fill btn-success btn-wd" (click)="addMediaUrl()"
-                        name="add_media_url" [disabled]="!media_url.startsWith('http')" value="Add Video By URL"
-                        style="display: none;"> -->
+                        
                         </div>
                       </div>
                     </div>
@@ -1078,11 +1076,7 @@
                           <div class="card-body">{{ video.key }}</div>
                           <div class="card-footer">
                             <div class="price">
-                              <!-- <button mat-raised-button type="button" class="btn btn-default btn-link" matTooltip="Feature"
-                            [matTooltipPosition]="'below'" (click)="setFeatured('video',i)">
-                            <i *ngIf="video.url !== solution.featured_url" class="material-icons">turned_in_not</i>
-                            <i *ngIf="video.url === solution.featured_url" class="material-icons">turned_in</i>
-                          </button> -->
+                             
                             </div>
                             <div class="stats">
                               <button
@@ -1114,11 +1108,7 @@
                           <div class="card-body">{{ embed_url }}</div>
                           <div class="card-footer">
                             <div class="price">
-                              <!-- <button mat-raised-button type="button" class="btn btn-default btn-link" matTooltip="Feature"
-                            [matTooltipPosition]="'below'" (click)="setFeatured('embed',i)">
-                            <i *ngIf="embed_url !== solution.featured_url" class="material-icons">turned_in_not</i>
-                            <i *ngIf="embed_url === solution.featured_url" class="material-icons">turned_in</i>
-                          </button> -->
+                          
                             </div>
                             <div class="stats">
                               <button
@@ -1159,11 +1149,7 @@
                           </div>
                           <div class="card-footer">
                             <div class="price">
-                              <!-- <button mat-raised-button type="button" class="btn btn-default btn-link" matTooltip="Feature"
-                            [matTooltipPosition]="'below'" (click)="setFeatured('embed',i)">
-                            <i *ngIf="embed_url !== solution.featured_url" class="material-icons">turned_in_not</i>
-                            <i *ngIf="embed_url === solution.featured_url" class="material-icons">turned_in</i>
-                          </button> -->
+                          
                             </div>
                             <div class="stats">
                               <button
@@ -1198,11 +1184,9 @@
                   />
                 </div>
                 <div class="ml-auto">
-                  <!-- <button class="btn btn-danger" (click)="deleteClicked()">
-                Delete
-              </button> -->
+                 
                   <button
-                    *ngIf="solution.id && solution.is_draft"
+                    *ngIf="solution['id'] && solution.is_draft"
                     class="btn btn-danger"
                     (click)="delete()"
                   >
@@ -1231,8 +1215,7 @@
                     value="Next"
                     #nextBtn
                   />
-                  <!-- <input type="button" class="btn btn-finish btn-fill btn-warning btn-wd" [disabled]="!isComplete()"
-                (click)="publishContent()" name="finish" value="Publish" style="display: none;"> -->
+                
                 </div>
                 <div class="clearfix"></div>
               </div>
@@ -1243,7 +1226,7 @@
 
       <!--Problem search results-->
       <div class="col-md-3 mt-4" *ngIf="hide">
-        <!-- <div class="wizard-container"> -->
+
         <ng-container *ngIf="problemSearchResults.length > 0">
           <div class="row justify-content-center">
             <div class="col-sm-10">
@@ -1284,10 +1267,10 @@
             </div>
           </div>
         </ng-container>
-        <!-- </div> -->
+
       </div>
 
-      <!--Problem search results-->
+
 
       <!--Solution smart search results-->
       <div class="col-md-3 mt-4" *ngIf="!hide">

@@ -39,7 +39,7 @@ import { TagsService } from '../../services/tags.service';
 import { FilesService } from '../../services/files.service';
 import { UsersService } from '../../services/users.service';
 import { AuthService } from '../../services/auth.service';
-// import { GeocoderService } from '../../services/geocoder.service';
+
 import { Observable, Subscription } from 'rxjs';
 import { map, startWith } from 'rxjs/operators';
 import { first, take } from 'rxjs/operators';
@@ -94,8 +94,7 @@ export class WizardComponent
   readonly separatorKeysCodes: number[] = [ENTER, COMMA];
   is_edit = false;
   media_url = '';
-  // canProceed: Boolean;
-  // owners = [];
+
   voted_by = [];
   watched_by = [];
   problemLocations: any[] = [];
@@ -126,7 +125,7 @@ export class WizardComponent
   filteredSectors: Observable<string[]>;
   sectors: any = [];
   matcher = new MyErrorStateMatcher();
-  // autoCompleteTags: any[] = [];
+
   tags = [];
   autosaveInterval: any;
   type: FormGroup;
@@ -148,14 +147,6 @@ export class WizardComponent
   goToTitle = false;
   wizardHeight;
   headingHeight = 0;
-
-  // removeOwnerSub: Subscription;
-  // getProlemSub: Subscription;
-  // addProblemSub: Subscription;
-  // addOwnerSub: Subscription;
-  // getSearchResultsSub: Subscription;
-  // deleteProblemSub: Subscription;
-  // addTagsSub: Subscription;
 
   @ViewChild('sectorInput') sectorInput: ElementRef<HTMLInputElement>;
   @ViewChild('auto') matAutocomplete: MatAutocomplete;
@@ -187,7 +178,6 @@ export class WizardComponent
           : Object.keys(this.tagService.allTags).slice()
       )
     );
-    // //console.log(this.auth.currentUserValue);
   }
 
   add(event: MatChipInputEvent): void {
@@ -209,7 +199,6 @@ export class WizardComponent
   }
 
   addTags(tags) {
-    // //console.log(tags, "tag working");
     this.sectors = tags;
   }
 
@@ -228,7 +217,6 @@ export class WizardComponent
   }
 
   addOwners(event) {
-    // event = this.removeDuplicates(event);
     this.owners = event;
   }
 
@@ -299,20 +287,11 @@ export class WizardComponent
 
   ngOnDestroy() {
     clearInterval(this.autosaveInterval);
-    // this.removeOwnerSub.unsubscribe();
-    // this.getProlemSub.unsubscribe();
-    // this.addProblemSub.unsubscribe();
-    // this.addOwnerSub.unsubscribe();
-    // this.getSearchResultsSub.unsubscribe();
-    // this.deleteProblemSub.unsubscribe();
-    // this.addTagsSub.unsubscribe();
   }
   ngOnInit() {
-    // console.log('wizard on in it');
     this.tagService.getTagsFromDB(this.filterService.domain_tags_query);
     this.geoService.getLocationsFromDB();
 
-    // //console.log("wizard ng on in it",this.auth.currentUserValue.);
     clearInterval(this.autosaveInterval);
     this.autosaveInterval = setInterval(() => {
       this.autoSave();
@@ -372,8 +351,6 @@ export class WizardComponent
           })
           .valueChanges.pipe(take(1))
           .subscribe(result => {
-            console.log(result, 'result');
-            // //console.log(result, "pppp>>>>>>>>");
             if (
               result.data.problems.length >= 1 &&
               result.data.problems[0].id
@@ -381,7 +358,6 @@ export class WizardComponent
               canProceed = true;
               this.problem['id'] = result.data.problems[0].id;
               Object.keys(this.problem).map(key => {
-                // //console.log(key, result.data.problems[0][key]);
                 if (result.data.problems[0][key]) {
                   this.problem[key] = result.data.problems[0][key];
                 }
@@ -396,7 +372,6 @@ export class WizardComponent
                     return tagArray.tag.name;
                   }
                 );
-                // //console.log(this.sectors, "sectors from db");
               }
               if (result.data.problems[0].problem_locations) {
                 this.problemLocations = result.data.problems[0].problem_locations.map(
@@ -409,12 +384,9 @@ export class WizardComponent
               }
 
               if (result.data.problems[0].problem_owners) {
-                // this.owners = result.data.problems[0].problem_owners;
                 result.data.problems[0].problem_owners.forEach(ownerArray => {
                   this.owners.push(ownerArray.user);
                 });
-
-                // //console.log(this.owners, "owners from db");
               }
 
               this.is_edit = true;
@@ -488,25 +460,6 @@ export class WizardComponent
       tabClass: 'nav nav-pills',
       nextSelector: '.btn-next',
       previousSelector: '.btn-previous',
-
-      // onNext: function(tab, navigation, index) {
-      //   const $valid = $(".card-wizard form").valid();
-      //   if (!$valid) {
-      //     $validator.focusInvalid();
-      //     return false;
-      //   } else if (!canProceed) {
-      //     if (
-      //       confirm(
-      //         "Are you sure you want to add a new problem and not enrich an existing one?"
-      //       )
-      //     ) {
-      //       canProceed = true;
-      //       return true;
-      //     } else {
-      //       return false;
-      //     }
-      //   }
-      // },
 
       onInit: function(tab: any, navigation: any, index: any) {
         // check number of tabs and fill the entire row
@@ -714,8 +667,6 @@ export class WizardComponent
   }
 
   ngOnChanges() {
-    console.log('>>>>>>>>>>>>>>>>>>>');
-
     const input = $(this);
     if (input[0].files && input[0].files[0]) {
       const reader: any = new FileReader();
@@ -726,8 +677,6 @@ export class WizardComponent
       };
       reader.readAsDataURL(input[0].files[0]);
     }
-
-    console.log('search result: ', this.searchResults.length);
   }
 
   ngAfterViewInit() {
@@ -808,128 +757,12 @@ export class WizardComponent
     }, 10);
   }
 
-  // removePhoto(index) {
-  //   this.filesService
-  //     .deleteFile(this.problem["image_urls"][index]["key"])
-  //     .promise()
-  //     .then(data => {
-  //       if (this.problem.image_urls[index].url === this.problem.featured_url) {
-  //         this.problem.featured_url = "";
-  //         this.problem.featured_type = "";
-  //       }
-  //       this.problem.image_urls.splice(index, 1);
-  //     })
-  //     .catch(e => {
-  //       //console.log("Err: ", e);
-  //     });
-  // }
-
-  // removeAll() {
-  //   this.problem.image_urls.forEach((imageObj, i) => {
-  //     this.filesService
-  //       .deleteFile(imageObj["key"])
-  //       .promise()
-  //       .then(data => {
-  //         // //console.log("Deleted file: ", data);
-  //         if (this.problem.image_urls.length === i + 1) {
-  //           this.problem.image_urls = [];
-  //         }
-  //       })
-  //       .catch(e => {
-  //         //console.log("Err: ", e);
-  //       });
-  //   });
-  // }
-
-  // onFileSelected(event) {
-  //   for (let i = 0; i < event.target.files.length; i++) {
-  //     const file = event.target.files[i];
-  //     const type = event.target.files[i].type.split("/")[0];
-  //     switch (type) {
-  //       case "image": {
-  //         if (typeof FileReader !== "undefined") {
-  //           const reader = new FileReader();
-
-  //           reader.onload = (e: any) => {
-  //             const img_id = file.name;
-  //             this.filesService
-  //               .uploadFile(e.target.result, img_id)
-  //               .promise()
-  //               .then(values => {
-  //                 this.problem.image_urls.push({
-  //                   url: values["Location"],
-  //                   key: values["Key"]
-  //                 });
-  //                 if (!this.problem.featured_url) {
-  //                   this.problem.featured_url = this.problem.image_urls[0].url;
-  //                   this.problem.featured_type = "image";
-  //                 }
-  //               })
-  //               .catch(e => //console.log("Err:: ", e));
-  //           };
-  //           reader.readAsArrayBuffer(file);
-  //         }
-  //         break;
-  //       }
-  //       case "video": {
-  //         const video = event.target.files[i];
-  //         this.filesService
-  //           .uploadFile(video, video.name)
-  //           .promise()
-  //           .then(data => {
-  //             this.problem.video_urls.push({
-  //               key: data["Key"],
-  //               url: data["Location"]
-  //             });
-  //             if (!this.problem.featured_url) {
-  //               this.problem.featured_url = this.problem.video_urls[0].url;
-  //               this.problem.featured_type = "video";
-  //             }
-  //           })
-  //           .catch(e => //console.log("Err:: ", e));
-  //         break;
-  //       }
-  //       default: {
-  //         //console.log("unknown file type");
-  //         alert("Unknown file type. Please upload images or videos");
-  //         break;
-  //       }
-  //     }
-  //   }
-  // }
-
-  // removeVideo(index: number) {
-  //   this.filesService
-  //     .deleteFile(this.problem["video_urls"][index]["key"])
-  //     .promise()
-  //     .then(data => {
-  //       if (this.problem.video_urls[index].url === this.problem.featured_url) {
-  //         this.problem.featured_url = "";
-  //         this.problem.featured_type = "";
-  //       }
-  //       this.problem.video_urls.splice(index, 1);
-  //     })
-  //     .catch(e => {
-  //       //console.log("Err: ", e);
-  //     });
-  // }
-
-  // removeEmbed(index: number) {
-  //   this.problem.embed_urls.splice(index, 1);
-  //   if (this.problem.embed_urls[index] === this.problem.featured_url) {
-  //     this.problem.featured_url = "";
-  //     this.problem.featured_type = "";
-  //   }
-  // }
-
   smartSearch() {
     let searchKey = this.problem.title + ' ' + this.problem.description;
     searchKey = searchKey.replace(/[^a-zA-Z ]/g, '');
 
     if (searchKey.length >= 3) {
       this.searchResults = [];
-      console.log(searchKey, 'search key');
-      console.log(this.filterService.sector_filter_query, 'filter query');
 
       this.http
         .post(
@@ -948,87 +781,6 @@ export class WizardComponent
           },
           error => {}
         );
-      // this.apollo
-      //   .watchQuery<any>({
-      //     query: gql`query {
-      //               search_problems_v2(
-      //               args: {search: "${searchKey.toLowerCase()}"},where: { is_draft: { _eq: false } }
-      //               ){
-      //               id
-      //               title
-      //               description
-      //               edited_at
-      //               updated_at
-      //               image_urls
-      //               featured_url
-
-      //               problem_locations{
-      //                 location{
-      //                   id
-      //                   location_name
-      //                   lat
-      //                   long
-      //                 }
-      //               }
-
-      //               problem_voters{
-      //                 problem_id
-      //                 user_id
-      //               }
-      //               problem_watchers{
-      //                 problem_id
-      //                 user_id
-
-      //               }
-      //               problems_tags {
-      //                   tag {
-      //                       name
-      //                   }
-      //               }
-
-      //               problem_validations{
-      //                 comment
-      //                 agree
-      //                 created_at
-      //                 files
-      //                 user_id
-      //                 edited_at
-      //                 is_deleted
-
-      //                 problem_id
-      //                 user {
-      //                   id
-      //                   name
-      //                 }
-
-      //               }
-      //               }
-      //               }`,
-      //     fetchPolicy: "no-cache"
-      //     // pollInterval: 200
-      //   })
-      //   .valueChanges.pipe(take(1))
-      //   .subscribe(
-      //     result => {
-      //       //console.log(result, "result from search");
-      //       if (result.data.search_problems_v2.length > 0) {
-      //         // //console.log(result.data.search_problems_v2.length, "search");
-      //         result.data.search_problems_v2.map(result => {
-      //           if (result.id != this.problem["id"]) {
-      //             this.searchResults[result.id] = result;
-      //           }
-      //         });
-      //         // //console.log(this.searchResults, ">>>>>searchresults");
-      //         if (!this.is_edit) {
-      //           canProceed = false;
-      //         }
-      //       }
-      //     },
-      //     err => {
-      //       // //console.log(err, "error from smart search");
-      //       console.error(JSON.stringify(err));
-      //     }
-      //   );
     } else {
       this.searchResults = [];
     }
@@ -1049,7 +801,6 @@ export class WizardComponent
     );
   }
   updateProblem(updatedProblem) {
-    // console.log(updatedProblem, 'updated problem');
     this.problem = updatedProblem;
   }
   removeDuplicates(array) {
@@ -1057,13 +808,10 @@ export class WizardComponent
   }
 
   scrollUp(event) {
-    //console.log("scroll up");
     window.scroll(0, 0);
   }
 
   autoSave() {
-    // //console.log(this.problem, "problem data");
-    // //console.log("trying to auto save");
     if (this.problem.is_draft) {
       if (this.problem.title) {
         this.submitProblemToDB(this.problem);
@@ -1071,10 +819,6 @@ export class WizardComponent
     }
   }
 
-  // saveProblemDraft() {
-  //   this.autoSave();
-  //   alert("Problem draft has been saved. You can continue editing anytime");
-  // }
   showSuccessSwal(title) {
     swal({
       type: 'success',
@@ -1084,22 +828,7 @@ export class WizardComponent
     }).catch(swal.noop);
   }
 
-  // showPromptSwal(title){
-  //   return swal({
-  //     title: "Are you sure you want to publish the problem",
-  //     // text: "You won't be able to revert this!",
-  //     type: "warning",
-  //     showCancelButton: true,
-  //     confirmButtonClass: "btn btn-success",
-  //     cancelButtonClass: "btn btn-warning",
-  //     confirmButtonText: "Yes",
-  //     buttonsStyling: false
-  //   })
-
-  // }
-
   publishProblem(problem) {
-    console.log(problem, ' publish problem');
     clearInterval(this.autosaveInterval);
 
     if (
@@ -1115,7 +844,7 @@ export class WizardComponent
     ) {
       swal({
         title: 'Are you sure you want to publish the problem?',
-        // text: "You won't be able to revert this!",
+
         type: 'warning',
         showCancelButton: true,
         confirmButtonClass: 'btn btn-success',
@@ -1145,7 +874,7 @@ export class WizardComponent
       swal({
         title:
           'Are you sure you want to publish the problem without adding media content?',
-        // text: "You won't be able to revert this!",
+
         type: 'warning',
         showCancelButton: true,
         confirmButtonClass: 'btn btn-success',
@@ -1167,13 +896,12 @@ export class WizardComponent
       problem.is_draft = false;
       this.submitProblemToDB(problem);
     }
-    // //console.log(problem, "problem before publishing");
   }
 
   deleteDraft(id) {
     swal({
       title: 'Are you sure you want to delete this draft?',
-      // text: "You won't be able to revert this!",
+
       type: 'warning',
       showCancelButton: true,
       confirmButtonClass: 'btn btn-success',
@@ -1186,16 +914,14 @@ export class WizardComponent
           ({ data }) => {
             swal({
               title: 'Deleted!',
-              // text: "Your file has been deleted.",
+
               type: 'success',
               confirmButtonClass: 'btn btn-success',
               buttonsStyling: false
             });
             window.history.back();
-            // this.router.navigateByUrl("/dashboard");
           },
           error => {
-            //console.log("Could delete due to " + error);
             console.error(JSON.stringify(error));
           }
         );
@@ -1204,7 +930,6 @@ export class WizardComponent
   }
 
   submitProblemToDB(problem) {
-    // console.log(problem, 'Problem');
     const upsert_problem = gql`
       mutation upsert_problem($problems: [problems_insert_input!]!) {
         insert_problems(
@@ -1272,13 +997,10 @@ export class WizardComponent
 
             this.saveOwnersInDB(this.problem['id'], this.owners);
 
-            // this.saveLocationsInDB(this.problem["id"], this.problemLocations);
-
             const tags = [];
 
             const problems_tags = new Set();
             const problem_locations = new Set();
-            // //console.log(this.sectors, "sectors");
 
             this.sectors.map(sector => {
               tags.push({ name: sector });
@@ -1297,8 +1019,6 @@ export class WizardComponent
             this.tagService.addTagsInDb(tags, 'problems', this.problem['id']);
 
             this.problemLocations.map(location => {
-              // const locationUniqueId =
-              //   location.lat.toString() + location.long.toString();
               if (
                 this.geoService.allLocations[location.location_name] &&
                 this.geoService.allLocations[location.location_name].id
@@ -1391,7 +1111,6 @@ export class WizardComponent
   }
 
   saveOwnersInDB(problemId, ownersArray) {
-    console.log(ownersArray, 'owners array');
     let owners = [];
     owners = ownersArray.map(owner => {
       return {
@@ -1433,12 +1152,6 @@ export class WizardComponent
   }
 
   confirmSubmission() {
-    // if (this.is_edit) {
-    //   this.showSuccessSwal("Problem Updated");
-    // } else {
-    //   this.showSuccessSwal("Problem Added");
-    // }
-
     this.router.navigate(['problems', this.problem['id']], {
       queryParamsHandling: 'preserve'
     });
@@ -1484,13 +1197,6 @@ export class WizardComponent
       this.problem.featured_type = 'image';
       this.problem.featured_url = this.problem.image_urls[index].url;
     }
-    /* else if (type === "video") {
-      this.problem.featured_type = "video";
-      this.problem.featured_url = this.problem.video_urls[index].url;
-    } else if (type === "embed") {
-      this.problem.featured_type = "embed";
-      this.problem.featured_url = this.problem.embed_urls[index];
-    } */
   }
 
   addMediaUrl() {
@@ -1517,10 +1223,6 @@ export class WizardComponent
       }
     });
 
-    // const index = this.sectors.indexOf(sector);
-    // if (index >= 0) {
-    //   this.sectors.splice(index, 1);
-    // }
     if (
       this.geoService.allLocations[removedLocation.location_name] &&
       this.problem['id']
@@ -1537,7 +1239,6 @@ export class WizardComponent
         'problems'
       );
     }
-    // this.problemLocations = locations;
   }
 
   moveFocusSearchHeading() {

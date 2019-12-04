@@ -1,10 +1,10 @@
-import { Injectable } from "@angular/core";
-import { Apollo } from "apollo-angular";
-import gql from "graphql-tag";
-import { Timestamp } from "aws-sdk/clients/kinesisanalytics";
-import { Subscription } from "rxjs";
-import swal from "sweetalert2";
-import { take } from "rxjs/operators";
+import { Injectable } from '@angular/core';
+import { Apollo } from 'apollo-angular';
+import gql from 'graphql-tag';
+import { Timestamp } from 'aws-sdk/clients/kinesisanalytics';
+import { Subscription } from 'rxjs';
+import swal from 'sweetalert2';
+import { take } from 'rxjs/operators';
 declare var $: any;
 
 export interface collaborator {
@@ -24,14 +24,12 @@ export interface collaborator {
 }
 
 @Injectable({
-  providedIn: "root"
+  providedIn: 'root'
 })
 export class CollaborationService {
   constructor(private apollo: Apollo) {}
 
   submitCollaboratorToDB(collaborationData: collaborator) {
-    // console.log(collaborationData, "collab data");
-    console.log(collaborationData, "collab data in submit");
     const upsert_collaborators = gql`
       mutation upsert_problem_collaborators(
         $problem_collaborators: [problem_collaborators_insert_input!]!
@@ -72,24 +70,21 @@ export class CollaborationService {
       .pipe(take(1))
       .subscribe(
         result => {
-          console.log(result, "result");
-          // location.reload();
           swal({
-            type: "success",
-            title: "Thank you for collaborating!",
+            type: 'success',
+            title: 'Thank you for collaborating!',
             timer: 4000,
             showConfirmButton: false
           }).catch(swal.noop);
         },
         error => {
-          console.log("error", error);
           console.error(JSON.stringify(error));
 
           swal({
-            title: "Error",
-            text: "Try Again",
-            type: "error",
-            confirmButtonClass: "btn btn-info",
+            title: 'Error',
+            text: 'Try Again',
+            type: 'error',
+            confirmButtonClass: 'btn btn-info',
             buttonsStyling: false
           }).catch(swal.noop);
         }
@@ -122,8 +117,6 @@ export class CollaborationService {
   }
 
   submitSolutionCollaboratorToDB(collaborationData: collaborator) {
-    // console.log(collaborationData, "collab data");
-    console.log(collaborationData, "collab data in submit");
     const upsert_collaborators = gql`
       mutation upsert_solution_collaborators(
         $solution_collaborators: [solution_collaborators_insert_input!]!
@@ -164,25 +157,21 @@ export class CollaborationService {
       .pipe(take(1))
       .subscribe(
         result => {
-          console.log(result, "result");
-
-          // location.reload();
           swal({
-            type: "success",
-            title: "Thank you for collaborating!",
+            type: 'success',
+            title: 'Thank you for collaborating!',
             timer: 4000,
             showConfirmButton: false
           }).catch(swal.noop);
         },
         error => {
-          console.log("error", error);
           console.error(JSON.stringify(error));
 
           swal({
-            title: "Error",
-            text: "Try Again",
-            type: "error",
-            confirmButtonClass: "btn btn-info",
+            title: 'Error',
+            text: 'Try Again',
+            type: 'error',
+            confirmButtonClass: 'btn btn-info',
             buttonsStyling: false
           }).catch(swal.noop);
         }

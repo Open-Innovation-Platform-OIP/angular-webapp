@@ -21,7 +21,7 @@ export class GlobalSearchViewComponent implements OnInit, OnChanges {
   @Input() solutionData: any;
   newAnnoucement: Promise<void>;
 
-  noResult: string = 'No Search Results';
+  noResult = 'No Search Results';
   problemSearchResults: any = [];
   userSearchResults: any = [];
   solutionSearchResults: any = [];
@@ -36,22 +36,10 @@ export class GlobalSearchViewComponent implements OnInit, OnChanges {
     private liveAnnouncer: LiveAnnouncer
   ) {}
 
-  ngOnInit() {
-    // this.router.routeReuseStrategy.shouldReuseRoute = function() {
-    //   return false;
-    // };
-    // this.router.events.subscribe(evt => {
-    //   if (evt instanceof NavigationEnd) {
-    //     this.router.navigated = false;
-    //     window.scrollTo(0, 0);
-    //   }
-    // });
-  }
+  ngOnInit() {}
 
   ngOnChanges() {
-    this.route.params.pipe(first()).subscribe(params => {
-      console.log('testing=', params);
-    });
+    this.route.params.pipe(first()).subscribe(params => {});
   }
 
   annoucement(message: string, tone: AriaLivePoliteness) {
@@ -62,7 +50,6 @@ export class GlobalSearchViewComponent implements OnInit, OnChanges {
   }
 
   globalSearch(searchInput: string) {
-    // this.router.navigateByUrl(`/search/${searchInput}`);
     if (searchInput.length >= 1) {
       this.globalProblemSearchResults = [];
       this.userSearchResults = [];
@@ -73,9 +60,9 @@ export class GlobalSearchViewComponent implements OnInit, OnChanges {
           this.globalProblemSearchResults = searchData['problems'];
           this.userSearchResults = searchData['users'];
           this.solutionSearchResults = searchData['solutions'];
-          console.log(searchData, 'search data');
+
           this.annoucement(
-            `Found 
+            `Found
             ${this.globalProblemSearchResults.length} Problems,
             ${this.solutionSearchResults.length} Solutions,
             ${this.userSearchResults.length} Contributors`,

@@ -1,59 +1,29 @@
 <div class="card-collapse">
   <div class="card-header" id="commentHeading">
     <h3 class="mb-0">
-      <a
-        class="collapsed"
-        data-toggle="collapse"
-        href="#comment-{{ comment.id }}"
-        aria-expanded="true"
-        attr.aria-controls="comment-{{ comment.id }}"
-      >
+      <a class="collapsed" data-toggle="collapse" href="#comment-{{ comment.id }}" aria-expanded="true"
+        attr.aria-controls="comment-{{ comment.id }}">
         {{ comment.user.name || 'Anonymous' }},
-        {{ comment.edited_at | date: short }}
+        {{ comment.edited_at | date: 'short' }}
         <i class="material-icons" aria-hidden="true">keyboard_arrow_down</i>
       </a>
     </h3>
   </div>
 
-  <div
-    id="comment-{{ comment.id }}"
-    class="collapse show"
-    attr.data-target="#comment-{{ comment.id }}"
-  >
+  <div id="comment-{{ comment.id }}" class="collapse show" attr.data-target="#comment-{{ comment.id }}">
     <div class="card-body">
       <!-- More button for comment -->
-      <ul
-        class="navbar-nav"
-        style="float:right;"
-        *ngIf="comment.user_id == auth.currentUserValue.id"
-      >
+      <ul class="navbar-nav" style="float:right;" *ngIf="comment.user_id == auth.currentUserValue.id">
         <li class="nav-item dropdown">
-          <a
-            class="nav-link more_icon"
-            href="javascript:void(0);"
-            id="discussion_more_btn"
-            data-toggle="dropdown"
-            aria-haspopup="true"
-            aria-expanded="false"
-            role="button"
-            aria-label="more"
-          >
+          <a class="nav-link more_icon" href="javascript:void(0);" id="discussion_more_btn" data-toggle="dropdown"
+            aria-haspopup="true" aria-expanded="false" role="button" aria-label="more">
             <i class="material-icons" aria-hidden="true">
               more_vert
             </i>
           </a>
           <div class="dropdown-menu" aria-labelledby="discussion_more_btn">
-            <a
-              class="dropdown-item"
-              href="javascript:void(0);"
-              (click)="idToDelete(comment)"
-              role="button"
-            >
-              <i
-                class="material-icons"
-                aria-hidden="true"
-                style="color:var(--danger);"
-              >
+            <a class="dropdown-item" href="javascript:void(0);" (click)="idToDelete(comment)" role="button">
+              <i class="material-icons" aria-hidden="true" style="color:var(--danger);">
                 delete_outline
               </i>
               Delete
@@ -66,120 +36,66 @@
 
       <!-- Attachments for comments -->
       <p>
-        <span
-          *ngFor="let attachment of comment.attachments; let i = index"
-          class="discussion_thumbnail"
-        >
+        <span *ngFor="let attachment of comment.attachments; let i = index" class="discussion_thumbnail">
           <ng-container *ngIf="attachment.mimeType">
-            <a
-              href="javascript:void(0);"
-              *ngIf="
+            <a href="javascript:void(0);" *ngIf="
                 attachment.mimeType.startsWith('image') && i < attachmentToShow
-              "
-              (click)="
+              " (click)="
                 assignUrl(comment.attachments, i, 'comment-' + comment.id)
-              "
-            >
-              <img
-                src="{{
+              ">
+              <img src="{{
                   filesService.fileAccessUrl + attachment['fileEndpoint']
-                }}"
-                [alt]="['attachment', i + 1]"
-              />
+                }}" [alt]="['attachment', i + 1]" />
             </a>
 
             <!-- icon in case url is of video -->
-            <a
-              href="javascript:void(0);"
-              *ngIf="
+            <a href="javascript:void(0);" *ngIf="
                 attachment.mimeType &&
                 attachment.mimeType.startsWith('video') &&
                 i < attachmentToShow
-              "
-              (click)="
+              " (click)="
                 assignUrl(comment.attachments, i, 'comment-' + comment.id)
-              "
-              ><img
-                src="../../../assets/img/video_icon.png"
-                [alt]="['video attachment', i + 1]"
-              />
+              "><img src="../../../assets/img/video_icon.png" [alt]="['video attachment', i + 1]" />
             </a>
 
-            <!-- <p>{{testMimeType(attachment.mimeType)}}</p> -->
-            <a
-              href="javascript:void(0);"
-              *ngIf="testMimeType(attachment.mimeType) && i < attachmentToShow"
-              (click)="
+
+            <a href="javascript:void(0);" *ngIf="testMimeType(attachment.mimeType) && i < attachmentToShow" (click)="
                 assignUrl(comment.attachments, i, 'comment-' + comment.id)
-              "
-              ><img
-                src="../../../assets/img/document_icon.png"
-                [alt]="['document attachment', i + 1]"
-              />
+              "><img src="../../../assets/img/document_icon.png" [alt]="['document attachment', i + 1]" />
             </a>
 
-            <a
-              href="javascript:void(0);"
-              *ngIf="
+            <a href="javascript:void(0);" *ngIf="
                 attachment.mimeType.endsWith('pdf') && i < attachmentToShow
-              "
-              (click)="
+              " (click)="
                 assignUrl(comment.attachments, i, 'comment-' + comment.id)
-              "
-              ><img
-                src="../../../assets/img/pdf_icon.png"
-                [alt]="['pdf attachment', i + 1]"
-              />
+              "><img src="../../../assets/img/pdf_icon.png" [alt]="['pdf attachment', i + 1]" />
             </a>
           </ng-container>
         </span>
 
         <!-- show more for comments -->
-        <i
-          class="material-icons"
-          tabindex="0"
-          role="button"
-          aria-label="show more"
-          *ngIf="
+        <i class="material-icons" tabindex="0" role="button" aria-label="show more" *ngIf="
             comment &&
             comment.attachments &&
             comment.attachments.length > 2 &&
             !commentsExpanded
-          "
-          style="padding: 5px; line-height: 50px;cursor: pointer;"
-          (click)="displayMoreAttachComments()"
-          matTooltip="show more"
-          [matTooltipPosition]="'right'"
-        >
+          " style="padding: 5px; line-height: 50px;cursor: pointer;" (click)="displayMoreAttachComments()"
+          matTooltip="show more" [matTooltipPosition]="'right'">
           arrow_forward_ios
         </i>
         <!-- show less for comments -->
-        <i
-          class="material-icons"
-          aria-label="show less"
-          role="button"
-          *ngIf="commentsExpanded"
-          tabindex="0"
-          style="padding:5px; line-height: 50px;cursor: pointer;"
-          (click)="displayMoreAttachComments()"
-          matTooltip="show less"
-          [matTooltipPosition]="'right'"
-        >
+        <i class="material-icons" aria-label="show less" role="button" *ngIf="commentsExpanded" tabindex="0"
+          style="padding:5px; line-height: 50px;cursor: pointer;" (click)="displayMoreAttachComments()"
+          matTooltip="show less" [matTooltipPosition]="'right'">
           arrow_back_ios
         </i>
       </p>
 
       <div class="d-flex align-items-center">
-        <button
-          class="btn btn-warning btn-link"
-          *ngIf="auth.currentUserValue.id"
-          matTooltip="upvote"
-          (click)="toggleVoteDiscussions()"
-          [attr.aria-pressed]="voters.has(userId)"
-          [ngStyle]="{ color: voters.has(userId) ? '#1E90FF' : 'black' }"
-          style="padding: 0 7px;"
-          [attr.aria-label]="['likes', voters.size]"
-        >
+        <button class="btn btn-warning btn-link" *ngIf="auth.currentUserValue.id" matTooltip="upvote"
+          (click)="toggleVoteDiscussions()" [attr.aria-pressed]="voters.has(userId)"
+          [ngStyle]="{ color: voters.has(userId) ? '#1E90FF' : 'black' }" style="padding: 0 7px;"
+          [attr.aria-label]="['likes', voters.size]">
           <i class="material-icons actions" aria-hidden="true">
             thumb_up
           </i>
@@ -187,21 +103,11 @@
         </button>
 
         <div class="dropdown">
-          <button
-            class="btn btn-link"
-            [ngClass]="{
+          <button class="btn btn-link" [ngClass]="{
               'btn-warning': !pageType,
               'btn-rose': pageType == 'solution'
-            }"
-            *ngIf="auth.currentUserValue.id"
-            matTooltip="share"
-            type="button"
-            id="discussion_share_btn"
-            data-toggle="dropdown"
-            aria-haspopup="true"
-            aria-expanded="false"
-            style="padding: 0 5px;"
-          >
+            }" *ngIf="auth.currentUserValue.id" matTooltip="share" type="button" id="discussion_share_btn"
+            data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" style="padding: 0 5px;">
             <i class="material-icons actions" aria-hidden="true">
               share
             </i>
@@ -209,19 +115,13 @@
 
           <ul class="dropdown-menu" aria-labelledby="discussion_share_btn">
             <li>
-              <a (click)="getCommentIdToShare(comment.id, 'linkedin')"
-                >LinkedIn</a
-              >
+              <a (click)="getCommentIdToShare(comment.id, 'linkedin')">LinkedIn</a>
             </li>
             <li>
-              <a (click)="getCommentIdToShare(comment.id, 'facebook')"
-                >Facebook</a
-              >
+              <a (click)="getCommentIdToShare(comment.id, 'facebook')">Facebook</a>
             </li>
             <li>
-              <a (click)="getCommentIdToShare(comment.id, 'twitter')"
-                >Twitter</a
-              >
+              <a (click)="getCommentIdToShare(comment.id, 'twitter')">Twitter</a>
             </li>
             <li>
               <a (click)="getCommentIdToShare(comment.id, 'email')">Email</a>
@@ -230,94 +130,44 @@
           </ul>
         </div>
 
-        <button
-          mat-raised-button
-          class="btn btn-link btn-sm"
-          [ngClass]="{
+        <button mat-raised-button class="btn btn-link btn-sm" [ngClass]="{
             'btn-warning': !pageType,
             'btn-rose': pageType == 'solution'
-          }"
-          matTooltip="Click to reply"
-          [matTooltipPosition]="'below'"
-          *ngIf="
+          }" matTooltip="Click to reply" [matTooltipPosition]="'below'" *ngIf="
             !(showReplyBox && replyingTo === comment.id) &&
             auth.currentUserValue.id
-          "
-          (click)="replyTo(comment.id)"
-        >
+          " (click)="replyTo(comment.id)">
           Reply
         </button>
       </div>
-      <app-submit-comment
-        *ngIf="showReplyBox && replyingTo === comment.id"
-        [users]="users"
-        [actionText]="'Reply'"
-        [cancelShown]="true"
-        [id]="comment.id"
-        (cancel)="showReplyBox = false"
-        (submit)="onCommentSubmit($event)"
-      >
+      <app-submit-comment *ngIf="showReplyBox && replyingTo === comment.id" [users]="users" [actionText]="'Reply'"
+        [cancelShown]="true" [id]="comment.id" (cancel)="showReplyBox = false" (submit)="onCommentSubmit($event)">
       </app-submit-comment>
       <div class="card-collapse" *ngFor="let reply of sortReplies(replies)">
         <div class="card-header" id="replyHeading">
           <h4 class="mb-0">
-            <a
-              class="collapsed"
-              data-toggle="collapse"
-              href="#reply-{{ reply.id }}"
-              aria-expanded="true"
-              attr.aria-controls="reply-{{ reply.id }}"
-            >
+            <a class="collapsed" data-toggle="collapse" href="#reply-{{ reply.id }}" aria-expanded="true"
+              attr.aria-controls="reply-{{ reply.id }}">
               {{ reply.user.name || 'Anonymous' }},
-              {{ reply.edited_at | date: short }}
-              <i class="material-icons" aria-hidden="true"
-                >keyboard_arrow_down</i
-              >
+              {{ reply.edited_at | date: 'short' }}
+              <i class="material-icons" aria-hidden="true">keyboard_arrow_down</i>
             </a>
           </h4>
         </div>
-        <div
-          id="reply-{{ reply.id }}"
-          class="collapse show"
-          attr.data-target="#reply-{{ reply.id }}"
-        >
+        <div id="reply-{{ reply.id }}" class="collapse show" attr.data-target="#reply-{{ reply.id }}">
           <div class="card-body">
             <!-- More button for replies -->
-            <ul
-              class="navbar-nav"
-              style="float:right;"
-              *ngIf="reply.user_id == auth.currentUserValue.id"
-            >
+            <ul class="navbar-nav" style="float:right;" *ngIf="reply.user_id == auth.currentUserValue.id">
               <li class="nav-item dropdown">
-                <a
-                  class="nav-link more_icon"
-                  href="javascript.void(0);"
-                  id="discussion_more_btn"
-                  data-toggle="dropdown"
-                  aria-haspopup="true"
-                  aria-expanded="false"
-                  role="button"
-                  aria-label="more"
-                >
+                <a class="nav-link more_icon" href="javascript.void(0);" id="discussion_more_btn" data-toggle="dropdown"
+                  aria-haspopup="true" aria-expanded="false" role="button" aria-label="more">
                   <i class="material-icons" aria-hidden="true">
                     more_vert
                   </i>
                 </a>
-                <div
-                  class="dropdown-menu"
-                  aria-labelledby="discussion_more_btn"
-                >
-                  <a
-                    class="dropdown-item"
-                    href="javascript:void(0);"
-                    (click)="idToDelete(reply)"
-                    role="button"
-                  >
-                    <i
-                      class="material-icons"
-                      aria-hidden="true"
-                      style="color:var(--danger);"
-                    >
+                <div class="dropdown-menu" aria-labelledby="discussion_more_btn">
+                  <a class="dropdown-item" href="javascript:void(0);" (click)="idToDelete(reply)" role="button">
+                    <i class="material-icons" aria-hidden="true" style="color:var(--danger);">
                       delete_outline
                     </i>
                     Delete
@@ -330,101 +180,55 @@
 
             <!-- Attachments for replies -->
             <p>
-              <span
-                *ngFor="let attachment of reply.attachments; let i = index"
-                class="discussion_thumbnail"
-              >
-                <a
-                  href="javascript:void(0);"
-                  *ngIf="
+              <span *ngFor="let attachment of reply.attachments; let i = index" class="discussion_thumbnail">
+                <a href="javascript:void(0);" *ngIf="
                     attachment.mimeType.startsWith('image') &&
                     i < repliesAttachmentNum
-                  "
-                  (click)="assignUrl(reply.attachments, i, 'reply-' + reply.id)"
-                >
-                  <img
-                    [alt]="['attachment', i + 1]"
-                    src="{{
+                  " (click)="assignUrl(reply.attachments, i, 'reply-' + reply.id)">
+                  <img [alt]="['attachment', i + 1]" src="{{
                       filesService.fileAccessUrl + attachment['fileEndpoint']
-                    }}"
-                  />
+                    }}" />
                 </a>
 
                 <!-- icon in case url is of video -->
-                <a
-                  href="javascript:void(0);"
-                  *ngIf="
+                <a href="javascript:void(0);" *ngIf="
                     attachment.mimeType.startsWith('video') &&
                     i < repliesAttachmentNum
-                  "
-                  (click)="assignUrl(reply.attachments, i, 'reply-' + reply.id)"
-                >
-                  <img
-                    src="../../../assets/img/video_icon.png"
-                    [alt]="['video attachment', i + 1]"
-                  />
+                  " (click)="assignUrl(reply.attachments, i, 'reply-' + reply.id)">
+                  <img src="../../../assets/img/video_icon.png" [alt]="['video attachment', i + 1]" />
                 </a>
 
-                <a
-                  href="javascript:void(0);"
-                  *ngIf="
+                <a href="javascript:void(0);" *ngIf="
                     testMimeType(attachment.mimeType) &&
                     i < repliesAttachmentNum
-                  "
-                  (click)="assignUrl(reply.attachments, i, 'reply-' + reply.id)"
-                >
-                  <img
-                    src="../../../assets/img/document_icon.png"
-                    [alt]="['document attachment', i + 1]"
-                  />
+                  " (click)="assignUrl(reply.attachments, i, 'reply-' + reply.id)">
+                  <img src="../../../assets/img/document_icon.png" [alt]="['document attachment', i + 1]" />
                 </a>
 
-                <a
-                  href="javascript:void(0);"
-                  *ngIf="
+                <a href="javascript:void(0);" *ngIf="
                     attachment.mimeType.endsWith('pdf') &&
                     i < repliesAttachmentNum
-                  "
-                  (click)="assignUrl(reply.attachments, i, 'reply-' + reply.id)"
-                >
-                  <img
-                    src="../../../assets/img/pdf_icon.png"
-                    [alt]="['pdf attachment', i + 1]"
-                  />
+                  " (click)="assignUrl(reply.attachments, i, 'reply-' + reply.id)">
+                  <img src="../../../assets/img/pdf_icon.png" [alt]="['pdf attachment', i + 1]" />
                 </a>
               </span>
               <!-- Show more for replies -->
-              <i
-                class="material-icons"
-                aria-label="show more"
-                role="button"
-                tabindex="0"
-                *ngIf="
+              <i class="material-icons" aria-label="show more" role="button" tabindex="0" *ngIf="
                   reply &&
                   reply.attachments &&
                   reply.attachments.length > 2 &&
                   !repliesExpanded
-                "
-                style="padding: 5px; line-height: 40px;cursor: pointer;"
-                (click)="displayMoreAttachReplies(reply.attachments)"
-                matTooltip="show more"
-                [matTooltipPosition]="'right'"
-              >
+                " style="padding: 5px; line-height: 40px;cursor: pointer;"
+                (click)="displayMoreAttachReplies(reply.attachments)" matTooltip="show more"
+                [matTooltipPosition]="'right'">
                 arrow_forward_ios
               </i>
 
               <!-- Show less for replies -->
-              <i
-                class="material-icons"
-                aria-label="show less"
-                tabindex="0"
-                role="button"
-                *ngIf="repliesExpanded"
+              <i class="material-icons" aria-label="show less" tabindex="0" role="button" *ngIf="repliesExpanded"
                 style="padding:5px; line-height: 40px;cursor: pointer;"
-                (click)="displayMoreAttachReplies(reply.attachments)"
-                matTooltip="show less"
-                [matTooltipPosition]="'right'"
-              >
+                (click)="displayMoreAttachReplies(reply.attachments)" matTooltip="show less"
+                [matTooltipPosition]="'right'">
                 arrow_back_ios
               </i>
             </p>

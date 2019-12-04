@@ -43,7 +43,7 @@ export class ProblemsViewComponent implements OnInit, OnDestroy, AfterViewInit {
   problemViewSubscription: any;
   constructor(
     private apollo: Apollo,
-    private auth: AuthService,
+    public auth: AuthService,
     private activatedRoute: ActivatedRoute,
     private router: Router,
     private tagsService: TagsService,
@@ -61,7 +61,7 @@ export class ProblemsViewComponent implements OnInit, OnDestroy, AfterViewInit {
       .then(result => {
         this.getProblems();
       })
-      .catch(err => console.log(err, 'error'));
+      .catch(err => console.error(err, 'error'));
   }
 
   ngOnInit() {
@@ -85,10 +85,10 @@ export class ProblemsViewComponent implements OnInit, OnDestroy, AfterViewInit {
 
       this.problemViewQuery = this.apollo.watchQuery<any>({
         query: gql`
-          query table${this.filterService.location_filter_header}{ 
+          query table${this.filterService.location_filter_header}{
             problems(where:{is_draft: { _eq: false },_and:[{problems_tags:{tag_id:{${this.filterService.sector_filter_query}}}},${this.filterService.location_filter_query}]}order_by: {  updated_at: desc } )
-            
-             
+
+
             {
             id
             title
@@ -153,7 +153,6 @@ export class ProblemsViewComponent implements OnInit, OnDestroy, AfterViewInit {
 
       this.problemViewSubscription.subscribe(
         result => {
-          console.log(result, 'results');
           if (result.data.problems.length > 0) {
             this.problems = result.data.problems;
           } else {

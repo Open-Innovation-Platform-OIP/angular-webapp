@@ -23,7 +23,7 @@ import {
   MatDialogRef,
   MAT_DIALOG_DATA
 } from '@angular/material/dialog';
-// import { FilesService } from "../../services/files.service";
+
 import {
   first,
   finalize,
@@ -59,7 +59,7 @@ import { reject } from 'q';
 import { ModalComponent } from 'src/app/components/modal/modal.component';
 import { FocusMonitor } from '@angular/cdk/a11y';
 import { filter } from 'rxjs/operators';
-var Buffer = require('buffer/').Buffer;
+const Buffer = require('buffer/').Buffer;
 
 const misc: any = {
   navbar_menu_visible: 0,
@@ -76,8 +76,6 @@ interface attachment_object {
 interface queryString {
   commentId: number;
 }
-
-// const domain = "https://app.socialalpha.jaagalabs.com";
 
 @Component({
   selector: 'app-problem-detail',
@@ -102,8 +100,7 @@ export class ProblemDetailComponent
   channels = sharing;
   discussionContext: string;
   lastContext = new Subject();
-  // filesService.fileAccessUrl: string = "";
-  // chartData: any;
+
   message: any;
   popup: any;
   watchers = new Set();
@@ -167,7 +164,7 @@ export class ProblemDetailComponent
 
   enrichDataToEdit: any;
   tags: any = [];
-  sectorMatched: boolean = false;
+  sectorMatched = false;
   enrichDataArray: any[];
   validationArray: any[];
   sectors: any[] = [];
@@ -183,22 +180,22 @@ export class ProblemDetailComponent
     is_incubator: false,
     is_entrepreneur: false
   };
-  // enrich: number[] = [1, 2, 3, 4, 5];
+
   modalImgSrc: String;
   modalVideoSrc: String;
   problem_attachments: any[] = [];
-  problem_attachments_index: number = 0;
+  problem_attachments_index = 0;
   problem_attachments_src: any;
   problemLocations: any = [];
   modalSrc: any;
   sources: any;
-  singleImg: boolean = false;
-  // modalBtnTxt: string;
-  imgUrlIndex: number = 0;
-  videoUrlIndex: number = 0;
-  disableEnrichButton: boolean = false;
-  disableValidateButton: boolean = false;
-  disableCollaborateButton: boolean = false;
+  singleImg = false;
+
+  imgUrlIndex = 0;
+  videoUrlIndex = 0;
+  disableEnrichButton = false;
+  disableValidateButton = false;
+  disableCollaborateButton = false;
 
   private listTitles: any[];
   location: Location;
@@ -209,7 +206,7 @@ export class ProblemDetailComponent
   private _router: Subscription;
   displayEnrichForm: boolean;
   showCollaborators: boolean;
-  hideProblemDetail: boolean = true;
+  hideProblemDetail = true;
   collaboratorProfileInfo: any;
   comments = {};
   replies = {};
@@ -219,19 +216,7 @@ export class ProblemDetailComponent
   pageUrl = '';
   mailToLink = '';
 
-  fabTogglerState: boolean = false;
-
-  // openform: any;
-  // reply: any;
-  // index: any;
-  // form = {
-  //   comment: null,
-  //   user_id: 1,
-  //   problem_id: 3
-  // };
-  // data: any;
-  // putReply: any;
-  // netReply: any;
+  fabTogglerState = false;
 
   // Carousel
   @Input() name: string;
@@ -251,7 +236,6 @@ export class ProblemDetailComponent
   public carouselTileItemsEnrichment$: Observable<number[]>;
   public carouselTileItemsValid$: Observable<number[]>;
   public carouselTileItemsCollab$: Observable<number[]>;
-  // public carouselTileItemSolution$: Observable<number[]>;
 
   public carouselTileConfig: NguCarouselConfig = {
     grid: { xs: 2, sm: 2, md: 2, lg: 2, all: 0 },
@@ -265,18 +249,13 @@ export class ProblemDetailComponent
     loop: true
   };
 
-  // voteProblemSub: Subscription;
-  // deleteProblemVoteSub: Subscription;
-  // watchProblemSub: Subscription;
-  // deleteProblemWatchSub: Subscription;
-
   constructor(
     private router: Router,
     private route: ActivatedRoute,
     private problemService: ProblemService,
     private apollo: Apollo,
     private cdr: ChangeDetectorRef,
-    private auth: AuthService,
+    public auth: AuthService,
     public usersService: UsersService,
     public filesService: FilesService,
     private discussionsService: DiscussionsService,
@@ -288,7 +267,7 @@ export class ProblemDetailComponent
     public dialog: MatDialog,
     private focusMonitor: FocusMonitor,
     private filterService: FilterService,
-    private tagsService:TagsService
+    private tagsService: TagsService
   ) {
     this.startInterval();
     this.pageUrl = domain + ngLocation.path();
@@ -339,16 +318,14 @@ export class ProblemDetailComponent
 
     this.userDataQuery.valueChanges.pipe(take(1)).subscribe(
       result => {
-        // //console.log("PERSONAS", result);
         if (result.data.users[0]) {
           Object.keys(result.data.users[0]).map(persona => {
             this.userPersonas[persona] = result.data.users[0][persona];
           });
-          // //console.log("persona assignment", this.userPersonas);
+
           result.data.users[0].users_tags.map(tag => {
             this.userInterests[tag.tag.name] = tag.tag;
           });
-          // //console.log(this.userInterests, "user interests");
         }
       },
       error => {
@@ -358,7 +335,6 @@ export class ProblemDetailComponent
   }
 
   loadCarousels() {
-    // //console.log("LOAD CAROUSELS", this.validation);
     this.carouselTileItemsEnrichment$ = interval(500).pipe(
       startWith(-1),
       take(2),
@@ -386,7 +362,6 @@ export class ProblemDetailComponent
           data = this.validation;
           return data;
         }
-        // return data;
       })
     );
 
@@ -404,37 +379,16 @@ export class ProblemDetailComponent
         }
       })
     );
-
-    // this.carouselTileItemSolution$ = interval(500).pipe(
-    //   startWith(-1),
-    //   take(2),
-    //   map(val => {
-    //     let data;
-
-    //     if (this.solutions && this.solutions.length < 1) {
-    //       this.solutions = [false];
-    //     } else {
-    //       data = this.solutions;
-    //       return data;
-    //     }
-    //   })
-    // );
   }
 
   ngOnInit() {
     this.userId = Number(this.auth.currentUserValue.id);
 
-    // this.filesService.fileAccessUrl = fileUploadVariables.accessUrl + "/";
-    console.log(this.auth.currentUserValue, 'current user value');
-
     this.getUserData(Number(this.auth.currentUserValue.id));
 
     this.loadCarousels();
 
-    // this.minimizeSidebar();
-
     this.route.queryParams.subscribe(params => {
-      // //console.log("params ", params, this.qs);
       if (params.commentId) {
         this.qs.commentId = params.commentId;
       }
@@ -448,17 +402,14 @@ export class ProblemDetailComponent
     this.problemDataSubcription.subscribe(
       result => {
         if (result.data.problems.length >= 1 && result.data.problems[0].id) {
-          let problem = result.data.problems[0];
+          const problem = result.data.problems[0];
           this.parseProblem(problem);
         }
       },
       error => {
-        // //console.log("error", error);
         console.error(JSON.stringify(error));
       }
     );
-
-    //console.log("check title", this.problemData.title);
   }
 
   getProblemData(id) {
@@ -491,7 +442,7 @@ export class ProblemDetailComponent
           user {
             id
             name
-          } 
+          }
           problems_tags{
             tag {
                 id
@@ -522,13 +473,13 @@ export class ProblemDetailComponent
           user_id
           edited_at
           is_deleted
-  
+
           problem_id
           user {
             id
             name
-          } 
-          
+          }
+
         }
         problem_watchers {
           user_id
@@ -536,8 +487,8 @@ export class ProblemDetailComponent
         problem_voters {
           user_id
         }
-       
-       
+
+
 
         problems_solutions{
           solution{
@@ -549,7 +500,7 @@ export class ProblemDetailComponent
             impact
             website_url
             deployment
-            
+
             image_urls
             edited_at
             updated_at
@@ -611,8 +562,8 @@ export class ProblemDetailComponent
             id
             name
             photo_url
-          } 
-          
+          }
+
         }
 
         enrichments(where: { is_deleted: { _eq: false } },order_by:{edited_at: desc}){
@@ -636,35 +587,34 @@ export class ProblemDetailComponent
             }
           }
           beneficiary_attributes
-          
+
           resources_needed
           image_urls
           attachments
           video_urls
           user_id
           edited_at
-          
+
           is_deleted
           featured_url
           embed_urls
           featured_type
-         
+
           user{
             id
             name
             photo_url
-          }   
+          }
         }
         }
     }
-        
+
     `,
       pollInterval: 1000,
       fetchPolicy: 'network-only'
     });
-    // this.chartQuery.valueChanges.subscribe
+
     return this.problemDataQuery.valueChanges;
-    // return problemDataSubcription;
   }
 
   fbShare() {
@@ -722,7 +672,6 @@ export class ProblemDetailComponent
       body: JSON.stringify(data) // body data type must match "Content-Type" header
     })
       .then(response => {
-        console.log(response);
         alert('Your message has been sent');
       }) // parses JSON response into native Javascript objects
       .catch(e => {
@@ -768,7 +717,6 @@ export class ProblemDetailComponent
 
     // map core keys
     Object.keys(this.problemData).map(key => {
-      // //console.log(key, result.data.problems[0][key]);
       if (problem[key]) {
         this.problemData[key] = problem[key];
       }
@@ -780,10 +728,8 @@ export class ProblemDetailComponent
       }
     });
     this.enrichment = problem.enrichments;
-    //console.log("enrichment", this.enrichment);
 
     problem.problem_validations.map(validation => {
-      // //console.log(validation.user_id, "test55");
       if (validation.user_id === Number(this.auth.currentUserValue.id)) {
         this.disableValidateButton = true;
       }
@@ -805,24 +751,18 @@ export class ProblemDetailComponent
       });
     }
 
-    //console.log(this.solutions, "solutions refresh");
-
     this.loadCarousels();
 
-    // //console.log(this.problemData, "result from nested queries");
-    // //console.log(problem.is_draft, "is draft");
     if (problem.user) {
       this.problemOwner = problem.user.name;
-      // //console.log(problem.problems_tags, "problem tags");
+
       problem.problems_tags.map(tags => {
         if (this.userInterests[tags.tag.name]) {
           this.sectorMatched = true;
-          // //console.log(this.sectorMatched, "sector matched");
         }
       });
       if (problem.problems_tags) {
         this.tags = problem.problems_tags.map(tagArray => {
-          // //console.log(tagArray, "work");
           return tagArray.tag;
         });
       }
@@ -831,8 +771,6 @@ export class ProblemDetailComponent
           this.problemData[key] = problem[key];
         }
       });
-
-      //console.log(problem.problem_locations, "==problem locations");
 
       if (problem.problem_locations) {
         this.problemLocations = problem.problem_locations.map(location => {
@@ -859,7 +797,7 @@ export class ProblemDetailComponent
       }
 
       // adding embed urls
-      let embedded_urls_arr = this.problemData.embed_urls.map(url => {
+      const embedded_urls_arr = this.problemData.embed_urls.map(url => {
         return { url: url };
       });
 
@@ -875,12 +813,8 @@ export class ProblemDetailComponent
         this.problem_attachments_index
       ];
 
-      //console.log(this.problem_attachments, "===src");
-
-      // //console.log(problem.discussions);
       problem.discussions.map(comment => {
         if (comment.linked_comment_id) {
-          // //console.log(comment);
           // this comment is a reply - add it to the replies object
           if (!this.replies[comment.linked_comment_id]) {
             // create reply object so we can add reply
@@ -895,7 +829,7 @@ export class ProblemDetailComponent
         } else {
           // this comment is a parent comment - add it to the comments object
           // comment object does not exist
-          // //console.log("COMMENT ID", comment.id);
+
           this.comments[comment.id] = comment;
           if (!this.replies[comment.id]) {
             this.replies[comment.id] = []; // create an empty array for replies to this comment
@@ -906,11 +840,14 @@ export class ProblemDetailComponent
       this.popularDiscussions = Object.keys(this.replies)
         .sort((a, b) => {
           // sorting by date
+          let dateA;
+          let dateB;
+
           if (this.comments[a]) {
-            var dateA = this.comments[a].edited_at;
+            dateA = this.comments[a].edited_at;
           }
           if (this.comments[b]) {
-            var dateB = this.comments[b].edited_at;
+            dateB = this.comments[b].edited_at;
           }
           if (dateA < dateB) {
             return 1;
@@ -927,10 +864,6 @@ export class ProblemDetailComponent
         })
         .filter(commentId => this.comments[commentId]) // to avoid undefined
         .map(commentId => this.comments[commentId]); //mapping the sorted array
-
-      //console.log("REPLIES", this.replies);
-      //console.log("COMMENTS", this.comments);
-      //console.log("POPULAR", this.popularDiscussions);
     }
   }
 
@@ -941,15 +874,14 @@ export class ProblemDetailComponent
   }
 
   sortComments(comments) {
-    // //console.log("comments>>>>> ", comments);
-    let sortByDate = comments.sort(this.compareDateForSort);
-    let sharedComment = comments.filter(comment => {
+    const sortByDate = comments.sort(this.compareDateForSort);
+    const sharedComment = comments.filter(comment => {
       if (this.qs.commentId) {
         return comment.id === Number(this.qs.commentId);
       }
     });
 
-    let sortedComments = this.removeDuplicateReplies([
+    const sortedComments = this.removeDuplicateReplies([
       ...sharedComment,
       ...sortByDate
     ]);
@@ -962,11 +894,9 @@ export class ProblemDetailComponent
   }
 
   deleteComment(comment) {
-    let deleteResp = this.discussionsService.deleteCommentsFromDB(comment.id);
+    const deleteResp = this.discussionsService.deleteCommentsFromDB(comment.id);
     deleteResp.subscribe(
       result => {
-        //console.log(result, "delete worked");
-        // location.reload();
         if (
           this.comments.hasOwnProperty(comment.id) &&
           !this.comments[comment.id].linked_comment_id
@@ -999,8 +929,8 @@ export class ProblemDetailComponent
   }
 
   compareDateForSort(a, b) {
-    var dateA = a.edited_at;
-    var dateB = b.edited_at;
+    const dateA = a.edited_at;
+    const dateB = b.edited_at;
     if (dateA < dateB) {
       return 1;
     }
@@ -1014,12 +944,11 @@ export class ProblemDetailComponent
   replyTo(discussionId) {
     this.showReplyBox = true;
     this.replyingTo = discussionId;
-    //console.log(discussionId);
   }
 
   checkUrlIsImg(url) {
-    var arr = ['jpeg', 'jpg', 'gif', 'png'];
-    var ext = url.substring(url.lastIndexOf('.') + 1);
+    const arr = ['jpeg', 'jpg', 'gif', 'png'];
+    const ext = url.substring(url.lastIndexOf('.') + 1);
     if (arr.indexOf(ext) > -1) {
       return true;
     } else {
@@ -1028,7 +957,6 @@ export class ProblemDetailComponent
   }
 
   sectorSelected(sector) {
-    // //console.log(sector,"sector");
     this.router.navigate(['/problems'], {
       queryParams: { [sector.name]: 'sectorFilter' },
       queryParamsHandling: 'merge'
@@ -1036,7 +964,7 @@ export class ProblemDetailComponent
   }
 
   locationSelected(location) {
-    let locationQuery = {
+    const locationQuery = {
       location_name: location.location_name,
       latitude: location.lat,
       longitude: location.long,
@@ -1139,7 +1067,7 @@ export class ProblemDetailComponent
 
   dimissVideoModal(e) {
     if (e.type === 'click') {
-      let problemVideoTag: HTMLMediaElement = document.querySelector(
+      const problemVideoTag: HTMLMediaElement = document.querySelector(
         '#problemVideoID'
       );
       problemVideoTag.pause();
@@ -1147,15 +1075,15 @@ export class ProblemDetailComponent
   }
 
   sidebarClose() {
-    var $toggle = document.getElementsByClassName('navbar-toggler')[0];
+    const $toggle = document.getElementsByClassName('navbar-toggler')[0];
     const body = document.getElementsByTagName('body')[0];
     this.toggleButton.classList.remove('toggled');
-    var $layer = document.createElement('div');
+    const $layer = document.createElement('div');
     $layer.setAttribute('class', 'close-layer');
 
     this.sidebarVisible = false;
     body.classList.remove('nav-open');
-    // $('html').removeClass('nav-open');
+
     body.classList.remove('nav-open');
     if ($layer) {
       $layer.remove();
@@ -1168,7 +1096,6 @@ export class ProblemDetailComponent
     this.mobile_menu_visible = 0;
   }
   toggleWatchProblem() {
-    // //console.log('toggling watch flag');
     if (
       !(this.userId == this.problemData.user_id) &&
       this.auth.currentUserValue.id
@@ -1202,7 +1129,6 @@ export class ProblemDetailComponent
           .subscribe(
             result => {
               if (result.data) {
-                // //console.log(result.data);
               }
             },
             err => {
@@ -1232,7 +1158,6 @@ export class ProblemDetailComponent
           .subscribe(
             result => {
               if (result.data) {
-                // //console.log(result.data);
               }
             },
             err => {
@@ -1244,7 +1169,6 @@ export class ProblemDetailComponent
   }
 
   toggleVoteProblem() {
-    // //console.log('toggling watch flag');
     if (
       !(this.userId == this.problemData.user_id) &&
       this.auth.currentUserValue.id
@@ -1265,7 +1189,7 @@ export class ProblemDetailComponent
           ) {
             returning {
               user_id
-              problem_id    
+              problem_id
             }
           }
         }
@@ -1278,7 +1202,6 @@ export class ProblemDetailComponent
           .subscribe(
             result => {
               if (result.data) {
-                // //console.log(result.data);
               }
             },
             err => {
@@ -1308,7 +1231,6 @@ export class ProblemDetailComponent
           .subscribe(
             result => {
               if (result.data) {
-                // //console.log(result.data);
               }
             },
             err => {
@@ -1329,14 +1251,12 @@ export class ProblemDetailComponent
   onEnrichmentSubmit(enrichmentData) {
     if (enrichmentData.__typename) {
       delete enrichmentData.__typename;
-      // delete enrichmentData.user;
     }
     enrichmentData.user_id = Number(this.auth.currentUserValue.id);
 
     enrichmentData.problem_id = this.problemData.id;
 
     if (typeof enrichmentData.voted_by === 'string') {
-      // this.submitted.emit(this.enrichmentData);
       this.enrichmentService.submitEnrichmentToDB(enrichmentData);
     } else {
       enrichmentData.voted_by = enrichmentData.voted_by = JSON.stringify(
@@ -1356,17 +1276,13 @@ export class ProblemDetailComponent
         this.disableEnrichButton = false;
         swal({
           title: 'Deleted!',
-          // text: "Your file has been deleted.",
+
           type: 'success',
           confirmButtonClass: 'btn btn-success',
           buttonsStyling: false
         });
-        // alert("deleted");
-        // this.loadCarousels();
-        // location.reload();
       },
       error => {
-        //console.log("Could not delete due to " + error);
         swal({
           title: 'Error',
           text: 'Try Again',
@@ -1383,13 +1299,12 @@ export class ProblemDetailComponent
   }
 
   onCollaborationSubmit(collaborationData) {
-    //console.log(collaborationData, "collaboration data");
     collaborationData.user_id = Number(this.auth.currentUserValue.id);
 
     collaborationData.problem_id = this.problemData.id;
 
     this.collaborationService.submitCollaboratorToDB(collaborationData);
-    //console.log(event, "from problem details collab");
+
     // close modal
     // send to db
   }
@@ -1410,7 +1325,7 @@ export class ProblemDetailComponent
         this.disableValidateButton = false;
         swal({
           title: 'Deleted!',
-          // text: "Your file has been deleted.",
+
           type: 'success',
           confirmButtonClass: 'btn btn-success',
           buttonsStyling: false
@@ -1419,7 +1334,6 @@ export class ProblemDetailComponent
         return;
       },
       error => {
-        //console.log("Could not delete due to " + error);
         swal({
           title: 'Error',
           text: 'Try Again',
@@ -1438,7 +1352,6 @@ export class ProblemDetailComponent
         this.disableCollaborateButton = false;
       },
       error => {
-        //console.log("Could delete due to " + error);
         swal({
           title: 'Error',
           text: 'Try Again',
@@ -1455,7 +1368,6 @@ export class ProblemDetailComponent
   }
   handleEnrichEditMode(enrichData) {
     this.enrichmentData = enrichData;
-    //console.log(enrichData, "event on edit");
   }
 
   handleValidationCardClicked(validationData) {
@@ -1464,7 +1376,7 @@ export class ProblemDetailComponent
 
   handleValidationEditMode(validationData) {
     this.validationDataToEdit = validationData;
-    // this.openModal("#EditValidationModal");
+
     $('#EditValidationModal').modal({
       backdrop: 'static',
       keyboard: false
@@ -1474,49 +1386,37 @@ export class ProblemDetailComponent
   }
 
   handleCollaborationEditMode(collaborationData) {
-    //console.log("edit collab", collaborationData);
     this.collaboratorDataToEdit = collaborationData;
   }
 
   async onCommentSubmit(event, comment_id?) {
     const [content, mentions, attachments] = event;
-    // //console.log(event);
+
     let file_links: attachment_object[];
     let _links = []; //local array
 
-    let all_promise = await attachments.map(file => {
-      //console.log(file, "comment file");
+    const all_promise = await attachments.map(file => {
       return new Promise((resolve, reject) => {
         if (typeof FileReader !== 'undefined') {
           const reader = new FileReader();
 
           reader.onload = (e: any) => {
-            let buffer = Buffer.from(e.target.result);
+            const buffer = Buffer.from(e.target.result);
             resolve(this.filesService.fileUpload(file, file.type));
           };
           reader.readAsArrayBuffer(file);
         }
       });
-      // return this.fileService.uploadFile(file, file.name).promise();
     });
 
     try {
       _links = await Promise.all(all_promise);
-    } catch (error) {
-      //console.log("Err while uploading reply files", error);
-    }
+    } catch (error) {}
 
     if (_links.length) {
       file_links = [];
 
       _links.forEach((link, i) => {
-        //console.log(link, "link");
-        // additional check
-        // if (!link["Location"].startsWith("https")) {
-        //   link["Location"] = `https://${link["Location"]}`;
-        // }
-        //console.log(attachments[i], "attachments");
-
         file_links.push({
           key: attachments[i].name,
           fileEndpoint: link.fileEndpoint,
@@ -1525,27 +1425,11 @@ export class ProblemDetailComponent
       });
     }
 
-    //console.log(mentions, "mentions of discussions");
-    // let comment = {
-    //   user_id: this.auth.currentUserValue.id,
-    //   problem_id: this.problemData["id"],
-    //   text: content,
-    //   attachments: file_links, // overwriting the incoming blobs
-    // };
-    // // //console.log(content, mentions);
-    // if (comment_id) {
-    //   comment["linked_comment_id"] = comment_id;
-    //   // this.replyingTo = 0;
-    //   // this.showReplyBox = false;
-    // }
-
-    // this.discussionsService.submitCommentToDB(comment, mentions);
-
     this.submitComment(content, mentions, file_links, comment_id);
   }
 
   submitComment(content, mentions, attachments?, comment_id?) {
-    let comment = {
+    const comment = {
       user_id: this.auth.currentUserValue.id,
       problem_id: this.problemData['id'],
       text: content,
@@ -1554,7 +1438,7 @@ export class ProblemDetailComponent
     if (comment_id) {
       comment['linked_comment_id'] = comment_id;
     }
-    // //console.log(content, mentions);
+
     if (this.showReplyBox) {
       comment['linked_comment_id'] = this.replyingTo;
       this.replyingTo = 0;
@@ -1564,37 +1448,6 @@ export class ProblemDetailComponent
     this.discussionsService.submitCommentToDB(comment, mentions);
   }
 
-  // async onReplySubmit(comment) {
-  //   let file_links: attachment_object[];
-  //   let _links = []; // local array
-
-  //   let all_promise = await comment.attachments.map(file => {
-  //     return this.fileService.uploadFile(file, file.name).promise();
-  //   });
-
-  //   try {
-  //     _links = await Promise.all(all_promise);
-  //   } catch (error) {
-  //     //console.log("Err while uploading reply files");
-  //   }
-
-  //   if (_links.length) {
-  //     file_links = [];
-  //     _links.map((link, i) => {
-  //       file_links.push({
-  //         key: link["key"],
-  //         url: link["Location"],
-  //         mimeType: comment.attachments[i].type
-  //       });
-  //     });
-  //   }
-
-  //   comment["user_id"] = this.auth.currentUserValue.id;
-  //   comment["problem_id"] = this.problemData["id"];
-  //   comment["attachments"] = file_links; // overwriting the incoming blobs
-  //   this.discussionsService.submitCommentToDB(comment);
-  // }
-
   checkIntent(event) {
     this.collaboratorIntent = event;
   }
@@ -1603,7 +1456,7 @@ export class ProblemDetailComponent
     if (this.collaboratorIntent) {
       swal({
         title: 'Are you sure you want to leave?',
-        // text: "You won't be able to revert this!",
+
         type: 'warning',
         showCancelButton: true,
         confirmButtonClass: 'btn btn-success',
@@ -1612,7 +1465,6 @@ export class ProblemDetailComponent
         buttonsStyling: false
       }).then(result => {
         if (result.value) {
-          //console.log("Received result", result);
           $('#collaboratorModal').modal('hide');
         }
       });
@@ -1660,19 +1512,18 @@ export class ProblemDetailComponent
 
   closeModal(e, context?: { from: string; index: number }) {
     if (e.type === 'click') {
-      let problemVideoTag: HTMLMediaElement = document.querySelector(
+      const problemVideoTag: HTMLMediaElement = document.querySelector(
         '#modalVideo'
       );
 
       if (context.from === 'enrichment') {
-        let enrichmentCard: HTMLElement = document.querySelector(
+        const enrichmentCard: HTMLElement = document.querySelector(
           `[aria-label='${context.from},${context.index + 1}']>a`
         );
 
         if (enrichmentCard) {
           setTimeout(() => {
             this.focusMonitor.focusVia(enrichmentCard, 'program');
-            console.log('done.', enrichmentCard);
           }, 1000);
         }
       }
@@ -1778,10 +1629,7 @@ export class ProblemDetailComponent
       data: {}
     });
 
-    inviteModalRef.afterClosed().subscribe(result => {
-      console.log('The dialog was closed');
-      // this.animal = result;
-    });
+    inviteModalRef.afterClosed().subscribe(result => {});
   }
 
   ngOnDestroy() {

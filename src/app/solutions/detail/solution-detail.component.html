@@ -358,11 +358,7 @@
         <!-- ----------------------------- solution attachments modal ends----------------------------- -->
 
         <div class="row justify-content-center">
-          <!-- <a mat-button>
-            <i class="material-icons">
-              keyboard_arrow_left
-            </i>
-          </a> -->
+         
           <button
             mat-raised-button
             class="btn btn-rose btn-round"
@@ -381,11 +377,7 @@
           >
             Validate
           </button>
-          <!-- <a mat-button>
-            <i class="material-icons">
-              keyboard_arrow_right
-            </i>
-          </a> -->
+         
         </div>
         <!--Validate divider-->
 
@@ -591,11 +583,7 @@
 
         <!--Collaborate divider-->
         <div class="row justify-content-center">
-          <!-- <a mat-button>
-            <i class="material-icons">
-              keyboard_arrow_left
-            </i>
-          </a> -->
+        
           <button
             mat-raised-button
             *ngIf="auth.currentUserValue.id"
@@ -615,11 +603,7 @@
           <p *ngIf="!auth.currentUserValue.id">
             Login to collaborate on this solution
           </p>
-          <!-- <a mat-button>
-            <i class="material-icons">
-              keyboard_arrow_right
-            </i>
-          </a> -->
+         
         </div>
         <!--Collaborate divider-->
 
@@ -703,7 +687,7 @@
                 <app-add-collaborator
                   (submitted)="onCollaborationSubmit($event)"
                   (intentValue)="checkIntent($event)"
-                  (edit)="onCollaorationUpdate($event)"
+                  
                 >
                 </app-add-collaborator>
               </div>

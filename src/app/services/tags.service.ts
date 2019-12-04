@@ -8,9 +8,6 @@ import { take } from 'rxjs/operators';
   providedIn: 'root'
 })
 export class TagsService {
-  // getTagsSub: Subscription;
-  // addTagsSub: Subscription;
-  // getTagsSub: Subscription;
   test: Observable<any>;
 
   public allTags = {};
@@ -18,8 +15,6 @@ export class TagsService {
   public allTagsArray: any[] = [];
   public sectorFilterArray = [];
   public allTagsSubscription = Subscription;
-
-  // public upsert_tags = ;
 
   constructor(private apollo: Apollo) {
     this.getTagsFromDBForAdmin();
@@ -37,7 +32,6 @@ export class TagsService {
         }
       `,
       fetchPolicy: 'network-only'
-      // pollInterval: 500
     }).valueChanges;
 
     return new Promise((resolve, reject) => {
@@ -64,7 +58,6 @@ export class TagsService {
         }
       `,
       fetchPolicy: 'network-only'
-      // pollInterval: 500
     }).valueChanges;
 
     return new Promise((resolve, reject) => {
@@ -72,7 +65,6 @@ export class TagsService {
         if (data.tags.length > 0) {
           data.tags.map(tag => {
             this.adminDomainAdditionTags[tag.name] = tag;
-            // this.allTagsArray.push(tag.id);
           });
         }
         resolve(this.adminDomainAdditionTags);
@@ -81,8 +73,8 @@ export class TagsService {
   }
 
   addTagsInDb(tags, tableName, tableId?) {
-    let trimmedTableName = tableName.slice(0, tableName.length - 1);
-    console.log(tags, 'check for tag');
+    const trimmedTableName = tableName.slice(0, tableName.length - 1);
+
     this.apollo
       .mutate({
         mutation: gql`
@@ -106,7 +98,7 @@ export class TagsService {
       .pipe(take(1))
       .subscribe(
         data => {
-          let tagsToBeLinked = [];
+          const tagsToBeLinked = [];
           if (data.data.insert_tags.returning) {
             data.data.insert_tags.returning.map(tag => {
               tagsToBeLinked.push({
@@ -142,68 +134,20 @@ export class TagsService {
               })
               .pipe(take(1))
               .subscribe(
-                data => {
-                  console.log('worked', data);
-                },
+                data => {},
                 err => {
-                  console.log(err, "couldn't add tags");
+                  console.error(err, 'couldn\'t add tags');
                 }
               );
-
-            console.log('worked', data);
           }
         },
         err => {
-          console.log(err, "couldn't add tags");
+          console.error(err, 'couldn\'t add tags');
         }
       );
-
-    // tags.map(tag => {
-    //   if (tag) {
-    //     this.apollo
-    //       .watchQuery<any>({
-    //         query: gql`query { tags( where: {name: {_eq:"${
-    //           tag.value
-    //         }"} }){id name}}`,
-    //         pollInterval: 500
-    //       })
-    //       .valueChanges.subscribe(({ data }) => {
-    //         console.log(data.tags, "tags presnt in db");
-    //         if (data.tags.length > 0) {
-    //           this.addRelationToTags(tableId, data.tags[0].id, tableName);
-    //         } else if (data.tags.length === 0) {
-    //           console.log(tag.value, "tag value");
-
-    //           this.apollo
-    //             .mutate<any>({
-    //               mutation: gql`mutation insert_tags {
-    //           insert_tags(
-    //             objects: [
-    //               {name:"${tag.value}"}
-    //             ]
-    //           ) {
-    //             returning {
-    //               id
-    //               name
-    //             }
-    //           }
-    //         }`
-    //             })
-    //             .subscribe(data => {
-    //               this.addRelationToTags(
-    //                 tableId,
-    //                 data.data.insert_tags.returning[0].id,
-    //                 tableName
-    //               );
-    //             });
-    //         }
-    //       });
-    //   }
-    // });
   }
   addRelationToTags(tableId, tagId, tableName) {
-    console.log(tableId, tagId, tableName, 'tableId', 'tagId', 'tableName');
-    let table = tableName.slice(0, tableName.length - 1);
+    const table = tableName.slice(0, tableName.length - 1);
     this.apollo
       .mutate<any>({
         mutation: gql`mutation insert_${tableName}_tags {
@@ -212,29 +156,27 @@ export class TagsService {
             { ${table}_id:"${tableId}",
               tag_id:"${tagId}"
           },
-            
+
           ]
         ) {
           returning {
             tag_id
-            
+
           }
         }
       }`
       })
       .pipe(take(1))
       .subscribe(
-        data => {
-          console.log(data, 'tag addition');
-        },
+        data => {},
         error => {
-          console.log('error', error);
+          console.error('error', error);
         }
       );
   }
 
   removeTagRelation(tagId, tableId, tableName) {
-    let trimmedTableName = tableName.slice(0, tableName.length - 1);
+    const trimmedTableName = tableName.slice(0, tableName.length - 1);
     this.apollo
       .mutate<any>({
         mutation: gql`
@@ -261,15 +203,10 @@ export class TagsService {
       .pipe(take(1))
       .subscribe(
         ({ data }) => {
-          console.log('worked', data);
-          // location.reload();
-          // location.reload();
-          // this.router.navigateByUrl("/problems");
-
           return;
         },
         error => {
-          console.log('Could delete due to ' + error);
+          console.error('Could delete due to ' + error);
         }
       );
   }

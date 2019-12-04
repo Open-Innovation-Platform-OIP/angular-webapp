@@ -1,14 +1,14 @@
-import { Injectable } from "@angular/core";
-import { Apollo } from "apollo-angular";
-import gql from "graphql-tag";
+import { Injectable } from '@angular/core';
+import { Apollo } from 'apollo-angular';
+import gql from 'graphql-tag';
 
-import { Timestamp } from "aws-sdk/clients/workspaces";
-import { stringType } from "aws-sdk/clients/iam";
-import { String } from "aws-sdk/clients/sns";
-import { Router, ActivatedRoute } from "@angular/router";
-import { Subscription } from "rxjs";
+import { Timestamp } from 'aws-sdk/clients/workspaces';
+import { stringType } from 'aws-sdk/clients/iam';
+import { String } from 'aws-sdk/clients/sns';
+import { Router, ActivatedRoute } from '@angular/router';
+import { Subscription } from 'rxjs';
 
-import swal from "sweetalert2";
+import swal from 'sweetalert2';
 declare var $: any;
 
 export interface enrichment {
@@ -34,15 +34,13 @@ export interface enrichment {
 }
 
 @Injectable({
-  providedIn: "root"
+  providedIn: 'root'
 })
 export class EnrichmentService {
   submitEnrichmentSub: Subscription;
   constructor(private apollo: Apollo, private router: Router) {}
 
   submitEnrichmentToDB(enrichmentData: enrichment) {
-    console.log(enrichmentData, "testing enrich on update");
-    console.log("test");
     this.submitEnrichmentSub = this.apollo
       .mutate({
         mutation: gql`
@@ -86,30 +84,28 @@ export class EnrichmentService {
       })
       .subscribe(
         data => {
-          console.log(data, "enrichment added");
           swal({
-            type: "success",
-            title: "Thank you for enriching!",
+            type: 'success',
+            title: 'Thank you for enriching!',
             timer: 4000,
             showConfirmButton: false
           }).catch(swal.noop);
-          // location.reload();
+
           this.router.navigate(
-            ["problems", data.data.insert_enrichments.returning[0].problem_id],
-            { queryParamsHandling: "preserve" }
+            ['problems', data.data.insert_enrichments.returning[0].problem_id],
+            { queryParamsHandling: 'preserve' }
           );
           this.submitEnrichmentSub.unsubscribe();
         },
         err => {
-          console.log(err, "error");
           console.error(JSON.stringify(err));
           this.submitEnrichmentSub.unsubscribe();
 
           swal({
-            title: "Error",
-            text: "Try Again",
-            type: "error",
-            confirmButtonClass: "btn btn-info",
+            title: 'Error',
+            text: 'Try Again',
+            type: 'error',
+            confirmButtonClass: 'btn btn-info',
             buttonsStyling: false
           }).catch(swal.noop);
         }
@@ -117,41 +113,6 @@ export class EnrichmentService {
   }
 
   deleteEnrichment(id: number) {
-    // console.log(id, "ID");
-    // this.apollo
-    //   .mutate<any>({
-    //     mutation: gql`
-    //       mutation DeleteMutation($where: enrichments_bool_exp!) {
-    //         delete_enrichments(where: $where) {
-    //           affected_rows
-    //           returning {
-    //             problem_id
-    //           }
-    //         }
-    //       }
-    //     `,
-    //     variables: {
-    //       where: {
-    //         id: {
-    //           _eq: id
-    //         }
-    //       }
-    //     }
-    //   })
-    //   .subscribe(
-    //     ({ data }) => {
-    //       // location.reload();
-    //       location.reload();
-    //       // this.router.navigateByUrl("/problems");
-
-    //       return;
-    //     },
-    //     error => {
-    //       console.log("Could delete due to " + error);
-    //       console.error(JSON.stringify(error));
-    //     }
-    //   );
-
     return this.apollo.mutate<any>({
       mutation: gql`
         mutation updateMutation(
@@ -180,8 +141,6 @@ export class EnrichmentService {
   }
 
   voteEnrichment(enrichmentData: any) {
-    console.log("enrichment voted by object", enrichmentData);
-    // console.log("test for vote enrich", id, enrichmentData);
     this.apollo
       .mutate<any>({
         mutation: gql`
@@ -210,13 +169,10 @@ export class EnrichmentService {
       })
       .subscribe(
         ({ data }) => {
-          console.log(data, "return form db");
-          // location.reload();
-
           return;
         },
         error => {
-          console.log("Could delete due to " + error);
+          console.error(error);
         }
       );
   }
