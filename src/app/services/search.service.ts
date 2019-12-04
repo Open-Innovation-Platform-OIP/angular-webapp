@@ -53,7 +53,7 @@ export class SearchService {
         }
         problems(where: { is_draft: { _eq: false } }){
           id
-    
+
         }
         solution_collaborators {
           intent
@@ -64,11 +64,11 @@ export class SearchService {
         enrichments(where: { is_deleted: { _eq: false } }){
           id
         }
-         
+
         }
       }
-    
-         
+
+
         `
     }).valueChanges;
   }
@@ -93,11 +93,11 @@ export class SearchService {
               }
             }
 
-            
 
-            
 
-           
+
+
+
             problem_voters{
               problem_id
               user_id
@@ -115,17 +115,17 @@ export class SearchService {
               user_id
               edited_at
               is_deleted
-      
+
               problem_id
               user {
                 id
                 name
-              } 
-              
+              }
+
             }
         }
-           
-          
+
+
     }
         `
     }).valueChanges;
@@ -160,15 +160,15 @@ export class SearchService {
               user_id
               edited_at
               is_deleted
-      
+
               solution_id
               user {
                 id
                 name
-              } 
-              
+              }
+
             }
-        }    
+        }
     }
         `
     }).valueChanges;

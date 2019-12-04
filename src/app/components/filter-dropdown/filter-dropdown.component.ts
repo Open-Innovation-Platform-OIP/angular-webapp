@@ -76,7 +76,7 @@ export class FilterDropdownComponent implements OnInit {
 
   selectDropdown(event) {
     if (event && event.option && event.option.value) {
-      let locationData = event.option.value.Location;
+      const locationData = event.option.value.Location;
 
       this.selectedLocationName = locationData.Address.Label;
       this.selectedLocation = {
@@ -101,7 +101,7 @@ export class FilterDropdownComponent implements OnInit {
       this.selectedLocation = {};
     }
 
-    let queries = {};
+    const queries = {};
 
     if (+this.range !== 0) {
       this.filterService.range = +this.range / 110;

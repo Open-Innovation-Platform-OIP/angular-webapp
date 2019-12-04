@@ -56,7 +56,7 @@ export class AddValidationComponent implements OnInit {
   }
 
   isFileDuplicate(file) {
-    let found = this.validationData.files.find(attachment => {
+    const found = this.validationData.files.find(attachment => {
       return attachment['key'] === file.name;
     });
 
@@ -93,7 +93,7 @@ export class AddValidationComponent implements OnInit {
   }
 
   checkForSpaces(event) {
-    let value = this.validationData.comment.trim();
+    const value = this.validationData.comment.trim();
     if (value) {
       this.blankSpace = false;
     } else {

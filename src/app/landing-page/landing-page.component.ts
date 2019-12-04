@@ -137,7 +137,7 @@ export class LandingPageComponent implements OnInit, OnDestroy {
       this.searchService.problemSearch(searchInput).subscribe(
         value => {
           this.landingPageSearchResults = value.data.search_problems_multiword;
-          let num = this.landingPageSearchResults.length;
+          const num = this.landingPageSearchResults.length;
           this.announcement(`Found ${num} ${num > 1 ? 'results' : 'result'}`);
         },
         error => {

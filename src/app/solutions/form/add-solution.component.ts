@@ -28,7 +28,7 @@ import { map, startWith } from 'rxjs/operators';
 import { Observable, Subscription } from 'rxjs';
 import { GeocoderService } from '../../services/geocoder.service';
 import swal from 'sweetalert2';
-var Buffer = require('buffer/').Buffer;
+const Buffer = require('buffer/').Buffer;
 import { FormBuilder } from '@angular/forms';
 import { take } from 'rxjs/operators';
 import { HttpClient } from '@angular/common/http';
@@ -380,7 +380,7 @@ export class AddSolutionComponent
                       problems(where: { id: { _eq: ${id} } }) {
                       id
                       title
-                     
+
                       impact
                       extent
                       min_population
@@ -390,13 +390,13 @@ export class AddSolutionComponent
                           name
                         }
                       }
-                      
-                      
+
+
                       max_population
                       beneficiary_attributes
                       resources_needed
-                     
-                                  
+
+
                       }
                   }
                   `,
@@ -730,11 +730,11 @@ export class AddSolutionComponent
                             title
                             user_id
                             technology
-                            resources                            
+                            resources
                             description
                             website_url
                             deployment
-                            
+
                             budget_title
                             min_budget
                             max_budget
@@ -768,7 +768,7 @@ export class AddSolutionComponent
                                 name
                               }
                             }
-                            
+
                             }
                         }
                         `
@@ -875,7 +875,7 @@ export class AddSolutionComponent
       onNext: function(tab, navigation, index) {
         window.scroll(0, 0);
 
-        var $valid = $('.card-wizard form').valid();
+        const $valid = $('.card-wizard form').valid();
         if (!$valid) {
           $validator.focusInvalid();
           return false;
@@ -885,21 +885,21 @@ export class AddSolutionComponent
       onInit: function(tab: any, navigation: any, index: any) {
         // check number of tabs and fill the entire row
         let $total = navigation.find('li').length;
-        let $wizard = navigation.closest('.card-wizard');
+        const $wizard = navigation.closest('.card-wizard');
 
-        let $first_li = navigation.find('li:first-child a').html();
-        let $moving_div = $('<div class="moving-tab">' + $first_li + '</div>');
+        const $first_li = navigation.find('li:first-child a').html();
+        const $moving_div = $('<div class="moving-tab">' + $first_li + '</div>');
         $('.card-wizard .wizard-navigation').append($moving_div);
 
         $total = $wizard.find('.nav li').length;
         let $li_width = 100 / $total;
 
-        let total_steps = $wizard.find('.nav li').length;
+        const total_steps = $wizard.find('.nav li').length;
         let move_distance = $wizard.width() / total_steps;
         let index_temp = index;
         let vertical_level = 0;
 
-        let mobile_device = $(document).width() < 600 && $total > 3;
+        const mobile_device = $(document).width() < 600 && $total > 3;
 
         if (mobile_device) {
           move_distance = $wizard.width() / 2;
@@ -909,10 +909,10 @@ export class AddSolutionComponent
 
         $wizard.find('.nav li').css('width', $li_width + '%');
 
-        let step_width = move_distance;
+        const step_width = move_distance;
         move_distance = move_distance * index_temp;
 
-        let $current = index + 1;
+        const $current = index + 1;
 
         if ($current == 1 || (mobile_device == true && index % 2 == 0)) {
           move_distance -= 8;
@@ -924,7 +924,7 @@ export class AddSolutionComponent
         }
 
         if (mobile_device) {
-          let x: any = index / 2;
+          const x: any = index / 2;
           vertical_level = parseInt(x);
           vertical_level = vertical_level * 38;
         }
@@ -998,12 +998,12 @@ export class AddSolutionComponent
         $total = $wizard.find('.nav li').length;
         let $li_width = 100 / $total;
 
-        let total_steps = $wizard.find('.nav li').length;
+        const total_steps = $wizard.find('.nav li').length;
         let move_distance = $wizard.width() / total_steps;
         let index_temp = index;
         let vertical_level = 0;
 
-        let mobile_device = $(document).width() < 600 && $total > 3;
+        const mobile_device = $(document).width() < 600 && $total > 3;
 
         if (mobile_device) {
           move_distance = $wizard.width() / 2;
@@ -1013,7 +1013,7 @@ export class AddSolutionComponent
 
         $wizard.find('.nav li').css('width', $li_width + '%');
 
-        let step_width = move_distance;
+        const step_width = move_distance;
         move_distance = move_distance * index_temp;
 
         $current = index + 1;
@@ -1028,7 +1028,7 @@ export class AddSolutionComponent
         }
 
         if (mobile_device) {
-          let x: any = index / 2;
+          const x: any = index / 2;
           vertical_level = parseInt(x);
           vertical_level = vertical_level * 38;
         }
@@ -1386,7 +1386,7 @@ export class AddSolutionComponent
       .subscribe(
         result => {
           if (result.data.insert_solutions.returning.length > 0) {
-            let updatedSolutionData = result.data.insert_solutions.returning[0];
+            const updatedSolutionData = result.data.insert_solutions.returning[0];
             this.solution['id'] = result.data.insert_solutions.returning[0].id;
 
             this.saveProblemsInDB(
@@ -1482,15 +1482,15 @@ export class AddSolutionComponent
       $('.card-wizard').each(function() {
         const $wizard = $(this);
         const index = $wizard.bootstrapWizard('currentIndex');
-        let $total = $wizard.find('.nav li').length;
+        const $total = $wizard.find('.nav li').length;
         let $li_width = 100 / $total;
 
-        let total_steps = $wizard.find('.nav li').length;
+        const total_steps = $wizard.find('.nav li').length;
         let move_distance = $wizard.width() / total_steps;
         let index_temp = index;
         let vertical_level = 0;
 
-        let mobile_device = $(document).width() < 600 && $total > 3;
+        const mobile_device = $(document).width() < 600 && $total > 3;
 
         if (mobile_device) {
           move_distance = $wizard.width() / 2;
@@ -1500,10 +1500,10 @@ export class AddSolutionComponent
 
         $wizard.find('.nav li').css('width', $li_width + '%');
 
-        let step_width = move_distance;
+        const step_width = move_distance;
         move_distance = move_distance * index_temp;
 
-        let $current = index + 1;
+        const $current = index + 1;
 
         if ($current == 1 || (mobile_device == true && index % 2 == 0)) {
           move_distance -= 8;
@@ -1515,7 +1515,7 @@ export class AddSolutionComponent
         }
 
         if (mobile_device) {
-          let x: any = index / 2;
+          const x: any = index / 2;
           vertical_level = parseInt(x);
           vertical_level = vertical_level * 38;
         }
@@ -1619,13 +1619,13 @@ export class AddSolutionComponent
   }
 
   checkIfExist(data: string) {
-    let problem_attachments = [
+    const problem_attachments = [
       ...this.solution['image_urls'],
       ...this.solution['video_urls'],
       ...this.solution['attachments']
     ];
 
-    let checked = problem_attachments.filter(attachmentObj => {
+    const checked = problem_attachments.filter(attachmentObj => {
       return attachmentObj.key === data;
     });
 
@@ -1756,7 +1756,7 @@ export class AddSolutionComponent
   }
 
   addMediaUrl() {
-    let duplicate = this.checkIfExist(this.media_url);
+    const duplicate = this.checkIfExist(this.media_url);
 
     if (this.media_url && !duplicate) {
       this.solution.embed_urls.push(this.media_url);

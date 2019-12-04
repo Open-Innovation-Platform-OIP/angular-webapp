@@ -17,7 +17,7 @@ export class LockComponent implements OnInit, OnDestroy {
             card.classList.remove('card-hidden');
         }, 700);
     }
-    ngOnDestroy(){
+    ngOnDestroy() {
       const body = document.getElementsByTagName('body')[0];
       body.classList.remove('lock-page');
       body.classList.remove('off-canvas-sidebar');

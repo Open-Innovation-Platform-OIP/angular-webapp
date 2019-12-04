@@ -271,7 +271,7 @@ export class AddUserProfileComponent
       locationData.DisplayPosition.Longitude
     ];
 
-    let location = {
+    const location = {
       location: { type: 'Point', coordinates: coordinateArray },
       location_name: locationData.Address.Label,
       lat: coordinateArray[0],
@@ -324,11 +324,11 @@ export class AddUserProfileComponent
                   location
                   lat
                   long
-              
+
                 }
 
               }
-              
+
               phone_number
               is_ngo
               is_innovator
@@ -361,8 +361,8 @@ export class AddUserProfileComponent
             }
         }
 
-              
-           
+
+
         `,
 
             fetchPolicy: 'network-only'

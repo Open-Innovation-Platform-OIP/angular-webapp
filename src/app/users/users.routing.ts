@@ -1,27 +1,27 @@
-import { Routes } from "@angular/router";
+import { Routes } from '@angular/router';
 
-import { AddUserProfileComponent } from "./form/add-user-profile.component";
-import { ProfilesViewComponent } from "./grid/profiles-view.component";
-import { ViewUserProfileComponent } from "./detail/view-user-profile.component";
+import { AddUserProfileComponent } from './form/add-user-profile.component';
+import { ProfilesViewComponent } from './grid/profiles-view.component';
+import { ViewUserProfileComponent } from './detail/view-user-profile.component';
 
 export const UsersRoutes: Routes = [
   {
-    path: "",
+    path: '',
     children: [
       {
-        path: "",
+        path: '',
         component: ProfilesViewComponent
       },
       {
-        path: ":id/edit",
+        path: ':id/edit',
         component: AddUserProfileComponent
       },
       {
-        path: ":id",
+        path: ':id',
         component: ViewUserProfileComponent
       },
       {
-        path: "add",
+        path: 'add',
         component: AddUserProfileComponent
       }
     ]

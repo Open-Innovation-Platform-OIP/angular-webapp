@@ -21,7 +21,7 @@ export class GlobalSearchViewComponent implements OnInit, OnChanges {
   @Input() solutionData: any;
   newAnnoucement: Promise<void>;
 
-  noResult: string = 'No Search Results';
+  noResult = 'No Search Results';
   problemSearchResults: any = [];
   userSearchResults: any = [];
   solutionSearchResults: any = [];
@@ -62,7 +62,7 @@ export class GlobalSearchViewComponent implements OnInit, OnChanges {
           this.solutionSearchResults = searchData['solutions'];
 
           this.annoucement(
-            `Found 
+            `Found
             ${this.globalProblemSearchResults.length} Problems,
             ${this.solutionSearchResults.length} Solutions,
             ${this.userSearchResults.length} Contributors`,

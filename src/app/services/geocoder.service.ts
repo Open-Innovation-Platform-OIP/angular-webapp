@@ -91,7 +91,7 @@ export class GeocoderService {
 
   public addLocationsInDB(locations, tableName, tableId?) {
     let locationData = [];
-    let test = `location_name`;
+    const test = `location_name`;
 
     locationData = locations.map(location => {
       return location;
@@ -125,8 +125,8 @@ export class GeocoderService {
         data => {
           this.getLocationsFromDB();
 
-          let locationsToBeLinked = [];
-          let trimmedTableName = tableName.slice(0, tableName.length - 1);
+          const locationsToBeLinked = [];
+          const trimmedTableName = tableName.slice(0, tableName.length - 1);
 
           if (data.data.insert_locations.returning) {
             data.data.insert_locations.returning.map(location => {
@@ -165,7 +165,7 @@ export class GeocoderService {
               .subscribe(
                 data => {},
                 err => {
-                  console.error(err, "couldn't add locations");
+                  console.error(err, 'couldn\'t add locations');
                 }
               );
           }
@@ -177,7 +177,7 @@ export class GeocoderService {
   }
 
   addRelationToLocations(tableId, locations, tableName) {
-    let table = tableName.slice(0, tableName.length - 1);
+    const table = tableName.slice(0, tableName.length - 1);
 
     const upsert_locations = gql`
                 mutation upsert_${table}_locations(
@@ -216,7 +216,7 @@ export class GeocoderService {
   }
 
   removeLocationRelation(locationId, tableId, tableName) {
-    let trimmedTableName = tableName.slice(0, tableName.length - 1);
+    const trimmedTableName = tableName.slice(0, tableName.length - 1);
     this.apollo
       .mutate<any>({
         mutation: gql`

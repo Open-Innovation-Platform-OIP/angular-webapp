@@ -46,7 +46,7 @@ export class ViewEnrichmentComponent implements OnInit, OnChanges, OnDestroy {
   }
 
   ngOnInit() {
-    let embedded_url_arr = this.enrichmentData.embed_urls.map(url => {
+    const embedded_url_arr = this.enrichmentData.embed_urls.map(url => {
       return { url: url };
     });
 
@@ -68,7 +68,7 @@ export class ViewEnrichmentComponent implements OnInit, OnChanges, OnDestroy {
       this.voters.add(voter.user_id);
     });
 
-    let embedded_url_arr = this.enrichmentData.embed_urls.map(url => {
+    const embedded_url_arr = this.enrichmentData.embed_urls.map(url => {
       return { url: url };
     });
 
@@ -100,9 +100,9 @@ export class ViewEnrichmentComponent implements OnInit, OnChanges, OnDestroy {
                 ]
               ) {
                 returning {
-                 
+
                   user_id
-    
+
                 }
               }
             }
@@ -196,8 +196,8 @@ export class ViewEnrichmentComponent implements OnInit, OnChanges, OnDestroy {
   }
 
   checkUrlIsImg(url) {
-    var arr = ['jpeg', 'jpg', 'gif', 'png'];
-    var ext = url.substring(url.lastIndexOf('.') + 1);
+    const arr = ['jpeg', 'jpg', 'gif', 'png'];
+    const ext = url.substring(url.lastIndexOf('.') + 1);
     if (arr.indexOf(ext) > -1) {
       return true;
     } else {
@@ -207,7 +207,7 @@ export class ViewEnrichmentComponent implements OnInit, OnChanges, OnDestroy {
 
   toggleView(e) {
     if (e.type === 'click') {
-      let problemVideoTag: HTMLMediaElement = document.querySelector(
+      const problemVideoTag: HTMLMediaElement = document.querySelector(
         '#modalVideo'
       );
       this.showModal = false;

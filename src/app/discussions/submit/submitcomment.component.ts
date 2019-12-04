@@ -126,7 +126,7 @@ export class CommentSubmitComponent implements OnInit {
 
   checkForSpaces(input) {
     if (input.target.innerText.length > 0) {
-      let value = input.target.innerText.trim();
+      const value = input.target.innerText.trim();
 
       if (value.length) {
         this.blankSpace = false;
@@ -153,7 +153,7 @@ export class CommentSubmitComponent implements OnInit {
   }
 
   isFileDuplicate(file) {
-    let found = this.attachments.find(attachment => {
+    const found = this.attachments.find(attachment => {
       return attachment['name'] === file.name;
     });
 

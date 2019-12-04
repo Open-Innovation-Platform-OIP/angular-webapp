@@ -57,7 +57,7 @@ export class AuthLayoutComponent implements OnInit {
     const body = document.getElementsByTagName('body')[0];
     if (this.sidebarVisible === false) {
       this.sidebarOpen();
-      let $layer = document.createElement('div');
+      const $layer = document.createElement('div');
       $layer.setAttribute('class', 'close-layer');
       if (body.querySelectorAll('.wrapper-full-page')) {
         document

@@ -95,7 +95,7 @@ export class InviteUserComponent implements OnInit, OnDestroy {
       'Status',
       'Invited By'
     ];
-    let userDataRow = [];
+    const userDataRow = [];
     invitedUserData.map(user => {
       userDataRow.push([
         user['name'],
@@ -197,8 +197,8 @@ export class InviteUserComponent implements OnInit, OnDestroy {
       return;
     }
 
-    let email = this.userInviteForm.value.email;
-    let name = this.userInviteForm.value.name;
+    const email = this.userInviteForm.value.email;
+    const name = this.userInviteForm.value.name;
 
     this.http
       .post(
@@ -222,7 +222,7 @@ export class InviteUserComponent implements OnInit, OnDestroy {
 
   updateInvitedUser(orgArray, email, name) {
     if (this.usersService.allOrgs[orgArray[0]]) {
-      let orgId = this.usersService.allOrgs[orgArray[0]].id;
+      const orgId = this.usersService.allOrgs[orgArray[0]].id;
       this.apollo
         .mutate({
           mutation: gql`
@@ -232,14 +232,14 @@ export class InviteUserComponent implements OnInit, OnDestroy {
                 _set: {
                   name: "${name}"
                   organization: ${orgId}
-                 
+
                 }
               ) {
                 affected_rows
                 returning {
                   id
                   name
-                 
+
                 }
               }
             }
@@ -258,7 +258,7 @@ export class InviteUserComponent implements OnInit, OnDestroy {
             }).catch(swal.noop);
           },
           err => {
-            console.error(err, "couldn't add tags");
+            console.error(err, 'couldn\'t add tags');
           }
         );
     } else {
@@ -269,9 +269,9 @@ export class InviteUserComponent implements OnInit, OnDestroy {
               insert_organizations(
                 objects: [
                   {
-                    
+
                     name: "${orgArray[0]}",
-                  
+
                   }
                 ]
               ) {
@@ -279,7 +279,7 @@ export class InviteUserComponent implements OnInit, OnDestroy {
                 returning {
                   id
                   name
-                 
+
                 }
               }
             }
@@ -288,7 +288,7 @@ export class InviteUserComponent implements OnInit, OnDestroy {
         .pipe(take(1))
         .subscribe(
           data => {
-            let organizationId = data.data.insert_organizations.returning[0].id;
+            const organizationId = data.data.insert_organizations.returning[0].id;
             this.usersService.getOrgsFromDB();
 
             this.apollo
@@ -326,12 +326,12 @@ export class InviteUserComponent implements OnInit, OnDestroy {
                   }).catch(swal.noop);
                 },
                 err => {
-                  console.error(err, "couldn't add tags");
+                  console.error(err, 'couldn\'t add tags');
                 }
               );
           },
           err => {
-            console.error(err, "couldn't add tags");
+            console.error(err, 'couldn\'t add tags');
           }
         );
     }

@@ -26,8 +26,8 @@ export class DisplayModalComponent implements OnInit {
   ngOnInit() {}
 
   checkUrlIsImg(url) {
-    var arr = ['jpeg', 'jpg', 'gif', 'png'];
-    var ext = url.substring(url.lastIndexOf('.') + 1);
+    const arr = ['jpeg', 'jpg', 'gif', 'png'];
+    const ext = url.substring(url.lastIndexOf('.') + 1);
     if (arr.indexOf(ext) > -1) {
       return true;
     } else {
@@ -35,8 +35,8 @@ export class DisplayModalComponent implements OnInit {
     }
   }
   checkUrlIsVideo(url) {
-    var arr = ['mp4', 'avi', 'webm', 'wmv', 'quicktime'];
-    var ext = url.substring(url.lastIndexOf('.') + 1);
+    const arr = ['mp4', 'avi', 'webm', 'wmv', 'quicktime'];
+    const ext = url.substring(url.lastIndexOf('.') + 1);
     if (arr.indexOf(ext) > -1) {
       return true;
     } else {
@@ -45,9 +45,9 @@ export class DisplayModalComponent implements OnInit {
   }
 
   checkUrlIsEmbeded(url) {
-    var arr = ['youtube', 'vimeo', 'dailymotion'];
+    const arr = ['youtube', 'vimeo', 'dailymotion'];
 
-    let filtered = arr.filter(provider => {
+    const filtered = arr.filter(provider => {
       return url.indexOf(provider) > -1;
     });
 

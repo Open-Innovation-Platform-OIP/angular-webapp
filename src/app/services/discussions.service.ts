@@ -73,7 +73,7 @@ export class DiscussionsService {
   }
 
   getComments(id, is_problem = true) {
-    let query = `{
+    const query = `{
           discussions(where: { problem_id: { _eq: ${id} } }) {
             id
             title

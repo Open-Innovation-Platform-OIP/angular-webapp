@@ -4,4 +4,4 @@ export const sharing = {
     twitter: true,
     sms: true,
     email: true
-}
+};

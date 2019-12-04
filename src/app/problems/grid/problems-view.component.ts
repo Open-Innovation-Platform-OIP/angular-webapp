@@ -85,10 +85,10 @@ export class ProblemsViewComponent implements OnInit, OnDestroy, AfterViewInit {
 
       this.problemViewQuery = this.apollo.watchQuery<any>({
         query: gql`
-          query table${this.filterService.location_filter_header}{ 
+          query table${this.filterService.location_filter_header}{
             problems(where:{is_draft: { _eq: false },_and:[{problems_tags:{tag_id:{${this.filterService.sector_filter_query}}}},${this.filterService.location_filter_query}]}order_by: {  updated_at: desc } )
-            
-             
+
+
             {
             id
             title

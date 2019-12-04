@@ -73,7 +73,7 @@ export class TagsService {
   }
 
   addTagsInDb(tags, tableName, tableId?) {
-    let trimmedTableName = tableName.slice(0, tableName.length - 1);
+    const trimmedTableName = tableName.slice(0, tableName.length - 1);
 
     this.apollo
       .mutate({
@@ -98,7 +98,7 @@ export class TagsService {
       .pipe(take(1))
       .subscribe(
         data => {
-          let tagsToBeLinked = [];
+          const tagsToBeLinked = [];
           if (data.data.insert_tags.returning) {
             data.data.insert_tags.returning.map(tag => {
               tagsToBeLinked.push({
@@ -136,18 +136,18 @@ export class TagsService {
               .subscribe(
                 data => {},
                 err => {
-                  console.error(err, "couldn't add tags");
+                  console.error(err, 'couldn\'t add tags');
                 }
               );
           }
         },
         err => {
-          console.error(err, "couldn't add tags");
+          console.error(err, 'couldn\'t add tags');
         }
       );
   }
   addRelationToTags(tableId, tagId, tableName) {
-    let table = tableName.slice(0, tableName.length - 1);
+    const table = tableName.slice(0, tableName.length - 1);
     this.apollo
       .mutate<any>({
         mutation: gql`mutation insert_${tableName}_tags {
@@ -156,12 +156,12 @@ export class TagsService {
             { ${table}_id:"${tableId}",
               tag_id:"${tagId}"
           },
-            
+
           ]
         ) {
           returning {
             tag_id
-            
+
           }
         }
       }`
@@ -176,7 +176,7 @@ export class TagsService {
   }
 
   removeTagRelation(tagId, tableId, tableName) {
-    let trimmedTableName = tableName.slice(0, tableName.length - 1);
+    const trimmedTableName = tableName.slice(0, tableName.length - 1);
     this.apollo
       .mutate<any>({
         mutation: gql`

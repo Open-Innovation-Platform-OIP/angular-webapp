@@ -115,8 +115,8 @@ export class CommentDisplayComponent implements OnInit, OnDestroy, OnChanges {
   }
 
   compareDateForSort(a, b) {
-    var dateA = a.edited_at;
-    var dateB = b.edited_at;
+    const dateA = a.edited_at;
+    const dateB = b.edited_at;
     if (dateA < dateB) {
       return 1;
     }
@@ -130,7 +130,7 @@ export class CommentDisplayComponent implements OnInit, OnDestroy, OnChanges {
   idToDelete(commentId) {
     swal({
       title: 'Are you sure?',
-      text: "You won't be able to revert this!",
+      text: 'You won\'t be able to revert this!',
       buttonsStyling: false,
       confirmButtonClass: 'btn btn-warning',
       confirmButtonText: 'Yes, delete it!'

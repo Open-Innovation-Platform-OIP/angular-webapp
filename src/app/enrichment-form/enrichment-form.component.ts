@@ -71,13 +71,13 @@ export class EnrichmentFormComponent implements OnInit, OnDestroy {
           query: gql`
                     {
                         problems(where: { id: { _eq: ${this.problemId} } }) {
-                        
-                        
+
+
                         id
                         title
                         user_id
                         description
-                        
+
                         resources_needed
                         problem_locations{
                           location{
@@ -99,7 +99,7 @@ export class EnrichmentFormComponent implements OnInit, OnDestroy {
                         featured_url
                         featured_type
                         embed_urls
-                        
+
                         user {
                           id
                           name
@@ -111,8 +111,8 @@ export class EnrichmentFormComponent implements OnInit, OnDestroy {
                           }
                       }
 
-                        
-                       
+
+
                         }
                     }
                     `
@@ -141,13 +141,13 @@ export class EnrichmentFormComponent implements OnInit, OnDestroy {
             query: gql`
                         {
                             enrichments(where: { id: { _eq: ${params.id} } }) {
-                            
-                            
+
+
                             id
-                            
+
                             user_id
                             description
-                            
+
                             resources_needed
                             image_urls
                             video_urls
@@ -172,13 +172,13 @@ export class EnrichmentFormComponent implements OnInit, OnDestroy {
                                 long
                               }
                             }
-                            
+
                             problem{
                               id
                               title
                               user_id
                               description
-                              
+
                               problem_locations{
                                 location{
                                   id
@@ -188,7 +188,7 @@ export class EnrichmentFormComponent implements OnInit, OnDestroy {
                                 long
                                 }
                               }
-                              
+
                               resources_needed
                               image_urls
                               video_urls
@@ -201,7 +201,7 @@ export class EnrichmentFormComponent implements OnInit, OnDestroy {
                               featured_url
                               featured_type
                               embed_urls
-                             
+
                               user {
                                 id
                                 name
@@ -214,10 +214,10 @@ export class EnrichmentFormComponent implements OnInit, OnDestroy {
                             }
 
                             }
-                           
 
-                            
-                           
+
+
+
                             }
                         }
                         `,
@@ -341,7 +341,7 @@ export class EnrichmentFormComponent implements OnInit, OnDestroy {
       })
       .subscribe(
         data => {
-          let enrichmentId = data.data.insert_enrichments.returning[0].id;
+          const enrichmentId = data.data.insert_enrichments.returning[0].id;
 
           const enrichment_locations = new Set();
           this.enrichmentLocations.map(location => {

@@ -21,7 +21,7 @@ export class LoginComponent implements OnInit, OnDestroy {
   };
   loading = true;
   submitted = false;
-  returnUrl: string = '/';
+  returnUrl = '/';
   error = '';
   link = '';
   private toggleButton: any;
@@ -50,7 +50,7 @@ export class LoginComponent implements OnInit, OnDestroy {
     }, 1000);
     this.currentTitle.setTitle('Login');
 
-    var navbar: HTMLElement = this.element.nativeElement;
+    const navbar: HTMLElement = this.element.nativeElement;
     this.toggleButton = navbar.getElementsByClassName('navbar-toggle')[0];
     const body = document.getElementsByTagName('body')[0];
     body.classList.add('login-page');
@@ -91,9 +91,9 @@ export class LoginComponent implements OnInit, OnDestroy {
     this.loading = false;
   }
   sidebarToggle() {
-    var toggleButton = this.toggleButton;
-    var body = document.getElementsByTagName('body')[0];
-    var sidebar = document.getElementsByClassName('navbar-collapse')[0];
+    const toggleButton = this.toggleButton;
+    const body = document.getElementsByTagName('body')[0];
+    const sidebar = document.getElementsByClassName('navbar-collapse')[0];
     if (this.sidebarVisible == false) {
       setTimeout(function() {
         toggleButton.classList.add('toggled');
@@ -121,8 +121,8 @@ export class LoginComponent implements OnInit, OnDestroy {
     return false;
   }
   done(err, res) {
-    if (err) console.error(err);
-    if (res) console.log(res);
+    if (err) { console.error(err); }
+    if (res) { console.log(res); }
   }
   login() {
     if (!(isEmail(this.loginDetails.email) && this.loginDetails.password)) {
@@ -140,7 +140,7 @@ export class LoginComponent implements OnInit, OnDestroy {
 
           this.userService.getCurrentUser();
 
-          let message =
+          const message =
             'Update your profile information to make the most out of the platform.';
 
           setTimeout(() => {
@@ -162,7 +162,7 @@ export class LoginComponent implements OnInit, OnDestroy {
             typeof msg === 'string' &&
             msg.toLowerCase().search('already verified') !== -1
           ) {
-            let message =
+            const message =
               'Your email is already verified. You can login or request a password reset';
             this.showNotification([
               'top',
@@ -176,7 +176,7 @@ export class LoginComponent implements OnInit, OnDestroy {
             typeof msg === 'string' &&
             msg.toLowerCase().search('not been verified') !== -1
           ) {
-            let message =
+            const message =
               'Your email has not been verified. Click OK to proceed to the email verification page.';
             this.showNotification([
               'top',

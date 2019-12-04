@@ -211,7 +211,7 @@ export class WizardContainerComponent
       location.DisplayPosition.Longitude
     ];
 
-    let locationData = {
+    const locationData = {
       location: { type: 'Point', coordinates: coordinateArray },
       location_name: location.Address.Label,
       lat: coordinateArray[0],
@@ -850,13 +850,13 @@ export class WizardContainerComponent
   }
 
   checkIfExist(data: string) {
-    let problem_attachments = [
+    const problem_attachments = [
       ...this.content['image_urls'],
       ...this.content['video_urls'],
       ...this.content['attachments']
     ];
 
-    let checked = problem_attachments.filter(attachmentObj => {
+    const checked = problem_attachments.filter(attachmentObj => {
       return attachmentObj.key === data;
     });
 
@@ -1002,7 +1002,7 @@ export class WizardContainerComponent
   }
 
   addMediaUrl() {
-    let duplicate = this.checkIfExist(this.media_url);
+    const duplicate = this.checkIfExist(this.media_url);
 
     if (this.media_url && !duplicate) {
       this.content.embed_urls.push(this.media_url);

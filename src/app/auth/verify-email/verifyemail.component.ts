@@ -17,7 +17,7 @@ export class VerifyEmailComponent implements OnInit, OnDestroy {
   step = 0;
   loading = false;
   submitted = false;
-  returnUrl: string = '/';
+  returnUrl = '/';
   error = '';
   private toggleButton: any;
   private sidebarVisible: boolean;
@@ -34,7 +34,7 @@ export class VerifyEmailComponent implements OnInit, OnDestroy {
   }
 
   ngOnInit() {
-    var navbar: HTMLElement = this.element.nativeElement;
+    let navbar: HTMLElement = this.element.nativeElement;
     this.toggleButton = navbar.getElementsByClassName('navbar-toggle')[0];
     const body = document.getElementsByTagName('body')[0];
     body.classList.add('login-page');
@@ -53,9 +53,9 @@ export class VerifyEmailComponent implements OnInit, OnDestroy {
     });
   }
   sidebarToggle() {
-    var toggleButton = this.toggleButton;
-    var body = document.getElementsByTagName('body')[0];
-    var sidebar = document.getElementsByClassName('navbar-collapse')[0];
+    let toggleButton = this.toggleButton;
+    let body = document.getElementsByTagName('body')[0];
+    let sidebar = document.getElementsByClassName('navbar-collapse')[0];
     if (this.sidebarVisible == false) {
       setTimeout(function() {
         toggleButton.classList.add('toggled');
@@ -83,8 +83,8 @@ export class VerifyEmailComponent implements OnInit, OnDestroy {
     return false;
   }
   done(err, res) {
-    if (err) console.error(err);
-    if (res) console.log(res);
+    if (err) { console.error(err); }
+    if (res) { console.log(res); }
   }
   requestOTP() {
     this.loading = true;

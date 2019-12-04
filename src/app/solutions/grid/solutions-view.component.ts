@@ -57,15 +57,15 @@ export class SolutionsViewComponent
       this.solutionViewQuery = this.apollo.watchQuery<any>({
         query: gql`
           query PostsGetQuery${this.filterService.location_filter_header} {
-           
+
             solutions(
               where: {
                 _and:[{
                 solutions_tags:{tag_id:{${this.filterService.sector_filter_query}
                 }}},${this.filterService.solution_location_filter_query}
               ],
-               
-                is_draft: { _eq: false } 
+
+                is_draft: { _eq: false }
               }
               order_by: { updated_at: desc }
             ){
@@ -97,16 +97,16 @@ export class SolutionsViewComponent
                   id
                       title
                       description
-                      
+
                       resources_needed
                       image_urls
                       edited_at
                       updated_at
-          
+
                       featured_url
-          
+
                       is_deleted
-          
+
                       problem_locations{
                         location{
                           id

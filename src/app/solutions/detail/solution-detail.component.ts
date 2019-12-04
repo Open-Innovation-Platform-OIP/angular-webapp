@@ -55,7 +55,7 @@ import { ValidationService } from 'src/app/services/validation.service';
 import { EnrichmentService } from 'src/app/services/enrichment.service';
 import { sharing } from '../../globalconfig';
 import { FocusMonitor } from '@angular/cdk/a11y';
-var Buffer = require('buffer/').Buffer;
+const Buffer = require('buffer/').Buffer;
 
 const misc: any = {
   navbar_menu_visible: 0,
@@ -88,7 +88,7 @@ export class SolutionDetailComponent implements OnInit {
   @ViewChild('solutionTitle') solutionTitle: ElementRef<HTMLElement>;
 
   channels = sharing;
-  imageAlt: string = 'Default image';
+  imageAlt = 'Default image';
   discussionContext: string;
   lastContext = new Subject();
   // chartData: any;
@@ -165,7 +165,7 @@ export class SolutionDetailComponent implements OnInit {
 
   enrichDataToEdit: any;
   tags: any = [];
-  sectorMatched: boolean = false;
+  sectorMatched = false;
   enrichDataArray: any[];
   validationArray: any[];
   sectors: any[] = [];
@@ -185,17 +185,17 @@ export class SolutionDetailComponent implements OnInit {
   modalImgSrc: String;
   modalVideoSrc: String;
   solution_attachments: any[] = [];
-  solution_attachments_index: number = 0;
+  solution_attachments_index = 0;
   solution_attachments_src: any;
   modalSrc: any;
   sources: any;
-  singleImg: boolean = false;
+  singleImg = false;
 
-  imgUrlIndex: number = 0;
-  videoUrlIndex: number = 0;
-  disableEnrichButton: boolean = false;
-  disableValidateButton: boolean = false;
-  disableCollaborateButton: boolean = false;
+  imgUrlIndex = 0;
+  videoUrlIndex = 0;
+  disableEnrichButton = false;
+  disableValidateButton = false;
+  disableCollaborateButton = false;
 
   private listTitles: any[];
   location: Location;
@@ -206,7 +206,7 @@ export class SolutionDetailComponent implements OnInit {
   private _router: Subscription;
   displayEnrichForm: boolean;
   showCollaborators: boolean;
-  hideProblemDetail: boolean = true;
+  hideProblemDetail = true;
   collaboratorProfileInfo: any;
   comments = {};
   replies = {};
@@ -216,7 +216,7 @@ export class SolutionDetailComponent implements OnInit {
   pageUrl = '';
   mailToLink = '';
 
-  fabTogglerState: boolean = false;
+  fabTogglerState = false;
 
   // Carousel
   @Input() name: string;
@@ -292,7 +292,7 @@ export class SolutionDetailComponent implements OnInit {
       query: gql`
           {
             users(where: { id: { _eq: ${id} } }) {
-              
+
               is_ngo
               is_innovator
               is_expert
@@ -309,7 +309,7 @@ export class SolutionDetailComponent implements OnInit {
             }
             }
         }
-            
+
         `,
       fetchPolicy: 'network-only',
       pollInterval: 1000
@@ -386,7 +386,7 @@ export class SolutionDetailComponent implements OnInit {
     this.solutionDataSubcription.subscribe(
       result => {
         if (result.data.solutions.length >= 1 && result.data.solutions[0].id) {
-          let solutionData = result.data.solutions[0];
+          const solutionData = result.data.solutions[0];
 
           this.parseSolution(solutionData);
         }
@@ -404,7 +404,7 @@ export class SolutionDetailComponent implements OnInit {
       {
         solutions(where: { id: { _eq: ${id} } }) {
           id
-          
+
     title
     description
     user_id
@@ -413,12 +413,12 @@ export class SolutionDetailComponent implements OnInit {
     pilots
     beneficiary_attributes
 
-  
+
     impact
     technology
     website_url
     deployment
-    
+
     budget_title
     min_budget
     max_budget
@@ -447,7 +447,7 @@ export class SolutionDetailComponent implements OnInit {
       agree
       created_at
       files
-      
+
       edited_at
       is_deleted
 
@@ -455,8 +455,8 @@ export class SolutionDetailComponent implements OnInit {
       user {
         id
         name
-      } 
-      
+      }
+
     }
 
     solution_collaborators(order_by:{edited_at: desc}){
@@ -474,8 +474,8 @@ export class SolutionDetailComponent implements OnInit {
         id
         name
         photo_url
-      } 
-      
+      }
+
     }
 
     solution_owners {
@@ -510,7 +510,7 @@ export class SolutionDetailComponent implements OnInit {
         id
             title
             description
-            
+
             resources_needed
             image_urls
             edited_at
@@ -545,20 +545,20 @@ export class SolutionDetailComponent implements OnInit {
             problem_validations {
               user_id
             }
-          
+
       }
-     
+
     }
 
 
-    
-    
+
+
     attachments
     user{
       name
     }
 
-       
+
     }
   }
 
@@ -677,7 +677,7 @@ export class SolutionDetailComponent implements OnInit {
       this.solutionLocations = [];
 
       solution.problems_solutions.map(problems => {
-        let locations = problems.problem.problem_locations.map(location => {
+        const locations = problems.problem.problem_locations.map(location => {
           this.solutionLocations.push(location.location);
         });
       });
@@ -730,7 +730,7 @@ export class SolutionDetailComponent implements OnInit {
 
     // adding embed urls
 
-    let embedded_urls_arr = this.solutionData.embed_urls.map(url => {
+    const embedded_urls_arr = this.solutionData.embed_urls.map(url => {
       return { url: url };
     });
 
@@ -772,12 +772,14 @@ export class SolutionDetailComponent implements OnInit {
 
     this.popularDiscussions = Object.keys(this.replies)
       .sort((a, b) => {
+        let dateA;
+        let dateB;
         // sorting by date
         if (this.comments[a]) {
-          var dateA = this.comments[a].edited_at;
+          dateA = this.comments[a].edited_at;
         }
         if (this.comments[b]) {
-          var dateB = this.comments[b].edited_at;
+          dateB = this.comments[b].edited_at;
         }
         if (dateA < dateB) {
           return 1;
@@ -803,14 +805,14 @@ export class SolutionDetailComponent implements OnInit {
   }
 
   sortComments(comments) {
-    let sortByDate = comments.sort(this.compareDateForSort);
-    let sharedComment = comments.filter(comment => {
+    const sortByDate = comments.sort(this.compareDateForSort);
+    const sharedComment = comments.filter(comment => {
       if (this.qs.commentId) {
         return comment.id === Number(this.qs.commentId);
       }
     });
 
-    let sortedComments = this.removeDuplicateReplies([
+    const sortedComments = this.removeDuplicateReplies([
       ...sharedComment,
       ...sortByDate
     ]);
@@ -823,7 +825,7 @@ export class SolutionDetailComponent implements OnInit {
   }
 
   deleteComment(comment) {
-    let deleteResp = this.discussionsService.deleteCommentsFromDB(comment.id);
+    const deleteResp = this.discussionsService.deleteCommentsFromDB(comment.id);
     deleteResp.subscribe(
       result => {
         if (
@@ -858,8 +860,8 @@ export class SolutionDetailComponent implements OnInit {
   }
 
   compareDateForSort(a, b) {
-    var dateA = a.edited_at;
-    var dateB = b.edited_at;
+    const dateA = a.edited_at;
+    const dateB = b.edited_at;
     if (dateA < dateB) {
       return 1;
     }
@@ -876,8 +878,8 @@ export class SolutionDetailComponent implements OnInit {
   }
 
   checkUrlIsImg(url) {
-    var arr = ['jpeg', 'jpg', 'gif', 'png'];
-    var ext = url.substring(url.lastIndexOf('.') + 1);
+    const arr = ['jpeg', 'jpg', 'gif', 'png'];
+    const ext = url.substring(url.lastIndexOf('.') + 1);
     if (arr.indexOf(ext) > -1) {
       return true;
     } else {
@@ -972,7 +974,7 @@ export class SolutionDetailComponent implements OnInit {
 
   dimissVideoModal(e) {
     if (e.type === 'click') {
-      let problemVideoTag: HTMLMediaElement = document.querySelector(
+      const problemVideoTag: HTMLMediaElement = document.querySelector(
         '#problemVideoID'
       );
       problemVideoTag.pause();
@@ -980,10 +982,10 @@ export class SolutionDetailComponent implements OnInit {
   }
 
   sidebarClose() {
-    var $toggle = document.getElementsByClassName('navbar-toggler')[0];
+    const $toggle = document.getElementsByClassName('navbar-toggler')[0];
     const body = document.getElementsByTagName('body')[0];
     this.toggleButton.classList.remove('toggled');
-    var $layer = document.createElement('div');
+    const $layer = document.createElement('div');
     $layer.setAttribute('class', 'close-layer');
 
     this.sidebarVisible = false;
@@ -1021,7 +1023,7 @@ export class SolutionDetailComponent implements OnInit {
           ) {
             returning {
               user_id
-              
+
             }
           }
         }
@@ -1094,7 +1096,7 @@ export class SolutionDetailComponent implements OnInit {
           ) {
             returning {
               user_id
-              solution_id    
+              solution_id
             }
           }
         }
@@ -1241,13 +1243,13 @@ export class SolutionDetailComponent implements OnInit {
     let file_links: attachment_object[];
     let _links = []; //local array
 
-    let all_promise = await attachments.map(file => {
+    const all_promise = await attachments.map(file => {
       return new Promise((resolve, reject) => {
         if (typeof FileReader !== 'undefined') {
           const reader = new FileReader();
 
           reader.onload = (e: any) => {
-            let buffer = Buffer.from(e.target.result);
+            const buffer = Buffer.from(e.target.result);
             resolve(this.filesService.fileUpload(file, file.type));
           };
           reader.readAsArrayBuffer(file);
@@ -1277,7 +1279,7 @@ export class SolutionDetailComponent implements OnInit {
   }
 
   submitComment(content, mentions, attachments?, comment_id?) {
-    let comment = {
+    const comment = {
       user_id: this.auth.currentUserValue.id,
       solution_id: this.solutionData['id'],
       text: content,
@@ -1360,7 +1362,7 @@ export class SolutionDetailComponent implements OnInit {
 
   closeModal(e) {
     if (e.type === 'click') {
-      let solutionVideoTag: HTMLMediaElement = document.querySelector(
+      const solutionVideoTag: HTMLMediaElement = document.querySelector(
         '#modalVideo'
       );
 
@@ -1462,7 +1464,7 @@ export class SolutionDetailComponent implements OnInit {
   }
 
   locationSelected(location) {
-    let locationQuery = {
+    const locationQuery = {
       location_name: location.location_name,
       latitude: location.lat,
       longitude: location.long,

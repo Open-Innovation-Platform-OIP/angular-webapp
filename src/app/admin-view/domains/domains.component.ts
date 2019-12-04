@@ -110,8 +110,8 @@ export class DomainsComponent implements OnInit, OnDestroy {
       return;
     }
 
-    let domainUrl = this.domainForm.value.domainUrl;
-    let colour = this.domainForm.value.colour;
+    const domainUrl = this.domainForm.value.domainUrl;
+    const colour = this.domainForm.value.colour;
 
     this.apollo
       .mutate({
@@ -150,7 +150,7 @@ export class DomainsComponent implements OnInit, OnDestroy {
 
   generateDomainsTable(domainData) {
     const domainHeaderRow = ['Url', 'Colour', 'Sectors'];
-    let domainDataRow = [];
+    const domainDataRow = [];
     domainData.map(domain => {
       domainDataRow.push([
         domain['url'],
@@ -177,6 +177,7 @@ export class DomainsComponent implements OnInit, OnDestroy {
 
     this.domainForm.value.domainUrl = url;
     this.domainForm.value.colour = colour;
+    this.domainForm.patchValue({ domainUrl: url, colour: colour });
   }
 
   getDomains() {

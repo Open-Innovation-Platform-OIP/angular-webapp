@@ -77,7 +77,7 @@ export class AdminViewComponent implements OnInit, OnDestroy {
       'Admin',
       'Approval Status'
     ];
-    let userDataRow = [];
+    const userDataRow = [];
     Object.values(userData).map(user => {
       userDataRow.push([
         user['email'],
@@ -97,7 +97,7 @@ export class AdminViewComponent implements OnInit, OnDestroy {
 
   generateUnapprovedUserTable(userData) {
     const userHeaderRow = ['Email', 'Approve'];
-    let userDataRow = [];
+    const userDataRow = [];
     Object.values(userData).map(user => {
       userDataRow.push([user['email'], user['is_approved'], user['id']]);
     });
@@ -109,7 +109,7 @@ export class AdminViewComponent implements OnInit, OnDestroy {
 
   generateInvitedUsersDataTable(invitedUserData) {
     const userHeaderRow = ['Invitee Email', 'Status', 'Invited By'];
-    let userDataRow = [];
+    const userDataRow = [];
     invitedUserData.map(user => {
       userDataRow.push([
         user['name'],
@@ -248,17 +248,17 @@ export class AdminViewComponent implements OnInit, OnDestroy {
                 id
                 is_admin
                 name
-                
+
               }
             }
-            
+
           }
         `
       })
       .pipe(take(1))
       .subscribe(
         data => {
-          let user = data.data.update_users.returning[0];
+          const user = data.data.update_users.returning[0];
 
           if (user.is_admin) {
             swal({
@@ -279,7 +279,7 @@ export class AdminViewComponent implements OnInit, OnDestroy {
     if (!this.userInviteForm.valid) {
       return;
     }
-    let email = this.userInviteForm.value.email;
+    const email = this.userInviteForm.value.email;
 
     this.http
       .post(
@@ -327,17 +327,17 @@ export class AdminViewComponent implements OnInit, OnDestroy {
                 email
                 name
                 is_approved
-                
+
               }
             }
-            
+
           }
         `
       })
       .pipe(take(1))
       .subscribe(
         data => {
-          let user = data.data.update_users.returning[0];
+          const user = data.data.update_users.returning[0];
 
           if (user.is_approved) {
             swal({
@@ -391,17 +391,17 @@ export class AdminViewComponent implements OnInit, OnDestroy {
                 email
                 name
                 is_approved
-                
+
               }
             }
-            
+
           }
         `
       })
       .pipe(take(1))
       .subscribe(
         data => {
-          let user = data.data.update_users.returning[0];
+          const user = data.data.update_users.returning[0];
 
           if (user.is_approved) {
             this.sendEmailToApprovedUser(user.email);

@@ -1,18 +1,18 @@
-import { Routes } from "@angular/router";
+import { Routes } from '@angular/router';
 
-import { EnrichmentFormComponent } from "./enrichment-form.component";
+import { EnrichmentFormComponent } from './enrichment-form.component';
 
 export const EnrichmentFormRoutes: Routes = [
   {
-    path: "",
+    path: '',
     children: [
       {
-        path: "add",
+        path: 'add',
         component: EnrichmentFormComponent
       },
 
       {
-        path: ":id/edit",
+        path: ':id/edit',
         component: EnrichmentFormComponent
       }
     ]

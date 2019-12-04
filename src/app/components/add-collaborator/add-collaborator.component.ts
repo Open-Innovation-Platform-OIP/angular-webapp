@@ -51,7 +51,7 @@ export class AddCollaboratorComponent implements OnInit, OnChanges {
   }
 
   checkForSpaces(event) {
-    let value = this.collaborator.intent.trim();
+    const value = this.collaborator.intent.trim();
     if (value) {
       this.blankSpace = false;
     } else {

@@ -31,15 +31,15 @@ export class FilterService {
   };
   sectorsArray = [];
   sectorFilterArray: any[] = [];
-  sector_filter_query: string = `_nin:[0]`;
-  location_filter_query: string = ``;
-  solution_location_filter_query: string = ``;
-  range: number = 0.2;
+  sector_filter_query = `_nin:[0]`;
+  location_filter_query = ``;
+  solution_location_filter_query = ``;
+  range = 0.2;
   queryVariable = {};
   location_filter_header: any = ``;
   selectedSectors: any[] = [];
   selectedLocation: any = '';
-  is_domain_filter_mode: boolean = false;
+  is_domain_filter_mode = false;
   domain_tags_query = '';
   isPrimaryDomain: Boolean;
 
@@ -101,7 +101,7 @@ export class FilterService {
   }
 
   async filterSectorByDomain(domain: string) {
-    let sectorIdArray = [];
+    const sectorIdArray = [];
 
     this.apollo
       .watchQuery<any>({
@@ -135,7 +135,7 @@ export class FilterService {
             this.is_domain_filter_mode = true;
             this.sector_filter_query = `_in:[${sectorIdArray}]`;
             this.domain_tags_query = `(where:{domain_tags:{domain:{url:{_eq:"${domain}"}}
-          
+
         }})`;
           } else {
             this.is_domain_filter_mode = false;

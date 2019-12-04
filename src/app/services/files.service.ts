@@ -13,19 +13,19 @@ import { HTTPHeader } from 'aws-sdk/clients/wafregional';
 })
 export class FilesService {
   fileinput_id: string;
-  authToken: string = '';
-  fileAccessUrl: string = '';
+  authToken = '';
+  fileAccessUrl = '';
 
   constructor(private http: HttpClient) {
     this.fileAccessUrl = fileUploadVariables.accessUrl + '/';
   }
 
   showSpinner() {
-    let btn_id = this.fileinput_id;
+    const btn_id = this.fileinput_id;
 
-    let comment_btn = <HTMLInputElement>document.getElementById(btn_id);
-    let spinner = document.getElementById('loader');
-    let upoadBtn = <HTMLInputElement>document.getElementById('file_input_btn');
+    const comment_btn = <HTMLInputElement>document.getElementById(btn_id);
+    const spinner = document.getElementById('loader');
+    const upoadBtn = <HTMLInputElement>document.getElementById('file_input_btn');
     if (spinner && upoadBtn) {
       spinner.style.display = 'block';
       upoadBtn.disabled = true;
@@ -37,11 +37,11 @@ export class FilesService {
   }
 
   hideSpinner() {
-    let btn_id = this.fileinput_id;
+    const btn_id = this.fileinput_id;
 
-    let comment_btn = <HTMLInputElement>document.getElementById(btn_id);
-    let spinner = document.getElementById('loader');
-    let uploadBtn = <HTMLInputElement>document.getElementById('file_input_btn');
+    const comment_btn = <HTMLInputElement>document.getElementById(btn_id);
+    const spinner = document.getElementById('loader');
+    const uploadBtn = <HTMLInputElement>document.getElementById('file_input_btn');
     if (spinner && uploadBtn) {
       spinner.style.display = 'none';
       uploadBtn.disabled = false;
@@ -57,11 +57,11 @@ export class FilesService {
     if (currentUser) {
       this.authToken = currentUser['token'];
     }
-    let headers = new HttpHeaders({
+    const headers = new HttpHeaders({
       Authorization: this.authToken
     });
-    let options = { headers: headers };
-    var params = {
+    const options = { headers: headers };
+    const params = {
       file_data: `${fileUploadVariables.bucketName}/${fileName}`
     };
 
@@ -77,10 +77,10 @@ export class FilesService {
     if (currentUser) {
       this.authToken = currentUser['token'];
     }
-    let headers = new HttpHeaders({
+    const headers = new HttpHeaders({
       Authorization: this.authToken
     });
-    let options = { headers: headers };
+    const options = { headers: headers };
     this.showSpinner();
     const fileName = file.name.substring(0, file.name.lastIndexOf('.'));
     const fileExt = file.name.substring(
@@ -115,7 +115,7 @@ export class FilesService {
                 .put(result['presigned_url'], file, httpOptions)
                 .subscribe(
                   result => {
-                    let returnObject = {
+                    const returnObject = {
                       fileEndpoint: `${fileUploadVariables.bucketName}/${uniqueFileName}`,
                       type: type,
                       key: uniqueFileName

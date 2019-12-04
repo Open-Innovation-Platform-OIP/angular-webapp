@@ -410,7 +410,7 @@ export class NavbarComponent implements OnInit, OnDestroy {
 
   openSearchComponent() {
     this.router.navigate(['/search'], { queryParamsHandling: 'preserve' });
-    let searchBar = <HTMLBaseElement>(
+    const searchBar = <HTMLBaseElement>(
       document.querySelector('input[name=searchInput]')
     );
     if (searchBar) {

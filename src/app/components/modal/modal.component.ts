@@ -41,7 +41,7 @@ export class ModalComponent {
     if (!this.userInviteModalForm.valid) {
       return;
     }
-    let email = this.userInviteModalForm.value.email;
+    const email = this.userInviteModalForm.value.email;
 
     this.http
       .post(

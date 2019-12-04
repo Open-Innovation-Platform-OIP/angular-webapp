@@ -9,7 +9,7 @@ import { FilesService } from '../../services/files.service';
 })
 export class EnrichmentCardComponent implements OnInit {
   @Input() enrichmentData: any;
-  @Input() index: number = 0;
+  @Input() index = 0;
   @Output() clicked = new EventEmitter();
   numberOfVotes: any = 0;
   voters = new Set();
@@ -26,8 +26,8 @@ export class EnrichmentCardComponent implements OnInit {
   }
 
   checkUrlIsImg(url) {
-    var arr = ['jpeg', 'jpg', 'gif', 'png'];
-    var ext = url.substring(url.lastIndexOf('.') + 1);
+    const arr = ['jpeg', 'jpg', 'gif', 'png'];
+    const ext = url.substring(url.lastIndexOf('.') + 1);
     if (arr.indexOf(ext) > -1) {
       return true;
     } else {

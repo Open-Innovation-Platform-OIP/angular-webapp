@@ -49,7 +49,7 @@ export class DashboardComponent implements OnInit, OnDestroy {
     title
     description
     user_id
-  
+
     problem_voters{user_id}
     problem_watchers{user_id}
     problem_validations{user_id}
@@ -71,7 +71,7 @@ export class DashboardComponent implements OnInit, OnDestroy {
     featured_url
     title
     description
-    
+
     solution_voters{user_id}
     solution_watchers{user_id}
     solution_validations{user_id}
@@ -102,7 +102,7 @@ export class DashboardComponent implements OnInit, OnDestroy {
                 interests_private
                 location_private
                 persona_private
-      
+
 
       problems(where: { is_draft: { _eq: false } }){
         id
@@ -169,9 +169,9 @@ export class DashboardComponent implements OnInit, OnDestroy {
       {
         problems(where:{is_draft:{_eq:true},is_deleted:{_eq:false}, user_id:{_eq: ${this.auth.currentUserValue.id}},problems_tags:{tag_id:{${this.filterService.sector_filter_query}}}} order_by: {edited_at: desc}) ${this.problemQueryString}
         ,
-        
+
           solutions(where:{is_draft:{_eq:true},is_deleted:{_eq:false}, user_id:{_eq: ${this.auth.currentUserValue.id}},solutions_tags:{tag_id:{${this.filterService.sector_filter_query}}}} order_by: {edited_at: desc}) ${this.solutionQueryString}
-      
+
 
 
     }
@@ -184,7 +184,7 @@ export class DashboardComponent implements OnInit, OnDestroy {
 
     this.draftsSub = this.draftsQueryRef.valueChanges.subscribe(({ data }) => {
       if (data.problems.length > 0) {
-        let problems_solutions = data.problems.concat(data.solutions);
+        const problems_solutions = data.problems.concat(data.solutions);
         problems_solutions.sort((a, b) => {
           if (a.edited_at < b.edited_at) {
             return 1;
@@ -205,13 +205,13 @@ export class DashboardComponent implements OnInit, OnDestroy {
   getUsersProblems() {
     const userProblemsQuery = gql`
     {
-      problems( 
+      problems(
         where:{ _and:[
         { is_draft: {_eq: false}},
         {user_id: {_eq: ${this.auth.currentUserValue.id} }},
         {problems_tags:{tag_id:{${this.filterService.sector_filter_query}}}}
       ],
-      
+
     } order_by: {updated_at: desc}) ${this.problemQueryString}
     }
     `;
@@ -233,7 +233,7 @@ export class DashboardComponent implements OnInit, OnDestroy {
   getUsersSolutions() {
     const userSolutionQuery = gql`
     {
-      solutions( 
+      solutions(
         where:{ _and:[
         { is_draft: {_eq: false}},
         {user_id: {_eq: ${this.auth.currentUserValue.id} }},
@@ -284,7 +284,7 @@ export class DashboardComponent implements OnInit, OnDestroy {
     solution_collaborators(where:{user_id:{_eq: ${this.auth.currentUserValue.id}},solution:{solutions_tags:{tag_id:{${this.filterService.sector_filter_query}}}}}) {
       solution ${this.solutionQueryString}
     }
-   
+
     }
     `;
     this.contributionsQueryRef = this.apollo.watchQuery({
@@ -334,7 +334,7 @@ export class DashboardComponent implements OnInit, OnDestroy {
 
       const recoProblemsQuery = gql`
     {
-     
+
       users_tags(where:{ _and: [
         {user_id:{_eq:${this.auth.currentUserValue.id}}},
         { tag_id:{${this.filterService.sector_filter_query}}}
