@@ -79,13 +79,12 @@ export class NavbarComponent implements OnInit, OnDestroy {
     location: Location,
     private renderer: Renderer,
     private element: ElementRef,
-    private router: Router,
+    public router: Router,
     private apollo: Apollo,
-    private auth: AuthService,
+    public auth: AuthService,
     private usersService: UsersService,
     private route: ActivatedRoute,
-    private filesService: FilesService,
-    private authService: AuthService
+    private filesService: FilesService
   ) {
     this.location = location;
     this.nativeElement = element.nativeElement;

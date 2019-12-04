@@ -1,5 +1,5 @@
 <div class="card-body ">
-  <form method="get" action="/" class="form-horizontal" (ngSubmit)="onSubmit()" #enrichmentForm="ngForm">
+  <form method="get" action="/" class="form-horizontal" #enrichmentForm="ngForm">
     <div class="form-group">
       <div class="row">
         <label class="col-sm-3 col-form-label"
@@ -258,7 +258,7 @@
           <span class="btn btn-file">
             <span class="fileinput-new">Select image</span>
             <span class="fileinput-exists">Add more</span>
-            <input type="file" name="..." (change)="onEnrichImgSelect($event)" multiple accept="image/*" />
+            <input type="file" name="..." multiple accept="image/*" />
           </span>
           <!-- <a href="#pablo" class="btn btn-danger fileinput-exists" data-dismiss="fileinput"><i class="fa fa-times"></i>
                   Remove</a> -->
