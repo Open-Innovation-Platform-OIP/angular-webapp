@@ -144,16 +144,16 @@ export class FilterService {
 
             this.is_domain_filter_mode = true;
             this.sector_filter_query = `_in:[${sectorIdArray}]`;
+            this.domain_tags_query = `(where:{domain_tags:{domain:{url:{_eq:"${domain}"}}
+          
+        }})`;
           } else {
             this.is_domain_filter_mode = false;
             this.sector_filter_query = `_nin:[0]`;
+            this.domain_tags_query = ``;
           }
 
           console.log(sectorIdArray, 'sector id array');
-
-          this.domain_tags_query = `(where:{domain_tags:{domain:{url:{_eq:"${domain}"}}
-          
-        }})`;
 
           await this.tagsService.getTagsFromDB(this.domain_tags_query);
         },
