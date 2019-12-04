@@ -6,6 +6,7 @@
   *ngIf="validationData"
   style="cursor: pointer;"
   role="group"
+  [attr.aria-label]="['Validation', index + 1]"
 >
   <a href="javascript:void(0);" (click)="cardClicked()" class="sr-only">
     open validate card
