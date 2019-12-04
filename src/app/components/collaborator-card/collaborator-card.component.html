@@ -1,70 +1,112 @@
 <!--REWRITE-->
 
-<!-- [routerLink]="currentUser&&!(collaboratorData.user_id===currentUser)&&'/profiles/'+collaboratorData.user_id" -->
-<div class="card card-profile collaborate-card" *ngIf="collaboratorData">
-  <div class="card-avatar actions photo_div"
-    [routerLink]="currentUser != collaboratorData.user_id ? '/users/' + collaboratorData.user_id : null">
+<div class="card card-profile" *ngIf="collaboratorData" role="group">
+  <div
+    class="card-avatar actions photo_div"
+    [routerLink]="
+      currentUser != collaboratorData.user_id
+        ? '/users/' + collaboratorData.user_id
+        : null
+    "
+  >
     <a *ngIf="collaboratorData.user && collaboratorData.user.photo_url">
-      <img class="img profile_photo" style="object-fit: cover;"
-        *ngIf="collaboratorData.user && collaboratorData.user.photo_url" src="{{
-        collaboratorData.user.photo_url && collaboratorData.user.photo_url.fileEndpoint
-            ? filesService.fileAccessUrl+collaboratorData.user.photo_url.fileEndpoint
+      <img
+        class="img profile_photo"
+        style="object-fit: cover;"
+        *ngIf="collaboratorData.user && collaboratorData.user.photo_url"
+        src="{{
+          collaboratorData.user.photo_url &&
+          collaboratorData.user.photo_url.fileEndpoint
+            ? filesService.fileAccessUrl +
+              collaboratorData.user.photo_url.fileEndpoint
             : './assets/img/default-avatar.png'
-        }}" />
+        }}"
+        [attr.alt]="['profile photo']"
+      />
     </a>
   </div>
   <div class="card-body">
     <h6 class="card-category text-gray"></h6>
-    <h4 class="card-title actions" *ngIf="collaboratorData.user && collaboratorData.user.name"
-      [routerLink]="currentUser != collaboratorData.user_id ? '/users/' + collaboratorData.user_id : null"
-      queryParamsHandling="merge">
-      <a>
-        {{ (currentUser == collaboratorData.user_id) ? 'You' : collaboratorData.user.name }}
+    <h3
+      class="card-title actions"
+      style="font-size: 1.2rem;"
+      *ngIf="collaboratorData.user && collaboratorData.user.name"
+      [routerLink]="
+        currentUser != collaboratorData.user_id
+          ? '/users/' + collaboratorData.user_id
+          : null
+      "
+      queryParamsHandling="merge"
+    >
+      <a href="javascript:void(0);">
+        {{
+          currentUser == collaboratorData.user_id
+            ? 'You'
+            : collaboratorData.user.name
+        }}
       </a>
-    </h4>
+    </h3>
     <p class="card-description description" style="white-space: pre-wrap;">
       {{ collaboratorData.intent }}
     </p>
-    <!-- <span><i class="material-icons">
-        more_horiz
-      </i></span> -->
-    <span style="cursor:pointer;" *ngIf=" collaboratorData.intent.length>60" (click)="seeMore()"><small><b>see
-          more...</b></small></span>
+
+    <span
+      style="cursor:pointer;"
+      *ngIf="collaboratorData.intent.length > 60"
+      (click)="seeMore()"
+      aria-hidden="true"
+      ><small><b>see more...</b></small></span
+    >
 
     <br />
 
-    <!-- <div *ngFor="let role of roles">
-      <span class="badge badge-warning">{{ role.slice(3) }}</span>
-      <span>&nbsp;</span>
-    </div> -->
-    <div *ngIf="roles.length">
-      <span *ngFor="let role of roles" class="badge badge-warning" style="margin-right: 0.3em;">{{role.slice(3)}}</span>
-      <span>&nbsp;</span>
+    <div
+      *ngIf="roles.length"
+      role="group"
+      aria-label="role"
+      class="d-flex flex-wrap justify-content-center"
+    >
+      <p
+        *ngFor="let role of roles"
+        class="badge badge-warning"
+        style="margin-right: 0.3em;"
+      >
+        {{ role.slice(3) }}
+      </p>
     </div>
   </div>
 
-  <hr *ngIf="collaboratorData.user_id == auth.currentUserValue.id">
-
+  <hr *ngIf="collaboratorData.user_id == auth.currentUserValue.id" />
 
   <div class="stats">
-    <button mat-button type="button" class="btn btn-sm btn-danger"
-      *ngIf="collaboratorData.user_id == auth.currentUserValue.id" (click)="deleteCollaboration()">
-      <i class="material-icons">
+    <button
+      mat-button
+      type="button"
+      class="btn btn-sm btn-danger"
+      *ngIf="collaboratorData.user_id == auth.currentUserValue.id"
+      (click)="deleteCollaboration()"
+      aria-label="delete"
+    >
+      <i class="material-icons" aria-hidden="true">
         delete
       </i>
     </button>
     <span>&nbsp;</span>
-    <button mat-button type="button" class="btn btn-sm btn-warning"
-      *ngIf="collaboratorData.user_id == auth.currentUserValue.id" (click)="editCollaboration()" data-toggle="modal"
-      data-target="#EditCollaborateModal">
-      <i class="material-icons">
+    <button
+      mat-button
+      type="button"
+      class="btn btn-sm btn-warning"
+      *ngIf="collaboratorData.user_id == auth.currentUserValue.id"
+      (click)="editCollaboration()"
+      data-toggle="modal"
+      data-target="#EditCollaborateModal"
+      aria-label="edit"
+    >
+      <i class="material-icons" aria-hidden="true">
         create
       </i>
     </button>
   </div>
-
 </div>
-
-
 
 <!--REWRITE-->

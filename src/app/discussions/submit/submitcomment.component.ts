@@ -9,6 +9,11 @@ import {
 import * as Quill from 'quill/dist/quill.js';
 import ImageResize from 'quill-image-resize-module';
 import { AuthService } from '../../services/auth.service';
+import {
+  FocusMonitor,
+  LiveAnnouncer,
+  AriaLivePoliteness
+} from '@angular/cdk/a11y';
 // import {ImageDrop} from 'quill-image-drop-module';
 Quill.register('modules/imageResize', ImageResize);
 // Quill.register('modules/imageDrop', ImageDrop);
@@ -76,6 +81,7 @@ export class CommentSubmitComponent implements OnInit {
         }
       }
     },
+    keyboard: { bindings: { tab: false } },
     // imageDrop: true,
     imageResize: {
       modules: ['Resize', 'DisplaySize', 'Toolbar'],
@@ -92,13 +98,22 @@ export class CommentSubmitComponent implements OnInit {
   constructor(
     private auth: AuthService,
     public fileService: FilesService,
-    private ngxService: NgxUiLoaderService
+    private ngxService: NgxUiLoaderService,
+    private focusMonitor: FocusMonitor,
+    private liveAnnouncer: LiveAnnouncer
   ) {}
 
   setFocus(event) {
     // tslint:disable-next-line:no-console
     // console.log(event);
     event.focus();
+  }
+
+  announcement(message: string, politeness?: AriaLivePoliteness) {
+    this.liveAnnouncer
+      .announce(message, politeness)
+      .then(x => console.log('announced'))
+      .catch(e => console.error(e));
   }
 
   submitComment() {
@@ -108,6 +123,7 @@ export class CommentSubmitComponent implements OnInit {
     this.content = '';
     this.mentions = [];
     this.attachments = [];
+    this.announcement('Comment submitted');
   }
 
   checkForSpaces(input) {

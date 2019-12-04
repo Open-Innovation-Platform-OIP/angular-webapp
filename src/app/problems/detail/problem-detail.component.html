@@ -16,6 +16,7 @@
               style="font-size: 2rem;"
               tabindex="-1"
               #problemDataTitle
+              id="problemTitle"
             >
               {{ problemData.title }}
             </h1>
@@ -62,7 +63,7 @@
               <div class="col-md-8">
                 <div *ngIf="problemData.description">
                   <strong aria-level="3" role="heading">Description</strong>
-                  <p class="description" style="white-space: pre-wrap;">
+                  <p class="description" style="white-space: pre-wrap;" id="problemDescription">
                     {{ problemData.description }}
                   </p>
                 </div>
@@ -181,14 +182,15 @@
           <div class="card-footer">
             <div class="stats">
               <a
-                href="javascript:void(0)"
+                href="javascript:void(0);"
                 (click)="toggleVoteProblem()"
                 role="button"
                 [attr.aria-pressed]="voters.has(userId)"
-                aria-label="number of likes"
+                [attr.aria-label]="['likes', voters.size]"
+                class="d-flex"
               >
                 <i
-                  class="material-icons actions"
+                  class="material-icons "
                   [ngStyle]="{
                     color: voters.has(userId) ? '#1E90FF' : 'black'
                   }"
@@ -200,15 +202,15 @@
               </a>
 
               <a
-                class="mx-2"
-                href="javascript:void(0)"
+                class="mx-2 d-flex"
+                href="javascript:void(0);"
                 (click)="toggleWatchProblem()"
                 role="button"
                 [attr.aria-pressed]="watchers.has(userId)"
-                aria-label="problem watched"
+                [attr.aria-label]="['Watch problem', watchers.size]"
               >
                 <i
-                  class="material-icons actions"
+                  class="material-icons "
                   [ngStyle]="{
                     color: watchers.has(userId) ? '#1E90FF' : 'black'
                   }"
@@ -220,7 +222,7 @@
               </a>
             </div>
 
-            <div class="dropdown">
+            <div class="input-group justify-content-end">
               <button
                 *ngIf="userId === problemData.user_id || owners.has(userId)"
                 [routerLink]="'/problems/' + problemData.id + '/edit'"
@@ -231,39 +233,38 @@
                   this.validation.length
                 "
                 class="btn btn-sm btn-warning mr-2"
-                aria-expanded="true"
+                aria-label="edit problem"
               >
-                <i class="material-icons actions" aria-hidden="true">
+                <i class="material-icons " aria-hidden="true">
                   create
                 </i>
               </button>
 
-              <div class="dropdown">
+              <button
+                *ngIf="userId === problemData.user_id || owners.has(userId)"
+                (click)="openInviteModal()"
+                class="btn btn-sm btn-warning"
+                aria-haspopup="true"
+                aria-label="invite people"
+              >
+                <i class="material-icons " aria-hidden="true">
+                  person_add
+                </i>
+              </button>
+
+              <div class="dropdown ml-2">
                 <button
                   class="btn btn-sm btn-warning"
                   type="button"
                   id="shareBtnDropdown"
                   data-toggle="dropdown"
-                  aria-haspopup="true"
                   aria-expanded="false"
                   aria-label="share"
                 >
-                  <i class="material-icons actions" aria-hidden="true">
+                  <i class="material-icons " aria-hidden="true">
                     share
                   </i>
                 </button>
-                <!-- <span>&nbsp;</span>
-              <span>&nbsp;</span> -->
-            <div class="dropdown">
-               
-
-            <button *ngIf="(userId===problemData.user_id) || owners.has(userId)" (click)="openInviteModal()"
-              class="btn btn-sm btn-warning" aria-expanded="true">
-              <i class="material-icons actions">
-                person_add
-              </i>
-            </button>
-
                 <div class="dropdown-menu" aria-labelledby="shareBtnDropdown">
                   <ng-container *ngIf="channels.linkedin">
                     <a
@@ -310,7 +311,6 @@
             </div>
           </div>
         </div>
-      </div>
 
         <!--Problem Details-->
 
@@ -421,46 +421,48 @@
           [inputs]="carouselTileConfig"
           [dataSource]="carouselTileItemsEnrichment$ | async"
           *ngIf="enrichment[0]"
+          role="region"
+          aria-label="Enrichment cards"
         >
           <ngu-tile
             *nguCarouselDef="let enrichment; let i = index; let ani = animate"
             data-toggle="modal"
-            (click)="openModal('#enrichModal')"
+            (click)="openModal('#enrichModal',i)"
           >
+          
             <app-enrichment-card
               [enrichmentData]="enrichment"
               (clicked)="handleEnrichCardClicked($event)"
+              [index]="i"
+              tabindex="-1"
             >
             </app-enrichment-card>
           </ngu-tile>
 
-          <!-- <button NguCarouselPrev class="btn btn-default leftRs" [style.opacity]="enrichCarousel.isFirst ? 0.5:1">&lt;</button> -->
-          <!-- <button NguCarouselNext class="btn btn-default rightRs" [style.opacity]="enrichCarousel.isLast ? 0.5:1">&gt;</button> -->
-
-          <!-- <div class="row justify-content-center"> -->
           <a
             mat-button
             NguCarouselPrev
             class="btn btn-white btn-just-icon btn-round leftRs"
             *ngIf="enrichment[0] && enrichment.length > 2"
+            aria-label="scroll left"
+            role="button"
           >
-            <i class="material-icons">
+            <i class="material-icons" aria-hidden="true">
               keyboard_arrow_left
             </i>
           </a>
-          <!-- <button mat-raised-button class="btn btn-warning btn-round" data-toggle="modal" data-target="#enrichmentModal" -->
-          <!-- matTooltip="Click to add enrichment" [matTooltipPosition]="'below'">Enrich</button> -->
           <a
             mat-button
             NguCarouselNext
             class="btn btn-white btn-just-icon btn-round rightRs"
             *ngIf="enrichment[0] && enrichment.length > 2"
+            aria-label="scroll right"
+            role="button"
           >
-            <i class="material-icons">
+            <i class="material-icons" aria-hidden="true">
               keyboard_arrow_right
             </i>
           </a>
-          <!-- </div> -->
         </ngu-carousel>
 
         <div class="row justify-content-center" *ngIf="!enrichment[0]">
@@ -471,7 +473,7 @@
 
         <!--Add Enrichment Modal-->
 
-        <div
+        <!-- <div
           class="modal fade "
           id="enrichmentModal"
           tabindex="-1"
@@ -495,15 +497,10 @@
                   <i class="material-icons">close</i>
                 </button>
               </div>
-              <div class="modal-body">
-                <!-- <app-add-enrichment (submitted)="onEnrichmentSubmit($event)"></app-add-enrichment> -->
-                <!-- <app-wizard-cmp></app-wizard-cmp> -->
-                <!-- <app-wizard-container></app-wizard-container> -->
-                <!-- <app-wizard-container [content]="enrichmentData" [contentType]="'enrichment'" (contentSubmitted)="onEnrichmentSubmit($event)"></app-wizard-container> -->
-              </div>
+              <div class="modal-body"></div>
             </div>
           </div>
-        </div>
+        </div> -->
 
         <!--Add Enrichment Modal-->
 
@@ -514,21 +511,22 @@
           id="enrichModal"
           tabindex="-1"
           role="dialog"
-          aria-labelledby="myModalLabel"
+          aria-labelledby="problemTitle"
           aria-hidden="true"
+          cdkTrapFocus
         >
           <div class="modal-dialog modal-notice modal-lg">
             <div class="modal-content">
               <div class="modal-header">
-                <h5 class="modal-title" id="myModalLabel">Enrichment Detail</h5>
+                <h1 class="modal-title h1-font" #enrichmentDetail tabindex="-1" id="myModalLabel">Enrichment Detail</h1>
                 <button
                   mat-button
                   class="close"
                   data-dismiss="modal"
-                  aria-hidden="true"
-                  (click)="closeModal($event)"
+                  (click)="closeModal($event,{from:'enrichment',index: enrichmentModalContext.index})"
+                  aria-label="close"
                 >
-                  <i class="material-icons">close</i>
+                  <i class="material-icons" aria-hidden="true">close</i>
                 </button>
               </div>
               <div class="modal-body">
@@ -540,12 +538,6 @@
                   (voteClicked)="voteEnrichment($event)"
                 ></app-view-enrichment>
               </div>
-              <!-- <div class="card-footer"> -->
-              <!-- <div class="text-center"> -->
-              <!-- <button mat-button type="button" class="btn btn-warning" aria-hidden="true" data-dismiss="modal"
-                      data-toggle="modal" data-target="#EditEnrichModal">Edit</button> -->
-              <!-- </div> -->
-              <!-- </div> -->
             </div>
           </div>
         </div>
@@ -554,7 +546,7 @@
 
         <!--Edit Enrichment Modal-->
 
-        <div
+        <!-- <div
           class="modal fade editModal"
           id="EditEnrichModal"
           tabindex="-1"
@@ -576,13 +568,10 @@
                   <i class="material-icons">close</i>
                 </button>
               </div>
-              <div class="modal-body">
-                <!-- <app-add-enrichment *ngIf="enrichDataToEdit" [enrichmentData]="enrichDataToEdit" (submitted)="onEnrichmentSubmit($event)"></app-add-enrichment> -->
-                <!-- <app-wizard-container [content]="enrichmentData" [contentType]="'enrichment'" (contentSubmitted)="onEnrichmentSubmit($event)"></app-wizard-container> -->
-              </div>
+              <div class="modal-body"></div>
             </div>
           </div>
-        </div>
+        </div> -->
 
         <!--Edit Enrichment Modal-->
 
@@ -592,11 +581,6 @@
 
         <!--Validate divider-->
         <div class="row justify-content-center">
-          <!-- <a mat-button>
-              <i class="material-icons">
-                keyboard_arrow_left
-              </i>
-            </a> -->
           <button
             mat-raised-button
             class="btn btn-warning btn-round"
@@ -615,11 +599,6 @@
           >
             Validate
           </button>
-          <!-- <a mat-button>
-              <i class="material-icons">
-                keyboard_arrow_right
-              </i>
-            </a> -->
         </div>
         <!--Validate divider-->
 
@@ -628,6 +607,8 @@
           [inputs]="carouselTileConfig"
           [dataSource]="carouselTileItemsValid$ | async"
           *ngIf="validation[0]"
+          role="region"
+          aria-label="validation cards"
         >
           <ngu-tile
             *nguCarouselDef="let validation; let i = index; let ani = animate"
@@ -641,34 +622,31 @@
             ></app-validate-card>
           </ngu-tile>
 
-          <!-- <button NguCarouselPrev class="btn btn-default leftRs" [style.opacity]="ValidCarousel.isFirst ? 0.5:1">&lt;</button> -->
-          <!-- <button NguCarouselNext class="btn btn-default rightRs" [style.opacity]="ValidCarousel.isLast ? 0.5:1">&gt;</button> -->
-
           <a
             mat-button
             NguCarouselPrev
             class="btn btn-white btn-just-icon btn-round leftRs"
             *ngIf="validation[0] && validation.length > 2"
+            aria-label="scroll-left"
           >
-            <i class="material-icons">
+            <i class="material-icons" aria-hidden="true">
               keyboard_arrow_left
             </i>
           </a>
-          <!-- <button mat-raised-button class="btn btn-warning btn-round" data-toggle="modal" data-target="#validatorModal" -->
-          <!-- matTooltip="Click to validate problem" [matTooltipPosition]="'below'">Validate</button> -->
           <a
             mat-button
             NguCarouselNext
             class="btn btn-white btn-just-icon btn-round rightRs"
             *ngIf="validation[0] && validation.length > 2"
+            aria-label="scroll right"
           >
-            <i class="material-icons">
+            <i class="material-icons" aria-hidden="true">
               keyboard_arrow_right
             </i>
           </a>
         </ngu-carousel>
+
         <div class="row justify-content-center" *ngIf="!validation[0]">
-          <!-- <p *ngIf="userPersonas.is_expert">No validations yet. Be the first to validate.</p> -->
           <p>No validations yet.</p>
         </div>
 
@@ -863,11 +841,6 @@
           <p *ngIf="!auth.currentUserValue.id">
             Login to collaborate on this problem
           </p>
-          <!-- <a mat-button>
-              <i class="material-icons">
-                keyboard_arrow_right
-              </i>
-            </a> -->
         </div>
         <!--Collaborate divider-->
 
@@ -876,6 +849,8 @@
           [inputs]="carouselTileConfig"
           [dataSource]="carouselTileItemsCollab$ | async"
           *ngIf="collaborators[0]"
+          role="region"
+          aria-label="collaborators"
         >
           <ngu-tile
             *nguCarouselDef="let collaborator; let i = index; let ani = animate"
@@ -894,8 +869,9 @@
             NguCarouselPrev
             class="btn btn-white btn-just-icon btn-round leftRs"
             *ngIf="collaborators[0] && collaborators.length > 2"
+            aria-label="scroll left"
           >
-            <i class="material-icons">
+            <i class="material-icons" aria-hidden="true">
               keyboard_arrow_left
             </i>
           </a>
@@ -905,8 +881,9 @@
             NguCarouselNext
             class="btn btn-white btn-just-icon btn-round rightRs"
             *ngIf="collaborators[0] && collaborators.length > 2"
+            aria-label="scroll right"
           >
-            <i class="material-icons">
+            <i class="material-icons" aria-hidden="true">
               keyboard_arrow_right
             </i>
           </a>
@@ -1020,16 +997,18 @@
             </div>
           </div>
         </div>
-        <div class="card">
+        <div class="card" role="region" aria-label="discussion">
           <div class="card-header card-header-icon card-header-warning">
             <div class="card-icon">
               <i class="material-icons" aria-hidden="true">forum</i>
             </div>
             <h2 style="font-size: 1.2rem;" class="card-title">Discussions</h2>
           </div>
+
           <div class="card-body" *ngIf="!auth.currentUserValue.id">
             <p>Login to join discussion for this problem</p>
           </div>
+
           <div class="card-body" *ngIf="auth.currentUserValue.id">
             <button
               mat-raised-button
@@ -1059,17 +1038,17 @@
                       aria-expanded=" true"
                       aria-controls="newComment"
                       class="collapsed"
-                      role="button"
                     >
                       Join Discussion
-                      <i class="material-icons" aria-hidden="true">keyboard_arrow_down</i>
+                      <i class="material-icons" aria-hidden="true">
+                        keyboard_arrow_down
+                      </i>
                     </a>
                   </div>
                 </div>
                 <div
                   id="newComment"
                   class="collapse show"
-                  role="tabpanel"
                   aria-labelledby="headingOne"
                   data-target="#newComment"
                 >
@@ -1085,6 +1064,7 @@
                 <app-display-comment
                   [users]="objectValues(usersService.allUsers)"
                   [comment]="comment"
+                  [focusContext]="lastContext"
                   [replies]="replies[comment.id]"
                   (reply)="onCommentSubmit($event, comment.id)"
                   (commentToDelete)="deleteComment($event)"
@@ -1101,6 +1081,7 @@
                 <app-display-comment
                   [users]="objectValues(usersService.allUsers)"
                   [comment]="popularDiscussion"
+                  [focusContext]="lastContext"
                   [replies]="replies[popularDiscussion.id]"
                   (reply)="onCommentSubmit($event, popularDiscussion.id)"
                   (fileClicked)="displayModal($event)"
@@ -1131,13 +1112,14 @@
 </div>
 
 <!-- discuss image and video modal starts -->
-<div class="modal fade" id="enlargeView" style="display: none;">
+<div class="modal fade" id="enlargeView" style="display: none;" cdkTrapFocus>
   <div class="modal-dialog modal-lg">
     <div class="modal-content">
       <div class="modal-header">
         <button
           type="button"
           class="close"
+          id="discussionModalCloseBtn"
           data-dismiss="modal"
           aria-hidden="true"
           (click)="closeModal($event)"
@@ -1159,6 +1141,7 @@
           [disabled]="sources['index'] < 1"
           (click)="toggleFileSrc(false)"
           class="btn btn-info btn-round"
+          aria-label="previous"
         >
           <span class="carousel-control-prev-icon" aria-hidden="true"></span>
         </button>
@@ -1169,6 +1152,8 @@
           [disabled]="sources['index'] == sources['attachmentObj'].length - 1"
           class="btn btn-info btn-round"
           (click)="toggleFileSrc(true)"
+          aria-label="next"
+          id="discussionModalNextBtn"
         >
           <span class="carousel-control-next-icon" aria-hidden="true"></span>
         </button>

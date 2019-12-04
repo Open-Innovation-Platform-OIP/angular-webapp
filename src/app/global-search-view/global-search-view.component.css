@@ -1,12 +1,16 @@
 .description {
-    max-lines: 2;
-    max-height: 5.5em;
-    overflow: hidden;
-    color: #333333;
+  max-lines: 2;
+  max-height: 5.5em;
+  overflow: hidden;
+  color: #333333;
 }
 
-input[type="search"]::-webkit-search-cancel-button {
-    -webkit-appearance: searchfield-cancel-button;
-    zoom: 1.5;
-    cursor: pointer;
+input[type='search']::-webkit-search-cancel-button {
+  -webkit-appearance: searchfield-cancel-button;
+  zoom: 1.5;
+  cursor: pointer;
+}
+
+.fontSize {
+  font-size: 1.1rem;
 }

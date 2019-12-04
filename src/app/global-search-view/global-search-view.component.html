@@ -1,63 +1,90 @@
-<div class="main-content">
+<div class="main-content" role="search">
   <div class="container-fluid">
     <div class="row justify-content-center" style="margin-top: 2%;">
       <div class="col-md-6 input-group">
-        <input type="search" value="" class="form-control" placeholder="Search..." name="searchInput" appAutofocus
-          [(ngModel)]="searchInput" (input)="globalSearch($event.target.value)" autocomplete="off" />
+        <input
+          type="search"
+          value=""
+          class="form-control"
+          placeholder="Search..."
+          name="searchInput"
+          appAutofocus
+          [(ngModel)]="searchInput"
+          (input)="globalSearch($event.target.value)"
+          autocomplete="off"
+        />
       </div>
     </div>
-    <hr />
+    <hr aria-hidden="true" />
     <div class="row">
       <div class="col-md-3">
-        <h4 class="card-title text-center">Problems</h4>
+        <h1 class="card-title text-center fontSize">Problems</h1>
         <br />
-        <div *ngFor="let problem of globalProblemSearchResults">
-          <app-problem-card *ngIf="problem" [problemData]="problem">
+        <div *ngFor="let problem of globalProblemSearchResults; let i = index">
+          <app-problem-card *ngIf="problem" [index]="i" [problemData]="problem">
           </app-problem-card>
           <br />
         </div>
-        <div class="card" *ngIf="
+        <div
+          class="card text-center"
+          *ngIf="
             searchInput &&
             globalProblemSearchResults &&
             globalProblemSearchResults.length === 0
-          ">
-          <h5 class="card-body text-center">
-            No search results for
-            <b>Problems</b>
-          </h5>
+          "
+        >
+          <div class="card-body fontSize">
+            No search results for <strong>Problems</strong>
+          </div>
         </div>
       </div>
       <div class="col-md-1"></div>
       <div class="col-md-3">
-        <h4 class="card-title text-center">Solutions</h4>
+        <h1 class="card-title text-center fontSize">Solutions</h1>
         <br />
-        <div *ngFor="let solution of solutionSearchResults">
-          <app-solution-card *ngIf="solution" [solutionData]="solution">
+        <div *ngFor="let solution of solutionSearchResults; let i = index">
+          <app-solution-card
+            *ngIf="solution"
+            [index]="i"
+            [solutionData]="solution"
+          >
           </app-solution-card>
           <br />
         </div>
-        <div class="card" *ngIf="searchInput &&
-        solutionSearchResults &&
-        solutionSearchResults.length === 0">
-          <h5 class="card-body text-center">
-            No search results for <b>Solutions</b>
-          </h5>
+        <div
+          class="card text-center"
+          *ngIf="
+            searchInput &&
+            solutionSearchResults &&
+            solutionSearchResults.length === 0
+          "
+        >
+          <div class="card-body fontSize">
+            No search results for <strong>Solutions</strong>
+          </div>
         </div>
       </div>
       <div class="col-md-1"></div>
       <div class="col-md-3">
-        <h4 class="card-title text-center">Contributors</h4>
+        <h1 class="card-title text-center fontSize">Contributors</h1>
         <br />
-        <div *ngFor="let user of userSearchResults">
-          <app-profile-card *ngIf="user" [userData]="user"></app-profile-card>
+        <div *ngFor="let user of userSearchResults; let i = index">
+          <app-profile-card
+            *ngIf="user"
+            [index]="i"
+            [userData]="user"
+          ></app-profile-card>
           <br />
         </div>
-        <div class="card" *ngIf="
+        <div
+          class="card text-center"
+          *ngIf="
             searchInput && userSearchResults && userSearchResults.length === 0
-          ">
-          <h5 class="card-body text-center">
-            No search results for <b>Contributors</b>
-          </h5>
+          "
+        >
+          <div class="card-body fontSize">
+            No search results for <strong>Contributors</strong>
+          </div>
         </div>
       </div>
     </div>

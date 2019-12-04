@@ -16,7 +16,7 @@ import {
   PathLocationStrategy
 } from '@angular/common';
 import { Router, ActivatedRoute, ParamMap } from '@angular/router';
-import { Observable, Subscription, interval } from 'rxjs';
+import { Observable, Subscription, interval, Subject, fromEvent } from 'rxjs';
 import { NgxUiLoaderService } from 'ngx-ui-loader';
 import {
   MatDialog,
@@ -93,8 +93,15 @@ interface queryString {
 export class ProblemDetailComponent
   implements OnInit, OnDestroy, AfterViewInit {
   @ViewChild('problemDataTitle') problemDataTitle: ElementRef<HTMLElement>;
+  @ViewChild('enrichmentDetail') enrichmentDetail: ElementRef<HTMLElement>;
+
+  enrichmentModalContext = {
+    index: 0
+  };
 
   channels = sharing;
+  discussionContext: string;
+  lastContext = new Subject();
   // filesService.fileAccessUrl: string = "";
   // chartData: any;
   message: any;
@@ -1614,9 +1621,32 @@ export class ProblemDetailComponent
     }
   }
 
-  displayModal(files: { attachmentObj: attachment_object; index: number }) {
+  displayModal(files: {
+    attachmentObj: attachment_object;
+    index: number;
+    context: string;
+  }) {
     this.sources = files;
     this.modalSrc = files.attachmentObj[files.index];
+    this.discussionContext = files.context;
+
+    const waitForTag = setInterval(() => {
+      const modalBtnTag: HTMLElement = document.querySelector(
+        '#discussionModalNextBtn'
+      );
+      const closeBtn: HTMLElement = document.querySelector(
+        '#discussionModalNextBtn'
+      );
+
+      if (modalBtnTag) {
+        this.focusMonitor.focusVia(modalBtnTag, 'program');
+        clearInterval(waitForTag);
+      }
+      if (closeBtn) {
+        this.focusMonitor.focusVia(closeBtn, 'program');
+        clearInterval(waitForTag);
+      }
+    }, 500);
 
     clearInterval(this.interval);
     /* opening modal */
@@ -1628,18 +1658,32 @@ export class ProblemDetailComponent
     $('#enlargeView').modal('show');
   }
 
-  closeModal(e) {
-    // //console.log(e, "e");
+  closeModal(e, context?: { from: string; index: number }) {
     if (e.type === 'click') {
       let problemVideoTag: HTMLMediaElement = document.querySelector(
         '#modalVideo'
       );
+
+      if (context.from === 'enrichment') {
+        let enrichmentCard: HTMLElement = document.querySelector(
+          `[aria-label='${context.from},${context.index + 1}']>a`
+        );
+
+        if (enrichmentCard) {
+          setTimeout(() => {
+            this.focusMonitor.focusVia(enrichmentCard, 'program');
+            console.log('done.', enrichmentCard);
+          }, 1000);
+        }
+      }
 
       this.startInterval();
       if (problemVideoTag) {
         problemVideoTag.pause();
       }
     }
+
+    this.lastContext.next(this.discussionContext);
   }
 
   toggleFileSrc(dir: boolean) {
@@ -1655,7 +1699,11 @@ export class ProblemDetailComponent
     }
   }
 
-  openModal(id) {
+  moveFocusToElement(elem: ElementRef): void {
+    this.focusMonitor.focusVia(elem, 'program');
+  }
+
+  openModal(id, index?) {
     clearInterval(this.interval);
 
     /* opening modal */
@@ -1665,6 +1713,13 @@ export class ProblemDetailComponent
     });
 
     $(id).modal('show');
+
+    if (id === '#enrichModal') {
+      setTimeout(() => {
+        this.moveFocusToElement(this.enrichmentDetail);
+        this.enrichmentModalContext['index'] = index;
+      }, 500);
+    }
   }
 
   showPopularDiscussions(id) {
