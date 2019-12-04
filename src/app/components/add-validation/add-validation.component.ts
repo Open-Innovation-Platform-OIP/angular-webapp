@@ -5,40 +5,34 @@ import {
   EventEmitter,
   OnInit,
   DoCheck
-} from "@angular/core";
-import { FilesService } from "../../services/files.service";
+} from '@angular/core';
+import { FilesService } from '../../services/files.service';
 
-import swal from "sweetalert2";
-import { ValidationService } from "../../services/validation.service";
-// import {FilesService} from "../../services/files.service"
+import swal from 'sweetalert2';
+import { ValidationService } from '../../services/validation.service';
 
 @Component({
-  selector: "app-add-validation",
-  templateUrl: "./add-validation.component.html",
-  styleUrls: ["./add-validation.component.css"]
+  selector: 'app-add-validation',
+  templateUrl: './add-validation.component.html',
+  styleUrls: ['./add-validation.component.css']
 })
 export class AddValidationComponent implements OnInit {
   @Input() validationData: any = {
-    comment: "",
+    comment: '',
     agree: false,
     files: []
   };
   @Output() submitted = new EventEmitter();
 
-  mode = "Add";
+  mode = 'Add';
   Arr = [1, 2, 3, 4];
   blankSpace: boolean;
 
-  constructor(
-    private filesService: FilesService // private problemService: ProblemService, // private validationService: ValidationService
-  ) {}
+  constructor(private filesService: FilesService) {}
 
-  ngOnInit() {
-    // console.log(this.validationData, "validation data check");
-  }
+  ngOnInit() {}
 
   async onValidateFileSelected(event) {
-    // console.log("Event: ", event);
     for (let i = 0; i < event.target.files.length; i++) {
       const file = event.target.files[i];
       if (!this.isFileDuplicate(file)) {
@@ -47,22 +41,12 @@ export class AddValidationComponent implements OnInit {
 
           .then(values => {
             this.validationData.files.push({
-              fileEndpoint: values["fileEndpoint"],
+              fileEndpoint: values['fileEndpoint'],
               mimeType: file.type,
-              key: values["key"]
+              key: values['key']
             });
           })
-          .catch(e => console.log("Err:: ", e));
-
-        //   let attachment = await this.space
-        //     .uploadFile(file, file["name"])
-        //     .promise();
-
-        //   this.validationData.files.push({
-        //     key: attachment["key"],
-        //     url: attachment["Location"],
-        //     mimeType: file.type
-        //   });
+          .catch(e => console.error('Err:: ', e));
       } else {
         alert(`File: ${file.name} already exist.`);
         continue;
@@ -73,7 +57,7 @@ export class AddValidationComponent implements OnInit {
 
   isFileDuplicate(file) {
     let found = this.validationData.files.find(attachment => {
-      return attachment["key"] === file.name;
+      return attachment['key'] === file.name;
     });
 
     return this.validationData.files.includes(found);
@@ -84,7 +68,7 @@ export class AddValidationComponent implements OnInit {
     if (this.validationData && this.validationData.files.length < 2) {
       this.validationData.files = [];
     } else {
-      fileName = this.validationData.files[index].fileEndpoint.split("/")[1];
+      fileName = this.validationData.files[index].fileEndpoint.split('/')[1];
       this.filesService.deleteFile(fileName).subscribe(
         result => console.log(result),
         error => {
@@ -98,8 +82,8 @@ export class AddValidationComponent implements OnInit {
 
   async validateConsent(userConsent) {
     swal({
-      type: "success",
-      text: "Thank you for validation",
+      type: 'success',
+      text: 'Thank you for validation',
       timer: 3000,
       showConfirmButton: false
     }).then(res => {
@@ -117,16 +101,3 @@ export class AddValidationComponent implements OnInit {
     }
   }
 }
-
-// deleting file from digital ocean space
-/* this.space
-      .deleteFile(this.validationData.files[index]["key"])
-      .promise()
-      .then(data => {
-        console.log("Deleted file: ", data);
-        this.validationData.files.splice(index, 1);
-        console.log("file removed");
-      })
-      .catch(e => {
-        console.log("Err: ", e);
-      }); */

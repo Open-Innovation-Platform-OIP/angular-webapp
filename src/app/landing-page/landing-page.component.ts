@@ -18,8 +18,6 @@ export class LandingPageComponent implements OnInit, OnDestroy {
   problems: any;
   numberToBeShown: Number;
 
-  // getProblemsSub: Subscription;
-
   constructor(
     private apollo: Apollo,
     private route: ActivatedRoute,
@@ -128,7 +126,6 @@ export class LandingPageComponent implements OnInit, OnDestroy {
   }
 
   landingPageSearch(searchInput: string) {
-    // this.numberToBeShown = 8;
     if (this.searchInput.length < 2) {
       this.numberToBeShown = 4;
     }
@@ -151,7 +148,5 @@ export class LandingPageComponent implements OnInit, OnDestroy {
       this.landingPageSearchResults = [];
     }
   }
-  ngOnDestroy() {
-    // this.getProblemsSub.unsubscribe();
-  }
+  ngOnDestroy() {}
 }

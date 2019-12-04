@@ -15,13 +15,10 @@ export class SearchService {
   ) {}
 
   globalSearch(keyword) {
-    console.log(this.filterService.sector_filter_query, 'sector filter');
     return this.http.post(
       'https://elasticsearch-microservice.dev.jaagalabs.com/global_search',
       { keyword: keyword, filter: this.filterService.sector_filter_query }
     );
-
-    // return results;
   }
 
   userSearch(searchInput) {
@@ -77,7 +74,6 @@ export class SearchService {
   }
 
   problemSearch(searchInput) {
-    // ,order_by: {problem_voters_aggregate: {count: desc}}
     return this.apollo.watchQuery<any>({
       query: gql`query {
           search_problems_multiword(args: {search: "${searchInput}"},where: { is_draft: { _eq: false } }) {
@@ -132,7 +128,6 @@ export class SearchService {
           
     }
         `
-      // pollInterval: 500
     }).valueChanges;
   }
 
@@ -176,7 +171,6 @@ export class SearchService {
         }    
     }
         `
-      // pollInterval: 500
     }).valueChanges;
   }
 }

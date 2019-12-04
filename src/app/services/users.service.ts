@@ -1,9 +1,9 @@
-import { Injectable } from "@angular/core";
-import { Apollo } from "apollo-angular";
-import gql from "graphql-tag";
-import { AuthService } from "./auth.service";
-import { AnalysisScheme } from "aws-sdk/clients/cloudsearch";
-import { take } from "rxjs/operators";
+import { Injectable } from '@angular/core';
+import { Apollo } from 'apollo-angular';
+import gql from 'graphql-tag';
+import { AuthService } from './auth.service';
+import { AnalysisScheme } from 'aws-sdk/clients/cloudsearch';
+import { take } from 'rxjs/operators';
 
 export interface User {
   id?: Number;
@@ -31,17 +31,17 @@ export interface User {
 }
 
 @Injectable({
-  providedIn: "root"
+  providedIn: 'root'
 })
 export class UsersService {
   public allOrgs: any = {};
   public allUsers = {};
   public currentUser = {
     id: 0,
-    email: "",
-    name: "",
-    photo_url: "",
-    organization: ""
+    email: '',
+    name: '',
+    photo_url: '',
+    organization: ''
   };
 
   dashboardDrafts: any[] = [];
@@ -57,9 +57,6 @@ export class UsersService {
     this.getOrgsFromDB();
     this.getUsersFromDB();
     this.getCurrentUser();
-    // this.currentUser = {
-    //   id: 21
-    // };
   }
 
   public getCurrentUser() {
@@ -80,12 +77,10 @@ export class UsersService {
           }
         }
       `,
-          fetchPolicy: "no-cache"
-          // pollInterval: 500
+          fetchPolicy: 'no-cache'
         })
         .valueChanges.pipe(take(1))
         .subscribe(({ data }) => {
-          // console.log("<<<curr user data", data);
           if (data.users.length > 0) {
             Object.keys(this.currentUser).map(key => {
               if (data.users[0][key]) {
@@ -100,7 +95,6 @@ export class UsersService {
           }
         });
     }
-    // console.log(this.currentUser, "current user on user service");
   }
   public getOrgsFromDB() {
     this.apollo
@@ -113,20 +107,15 @@ export class UsersService {
             }
           }
         `,
-        fetchPolicy: "network-only"
-
-        // pollInterval: 500
+        fetchPolicy: 'network-only'
       })
       .valueChanges.pipe(take(1))
       .subscribe(({ data }) => {
         if (data.organizations.length > 0) {
           data.organizations.map(organization => {
             this.allOrgs[organization.name] = organization;
-            // this.allOrgs = Array.from(this.allOrgs);
-            // / console.log(this.allOrgs, "all orgs");
           });
         }
-        // console.log(data, "data from all orgs");
       });
   }
 
@@ -146,15 +135,14 @@ export class UsersService {
             }
           }
         `,
-        // pollInterval: 500
-        fetchPolicy: "network-only"
+
+        fetchPolicy: 'network-only'
       })
       .valueChanges.pipe(take(1))
       .subscribe(({ data }) => {
         if (data.users.length > 0) {
           data.users.map(user => {
             if (user.id && user.name) {
-              // console.log(user.name);
               this.allUsers[user.id] = {
                 id: user.id,
                 value: user.name
@@ -170,7 +158,6 @@ export class UsersService {
   }
 
   submitUserToDB(userData: User) {
-    console.log(userData, "user Data on edit testing");
     return this.apollo.mutate({
       mutation: gql`
         mutation upsert_users($users: [users_insert_input!]!) {

@@ -1,13 +1,13 @@
-import { Routes } from "@angular/router";
+import { Routes } from '@angular/router';
 
-import { GlobalSearchViewComponent } from "./global-search-view.component";
+import { GlobalSearchViewComponent } from './global-search-view.component';
 
 export const GlobalSearchViewRoutes: Routes = [
   {
-    path: "",
+    path: '',
     children: [
       {
-        path: "",
+        path: '',
         component: GlobalSearchViewComponent
       }
     ]

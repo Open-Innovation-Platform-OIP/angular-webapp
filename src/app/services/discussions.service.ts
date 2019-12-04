@@ -1,9 +1,9 @@
-import { Injectable } from "@angular/core";
-import { Apollo } from "apollo-angular";
-import gql from "graphql-tag";
-import { AuthService } from "./auth.service";
-// import { Subscription } from "rxjs";
-import { take } from "rxjs/operators";
+import { Injectable } from '@angular/core';
+import { Apollo } from 'apollo-angular';
+import gql from 'graphql-tag';
+import { AuthService } from './auth.service';
+
+import { take } from 'rxjs/operators';
 
 export interface Comment {
   id?: number; // new comments will automatically get ids from PostgreSQL. Edits will have an id.
@@ -16,14 +16,13 @@ export interface Comment {
 }
 
 @Injectable({
-  providedIn: "root"
+  providedIn: 'root'
 })
 export class DiscussionsService {
   constructor(private apollo: Apollo, private auth: AuthService) {}
 
   submitCommentToDB(comment: Comment, mentions?) {
     if (!(comment.problem_id || comment.solution_id)) {
-      console.log("cannot continue without problem or solution id");
       return false;
     }
     comment.user_id = this.auth.currentUserValue.id;
@@ -55,7 +54,6 @@ export class DiscussionsService {
       .subscribe(
         result => {
           if (result.data.insert_discussions.returning.length > 0) {
-            console.log(result.data.insert_discussions);
             if (mentions && mentions.length > 0) {
               mentions = mentions.map(mention => {
                 return {
@@ -63,7 +61,7 @@ export class DiscussionsService {
                   user_id: mention
                 };
               });
-              console.log(mentions, "mentions array of objects");
+
               this.submitMentionsToDB(mentions);
             }
           }
@@ -82,7 +80,7 @@ export class DiscussionsService {
           }
         }`;
     if (!is_problem) {
-      query.replace("problem_id", "solution_id");
+      query.replace('problem_id', 'solution_id');
     }
     return this.apollo.watchQuery<any>({
       query: gql`
@@ -103,7 +101,7 @@ export class DiscussionsService {
         }
       `,
       pollInterval: 500,
-      fetchPolicy: "network-only"
+      fetchPolicy: 'network-only'
     }).valueChanges;
   }
 
@@ -135,12 +133,7 @@ export class DiscussionsService {
       })
       .pipe(take(1))
       .subscribe(
-        result => {
-          console.log(result, "mention worked");
-          // if (result.data.insert_discussions.returning.length > 0) {
-          //   console.log(result.data.insert_discussions);
-          // }
-        },
+        result => {},
         err => {
           console.error(JSON.stringify(err));
         }

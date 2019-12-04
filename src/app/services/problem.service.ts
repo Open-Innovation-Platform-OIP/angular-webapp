@@ -1,15 +1,15 @@
-import { Injectable } from "@angular/core";
+import { Injectable } from '@angular/core';
 
-import { Apollo } from "apollo-angular";
-import gql from "graphql-tag";
-import swal from "sweetalert2";
-import { Router, ActivatedRoute } from "@angular/router";
-import { store } from "@angular/core/src/render3";
-import { TagsService } from "./tags.service";
-import { AuthService } from "./auth.service";
+import { Apollo } from 'apollo-angular';
+import gql from 'graphql-tag';
+import swal from 'sweetalert2';
+import { Router, ActivatedRoute } from '@angular/router';
+import { store } from '@angular/core/src/render3';
+import { TagsService } from './tags.service';
+import { AuthService } from './auth.service';
 
 @Injectable({
-  providedIn: "root"
+  providedIn: 'root'
 })
 export class ProblemService {
   enrichImgs: any[] = [];
@@ -51,4 +51,3 @@ export class ProblemService {
     });
   }
 }
-// }

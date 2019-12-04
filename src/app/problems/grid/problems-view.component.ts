@@ -61,7 +61,7 @@ export class ProblemsViewComponent implements OnInit, OnDestroy, AfterViewInit {
       .then(result => {
         this.getProblems();
       })
-      .catch(err => console.log(err, 'error'));
+      .catch(err => console.error(err, 'error'));
   }
 
   ngOnInit() {
@@ -153,7 +153,6 @@ export class ProblemsViewComponent implements OnInit, OnDestroy, AfterViewInit {
 
       this.problemViewSubscription.subscribe(
         result => {
-          console.log(result, 'results');
           if (result.data.problems.length > 0) {
             this.problems = result.data.problems;
           } else {

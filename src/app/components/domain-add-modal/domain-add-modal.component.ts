@@ -73,8 +73,6 @@ export class DomainAddModalComponent implements OnInit {
     this.tags.push(event.option.value);
     this.tagsInput.nativeElement.value = '';
     this.tagsCtrl.setValue(null);
-
-    // this.announcement(`Added ${event.option.value.value}`);
   }
 
   private _filter(value: string): string[] {
@@ -91,8 +89,6 @@ export class DomainAddModalComponent implements OnInit {
     const index = this.tags.indexOf(owner);
     if (index >= 0) {
       this.tags.splice(index, 1);
-      // this.removed.emit(owner);
-      // this.announcement(`Removed ${owner.value || owner.name}`);
     }
   }
 }

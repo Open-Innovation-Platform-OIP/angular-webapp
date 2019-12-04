@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
-// import { LocalStorage } from '@ngx-pwa/local-storage';
+
 import { JwtHelper } from 'angular2-jwt';
 import { Observable, BehaviorSubject } from 'rxjs';
 import { map } from 'rxjs/operators';
@@ -30,9 +30,7 @@ interface VerificationDetails {
   providedIn: 'root'
 })
 export class AuthService {
-  // authEndpoint = "https://auth-new.socialalpha.jaagalabs.com/auth/";
   authEndpoint = 'https://sa-auth-dev.dev.jaagalabs.com/auth/';
-  // authEndpoint = "https://test-auth.dev.jaagalabs.com/auth/";
 
   private jwtHelper;
   public user: Observable<any>;
@@ -45,7 +43,7 @@ export class AuthService {
     private router: Router // protected localStorage: LocalStorage
   ) {
     this.jwtHelper = new JwtHelper();
-    // this.getUser();
+
     this.currentUserSubject = new BehaviorSubject<any>(
       JSON.parse(localStorage.getItem('currentUser'))
     );
@@ -70,21 +68,16 @@ export class AuthService {
   }
 
   logout() {
-    console.log('deleting user token');
     // remove user from local storage to log user out
-    // this.localStorage.removeItem('user').subscribe(() => { });
+
     localStorage.removeItem('currentUser');
     this.currentUserSubject.next(null);
     this.apollo.getClient().resetStore();
-    // this.router.navigateByUrl("/landing-page");
-    window.location.href = `/landing-page`;
 
-    // location.replace('https://app.socialalpha.jaagalabs.com')
-    // location.reload();
+    window.location.href = `/landing-page`;
   }
 
   login(loginDetails) {
-    // console.log(loginDetails);
     const httpOptions = {
       headers: new HttpHeaders({
         'Content-Type': 'application/json'
@@ -98,12 +91,10 @@ export class AuthService {
       )
       .pipe(
         map(user => {
-          console.log(user, 'user login');
           if (user && user['token'] && user['id']) {
             user['email'] = loginDetails.email;
-            // localStorage.setItem('currentUser', JSON.stringify(user));
+
             return this.storeUser(user);
-            // this.currentUserSubject.next(<User>user);
           }
           return user;
         })
@@ -119,7 +110,7 @@ export class AuthService {
       !this.isExpired(user['token'])
     ) {
       localStorage.setItem('currentUser', JSON.stringify(user));
-      // this.currentUserSubject.next(<User>user);
+
       this.currentUserSubject = new BehaviorSubject<any>(
         JSON.parse(localStorage.getItem('currentUser'))
       );
@@ -130,7 +121,6 @@ export class AuthService {
   }
 
   register(user) {
-    // console.log(user);
     const httpOptions = {
       headers: new HttpHeaders({
         'Content-Type': 'application/json'
@@ -189,7 +179,6 @@ export class AuthService {
   }
 
   resetPassword(payload: ResetDetails) {
-    // console.log(resetDetails);
     const httpOptions = {
       headers: new HttpHeaders({
         'Content-Type': 'application/json'

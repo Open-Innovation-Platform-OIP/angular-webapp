@@ -1,29 +1,21 @@
-import { Component, OnInit, OnDestroy, ElementRef } from "@angular/core";
+import { Component, OnInit, OnDestroy, ElementRef } from '@angular/core';
 import { Title } from '@angular/platform-browser';
 import { FocusMonitor } from '@angular/cdk/a11y';
-import { isEmail } from "validator";
-import { AuthService } from "src/app/services/auth.service";
-import { Router, ActivatedRoute, NavigationEnd } from "@angular/router";
-import { first } from "rxjs/operators";
-import swal from "sweetalert2";
+import { isEmail } from 'validator';
+import { AuthService } from 'src/app/services/auth.service';
+import { Router, ActivatedRoute, NavigationEnd } from '@angular/router';
+import { first } from 'rxjs/operators';
+import swal from 'sweetalert2';
 import { FormGroup, FormControl, Validators } from '@angular/forms';
 import { Observable } from 'rxjs';
 
 declare var $: any;
 
-// export function passwordMismatch(control: FormControl): { [s: string]: boolean } {
-//   if (this.passwordMismatch.indexOf(control.value)) {
-//     return { 'mismatch': true };
-//   }
-//   return null;
-// };
-
 @Component({
-  selector: "app-register-cmp",
-  templateUrl: "./register.component.html"
+  selector: 'app-register-cmp',
+  templateUrl: './register.component.html'
 })
 export class RegisterComponent implements OnInit, OnDestroy {
-  // test: Date = new Date();
   user = {
     name: '',
     email: '',
@@ -31,7 +23,6 @@ export class RegisterComponent implements OnInit, OnDestroy {
     confirmPassword: ''
   };
   passwordRegex = new RegExp('^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.{6,})');
-  // mediumRegex = new RegExp("^(((?=.*[a-z])(?=.*[A-Z]))|((?=.*[a-z])(?=.*[0-9]))|((?=.*[A-Z])(?=.*[0-9])))(?=.{6,})");
 
   loading = false;
   registerForm: FormGroup;
@@ -42,30 +33,31 @@ export class RegisterComponent implements OnInit, OnDestroy {
     private currentTitle: Title,
     private focusMonitor: FocusMonitor,
     private elementRef: ElementRef,
-    private router: Router) { }
+    private router: Router
+  ) {}
 
   ngOnInit() {
     this.registerForm = new FormGroup({
-      email: new FormControl('', [
-        Validators.required,
-        Validators.email,
-      ]),
+      email: new FormControl('', [Validators.required, Validators.email]),
       name: new FormControl(null, [Validators.required]),
-      password: new FormControl(null, [Validators.required, Validators.pattern(this.passwordRegex)]),
-      confirmPassword: new FormControl(null, [Validators.required], this.passwordMismatch)
+      password: new FormControl(null, [
+        Validators.required,
+        Validators.pattern(this.passwordRegex)
+      ]),
+      confirmPassword: new FormControl(
+        null,
+        [Validators.required],
+        this.passwordMismatch
+      )
     });
 
-    this.router.events
-      .subscribe((event) => {
-        // console.log(event);
-        this.currentTitle.setTitle('Register');
-      }
-      );
-    // this.currentTitle.setTitle('Register');
+    this.router.events.subscribe(event => {
+      this.currentTitle.setTitle('Register');
+    });
 
-    const body = document.getElementsByTagName("body")[0];
-    body.classList.add("register-page");
-    body.classList.add("off-canvas-sidebar");
+    const body = document.getElementsByTagName('body')[0];
+    body.classList.add('register-page');
+    body.classList.add('off-canvas-sidebar');
 
     const pageHeading = this.elementRef.nativeElement.querySelector('#heading');
     setTimeout(() => {
@@ -74,7 +66,6 @@ export class RegisterComponent implements OnInit, OnDestroy {
   }
 
   passwordMismatch(control: FormControl): Promise<any> | Observable<any> {
-
     const promise = new Promise((resolve, reject) => {
       setTimeout(() => {
         const pwd = control.parent.value['password'];
@@ -82,7 +73,7 @@ export class RegisterComponent implements OnInit, OnDestroy {
         if (pwd === confirmPwd) {
           resolve(null);
         } else {
-          resolve({ 'mismatch': true });
+          resolve({ mismatch: true });
         }
       }, 10);
     });
@@ -91,9 +82,9 @@ export class RegisterComponent implements OnInit, OnDestroy {
   }
 
   ngOnDestroy() {
-    const body = document.getElementsByTagName("body")[0];
-    body.classList.remove("register-page");
-    body.classList.remove("off-canvas-sidebar");
+    const body = document.getElementsByTagName('body')[0];
+    body.classList.remove('register-page');
+    body.classList.remove('off-canvas-sidebar');
   }
   canSubmit() {
     if (
@@ -102,8 +93,6 @@ export class RegisterComponent implements OnInit, OnDestroy {
       this.user.password.length >= 4 &&
       this.user.password === this.user.confirmPassword
     ) {
-      // &&
-      // this.passwordRegex.test(this.user.password)
       return true;
     }
     return false;
@@ -112,20 +101,18 @@ export class RegisterComponent implements OnInit, OnDestroy {
     if (err) console.error(err);
     if (res) {
       console.log(res);
-      this.router.navigate([""]);
+      this.router.navigate(['']);
     }
   }
   register() {
     this.loading = true;
     this.auth.register(this.user).subscribe(
       res => {
-        // console.log(res, "signup response");
-        // this.router.navigateByUrl('/auth/verify');
-        if (res["is_invited"] && res["admin_invited"]) {
-          alert("Please login ");
+        if (res['is_invited'] && res['admin_invited']) {
+          alert('Please login ');
           this.router.navigateByUrl(`/auth/login`);
-        } else if (res["is_invited"] && !res["admin_invited"]) {
-          alert("User created.Please wait for admin approval ");
+        } else if (res['is_invited'] && !res['admin_invited']) {
+          alert('User created.Please wait for admin approval ');
           this.router.navigateByUrl(`/landing-page`);
         } else {
           this.router.navigateByUrl(

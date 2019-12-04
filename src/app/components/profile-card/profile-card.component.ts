@@ -16,7 +16,5 @@ export class ProfileCardComponent implements OnInit {
     public authService: AuthService
   ) {}
 
-  ngOnInit() {
-    // console.log(this.userData, "in card");
-  }
+  ngOnInit() {}
 }

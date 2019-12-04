@@ -14,12 +14,8 @@
       </div>
       <hr />
       <div *ngIf="drafts.length > 4" class="col-md-2" style="padding-top: 1em;">
-        <button
-          mat-raised-button
-          class="btn btn-warning btn-sm"
-          [routerLink]="['/dashboard/drafts', { type: 'drafts' }]"
-          queryParamsHandling="merge"
-        >
+        <button mat-raised-button class="btn btn-warning btn-sm"
+          [routerLink]="['/dashboard/drafts', { type: 'drafts' }]" queryParamsHandling="merge">
           View All ({{
             this.userService.dashboardDrafts.length +
               this.userService.solutionDrafts.length
@@ -32,17 +28,11 @@
     <div class="row">
       <div class="col-md-3" *ngFor="let draft of drafts; let i = index">
         <ng-container *ngIf="draft.problem_locations">
-          <app-problem-card
-            *ngIf="i < 4"
-            [problemData]="draft"
-          ></app-problem-card>
+          <app-problem-card *ngIf="i < 4" [problemData]="draft"></app-problem-card>
         </ng-container>
 
         <ng-container *ngIf="!draft.problem_locations">
-          <app-solution-card
-            *ngIf="i < 4"
-            [solutionData]="draft"
-          ></app-solution-card>
+          <app-solution-card *ngIf="i < 4" [solutionData]="draft"></app-solution-card>
         </ng-container>
       </div>
     </div>
@@ -53,17 +43,9 @@
           Problems added by you
         </h3>
       </div>
-      <div
-        *ngIf="userProblems.length > 4"
-        class="col-md-2"
-        style="padding-top: 1em;"
-      >
-        <button
-          mat-raised-button
-          class="btn btn-warning btn-sm"
-          [routerLink]="['/dashboard/problems', { type: 'problems' }]"
-          queryParamsHandling="merge"
-        >
+      <div *ngIf="userProblems.length > 4" class="col-md-2" style="padding-top: 1em;">
+        <button mat-raised-button class="btn btn-warning btn-sm"
+          [routerLink]="['/dashboard/problems', { type: 'problems' }]" queryParamsHandling="merge">
           View All ({{ userProblems.length }})
           <i class="material-icons" aria-hidden="true">keyboard_arrow_right</i>
         </button>
@@ -72,10 +54,7 @@
     <br />
     <div class="row">
       <div class="col-md-3" *ngFor="let problem of userProblems; let i = index">
-        <app-problem-card
-          *ngIf="i < 4"
-          [problemData]="problem"
-        ></app-problem-card>
+        <app-problem-card *ngIf="i < 4" [problemData]="problem"></app-problem-card>
       </div>
     </div>
 
@@ -85,17 +64,9 @@
           Solutions added by you
         </h3>
       </div>
-      <div
-        *ngIf="userSolutions.length > 4"
-        class="col-md-2"
-        style="padding-top: 1em;"
-      >
-        <button
-          mat-raised-button
-          class="btn btn-warning btn-sm"
-          [routerLink]="['/dashboard/solutions', { type: 'solutions' }]"
-          queryParamsHandling="merge"
-        >
+      <div *ngIf="userSolutions.length > 4" class="col-md-2" style="padding-top: 1em;">
+        <button mat-raised-button class="btn btn-warning btn-sm"
+          [routerLink]="['/dashboard/solutions', { type: 'solutions' }]" queryParamsHandling="merge">
           View All ({{ userSolutions.length }})
           <i class="material-icons" aria-hidden="true">keyboard_arrow_right</i>
         </button>
@@ -103,14 +74,8 @@
     </div>
     <br />
     <div class="row">
-      <div
-        class="col-md-3"
-        *ngFor="let solution of userSolutions; let i = index"
-      >
-        <app-solution-card
-          *ngIf="i < 4"
-          [solutionData]="solution"
-        ></app-solution-card>
+      <div class="col-md-3" *ngFor="let solution of userSolutions; let i = index">
+        <app-solution-card *ngIf="i < 4" [solutionData]="solution"></app-solution-card>
       </div>
     </div>
 
@@ -120,17 +85,9 @@
           Your contributions
         </h3>
       </div>
-      <div
-        *ngIf="objectKeys(contributions).length > 4"
-        class="col-md-2"
-        style="padding-top: 1em;"
-      >
-        <button
-          mat-raised-button
-          class="btn btn-warning btn-sm"
-          [routerLink]="['/dashboard/contributions', { type: 'contributions' }]"
-          queryParamsHandling="merge"
-        >
+      <div *ngIf="objectKeys(contributions).length > 4" class="col-md-2" style="padding-top: 1em;">
+        <button mat-raised-button class="btn btn-warning btn-sm"
+          [routerLink]="['/dashboard/contributions', { type: 'contributions' }]" queryParamsHandling="merge">
           View All ({{ objectKeys(contributions).length }})
           <i class="material-icons" aria-hidden="true">keyboard_arrow_right</i>
         </button>
@@ -138,49 +95,27 @@
     </div>
     <br />
     <div class="row">
-      <div
-        class="col-md-3"
-        *ngFor="let contribution of objectValues(contributions); let i = index"
-      >
-        <!-- <app-problem-card *ngIf="i < 4" [problemData]="problem"></app-problem-card> -->
+      <div class="col-md-3" *ngFor="let contribution of objectValues(contributions); let i = index">
+
         <ng-container *ngIf="contribution.problem_locations">
-          <app-problem-card
-            *ngIf="i < 4"
-            [index]="i"
-            [problemData]="contribution"
-          ></app-problem-card>
+          <app-problem-card *ngIf="i < 4" [index]="i" [problemData]="contribution"></app-problem-card>
         </ng-container>
 
         <ng-container *ngIf="!contribution.problem_locations">
-          <app-solution-card
-            *ngIf="i < 4"
-            [index]="i"
-            [solutionData]="contribution"
-          ></app-solution-card>
+          <app-solution-card *ngIf="i < 4" [index]="i" [solutionData]="contribution"></app-solution-card>
         </ng-container>
       </div>
     </div>
 
     <div class="row">
       <div class="col-md-10">
-        <h3
-          *ngIf="objectKeys(recommendedProblems).length > 0"
-          class="card-title"
-        >
+        <h3 *ngIf="objectKeys(recommendedProblems).length > 0" class="card-title">
           Problems you may be interested in
         </h3>
       </div>
-      <div
-        *ngIf="objectKeys(recommendedProblems).length > 4"
-        class="col-md-2"
-        style="padding-top: 1em;"
-      >
-        <button
-          mat-raised-button
-          class="btn btn-warning btn-sm"
-          [routerLink]="['/dashboard/interests', { type: 'interests' }]"
-          queryParamsHandling="merge"
-        >
+      <div *ngIf="objectKeys(recommendedProblems).length > 4" class="col-md-2" style="padding-top: 1em;">
+        <button mat-raised-button class="btn btn-warning btn-sm"
+          [routerLink]="['/dashboard/interests', { type: 'interests' }]" queryParamsHandling="merge">
           View All ({{ objectKeys(recommendedProblems).length }})
           <i class="material-icons" aria-hidden="true">keyboard_arrow_right</i>
         </button>
@@ -188,15 +123,8 @@
     </div>
     <br />
     <div class="row">
-      <div
-        class="col-md-3"
-        *ngFor="let problem of objectValues(recommendedProblems); let i = index"
-      >
-        <app-problem-card
-          *ngIf="i < 4"
-          [index]="i"
-          [problemData]="problem"
-        ></app-problem-card>
+      <div class="col-md-3" *ngFor="let problem of objectValues(recommendedProblems); let i = index">
+        <app-problem-card *ngIf="i < 4" [index]="i" [problemData]="problem"></app-problem-card>
       </div>
     </div>
 
@@ -206,17 +134,9 @@
           People with similar interests
         </h3>
       </div>
-      <div
-        *ngIf="objectKeys(recommendedUsers).length > 4"
-        class="col-md-2"
-        style="padding-top: 1em;"
-      >
-        <button
-          mat-raised-button
-          class="btn btn-warning btn-sm"
-          [routerLink]="['/dashboard/recommended-users', { type: 'users' }]"
-          queryParamsHandling="merge"
-        >
+      <div *ngIf="objectKeys(recommendedUsers).length > 4" class="col-md-2" style="padding-top: 1em;">
+        <button mat-raised-button class="btn btn-warning btn-sm"
+          [routerLink]="['/dashboard/recommended-users', { type: 'users' }]" queryParamsHandling="merge">
           View All ({{ objectKeys(recommendedUsers).length }})
           <i class="material-icons" aria-hidden="true">keyboard_arrow_right</i>
         </button>
@@ -224,15 +144,8 @@
     </div>
     <br />
     <div class="row">
-      <div
-        class="col-md-3"
-        *ngFor="let user of objectValues(recommendedUsers); let i = index"
-      >
-        <app-profile-card
-          *ngIf="i < 4"
-          [index]="i"
-          [userData]="user"
-        ></app-profile-card>
+      <div class="col-md-3" *ngFor="let user of objectValues(recommendedUsers); let i = index">
+        <app-profile-card *ngIf="i < 4" [index]="i" [userData]="user"></app-profile-card>
       </div>
     </div>
   </div>
@@ -242,15 +155,7 @@
   <div *ngIf="showLoader">
     <div class="loader">
       <svg class="circular" viewBox="25 25 50 50">
-        <circle
-          class="path"
-          cx="50"
-          cy="50"
-          r="20"
-          fill="none"
-          stroke-width="2"
-          stroke-miterlimit="10"
-        />
+        <circle class="path" cx="50" cy="50" r="20" fill="none" stroke-width="2" stroke-miterlimit="10" />
       </svg>
     </div>
   </div>
@@ -260,18 +165,12 @@
       <h3>New here?</h3>
       <p>
         Why not help enrich some of
-        <a [routerLink]="'/problems'" queryParamsHandling="merge"
-          >the problems</a
-        >
+        <a [routerLink]="'/problems'" queryParamsHandling="merge">the problems</a>
         on the platform? Or perhaps add a new one?
       </p>
       <p>
         Don't forget to
-        <a
-          [routerLink]="'/users/' + auth.currentUserValue.id"
-          queryParamsHandling="merge"
-          >update your profile</a
-        >
+        <a [routerLink]="'/users/' + auth.currentUserValue.id" queryParamsHandling="merge">update your profile</a>
         so that other users can find you!
       </p>
     </div>

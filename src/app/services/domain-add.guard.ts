@@ -30,11 +30,7 @@ export class DomainAddGuard implements CanActivate {
     } else {
       this.router.navigate(['/dashboard']);
 
-      // alert('wrong');
-
       return false;
     }
-
-    // return isAdmin;
   }
 }

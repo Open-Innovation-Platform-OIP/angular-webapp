@@ -46,56 +46,38 @@ export class FilterDropdownComponent implements OnInit {
     });
 
     this.sectors = this.tagsService.allTags;
-    // this.locations = this.geoService.allLocations;
 
     this.activatedRoute.queryParams.subscribe(params => {
-      console.log(params, 'params in dropdown');
       this.selectedSectors = this.filterService.filterSector(params);
-      // this.selectedLocationName = this.filterService.filterLocation(params).location_name;
+
       this.selectedLocation = this.filterService.filterLocation(params);
       if (Object.values(this.selectedLocation).length) {
         this.selectedLocationName = this.selectedLocation.location_name;
       }
       if (params.locationRange) {
-        console.log(typeof params.locationRange, 'location range');
         this.range = Math.round(+params.locationRange * 110).toString();
         this.filterService.range = +params.locationRange;
       } else {
         this.range = '0';
       }
     });
-    // this.selectedLocation = this.filterService.selectedLocation;
-    // this.selectedSectors = this.filterService.selectedSectors;
   }
 
   getLocation(input) {
-    // console.log(input, "input tag");
     this.geoService.getAddress(this.selectedLocationName).then(
       result => {
-        console.log(result, "location search result");
         this.locations = <Array<any>>result;
       },
       error => {
         console.error(error);
       }
     );
-
-    // var obj = personas;
-    // console.log(personas);
-    // var keys = Object.keys(obj);
-
-    // var filtered = keys.filter(function(key) {
-    //   return obj[key];
-    // });
-    // console.log(JSON.parse("{" + filtered.toString() + "}"));
-    // console.log(typeof JSON.parse("{" + filtered.toString() + "}"));
   }
 
   selectDropdown(event) {
     if (event && event.option && event.option.value) {
       let locationData = event.option.value.Location;
 
-      console.log(event, "event");
       this.selectedLocationName = locationData.Address.Label;
       this.selectedLocation = {
         location_name: locationData.Address.Label,
@@ -105,17 +87,15 @@ export class FilterDropdownComponent implements OnInit {
       };
 
       if (locationData.Address.City) {
-        this.selectedLocation["city"] = locationData.Address.City;
+        this.selectedLocation['city'] = locationData.Address.City;
       }
       if (locationData.Address.State) {
-        this.selectedLocation["state"] = locationData.Address.State;
+        this.selectedLocation['state'] = locationData.Address.State;
       }
       if (locationData.Address.Country) {
-        this.selectedLocation["country"] = locationData.Address.Country;
+        this.selectedLocation['country'] = locationData.Address.Country;
       }
     }
-
-    // console.log(this.selectedLocation, "Selected location 2");
 
     if (!this.selectedLocationName) {
       this.selectedLocation = {};
@@ -147,8 +127,6 @@ export class FilterDropdownComponent implements OnInit {
     if (Object.values(this.selectedLocation).length) {
       queries['filterLocation'] = JSON.stringify(this.selectedLocation);
     }
-
-    console.log(queries, 'queries');
 
     this.router.navigate(['/' + this.type], {
       queryParams: queries

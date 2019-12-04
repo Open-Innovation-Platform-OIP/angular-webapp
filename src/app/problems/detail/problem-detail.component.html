@@ -1,13 +1,8 @@
-<!-- discuss image and video modal ends -->
-
-<!--REWRITE-->
-
-<!--REWRITE-->
 
 <div class="main-content">
   <div class="container-fluid">
     <div class="row">
-      <!--Problem Details-->
+
       <div class="col-md-8">
         <div class="card card-product">
           <div class="card-header card-header-warning">
@@ -314,7 +309,7 @@
 
         <!--Problem Details-->
 
-        <!-- <h2 *ngIf="collaborators[0].intent">{{collaborators[0].intent}}</h2> -->
+
 
         <!--Show more images and videos-->
 
@@ -390,11 +385,7 @@
 
         <!--Enrichment divider-->
         <div class="row justify-content-center">
-          <!-- <a mat-button NguCarouselPrev class="leftRs">
-              <i class="material-icons">
-                keyboard_arrow_left
-              </i>
-            </a> -->
+          
           <button
             mat-raised-button
             *ngIf="auth.currentUserValue.id"
@@ -408,11 +399,7 @@
             Enrich
           </button>
           <p *ngIf="!auth.currentUserValue.id">Login to enrich the problem</p>
-          <!-- <a mat-button NguCarouselNext class="rightRs">
-              <i class="material-icons">
-                keyboard_arrow_right
-              </i>
-            </a> -->
+          
         </div>
         <!--Enrichment divider-->
 
@@ -473,34 +460,7 @@
 
         <!--Add Enrichment Modal-->
 
-        <!-- <div
-          class="modal fade "
-          id="enrichmentModal"
-          tabindex="-1"
-          role="dialog"
-          aria-labelledby="myModalLabel"
-          aria-hidden="true"
-        >
-          <div class="modal-dialog modal-notice modal-lg">
-            <div class="modal-content">
-              <div class="modal-header">
-                <h5 class="modal-title" id="myModalLabel">
-                  Add New Enrichment
-                </h5>
-                <button
-                  mat-button
-                  type="button"
-                  class="close"
-                  data-dismiss="modal"
-                  aria-hidden="true"
-                >
-                  <i class="material-icons">close</i>
-                </button>
-              </div>
-              <div class="modal-body"></div>
-            </div>
-          </div>
-        </div> -->
+        
 
         <!--Add Enrichment Modal-->
 
@@ -546,33 +506,7 @@
 
         <!--Edit Enrichment Modal-->
 
-        <!-- <div
-          class="modal fade editModal"
-          id="EditEnrichModal"
-          tabindex="-1"
-          role="dialog"
-          aria-labelledby="EditEnrichModalLabel"
-          aria-hidden="true"
-        >
-          <div class="modal-dialog modal-notice modal-lg">
-            <div class="modal-content">
-              <div class="modal-header">
-                <h5 class="modal-title" id="myModalLabel">Edit Enrichment</h5>
-                <button
-                  mat-button
-                  type="button"
-                  class="close"
-                  data-dismiss="modal"
-                  aria-hidden="true"
-                >
-                  <i class="material-icons">close</i>
-                </button>
-              </div>
-              <div class="modal-body"></div>
-            </div>
-          </div>
-        </div> -->
-
+        
         <!--Edit Enrichment Modal-->
 
         <hr />
@@ -817,11 +751,7 @@
 
         <!--Collaborate divider-->
         <div class="row justify-content-center">
-          <!-- <a mat-button>
-              <i class="material-icons">
-                keyboard_arrow_left
-              </i>
-            </a> -->
+         
           <button
             mat-raised-button
             *ngIf="auth.currentUserValue.id"
@@ -889,51 +819,14 @@
           </a>
         </ngu-carousel>
         <div class="row justify-content-center">
-          <!-- <p *ngIf="!collaborators[0]">No collaborators yet.</p> -->
+
 
           <p *ngIf="!collaborators[0]">No collaborators yet.</p>
-          <!-- <ng-template #notUser>&nbsp; No collaborators yet.</ng-template> -->
+
         </div>
         <hr />
 
-        <!--solution carousel start-->
-        <!-- <div class="row justify-content-center">
         
-          <h4 *ngIf="solutions[0]">Solutions</h4>
-        
-        </div>
-
-
-        <ngu-carousel #solutionCarousel [inputs]="carouselTileConfig" [dataSource]="carouselTileItemSolution$ | async"
-          *ngIf="solutions[0]">
-          <ngu-tile *nguCarouselDef="let solution; let i = index; let ani = animate" data-toggle="modal"
-            (click)="openModal('#enrichModal')">
-
-            <app-solution-card [solutionData]="solution" (clicked)=handleEnrichCardClicked($event)>
-            </app-solution-card>
-          </ngu-tile>
-
-         
-          <a mat-button NguCarouselPrev class="btn btn-white btn-just-icon btn-round leftRs"
-            *ngIf="solutions[0]&&solutions.length>2">
-            <i class="material-icons">
-              keyboard_arrow_left
-            </i>
-          </a>
-         
-          <a mat-button NguCarouselNext class="btn btn-white btn-just-icon btn-round rightRs"
-            *ngIf="solutions[0]&&solutions.length>2">
-            <i class="material-icons">
-              keyboard_arrow_right
-            </i>
-          </a>
-
-
-
-        </ngu-carousel>
-
-        -->
-
         <!--Add Collaborator Modal-->
         <div
           class="modal fade"
@@ -1163,4 +1056,4 @@
 </div>
 <!-- discuss image and video modal ends -->
 
-<!--REWRITE-->
+

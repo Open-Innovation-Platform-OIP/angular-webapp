@@ -20,9 +20,8 @@ import { Router, ActivatedRoute } from '@angular/router';
 import { map, startWith } from 'rxjs/operators';
 import { Observable } from 'rxjs';
 import { GeocoderService } from '../../services/geocoder.service';
-// import { fileUploadVariables } from "../../../environments/environment";
+
 import swal from 'sweetalert2';
-// var Buffer = require('buffer/').Buffer;
 
 import {
   FormControl,
@@ -90,7 +89,6 @@ export class WizardContainerComponent
   @Input() selectedLocations = [];
   @Input() revertFocus = false;
 
-  // @Input() canProceed: any = true;
   @Output() fieldsPopulated = new EventEmitter();
   @Output() smartSearchInput = new EventEmitter();
   @Output() changeFocus = new EventEmitter();
@@ -115,8 +113,6 @@ export class WizardContainerComponent
   ];
 
   objectKeys = Object.keys;
-
-  // locationCoordinates: any[] = [];
 
   localSectors: any[] = [];
 
@@ -181,20 +177,6 @@ export class WizardContainerComponent
       startWith(null),
       map((owner: string | null) => (owner ? this.filterOwners(owner) : []))
     );
-
-    // this.type = this.formBuilder.group({
-    //   title: [null, Validators.required],
-    //   description: [null, Validators.required],
-    //   location: [null, Validators.required],
-    //   population: [null, Validators.required],
-    //   organization: [null, Validators.required],
-    //   impact: [null, null],
-    //   extent: [null, null],
-    //   beneficiary: [null, null],
-    //   resources: [null, null],
-    //   sectors: [null, null],
-    //   media_url: [null, null]
-    // });
   }
 
   announcement(message: string, politeness?: AriaLivePoliteness) {
@@ -217,16 +199,12 @@ export class WizardContainerComponent
         input.value = '';
       }
       this.sectorCtrl.setValue(null);
-      // this.tagAdded.emit(this.sectors);
     }
   }
 
   selectedLocation(event) {
-    console.log(event, 'selected location');
     const location = event.option.value.Location;
     const matchType = event.option.value.MatchLevel;
-
-    // this.content.location.push(event.option.value);
 
     const coordinateArray = [
       location.DisplayPosition.Latitude,
@@ -249,11 +227,9 @@ export class WizardContainerComponent
     if (location.Address.Country) {
       locationData['country'] = location.Address.Country;
     }
-    console.log(this.selectedLocations, 'locations');
+
     this.selectedLocations.push(locationData);
     this.announcement(`Added ${locationData.location_name}`);
-
-    // //console.log(this.selectedLocations, "selected locations");
 
     this.locationSelected.emit(this.selectedLocations);
 
@@ -268,20 +244,16 @@ export class WizardContainerComponent
 
       // Add our sector
       if ((value || '').trim()) {
-        console.log(value, 'value location');
-        // this.content.location.push(value);
       }
       // Reset the input value
       if (input) {
         input.value = '';
       }
       this.sectorCtrl.setValue(null);
-      // this.tagAdded.emit(this.sectors);
     }
   }
 
   removeLocation(removedLocation) {
-    // console.log(removedLocation, 'removed location');
     this.selectedLocations = this.selectedLocations.filter(location => {
       if (
         location.location.coordinates[0] !==
@@ -292,11 +264,6 @@ export class WizardContainerComponent
         return location;
       }
     });
-    // const index = this.selectedLocations.indexOf(location);
-    // if (index >= 0) {
-    //   this.selectedLocations.splice(index, 1);
-    // }
-    // //console.log(this.selectedLocations, "selected locations after removal");
 
     this.locationRemoved.emit(removedLocation);
     this.announcement(`Remove ${removedLocation.location_name}`);
@@ -307,7 +274,6 @@ export class WizardContainerComponent
   }
 
   remove(sector: string): void {
-    console.log(sector, this.localSectors);
     const index = this.localSectors.indexOf(sector);
     if (index >= 0) {
       this.localSectors.splice(index, 1);
@@ -333,7 +299,6 @@ export class WizardContainerComponent
   }
 
   selected(event: MatAutocompleteSelectedEvent): void {
-    // //console.log(this.sectors, "test for sector");
     this.localSectors.push(event.option.viewValue);
     this.sectorInput.nativeElement.value = '';
     this.sectorCtrl.setValue(null);
@@ -351,13 +316,10 @@ export class WizardContainerComponent
 
   private filterOwners(value: String): any[] {
     if (typeof value === 'string') {
-      //console.log(value, "value in filtered owners");
       const filterValue = value.toLowerCase();
-      //console.log(filterValue, "value from filter");
 
       return Object.values(this.usersService.allUsers).filter(owner => {
         if (owner['value'].toLowerCase().indexOf(filterValue) === 0) {
-          //console.log(owner, "owner", filterValue);
           return owner;
         }
       });
@@ -381,9 +343,7 @@ export class WizardContainerComponent
     }
   }
 
-  addOwner(event) {
-    //console.log(event, "event");
-  }
+  addOwner(event) {}
 
   displayFieldCss(form: FormGroup, field: string) {
     return {
@@ -407,20 +367,11 @@ export class WizardContainerComponent
   }
 
   ngOnInit() {
-    // //console.log(
-    //   this.content.locations,
-    //   "wizard container locations",
-    //   this.content
-    // );
-    // this.selectedLocations = this.content.locations;
-    // this.accessUrl = fileUploadVariables.accessUrl;
-
     if (
       this.usersService.currentUser &&
       this.usersService.currentUser.organization
     ) {
       this.content.organization = this.usersService.currentUser.organization;
-      // console.log(this.content.organization, "test orgs on user");
     } else {
       this.content.organization = 'none';
     }
@@ -495,7 +446,7 @@ export class WizardContainerComponent
 
       onNext: function(tab, navigation, index) {
         window.scroll(0, 0);
-        //console.log("next tab");
+
         this.nextTab.emit(true);
 
         const $valid = $('.card-wizard form').valid();
@@ -736,23 +687,9 @@ export class WizardContainerComponent
     }
 
     if (this.localSectors.length <= this.sectors.length) {
-      // console.log(this.localSectors, ">>>>> local sectors ");
       this.localSectors = this.sectors;
-      // //console.log(
-      //   this.localSectors,
-      //   "local sectors on ng on change",
-      //   this.sectors
-      // );
     } else {
-      // //console.log(
-      //   this.localSectors,
-      //   "local sectors on ng on change",
-      //   "sectors from parent==",
-      //   this.sectors
-      // );
     }
-
-    //console.log("wizard container ngonchanges", this.selectedLocations);
 
     const input = $(this);
     if (input[0].files && input[0].files[0]) {
@@ -767,24 +704,16 @@ export class WizardContainerComponent
   }
 
   sendInputToParent(input) {
-    // //console.log(event, "test for event");
     this.smartSearchInput.emit(input);
   }
 
   checkForSpaces($event) {}
 
   publishContent() {
-    console.log(this.content, 'content');
     this.contentSubmitted.emit(this.content);
   }
 
   sendDataBack(event) {
-    // console.log("keyup event", event.srcElement.id);
-    // if (
-    //   event.srcElement &&
-    //   event.srcElement.id &&
-    //   !(event.srcElement.id === "title")
-    // )
     this.fieldsPopulated.emit(this.content);
   }
 
@@ -861,26 +790,18 @@ export class WizardContainerComponent
     let fileName;
     switch (type) {
       case 'image':
-        // //console.log(
-        //   this.content.image_urls[index],
-        //   "deleted image",
-        //   this.content.featured_url
-        // );
-
         if (
           this.content.image_urls[index].fileEndpoint ==
           this.content.featured_url
         ) {
           this.content.featured_url = '';
           this.content.featured_type = '';
-          console.log(this.content.featured_url, 'content featured');
-          console.log(this.content, 'content');
         }
         fileName = this.content.image_urls[index].fileEndpoint.split('/')[1];
         this.filesService.deleteFile(fileName).subscribe(
           result => console.log(result),
           error => {
-            console.log(error);
+            console.error(error);
           }
         );
         this.content.image_urls.splice(index, 1);
@@ -907,8 +828,7 @@ export class WizardContainerComponent
           this.content.featured_url = '';
           this.content.featured_type = '';
         }
-        // fileName = this.content.image_urls[index].fileEndpoint.split("/")[1];
-        // this.filesService.deleteFile(fileName);
+
         break;
 
       case 'link':
@@ -918,17 +838,14 @@ export class WizardContainerComponent
         break;
 
       default:
-        //console.log("remove item default case");
         break;
     }
   }
 
   setDefaultFeaturedImage() {
     if (!this.content.featured_url && this.content.image_urls.length) {
-      //console.log(this.content.image_urls[0].fileEndpoint, "deafault");
       this.content.featured_url = this.content.image_urls[0].fileEndpoint;
       this.content.featured_type = 'image';
-      console.log(this.content, 'default contetn');
     }
   }
 
@@ -1022,7 +939,6 @@ export class WizardContainerComponent
           break;
         }
         default: {
-          // console.log('unknown file type');
           alert('Unknown file type.');
           break;
         }
@@ -1061,25 +977,18 @@ export class WizardContainerComponent
         this.content.description &&
         this.content.organization &&
         this.localSectors.length &&
-        // this.content.min_population &&
         this.content.max_population
-
-        // &&
-        // this.content.location.length
       );
     } else {
       return (
         this.content.description &&
         this.content.organization &&
         this.content.max_population
-        // &&
-        // this.content.location.length
       );
     }
   }
 
   setFeatured(type, index) {
-    // //console.log(type, index);
     if (type === 'image') {
       this.content.featured_type = 'image';
       this.content.featured_url = this.content.image_urls[index].fileEndpoint;

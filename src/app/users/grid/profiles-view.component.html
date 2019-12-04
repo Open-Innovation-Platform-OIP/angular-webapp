@@ -1,28 +1,5 @@
 <div class="main-content">
   <div class="container-fluid">
-    <!-- <div class="row justify-content-center">
-      <button mat-raised-button class="btn btn-default btn-lg" [routerLink]="['/profiles/add']">Add User Profile</button>
-      <div class="col-1"></div>
-      <button mat-raised-button class="btn btn-warning btn-lg" [routerLink]="['/profiles/details']">View User Profile</button>
-      <div class="col-1"></div>
-      <button mat-raised-button class="btn btn-warning btn-lg" [routerLink]="['/login']">Open Login Page</button>
-    </div> -->
-    <!-- <div class="row">
-      <div class="col-3">
-        <app-profile-card></app-profile-card>
-      </div>
-      <div class="col-3">
-        <app-profile-card></app-profile-card>
-      </div>
-      <div class="col-3">
-        <app-profile-card></app-profile-card>
-      </div>
-      <div class="col-3">
-        <app-profile-card></app-profile-card>
-      </div>
-    </div>
-  </div>
-</div> -->
 
     <div class="row" *ngIf="users | async as users">
       <div class="col-md-3" *ngFor="let user of users.data.users">
@@ -33,4 +10,3 @@
     </div>
   </div>
 </div>
-<!-- <app-login-cmp></app-login-cmp> -->

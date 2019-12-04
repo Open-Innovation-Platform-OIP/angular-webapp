@@ -104,13 +104,13 @@ export class SidebarComponent implements OnInit {
   sidebarClose() {
     const $toggle = document.getElementsByClassName('navbar-toggler')[0];
     const body = document.getElementsByTagName('body')[0];
-    // this.toggleButton.classList.remove("toggled");
+
     const $layer = document.createElement('div');
     $layer.setAttribute('class', 'close-layer');
 
     this.sidebarVisible = false;
     body.classList.remove('nav-open');
-    // $('html').removeClass('nav-open');
+
     body.classList.remove('nav-open');
     if ($layer) {
       $layer.remove();

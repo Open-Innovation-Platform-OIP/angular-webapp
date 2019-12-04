@@ -17,16 +17,11 @@ export class EnrichmentCardComponent implements OnInit {
   constructor(private auth: AuthService, private filesService: FilesService) {}
 
   ngOnInit() {
-    // if (this.enrichmentData && this.enrichmentData.voted_by) {
-    //   this.numberOfVotes = this.enrichmentData.voted_by.length;
-    // }
-
     this.enrichmentData.enrichment_voters.map(voter => {
       this.voters.add(voter.user_id);
     });
   }
   cardClicked() {
-    console.log('card clicked');
     this.clicked.emit(this.enrichmentData);
   }
 

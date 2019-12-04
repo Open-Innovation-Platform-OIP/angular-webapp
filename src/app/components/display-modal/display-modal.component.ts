@@ -5,33 +5,29 @@ import {
   Input,
   Output,
   EventEmitter
-} from "@angular/core";
-import { EmbedVideoService } from "ngx-embed-video";
-// import { fileUploadVariables } from "../../../environments/environment";
-import { FilesService } from "../../services/files.service";
+} from '@angular/core';
+import { EmbedVideoService } from 'ngx-embed-video';
+
+import { FilesService } from '../../services/files.service';
 @Component({
-  selector: "app-display-modal",
-  templateUrl: "./display-modal.component.html",
-  styleUrls: ["./display-modal.component.css"]
+  selector: 'app-display-modal',
+  templateUrl: './display-modal.component.html',
+  styleUrls: ['./display-modal.component.css']
 })
 export class DisplayModalComponent implements OnInit {
   @Input() source;
   iframe_html: any;
-  // filesService.fileAccessUrl: string = "";
 
   constructor(
     private embedService: EmbedVideoService,
     private filesService: FilesService
   ) {}
 
-  ngOnInit() {
-    // this.filesService.fileAccessUrl = fileUploadVariables.accessUrl + "/";
-    // console.log(this.source, "source");
-  }
+  ngOnInit() {}
 
   checkUrlIsImg(url) {
-    var arr = ["jpeg", "jpg", "gif", "png"];
-    var ext = url.substring(url.lastIndexOf(".") + 1);
+    var arr = ['jpeg', 'jpg', 'gif', 'png'];
+    var ext = url.substring(url.lastIndexOf('.') + 1);
     if (arr.indexOf(ext) > -1) {
       return true;
     } else {
@@ -39,8 +35,8 @@ export class DisplayModalComponent implements OnInit {
     }
   }
   checkUrlIsVideo(url) {
-    var arr = ["mp4", "avi", "webm", "wmv", "quicktime"];
-    var ext = url.substring(url.lastIndexOf(".") + 1);
+    var arr = ['mp4', 'avi', 'webm', 'wmv', 'quicktime'];
+    var ext = url.substring(url.lastIndexOf('.') + 1);
     if (arr.indexOf(ext) > -1) {
       return true;
     } else {
@@ -49,16 +45,15 @@ export class DisplayModalComponent implements OnInit {
   }
 
   checkUrlIsEmbeded(url) {
-    // console.log(url, "url embed");
-    var arr = ["youtube", "vimeo", "dailymotion"];
-    // var ext = url.substring(url.lastIndexOf(".") + 1);
+    var arr = ['youtube', 'vimeo', 'dailymotion'];
+
     let filtered = arr.filter(provider => {
       return url.indexOf(provider) > -1;
     });
 
     if (filtered.length) {
       this.iframe_html = this.iframe_html = this.embedService.embed(url, {
-        attr: { width: "100%", height: 500 }
+        attr: { width: '100%', height: 500 }
       });
       return true;
     } else {

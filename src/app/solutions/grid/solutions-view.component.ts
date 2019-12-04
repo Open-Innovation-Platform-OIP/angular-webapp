@@ -127,7 +127,6 @@ export class SolutionsViewComponent
       });
       this.solutionViewSubscription = this.solutionViewQuery.valueChanges.subscribe(
         result => {
-          console.log(result, 'solution view result');
           if (result.data.solutions.length > 0) {
             this.solutions = result.data.solutions;
           } else {

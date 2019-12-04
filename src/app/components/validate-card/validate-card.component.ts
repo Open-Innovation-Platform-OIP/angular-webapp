@@ -1,10 +1,10 @@
-import { Component, OnInit, Input, Output, EventEmitter } from "@angular/core";
-import { AuthService } from "../../services/auth.service";
+import { Component, OnInit, Input, Output, EventEmitter } from '@angular/core';
+import { AuthService } from '../../services/auth.service';
 
 @Component({
-  selector: "app-validate-card",
-  templateUrl: "./validate-card.component.html",
-  styleUrls: ["./validate-card.component.css"]
+  selector: 'app-validate-card',
+  templateUrl: './validate-card.component.html',
+  styleUrls: ['./validate-card.component.css']
 })
 export class ValidateCardComponent implements OnInit {
   @Input() validationData: any;
@@ -12,9 +12,7 @@ export class ValidateCardComponent implements OnInit {
 
   constructor(private auth: AuthService) {}
 
-  ngOnInit() {
-    // console.log("validate-card: ", this.validationData);
-  }
+  ngOnInit() {}
   cardClicked() {
     this.clicked.emit(this.validationData);
   }

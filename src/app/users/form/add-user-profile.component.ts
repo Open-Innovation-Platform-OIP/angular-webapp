@@ -175,16 +175,14 @@ export class AddUserProfileComponent
   }
 
   deleteProfileImage(image) {
-    console.log(image);
     const fileName = image.fileEndpoint.split('/')[1];
 
     this.filesService.deleteFile(fileName).subscribe(
       result => {
-        console.log(result);
         this.user.photo_url = {};
       },
       error => {
-        console.log(error);
+        console.error(error);
       }
     );
   }
@@ -262,21 +260,11 @@ export class AddUserProfileComponent
         console.error(error);
       }
     );
-
-    // var obj = personas;
-    // console.log(personas);
-    // var keys = Object.keys(obj);
-
-    // var filtered = keys.filter(function(key) {
-    //   return obj[key];
-    // });
-    // console.log(JSON.parse("{" + filtered.toString() + "}"));
-    // console.log(typeof JSON.parse("{" + filtered.toString() + "}"));
   }
   public storeLocation(event) {
     const locationData = event.option.value.Location;
     const matchType = event.option.value.MatchLevel;
-    // this.user.location = location.option.value;
+
     this.locationData = [];
     const coordinateArray = [
       locationData.DisplayPosition.Latitude,
@@ -378,7 +366,6 @@ export class AddUserProfileComponent
         `,
 
             fetchPolicy: 'network-only'
-            // pollInterval: 500
           })
           .valueChanges.pipe(take(1))
           .subscribe(
@@ -389,19 +376,17 @@ export class AddUserProfileComponent
                     this.user[key] = data.users[0][key];
                   }
                 });
-                console.log(this.user, 'user data');
 
                 if (data.users[0].user_locations.length) {
                   const userLocationFromDB =
                     data.users[0].user_locations[0].location;
                   delete userLocationFromDB.__typename;
-                  console.log(data.users[0].user_locations, 'user locations');
+
                   this.userLocationName = userLocationFromDB.location_name;
 
                   this.prevLocation = userLocationFromDB;
 
                   this.locationData.push(userLocationFromDB);
-                  console.log(this.locationData, 'location data ng on it');
                 }
 
                 if (data.users[0].organizationByOrganizationId) {
@@ -418,7 +403,6 @@ export class AddUserProfileComponent
               });
             },
             error => {
-              console.log('could not get user due to', error);
               console.error(JSON.stringify(error));
             }
           );
@@ -435,7 +419,6 @@ export class AddUserProfileComponent
   }
 
   onValChange(event, type) {
-    console.log(this.user[`${type}_private`], 'private toggle data', this.user);
     this.user[`${type}_private`] = event.checked;
   }
 
@@ -483,8 +466,6 @@ export class AddUserProfileComponent
         const user_location = new Set();
         if (this.locationData.length) {
           this.locationData.map(location => {
-            // const locationUniqueId =
-            //   location.lat.toString() + location.long.toString();
             if (
               this.geoService.allLocations[location.location_name] &&
               this.geoService.allLocations[location.location_name].id
@@ -575,17 +556,13 @@ export class AddUserProfileComponent
 
   onSubmit() {
     // adding persona before submitting
-    // this.user.personas = personas;
 
     if (this.imageBlob) {
-      console.log('inside image blob');
-
       // Handle the image name if you want
       this.filesService
         .fileUpload(this.imageBlob, this.imageBlob['type'])
 
         .then(values => {
-          console.log(values, 'user values');
           this.user.photo_url = {};
           this.user.photo_url.fileEndpoint = values['fileEndpoint'];
           this.user.photo_url.mimeType = this.imageBlob['type'];
@@ -594,7 +571,7 @@ export class AddUserProfileComponent
           this.updateProfileToDb();
         })
         .catch(e => {
-          console.log('Err:: ', e);
+          console.error('Err:: ', e);
           this.updateProfileToDb();
         });
     } else {

@@ -28,9 +28,6 @@
 
           </mat-form-field>
 
-          <!-- </form> -->
-
-          <!-- <form class="form-horizontal"> -->
           <mat-form-field class="example-chip-list">
             <mat-chip-list #chipList>
               <input placeholder="Org" name="org" #orgsInput [formControl]="orgsCtrl" input="test"
@@ -40,8 +37,7 @@
 
 
 
-              <!-- <input placeholder="Org" matInput type="text" #orgsInput name="org" required [matAutocomplete]="auto"
-                (ngModelChange)="getOrg($event)" [ngModelOptions]="{standalone: true}" [(ngModel)]="orgName" /> -->
+
             </mat-chip-list>
             <mat-chip *ngFor="let org of orgs" [selectable]="selectable" [removable]="removable"
               (removed)="removeOrg(org)" style="margin-right:0.3em; margin-bottom: 0.4em;">
@@ -62,7 +58,7 @@
             </mat-autocomplete>
           </mat-form-field>
 
-          <!-- </form> -->
+
 
 
 

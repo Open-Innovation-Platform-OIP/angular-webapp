@@ -58,7 +58,7 @@
               "><img src="../../../assets/img/video_icon.png" [alt]="['video attachment', i + 1]" />
             </a>
 
-            <!-- <p>{{testMimeType(attachment.mimeType)}}</p> -->
+
             <a href="javascript:void(0);" *ngIf="testMimeType(attachment.mimeType) && i < attachmentToShow" (click)="
                 assignUrl(comment.attachments, i, 'comment-' + comment.id)
               "><img src="../../../assets/img/document_icon.png" [alt]="['document attachment', i + 1]" />

@@ -46,7 +46,6 @@ export class LoginComponent implements OnInit, OnDestroy {
   ngOnInit() {
     const pageHeading = this.element.nativeElement.querySelector('#heading');
     setTimeout(() => {
-      // this.liveAnnouncer.announce('Login Page');
       this.focusMonitor.focusVia(pageHeading, 'program');
     }, 1000);
     this.currentTitle.setTitle('Login');
@@ -58,14 +57,12 @@ export class LoginComponent implements OnInit, OnDestroy {
     body.classList.add('off-canvas-sidebar');
     const card = document.getElementsByClassName('card')[0];
     setTimeout(function() {
-      // after 1000 ms we add the class animated to the login/register card
       card.classList.remove('card-hidden');
     }, 700);
     this.route.queryParams.subscribe(params => {
-      // console.log(params);
       const err = params['err'];
       if (err) {
-        console.log(err);
+        console.error(err);
         alert(err);
         return false;
       }
@@ -81,22 +78,17 @@ export class LoginComponent implements OnInit, OnDestroy {
         user['is_admin'] = false;
       }
       this.returnUrl = params['returnUrl'] || '/';
-      console.log(user, 'user on enter');
+
       if (user && user['token'] && user['id'] && user['email']) {
         const res = this.auth.storeUser(user);
         if (res) {
-          // this.
-          console.log('valid token for', this.auth.currentUserValue.email);
-          // this.router.navigate([this.returnUrl]);
           window.location.href = `${this.returnUrl}`;
         } else {
-          // console.log('invalid token');
           alert('Invalid login. Please try again');
         }
       }
     });
     this.loading = false;
-    // this.returnUrl = this.route.snapshot.queryParams["returnUrl"] || "/";
   }
   sidebarToggle() {
     var toggleButton = this.toggleButton;
@@ -120,13 +112,10 @@ export class LoginComponent implements OnInit, OnDestroy {
     body.classList.remove('off-canvas-sidebar');
   }
 
-  onTyping(event) {
-    // console.log(this.loginDetails);
-  }
+  onTyping(event) {}
 
   canSubmit() {
     if (isEmail(this.loginDetails.email) && this.loginDetails.password) {
-      // console.log('ok');
       return true;
     }
     return false;
@@ -141,16 +130,13 @@ export class LoginComponent implements OnInit, OnDestroy {
     }
     this.submitted = true;
     this.loading = true;
-    // this.auth.login(this.loginDetails, this.done);
+
     this.auth
       .login(this.loginDetails)
       .pipe(first())
       .subscribe(
         data => {
-          // this.router.navigate([this.returnUrl]);
-          // console.log(this.returnUrl, "return url");
           window.location.href = `${this.returnUrl}`;
-          // location.reload();
 
           this.userService.getCurrentUser();
 
@@ -223,7 +209,6 @@ export class LoginComponent implements OnInit, OnDestroy {
             this.showNotification(['top', 'center', 4, 'warning', 3000, msg]);
           }
           this.loading = false;
-          // alert(error.error.errors[0].msg);
         }
       );
   }

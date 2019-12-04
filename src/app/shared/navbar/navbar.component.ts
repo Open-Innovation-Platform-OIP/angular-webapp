@@ -35,8 +35,7 @@ import gql from 'graphql-tag';
 import { AuthService } from '../../services/auth.service';
 import { UsersService } from '../../services/users.service';
 import { Integer } from 'aws-sdk/clients/comprehendmedical';
-// import { NotificationsComponent } from "src/app/components/notifications/notifications.component";
-// import { SearchService } from "../../search.service";
+
 declare var $: any;
 @Component({
   selector: 'app-navbar-cmp',
@@ -53,9 +52,7 @@ export class NavbarComponent implements OnInit, OnDestroy {
   private toggleButton: any;
   private sidebarVisible: boolean;
   private _router: Subscription;
-  // notifications_updated = [];
-  // notifications_not_updated = [];
-  // no_notification: Integer;
+
   user_id: any;
   notifications = {};
   url: any;
@@ -64,13 +61,7 @@ export class NavbarComponent implements OnInit, OnDestroy {
   getNotificationsSub: Subscription;
   @ViewChild('app-navbar-cmp') button: any;
 
-  // form = {
-  //   searchT: null
-  // }
-  // searchT: any;
-  // searchResults = [];
   noResult = 'No Search Results';
-  // searchUser: any;
 
   problemSearchResults: any;
   userSearchResults: any;
@@ -89,8 +80,6 @@ export class NavbarComponent implements OnInit, OnDestroy {
     this.location = location;
     this.nativeElement = element.nativeElement;
     this.sidebarVisible = false;
-
-    // console.log(this.user_id);
   }
 
   minimizeSidebar() {
@@ -134,7 +123,7 @@ export class NavbarComponent implements OnInit, OnDestroy {
     } else {
       setTimeout(function() {
         body.classList.add('hide-sidebar');
-        // $('.sidebar').addClass('animation');
+
         misc.hide_sidebar_active = true;
       }, 300);
     }
@@ -152,8 +141,6 @@ export class NavbarComponent implements OnInit, OnDestroy {
 
   ngOnInit() {
     this.user_id = this.auth.currentUserValue.id;
-    console.log('USER ID', this.user_id);
-    console.log('USER data', this.usersService.currentUser);
 
     this.listTitles = ROUTES.filter(listTitle => listTitle);
 
@@ -177,7 +164,6 @@ export class NavbarComponent implements OnInit, OnDestroy {
         }
       });
 
-    // if (this.user_id) {
     this.getNotificationsSub = this.apollo
       .watchQuery<any>({
         query: gql`
@@ -223,7 +209,6 @@ export class NavbarComponent implements OnInit, OnDestroy {
       })
       .valueChanges.subscribe(
         ({ data }) => {
-          console.log(data, 'from notifications');
           data.notifications.map(notification => {
             if (notification.discussion) {
               notification.discussion.text = notification.discussion.text.replace(
@@ -233,16 +218,11 @@ export class NavbarComponent implements OnInit, OnDestroy {
             }
             this.notifications[notification.id] = notification;
           });
-
-          // this.notifications = data.notifications;
-          // this.no_notification = this.notifications.length;
         },
         err => {
-          console.log('could not get notifications', err);
           console.error(JSON.stringify(err));
         }
       );
-    // }
   }
 
   onResize(event) {
@@ -299,32 +279,10 @@ export class NavbarComponent implements OnInit, OnDestroy {
     this.sidebarVisible = true;
   }
 
-  // getNotifications() {
-  //   this.notifications_updated = [];
-  //   this.notifications_not_updated = [];
-  //   for (var i = 0; i < this.notifications.length; i++) {
-  //     if (this.notifications[i].is_update === true) {
-  //       this.notifications_updated.push(this.notifications[i]);
-  //     } else if (this.notifications[i].is_update === false) {
-  //       this.notifications_not_updated.push(this.notifications[i]);
-  //     }
-  //   }
-  //   console.log(this.notifications_updated);
-  //   console.log(this.notifications_not_updated);
-  // }
-
   onRead(event) {
-    console.log(event.srcElement.name, 'event.srcElem');
     const notification_id = Number(event.srcElement.name);
 
     delete this.notifications[notification_id];
-    console.log(this.notifications, 'notifications');
-    console.log(
-      Object.values(this.notifications).length,
-      'notification delete',
-      'notification id==',
-      notification_id
-    );
 
     this.apollo
       .mutate<any>({
@@ -343,14 +301,12 @@ export class NavbarComponent implements OnInit, OnDestroy {
         `
       })
       .pipe(take(1))
-      .subscribe(({ data }) => {
-        console.log(data);
-      });
+      .subscribe(({ data }) => {});
   }
 
   allRead() {
     const notifications = [];
-    // const notifications = Object.assign({}, this.notifications);
+
     Object.keys(this.notifications).map(notification_id => {
       const notification = this.notifications[notification_id];
       notifications.push({
@@ -386,34 +342,11 @@ export class NavbarComponent implements OnInit, OnDestroy {
       })
       .pipe(take(1))
       .subscribe(
-        data => {
-          console.log(data);
-          // this.router.navigate(['products/items']);
-        },
+        data => {},
         err => {
           console.error(JSON.stringify(err));
         }
       );
-    // this.apollo
-    //   .mutate<any>({
-    //     mutation: gql`
-    //       mutation set_read {
-    //         update_notifications(
-    //           where: { id: { _eq: id } }
-    //           _set: { read: true }
-    //         ) {
-    //           affected_rows
-    //           returning {
-    //             id
-    //             read
-    //           }
-    //         }
-    //       }
-    //     `
-    //   })
-    //   .subscribe(({ data }) => {
-    //     console.log(data);
-    //   });
   }
 
   sidebarClose() {
@@ -425,7 +358,7 @@ export class NavbarComponent implements OnInit, OnDestroy {
 
     this.sidebarVisible = false;
     body.classList.remove('nav-open');
-    // $('html').removeClass('nav-open');
+
     body.classList.remove('nav-open');
     if ($layer) {
       $layer.remove();
@@ -445,18 +378,6 @@ export class NavbarComponent implements OnInit, OnDestroy {
       this.sidebarClose();
     }
   }
-
-  // onFocus() {
-  //   this.router.navigateByUrl("/search");
-  // }
-
-  // onBlur() {
-  //   this.router.navigateByUrl("/problems");
-  // }
-
-  /* hideSearchResults() {
-      this.router.navigateByUrl("/problems");
-    } */
 
   getTitle() {
     const titlee: any = this.location.prepareExternalUrl(this.location.path());
@@ -499,74 +420,7 @@ export class NavbarComponent implements OnInit, OnDestroy {
 
   logout() {
     this.auth.logout();
-    // this.router.navigate(["/landing-page"]);
   }
-
-  // GlobalSearch() {
-  //   if (this.searchT === undefined) {
-  //     window.alert("Enter Text to Search");
-  //   } else {
-  //     console.log("Your Search Term is : ", this.searchT);
-  //     this.apollo
-  //       .watchQuery<any>({
-  //         query: gql`query {
-  //           search_problems(
-  //           args: {search: "${this.searchT}"}
-  //           ) {
-  //             id
-  //             title
-  //             description
-  //   }, search_users(args:{search:"${this.searchT}"}) {
-  //           id
-  //           name
-  //           email
-  //           }
-  //           }`
-  //       })
-  //       .valueChanges.subscribe(val => {
-  //         // console.log('Search Result : ', val.data.search_problems);
-  //         this.searchText = val.data.search_problems;
-  //         this.searchUser = val.data.search_users;
-  //       });
-  //   }
-  // }
-
-  // globalSearch(searchInput: string) {
-  // this.router.navigateByUrl(`/search/${searchInput}`);
-  // if (searchInput.length >= 3) {
-  //   // this.searchResults = [];
-  //   this.apollo
-  //     .watchQuery<any>({
-  //       query: gql`query {
-  //           search_problems(
-  //           args: {search: "${searchInput}"}
-  //           ) {
-  //             id
-  //             title
-  //             description
-  //   }, search_users(args:{search:"${searchInput}"}) {
-  //           id
-  //           name
-  //           email
-  //           }
-  //           }`
-  //     })
-  //     .valueChanges.subscribe(value => {
-  //       this.search.globalProblemSearchResults = value.data.search_problems;
-  //       this.userSearchResults = value.data.search_users;
-  //       console.log(
-  //         "Problem results = ",
-  //         this.search.globalProblemSearchResults
-  //       );
-  //       // console.log('searchValue : ', searchT);
-  //       // console.log('SearchText : ', this.searchText);
-  //       // console.log('SearchUser : ', this.searchUser);
-  //     });
-  // } else {
-  //   this.search.globalProblemSearchResults = null;
-  //   this.userSearchResults = null;
-  // }
-  // }
 
   ngOnDestroy() {
     this.getNotificationsSub.unsubscribe();

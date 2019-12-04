@@ -17,7 +17,6 @@ import { GeocoderService } from '../services/geocoder.service';
 import { Subscription } from 'rxjs';
 import swal from 'sweetalert2';
 import { FocusMonitor, FocusOrigin } from '@angular/cdk/a11y';
-// import { Router, ActivatedRoute } from "@angular/router";
 
 @Component({
   selector: 'app-enrichment-form',
@@ -64,7 +63,6 @@ export class EnrichmentFormComponent implements OnInit, OnDestroy {
   ) {}
 
   ngOnInit() {
-    // console.log(this.route.snapshot.paramMap.get("problemId"), "problemid");
     this.problemId = Number(this.route.snapshot.paramMap.get('problemId'));
 
     if (this.problemId) {
@@ -118,33 +116,19 @@ export class EnrichmentFormComponent implements OnInit, OnDestroy {
                         }
                     }
                     `
-          // fetchPolicy: "network-only"
-          // pollInterval: 500,
         })
         .valueChanges.pipe(take(1))
         .subscribe(
           result => {
-            console.log(result, 'result');
             if (
               result.data.problems.length >= 1 &&
               result.data.problems[0].id
             ) {
-              // this.enrichmentData = result.data.enrichments[0];
-              // this.enrichmentData["id"] = result.data.enrichments[0].id;
-              // Object.keys(this.enrichmentData).map(key => {
-              //   // console.log(key, result.data.problems[0][key]);
-              //   if (result.data.enrichments[0][key]) {
-              //     this.enrichmentData[key] = result.data.enrichments[0][key];
-              //   }
-              // });
-
               this.problemData = result.data.problems[0];
-
-              console.log(this.problemData, 'problemData');
             }
           },
           err => {
-            console.log('error', err);
+            console.error('error', err);
             console.error(JSON.stringify(err));
           }
         );
@@ -152,7 +136,6 @@ export class EnrichmentFormComponent implements OnInit, OnDestroy {
 
     this.route.params.pipe(first()).subscribe(params => {
       if (params.id) {
-        console.log(params.id, 'params id in enrichment');
         this.apollo
           .watchQuery<any>({
             query: gql`
@@ -239,20 +222,16 @@ export class EnrichmentFormComponent implements OnInit, OnDestroy {
                         }
                         `,
             fetchPolicy: 'network-only'
-            // pollInterval: 500
           })
           .valueChanges.pipe(take(1))
           .subscribe(
             result => {
-              console.log(result, 'result');
               if (
                 result.data.enrichments.length >= 1 &&
                 result.data.enrichments[0].id
               ) {
-                // this.enrichmentData = result.data.enrichments[0];
                 this.enrichmentData['id'] = result.data.enrichments[0].id;
                 Object.keys(this.enrichmentData).map(key => {
-                  // console.log(key, result.data.problems[0][key]);
                   if (result.data.enrichments[0][key]) {
                     this.enrichmentData[key] = result.data.enrichments[0][key];
                   }
@@ -271,11 +250,10 @@ export class EnrichmentFormComponent implements OnInit, OnDestroy {
 
                 this.problemData =
                   result.data.enrichments[0].problemsByproblemId;
-                console.log(this.problemData, 'on edit problme data');
               }
             },
             err => {
-              console.log('error', err);
+              console.error('error', err);
               console.error(JSON.stringify(err));
             }
           );
@@ -285,12 +263,9 @@ export class EnrichmentFormComponent implements OnInit, OnDestroy {
 
   addLocation(locations) {
     this.enrichmentLocations = locations;
-    console.log(this.geoService.allLocations, 'all locations');
   }
 
   removeLocation(removedLocation) {
-    console.log(this.enrichmentLocations, 'removed location');
-
     this.enrichmentLocations = this.enrichmentLocations.filter(location => {
       if (location.location_name !== removedLocation.location_name) {
         return location;
@@ -318,23 +293,10 @@ export class EnrichmentFormComponent implements OnInit, OnDestroy {
   onEnrichmentSubmit(enrichmentData) {
     if (enrichmentData.__typename) {
       delete enrichmentData.__typename;
-      // delete enrichmentData.user;
     }
     enrichmentData.user_id = Number(this.auth.currentUserValue.id);
 
     enrichmentData.problem_id = this.problemId;
-
-    // if (typeof enrichmentData.voted_by === "string") {
-    //   // this.submitted.emit(this.enrichmentData);
-    //   this.enrichmentService.submitEnrichmentToDB(enrichmentData);
-    // } else {
-    //   enrichmentData.voted_by = enrichmentData.voted_by = JSON.stringify(
-    //     enrichmentData.voted_by
-    //   )
-    //     .replace("[", "{")
-    //     .replace("]", "}");
-
-    // this.enrichmentService.submitEnrichmentToDB(enrichmentData);
 
     this.submitEnrichmentSub = this.apollo
       .mutate({
@@ -379,9 +341,8 @@ export class EnrichmentFormComponent implements OnInit, OnDestroy {
       })
       .subscribe(
         data => {
-          console.log(data, 'enrichment submit data');
           let enrichmentId = data.data.insert_enrichments.returning[0].id;
-          // this.enrichmentData
+
           const enrichment_locations = new Set();
           this.enrichmentLocations.map(location => {
             if (
@@ -413,14 +374,13 @@ export class EnrichmentFormComponent implements OnInit, OnDestroy {
             );
           }
 
-          console.log(data, 'enrichment added');
           swal({
             type: 'success',
             title: 'Thank you for enriching!',
             timer: 4000,
             showConfirmButton: false
           }).catch(swal.noop);
-          // location.reload();
+
           this.router.navigate(
             ['problems', data.data.insert_enrichments.returning[0].problem_id],
             { queryParamsHandling: 'preserve' }
@@ -428,7 +388,7 @@ export class EnrichmentFormComponent implements OnInit, OnDestroy {
           this.submitEnrichmentSub.unsubscribe();
         },
         err => {
-          console.log(err, 'error');
+          console.error(err, 'error');
           console.error(JSON.stringify(err));
           this.submitEnrichmentSub.unsubscribe();
 

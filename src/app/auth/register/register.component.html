@@ -39,7 +39,7 @@
                     <mat-form-field class="my-1">
                       <mat-icon matSuffix>face</mat-icon>
                       <input matInput placeholder="Fullname" formControlName="name" required>
-                      <!-- <mat-hint>Errors appear instantly!</mat-hint> -->
+
                       <mat-error *ngIf="
                           registerForm.get('name').hasError('required') && register.submitted">
                         Fullname is <strong>required</strong>
@@ -49,7 +49,7 @@
                     <mat-form-field class="my-1">
                       <mat-icon matSuffix>mail</mat-icon>
                       <input matInput type="email" placeholder="Email" formControlName="email" required>
-                      <!-- <mat-hint>Errors appear instantly!</mat-hint> -->
+
                       <mat-error *ngIf="registerForm.get('email').hasError('email') && register.submitted">
                         Please enter a valid email address
                       </mat-error>
@@ -97,77 +97,6 @@
 
 
 
-                  <!-- <form class="form" autocomplete="off">
-                    <div class="form-group has-default">
-                      <div class="input-group">
-                        <div class="input-group-prepend">
-                          <span class="input-group-text">
-                            <i [ngStyle]="{
-                      color: !user.name ? 'red' : '#AAAAAA'
-                    }" class="material-icons">
-                              face</i>
-                          </span>
-                        </div>
-                        <input type="text" name="name" [(ngModel)]="user.name" class="form-control"
-                          placeholder="Full Name" aria-required="true">
-                      </div>
-                    </div>
-                    <div class="form-group has-default">
-                      <div class="input-group">
-                        <div class="input-group-prepend">
-                          <span class="input-group-text">
-                            <i [ngStyle]="{
-                      color: !user.email ? 'red' : '#AAAAAA'
-                    }" class="material-icons" class="material-icons">mail</i>
-                          </span>
-                        </div>
-                        <input type="email" name="email" [(ngModel)]="user.email" class="form-control"
-                          placeholder="Enter email" aria-required="true">
-                      </div>
-                    </div>
-                    <div class="form-group has-default">
-                      <div class="input-group">
-                        <div class="input-group-prepend">
-                          <span class="input-group-text">
-                            <i [ngStyle]="{
-                      color: !user.password ? 'red' : '#AAAAAA'
-                    }" class="material-icons" class="material-icons">lock_outline</i>
-                          </span>
-                        </div>
-                        
-                        <input type="password" name="password" [(ngModel)]="user.password"
-                          placeholder="password: minimum 6 chars, lower & upper case, numbers" class="form-control"
-                          aria-required="true">
-                      </div>
-                    </div>
-                    <div class="form-group has-default">
-                      <div class="input-group">
-                        <div class="input-group-prepend">
-                          <span class="input-group-text">
-                            <i [ngStyle]="{
-                      color: !user.confirmPassword ? 'red' : '#AAAAAA'
-                    }" class="material-icons" class="material-icons">lock_outline</i>
-                          </span>
-                        </div>
-                        <input type="password" name="confirmPassword" [(ngModel)]="user.confirmPassword"
-                          placeholder="Confirm password: minimum 6 chars, lower & upper case, numbers"
-                          class="form-control" aria-required="true">
-                      </div>
-                    </div>
-                    <div class="text-center" tabindex="0">
-                      <button (click)="register()" [attr.aria-disabled]="[!canSubmit()]" [disabled]="!canSubmit()"
-                        mat-raised-button class="btn btn-rose">Sign
-                        Up</button>
-                      <img *ngIf="loading" class="pl-2" alt=""
-                        src="data:image/gif;base64,R0lGODlhEAAQAPIAAP///wAAAMLCwkJCQgAAAGJiYoKCgpKSkiH/C05FVFNDQVBFMi4wAwEAAAAh/hpDcmVhdGVkIHdpdGggYWpheGxvYWQuaW5mbwAh+QQJCgAAACwAAAAAEAAQAAADMwi63P4wyklrE2MIOggZnAdOmGYJRbExwroUmcG2LmDEwnHQLVsYOd2mBzkYDAdKa+dIAAAh+QQJCgAAACwAAAAAEAAQAAADNAi63P5OjCEgG4QMu7DmikRxQlFUYDEZIGBMRVsaqHwctXXf7WEYB4Ag1xjihkMZsiUkKhIAIfkECQoAAAAsAAAAABAAEAAAAzYIujIjK8pByJDMlFYvBoVjHA70GU7xSUJhmKtwHPAKzLO9HMaoKwJZ7Rf8AYPDDzKpZBqfvwQAIfkECQoAAAAsAAAAABAAEAAAAzMIumIlK8oyhpHsnFZfhYumCYUhDAQxRIdhHBGqRoKw0R8DYlJd8z0fMDgsGo/IpHI5TAAAIfkECQoAAAAsAAAAABAAEAAAAzIIunInK0rnZBTwGPNMgQwmdsNgXGJUlIWEuR5oWUIpz8pAEAMe6TwfwyYsGo/IpFKSAAAh+QQJCgAAACwAAAAAEAAQAAADMwi6IMKQORfjdOe82p4wGccc4CEuQradylesojEMBgsUc2G7sDX3lQGBMLAJibufbSlKAAAh+QQJCgAAACwAAAAAEAAQAAADMgi63P7wCRHZnFVdmgHu2nFwlWCI3WGc3TSWhUFGxTAUkGCbtgENBMJAEJsxgMLWzpEAACH5BAkKAAAALAAAAAAQABAAAAMyCLrc/jDKSatlQtScKdceCAjDII7HcQ4EMTCpyrCuUBjCYRgHVtqlAiB1YhiCnlsRkAAAOwAAAAAAAAAAAA==" />
-
-                      <p>Existing User ?
-                        <a href="/auth/login">Log In</a>
-                      </p>
-                    </div>
-                  </form> -->
-                  <!-- <div> -->
-                  <!-- </div> -->
                 </div>
               </div>
             </div>

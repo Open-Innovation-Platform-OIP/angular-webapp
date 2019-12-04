@@ -68,14 +68,10 @@ export class FilterService {
           }
         });
 
-        // console.log(this.sectorFilterArray, "tag array");
         if (this.sectorFilterArray.length) {
           this.sector_filter_query = `_in:[${this.sectorFilterArray}]`;
         }
-        // console.log(
-        //   this.sector_filter_query,
-        //   '=== test for sector filter query'
-        // );
+
         return this.sectorsArray;
       }
     } else {
@@ -93,14 +89,10 @@ export class FilterService {
           }
         });
 
-        // console.log(this.sectorFilterArray, "tag array");
         if (this.sectorFilterArray.length) {
           this.sector_filter_query = `_in:[${this.sectorFilterArray}]`;
         }
-        // console.log(
-        //   this.sector_filter_query,
-        //   '=== test for sector filter query'
-        // );
+
         return this.sectorsArray;
       } else {
         return [];
@@ -111,7 +103,6 @@ export class FilterService {
   async filterSectorByDomain(domain: string) {
     let sectorIdArray = [];
 
-    console.log(this.sector_filter_query, 'filter service sector filter query');
     this.apollo
       .watchQuery<any>({
         query: gql`
@@ -129,7 +120,6 @@ export class FilterService {
       })
       .valueChanges.subscribe(
         async ({ data }) => {
-          console.log(data, ' domain filter result');
           if (data.domains[0].is_primary) {
             this.isPrimaryDomain = true;
           } else {
@@ -153,8 +143,6 @@ export class FilterService {
             this.domain_tags_query = ``;
           }
 
-          console.log(sectorIdArray, 'sector id array');
-
           await this.tagsService.getTagsFromDB(this.domain_tags_query);
         },
         error => {
@@ -171,8 +159,6 @@ export class FilterService {
       parsedQuery = JSON.parse(queryParams.filterLocation);
 
       coordinates = [parsedQuery.latitude, parsedQuery.longitude];
-
-      console.log(parsedQuery, 'parsed query');
 
       if (
         parsedQuery.type === 'city' ||
@@ -201,19 +187,12 @@ export class FilterService {
         }
       };
 
-      // this.queryVariable = {
-      //   point: {
-      //     type: "Point",
-      //     coordinates: [12.2, 17.12]
-      //   }
-      // };
-
       this.location_filter_header = `($point:geometry!)`;
 
       return parsedQuery;
     } else {
       this.location_filter_query = ``;
-      // console.log(location)
+
       this.solution_location_filter_query = ``;
       return {};
     }

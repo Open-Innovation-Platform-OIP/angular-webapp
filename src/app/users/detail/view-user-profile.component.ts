@@ -40,25 +40,15 @@ export class ViewUserProfileComponent
     public auth: AuthService,
     public filesService: FilesService,
     private focusMonitor: FocusMonitor
-  ) {
-    // this.route.params.pipe(first()).subscribe(params => {
-    //   console.log(params.id, "params id");
-    //   if (params.id) {
-    //     this.getProfile(params.id);
-    //   }
-    // });
-  }
+  ) {}
 
   ngAfterViewInit() {
     this.focusMonitor.focusVia(this.profileTitle, 'program');
   }
 
   ngOnInit() {
-    console.log('init on user profile');
     this.user = this.route.paramMap.pipe(
       switchMap((params: ParamMap) => {
-        console.log('result');
-
         return this.getProfile(params.get('id'));
       })
     );
@@ -66,7 +56,7 @@ export class ViewUserProfileComponent
       result => {
         this.interests = [];
         this.personas = [];
-        console.log(result, 'result');
+
         if (result.data.users[0]) {
           this.userData = result.data.users[0];
           Object.entries(this.userData).map(data => {
@@ -94,11 +84,9 @@ export class ViewUserProfileComponent
             });
           }
 
-          console.log(this.userData, 'userData');
           if (this.userData.id === Number(this.auth.currentUserValue.id)) {
             this.loggedInUsersProfile = true;
           }
-          // console.log(this.problemService.problem, "problem");
         }
       },
       error => {
@@ -181,13 +169,9 @@ export class ViewUserProfileComponent
     return this.userDataQuery.valueChanges;
   }
 
-  adminSelection(event, row) {
-    console.log(event, 'event');
-    console.log(row, 'row');
-  }
+  adminSelection(event, row) {}
 
   ngOnDestroy() {
     this.userDataQuery.stopPolling();
-    // this.user.unsubscribe();
   }
 }
