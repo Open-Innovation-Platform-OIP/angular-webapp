@@ -12,8 +12,8 @@ export class ProfileCardComponent implements OnInit {
   @Input() index: number = 0;
 
   constructor(
-    private filesService: FilesService,
-    private authService: AuthService
+    public filesService: FilesService,
+    public authService: AuthService
   ) {}
 
   ngOnInit() {

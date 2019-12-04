@@ -287,7 +287,7 @@
         <span class="btn btn-default btn-file">
           <span class="fileinput-new">Select video </span>
           <span class="fileinput-exists">Add More</span>
-          <input type="file" (change)="onEnrichVideoSelect($event)" name="..." multiple accept="video/*">
+          <input type="file" name="..." multiple accept="video/*">
         </span>
         <div *ngFor="let video of  enrichmentData.video_urls; let i=index">
           <span>{{video.key}}</span>

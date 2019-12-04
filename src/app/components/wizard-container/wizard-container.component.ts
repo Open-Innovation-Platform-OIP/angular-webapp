@@ -160,7 +160,7 @@ export class WizardContainerComponent
     private formBuilder: FormBuilder,
     private filesService: FilesService,
     private tagService: TagsService,
-    private usersService: UsersService,
+    public usersService: UsersService,
     private auth: AuthService,
     private here: GeocoderService,
     private elementRef: ElementRef,
