@@ -96,7 +96,7 @@ export class CommentSubmitComponent implements OnInit {
   };
 
   constructor(
-    private auth: AuthService,
+    public auth: AuthService,
     public fileService: FilesService,
     private ngxService: NgxUiLoaderService,
     private focusMonitor: FocusMonitor,

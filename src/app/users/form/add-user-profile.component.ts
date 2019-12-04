@@ -112,11 +112,11 @@ export class AddUserProfileComponent
   @ViewChild('auto') matAutocomplete: MatAutocomplete;
 
   constructor(
-    private userService: UsersService,
+    public userService: UsersService,
     private apollo: Apollo,
     private router: Router,
     private route: ActivatedRoute,
-    private filesService: FilesService,
+    public filesService: FilesService,
     private auth: AuthService,
     private here: GeocoderService,
     private tagService: TagsService,
@@ -559,7 +559,10 @@ export class AddUserProfileComponent
               }
             })
             .pipe(take(1))
-            .subscribe(data => {}, err => {});
+            .subscribe(
+              data => {},
+              err => {}
+            );
         }
       },
       err => {

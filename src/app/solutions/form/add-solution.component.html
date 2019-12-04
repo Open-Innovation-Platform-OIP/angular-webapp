@@ -1202,7 +1202,7 @@
                 Delete
               </button> -->
                   <button
-                    *ngIf="solution.id && solution.is_draft"
+                    *ngIf="solution['id'] && solution.is_draft"
                     class="btn btn-danger"
                     (click)="delete()"
                   >

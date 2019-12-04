@@ -17,7 +17,7 @@ export class SolutionCardComponent implements OnInit {
   link = '';
   imageAlt = 'default image';
 
-  constructor(private filesService: FilesService) {}
+  constructor(public filesService: FilesService) {}
 
   ngOnInit() {
     // console.log(this.solutionData, 'solution data');

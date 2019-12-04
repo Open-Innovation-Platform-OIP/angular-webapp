@@ -45,6 +45,7 @@ export class DomainAddModalComponent implements OnInit {
 
   tags = [];
   addDomain: FormGroup;
+  addOnBlur = true;
 
   readonly separatorKeysCodes: number[] = [ENTER, COMMA];
 
@@ -83,6 +84,8 @@ export class DomainAddModalComponent implements OnInit {
       sector => sector.toLowerCase().indexOf(filterValue) === 0
     );
   }
+
+  addTag(event) {}
 
   removeTag(owner) {
     const index = this.tags.indexOf(owner);

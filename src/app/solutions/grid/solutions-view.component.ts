@@ -35,7 +35,7 @@ export class SolutionsViewComponent
 
   constructor(
     private apollo: Apollo,
-    private auth: AuthService,
+    public auth: AuthService,
     private router: Router,
     private activatedRoute: ActivatedRoute,
     private tagsService: TagsService,

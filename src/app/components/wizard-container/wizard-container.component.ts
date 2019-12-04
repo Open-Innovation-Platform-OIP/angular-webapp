@@ -137,6 +137,7 @@ export class WizardContainerComponent
   locationCtrl = new FormControl();
   filteredSectors: Observable<string[]>;
   filteredOwners: Observable<any[]>;
+  addOnBlur = true;
 
   tags = [];
   removable = true;

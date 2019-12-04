@@ -135,7 +135,11 @@ export class SolutionDetailComponent implements OnInit {
     featured_type: '',
     user_id: 0,
     is_draft: true,
-    attachments: []
+    attachments: [],
+    organization: '',
+    resources: '',
+    timeline: '',
+    pilots: ''
   };
 
   problemData: any = {
@@ -264,7 +268,7 @@ export class SolutionDetailComponent implements OnInit {
     private problemService: ProblemService,
     private apollo: Apollo,
     private cdr: ChangeDetectorRef,
-    private auth: AuthService,
+    public auth: AuthService,
     public usersService: UsersService,
     public filesService: FilesService,
     private discussionsService: DiscussionsService,

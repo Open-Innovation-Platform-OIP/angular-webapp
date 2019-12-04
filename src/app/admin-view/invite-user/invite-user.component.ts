@@ -45,6 +45,7 @@ export class InviteUserComponent implements OnInit, OnDestroy {
   public invitedUsersDataTable: TableData;
   public invitedUsersQuery: QueryRef<any>;
   public invitedUsersSubscription: Subscription;
+  addOnBlur = true;
 
   @ViewChild('orgsInput') orgsInput: ElementRef<HTMLInputElement>;
 

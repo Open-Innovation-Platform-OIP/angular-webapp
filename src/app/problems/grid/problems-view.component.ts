@@ -43,7 +43,7 @@ export class ProblemsViewComponent implements OnInit, OnDestroy, AfterViewInit {
   problemViewSubscription: any;
   constructor(
     private apollo: Apollo,
-    private auth: AuthService,
+    public auth: AuthService,
     private activatedRoute: ActivatedRoute,
     private router: Router,
     private tagsService: TagsService,

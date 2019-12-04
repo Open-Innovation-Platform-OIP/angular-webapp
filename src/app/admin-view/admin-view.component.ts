@@ -46,7 +46,7 @@ export class AdminViewComponent implements OnInit, OnDestroy {
     private authService: AuthService,
     private http: HttpClient,
     public dialog: MatDialog,
-    private filterService: FilterService
+    public filterService: FilterService
   ) {}
 
   ngOnInit() {

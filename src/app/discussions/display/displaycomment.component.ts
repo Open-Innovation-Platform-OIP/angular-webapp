@@ -51,7 +51,7 @@ export class CommentDisplayComponent implements OnInit, OnDestroy, OnChanges {
 
   constructor(
     private apollo: Apollo,
-    private auth: AuthService,
+    public auth: AuthService,
     private filesService: FilesService,
     private ele: ElementRef,
     private focusMonitor: FocusMonitor

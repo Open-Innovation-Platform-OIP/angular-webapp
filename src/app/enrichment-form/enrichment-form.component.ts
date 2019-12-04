@@ -27,9 +27,9 @@ import { FocusMonitor, FocusOrigin } from '@angular/cdk/a11y';
 export class EnrichmentFormComponent implements OnInit, OnDestroy {
   @ViewChild('cardHeading') cardHeader: ElementRef<HTMLElement>;
   private problemId: Number;
-  private problemData: any;
+  public problemData: any;
   enrichmentLocations: any = [];
-  private enrichmentData: any = {
+  public enrichmentData: any = {
     user_id: '',
 
     description: '',

@@ -276,7 +276,7 @@ export class ProblemDetailComponent
     private problemService: ProblemService,
     private apollo: Apollo,
     private cdr: ChangeDetectorRef,
-    private auth: AuthService,
+    public auth: AuthService,
     public usersService: UsersService,
     public filesService: FilesService,
     private discussionsService: DiscussionsService,
@@ -288,7 +288,7 @@ export class ProblemDetailComponent
     public dialog: MatDialog,
     private focusMonitor: FocusMonitor,
     private filterService: FilterService,
-    private tagsService:TagsService
+    private tagsService: TagsService
   ) {
     this.startInterval();
     this.pageUrl = domain + ngLocation.path();

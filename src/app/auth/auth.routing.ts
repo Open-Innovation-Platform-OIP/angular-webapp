@@ -1,39 +1,34 @@
-import { Routes } from "@angular/router";
+import { Routes } from '@angular/router';
 
-import { RegisterComponent } from "./register/register.component";
-import { LockComponent } from "./lock/lock.component";
-import { LoginComponent } from "./login/login.component";
-import { ForgotPasswordComponent } from "./forgot-password/forgotpassword.component";
-import { VerifyEmailComponent } from "./verify-email/verifyemail.component";
-import { StagingComponent } from "./staging/staging.component";
+import { RegisterComponent } from './register/register.component';
+import { LockComponent } from './lock/lock.component';
+import { LoginComponent } from './login/login.component';
+import { ForgotPasswordComponent } from './forgot-password/forgotpassword.component';
+import { VerifyEmailComponent } from './verify-email/verifyemail.component';
 
 export const AuthRoutes: Routes = [
   {
-    path: "",
+    path: '',
     children: [
       {
-        path: "login",
+        path: 'login',
         component: LoginComponent
       },
       {
-        path: "lock",
+        path: 'lock',
         component: LockComponent
       },
       {
-        path: "register",
+        path: 'register',
         component: RegisterComponent
       },
       {
-        path: "forgot",
+        path: 'forgot',
         component: ForgotPasswordComponent
       },
       {
-        path: "verify",
+        path: 'verify',
         component: VerifyEmailComponent
-      },
-      {
-        path: "staging",
-        component: StagingComponent
       }
     ]
   }
