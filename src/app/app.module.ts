@@ -1,14 +1,14 @@
-import { BrowserModule, Title } from "@angular/platform-browser";
-import { NgModule, ErrorHandler, Injectable } from "@angular/core";
-import { BrowserAnimationsModule } from "@angular/platform-browser/animations";
-import { RouterModule } from "@angular/router";
-import { HttpModule } from "@angular/http";
-import { HttpClientModule, HTTP_INTERCEPTORS } from "@angular/common/http";
-import * as Sentry from "@sentry/browser";
-import { APP_BASE_HREF } from "@angular/common";
-import { FormsModule } from "@angular/forms";
-import { QuillModule } from "ngx-quill";
-import { CommonModule } from "@angular/common";
+import { BrowserModule, Title } from '@angular/platform-browser';
+import { NgModule, ErrorHandler, Injectable } from '@angular/core';
+import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
+import { RouterModule } from '@angular/router';
+import { HttpModule } from '@angular/http';
+import { HttpClientModule, HTTP_INTERCEPTORS } from '@angular/common/http';
+import * as Sentry from '@sentry/browser';
+import { APP_BASE_HREF } from '@angular/common';
+import { FormsModule } from '@angular/forms';
+import { QuillModule } from 'ngx-quill';
+import { CommonModule } from '@angular/common';
 // import { NgxUiLoaderModule } from 'ngx-ui-loader';
 
 import {
@@ -42,22 +42,22 @@ import {
   MatToolbarModule,
   MatTooltipModule,
   MatStepperModule
-} from "@angular/material";
-import { MatDatepickerModule } from "@angular/material/datepicker";
+} from '@angular/material';
+import { MatDatepickerModule } from '@angular/material/datepicker';
 
-import { AppComponent } from "./app.component";
+import { AppComponent } from './app.component';
 
-import { SidebarModule } from "./sidebar/sidebar.module";
-import { FooterModule } from "./shared/footer/footer.module";
-import { NavbarModule } from "./shared/navbar/navbar.module";
-import { FixedpluginModule } from "./shared/fixedplugin/fixedplugin.module";
-import { AdminLayoutComponent } from "./layouts/admin/admin-layout.component";
-import { AuthLayoutComponent } from "./layouts/auth/auth-layout.component";
+import { SidebarModule } from './sidebar/sidebar.module';
+import { FooterModule } from './shared/footer/footer.module';
+import { NavbarModule } from './shared/navbar/navbar.module';
+import { FixedpluginModule } from './shared/fixedplugin/fixedplugin.module';
+import { AdminLayoutComponent } from './layouts/admin/admin-layout.component';
+import { AuthLayoutComponent } from './layouts/auth/auth-layout.component';
 
-import { AppRoutes } from "./app.routing";
-import { GraphQLModule } from "./services/graphql.module";
-import { EmbedVideo } from "ngx-embed-video";
-import { AuthInterceptor } from "./services/auth-interceptor";
+import { AppRoutes } from './app.routing';
+import { GraphQLModule } from './services/graphql.module';
+import { EmbedVideo } from 'ngx-embed-video';
+import { AuthInterceptor } from './services/auth-interceptor';
 // import { AdminViewComponent } from "./admin-view/admin-view.component";
 // import { WizardComponent } from './solution/form/wizard/wizard.component';
 // import { LandingPageComponent } from './landing-page/landing-page.component';
@@ -104,7 +104,7 @@ import { AuthInterceptor } from "./services/auth-interceptor";
     // WizardComponent
   ]
 })
-export class MaterialModule { }
+export class MaterialModule {}
 
 // Sentry.init({
 //   dsn: "https://aa3877830cee4ba6b6999be089316f57@sentry.io/1408858"
@@ -125,7 +125,10 @@ export class MaterialModule { }
     CommonModule,
     BrowserAnimationsModule,
     FormsModule,
-    RouterModule.forRoot(AppRoutes),
+    RouterModule.forRoot(AppRoutes, {
+      useHash: false,
+      anchorScrolling: 'enabled'
+    }),
     HttpModule,
     MaterialModule,
     MatNativeDateModule,
@@ -138,9 +141,9 @@ export class MaterialModule { }
   ],
   declarations: [AppComponent, AdminLayoutComponent, AuthLayoutComponent],
   providers: [
-    Title,
+    Title
     // { provide: ErrorHandler, useClass: SentryErrorHandler }
   ],
   bootstrap: [AppComponent]
 })
-export class AppModule { }
+export class AppModule {}

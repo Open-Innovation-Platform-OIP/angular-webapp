@@ -44,6 +44,7 @@ export class DomainsComponent implements OnInit, OnDestroy {
   sectors = [];
   allTags = {};
   public removable = true;
+  showDomainForm = false;
 
   public domainDataTable: TableData;
   public domainsQuery: QueryRef<any>;
@@ -60,7 +61,7 @@ export class DomainsComponent implements OnInit, OnDestroy {
     this.domainForm = this.formBuilder.group({
       domainUrl: new FormControl('', [Validators.required]),
 
-      colour: new FormControl('', [Validators.required])
+      colour: new FormControl('')
     });
 
     this.filteredSectors = of(['']);
@@ -111,32 +112,33 @@ export class DomainsComponent implements OnInit, OnDestroy {
       return;
     }
 
+    console.log(this.domainForm, 'domain form');
+
     let domainUrl = this.domainForm.value.domainUrl;
     let colour = this.domainForm.value.colour;
 
     this.apollo
       .mutate({
         mutation: gql`
-            mutation insert_domains {
-              insert_domains(
-                objects: [
-                  {
-                    
-                    url: "${domainUrl}",
-                    colour:"${colour}"
-                  
-                  }
-                ]
-              ) {
-                affected_rows
-                returning {
-                  id
-                  
-                 
-                }
+          mutation upsert_domains($domains: [domains_insert_input!]!) {
+            insert_domains(
+              objects: $domains
+              on_conflict: {
+                constraint: domains_pkey
+                update_columns: [url, colour]
+              }
+            ) {
+              affected_rows
+              returning {
+                id
               }
             }
-          `
+          }
+        `,
+
+        variables: {
+          domains: { url: domainUrl, colour: colour }
+        }
       })
       .pipe(take(1))
       .subscribe(
@@ -161,13 +163,29 @@ export class DomainsComponent implements OnInit, OnDestroy {
       domainDataRow.push([
         domain['url'],
         domain['colour'],
-        domain['domain_tags']
+        domain['domain_tags'],
+        domain['id']
       ]);
     });
     this.domainDataTable = {
       headerRow: domainHeaderRow,
       dataRows: domainDataRow
     };
+  }
+
+  editDomain(domainData) {
+    // console.log(domain, 'domain edit');
+    this.showDomainForm = true;
+    const url = domainData[0];
+    const colour = domainData[1];
+    if (domainData[2].length) {
+      domainData[2].map(tags => {
+        this.sectors.push(tags.tag.name);
+      });
+    }
+
+    this.domainForm.value.domainUrl = url;
+    this.domainForm.value.colour = colour;
   }
 
   getDomains() {
@@ -178,6 +196,7 @@ export class DomainsComponent implements OnInit, OnDestroy {
             url
             colour
             id
+            is_primary
             domain_tags {
               tag {
                 name
