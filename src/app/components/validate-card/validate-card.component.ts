@@ -9,6 +9,7 @@ import { AuthService } from '../../services/auth.service';
 export class ValidateCardComponent implements OnInit {
   @Input() validationData: any;
   @Output() clicked = new EventEmitter();
+  @Input() index: number = 0;
 
   constructor(private auth: AuthService) {}
 

@@ -2,51 +2,82 @@
 
   <div class="card-body">
     <div class="row">
-      <label class="col-sm-3">Comment</label>
-      <div class="col-sm-9" style="white-space: pre-wrap;">{{validationData.comment}}</div>
-    </div>
-    <div class="row">
-      <label class="col-sm-3">Approval Status</label>
-      <div class="col-sm-9" [ngStyle]="{color: validationData.agree ? 'green' : 'orangered'}">
-        {{validationData.agree?'Agreed':'Disagreed'}}
+      <label role="heading" aria-level="2" class="col-sm-3">Comment</label>
+      <div class="col-sm-9" style="white-space: pre-wrap;">
+        {{ validationData.comment }}
       </div>
     </div>
-    <div class="row" *ngIf="validationData&&validationData.files&&validationData.files.length>0">
-      <label class="col-sm-3">Download</label>
+    <div class="row">
+      <label class="col-sm-3" role="heading" aria-level="2"
+        >Approval Status</label
+      >
+      <div
+        class="col-sm-9"
+        [ngStyle]="{ color: validationData.agree ? 'green' : 'orangered' }"
+      >
+        {{ validationData.agree ? 'Agreed' : 'Disagreed' }}
+      </div>
+    </div>
+    <div
+      class="row"
+      *ngIf="
+        validationData &&
+        validationData.files &&
+        validationData.files.length > 0
+      "
+    >
+      <label role="heading" aria-level="2" class="col-sm-3">Download</label>
       <div class="col-sm-9">
-        <div *ngFor="let file of validationData.files">
+        <div *ngFor="let file of validationData.files; let i = index">
           <span class="d-inline-block text-truncate" style="max-width: 88%;">
-            {{file.key}}
+            {{ file.key }}
           </span>
           &nbsp;
           <sup>
-            <a href="{{filesService.fileAccessUrl+file.fileEndpoint}}">
-              <i class="material-icons" title="Download all the Attachments">cloud_download
+            <a
+              href="{{ filesService.fileAccessUrl + file.fileEndpoint }}"
+              [attr.aria-label]="['Download attachment', i + 1]"
+            >
+              <i
+                class="material-icons"
+                title="Download attachment"
+                aria-hidden="true"
+                >cloud_download
               </i>
             </a>
           </sup>
-
         </div>
       </div>
     </div>
   </div>
-  <hr>
-  <div class="row justify-content-center" *ngIf="validationData.user_id===auth.currentUserValue.id">
-
-    <button mat-button type="button" (click)="editValidation()" class="btn btn-warning" aria-hidden="true"
-      data-dismiss="modal">
-      <i class="material-icons actions">
+  <hr aria-hidden="true" />
+  <div
+    class="row justify-content-center"
+    *ngIf="validationData.user_id === auth.currentUserValue.id"
+  >
+    <button
+      mat-button
+      type="button"
+      (click)="editValidation()"
+      class="btn btn-warning"
+      aria-label="create"
+      data-dismiss="modal"
+    >
+      <i class="material-icons " aria-hidden="true">
         create
       </i>
     </button>
 
-    <button mat-button type="button" class="btn btn-danger" (click)="deleteValidation()">
-      <i class="material-icons actions">
+    <button
+      mat-button
+      type="button"
+      class="btn btn-danger"
+      (click)="deleteValidation()"
+      aria-label="delete"
+    >
+      <i class="material-icons " aria-hidden="true">
         delete
       </i>
     </button>
-
   </div>
-
-
 </div>
