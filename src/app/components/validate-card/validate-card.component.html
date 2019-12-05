@@ -1,5 +1,13 @@
-<div class="card card-product validate-card" (click)="cardClicked()" *ngIf="validationData" style="cursor: pointer;"
-  role="group">
+<!--REWRITE-->
+
+<div
+  class="card card-product validate-card"
+  (click)="cardClicked()"
+  *ngIf="validationData"
+  style="cursor: pointer;"
+  role="group"
+  [attr.aria-label]="['Validation', index + 1]"
+>
   <a href="javascript:void(0);" (click)="cardClicked()" class="sr-only">
     open validate card
   </a>

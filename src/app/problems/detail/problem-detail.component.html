@@ -58,7 +58,11 @@
               <div class="col-md-8">
                 <div *ngIf="problemData.description">
                   <strong aria-level="3" role="heading">Description</strong>
-                  <p class="description" style="white-space: pre-wrap;" id="problemDescription">
+                  <p
+                    class="description"
+                    style="white-space: pre-wrap;"
+                    id="problemDescription"
+                  >
                     {{ problemData.description }}
                   </p>
                 </div>
@@ -110,12 +114,16 @@
                   <div>
                     <button
                       *ngFor="let tag of tags"
-                      [disabled]="filterService.is_domain_filter_mode && !tagsService.allTags[tag.name] "
+                      [disabled]="
+                        filterService.is_domain_filter_mode &&
+                        !tagsService.allTags[tag.name]
+                      "
                       (click)="sectorSelected(tag)"
                       class="badge badge-warning actions"
                       style="margin-right: 0.3em;border: none;"
-                      >{{ tag.name }}</button
                     >
+                      {{ tag.name }}
+                    </button>
                   </div>
                 </div>
 
@@ -414,9 +422,8 @@
           <ngu-tile
             *nguCarouselDef="let enrichment; let i = index; let ani = animate"
             data-toggle="modal"
-            (click)="openModal('#enrichModal',i)"
+            (click)="openModal('#enrichModal', i)"
           >
-          
             <app-enrichment-card
               [enrichmentData]="enrichment"
               (clicked)="handleEnrichCardClicked($event)"
@@ -458,12 +465,15 @@
 
         <!--Enrichment-->
 
+<<<<<<< HEAD
         <!--Add Enrichment Modal-->
 
         
 
         <!--Add Enrichment Modal-->
 
+=======
+>>>>>>> prob_detail_wcag
         <!--View Enrichment Modal-->
 
         <div
@@ -478,12 +488,24 @@
           <div class="modal-dialog modal-notice modal-lg">
             <div class="modal-content">
               <div class="modal-header">
-                <h1 class="modal-title h1-font" #enrichmentDetail tabindex="-1" id="myModalLabel">Enrichment Detail</h1>
+                <h1
+                  class="modal-title h1-font"
+                  #enrichmentDetail
+                  tabindex="-1"
+                  id="myModalLabel"
+                >
+                  Enrichment Detail
+                </h1>
                 <button
                   mat-button
                   class="close"
                   data-dismiss="modal"
-                  (click)="closeModal($event,{from:'enrichment',index: enrichmentModalContext.index})"
+                  (click)="
+                    closeModal($event, {
+                      from: 'enrichment',
+                      index: enrichmentModalContext.index
+                    })
+                  "
                   aria-label="close"
                 >
                   <i class="material-icons" aria-hidden="true">close</i>
@@ -503,11 +525,6 @@
         </div>
 
         <!--View Enrichment Modal-->
-
-        <!--Edit Enrichment Modal-->
-
-        
-        <!--Edit Enrichment Modal-->
 
         <hr />
 
@@ -552,6 +569,7 @@
             <app-validate-card
               *ngIf="!validation.is_deleted"
               [validationData]="validation"
+              [index]="i"
               (clicked)="handleValidationCardClicked($event)"
             ></app-validate-card>
           </ngu-tile>
@@ -638,23 +656,27 @@
           id="validModal"
           tabindex="-1"
           role="dialog"
-          aria-labelledby="ModalLabel"
-          aria-hidden="true"
+          
         >
-          <div class="modal-dialog modal-notice">
+          <div class="modal-dialog modal-notice" >
             <div class="modal-content">
               <div class="modal-header">
-                <h5 class="modal-title" id="myModalLabel">
+                <h1
+                  class="modal-title h1-font"
+                  tabindex="-1"
+                  id="validationModal"
+                >
                   Validation Details
-                </h5>
+                </h1>
+
                 <button
                   mat-button
                   type="button"
                   class="close"
                   data-dismiss="modal"
-                  aria-hidden="true"
+                  aria-label="close"
                 >
-                  <i class="material-icons">close</i>
+                  <i class="material-icons" aria-hidden="true">close</i>
                 </button>
               </div>
               <div class="modal-body">
