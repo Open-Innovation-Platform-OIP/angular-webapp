@@ -13,36 +13,57 @@
   </a>
   <div class="card-body">
     <strong role="heading" aria-level="3">Comment</strong>
-    <p class="description" *ngIf="validationData.comment" style="white-space: pre-wrap;">
+    <p
+      class="description"
+      *ngIf="validationData.comment"
+      style="white-space: pre-wrap;"
+    >
       {{ validationData.comment }}
     </p>
 
     <strong role="heading" aria-level="3">Status</strong>
     <div class="row">
-      <div class="col-md-3">
+      <div class="col">
         <p class="description">
           {{ validationData.agree ? 'Agree' : 'Disagree' }}
+          <span class="align-middle">
+            <i
+              class="material-icons"
+              *ngIf="validationData.agree"
+              style="color: green;font-size: 2em;"
+              aria-hidden="true"
+            >
+              check_circle_outline
+            </i>
+            <i
+              class="material-icons"
+              *ngIf="validationData.agree == false"
+              style="color: grey;font-size: 2em;"
+              aria-hidden="true"
+            >
+              highlight_off
+            </i>
+          </span>
         </p>
-      </div>
-      <div class="col-md-1" style="margin-left: -10%;">
-        <i class="material-icons" *ngIf="validationData.agree" style="color: green;font-size: 2em;" aria-hidden="true">
-          check_circle_outline
-        </i>
-        <i class="material-icons" *ngIf="validationData.agree == false" style="color: grey;font-size: 2em;"
-          aria-hidden="true">
-          highlight_off
-        </i>
       </div>
     </div>
 
-    <strong role="heading" aria-level="3" *ngIf="
+    <strong
+      role="heading"
+      aria-level="3"
+      *ngIf="
         validationData && validationData.files && validationData.files.length
-      ">Attachment</strong>
-    <p class="description" *ngIf="
+      "
+      >Attachment</strong
+    >
+    <p
+      class="description"
+      *ngIf="
         validationData &&
         validationData.files &&
         validationData.files.length > 0
-      ">
+      "
+    >
       {{ validationData.files.length }} File(s)
     </p>
   </div>

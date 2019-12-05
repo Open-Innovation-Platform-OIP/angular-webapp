@@ -561,7 +561,7 @@
               *ngIf="!validation.is_deleted"
               [validationData]="validation"
               [index]="i"
-              (clicked)="handleValidationCardClicked($event)"
+              (clicked)="handleValidationCardClicked($event,i)"
             ></app-validate-card>
           </ngu-tile>
 
@@ -645,9 +645,10 @@
         <div
           class="modal fade"
           id="validModal"
-          tabindex="-1"
+          aria-label="View Validation"
           role="dialog"
-          
+          aria-hidden="true"
+          cdkTrapFocus
         >
           <div class="modal-dialog modal-notice" >
             <div class="modal-content">
@@ -655,7 +656,7 @@
                 <h1
                   class="modal-title h1-font"
                   tabindex="-1"
-                  id="validationModal"
+                  #viewValidationModal
                 >
                   Validation Details
                 </h1>
@@ -666,6 +667,7 @@
                   class="close"
                   data-dismiss="modal"
                   aria-label="close"
+                  (click)="closeViewValidateModal()"
                 >
                   <i class="material-icons" aria-hidden="true">close</i>
                 </button>
