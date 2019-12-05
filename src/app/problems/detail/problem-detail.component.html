@@ -1,8 +1,6 @@
-
 <div class="main-content">
   <div class="container-fluid">
     <div class="row">
-
       <div class="col-md-8">
         <div class="card card-product">
           <div class="card-header card-header-warning">
@@ -317,8 +315,6 @@
 
         <!--Problem Details-->
 
-
-
         <!--Show more images and videos-->
 
         <!-- ----------------------------- problem attachments modal start----------------------------- -->
@@ -393,7 +389,6 @@
 
         <!--Enrichment divider-->
         <div class="row justify-content-center">
-          
           <button
             mat-raised-button
             *ngIf="auth.currentUserValue.id"
@@ -407,7 +402,6 @@
             Enrich
           </button>
           <p *ngIf="!auth.currentUserValue.id">Login to enrich the problem</p>
-          
         </div>
         <!--Enrichment divider-->
 
@@ -561,7 +555,7 @@
               *ngIf="!validation.is_deleted"
               [validationData]="validation"
               [index]="i"
-              (clicked)="handleValidationCardClicked($event)"
+              (clicked)="handleValidationCardClicked($event, i)"
             ></app-validate-card>
           </ngu-tile>
 
@@ -645,17 +639,18 @@
         <div
           class="modal fade"
           id="validModal"
-          tabindex="-1"
+          aria-label="View Validation"
           role="dialog"
-          
+          aria-hidden="true"
+          cdkTrapFocus
         >
-          <div class="modal-dialog modal-notice" >
+          <div class="modal-dialog modal-notice">
             <div class="modal-content">
               <div class="modal-header">
                 <h1
                   class="modal-title h1-font"
                   tabindex="-1"
-                  id="validationModal"
+                  #viewValidationModal
                 >
                   Validation Details
                 </h1>
@@ -666,6 +661,7 @@
                   class="close"
                   data-dismiss="modal"
                   aria-label="close"
+                  (click)="closeViewValidateModal()"
                 >
                   <i class="material-icons" aria-hidden="true">close</i>
                 </button>
@@ -688,22 +684,29 @@
         <div
           class="modal fade editModal"
           id="EditValidationModal"
-          tabindex="-1"
           role="dialog"
-          aria-labelledby="myModalLabel"
+          aria-label="Edit Validation"
           aria-hidden="true"
+          cdkTrapFocus
         >
           <div class="modal-dialog modal-notice">
             <div class="modal-content">
               <div class="modal-header">
-                <h5 class="modal-title" id="myModalLabel">Edit Validation</h5>
+                <h1
+                  class="modal-title h1-font"
+                  tabindex="-1"
+                  #editValidationModal
+                >
+                  Edit Validation
+                </h1>
+
                 <button
                   mat-button
                   type="button"
                   class="close"
                   data-dismiss="modal"
                   aria-hidden="true"
-                  (click)="closeModal($event)"
+                  (click)="closeModal($event,{from: 'editValidation',index: lastValidationCardIndex})"
                 >
                   <i class="material-icons">close</i>
                 </button>
@@ -764,7 +767,6 @@
 
         <!--Collaborate divider-->
         <div class="row justify-content-center">
-         
           <button
             mat-raised-button
             *ngIf="auth.currentUserValue.id"
@@ -832,14 +834,10 @@
           </a>
         </ngu-carousel>
         <div class="row justify-content-center">
-
-
           <p *ngIf="!collaborators[0]">No collaborators yet.</p>
-
         </div>
         <hr />
 
-        
         <!--Add Collaborator Modal-->
         <div
           class="modal fade"
@@ -869,7 +867,6 @@
                 <app-add-collaborator
                   (submitted)="onCollaborationSubmit($event)"
                   (intentValue)="checkIntent($event)"
-                  
                 >
                 </app-add-collaborator>
               </div>
@@ -1068,5 +1065,3 @@
   </div>
 </div>
 <!-- discuss image and video modal ends -->
-
-

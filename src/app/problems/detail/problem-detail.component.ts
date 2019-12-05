@@ -57,7 +57,11 @@ import { fileUploadVariables } from '../../../environments/environment';
 import { sharing } from '../../globalconfig';
 import { reject } from 'q';
 import { ModalComponent } from 'src/app/components/modal/modal.component';
-import { FocusMonitor } from '@angular/cdk/a11y';
+import {
+  FocusMonitor,
+  LiveAnnouncer,
+  AriaLivePoliteness
+} from '@angular/cdk/a11y';
 import { filter } from 'rxjs/operators';
 const Buffer = require('buffer/').Buffer;
 
@@ -92,6 +96,12 @@ export class ProblemDetailComponent
   implements OnInit, OnDestroy, AfterViewInit {
   @ViewChild('problemDataTitle') problemDataTitle: ElementRef<HTMLElement>;
   @ViewChild('enrichmentDetail') enrichmentDetail: ElementRef<HTMLElement>;
+  @ViewChild('viewValidationModal') viewValidationModal: ElementRef<
+    HTMLElement
+  >;
+  @ViewChild('editValidationModal') editValidationModal: ElementRef<
+    HTMLElement
+  >;
 
   enrichmentModalContext = {
     index: 0
@@ -248,6 +258,7 @@ export class ProblemDetailComponent
 
     loop: true
   };
+  lastValidationCardIndex: number;
 
   constructor(
     private router: Router,
@@ -266,6 +277,7 @@ export class ProblemDetailComponent
     private ngxService: NgxUiLoaderService,
     public dialog: MatDialog,
     private focusMonitor: FocusMonitor,
+    private liveAnnoucer: LiveAnnouncer,
     private filterService: FilterService,
     private tagsService: TagsService
   ) {
@@ -1370,8 +1382,34 @@ export class ProblemDetailComponent
     this.enrichmentData = enrichData;
   }
 
-  handleValidationCardClicked(validationData) {
+  handleValidationCardClicked(validationData, index: number) {
     this.validationDataToView = validationData;
+    this.lastValidationCardIndex = index;
+
+    setTimeout(() => {
+      this.focusMonitor.focusVia(this.viewValidationModal, 'program');
+    }, 1000);
+  }
+
+  announcement(message, tone: AriaLivePoliteness) {
+    this.liveAnnoucer
+      .announce(message, tone)
+      .then(x => x)
+      .catch(e => console.error(e));
+  }
+
+  closeViewValidateModal() {
+    setTimeout(() => {
+      const validationCard: HTMLElement = document.querySelector(
+        `[aria-label='Validation,${this.lastValidationCardIndex + 1}']>a`
+      );
+
+      if (validationCard) {
+        setTimeout(() => {
+          this.focusMonitor.focusVia(validationCard, 'program');
+        }, 1000);
+      }
+    }, 500);
   }
 
   handleValidationEditMode(validationData) {
@@ -1383,6 +1421,10 @@ export class ProblemDetailComponent
     });
 
     $('#EditValidationModal').modal('show');
+
+    setTimeout(() => {
+      this.focusMonitor.focusVia(this.editValidationModal, 'program');
+    }, 1000);
   }
 
   handleCollaborationEditMode(collaborationData) {
@@ -1524,6 +1566,17 @@ export class ProblemDetailComponent
         if (enrichmentCard) {
           setTimeout(() => {
             this.focusMonitor.focusVia(enrichmentCard, 'program');
+          }, 1000);
+        }
+      }
+
+      if (context.from === 'editValidation') {
+        const editValidationCard: HTMLElement = document.querySelector(
+          `[aria-label='Validation,${context.index + 1}']>a`
+        );
+        if (editValidationCard) {
+          setTimeout(() => {
+            this.focusMonitor.focusVia(editValidationCard, 'program');
           }, 1000);
         }
       }
