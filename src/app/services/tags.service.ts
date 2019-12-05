@@ -136,13 +136,13 @@ export class TagsService {
               .subscribe(
                 data => {},
                 err => {
-                  console.error(err, 'couldn\'t add tags');
+                  console.error(err, "couldn't add tags");
                 }
               );
           }
         },
         err => {
-          console.error(err, 'couldn\'t add tags');
+          console.error(err, "couldn't add tags");
         }
       );
   }
@@ -206,7 +206,7 @@ export class TagsService {
           return;
         },
         error => {
-          console.error('Could delete due to ' + error);
+          console.error('Could not delete due to ' + error);
         }
       );
   }

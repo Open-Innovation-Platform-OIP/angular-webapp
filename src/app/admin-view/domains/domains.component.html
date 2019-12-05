@@ -44,7 +44,7 @@
 
                     <button mat-raised-button type="button" (click)="editDomain(row)"
                       class="btn btn-success {{row[3]}}">
-                      <a [routerLink]="['/admin/domains']" fragment="form"><i class="material-icons">edit</i> </a>
+                      <i class="material-icons">edit</i>
                     </button>
 
                   </td>
@@ -55,7 +55,7 @@
 
 
 
-          <button (click)="showDomainForm=!showDomainForm" mat-raised-button
+          <button (click)="formButtonClicked()" mat-raised-button
             class="btn btn-rose">{{showDomainForm?"Collapse":"Add"}}</button>
 
           <div class="card" id="form" *ngIf="showDomainForm">
@@ -77,8 +77,7 @@
 
                 </mat-form-field>
                 <mat-form-field class="example-full-width">
-                  <input type="color" matInput style="width:4em;" placeholder="Colour" formControlName="colour"
-                    value="#FF9800">
+                  <input type="color" matInput style="width:4em;" placeholder="Colour" formControlName="colour">
 
                 </mat-form-field>
 
@@ -125,7 +124,8 @@
               </div>
               <div class="card-footer text-right">
 
-                <button (click)="addDomain()" mat-raised-button class="btn btn-rose">Add</button>
+                <button (click)="addDomain()" mat-raised-button class="btn btn-rose">{{editMode?"Edit":"Add"}}</button>
+
 
               </div>
             </form>

@@ -45,6 +45,8 @@ export class DomainsComponent implements OnInit, OnDestroy {
   allTags = {};
   public removable = true;
   showDomainForm = false;
+  editMode = false;
+  domainId: any = null;
 
   public domainDataTable: TableData;
   public domainsQuery: QueryRef<any>;
@@ -89,6 +91,41 @@ export class DomainsComponent implements OnInit, OnDestroy {
     if (index >= 0) {
       this.sectors.splice(index, 1);
     }
+
+    if (this.tagService.allTags[sector] && this.domainId) {
+      this.apollo
+        .mutate<any>({
+          mutation: gql`
+            mutation DeleteMutation($where: domain_tags_bool_exp!) {
+              delete_domain_tags(where: $where) {
+                affected_rows
+                returning {
+                  tag_id
+                }
+              }
+            }
+          `,
+          variables: {
+            where: {
+              tag_id: {
+                _eq: this.tagService.allTags[sector].id
+              },
+              domain_id: {
+                _eq: this.domainId
+              }
+            }
+          }
+        })
+        .pipe(take(1))
+        .subscribe(
+          ({ data }) => {
+            return;
+          },
+          error => {
+            console.error('Could not delete due to ' + error);
+          }
+        );
+    }
   }
 
   selected(event: MatAutocompleteSelectedEvent): void {
@@ -112,6 +149,19 @@ export class DomainsComponent implements OnInit, OnDestroy {
 
     const domainUrl = this.domainForm.value.domainUrl;
     const colour = this.domainForm.value.colour;
+    let domainDataObject = {};
+    if (this.domainId) {
+      domainDataObject = {
+        url: domainUrl,
+        colour,
+        id: this.domainId
+      };
+    } else {
+      domainDataObject = {
+        url: domainUrl,
+        colour
+      };
+    }
 
     this.apollo
       .mutate({
@@ -133,7 +183,7 @@ export class DomainsComponent implements OnInit, OnDestroy {
         `,
 
         variables: {
-          domains: { url: domainUrl, colour: colour }
+          domains: domainDataObject
         }
       })
       .pipe(take(1))
@@ -141,6 +191,9 @@ export class DomainsComponent implements OnInit, OnDestroy {
         data => {
           const domainId = data.data.insert_domains.returning[0].id;
           this.addSectorRelationship(domainId);
+          this.editMode = false;
+          this.domainId = null;
+          this.showDomainForm = false;
         },
         error => {
           console.error(error);
@@ -166,6 +219,8 @@ export class DomainsComponent implements OnInit, OnDestroy {
   }
 
   editDomain(domainData) {
+    this.editMode = true;
+
     this.showDomainForm = true;
     const url = domainData[0];
     const colour = domainData[1];
@@ -174,9 +229,8 @@ export class DomainsComponent implements OnInit, OnDestroy {
         this.sectors.push(tags.tag.name);
       });
     }
+    this.domainId = domainData[3];
 
-    this.domainForm.value.domainUrl = url;
-    this.domainForm.value.colour = colour;
     this.domainForm.patchValue({ domainUrl: url, colour: colour });
   }
 
@@ -213,6 +267,17 @@ export class DomainsComponent implements OnInit, OnDestroy {
         console.error(error);
       }
     );
+  }
+
+  formButtonClicked() {
+    this.showDomainForm = !this.showDomainForm;
+    this.sectors = [];
+    if (this.editMode) {
+      this.domainForm.reset();
+
+      this.editMode = false;
+      this.domainId = null;
+    }
   }
 
   addSectorRelationship(domainId) {
