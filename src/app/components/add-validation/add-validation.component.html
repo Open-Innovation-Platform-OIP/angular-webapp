@@ -1,49 +1,84 @@
 <div class="row">
-  <label class="col-sm-3 col-form-label">Comment</label>
+  <label class="col-sm-3 col-form-label" role="heading" aria-level="2"
+    >Comment</label
+  >
   <div class="col-sm-9">
     <mat-form-field class="example-full-width">
-      <textarea matInput type="text" name="comment" required [(ngModel)]="validationData.comment" rows="4"
-        (keyup)="checkForSpaces($event)"></textarea>
+      <textarea
+        matInput
+        type="text"
+        name="comment"
+        required
+        [(ngModel)]="validationData.comment"
+        rows="4"
+        (keyup)="checkForSpaces($event)"
+      ></textarea>
     </mat-form-field>
   </div>
 </div>
 
 <div class="row">
-  <label class="col-sm-3 col-form-label">Attachment</label>
+  <label class="col-sm-3 col-form-label" role="heading" aria-level="2">
+    Attachment
+  </label>
   <div class="col-md-9">
-    <span class="btn btn-secondary btn-sm btn-round btn-file" style="cursor:pointer;">
-      <i class="material-icons">
+    <span
+      class="btn btn-secondary btn-sm btn-round btn-file"
+      style="cursor:pointer;"
+    >
+      <i class="material-icons" aria-hidden="true">
         attach_file
       </i>
-      <span>Attach File</span>
-      <input type="file" name="..." (change)="onValidateFileSelected($event)" multiple
-        accept="application/pdf,text/plain,image/*" />
+      <span id="attachFile" aria-hidden="true">Attach File</span>
+      <input
+        type="file"
+        aria-labelledby="attachFile"
+        (change)="onValidateFileSelected($event)"
+        multiple
+        accept="application/pdf,text/plain,image/*"
+      />
     </span>
 
-    <div *ngFor="let file of validationData.files; let i=index;">
+    <div *ngFor="let file of validationData.files; let i = index">
       <div *ngIf="file">
         <span class="d-inline-block text-truncate" style="max-width: 90%;">
-          {{file.key}}
+          {{ file.key }}
         </span>
         &nbsp;
         <sup>
-          <i class="fa fa-close" style="cursor:pointer" (click)="removeAttachment(i)"></i>
+          <i
+            class="fa fa-close"
+            style="cursor:pointer"
+            aria-label="remove"
+            role="button"
+            (click)="removeAttachment(i)"
+          ></i>
         </sup>
       </div>
     </div>
   </div>
 </div>
-<hr>
+<hr aria-hidden="true" />
 <div class="row justify-content-center">
   <div class="col-md-3">
-    <button mat-raised-button class="btn btn-success btn-sm" (click)="validateConsent(true)"
-      [disabled]="!validationData.comment || blankSpace" data-dismiss="modal">
+    <button
+      mat-raised-button
+      class="btn btn-success btn-sm"
+      (click)="validateConsent(true)"
+      [disabled]="!validationData.comment || blankSpace"
+      data-dismiss="modal"
+    >
       Agree
     </button>
   </div>
   <div class="col-md-3">
-    <button mat-raised-button class="btn btn-danger btn-sm" (click)="validateConsent(false)" data-dismiss="modal"
-      [disabled]="!validationData.comment || blankSpace">
+    <button
+      mat-raised-button
+      class="btn btn-danger btn-sm"
+      (click)="validateConsent(false)"
+      data-dismiss="modal"
+      [disabled]="!validationData.comment || blankSpace"
+    >
       Disagree
     </button>
   </div>

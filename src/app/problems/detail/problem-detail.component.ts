@@ -99,6 +99,9 @@ export class ProblemDetailComponent
   @ViewChild('viewValidationModal') viewValidationModal: ElementRef<
     HTMLElement
   >;
+  @ViewChild('editValidationModal') editValidationModal: ElementRef<
+    HTMLElement
+  >;
 
   enrichmentModalContext = {
     index: 0
@@ -1418,6 +1421,10 @@ export class ProblemDetailComponent
     });
 
     $('#EditValidationModal').modal('show');
+
+    setTimeout(() => {
+      this.focusMonitor.focusVia(this.editValidationModal, 'program');
+    }, 1000);
   }
 
   handleCollaborationEditMode(collaborationData) {
@@ -1559,6 +1566,17 @@ export class ProblemDetailComponent
         if (enrichmentCard) {
           setTimeout(() => {
             this.focusMonitor.focusVia(enrichmentCard, 'program');
+          }, 1000);
+        }
+      }
+
+      if (context.from === 'editValidation') {
+        const editValidationCard: HTMLElement = document.querySelector(
+          `[aria-label='Validation,${context.index + 1}']>a`
+        );
+        if (editValidationCard) {
+          setTimeout(() => {
+            this.focusMonitor.focusVia(editValidationCard, 'program');
           }, 1000);
         }
       }
