@@ -102,6 +102,7 @@ export class ProblemDetailComponent
   @ViewChild('editValidationModal') editValidationModal: ElementRef<
     HTMLElement
   >;
+  @ViewChild('addValidation') addValidation: ElementRef<HTMLElement>;
 
   enrichmentModalContext = {
     index: 0
@@ -1388,6 +1389,14 @@ export class ProblemDetailComponent
 
     setTimeout(() => {
       this.focusMonitor.focusVia(this.viewValidationModal, 'program');
+    }, 1000);
+  }
+
+  showValidatorModal() {
+    setTimeout(() => {
+      console.log(this.addValidation);
+
+      this.focusMonitor.focusVia(this.addValidation, 'program');
     }, 1000);
   }
 

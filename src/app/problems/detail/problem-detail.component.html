@@ -459,58 +459,6 @@
 
         <!--Enrichment-->
 
-        <!--View Enrichment Modal-->
-
-        <div
-          class="modal fade"
-          id="enrichModal"
-          tabindex="-1"
-          role="dialog"
-          aria-labelledby="problemTitle"
-          aria-hidden="true"
-          cdkTrapFocus
-        >
-          <div class="modal-dialog modal-notice modal-lg">
-            <div class="modal-content">
-              <div class="modal-header">
-                <h1
-                  class="modal-title h1-font"
-                  #enrichmentDetail
-                  tabindex="-1"
-                  id="myModalLabel"
-                >
-                  Enrichment Detail
-                </h1>
-                <button
-                  mat-button
-                  class="close"
-                  data-dismiss="modal"
-                  (click)="
-                    closeModal($event, {
-                      from: 'enrichment',
-                      index: enrichmentModalContext.index
-                    })
-                  "
-                  aria-label="close"
-                >
-                  <i class="material-icons" aria-hidden="true">close</i>
-                </button>
-              </div>
-              <div class="modal-body">
-                <app-view-enrichment
-                  *ngIf="enrichmentDataToView"
-                  [enrichmentData]="enrichmentDataToView"
-                  (editClicked)="handleEnrichEditMode($event)"
-                  (deleteClicked)="deleteEnrichment($event)"
-                  (voteClicked)="voteEnrichment($event)"
-                ></app-view-enrichment>
-              </div>
-            </div>
-          </div>
-        </div>
-
-        <!--View Enrichment Modal-->
-
         <hr />
 
         <!--Validate-->
@@ -525,6 +473,7 @@
             matTooltip="Click to validate problem"
             [matTooltipPosition]="'below'"
             *ngIf="problemData.id && auth.currentUserValue.id"
+            (click)="showValidatorModal()"
             [disabled]="
               disableValidateButton ||
               !userPersonas.is_expert ||
@@ -600,128 +549,6 @@
             order to validate
           </p>
         </div>
-
-        <!--Validate Modal-->
-        <div
-          class="modal fade"
-          id="validatorModal"
-          tabindex="-1"
-          role="dialog"
-          aria-labelledby="myModalLabel"
-          aria-hidden="true"
-        >
-          <div class="modal-dialog modal-notice">
-            <div class="modal-content">
-              <div class="modal-header">
-                <h5 class="modal-title" id="myModalLabel">Validate Problem</h5>
-                <button
-                  mat-button
-                  type="button"
-                  class="close"
-                  data-dismiss="modal"
-                  aria-hidden="true"
-                >
-                  <i class="material-icons">close</i>
-                </button>
-              </div>
-              <div class="modal-body">
-                <app-add-validation
-                  (submitted)="onValidationSubmit($event)"
-                ></app-add-validation>
-              </div>
-            </div>
-          </div>
-        </div>
-        <!--Validate Modal-->
-
-        <!--View Validation Modal-->
-
-        <div
-          class="modal fade"
-          id="validModal"
-          aria-label="View Validation"
-          role="dialog"
-          aria-hidden="true"
-          cdkTrapFocus
-        >
-          <div class="modal-dialog modal-notice">
-            <div class="modal-content">
-              <div class="modal-header">
-                <h1
-                  class="modal-title h1-font"
-                  tabindex="-1"
-                  #viewValidationModal
-                >
-                  Validation Details
-                </h1>
-
-                <button
-                  mat-button
-                  type="button"
-                  class="close"
-                  data-dismiss="modal"
-                  aria-label="close"
-                  (click)="closeViewValidateModal()"
-                >
-                  <i class="material-icons" aria-hidden="true">close</i>
-                </button>
-              </div>
-              <div class="modal-body">
-                <app-detailed-validate-view
-                  [validationData]="validationDataToView"
-                  (deleteClicked)="deleteValidation($event)"
-                  (editClicked)="handleValidationEditMode($event)"
-                >
-                </app-detailed-validate-view>
-              </div>
-            </div>
-          </div>
-        </div>
-
-        <!--View Validation Modal-->
-
-        <!--Edit Validation Modal-->
-        <div
-          class="modal fade editModal"
-          id="EditValidationModal"
-          role="dialog"
-          aria-label="Edit Validation"
-          aria-hidden="true"
-          cdkTrapFocus
-        >
-          <div class="modal-dialog modal-notice">
-            <div class="modal-content">
-              <div class="modal-header">
-                <h1
-                  class="modal-title h1-font"
-                  tabindex="-1"
-                  #editValidationModal
-                >
-                  Edit Validation
-                </h1>
-
-                <button
-                  mat-button
-                  type="button"
-                  class="close"
-                  data-dismiss="modal"
-                  aria-hidden="true"
-                  (click)="closeModal($event,{from: 'editValidation',index: lastValidationCardIndex})"
-                >
-                  <i class="material-icons">close</i>
-                </button>
-              </div>
-              <div class="modal-body">
-                <app-add-validation
-                  *ngIf="validationDataToEdit"
-                  [validationData]="validationDataToEdit"
-                  (submitted)="onValidationSubmit($event)"
-                ></app-add-validation>
-              </div>
-            </div>
-          </div>
-        </div>
-        <!--Edit Validation Modal-->
 
         <!--Validate-->
 
@@ -1065,3 +892,177 @@
   </div>
 </div>
 <!-- discuss image and video modal ends -->
+
+<!--Validate Modal-->
+<div
+  class="modal fade"
+  id="validatorModal"
+  aria-label="Add Validation"
+  role="dialog"
+  aria-hidden="true"
+  cdkTrapFocus
+>
+  <div class="modal-dialog modal-notice">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h1 class="modal-title h1-font" tabindex="-1" #addValidation>
+          Validate Problem
+        </h1>
+
+        <button
+          mat-button
+          type="button"
+          class="close"
+          data-dismiss="modal"
+          aria-label="close"
+        >
+          <i class="material-icons" aria-hidden="true">close</i>
+        </button>
+      </div>
+      <div class="modal-body">
+        <app-add-validation
+          (submitted)="onValidationSubmit($event)"
+        ></app-add-validation>
+      </div>
+    </div>
+  </div>
+</div>
+<!--Validate Modal-->
+
+<!--View Validation Modal-->
+
+<div
+  class="modal fade"
+  id="validModal"
+  aria-label="View Validation"
+  role="dialog"
+  aria-hidden="true"
+  cdkTrapFocus
+>
+  <div class="modal-dialog modal-notice">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h1 class="modal-title h1-font" tabindex="-1" #viewValidationModal>
+          Validation Details
+        </h1>
+
+        <button
+          mat-button
+          type="button"
+          class="close"
+          data-dismiss="modal"
+          aria-label="close"
+          (click)="closeViewValidateModal()"
+        >
+          <i class="material-icons" aria-hidden="true">close</i>
+        </button>
+      </div>
+      <div class="modal-body">
+        <app-detailed-validate-view
+          [validationData]="validationDataToView"
+          (deleteClicked)="deleteValidation($event)"
+          (editClicked)="handleValidationEditMode($event)"
+        >
+        </app-detailed-validate-view>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!--View Validation Modal-->
+
+<!--Edit Validation Modal-->
+<div
+  class="modal fade editModal"
+  id="EditValidationModal"
+  role="dialog"
+  aria-label="Edit Validation"
+  aria-hidden="true"
+  cdkTrapFocus
+>
+  <div class="modal-dialog modal-notice">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h1 class="modal-title h1-font" tabindex="-1" #editValidationModal>
+          Edit Validation
+        </h1>
+
+        <button
+          mat-button
+          type="button"
+          class="close"
+          data-dismiss="modal"
+          aria-hidden="true"
+          (click)="
+            closeModal($event, {
+              from: 'editValidation',
+              index: lastValidationCardIndex
+            })
+          "
+        >
+          <i class="material-icons">close</i>
+        </button>
+      </div>
+      <div class="modal-body">
+        <app-add-validation
+          *ngIf="validationDataToEdit"
+          [validationData]="validationDataToEdit"
+          (submitted)="onValidationSubmit($event)"
+        ></app-add-validation>
+      </div>
+    </div>
+  </div>
+</div>
+<!--Edit Validation Modal-->
+
+<!--View Enrichment Modal-->
+
+<div
+  class="modal fade"
+  id="enrichModal"
+  tabindex="-1"
+  role="dialog"
+  aria-labelledby="problemTitle"
+  aria-hidden="true"
+  cdkTrapFocus
+>
+  <div class="modal-dialog modal-notice modal-lg">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h1
+          class="modal-title h1-font"
+          #enrichmentDetail
+          tabindex="-1"
+          id="myModalLabel"
+        >
+          Enrichment Detail
+        </h1>
+        <button
+          mat-button
+          class="close"
+          data-dismiss="modal"
+          (click)="
+            closeModal($event, {
+              from: 'enrichment',
+              index: enrichmentModalContext.index
+            })
+          "
+          aria-label="close"
+        >
+          <i class="material-icons" aria-hidden="true">close</i>
+        </button>
+      </div>
+      <div class="modal-body">
+        <app-view-enrichment
+          *ngIf="enrichmentDataToView"
+          [enrichmentData]="enrichmentDataToView"
+          (editClicked)="handleEnrichEditMode($event)"
+          (deleteClicked)="deleteEnrichment($event)"
+          (voteClicked)="voteEnrichment($event)"
+        ></app-view-enrichment>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!--View Enrichment Modal-->
