@@ -29,17 +29,19 @@
     !source.mimeType.startsWith('image') &&
     !source.mimeType.startsWith('video')
   "
-  class="doc_div"
+  class="doc_div d-flex flex-column"
 >
-  <h3>{{ source.key }}</h3>
-  <a href="{{ filesService.fileAccessUrl + source.fileEndpoint }}">
-    <button mat-raised-button class="btn btn-secondary btn-round btn-lg">
-      <i class="material-icons" aria-hidden="true">
-        arrow_downward
-      </i>
-      Download
-    </button>
-  </a>
+  <div style="margin-top: 13rem;">
+    <h1 class="text-white" style="font-size: 2rem;">{{ source.key }}</h1>
+    <a href="{{ filesService.fileAccessUrl + source.fileEndpoint }}">
+      <button mat-raised-button class="btn btn-secondary btn-round btn-lg">
+        <i class="material-icons" aria-hidden="true">
+          arrow_downward
+        </i>
+        Download
+      </button>
+    </a>
+  </div>
 </div>
 
 <!-- for embedded videos -->

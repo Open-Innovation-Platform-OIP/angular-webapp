@@ -777,7 +777,15 @@
 </div>
 
 <!-- discuss image and video modal starts -->
-<div class="modal fade" id="enlargeView" style="display: none;" cdkTrapFocus>
+<div
+  class="modal fade"
+  id="enlargeView"
+  style="display: none;"
+  aria-label="discussion attachments"
+  role="dialog"
+  aria-hidden="true"
+  cdkTrapFocus
+>
   <div class="modal-dialog modal-lg">
     <div class="modal-content">
       <div class="modal-header">
@@ -786,10 +794,10 @@
           class="close"
           id="discussionModalCloseBtn"
           data-dismiss="modal"
-          aria-hidden="true"
+          aria-label="close"
           (click)="closeModal($event)"
         >
-          <i class="material-icons">close</i>
+          <i class="material-icons" aria-hidden="true">close</i>
         </button>
       </div>
       <div class="modal-body">
