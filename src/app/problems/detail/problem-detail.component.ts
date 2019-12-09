@@ -63,6 +63,7 @@ import {
   AriaLivePoliteness
 } from '@angular/cdk/a11y';
 import { filter } from 'rxjs/operators';
+import { split } from 'apollo-link';
 const Buffer = require('buffer/').Buffer;
 
 const misc: any = {
@@ -103,7 +104,12 @@ export class ProblemDetailComponent
     HTMLElement
   >;
   @ViewChild('addValidation') addValidation: ElementRef<HTMLElement>;
+  @ViewChild('showModalBtn') showModalBtn: ElementRef<HTMLElement>;
+  @ViewChild('prolemDetailAttachmentBtn') prolemDetailAttachmentBtn: ElementRef<
+    HTMLElement
+  >;
 
+  annouce: any;
   enrichmentModalContext = {
     index: 0
   };
@@ -1008,6 +1014,18 @@ export class ProblemDetailComponent
         this.problem_attachments_index
       ];
     }
+
+    this.announcement(this.getCurrentAttachmentType(), 'polite');
+  }
+
+  getCurrentAttachmentType() {
+    const attachment = this.problem_attachments[this.problem_attachments_index];
+    if (attachment) {
+      try {
+        const type = attachment['mimeType'].split('/')[0];
+        return type;
+      } catch (error) {}
+    }
   }
 
   showSwal(type) {
@@ -1401,10 +1419,9 @@ export class ProblemDetailComponent
   }
 
   announcement(message, tone: AriaLivePoliteness) {
-    this.liveAnnoucer
-      .announce(message, tone)
-      .then(x => x)
-      .catch(e => console.error(e));
+    const annouce = this.liveAnnoucer.announce(message, tone);
+
+    annouce.then(x => x).catch(e => console.error(e));
   }
 
   closeViewValidateModal() {
@@ -1567,7 +1584,7 @@ export class ProblemDetailComponent
         '#modalVideo'
       );
 
-      if (context.from === 'enrichment') {
+      if (context && context.from === 'enrichment') {
         const enrichmentCard: HTMLElement = document.querySelector(
           `[aria-label='${context.from},${context.index + 1}']>a`
         );
@@ -1579,7 +1596,7 @@ export class ProblemDetailComponent
         }
       }
 
-      if (context.from === 'editValidation') {
+      if (context && context.from === 'editValidation') {
         const editValidationCard: HTMLElement = document.querySelector(
           `[aria-label='Validation,${context.index + 1}']>a`
         );
@@ -1588,6 +1605,12 @@ export class ProblemDetailComponent
             this.focusMonitor.focusVia(editValidationCard, 'program');
           }, 1000);
         }
+      }
+
+      if (context && context.from === 'problemDetailAttachments') {
+        setTimeout(() => {
+          this.focusMonitor.focusVia(this.showModalBtn, 'program');
+        }, 1000);
       }
 
       this.startInterval();
@@ -1632,6 +1655,10 @@ export class ProblemDetailComponent
         this.moveFocusToElement(this.enrichmentDetail);
         this.enrichmentModalContext['index'] = index;
       }, 500);
+    } else if (id === '#viewMoreImgModal') {
+      setTimeout(() => {
+        this.focusMonitor.focusVia(this.prolemDetailAttachmentBtn, 'program');
+      }, 1000);
     }
   }
 

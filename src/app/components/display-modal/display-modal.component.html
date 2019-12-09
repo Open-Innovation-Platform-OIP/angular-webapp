@@ -1,21 +1,36 @@
-<video *ngIf="
+<video
+  *ngIf="
     (source && source.mimeType && source.mimeType.startsWith('video')) ||
     checkUrlIsVideo(source.key || source.url)
-  " id="modalVideo" controls width="100%" height="450"
-  src="{{ filesService.fileAccessUrl + source.fileEndpoint }}"></video>
+  "
+  id="modalVideo"
+  controls
+  disablePictureInPicture
+  controlsList="nodownload"
+  width="100%"
+  height="450"
+  src="{{ filesService.fileAccessUrl + source.fileEndpoint }}"
+></video>
 
-<img *ngIf="
+<img
+  *ngIf="
     (source && source.mimeType && source.mimeType.startsWith('image')) ||
     checkUrlIsImg(source.key || source.url)
-  " src="{{ filesService.fileAccessUrl + source.fileEndpoint }}" alt="{{ source.key }}" class="fix_view" />
+  "
+  src="{{ filesService.fileAccessUrl + source.fileEndpoint }}"
+  alt="{{ source.key }}"
+  class="fix_view"
+/>
 
-
-<div *ngIf="
+<div
+  *ngIf="
     source &&
     source.mimeType &&
     !source.mimeType.startsWith('image') &&
     !source.mimeType.startsWith('video')
-  " class="doc_div">
+  "
+  class="doc_div"
+>
   <h3>{{ source.key }}</h3>
   <a href="{{ filesService.fileAccessUrl + source.fileEndpoint }}">
     <button mat-raised-button class="btn btn-secondary btn-round btn-lg">
@@ -28,4 +43,7 @@
 </div>
 
 <!-- for embedded videos -->
-<div *ngIf="source && checkUrlIsEmbeded(source.url || source.key)" [innerHtml]="iframe_html"></div>
+<div
+  *ngIf="source && checkUrlIsEmbeded(source.url || source.key)"
+  [innerHtml]="iframe_html"
+></div>

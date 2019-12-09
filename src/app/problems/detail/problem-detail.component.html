@@ -46,6 +46,7 @@
                       *ngIf="problem_attachments.length > 0"
                       class="btn btn-raised btn-info btn-sm"
                       data-toggle="modal"
+                      #showModalBtn
                       (click)="openModal('#viewMoreImgModal')"
                     >
                       view media ({{ problem_attachments.length }})
@@ -316,72 +317,6 @@
         <!--Problem Details-->
 
         <!--Show more images and videos-->
-
-        <!-- ----------------------------- problem attachments modal start----------------------------- -->
-        <div
-          class="modal fade"
-          id="viewMoreImgModal"
-          tabindex="-1"
-          role="dialog"
-          aria-labelledby="myModalLabel"
-          aria-hidden="true"
-        >
-          <div class="modal-dialog modal-dialog-centered modal-lg">
-            <div class="modal-content">
-              <div class="modal-header">
-                <button
-                  type="button"
-                  class="close"
-                  data-dismiss="modal"
-                  aria-hidden="true"
-                  (click)="closeModal($event)"
-                >
-                  <i class="material-icons">close</i>
-                </button>
-              </div>
-              <div class="modal-body">
-                <app-display-modal
-                  *ngIf="problem_attachments_src"
-                  [source]="problem_attachments[problem_attachments_index]"
-                >
-                </app-display-modal>
-              </div>
-              <div
-                class="modal-footer justify-content-center"
-                *ngIf="this.problem_attachments.length > 1"
-              >
-                <button
-                  mat-raised-button
-                  type="button"
-                  [disabled]="problem_attachments_index < 1"
-                  (click)="toggleProblemAttachmentsIndex(false)"
-                  class="btn btn-link btn-round btn-twitter"
-                >
-                  <i class="material-icons" style="zoom:2;">
-                    keyboard_arrow_left
-                  </i>
-                </button>
-                <div class="col-3 text-center">
-                  <strong>{{ problem_attachments_index + 1 }}</strong>
-                </div>
-                <button
-                  mat-raised-button
-                  type="button"
-                  [disabled]="
-                    problem_attachments_index === problem_attachments.length - 1
-                  "
-                  class="btn btn-link btn-round btn-twitter"
-                  (click)="toggleProblemAttachmentsIndex(true)"
-                >
-                  <i class="material-icons" style="zoom:2;">
-                    keyboard_arrow_right
-                  </i>
-                </button>
-              </div>
-            </div>
-          </div>
-        </div>
-        <!-- ----------------------------- problem attachments modal ends----------------------------- -->
 
         <hr />
 
@@ -1066,3 +1001,72 @@
 </div>
 
 <!--View Enrichment Modal-->
+
+<!-- ----------------------------- problem attachments modal start----------------------------- -->
+<div
+  class="modal fade"
+  id="viewMoreImgModal"
+  aria-label="Problem Attachments"
+  role="dialog"
+  aria-hidden="true"
+  cdkTrapFocus
+>
+  <div class="modal-dialog modal-dialog-centered modal-lg">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button
+          type="button"
+          class="close"
+          data-dismiss="modal"
+          aria-label="close"
+          #prolemDetailAttachmentBtn
+          (click)="closeModal($event, { from: 'problemDetailAttachments' })"
+        >
+          <i class="material-icons" aria-hidden="true">close</i>
+        </button>
+      </div>
+      <div class="modal-body">
+        <app-display-modal
+          *ngIf="problem_attachments_src"
+          [source]="problem_attachments[problem_attachments_index]"
+        >
+        </app-display-modal>
+      </div>
+      <div
+        class="modal-footer justify-content-center"
+        *ngIf="this.problem_attachments.length > 1"
+      >
+        <button
+          mat-raised-button
+          type="button"
+          [disabled]="problem_attachments_index < 1"
+          (click)="toggleProblemAttachmentsIndex(false)"
+          class="btn btn-link btn-round btn-twitter"
+          aria-label="previous"
+        >
+          <i class="material-icons" style="zoom:2;" aria-hidden="true">
+            keyboard_arrow_left
+          </i>
+        </button>
+        <div class="col-3 text-center">
+          <strong>{{ problem_attachments_index + 1 }}</strong>
+        </div>
+        <button
+          mat-raised-button
+          type="button"
+          [disabled]="
+            problem_attachments_index === problem_attachments.length - 1
+          "
+          class="btn btn-link btn-round btn-twitter"
+          (click)="toggleProblemAttachmentsIndex(true)"
+          aria-label="next"
+        >
+          <i class="material-icons" style="zoom:2;" aria-hidden="true">
+            keyboard_arrow_right
+          </i>
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
+<!-- ----------------------------- problem attachments modal ends----------------------------- -->
