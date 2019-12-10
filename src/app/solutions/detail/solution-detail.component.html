@@ -338,7 +338,7 @@
             <app-validate-card
               *ngIf="!validation.is_deleted"
               [validationData]="validation"
-              (clicked)="handleValidationCardClicked($event)"
+              (clicked)="handleValidationCardClicked($event,i)"
             >
             </app-validate-card>
           </ngu-tile>
@@ -403,46 +403,6 @@
           </div>
         </div>
         <!--Validate Modal-->
-
-        <!--View Validation Modal-->
-
-        <div
-          class="modal fade"
-          id="validModal"
-          tabindex="-1"
-          role="dialog"
-          aria-labelledby="ModalLabel"
-          aria-hidden="true"
-        >
-          <div class="modal-dialog modal-notice">
-            <div class="modal-content">
-              <div class="modal-header">
-                <h5 class="modal-title" id="myModalLabel">
-                  Validation Details
-                </h5>
-                <button
-                  mat-button
-                  type="button"
-                  class="close"
-                  data-dismiss="modal"
-                  aria-hidden="true"
-                >
-                  <i class="material-icons">close</i>
-                </button>
-              </div>
-              <div class="modal-body">
-                <app-detailed-validate-view
-                  [validationData]="validationDataToView"
-                  (deleteClicked)="deleteValidation($event)"
-                  (editClicked)="handleValidationEditMode($event)"
-                >
-                </app-detailed-validate-view>
-              </div>
-            </div>
-          </div>
-        </div>
-
-        <!--View Validation Modal-->
 
         <!--Edit Validation Modal-->
         <div
@@ -874,3 +834,44 @@
   </div>
 </div>
 <!-- ----------------------------- solution attachments modal ends----------------------------- -->
+
+<!--View Validation Modal-->
+
+<div
+  class="modal fade"
+  id="validModal"
+  aria-label="view Validation "
+  role="dialog"
+  aria-hidden="true"
+  cdkTrapFocus
+>
+  <div class="modal-dialog modal-notice">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h1 class="modal-title h1-font" #validationDetails tabindex="-1">
+          Validation Details
+        </h1>
+        <button
+          mat-button
+          type="button"
+          class="close"
+          data-dismiss="modal"
+          aria-hidden="true"
+          (click)="closeViewValidationModal()"
+        >
+          <i class="material-icons">close</i>
+        </button>
+      </div>
+      <div class="modal-body">
+        <app-detailed-validate-view
+          [validationData]="validationDataToView"
+          (deleteClicked)="deleteValidation($event)"
+          (editClicked)="handleValidationEditMode($event)"
+        >
+        </app-detailed-validate-view>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!--View Validation Modal-->

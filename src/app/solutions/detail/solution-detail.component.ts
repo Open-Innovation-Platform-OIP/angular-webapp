@@ -90,6 +90,7 @@ export class SolutionDetailComponent implements OnInit {
     HTMLElement
   >;
   @ViewChild('viewMediaBtn') viewMediaBtn: ElementRef<HTMLElement>;
+  @ViewChild('validationDetails') validationDetails: ElementRef<HTMLElement>;
 
   channels = sharing;
   imageAlt = 'Default image';
@@ -249,6 +250,7 @@ export class SolutionDetailComponent implements OnInit {
 
     loop: true
   };
+  validationCardIndex: number;
 
   constructor(
     private router: Router,
@@ -280,9 +282,7 @@ export class SolutionDetailComponent implements OnInit {
   }
 
   ngAfterViewInit() {
-    setTimeout(() => {
-      this.focusMonitor.focusVia(this.solutionTitle, 'program');
-    }, 100);
+    this.setFocus(this.solutionTitle, 100);
   }
 
   startInterval() {
@@ -1222,8 +1222,24 @@ export class SolutionDetailComponent implements OnInit {
       );
   }
 
-  handleValidationCardClicked(validationData) {
+  setFocus(elem: any, time: number = 0): void {
+    setTimeout(() => {
+      this.focusMonitor.focusVia(elem, 'program');
+    }, time);
+  }
+
+  handleValidationCardClicked(validationData, cardIndex?: number) {
+    this.validationCardIndex = cardIndex;
     this.validationDataToView = validationData;
+    this.setFocus(this.validationDetails, 1000);
+  }
+
+  closeViewValidationModal() {
+    const viewValidationCard: HTMLElement = document.querySelector(
+      `[aria-label='Validation,${this.validationCardIndex + 1}']>a`
+    );
+
+    this.setFocus(viewValidationCard, 1000);
   }
 
   handleValidationEditMode(validationData) {
@@ -1377,9 +1393,7 @@ export class SolutionDetailComponent implements OnInit {
     }
 
     this.lastContext.next(this.discussionContext);
-    setTimeout(() => {
-      this.focusMonitor.focusVia(this.viewMediaBtn, 'program');
-    }, 1000);
+    this.setFocus(this.viewMediaBtn, 1000);
   }
 
   toggleFileSrc(dir: boolean) {
@@ -1409,9 +1423,7 @@ export class SolutionDetailComponent implements OnInit {
     $(id).modal('show');
 
     if (id === '#viewMoreImgModal') {
-      setTimeout(() => {
-        this.focusMonitor.focusVia(this.attachmentsModalCloseBtn, 'program');
-      }, 1000);
+      this.setFocus(this.attachmentsModalCloseBtn, 1000);
     }
   }
 

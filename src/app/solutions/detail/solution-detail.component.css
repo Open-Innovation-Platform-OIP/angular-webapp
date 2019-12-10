@@ -6,100 +6,101 @@
 } */
 
 .fab-container {
-    position: fixed;
-    bottom: 15px;
-    right: 15px;
-    z-index: 100;
-    display: flex;
-    flex-direction: column-reverse;
-    align-items: center;
+  position: fixed;
+  bottom: 15px;
+  right: 15px;
+  z-index: 100;
+  display: flex;
+  flex-direction: column-reverse;
+  align-items: center;
 }
 
-.fab-container>div {
-    display: flex;
-    flex-direction: column-reverse;
-    align-items: center;
-    margin-bottom: 5px;
+.fab-container > div {
+  display: flex;
+  flex-direction: column-reverse;
+  align-items: center;
+  margin-bottom: 5px;
 }
 
-.fab-container>div>button {
-    margin-bottom: 17px;
+.fab-container > div > button {
+  margin-bottom: 17px;
 }
-
 
 .fab-toggler {
-    float: right;
-    z-index: 100;
+  float: right;
+  z-index: 100;
 }
 
 .actions {
-    cursor: pointer;
+  cursor: pointer;
 }
 
 .example-viewport {
-    height: 500px;
-    width: 470px;
-    border: 1px solid black;
+  height: 500px;
+  width: 470px;
+  border: 1px solid black;
 }
 
 .example-item {
-    height: 50px;
+  height: 50px;
 }
 
-
 label {
-    cursor: pointer;
-    /* Style as you please, it will become the visible UI component. */
+  cursor: pointer;
+  /* Style as you please, it will become the visible UI component. */
 }
 
 #upload-photo {
-    opacity: 0;
-    position: absolute;
-    z-index: -1;
+  opacity: 0;
+  position: absolute;
+  z-index: -1;
 }
 
 #upload-video {
-    opacity: 0;
-    position: absolute;
-    z-index: -1;
+  opacity: 0;
+  position: absolute;
+  z-index: -1;
 }
 
 #upload-file {
-    opacity: 0;
-    position: absolute;
-    z-index: -1;
+  opacity: 0;
+  position: absolute;
+  z-index: -1;
 }
 
 .editModal {
-    overflow-y: auto;
+  overflow-y: auto;
 }
 
 .leftRs {
-    position: absolute;
-    left: 42%;
+  position: absolute;
+  left: 42%;
 }
 
 .rightRs {
-    position: absolute;
-    left: 47%;
+  position: absolute;
+  left: 47%;
 }
 
 .viewMoreComments {
-    color: grey;
+  color: grey;
 }
 
 .viewMoreComments:hover {
-    text-decoration: underline;
-    color: orange;
+  text-decoration: underline;
+  color: orange;
 }
 
 .dropdown-menu a:hover {
-    background-color: #E82C6C;
-    color: var(--light);
-    cursor: pointer;
+  background-color: #e82c6c;
+  color: var(--light);
+  cursor: pointer;
 }
 
 .actions {
-    cursor: pointer;
+  cursor: pointer;
+}
 
+.h1-font {
+  font-size: 1.8rem;
 }
