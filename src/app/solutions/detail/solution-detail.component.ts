@@ -86,6 +86,10 @@ interface queryString {
 })
 export class SolutionDetailComponent implements OnInit {
   @ViewChild('solutionTitle') solutionTitle: ElementRef<HTMLElement>;
+  @ViewChild('attachmentsModalCloseBtn') attachmentsModalCloseBtn: ElementRef<
+    HTMLElement
+  >;
+  @ViewChild('viewMediaBtn') viewMediaBtn: ElementRef<HTMLElement>;
 
   channels = sharing;
   imageAlt = 'Default image';
@@ -1373,6 +1377,9 @@ export class SolutionDetailComponent implements OnInit {
     }
 
     this.lastContext.next(this.discussionContext);
+    setTimeout(() => {
+      this.focusMonitor.focusVia(this.viewMediaBtn, 'program');
+    }, 1000);
   }
 
   toggleFileSrc(dir: boolean) {
@@ -1391,6 +1398,8 @@ export class SolutionDetailComponent implements OnInit {
   openModal(id) {
     clearInterval(this.interval);
 
+    console.log('>>> ', id);
+
     /* opening modal */
     $(id).modal({
       backdrop: 'static',
@@ -1398,6 +1407,12 @@ export class SolutionDetailComponent implements OnInit {
     });
 
     $(id).modal('show');
+
+    if (id === '#viewMoreImgModal') {
+      setTimeout(() => {
+        this.focusMonitor.focusVia(this.attachmentsModalCloseBtn, 'program');
+      }, 1000);
+    }
   }
 
   showPopularDiscussions(id) {

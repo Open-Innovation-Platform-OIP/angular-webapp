@@ -49,6 +49,7 @@
                       "
                       class="btn btn-raised btn-info btn-sm"
                       data-toggle="modal"
+                      #viewMediaBtn
                       (click)="openModal('#viewMoreImgModal')"
                     >
                       view media ({{ solution_attachments.length }})
@@ -123,9 +124,18 @@
                 <div *ngIf="tags.length">
                   <strong aria-level="3" role="heading">Sectors</strong>
                   <div role="group">
-                    <button *ngFor="let tag of tags" (click)="sectorSelected(tag)"
-                    [disabled]="filterService.is_domain_filter_mode && !tagsService.allTags[tag.name] "
-                    class="badge badge-rose actions" style="margin-right: 0.3em;border: none;">{{tag.name}}</button>
+                    <button
+                      *ngFor="let tag of tags"
+                      (click)="sectorSelected(tag)"
+                      [disabled]="
+                        filterService.is_domain_filter_mode &&
+                        !tagsService.allTags[tag.name]
+                      "
+                      class="badge badge-rose actions"
+                      style="margin-right: 0.3em;border: none;"
+                    >
+                      {{ tag.name }}
+                    </button>
                   </div>
                 </div>
 
@@ -290,75 +300,7 @@
 
         <!--Show more images and videos-->
 
-        <!-- ----------------------------- solution attachments modal start----------------------------- -->
-        <div
-          class="modal fade"
-          id="viewMoreImgModal"
-          tabindex="-1"
-          role="dialog"
-          aria-labelledby="myModalLabel"
-          aria-hidden="true"
-        >
-          <div class="modal-dialog modal-dialog-centered modal-lg">
-            <div class="modal-content">
-              <div class="modal-header">
-                <button
-                  type="button"
-                  class="close"
-                  data-dismiss="modal"
-                  aria-hidden="true"
-                  (click)="closeModal($event)"
-                >
-                  <i class="material-icons">close</i>
-                </button>
-              </div>
-              <div class="modal-body">
-                <app-display-modal
-                  *ngIf="solution_attachments_src"
-                  [source]="solution_attachments[solution_attachments_index]"
-                >
-                </app-display-modal>
-              </div>
-              <div
-                class="modal-footer justify-content-center"
-                *ngIf="this.solution_attachments.length > 1"
-              >
-                <button
-                  mat-raised-button
-                  type="button"
-                  [disabled]="solution_attachments_index < 1"
-                  (click)="toggleSolutionAttachmentsIndex(false)"
-                  class="btn btn-link btn-round btn-twitter"
-                >
-                  <i class="material-icons" style="zoom:2;">
-                    keyboard_arrow_left
-                  </i>
-                </button>
-                <div class="col-3 text-center">
-                  <strong>{{ solution_attachments_index + 1 }}</strong>
-                </div>
-                <button
-                  mat-raised-button
-                  type="button"
-                  [disabled]="
-                    solution_attachments_index ===
-                    solution_attachments.length - 1
-                  "
-                  class="btn btn-link btn-round btn-twitter"
-                  (click)="toggleSolutionAttachmentsIndex(true)"
-                >
-                  <i class="material-icons" style="zoom:2;">
-                    keyboard_arrow_right
-                  </i>
-                </button>
-              </div>
-            </div>
-          </div>
-        </div>
-        <!-- ----------------------------- solution attachments modal ends----------------------------- -->
-
         <div class="row justify-content-center">
-         
           <button
             mat-raised-button
             class="btn btn-rose btn-round"
@@ -377,7 +319,6 @@
           >
             Validate
           </button>
-         
         </div>
         <!--Validate divider-->
 
@@ -583,7 +524,6 @@
 
         <!--Collaborate divider-->
         <div class="row justify-content-center">
-        
           <button
             mat-raised-button
             *ngIf="auth.currentUserValue.id"
@@ -603,7 +543,6 @@
           <p *ngIf="!auth.currentUserValue.id">
             Login to collaborate on this solution
           </p>
-         
         </div>
         <!--Collaborate divider-->
 
@@ -687,7 +626,6 @@
                 <app-add-collaborator
                   (submitted)="onCollaborationSubmit($event)"
                   (intentValue)="checkIntent($event)"
-                  
                 >
                 </app-add-collaborator>
               </div>
@@ -743,7 +681,9 @@
                       class="collapsed"
                     >
                       Join Discussion
-                      <i class="material-icons" aria-hidden="true">keyboard_arrow_down</i>
+                      <i class="material-icons" aria-hidden="true"
+                        >keyboard_arrow_down</i
+                      >
                     </a>
                   </div>
                 </div>
@@ -865,3 +805,72 @@
     </div>
   </div>
 </div>
+
+<!-- ----------------------------- solution attachments modal start----------------------------- -->
+<div
+  class="modal fade"
+  id="viewMoreImgModal"
+  aria-label="Solution Attachments"
+  role="dialog"
+  aria-hidden="true"
+  cdkTrapFocus
+>
+  <div class="modal-dialog modal-dialog-centered modal-lg">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button
+          type="button"
+          class="close"
+          data-dismiss="modal"
+          aria-label="close"
+          #attachmentsModalCloseBtn
+          (click)="closeModal($event)"
+        >
+          <i class="material-icons" aria-hidden="true">close</i>
+        </button>
+      </div>
+      <div class="modal-body">
+        <app-display-modal
+          *ngIf="solution_attachments_src"
+          [source]="solution_attachments[solution_attachments_index]"
+        >
+        </app-display-modal>
+      </div>
+      <div
+        class="modal-footer justify-content-center"
+        *ngIf="this.solution_attachments.length > 1"
+      >
+        <button
+          mat-raised-button
+          type="button"
+          [disabled]="solution_attachments_index < 1"
+          (click)="toggleSolutionAttachmentsIndex(false)"
+          class="btn btn-link btn-round btn-twitter"
+          aria-label="previous"
+        >
+          <i class="material-icons" style="zoom:2;" aria-hidden="true">
+            keyboard_arrow_left
+          </i>
+        </button>
+        <div class="col-3 text-center">
+          <strong>{{ solution_attachments_index + 1 }}</strong>
+        </div>
+        <button
+          mat-raised-button
+          type="button"
+          [disabled]="
+            solution_attachments_index === solution_attachments.length - 1
+          "
+          class="btn btn-link btn-round btn-twitter"
+          (click)="toggleSolutionAttachmentsIndex(true)"
+          aria-label="next"
+        >
+          <i class="material-icons" style="zoom:2;" aria-hidden="true">
+            keyboard_arrow_right
+          </i>
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
+<!-- ----------------------------- solution attachments modal ends----------------------------- -->
