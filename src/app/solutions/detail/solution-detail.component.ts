@@ -91,6 +91,9 @@ export class SolutionDetailComponent implements OnInit {
   >;
   @ViewChild('viewMediaBtn') viewMediaBtn: ElementRef<HTMLElement>;
   @ViewChild('validationDetails') validationDetails: ElementRef<HTMLElement>;
+  @ViewChild('editValidationDetails') editValidationDetails: ElementRef<
+    HTMLElement
+  >;
 
   channels = sharing;
   imageAlt = 'Default image';
@@ -1177,6 +1180,12 @@ export class SolutionDetailComponent implements OnInit {
 
     this.validationService.submitSolutionValidationToDB(validationData);
     this.startInterval();
+
+    const viewValidationCard: HTMLElement = document.querySelector(
+      `[aria-label='Validation,${this.validationCardIndex + 1}']>a`
+    );
+
+    this.setFocus(viewValidationCard, 1000);
   }
 
   deleteValidation(validationData) {
@@ -1242,6 +1251,14 @@ export class SolutionDetailComponent implements OnInit {
     this.setFocus(viewValidationCard, 1000);
   }
 
+  closeEditValidationModal() {
+    const viewValidationCard: HTMLElement = document.querySelector(
+      `[aria-label='Validation,${this.validationCardIndex + 1}']>a`
+    );
+
+    this.setFocus(viewValidationCard, 1000);
+  }
+
   handleValidationEditMode(validationData) {
     this.validationDataToEdit = validationData;
 
@@ -1251,6 +1268,7 @@ export class SolutionDetailComponent implements OnInit {
     });
 
     $('#EditValidationModal').modal('show');
+    this.setFocus(this.editValidationDetails, 1000);
   }
 
   handleCollaborationEditMode(collaborationData) {
@@ -1411,8 +1429,6 @@ export class SolutionDetailComponent implements OnInit {
 
   openModal(id) {
     clearInterval(this.interval);
-
-    console.log('>>> ', id);
 
     /* opening modal */
     $(id).modal({

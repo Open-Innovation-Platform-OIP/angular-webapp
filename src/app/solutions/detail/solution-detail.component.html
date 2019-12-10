@@ -338,7 +338,7 @@
             <app-validate-card
               *ngIf="!validation.is_deleted"
               [validationData]="validation"
-              (clicked)="handleValidationCardClicked($event,i)"
+              (clicked)="handleValidationCardClicked($event, i)"
             >
             </app-validate-card>
           </ngu-tile>
@@ -403,42 +403,6 @@
           </div>
         </div>
         <!--Validate Modal-->
-
-        <!--Edit Validation Modal-->
-        <div
-          class="modal fade editModal"
-          id="EditValidationModal"
-          tabindex="-1"
-          role="dialog"
-          aria-labelledby="myModalLabel"
-          aria-hidden="true"
-        >
-          <div class="modal-dialog modal-notice">
-            <div class="modal-content">
-              <div class="modal-header">
-                <h5 class="modal-title" id="myModalLabel">Edit Validation</h5>
-                <button
-                  mat-button
-                  type="button"
-                  class="close"
-                  data-dismiss="modal"
-                  aria-hidden="true"
-                  (click)="closeModal($event)"
-                >
-                  <i class="material-icons">close</i>
-                </button>
-              </div>
-              <div class="modal-body">
-                <app-add-validation
-                  *ngIf="validationDataToEdit"
-                  [validationData]="validationDataToEdit"
-                  (submitted)="onValidationSubmit($event)"
-                ></app-add-validation>
-              </div>
-            </div>
-          </div>
-        </div>
-        <!--Edit Validation Modal-->
 
         <!--Validate-->
 
@@ -875,3 +839,42 @@
 </div>
 
 <!--View Validation Modal-->
+
+<!--Edit Validation Modal-->
+<div
+  class="modal fade editModal"
+  id="EditValidationModal"
+  aria-label="Edit Validation "
+  role="dialog"
+  aria-hidden="true"
+  cdkTrapFocus
+>
+  <div class="modal-dialog modal-notice">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h1 class="modal-title h1-font" #editValidationDetails tabindex="-1">
+          Edit Validation
+        </h1>
+
+        <button
+          mat-button
+          type="button"
+          class="close"
+          data-dismiss="modal"
+          aria-hidden="true"
+          (click)="closeEditValidationModal()"
+        >
+          <i class="material-icons">close</i>
+        </button>
+      </div>
+      <div class="modal-body">
+        <app-add-validation
+          *ngIf="validationDataToEdit"
+          [validationData]="validationDataToEdit"
+          (submitted)="onValidationSubmit($event)"
+        ></app-add-validation>
+      </div>
+    </div>
+  </div>
+</div>
+<!--Edit Validation Modal-->
