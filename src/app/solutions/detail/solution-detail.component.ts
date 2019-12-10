@@ -91,7 +91,14 @@ export class SolutionDetailComponent implements OnInit {
   >;
   @ViewChild('viewMediaBtn') viewMediaBtn: ElementRef<HTMLElement>;
   @ViewChild('validationDetails') validationDetails: ElementRef<HTMLElement>;
+  @ViewChild('addValidationDetails') addValidationDetails: ElementRef<
+    HTMLElement
+  >;
   @ViewChild('editValidationDetails') editValidationDetails: ElementRef<
+    HTMLElement
+  >;
+  @ViewChild('shareBtn') shareBtn: ElementRef<HTMLElement>;
+  @ViewChild('discussionModalCloseBtn') discussionModalCloseBtn: ElementRef<
     HTMLElement
   >;
 
@@ -1181,11 +1188,18 @@ export class SolutionDetailComponent implements OnInit {
     this.validationService.submitSolutionValidationToDB(validationData);
     this.startInterval();
 
-    const viewValidationCard: HTMLElement = document.querySelector(
-      `[aria-label='Validation,${this.validationCardIndex + 1}']>a`
-    );
+    if (this.validationCardIndex) {
+      const viewValidationCard: HTMLElement = document.querySelector(
+        `[aria-label='Validation,${this.validationCardIndex + 1}']>a`
+      );
+      this.setFocus(viewValidationCard, 1000);
+    } else {
+      this.setFocus(this.shareBtn, 1000);
+    }
+  }
 
-    this.setFocus(viewValidationCard, 1000);
+  addNewValidation() {
+    this.setFocus(this.addValidationDetails, 1000);
   }
 
   deleteValidation(validationData) {
@@ -1377,28 +1391,12 @@ export class SolutionDetailComponent implements OnInit {
       keyboard: false
     });
 
-    const waitForTag = setInterval(() => {
-      const modalBtnTag: HTMLElement = document.querySelector(
-        '#discussionModalNextBtn'
-      );
-      const closeBtn: HTMLElement = document.querySelector(
-        '#discussionModalNextBtn'
-      );
-
-      if (modalBtnTag) {
-        this.focusMonitor.focusVia(modalBtnTag, 'program');
-        clearInterval(waitForTag);
-      }
-      if (closeBtn) {
-        this.focusMonitor.focusVia(closeBtn, 'program');
-        clearInterval(waitForTag);
-      }
-    }, 500);
+    this.setFocus(this.discussionModalCloseBtn, 1000);
 
     $('#enlargeView').modal('show');
   }
 
-  closeModal(e) {
+  closeModal(e, context: string) {
     if (e.type === 'click') {
       const solutionVideoTag: HTMLMediaElement = document.querySelector(
         '#modalVideo'
@@ -1410,8 +1408,11 @@ export class SolutionDetailComponent implements OnInit {
       }
     }
 
-    this.lastContext.next(this.discussionContext);
-    this.setFocus(this.viewMediaBtn, 1000);
+    if (context === 'discussion') {
+      this.lastContext.next(this.discussionContext);
+    } else {
+      this.setFocus(this.viewMediaBtn, 1000);
+    }
   }
 
   toggleFileSrc(dir: boolean) {

@@ -256,11 +256,11 @@
               </button>
 
               <button
-                href="#"
                 class="btn btn-sm btn-rose ml-2"
                 data-toggle="dropdown"
                 aria-expanded="false"
                 aria-label="share"
+                #shareBtn
               >
                 <i class="material-icons actions" aria-hidden="true">
                   share
@@ -308,6 +308,7 @@
             data-target="#validatorModal"
             matTooltip="Click to validate solution"
             [matTooltipPosition]="'below'"
+            (click)="addNewValidation()"
             [disabled]="
               disableValidateButton ||
               userId == solutionData.user_id ||
@@ -370,39 +371,6 @@
         <div class="row justify-content-center" *ngIf="!validation[0]">
           <p>No validations yet.</p>
         </div>
-
-        <!--Validate Modal-->
-        <div
-          class="modal fade"
-          id="validatorModal"
-          tabindex="-1"
-          role="dialog"
-          aria-labelledby="myModalLabel"
-          aria-hidden="true"
-        >
-          <div class="modal-dialog modal-notice">
-            <div class="modal-content">
-              <div class="modal-header">
-                <h5 class="modal-title" id="myModalLabel">Validate Solution</h5>
-                <button
-                  mat-button
-                  type="button"
-                  class="close"
-                  data-dismiss="modal"
-                  aria-hidden="true"
-                >
-                  <i class="material-icons">close</i>
-                </button>
-              </div>
-              <div class="modal-body">
-                <app-add-validation
-                  (submitted)="onValidationSubmit($event)"
-                ></app-add-validation>
-              </div>
-            </div>
-          </div>
-        </div>
-        <!--Validate Modal-->
 
         <!--Validate-->
 
@@ -682,7 +650,15 @@
 
 <!-- discuss image and video modal starts -->
 
-<div class="modal fade" id="enlargeView" style="display: none;">
+<div
+  class="modal fade"
+  id="enlargeView"
+  style="display: none;"
+  aria-label="Discussion"
+  role="dialog"
+  aria-hidden="true"
+  cdkTrapFocus
+>
   <div class="modal-dialog modal-lg">
     <div class="modal-content">
       <div class="modal-header">
@@ -690,9 +666,9 @@
           type="button"
           class="close"
           data-dismiss="modal"
-          aria-hidden="true"
-          (click)="closeModal($event)"
-          id="discussionModalCloseBtn"
+          aria-label="close"
+          (click)="closeModal($event, 'discussion')"
+          #discussionModalCloseBtn
         >
           <i class="material-icons" aria-hidden="true">close</i>
         </button>
@@ -748,7 +724,7 @@
           data-dismiss="modal"
           aria-label="close"
           #attachmentsModalCloseBtn
-          (click)="closeModal($event)"
+          (click)="closeModal($event, 'view-more')"
         >
           <i class="material-icons" aria-hidden="true">close</i>
         </button>
@@ -878,3 +854,38 @@
   </div>
 </div>
 <!--Edit Validation Modal-->
+
+<!--Validate Modal-->
+<div
+  class="modal fade"
+  id="validatorModal"
+  aria-label="Add Validation"
+  role="dialog"
+  aria-hidden="true"
+  cdkTrapFocus
+>
+  <div class="modal-dialog modal-notice">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h1 class="modal-title h1-font" #addValidationDetails tabindex="-1">
+          Validate Solution
+        </h1>
+        <button
+          mat-button
+          type="button"
+          class="close"
+          data-dismiss="modal"
+          aria-label="close"
+        >
+          <i class="material-icons" aria-hidden="true">close</i>
+        </button>
+      </div>
+      <div class="modal-body">
+        <app-add-validation
+          (submitted)="onValidationSubmit($event)"
+        ></app-add-validation>
+      </div>
+    </div>
+  </div>
+</div>
+<!--Validate Modal-->
