@@ -1,4 +1,10 @@
-import { Component, OnInit, OnDestroy } from '@angular/core';
+import {
+  Component,
+  OnInit,
+  OnDestroy,
+  ElementRef,
+  ViewChild
+} from '@angular/core';
 import { TableData } from '../md/md-table/md-table.component';
 import { Apollo, QueryRef } from 'apollo-angular';
 import gql from 'graphql-tag';
@@ -15,6 +21,7 @@ import {
   MatDialogRef,
   MAT_DIALOG_DATA
 } from '@angular/material/dialog';
+import { FocusMonitor } from '@angular/cdk/a11y';
 
 @Component({
   selector: 'app-admin-view',
@@ -22,6 +29,8 @@ import {
   styleUrls: ['./admin-view.component.css']
 })
 export class AdminViewComponent implements OnInit, OnDestroy {
+  @ViewChild('usersHeading') userHeading: ElementRef<HTMLElement>;
+
   public userDataTable: TableData;
   public unapprovedUserDataTable: TableData;
   public invitedUsersDataTable: TableData;
@@ -46,7 +55,8 @@ export class AdminViewComponent implements OnInit, OnDestroy {
     private authService: AuthService,
     private http: HttpClient,
     public dialog: MatDialog,
-    public filterService: FilterService
+    public filterService: FilterService,
+    private focusMonitor: FocusMonitor
   ) {}
 
   ngOnInit() {
@@ -56,6 +66,14 @@ export class AdminViewComponent implements OnInit, OnDestroy {
     this.userInviteForm = new FormGroup({
       email: new FormControl('', [Validators.email])
     });
+
+    this.setFocus(this.userHeading, 1000);
+  }
+
+  setFocus(elem: ElementRef, time: number) {
+    setTimeout(() => {
+      this.focusMonitor.focusVia(elem, 'program');
+    }, time);
   }
 
   openDomainAddModal(): void {

@@ -1,103 +1,119 @@
 <div class="main-content" style="margin-top: 10%;">
   <div class="container-fluid">
-    <div class="row mt-4">
-
-
-
-      <div class="card" *ngIf="userDataTable&&userDataTable.dataRows">
+    <h1
+      *ngIf="objectKeys(allUnapprovedUsers).length"
+      class="h1-font"
+      #usersHeading
+      tabindex="-1"
+    >
+      Existing Users
+    </h1>
+    <div class="row">
+      <div class="card" *ngIf="userDataTable && userDataTable.dataRows">
         <div class="card-header card-header-icon card-header-rose">
           <div class="card-icon">
-            <i class="material-icons">group</i>
+            <i class="material-icons" aria-hidden="true">group</i>
           </div>
-          <h4 class="card-title ">Users</h4>
+          <h2 class="card-title h2-font">Users</h2>
         </div>
         <div class="card-body">
           <div class="table-responsive">
             <table class="table">
               <thead class="text-primary">
                 <tr>
-                  <th *ngFor="let cell of userDataTable.headerRow">{{ cell }}</th>
+                  <th *ngFor="let cell of userDataTable.headerRow">
+                    {{ cell }}
+                  </th>
                 </tr>
               </thead>
               <tbody>
                 <tr *ngFor="let row of userDataTable.dataRows">
-                  <td>{{row[0]}}</td>
-                  <td>{{row[1]}}</td>
-                  <td>{{row[2]}}</td>
-
+                  <td>{{ row[0] }}</td>
+                  <td>{{ row[1] }}</td>
+                  <td>{{ row[2] }}</td>
 
                   <td>
-                    <mat-checkbox [checked]="row[3]" (change)="adminToggle($event,row)"></mat-checkbox>
+                    <mat-checkbox
+                      [checked]="row[3]"
+                      (change)="adminToggle($event, row)"
+                    ></mat-checkbox>
                   </td>
                   <td>
-                    <mat-checkbox [checked]="row[4]" (change)="approveUserToggle($event,row)"></mat-checkbox>
+                    <mat-checkbox
+                      [checked]="row[4]"
+                      (change)="approveUserToggle($event, row)"
+                    ></mat-checkbox>
                   </td>
-
-
                 </tr>
               </tbody>
             </table>
-
           </div>
         </div>
       </div>
-
     </div>
 
+    <button
+      [routerLink]="'/admin/invite-user'"
+      mat-raised-button
+      class="btn btn-rose"
+    >
+      Invite a User
+    </button>
+    <button
+      *ngIf="filterService.isPrimaryDomain"
+      [routerLink]="'/admin/domains'"
+      mat-raised-button
+      class="btn btn-rose"
+    >
+      Add a Domain
+    </button>
 
-
-
-    <button [routerLink]="'/admin/invite-user'" mat-raised-button class="btn btn-rose">Invite a User</button>
-    <button *ngIf="filterService.isPrimaryDomain" [routerLink]="'/admin/domains'" mat-raised-button
-      class="btn btn-rose">Add a Domain </button>
-
-
-
-
-
-
-    <h3 *ngIf="objectKeys(allUnapprovedUsers).length">Users to be approved</h3>
-    <div class="row mt-4">
-
-
-
-      <div class="card"
-        *ngIf="unapprovedUserDataTable&&unapprovedUserDataTable.dataRows && objectKeys(allUnapprovedUsers).length">
-        <div class="card-header card-header-icon card-header-rose">
-          <div class="card-icon">
-            <i class="material-icons">group</i>
+    <div class="mt-4">
+      <h1 *ngIf="objectKeys(allUnapprovedUsers).length" class="h1-font">
+        Users to be approved
+      </h1>
+      <div class="row ">
+        <div
+          class="card"
+          *ngIf="
+            unapprovedUserDataTable &&
+            unapprovedUserDataTable.dataRows &&
+            objectKeys(allUnapprovedUsers).length
+          "
+        >
+          <div class="card-header card-header-icon card-header-rose">
+            <div class="card-icon">
+              <i class="material-icons" aria-hidden="true">group</i>
+            </div>
+            <h2 class="card-title h2-font ">Unapproved Users</h2>
           </div>
-          <h4 class="card-title ">Unapproved Users</h4>
-        </div>
-        <div class="card-body">
-          <div class="table-responsive">
-            <table class="table">
-              <thead class="text-primary">
-                <tr>
-                  <th *ngFor="let cell of unapprovedUserDataTable.headerRow">{{ cell }}</th>
-                </tr>
-              </thead>
-              <tbody>
-                <tr *ngFor="let row of unapprovedUserDataTable.dataRows">
-                  <td>{{row[0]}}</td>
+          <div class="card-body">
+            <div class="table-responsive">
+              <table class="table">
+                <thead class="text-primary">
+                  <tr>
+                    <th *ngFor="let cell of unapprovedUserDataTable.headerRow">
+                      {{ cell }}
+                    </th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr *ngFor="let row of unapprovedUserDataTable.dataRows">
+                    <td>{{ row[0] }}</td>
 
-
-                  <td>
-                    <mat-checkbox [checked]="row[1]" (change)="approveUser($event,row)"></mat-checkbox>
-                  </td>
-
-                </tr>
-              </tbody>
-            </table>
-
+                    <td>
+                      <mat-checkbox
+                        [checked]="row[1]"
+                        (change)="approveUser($event, row)"
+                      ></mat-checkbox>
+                    </td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
           </div>
         </div>
       </div>
-
     </div>
-
-
-
-
   </div>
 </div>
