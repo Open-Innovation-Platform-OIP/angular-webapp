@@ -1,64 +1,103 @@
 <div class="wrapper wrapper-full-page">
-  <div class="page-header login-page header-filter" filter-color="black"
-    style="background-image: url('./assets/img/login.jpg'); background-size: cover; background-position: top center;">
-
+  <div
+    class="page-header login-page header-filter"
+    filter-color="black"
+    style="background-image: url('./assets/img/login.jpg'); background-size: cover; background-position: top center;"
+  >
     <div class="container">
       <div class="row">
         <div class="col-lg-4 col-md-6 col-sm-6 ml-auto mr-auto">
           <form class="form" autocomplete="off">
             <div class="card card-login card-hidden">
               <div class="card-header card-header-warning text-center">
-                <h1 #mainHeading id="heading" style="font-size: 1.5rem;" class="card-title" tabindex="0">Log in</h1>
+                <h1
+                  #mainHeading
+                  id="heading"
+                  style="font-size: 1.5rem;"
+                  class="card-title"
+                  tabindex="0"
+                >
+                  Log in
+                </h1>
                 <div class="social-line">
-
-                  <a href="https://sa-auth-dev.dev.jaagalabs.com/auth/linkedin"
-                    class="btn btn-just-icon btn-link btn-white" aria-label="social login linkedin">
-                    <i class="fa fa-linkedin"></i>
+                  <a
+                    href="https://sa-auth-dev.dev.jaagalabs.com/auth/linkedin"
+                    class="btn btn-just-icon btn-link btn-white"
+                    aria-label="social login linkedin"
+                  >
+                    <i class="fa fa-linkedin" aria-hidden="true"></i>
                   </a>
-                  <a href="https://sa-auth-dev.dev.jaagalabs.com/auth/google" aria-label="social login google"
-                    class="btn btn-just-icon btn-link btn-white">
-                    <i class="fa fa-google-plus"></i>
+                  <a
+                    href="https://sa-auth-dev.dev.jaagalabs.com/auth/google"
+                    aria-label="social login google"
+                    class="btn btn-just-icon btn-link btn-white"
+                  >
+                    <i class="fa fa-google-plus" aria-hidden="true"></i>
                   </a>
                 </div>
               </div>
               <div class="card-body ">
-                <span class="bmd-form-group">
-                </span>
+                <span class="bmd-form-group"> </span>
                 <span class="bmd-form-group">
                   <div class="input-group">
                     <div class="input-group-prepend">
                       <span class="input-group-text">
-                        <i class="material-icons">email</i>
+                        <i class="material-icons" aria-hidden="true">email</i>
                       </span>
                     </div>
-                    <input type="email" class="form-control" name="email" [(ngModel)]="loginDetails.email"
-                      placeholder="Email" autofocus aria-required="true">
+                    <input
+                      type="email"
+                      class="form-control"
+                      name="email"
+                      [(ngModel)]="loginDetails.email"
+                      placeholder="Email"
+                      autofocus
+                      aria-required="true"
+                    />
                   </div>
                 </span>
                 <span class="bmd-form-group">
                   <div class="input-group">
                     <div class="input-group-prepend">
                       <span class="input-group-text">
-                        <i class="material-icons">lock_outline</i>
+                        <i class="material-icons" aria-hidden="true"
+                          >lock_outline</i
+                        >
                       </span>
                     </div>
-                    <input type="password" class="form-control" name="password" [(ngModel)]="loginDetails.password"
-                      placeholder="Password" aria-required="true">
+                    <input
+                      type="password"
+                      class="form-control"
+                      name="password"
+                      [(ngModel)]="loginDetails.password"
+                      placeholder="Password"
+                      aria-required="true"
+                    />
                   </div>
                 </span>
               </div>
               <div class="card-footer">
                 <div class="price">
-                  <button (click)="login()" mat-raised-button class="btn btn-warning">Log
-                    In</button>
-                  <img *ngIf="loading" class="pl-2"
-                    src="data:image/gif;base64,R0lGODlhEAAQAPIAAP///wAAAMLCwkJCQgAAAGJiYoKCgpKSkiH/C05FVFNDQVBFMi4wAwEAAAAh/hpDcmVhdGVkIHdpdGggYWpheGxvYWQuaW5mbwAh+QQJCgAAACwAAAAAEAAQAAADMwi63P4wyklrE2MIOggZnAdOmGYJRbExwroUmcG2LmDEwnHQLVsYOd2mBzkYDAdKa+dIAAAh+QQJCgAAACwAAAAAEAAQAAADNAi63P5OjCEgG4QMu7DmikRxQlFUYDEZIGBMRVsaqHwctXXf7WEYB4Ag1xjihkMZsiUkKhIAIfkECQoAAAAsAAAAABAAEAAAAzYIujIjK8pByJDMlFYvBoVjHA70GU7xSUJhmKtwHPAKzLO9HMaoKwJZ7Rf8AYPDDzKpZBqfvwQAIfkECQoAAAAsAAAAABAAEAAAAzMIumIlK8oyhpHsnFZfhYumCYUhDAQxRIdhHBGqRoKw0R8DYlJd8z0fMDgsGo/IpHI5TAAAIfkECQoAAAAsAAAAABAAEAAAAzIIunInK0rnZBTwGPNMgQwmdsNgXGJUlIWEuR5oWUIpz8pAEAMe6TwfwyYsGo/IpFKSAAAh+QQJCgAAACwAAAAAEAAQAAADMwi6IMKQORfjdOe82p4wGccc4CEuQradylesojEMBgsUc2G7sDX3lQGBMLAJibufbSlKAAAh+QQJCgAAACwAAAAAEAAQAAADMgi63P7wCRHZnFVdmgHu2nFwlWCI3WGc3TSWhUFGxTAUkGCbtgENBMJAEJsxgMLWzpEAACH5BAkKAAAALAAAAAAQABAAAAMyCLrc/jDKSatlQtScKdceCAjDII7HcQ4EMTCpyrCuUBjCYRgHVtqlAiB1YhiCnlsRkAAAOwAAAAAAAAAAAA==" />
+                  <button
+                    (click)="login()"
+                    mat-raised-button
+                    class="btn btn-warning"
+                  >
+                    Log In
+                  </button>
+                  <img
+                    *ngIf="loading"
+                    class="pl-2"
+                    src="data:image/gif;base64,R0lGODlhEAAQAPIAAP///wAAAMLCwkJCQgAAAGJiYoKCgpKSkiH/C05FVFNDQVBFMi4wAwEAAAAh/hpDcmVhdGVkIHdpdGggYWpheGxvYWQuaW5mbwAh+QQJCgAAACwAAAAAEAAQAAADMwi63P4wyklrE2MIOggZnAdOmGYJRbExwroUmcG2LmDEwnHQLVsYOd2mBzkYDAdKa+dIAAAh+QQJCgAAACwAAAAAEAAQAAADNAi63P5OjCEgG4QMu7DmikRxQlFUYDEZIGBMRVsaqHwctXXf7WEYB4Ag1xjihkMZsiUkKhIAIfkECQoAAAAsAAAAABAAEAAAAzYIujIjK8pByJDMlFYvBoVjHA70GU7xSUJhmKtwHPAKzLO9HMaoKwJZ7Rf8AYPDDzKpZBqfvwQAIfkECQoAAAAsAAAAABAAEAAAAzMIumIlK8oyhpHsnFZfhYumCYUhDAQxRIdhHBGqRoKw0R8DYlJd8z0fMDgsGo/IpHI5TAAAIfkECQoAAAAsAAAAABAAEAAAAzIIunInK0rnZBTwGPNMgQwmdsNgXGJUlIWEuR5oWUIpz8pAEAMe6TwfwyYsGo/IpFKSAAAh+QQJCgAAACwAAAAAEAAQAAADMwi6IMKQORfjdOe82p4wGccc4CEuQradylesojEMBgsUc2G7sDX3lQGBMLAJibufbSlKAAAh+QQJCgAAACwAAAAAEAAQAAADMgi63P7wCRHZnFVdmgHu2nFwlWCI3WGc3TSWhUFGxTAUkGCbtgENBMJAEJsxgMLWzpEAACH5BAkKAAAALAAAAAAQABAAAAMyCLrc/jDKSatlQtScKdceCAjDII7HcQ4EMTCpyrCuUBjCYRgHVtqlAiB1YhiCnlsRkAAAOwAAAAAAAAAAAA=="
+                  />
                 </div>
                 <div class="stats">
-
-                  <a href="javascript:void(0);" style="cursor:pointer" (click)="forgotPassword()">Forgot
-                    Password</a>
-
+                  <a
+                    href="javascript:void(0);"
+                    style="cursor:pointer"
+                    (click)="forgotPassword()"
+                    >Forgot Password</a
+                  >
                 </div>
               </div>
             </div>

@@ -52,21 +52,23 @@
       </div>
     </div>
 
-    <button
+    <a
+      href="javascript:void(0);"
       [routerLink]="'/admin/invite-user'"
       mat-raised-button
       class="btn btn-rose"
     >
       Invite a User
-    </button>
-    <button
+    </a>
+    <a
+      href="javascript:void(0);"
       *ngIf="filterService.isPrimaryDomain"
       [routerLink]="'/admin/domains'"
       mat-raised-button
       class="btn btn-rose"
     >
       Add a Domain
-    </button>
+    </a>
 
     <div class="mt-4">
       <h1 *ngIf="objectKeys(allUnapprovedUsers).length" class="h1-font">

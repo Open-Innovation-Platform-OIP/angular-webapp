@@ -1578,7 +1578,7 @@ export class ProblemDetailComponent
     $('#enlargeView').modal('show');
   }
 
-  closeModal(e, context?: { from: string; index: number }) {
+  closeModal(e, context?: { from: string; index?: number }) {
     if (e.type === 'click') {
       const problemVideoTag: HTMLMediaElement = document.querySelector(
         '#modalVideo'
